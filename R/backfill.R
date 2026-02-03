@@ -1,0 +1,204 @@
+# File: R/backfill.R
+# Batch backfill of kline (OHLCV) data across multiple symbols and frequencies,
+# with CSV-based resume support.
+
+#' Backfill KuCoin Kline Data to CSV
+#'
+#' Downloads historical OHLCV candlestick data for one or more trading pairs and
+#' frequencies, writing results incrementally to a CSV file. Supports resuming
+#' from a partially completed backfill by reading the existing file and skipping
+#' symbol-frequency combinations that are already up to date.
+#'
+#' @param symbols Character vector of trading pair symbols (e.g.,
+#'   `c("BTC-USDT", "ETH-USDT")`). Must not be NULL or empty.
+#' @param freqs Character vector of candle frequencies (e.g., `c("1day", "1hour")`).
+#'   Valid values are the names of the internal frequency map: `"1min"`, `"3min"`,
+#'   `"5min"`, `"15min"`, `"30min"`, `"1hour"`, `"2hour"`, `"4hour"`, `"6hour"`,
+#'   `"8hour"`, `"12hour"`, `"1day"`, `"1week"`, `"1month"`.
+#' @param from POSIXct or numeric; start of the backfill window. Defaults to one
+#'   year ago. Values before `"2017-01-01"` (or `-Inf`) are clamped to
+#'   `"2017-01-01"` since KuCoin data does not exist before that date.
+#' @param to POSIXct or numeric; end of the backfill window. Defaults to
+#'   current time. `Inf` is replaced with current time.
+#' @param file Character; path to the output CSV file. Data is appended
+#'   incrementally so progress is saved even if the process is interrupted.
+#' @param base_url Character; KuCoin API base URL.
+#' @param sleep Numeric; seconds to sleep between each symbol-frequency
+#'   combination to respect rate limits.
+#' @param verbose Logical; if `TRUE`, prints progress messages via [rlang::inform()].
+#'
+#' @return The file path (invisibly). If any symbol-frequency combinations
+#'   failed, a `"failures"` attribute is attached containing a
+#'   [data.table::data.table] with columns `symbol`, `freq`, and `error`.
+#'
+#' @importFrom data.table fread fwrite data.table rbindlist
+#' @importFrom httr2 req_perform
+#' @importFrom lubridate as_datetime now
+#' @importFrom rlang abort inform warn
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' kucoin_backfill_klines(
+#'   symbols = c("BTC-USDT", "ETH-USDT"),
+#'   freqs = c("1day", "1hour"),
+#'   from = lubridate::as_datetime("2020-01-01"),
+#'   file = "my_klines.csv"
+#' )
+#' }
+kucoin_backfill_klines <- function(
+  symbols,
+  freqs = "1day",
+  from = lubridate::now("UTC") - lubridate::ddays(365),
+  to = lubridate::now("UTC"),
+  file = "kucoin_klines.csv",
+  base_url = "https://api.kucoin.com",
+  sleep = 0.3,
+  verbose = TRUE
+) {
+  # --- Input validation ---
+  if (is.null(symbols) || length(symbols) == 0L) {
+    rlang::abort("`symbols` must be a non-empty character vector of trading pairs.")
+  }
+
+  # Clamp from / to
+  kucoin_epoch <- lubridate::as_datetime("2017-01-01", tz = "UTC")
+
+  if (is.infinite(from) && from < 0) {
+    from <- kucoin_epoch
+  } else {
+    from <- lubridate::as_datetime(from, tz = "UTC")
+    if (from < kucoin_epoch) {
+      from <- kucoin_epoch
+    }
+  }
+
+  if (is.infinite(to) && to > 0) {
+    to <- lubridate::now("UTC")
+  } else {
+    to <- lubridate::as_datetime(to, tz = "UTC")
+  }
+
+  # --- Resume support: read existing file ---
+  resume <- NULL
+  if (file.exists(file)) {
+    existing <- tryCatch(
+      data.table::fread(file, select = c("symbol", "freq", "datetime")),
+      error = function(e) NULL
+    )
+    if (!is.null(existing) && nrow(existing) > 0L) {
+      existing[, datetime := lubridate::as_datetime(datetime, tz = "UTC")]
+      resume <- existing[, .(last_dt = max(datetime)), by = .(symbol, freq)]
+    }
+  }
+
+  # --- Sync request function closure ---
+  sync_req_fn <- function(endpoint, method = "GET", query = list(), auth = FALSE, .parser = identity, ...) {
+    return(kucoin_build_request(
+      base_url = base_url,
+      endpoint = endpoint,
+      method = method,
+      query = query,
+      body = NULL,
+      keys = NULL,
+      .perform = httr2::req_perform,
+      .parser = .parser,
+      is_async = FALSE
+    ))
+  }
+
+  # --- Build combo grid ---
+  combos <- expand.grid(
+    symbol = symbols,
+    freq = freqs,
+    stringsAsFactors = FALSE
+  )
+  total <- nrow(combos)
+
+  failures <- list()
+  file_exists <- file.exists(file)
+
+  for (i in seq_len(total)) {
+    sym <- combos$symbol[i]
+    frq <- combos$freq[i]
+
+    # Determine effective from for this combo
+    combo_from <- from
+    resumed_from <- NULL
+
+    if (!is.null(resume)) {
+      match_row <- resume[symbol == sym & freq == frq]
+      if (nrow(match_row) > 0L) {
+        last_dt <- match_row$last_dt[1L]
+        if (last_dt >= to) {
+          if (verbose) {
+            rlang::inform(sprintf("[%d/%d] %s %s: skipped (already up to date)", i, total, sym, frq))
+          }
+          next
+        }
+        combo_from <- last_dt
+        resumed_from <- last_dt
+      }
+    }
+
+    dt <- tryCatch(
+      {
+        result <- kucoin_fetch_klines(
+          symbol = sym,
+          freq = frq,
+          from = combo_from,
+          to = to,
+          .req_fn = sync_req_fn,
+          is_async = FALSE
+        )
+        result
+      },
+      error = function(e) {
+        failures[[length(failures) + 1L]] <<- data.table::data.table(
+          symbol = sym,
+          freq = frq,
+          error = conditionMessage(e)
+        )
+        rlang::warn(sprintf("[%d/%d] %s %s: FAILED - %s", i, total, sym, frq, conditionMessage(e)))
+        return(NULL)
+      }
+    )
+
+    if (!is.null(dt) && nrow(dt) > 0L) {
+      dt[, symbol := sym]
+      dt[, freq := frq]
+
+      if (!file_exists) {
+        data.table::fwrite(dt, file, append = FALSE)
+        file_exists <- TRUE
+      } else {
+        data.table::fwrite(dt, file, append = TRUE)
+      }
+
+      if (verbose) {
+        msg <- sprintf("[%d/%d] %s %s: %d rows", i, total, sym, frq, nrow(dt))
+        if (!is.null(resumed_from)) {
+          msg <- paste0(msg, sprintf(" (resumed from %s)", format(resumed_from, "%Y-%m-%d")))
+        }
+        rlang::inform(msg)
+      }
+    } else if (is.null(dt)) {
+      # Error already handled above
+    } else {
+      if (verbose) {
+        rlang::inform(sprintf("[%d/%d] %s %s: 0 rows", i, total, sym, frq))
+      }
+    }
+
+    if (i < total) {
+      Sys.sleep(sleep)
+    }
+  }
+
+  # --- Attach failures attribute ---
+  if (length(failures) > 0L) {
+    attr(file, "failures") <- data.table::rbindlist(failures)
+  }
+
+  return(invisible(file))
+}

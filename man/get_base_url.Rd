@@ -7,27 +7,23 @@
 get_base_url(url = Sys.getenv("KC-API-ENDPOINT"))
 }
 \arguments{
-\item{url}{Character string representing the base URL. Defaults to \code{Sys.getenv("KC-API-ENDPOINT")}.}
+\item{url}{Character string; explicit base URL. Defaults to
+\code{Sys.getenv("KC-API-ENDPOINT")}.}
 }
 \value{
-Character string containing the determined base URL.
+Character string; the API base URL.
 }
 \description{
-Returns the base URL for the KuCoin API, determined by the following priority:
-}
-\details{
+Returns the base URL for the KuCoin API in the following priority:
 \enumerate{
-\item Uses the explicitly provided \code{url} parameter if specified.
-\item If \code{url} is \code{NULL} or empty, checks the \code{"KC-API-ENDPOINT"} environment variable.
-\item Falls back to the default \code{"https://api.kucoin.com"} if neither above source provides a value.
+\item The explicitly provided \code{url} parameter.
+\item The \code{KC-API-ENDPOINT} environment variable.
+\item The default \code{"https://api.kucoin.com"}.
 }
 }
 \examples{
 \dontrun{
-# Default behavior (uses environment variable or fallback)
-get_base_url()  # Might return "https://api.kucoin.com" if KC-API-ENDPOINT is unset
-
-# Explicit URL
-get_base_url("https://testnet.kucoin.com")  # Returns "https://testnet.kucoin.com"
+get_base_url()
+get_base_url("https://openapi-sandbox.kucoin.com")
 }
 }

@@ -1,5 +1,6 @@
 # dev
 api-responses/
+local/
 
 deprecated/
 temp*
@@ -68,3 +69,5 @@ rsconnect/
 
 # machine
 .DS_Store
+/doc/
+/Meta/

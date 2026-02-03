@@ -1,0 +1,465 @@
+---
+title: "Getting Started with kucoin"
+author: "Dereck Mezquita"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with kucoin}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+box::use(
+  kucoin[
+    KucoinMarketData, KucoinTrading, KucoinAccount,
+    KucoinStopOrders, KucoinOcoOrders, KucoinDeposit,
+    KucoinSubAccount, get_api_keys
+  ],
+  lubridate[ymd_hms]
+)
+
+box::use(../tests/testthat/mock_router[mock_router])
+
+KEYS <- get_api_keys(
+  api_key = "fake-key",
+  api_secret = "fake-secret",
+  api_passphrase = "fake-passphrase"
+)
+BASE <- "https://api.kucoin.com"
+
+options(httr2_mock = mock_router)
+```
+
+This vignette demonstrates how to use `kucoin` in **synchronous** mode.
+
+## Setup
+
+```{r load}
+box::use(
+  kucoin[
+    KucoinMarketData, KucoinTrading, KucoinAccount,
+    KucoinStopOrders, KucoinOcoOrders, KucoinDeposit,
+    KucoinSubAccount, get_api_keys
+  ],
+  lubridate[ymd_hms]
+)
+
+keys <- get_api_keys(
+  api_key = "your-api-key",
+  api_secret = "your-api-secret",
+  api_passphrase = "your-api-passphrase"
+)
+```
+
+```{r keys, echo = FALSE}
+keys <- KEYS
+base <- BASE
+```
+
+---
+
+## Market Data
+
+The `KucoinMarketData` class covers all public (no auth) market endpoints.
+
+```{r market-init}
+market <- KucoinMarketData$new()
+```
+
+```{r market-init-hidden, echo = FALSE}
+market <- KucoinMarketData$new(keys = keys, base_url = base)
+```
+
+### Ticker
+
+```{r ticker}
+ticker <- market$get_ticker("BTC-USDT")
+ticker
+```
+
+### 24hr Statistics
+
+```{r stats-24hr}
+stats <- market$get_24hr_stats("BTC-USDT")
+stats
+```
+
+### All Tickers
+
+```{r all-tickers}
+tickers <- market$get_all_tickers()
+tickers
+```
+
+### Trade History
+
+```{r trade-history}
+trades <- market$get_trade_history("BTC-USDT")
+trades
+```
+
+### Partial Orderbook
+
+```{r orderbook}
+book <- market$get_part_orderbook("BTC-USDT", size = 20)
+book
+```
+
+### Klines (Candlestick Data)
+
+```{r klines}
+klines <- market$get_klines("BTC-USDT", "15min",
+  from = ymd_hms("2024-10-16 20:00:00"),
+  to = ymd_hms("2024-10-16 21:00:00")
+)
+klines
+```
+
+### Currency Info
+
+```{r currency}
+btc <- market$get_currency("BTC")
+btc
+```
+
+### Symbol Info
+
+```{r symbol}
+sym <- market$get_symbol("BTC-USDT")
+sym
+```
+
+---
+
+## Trading
+
+The `KucoinTrading` class manages HF spot orders. All trading endpoints
+require authentication.
+
+### Place a Test Order
+
+Test orders validate parameters without executing:
+
+```{r trading-test-order}
+trading <- KucoinTrading$new()
+```
+
+```{r trading-init-hidden, echo = FALSE}
+trading <- KucoinTrading$new(keys = keys, base_url = base)
+```
+
+```{r}
+result <- trading$add_order_test(
+  type = "limit",
+  symbol = "BTC-USDT",
+  side = "buy",
+  price = "50000",
+  size = "0.0001"
+)
+result
+```
+
+### Cancel an Order
+
+```{r trading-cancel}
+cancelled <- trading$cancel_order_by_id("670fd33bf9406e0007ab3945", symbol = "BTC-USDT")
+cancelled
+```
+
+### Query Open Orders
+
+```{r trading-open-orders}
+open_orders <- trading$get_open_orders("BTC-USDT")
+open_orders
+```
+
+---
+
+## Stop Orders
+
+```{r stop-orders}
+stop <- KucoinStopOrders$new()
+```
+
+```{r stop-hidden, echo = FALSE}
+stop <- KucoinStopOrders$new(keys = keys, base_url = base)
+```
+
+```{r}
+result <- stop$add_order(
+  type = "limit",
+  symbol = "BTC-USDT",
+  side = "sell",
+  price = "60000",
+  size = "0.0001",
+  stopPrice = "59000"
+)
+result
+```
+
+---
+
+## OCO Orders
+
+An OCO (One-Cancels-Other) order pairs a limit order with a stop-limit
+order; when one side fills, the other is cancelled automatically.
+
+```{r oco-orders}
+oco <- KucoinOcoOrders$new()
+```
+
+```{r oco-hidden, echo = FALSE}
+oco <- KucoinOcoOrders$new(keys = keys, base_url = base)
+```
+
+```{r}
+result <- oco$add_order(
+  symbol = "BTC-USDT",
+  side = "sell",
+  price = "110000",
+  size = "0.0001",
+  stopPrice = "90000",
+  limitPrice = "89500"
+)
+result
+```
+
+---
+
+## Account Management
+
+### Account Summary
+
+```{r account-summary}
+account <- KucoinAccount$new()
+```
+
+```{r account-hidden, echo = FALSE}
+account <- KucoinAccount$new(keys = keys, base_url = base)
+```
+
+```{r}
+summary <- account$get_summary()
+summary
+```
+
+### Spot Account Balances
+
+```{r spot-accounts}
+balances <- account$get_spot_accounts()
+balances
+```
+
+---
+
+## Deposits
+
+### Get Deposit Addresses
+
+```{r deposit-addresses}
+deposit <- KucoinDeposit$new()
+```
+
+```{r deposit-hidden, echo = FALSE}
+deposit <- KucoinDeposit$new(keys = keys, base_url = base)
+```
+
+```{r}
+addrs <- deposit$get_deposit_addresses(currency = "USDT")
+addrs
+```
+
+### Sync Orders and Modify
+
+Sync variants return fill results in a single round trip:
+
+```{r, eval = FALSE}
+# Place order and get immediate fill result
+order <- trading$add_order_sync(
+  type = "limit", symbol = "BTC-USDT", side = "buy",
+  price = "50000", size = "0.0001"
+)
+cat("Status:", order$status, "Filled:", order$deal_size, "\n")
+
+# Modify an existing order's price
+modified <- trading$modify_order(
+  symbol = "BTC-USDT",
+  orderId = order$order_id,
+  newPrice = "51000"
+)
+cat("New order ID:", modified$new_order_id, "\n")
+```
+
+### Dead Connection Protection (DCP)
+
+A dead-man's switch that auto-cancels orders if your bot stops heartbeating:
+
+```{r, eval = FALSE}
+# Enable: cancel all BTC-USDT orders if no request in 30 seconds
+trading$set_dcp(timeout = 30, symbols = "BTC-USDT")
+
+# Check current DCP settings
+dcp <- trading$get_dcp()
+cat("Timeout:", dcp$timeout, "s\n")
+
+# Disable
+trading$set_dcp(timeout = -1)
+```
+
+---
+
+## Fee Rates
+
+```{r, eval = FALSE}
+# Base fee rate (account tier default)
+base_fees <- account$get_base_fee_rate()
+cat("Base taker:", base_fees$taker_fee_rate, "\n")
+
+# Per-symbol actual rates (after VIP/KCS discounts)
+actual_fees <- account$get_fee_rate("BTC-USDT,ETH-USDT")
+actual_fees
+```
+
+## HF Trading Ledger
+
+The HF ledger contains fills, fees, and settlements from HF orders (7-day window):
+
+```{r, eval = FALSE}
+hf_ledger <- account$get_hf_ledger(currency = "USDT", bizType = "TRADE_EXCHANGE")
+hf_ledger
+```
+
+## Server Time and Service Status
+
+```{r, eval = FALSE}
+# Check clock drift
+st <- market$get_server_time()
+drift_ms <- as.numeric(lubridate::now()) * 1000 - st$server_time
+cat("Clock drift:", round(drift_ms), "ms\n")
+
+# Pre-flight: is the exchange operational?
+status <- market$get_service_status()
+if (status$status != "open") stop("Exchange not operational: ", status$msg)
+```
+
+## Fiat Prices
+
+```{r, eval = FALSE}
+prices <- market$get_fiat_prices(base = "USD", currencies = "BTC,ETH,USDT")
+prices
+```
+
+---
+
+## Fund Transfers
+
+Deposits land in the **main** account, but HF spot orders require funds in
+the **trade** account. Use `KucoinTransfer` to move funds between account types.
+
+```{r, eval = FALSE}
+box::use(kucoin[KucoinTransfer])
+
+transfer <- KucoinTransfer$new()
+
+# Check how much USDT is available to transfer
+balance <- transfer$get_transferable(currency = "USDT", type = "MAIN")
+balance
+
+# Transfer USDT from main to trade account
+result <- transfer$add_transfer(
+  clientOid = "unique-id-here",
+  currency = "USDT",
+  amount = "100",
+  type = "INTERNAL",
+  fromAccountType = "MAIN",
+  toAccountType = "TRADE"
+)
+result
+```
+
+---
+
+## Withdrawals
+
+Use `KucoinWithdrawal` to check withdrawal limits, initiate withdrawals,
+and monitor withdrawal status.
+
+```{r, eval = FALSE}
+box::use(kucoin[KucoinWithdrawal])
+
+withdrawal <- KucoinWithdrawal$new()
+
+# Check withdrawal quotas and fees
+quotas <- withdrawal$get_withdrawal_quotas(currency = "USDT", chain = "trx")
+quotas
+
+# Withdraw USDT via TRC20
+result <- withdrawal$add_withdrawal(
+  currency = "USDT",
+  toAddress = "your-trc20-address",
+  amount = "10",
+  withdrawType = "ADDRESS",
+  chain = "trx"
+)
+result
+
+# Check withdrawal history
+history <- withdrawal$get_withdrawal_history(currency = "USDT")
+history
+```
+
+---
+
+## Sub-Account Management
+
+### List Sub-Accounts
+
+```{r sub-accounts}
+sub <- KucoinSubAccount$new()
+```
+
+```{r sub-hidden, echo = FALSE}
+sub <- KucoinSubAccount$new(keys = keys, base_url = base)
+```
+
+```{r}
+subs <- sub$get_sub_account_list()
+subs
+```
+
+---
+
+## Clock Drift: Server Time Signing
+
+By default, HMAC request signatures use your local machine's clock. If your
+system time is out of sync with KuCoin's servers, authenticated requests may
+fail. You can configure any class to fetch the server time before each
+authenticated request:
+
+```{r, eval = FALSE}
+# Use server time for signing (adds one round trip per request)
+trading <- KucoinTrading$new(time_source = "server")
+
+# All authenticated calls now use the exchange clock
+order <- trading$add_order_test(
+  type = "limit", symbol = "BTC-USDT", side = "buy",
+  price = "50000", size = "0.0001"
+)
+```
+
+The `time_source` parameter is available on all class constructors:
+`KucoinTrading`, `KucoinAccount`, `KucoinStopOrders`, `KucoinOcoOrders`,
+`KucoinDeposit`, `KucoinTransfer`, `KucoinWithdrawal`, and `KucoinSubAccount`.
+
+---
+
+## Next Steps
+
+- See `vignette("async-usage")` for promise-based asynchronous operation.
+- Browse the [pkgdown site](https://dereckmezquita.github.io/kucoin/) for full method documentation.
+- For bulk historical data downloads, see `?kucoin_backfill_klines`.

@@ -2,176 +2,163 @@
 % Please edit documentation in R/KucoinDeposit.R
 \name{KucoinDeposit}
 \alias{KucoinDeposit}
-\title{KucoinDeposit Class for KuCoin Deposit Management}
+\title{KucoinDeposit: Deposit Management}
 \description{
-The \code{KucoinDeposit} class provides an asynchronous interface for managing deposit operations on KuCoin.
-It leverages the \code{coro} package for non-blocking HTTP requests, returning promises that resolve to \code{data.table} objects.
-This class supports creating new deposit addresses, retrieving existing deposit addresses, and fetching deposit history,
-all requiring authentication via API keys.
+KucoinDeposit: Deposit Management
+
+KucoinDeposit: Deposit Management
 }
 \details{
+Provides methods for managing deposit addresses and retrieving deposit
+history on KuCoin. Inherits from \link{KucoinBase}.
 \subsection{Purpose and Scope}{
-
-This class is designed to handle deposit-related tasks in the KuCoin ecosystem, including:
 \itemize{
-\item \strong{Address Creation}: Generating new deposit addresses for various currencies and chains.
-\item \strong{Address Retrieval}: Listing all deposit addresses for a currency.
-\item \strong{History Tracking}: Querying deposit records with filtering and pagination.
+\item \strong{Address Creation}: Create new deposit addresses for any supported currency and chain.
+\item \strong{Address Retrieval}: Query existing deposit addresses with optional chain filtering.
+\item \strong{Deposit History}: Retrieve paginated deposit transaction records with status tracking,
+timestamps, and wallet transaction IDs for on-chain verification.
 }
 }
 
 \subsection{Usage}{
 
-Utilised by traders and developers to programmatically manage deposits on KuCoin. The class is initialized with API credentials,
-automatically sourced from \code{get_api_keys()} if not provided, and a base URL from \code{get_base_url()}. All methods require authentication.
-For detailed endpoint information, parameters, and response schemas, refer to the official \href{https://www.kucoin.com/docs-new}{KuCoin API Documentation}.
+All methods require authentication (valid API key, secret, passphrase).
+Deposit operations are read/write for address creation and read-only for
+history retrieval. Use \code{get_deposit_addresses()} to check if an address
+already exists before calling \code{add_deposit_address()} to avoid creating
+duplicates.
 }
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/account-info/deposit/introduction}{KuCoin API Documentation - Deposit}
-}
-}
-\section{Methods}{
-
-\itemize{
-\item \strong{initialize(keys, base_url):} Initialises the object with API credentials and base URL.
-\item \strong{add_deposit_address(currency, chain, to, amount):} Creates a new deposit address for a currency.
-\item \strong{get_deposit_addresses(currency, chain, amount):} Retrieves all deposit addresses for a currency.
-\item \strong{get_deposit_history(currency, status, startAt, endAt, page_size, max_pages):} Fetches paginated deposit history.
-}
+\href{https://www.kucoin.com/docs-new/rest/account-info/deposit/add-deposit-address-v3}{KuCoin Deposit Endpoints}
 }
 
+\subsection{Endpoints Covered}{\tabular{lll}{
+   Method \tab Endpoint \tab HTTP \cr
+   add_deposit_address \tab POST /api/v3/deposit-address/create \tab POST \cr
+   get_deposit_addresses \tab GET /api/v3/deposit-addresses \tab GET \cr
+   get_deposit_history \tab GET /api/v1/deposits \tab GET \cr
+}
+
+}
+}
 \examples{
 \dontrun{
-# Comprehensive example demonstrating key methods
-main_async <- coro::async(function() {
-  # Initialise the class
-  deposit <- KucoinDeposit$new()
+# Synchronous
+deposit <- KucoinDeposit$new()
+addresses <- deposit$get_deposit_addresses(currency = "BTC")
+print(addresses)
 
-  # Add a new deposit address for USDT on TRON
-  new_address <- await(deposit$add_deposit_address(
-    currency = "USDT",
-    chain = "trx",
-    to = "trade"
-  ))
-  print("New Deposit Address:"); print(new_address)
-
-  # Get all deposit addresses for USDT
-  addresses <- await(deposit$get_deposit_addresses(currency = "USDT"))
-  print("USDT Deposit Addresses:"); print(addresses)
-
-  # Get deposit history for USDT over a specific period
-  history <- await(deposit$get_deposit_history(
-    currency = "USDT",
-    status = "SUCCESS",
-    startAt = as.integer(Sys.time() - 24*3600) * 1000,
-    endAt = as.integer(Sys.time()) * 1000,
-    page_size = 10,
-    max_pages = 2
-  ))
-  print("USDT Deposit History:"); print(history)
+# Asynchronous
+deposit_async <- KucoinDeposit$new(async = TRUE)
+main <- coro::async(function() {
+  addrs <- await(deposit_async$get_deposit_addresses(currency = "ETH"))
+  print(addrs)
 })
-main_async()
+main()
 while (!later::loop_empty()) later::run_now()
 }
 
-}
-\section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{keys}}{List containing KuCoin API keys (\code{api_key}, \code{api_secret}, \code{api_passphrase}, \code{key_version}).}
 
-\item{\code{base_url}}{Character string representing the base URL for KuCoin API endpoints.
-Initialise a New KucoinDeposit Object
-\subsection{Description}{
+## ------------------------------------------------
+## Method `KucoinDeposit$add_deposit_address`
+## ------------------------------------------------
 
-Initialises a \code{KucoinDeposit} object with API credentials and a base URL for managing deposit operations
-asynchronously. All methods require authentication, so valid credentials are essential.
-}
+\dontrun{
+deposit <- KucoinDeposit$new()
 
-\subsection{Workflow Overview}{
-\enumerate{
-\item \strong{Credential Assignment}: Sets \code{self$keys} to the provided or default API keys from \code{get_api_keys()}.
-\item \strong{URL Assignment}: Sets \code{self$base_url} to the provided or default base URL from \code{get_base_url()}.
-}
-}
+# Create a BTC deposit address on the default chain
+btc_addr <- deposit$add_deposit_address(currency = "BTC")
+print(btc_addr$address)
 
-\subsection{API Endpoint}{
-
-Not applicable (initialisation method).
+# Create a USDT deposit address on TRC20 network
+usdt_addr <- deposit$add_deposit_address(
+  currency = "USDT",
+  chain = "TRC20",
+  to = "trade"
+)
+print(usdt_addr[, .(address, chain, to)])
 }
 
-\subsection{Usage}{
+## ------------------------------------------------
+## Method `KucoinDeposit$get_deposit_addresses`
+## ------------------------------------------------
 
-Creates an instance for managing KuCoin deposits, requiring authenticated API access for all operations.
+\dontrun{
+deposit <- KucoinDeposit$new()
+
+# Get all BTC deposit addresses across all chains
+btc_addrs <- deposit$get_deposit_addresses(currency = "BTC")
+print(btc_addrs[, .(address, chain, to)])
+
+# Get USDT address for a specific chain
+usdt_erc20 <- deposit$get_deposit_addresses(
+  currency = "USDT",
+  chain = "ERC20"
+)
+print(usdt_erc20$address)
 }
 
-\subsection{Official Documentation}{
+## ------------------------------------------------
+## Method `KucoinDeposit$get_deposit_history`
+## ------------------------------------------------
 
-\href{https://www.kucoin.com/docs-new/rest/introduction#authentication}{KuCoin API Authentication}
-}
+\dontrun{
+deposit <- KucoinDeposit$new()
 
-\subsection{Automated Trading Usage}{
-\itemize{
-\item \strong{Deposit Automation}: Use as the core object for deposit workflows in your bot, integrating with wallet management systems.
-\item \strong{Secure Setup}: Provide explicit \code{keys} or use \code{get_api_keys()} from a secure vault for production-grade security.
-\item \strong{Scalability}: Instantiate once and reuse across deposit cycles, pairing with withdrawal classes for full fund management.
+# Get all successful BTC deposits
+btc_deposits <- deposit$get_deposit_history(
+  currency = "BTC",
+  status = "SUCCESS"
+)
+print(btc_deposits[, .(amount, status, datetime_created)])
+
+# Get deposits from the last 24 hours
+now_ms <- as.numeric(lubridate::now()) * 1000
+recent <- deposit$get_deposit_history(
+  startAt = as.integer(now_ms - 86400000),
+  endAt = as.integer(now_ms),
+  page_size = 100,
+  max_pages = 5
+)
+print(recent[, .(currency, amount, wallet_tx_id, datetime_created)])
 }
-}}
 }
-\if{html}{\out{</div>}}
+\section{Super class}{
+\code{\link[kucoin:KucoinBase]{kucoin::KucoinBase}} -> \code{KucoinDeposit}
 }
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-KucoinDeposit-new}{\code{KucoinDeposit$new()}}
 \item \href{#method-KucoinDeposit-add_deposit_address}{\code{KucoinDeposit$add_deposit_address()}}
 \item \href{#method-KucoinDeposit-get_deposit_addresses}{\code{KucoinDeposit$get_deposit_addresses()}}
 \item \href{#method-KucoinDeposit-get_deposit_history}{\code{KucoinDeposit$get_deposit_history()}}
 \item \href{#method-KucoinDeposit-clone}{\code{KucoinDeposit$clone()}}
 }
 }
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-KucoinDeposit-new"></a>}}
-\if{latex}{\out{\hypertarget{method-KucoinDeposit-new}{}}}
-\subsection{Method \code{new()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinDeposit$new(keys = get_api_keys(), base_url = get_base_url())}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{keys}}{List containing API configuration parameters from \code{get_api_keys()}, including:
-\itemize{
-\item \code{api_key}: Character string; your KuCoin API key.
-\item \code{api_secret}: Character string; your KuCoin API secret.
-\item \code{api_passphrase}: Character string; your KuCoin API passphrase.
-\item \code{key_version}: Character string; API key version (e.g., \code{"2"}).
-Defaults to \code{get_api_keys()}.
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>kucoin::KucoinBase$initialize()</code></a></span></li>
+</ul>
+</details>
 }}
-
-\item{\code{base_url}}{Character string representing the base URL for the API. Defaults to \code{get_base_url()}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A new instance of the \code{KucoinDeposit} class.
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-KucoinDeposit-add_deposit_address"></a>}}
+\if{latex}{\out{\hypertarget{method-KucoinDeposit-add_deposit_address}{}}}
+\subsection{Method \code{add_deposit_address()}}{
 Add Deposit Address
-\subsection{Description}{
 
-Creates a new deposit address for a specified currency asynchronously via a POST request to \verb{/api/v3/deposit-address/create}.
-Calls \code{add_deposit_address_v3_impl}.
-}
-
-\subsection{Workflow Overview}{
+Creates a new deposit address for a currency. Each currency/chain
+combination can have a limited number of addresses. If an address
+already exists for the given currency and chain, the API may return
+an error; use \code{get_deposit_addresses()} first to check.
+\subsection{Workflow}{
 \enumerate{
-\item \strong{Validation}: Ensures \code{currency} is valid within the implementation.
-\item \strong{Request Body}: Constructs JSON with \code{currency}, \code{chain}, \code{to}, and optional \code{amount}.
-\item \strong{Authentication}: Generates headers with API keys.
-\item \strong{API Call}: Sends POST request.
-\item \strong{Response}: Returns address details as a \code{data.table}.
+\item \strong{Build Body}: Constructs JSON body with \code{currency} and optional \code{chain}, \code{to}, \code{amount} fields.
+\item \strong{Request}: Authenticated POST to the deposit address creation endpoint.
+\item \strong{Parsing}: Returns \code{data.table} with the newly created address, memo, and chain details.
 }
 }
 
@@ -180,29 +167,50 @@ Calls \code{add_deposit_address_v3_impl}.
 \verb{POST https://api.kucoin.com/api/v3/deposit-address/create}
 }
 
-\subsection{Usage}{
-
-Utilised to generate new deposit addresses for funding KuCoin accounts, supporting various chains and account types.
-}
-
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/account-info/deposit/add-deposit-address-v3}{KuCoin Add Deposit Address (V3)}
+\href{https://www.kucoin.com/docs-new/rest/account-info/deposit/add-deposit-address-v3}{KuCoin Add Deposit Address V3}
+
+Verified: 2026-02-01
 }
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Fund Allocation}: Generate addresses for \code{to = "trade"} to direct funds to trading accounts, automating wallet-to-exchange transfers.
-\item \strong{Chain Selection}: Specify \code{chain} (e.g., "trx" for USDT) to optimize fees, integrating with fee analysis from market data.
-\item \strong{Address Rotation}: Create new addresses periodically for security, tracking via \code{chainId} and auditing with \code{get_deposit_addresses}.
+\item \strong{Multi-Chain Support}: Specify \code{chain} (e.g., \code{"ERC20"}, \code{"TRC20"}) to create addresses on the correct network for your deposit workflow.
+\item \strong{Address Pre-Provisioning}: Create deposit addresses at bot startup so they are ready when funds need to be received.
+\item \strong{Account Routing}: Use the \code{to} parameter to direct deposits to \code{"main"} or \code{"trade"} accounts for immediate trading use.
 }
 }
+
+\subsection{curl}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request POST 'https://api.kucoin.com/api/v3/deposit-address/create' \\
+  --header 'Content-Type: application/json' \\
+  --header 'KC-API-KEY: your-api-key' \\
+  --header 'KC-API-SIGN: your-signature' \\
+  --header 'KC-API-TIMESTAMP: 1729176273859' \\
+  --header 'KC-API-PASSPHRASE: your-passphrase' \\
+  --header 'KC-API-KEY-VERSION: 2' \\
+  --data-raw '\{"currency":"BTC","chain":"btc"\}'
+}\if{html}{\out{</div>}}
 }
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": \{
+    "address": "bc1qxz47arp3kx8f0smu4j5dqylecgn3r7sft2wkgq",
+    "memo": "",
+    "chain": "btc",
+    "chainId": "btc",
+    "to": "main",
+    "currency": "BTC",
+    "contractAddress": ""
+  \}
+\}
+}\if{html}{\out{</div>}}
 }
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-KucoinDeposit-add_deposit_address"></a>}}
-\if{latex}{\out{\hypertarget{method-KucoinDeposit-add_deposit_address}{}}}
-\subsection{Method \code{add_deposit_address()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{KucoinDeposit$add_deposit_address(
   currency,
@@ -215,48 +223,69 @@ Utilised to generate new deposit addresses for funding KuCoin accounts, supporti
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{currency}}{Character string; currency code (e.g., "BTC", "USDT"). Required.}
+\item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"ETH"}, \code{"USDT"}).
+Must be a valid KuCoin-supported currency symbol.}
 
-\item{\code{chain}}{Character string; chain identifier (e.g., "trx", "erc20"). Optional.}
+\item{\code{chain}}{Character or NULL; blockchain network identifier (e.g., \code{"ERC20"},
+\code{"TRC20"}, \code{"btc"}). When NULL, the default chain for the currency is used.}
 
-\item{\code{to}}{Character string; account type ("main" or "trade"). Optional, defaults to "main".}
+\item{\code{to}}{Character or NULL; target account type for the deposit. Accepted values
+include \code{"main"} (funding account) and \code{"trade"} (trading account).}
 
-\item{\code{amount}}{Character string; amount for Lightning Network invoices. Optional.}
+\item{\code{amount}}{Character or NULL; deposit amount. Required for some invoice-based
+deposit addresses (e.g., Lightning Network).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Promise resolving to a \code{data.table} with:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
-\item \code{address} (character): Deposit address.
-\item \code{memo} (character): Address remark (if any).
-\item \code{chainId} (character): Chain identifier.
-\item \code{to} (character): Account type.
-\item \code{expirationDate} (integer): Expiration (Lightning Network).
+\item \code{address} (character): The generated deposit address.
+\item \code{memo} (character): Memo/tag for the address (empty string if not applicable).
+\item \code{chain} (character): Blockchain network name.
+\item \code{chain_id} (character): Chain identifier.
+\item \code{to} (character): Target account type.
 \item \code{currency} (character): Currency code.
-\item \code{chainName} (character): Chain name.
+\item \code{contract_address} (character): Token contract address (empty for native coins).
 }
-\subsection{JSON Response Example}{
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+deposit <- KucoinDeposit$new()
 
-\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{"code": "200000", "data": \{"address": "T...x", "memo": "", "chainId": "trx", "to": "trade", "currency": "USDT", "chainName": "TRON"\}\}
-}\if{html}{\out{</div>}}
+# Create a BTC deposit address on the default chain
+btc_addr <- deposit$add_deposit_address(currency = "BTC")
+print(btc_addr$address)
 
+# Create a USDT deposit address on TRC20 network
+usdt_addr <- deposit$add_deposit_address(
+  currency = "USDT",
+  chain = "TRC20",
+  to = "trade"
+)
+print(usdt_addr[, .(address, chain, to)])
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-KucoinDeposit-get_deposit_addresses"></a>}}
+\if{latex}{\out{\hypertarget{method-KucoinDeposit-get_deposit_addresses}{}}}
+\subsection{Method \code{get_deposit_addresses()}}{
 Get Deposit Addresses
-}
 
-\subsection{Description}{
-
-Retrieves all deposit addresses for a specified currency asynchronously via a GET request to \verb{/api/v3/deposit-addresses}.
-Calls \code{get_deposit_addresses_v3_impl}.
-}
-
-\subsection{Workflow Overview}{
+Retrieves existing deposit addresses for a currency. Returns all
+addresses if no chain is specified, or a single address for the
+given chain. Useful for looking up addresses before creating new ones.
+\subsection{Workflow}{
 \enumerate{
-\item \strong{Validation}: Ensures \code{currency} is valid within the implementation.
-\item \strong{Query}: Builds query with \code{currency}, optional \code{chain}, and \code{amount}.
-\item \strong{Authentication}: Generates headers with API keys.
-\item \strong{API Call}: Sends GET request.
-\item \strong{Response}: Returns a \code{data.table} of all addresses, empty if none exist.
+\item \strong{Request}: Authenticated GET with \code{currency} (required) and optional \code{amount}, \code{chain} query parameters.
+\item \strong{Parsing}: Normalises response into a \code{data.table} whether the API returns a single object or an array.
+\item \strong{Result}: Returns one row per deposit address with chain and memo details.
 }
 }
 
@@ -265,77 +294,128 @@ Calls \code{get_deposit_addresses_v3_impl}.
 \verb{GET https://api.kucoin.com/api/v3/deposit-addresses}
 }
 
-\subsection{Usage}{
-
-Utilised to list all existing deposit addresses for a currency, aiding in deposit management.
-}
-
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/account-info/deposit/get-deposit-address-v3}{KuCoin Get Deposit Address (V3)}
+\href{https://www.kucoin.com/docs-new/rest/account-info/deposit/get-deposit-address-v3/en}{KuCoin Get Deposit Addresses V3}
+
+Verified: 2026-02-01
 }
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Address Inventory}: Fetch all addresses for a currency to manage multiple deposit points, selecting based on \code{to} or \code{chainName}.
-\item \strong{Verification}: Confirm address availability before initiating deposits, retrying \code{add_deposit_address} if none exist.
-\item \strong{Chain Preference}: Filter by \code{chain} to use low-fee networks, integrating with deposit history to track usage.
+\item \strong{Address Verification}: Query addresses before initiating external transfers to confirm the correct chain and memo.
+\item \strong{Multi-Chain Inventory}: Retrieve all addresses for a currency to manage deposits across networks (e.g., ERC20 vs TRC20 for USDT).
+\item \strong{Idempotent Setup}: Check if an address exists before calling \code{add_deposit_address()} to avoid duplicate creation errors.
 }
 }
+
+\subsection{curl}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET \\
+  'https://api.kucoin.com/api/v3/deposit-addresses?currency=BTC' \\
+  --header 'KC-API-KEY: your-api-key' \\
+  --header 'KC-API-SIGN: your-signature' \\
+  --header 'KC-API-TIMESTAMP: 1729176273859' \\
+  --header 'KC-API-PASSPHRASE: your-passphrase' \\
+  --header 'KC-API-KEY-VERSION: 2'
+}\if{html}{\out{</div>}}
 }
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": [
+    \{
+      "address": "bc1qxz47arp3kx8f0smu4j5dqylecgn3r7sft2wkgq",
+      "memo": "",
+      "chain": "btc",
+      "chainId": "btc",
+      "to": "main",
+      "currency": "BTC",
+      "contractAddress": ""
+    \},
+    \{
+      "address": "0x7a1f3d8b2c9e4f5a6b7c8d9e0f1a2b3c4d5e6f7a",
+      "memo": "",
+      "chain": "ERC20",
+      "chainId": "eth",
+      "to": "main",
+      "currency": "BTC",
+      "contractAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+    \}
+  ]
+\}
+}\if{html}{\out{</div>}}
 }
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-KucoinDeposit-get_deposit_addresses"></a>}}
-\if{latex}{\out{\hypertarget{method-KucoinDeposit-get_deposit_addresses}{}}}
-\subsection{Method \code{get_deposit_addresses()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinDeposit$get_deposit_addresses(currency, chain = NULL, amount = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinDeposit$get_deposit_addresses(currency, amount = NULL, chain = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{currency}}{Character string; currency code (e.g., "BTC", "USDT"). Required.}
+\item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"ETH"}, \code{"USDT"}).
+Must be a valid KuCoin-supported currency symbol. Required.}
 
-\item{\code{chain}}{Character string; chain identifier (e.g., "trx"). Optional.}
+\item{\code{amount}}{Character or NULL; deposit amount. Some chains require an amount
+to generate invoice-based addresses (e.g., Lightning Network).}
 
-\item{\code{amount}}{Character string; amount for Lightning Network invoices. Optional.}
+\item{\code{chain}}{Character or NULL; blockchain network identifier (e.g., \code{"ERC20"},
+\code{"TRC20"}, \code{"btc"}). When NULL, returns addresses for all chains.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Promise resolving to a \code{data.table} with:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
-\item \code{address} (character): Deposit address.
-\item \code{memo} (character): Address remark (if any).
-\item \code{chainId} (character): Chain identifier.
-\item \code{to} (character): Account type.
-\item \code{expirationDate} (integer): Expiration (Lightning Network).
+\item \code{address} (character): The deposit address string.
+\item \code{memo} (character): Memo/tag for the address (empty string if not applicable).
+\item \code{chain} (character): Blockchain network name.
+\item \code{chain_id} (character): Chain identifier.
+\item \code{to} (character): Target account type.
 \item \code{currency} (character): Currency code.
-\item \code{contractAddress} (character): Token contract address.
-\item \code{chainName} (character): Chain name.
+\item \code{contract_address} (character): Token contract address (empty for native coins).
 }
-\subsection{JSON Response Example}{
 
-\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{"code": "200000", "data": [\{"address": "T...x", "memo": "", "chainId": "trx", "to": "trade", "currency": "USDT", "chainName": "TRON"\}]\}
-}\if{html}{\out{</div>}}
+Returns an empty \code{data.table} if no addresses exist for the currency.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+deposit <- KucoinDeposit$new()
 
+# Get all BTC deposit addresses across all chains
+btc_addrs <- deposit$get_deposit_addresses(currency = "BTC")
+print(btc_addrs[, .(address, chain, to)])
+
+# Get USDT address for a specific chain
+usdt_erc20 <- deposit$get_deposit_addresses(
+  currency = "USDT",
+  chain = "ERC20"
+)
+print(usdt_erc20$address)
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-KucoinDeposit-get_deposit_history"></a>}}
+\if{latex}{\out{\hypertarget{method-KucoinDeposit-get_deposit_history}{}}}
+\subsection{Method \code{get_deposit_history()}}{
 Get Deposit History
-}
 
-\subsection{Description}{
-
-Retrieves paginated deposit history asynchronously via a GET request to \verb{/api/v1/deposits}.
-Calls \code{get_deposit_history_impl}.
-}
-
-\subsection{Workflow Overview}{
+Retrieves paginated deposit history with optional filtering by currency,
+status, and time range. Automatically converts \code{created_at} timestamps
+to POSIXct datetime objects for convenient analysis.
+\subsection{Workflow}{
 \enumerate{
-\item \strong{Validation}: Ensures parameters meet API constraints (e.g., \code{page_size} 10-500).
-\item \strong{Query}: Constructs query with filters and pagination settings.
-\item \strong{Authentication}: Generates headers with API keys.
-\item \strong{API Call}: Fetches pages up to \code{max_pages}.
-\item \strong{Response}: Aggregates history into a \code{data.table} with datetime conversion.
+\item \strong{Pagination}: Uses \code{private$.paginate()} to fetch all pages of deposit records up to \code{max_pages}.
+\item \strong{Flattening}: Combines all pages into a single \code{data.table} via \code{flatten_pages()}.
+\item \strong{Timestamp Conversion}: Converts \code{created_at} (milliseconds) to \code{datetime_created} (POSIXct).
 }
 }
 
@@ -344,32 +424,79 @@ Calls \code{get_deposit_history_impl}.
 \verb{GET https://api.kucoin.com/api/v1/deposits}
 }
 
-\subsection{Usage}{
-
-Utilised to track deposit transactions, with filtering by currency, status, and time range.
-}
-
 \subsection{Official Documentation}{
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/deposit/get-deposit-history}{KuCoin Get Deposit History}
+
+Verified: 2026-02-01
 }
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Fund Tracking}: Monitor \code{status = "SUCCESS"} deposits to confirm fund availability, triggering trading actions.
-\item \strong{Reconciliation}: Use \code{createdAtDatetime} and \code{amount} to reconcile with external wallet records, polling daily with time filters.
-\item \strong{Error Handling}: Filter \code{status = "FAILURE"} to investigate issues, alerting users or retrying deposits automatically.
+\item \strong{Deposit Monitoring}: Poll for \code{"SUCCESS"} status deposits to trigger trading logic when funds arrive.
+\item \strong{Reconciliation}: Match \code{wallet_tx_id} against on-chain transaction hashes for audit and verification.
+\item \strong{Time-Windowed Queries}: Use \code{startAt}/\code{endAt} timestamps to retrieve deposits within a specific period for daily reporting.
 }
 }
+
+\subsection{curl}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET \\
+  'https://api.kucoin.com/api/v1/deposits?currency=BTC&status=SUCCESS&currentPage=1&pageSize=50' \\
+  --header 'KC-API-KEY: your-api-key' \\
+  --header 'KC-API-SIGN: your-signature' \\
+  --header 'KC-API-TIMESTAMP: 1729176273859' \\
+  --header 'KC-API-PASSPHRASE: your-passphrase' \\
+  --header 'KC-API-KEY-VERSION: 2'
+}\if{html}{\out{</div>}}
 }
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": \{
+    "currentPage": 1,
+    "pageSize": 50,
+    "totalNum": 2,
+    "totalPage": 1,
+    "items": [
+      \{
+        "currency": "BTC",
+        "chain": "btc",
+        "status": "SUCCESS",
+        "address": "bc1qxz47arp3kx8f0smu4j5dqylecgn3r7sft2wkgq",
+        "memo": "",
+        "isInner": false,
+        "amount": "0.05000000",
+        "fee": "0.00000000",
+        "walletTxId": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2",
+        "createdAt": 1729577515473,
+        "updatedAt": 1729577815473,
+        "remark": ""
+      \},
+      \{
+        "currency": "BTC",
+        "chain": "btc",
+        "status": "SUCCESS",
+        "address": "bc1qxz47arp3kx8f0smu4j5dqylecgn3r7sft2wkgq",
+        "memo": "",
+        "isInner": true,
+        "amount": "0.10000000",
+        "fee": "0.00000000",
+        "walletTxId": "f0e1d2c3b4a5968778695a4b3c2d1e0f9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d",
+        "createdAt": 1729491115473,
+        "updatedAt": 1729491415473,
+        "remark": ""
+      \}
+    ]
+  \}
+\}
+}\if{html}{\out{</div>}}
 }
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-KucoinDeposit-get_deposit_history"></a>}}
-\if{latex}{\out{\hypertarget{method-KucoinDeposit-get_deposit_history}{}}}
-\subsection{Method \code{get_deposit_history()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{KucoinDeposit$get_deposit_history(
-  currency,
+  currency = NULL,
   status = NULL,
   startAt = NULL,
   endAt = NULL,
@@ -381,37 +508,71 @@ Utilised to track deposit transactions, with filtering by currency, status, and 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{currency}}{Character string; currency code (e.g., "BTC", "USDT"). Required.}
+\item{\code{currency}}{Character or NULL; filter by currency code (e.g., \code{"BTC"}, \code{"USDT"}).
+When NULL, returns deposits for all currencies.}
 
-\item{\code{status}}{Character string; status filter ("PROCESSING", "SUCCESS", "FAILURE"). Optional.}
+\item{\code{status}}{Character or NULL; filter by deposit status. Accepted values:
+\code{"PROCESSING"}, \code{"WALLET_PROCESSING"}, \code{"SUCCESS"}, \code{"FAILURE"}.
+When NULL, returns deposits of all statuses.}
 
-\item{\code{startAt}}{Integer; start time (ms). Optional.}
+\item{\code{startAt}}{Integer or NULL; start timestamp in milliseconds (inclusive).
+Used to filter deposits created on or after this time.}
 
-\item{\code{endAt}}{Integer; end time (ms). Optional.}
+\item{\code{endAt}}{Integer or NULL; end timestamp in milliseconds (inclusive).
+Used to filter deposits created on or before this time.}
 
-\item{\code{page_size}}{Integer; results per page (10-500, default 50).}
+\item{\code{page_size}}{Integer; number of results per page (default 50, max 100).}
 
-\item{\code{max_pages}}{Numeric; max pages to fetch (default \code{Inf}).}
+\item{\code{max_pages}}{Numeric; maximum number of pages to fetch (default \code{Inf} for all pages).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Promise resolving to a \code{data.table} with:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
-\item \code{currency} (character): Currency code.
-\item \code{chain} (character): Chain identifier.
-\item \code{status} (character): Deposit status.
+\item \code{currency} (character): Deposited currency code.
+\item \code{chain} (character): Blockchain network used for the deposit.
+\item \code{status} (character): Deposit status (\code{"PROCESSING"}, \code{"SUCCESS"}, \code{"FAILURE"}).
 \item \code{address} (character): Deposit address.
+\item \code{memo} (character): Memo/tag (empty string if not applicable).
+\item \code{is_inner} (logical): Whether this was an internal KuCoin transfer.
 \item \code{amount} (character): Deposit amount.
-\item \code{createdAtDatetime} (POSIXct): Creation time.
-\item Full schema in implementation docs.
+\item \code{fee} (character): Deposit fee charged.
+\item \code{wallet_tx_id} (character): On-chain transaction hash.
+\item \code{updated_at} (numeric): Last update timestamp in milliseconds.
+\item \code{remark} (character): Optional remark.
+\item \code{datetime_created} (POSIXct): Creation datetime.
 }
-\subsection{JSON Response Example}{
 
-\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{"code": "200000", "data": \{"items": [\{"currency": "USDT", "status": "SUCCESS", "amount": "100", "createdAt": 1733049198863\}]\}\}
-}\if{html}{\out{</div>}}
+Returns an empty \code{data.table} if no deposits match the filters.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+deposit <- KucoinDeposit$new()
+
+# Get all successful BTC deposits
+btc_deposits <- deposit$get_deposit_history(
+  currency = "BTC",
+  status = "SUCCESS"
+)
+print(btc_deposits[, .(amount, status, datetime_created)])
+
+# Get deposits from the last 24 hours
+now_ms <- as.numeric(lubridate::now()) * 1000
+recent <- deposit$get_deposit_history(
+  startAt = as.integer(now_ms - 86400000),
+  endAt = as.integer(now_ms),
+  page_size = 100,
+  max_pages = 5
+)
+print(recent[, .(currency, amount, wallet_tx_id, datetime_created)])
 }
 }
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinDeposit-clone"></a>}}

@@ -30,3 +30,12 @@ merged_files.txt
 tests-manual/
 tests-temp/
 log.txt
+^\.claude$
+^\.graphics$
+^_pkgdown\.yml$
+^air\.toml$
+^cran-comments\.md$
+^ROADMAP\.md$
+^doc$
+^Meta$
+^local$

@@ -2,180 +2,200 @@
 % Please edit documentation in R/KucoinSubAccount.R
 \name{KucoinSubAccount}
 \alias{KucoinSubAccount}
-\title{KucoinSubAccount Class for KuCoin Sub-Account Management}
+\title{KucoinSubAccount: Sub-Account Management}
 \description{
-The \code{KucoinSubAccount} class provides an asynchronous interface for managing sub-accounts under a KuCoin master account.
-It leverages the \code{coro} package for non-blocking HTTP requests, returning promises that resolve to \code{data.table} objects.
-This class supports creating sub-accounts, retrieving summaries and detailed balance information for all sub-accounts,
-and fetching comprehensive Spot sub-account balance details across account types.
+KucoinSubAccount: Sub-Account Management
+
+KucoinSubAccount: Sub-Account Management
 }
 \details{
+Provides methods for managing sub-accounts under a KuCoin master account.
+Inherits from \link{KucoinBase}.
 \subsection{Purpose and Scope}{
-
-This class is designed to facilitate sub-account administration within the KuCoin ecosystem, including:
 \itemize{
-\item \strong{Sub-Account Creation}: Adding new sub-accounts with specific permissions.
-\item \strong{Summary Overview}: Listing all sub-accounts with basic details.
-\item \strong{Balance Details}: Retrieving financial metrics for individual or all sub-accounts.
+\item \strong{Sub-Account Creation}: Create new sub-accounts with configurable permissions (Spot, Futures, Margin).
+\item \strong{Sub-Account Listing}: Retrieve paginated summaries of all sub-accounts under the master account.
+\item \strong{Balance Queries}: Fetch detailed balance breakdowns per sub-account across main, trade, and margin wallets.
+\item \strong{Batch Balance Overview}: Paginated retrieval of Spot balances for all sub-accounts simultaneously (V2 endpoint).
 }
 }
 
 \subsection{Usage}{
 
-Utilised by traders and developers to programmatically manage KuCoin sub-accounts. The class is initialized with API
-credentials, sourced from \code{get_api_keys()} if not provided, and a base URL from \code{get_base_url()}. All methods require
-authentication as they operate under the master account’s privileges. For detailed endpoint information, parameters,
-and response schemas, refer to the official \href{https://www.kucoin.com/docs-new}{KuCoin API Documentation}.
+All methods require authentication (valid API key, secret, passphrase) from a \strong{master account}.
+Sub-account API keys cannot call these endpoints; only the master account that owns the
+sub-accounts has permission. The class supports both synchronous and asynchronous (promise-based)
+operation depending on the \code{async} flag passed to the constructor.
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{# Synchronous usage
+sub <- KucoinSubAccount$new()
+summary <- sub$get_sub_account_list()
+
+# Asynchronous usage
+sub_async <- KucoinSubAccount$new(async = TRUE)
+coro::async(function() \{
+  summary <- await(sub_async$get_sub_account_list())
+  print(summary)
+\})()
+}\if{html}{\out{</div>}}
 }
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/account-info/sub-account/introduction}{KuCoin API Documentation - Sub-Account}
-}
-}
-\section{Methods}{
-
-\itemize{
-\item \strong{initialize(keys, base_url):} Initialises the object with API credentials and base URL.
-\item \strong{add_subaccount(password, subName, access, remarks):} Creates a new sub-account.
-\item \strong{get_subaccount_list_summary(page_size, max_pages):} Retrieves a paginated summary of all sub-accounts.
-\item \strong{get_subaccount_detail_balance(subUserId, includeBaseAmount):} Fetches detailed balance for a specific sub-account.
-\item \strong{get_subaccount_spot_v2(page_size, max_pages):} Retrieves Spot sub-account balance details for all sub-accounts.
-}
+\href{https://www.kucoin.com/docs-new/rest/account-info/sub-account/add-subaccount}{KuCoin Sub-Account Management}
 }
 
+\subsection{Endpoints Covered}{\tabular{lll}{
+   Method \tab Endpoint \tab HTTP \cr
+   add_sub_account \tab POST /api/v2/sub/user/created \tab POST \cr
+   get_sub_account_list \tab GET /api/v2/sub/user \tab GET \cr
+   get_detail_balance \tab GET /api/v1/sub-accounts/\{subUserId\} \tab GET \cr
+   get_all_spot_balances \tab GET /api/v2/sub-accounts \tab GET \cr
+}
+
+}
+}
 \examples{
 \dontrun{
-# Comprehensive example demonstrating key methods
-main_async <- coro::async(function() {
-  # Initialise the class
-  sub_acc <- KucoinSubAccount$new()
+# Synchronous
+sub <- KucoinSubAccount$new()
+summary <- sub$get_sub_account_list()
+print(summary)
 
-  # Add a new sub-account
-  new_sub <- await(sub_acc$add_subaccount(
-    password = "SecurePass123",
-    subName = "TradingSub1",
-    access = "Spot",
-    remarks = "Spot trading sub-account"
-  ))
-  print("New Sub-Account:"); print(new_sub)
-
-  # Get sub-account summary
-  summary <- await(sub_acc$get_subaccount_list_summary(page_size = 10, max_pages = 1))
-  print("Sub-Account Summary:"); print(summary)
-
-  # Get balance for the new sub-account (if created)
-  if (nrow(summary) > 0) {
-    sub_id <- summary[1, uid]
-    balance <- await(sub_acc$get_subaccount_detail_balance(sub_id, includeBaseAmount = TRUE))
-    print("Sub-Account Balance:"); print(balance)
-  }
-
-  # Get Spot sub-account balances
-  spot_balances <- await(sub_acc$get_subaccount_spot_v2(page_size = 20, max_pages = 2))
-  print("Spot Sub-Account Balances:"); print(spot_balances)
+# Asynchronous
+sub_async <- KucoinSubAccount$new(async = TRUE)
+main <- coro::async(function() {
+  summary <- await(sub_async$get_sub_account_list())
+  print(summary)
 })
-main_async()
+main()
 while (!later::loop_empty()) later::run_now()
 }
 
-}
-\section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{keys}}{List containing KuCoin API keys (\code{api_key}, \code{api_secret}, \code{api_passphrase}, \code{key_version}).}
 
-\item{\code{base_url}}{Character string representing the base URL for KuCoin API endpoints.
-Initialise a New KucoinSubAccount Object
-\subsection{Description}{
+## ------------------------------------------------
+## Method `KucoinSubAccount$add_sub_account`
+## ------------------------------------------------
 
-Initialises a \code{KucoinSubAccount} object with API credentials and a base URL for managing sub-accounts
-asynchronously. All operations require authentication under the master account’s privileges.
-}
+\dontrun{
+sub <- KucoinSubAccount$new()
 
-\subsection{Workflow Overview}{
-\enumerate{
-\item \strong{Credential Assignment}: Sets \code{self$keys} to the provided or default API keys from \code{get_api_keys()}.
-\item \strong{URL Assignment}: Sets \code{self$base_url} to the provided or default base URL from \code{get_base_url()}.
-}
-}
+# Create a Spot sub-account
+result <- sub$add_sub_account(
+  password = "MyPass123",
+  subName = "botaccount1",
+  access = "Spot",
+  remarks = "alpha-strategy"
+)
+print(result$uid)
+print(result$sub_name)
 
-\subsection{API Endpoint}{
-
-Not applicable (initialisation method).
-}
-
-\subsection{Usage}{
-
-Creates an instance for sub-account management, enabling creation, summary retrieval, and balance queries.
+# Create a Futures sub-account without remarks
+result <- sub$add_sub_account(
+  password = "SecurePass99",
+  subName = "futuresbot1",
+  access = "Futures"
+)
 }
 
-\subsection{Official Documentation}{
+## ------------------------------------------------
+## Method `KucoinSubAccount$get_sub_account_list`
+## ------------------------------------------------
 
-\href{https://www.kucoin.com/docs-new/rest/introduction#authentication}{KuCoin API Authentication}
+\dontrun{
+sub <- KucoinSubAccount$new()
+
+# Fetch all sub-accounts
+all_subs <- sub$get_sub_account_list()
+print(all_subs)
+
+# Fetch only first page with 10 results
+first_page <- sub$get_sub_account_list(page_size = 10, max_pages = 1)
+print(first_page[, .(sub_name, access, datetime_created)])
+
+# Filter for Spot sub-accounts
+spot_subs <- all_subs[access == "Spot"]
 }
 
-\subsection{Automated Trading Usage}{
-\itemize{
-\item \strong{Sub-Account Hub}: Use as the central object for sub-account operations in your bot, managing trading silos.
-\item \strong{Secure Setup}: Provide explicit \code{keys} or use \code{get_api_keys()} from a secure vault for production-grade security.
-\item \strong{Scalability}: Instantiate once and reuse across sessions, integrating with account and funding classes for comprehensive oversight.
+## ------------------------------------------------
+## Method `KucoinSubAccount$get_detail_balance`
+## ------------------------------------------------
+
+\dontrun{
+sub <- KucoinSubAccount$new()
+
+# Get balances for a specific sub-account
+balances <- sub$get_detail_balance(subUserId = "169630809")
+print(balances)
+
+# Include zero-balance currencies
+all_balances <- sub$get_detail_balance(
+  subUserId = "169630809",
+  includeBaseAmount = TRUE
+)
+
+# Filter for trade account balances only
+trade_bal <- balances[account_type == "trade"]
+print(trade_bal[, .(currency, available, holds)])
 }
-}}
+
+## ------------------------------------------------
+## Method `KucoinSubAccount$get_all_spot_balances`
+## ------------------------------------------------
+
+\dontrun{
+sub <- KucoinSubAccount$new()
+
+# Fetch all sub-account Spot balances
+all_balances <- sub$get_all_spot_balances()
+print(all_balances)
+
+# Fetch first page only with 10 results per page
+first_page <- sub$get_all_spot_balances(page_size = 10, max_pages = 1)
+
+# Summarise total available USDT across all sub-accounts
+usdt <- all_balances[currency == "USDT"]
+total_avail <- sum(as.numeric(usdt$available))
+cat("Total available USDT:", total_avail, "\\\\n")
+
+# Group by sub-account
+all_balances[, .(n_currencies = .N), by = .(sub_name, account_type)]
 }
-\if{html}{\out{</div>}}
+}
+\section{Super class}{
+\code{\link[kucoin:KucoinBase]{kucoin::KucoinBase}} -> \code{KucoinSubAccount}
 }
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-KucoinSubAccount-new}{\code{KucoinSubAccount$new()}}
-\item \href{#method-KucoinSubAccount-add_subaccount}{\code{KucoinSubAccount$add_subaccount()}}
-\item \href{#method-KucoinSubAccount-get_subaccount_list_summary}{\code{KucoinSubAccount$get_subaccount_list_summary()}}
-\item \href{#method-KucoinSubAccount-get_subaccount_detail_balance}{\code{KucoinSubAccount$get_subaccount_detail_balance()}}
-\item \href{#method-KucoinSubAccount-get_subaccount_spot_v2}{\code{KucoinSubAccount$get_subaccount_spot_v2()}}
+\item \href{#method-KucoinSubAccount-add_sub_account}{\code{KucoinSubAccount$add_sub_account()}}
+\item \href{#method-KucoinSubAccount-get_sub_account_list}{\code{KucoinSubAccount$get_sub_account_list()}}
+\item \href{#method-KucoinSubAccount-get_detail_balance}{\code{KucoinSubAccount$get_detail_balance()}}
+\item \href{#method-KucoinSubAccount-get_all_spot_balances}{\code{KucoinSubAccount$get_all_spot_balances()}}
 \item \href{#method-KucoinSubAccount-clone}{\code{KucoinSubAccount$clone()}}
 }
 }
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-KucoinSubAccount-new"></a>}}
-\if{latex}{\out{\hypertarget{method-KucoinSubAccount-new}{}}}
-\subsection{Method \code{new()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinSubAccount$new(keys = get_api_keys(), base_url = get_base_url())}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{keys}}{List containing API configuration parameters from \code{get_api_keys()}, including:
-\itemize{
-\item \code{api_key}: Character string; your KuCoin API key.
-\item \code{api_secret}: Character string; your KuCoin API secret.
-\item \code{api_passphrase}: Character string; your KuCoin API passphrase.
-\item \code{key_version}: Character string; API key version (e.g., \code{"2"}).
-Defaults to \code{get_api_keys()}.
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>kucoin::KucoinBase$initialize()</code></a></span></li>
+</ul>
+</details>
 }}
-
-\item{\code{base_url}}{Character string representing the base URL for the API. Defaults to \code{get_base_url()}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A new instance of the \code{KucoinSubAccount} class.
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-KucoinSubAccount-add_sub_account"></a>}}
+\if{latex}{\out{\hypertarget{method-KucoinSubAccount-add_sub_account}{}}}
+\subsection{Method \code{add_sub_account()}}{
 Add Sub-Account
-\subsection{Description}{
 
-Creates a new sub-account under the master account asynchronously via a POST request to \verb{/api/v2/sub/user/created}.
-Calls \code{add_subaccount_impl}.
-}
-
-\subsection{Workflow Overview}{
+Creates a new sub-account under the master account. The sub-account is
+assigned a unique UID and can be granted Spot, Futures, or Margin trading
+permissions. Only master accounts can call this endpoint.
+\subsection{Workflow}{
 \enumerate{
-\item \strong{Validation}: Ensures parameters meet API constraints within the implementation.
-\item \strong{Request Body}: Constructs JSON with \code{password}, \code{subName}, \code{access}, and optional \code{remarks}.
-\item \strong{Authentication}: Generates headers with API keys.
-\item \strong{API Call}: Sends POST request.
-\item \strong{Response}: Returns sub-account details as a \code{data.table}.
+\item \strong{Validation}: \code{access} is matched against \code{"Spot"}, \code{"Futures"}, \code{"Margin"}.
+\item \strong{Request}: Authenticated POST with sub-account creation parameters in JSON body.
+\item \strong{Parsing}: Returns a single-row \code{data.table} with the newly created sub-account details.
 }
 }
 
@@ -184,73 +204,115 @@ Calls \code{add_subaccount_impl}.
 \verb{POST https://api.kucoin.com/api/v2/sub/user/created}
 }
 
-\subsection{Usage}{
-
-Utilised to create sub-accounts with specific permissions for segregated trading or management purposes.
-}
-
 \subsection{Official Documentation}{
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/sub-account/add-subaccount}{KuCoin Add Sub-Account}
+
+Verified: 2026-02-01
 }
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Account Segregation}: Create sub-accounts with \code{access = "Spot"} for isolated trading strategies, assigning unique \code{subName}s for tracking.
-\item \strong{Security}: Use strong, unique \code{password}s generated programmatically, storing securely with \code{remarks} for audit trails.
-\item \strong{Post-Creation}: Follow with \code{get_subaccount_list_summary} to verify creation and retrieve \code{uid} for further operations.
+\item \strong{Isolation}: Create dedicated sub-accounts per strategy to isolate funds and risk.
+\item \strong{Permission Control}: Grant only the needed permission (e.g., \code{"Spot"}) to limit exposure.
+\item \strong{Remarks}: Use \code{remarks} to tag sub-accounts by strategy name for easy identification.
 }
 }
+
+\subsection{curl}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request POST 'https://api.kucoin.com/api/v2/sub/user/created' \\
+  --header 'Content-Type: application/json' \\
+  --header 'KC-API-KEY: your-api-key' \\
+  --header 'KC-API-SIGN: your-signature' \\
+  --header 'KC-API-TIMESTAMP: 1729176273859' \\
+  --header 'KC-API-PASSPHRASE: your-passphrase' \\
+  --header 'KC-API-KEY-VERSION: 2' \\
+  --data-raw '\{"password":"MyPass123","subName":"mysubacct1","access":"Spot","remarks":"bot-alpha"\}'
+}\if{html}{\out{</div>}}
 }
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": \{
+    "uid": 169630809,
+    "subName": "mysubacct1",
+    "remarks": "bot-alpha",
+    "access": "Spot"
+  \}
+\}
+}\if{html}{\out{</div>}}
 }
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-KucoinSubAccount-add_subaccount"></a>}}
-\if{latex}{\out{\hypertarget{method-KucoinSubAccount-add_subaccount}{}}}
-\subsection{Method \code{add_subaccount()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinSubAccount$add_subaccount(password, subName, access, remarks = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinSubAccount$add_sub_account(password, subName, access, remarks = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{password}}{Character string; sub-account password (7-24 characters, must include letters and numbers). Required.}
+\item{\code{password}}{Character; sub-account password (7-24 chars, must contain both letters and numbers, no special characters).}
 
-\item{\code{subName}}{Character string; sub-account name (7-32 characters, must include a letter and number, no spaces). Required.}
+\item{\code{subName}}{Character; sub-account name (7-32 chars, must start with a letter, letters and numbers only, no spaces).}
 
-\item{\code{access}}{Character string; permission type ("Spot", "Futures", "Margin"). Required.}
+\item{\code{access}}{Character; permission type: \code{"Spot"}, \code{"Futures"}, or \code{"Margin"}. Validated via \code{rlang::arg_match0()}.}
 
-\item{\code{remarks}}{Character string; optional remarks (1-24 characters if provided).}
+\item{\code{remarks}}{Character or NULL; optional descriptive remarks for the sub-account (1-24 chars). Default \code{NULL}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Promise resolving to a \code{data.table} with:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
-\item \code{uid} (integer): Sub-account ID.
-\item \code{subName} (character): Sub-account name.
-\item \code{remarks} (character): Remarks (if provided).
-\item \code{access} (character): Permission type.
+\item \code{uid} (integer): Unique user ID assigned to the new sub-account.
+\item \code{sub_name} (character): The sub-account login name.
+\item \code{remarks} (character): The remarks string (if provided).
+\item \code{access} (character): Permission granted (\code{"Spot"}, \code{"Futures"}, or \code{"Margin"}).
 }
-\subsection{JSON Response Example}{
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+sub <- KucoinSubAccount$new()
 
-\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{"code": "200000", "data": \{"uid": 169579801, "subName": "TestSub123", "remarks": "Test", "access": "Spot"\}\}
-}\if{html}{\out{</div>}}
+# Create a Spot sub-account
+result <- sub$add_sub_account(
+  password = "MyPass123",
+  subName = "botaccount1",
+  access = "Spot",
+  remarks = "alpha-strategy"
+)
+print(result$uid)
+print(result$sub_name)
 
+# Create a Futures sub-account without remarks
+result <- sub$add_sub_account(
+  password = "SecurePass99",
+  subName = "futuresbot1",
+  access = "Futures"
+)
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-KucoinSubAccount-get_sub_account_list"></a>}}
+\if{latex}{\out{\hypertarget{method-KucoinSubAccount-get_sub_account_list}{}}}
+\subsection{Method \code{get_sub_account_list()}}{
 Get Sub-Account List Summary
-}
 
-\subsection{Description}{
-
-Retrieves a paginated summary of all sub-accounts asynchronously via a GET request to \verb{/api/v2/sub/user}.
-Calls \code{get_subaccount_list_summary_impl}.
-}
-
-\subsection{Workflow Overview}{
+Retrieves a paginated summary of all sub-accounts under the master account.
+Automatically handles pagination, fetching up to \code{max_pages} pages of results.
+A \code{datetime_created} column is appended by converting the millisecond timestamp.
+\subsection{Workflow}{
 \enumerate{
-\item \strong{Pagination}: Fetches pages with \code{page_size} up to \code{max_pages}.
-\item \strong{Request}: Constructs authenticated GET request.
-\item \strong{Response}: Aggregates results into a \code{data.table} with datetime conversion.
+\item \strong{Pagination}: Calls the paginated endpoint, fetching \code{page_size} records per page up to \code{max_pages}.
+\item \strong{Flattening}: Combines all pages into a single \code{data.table} via \code{flatten_pages()}.
+\item \strong{Timestamp Conversion}: Converts \code{created_at} (ms epoch) to POSIXct in \code{datetime_created}.
 }
 }
 
@@ -259,145 +321,290 @@ Calls \code{get_subaccount_list_summary_impl}.
 \verb{GET https://api.kucoin.com/api/v2/sub/user}
 }
 
-\subsection{Usage}{
-
-Utilised to obtain an overview of all sub-accounts, including creation details and permissions.
-}
-
 \subsection{Official Documentation}{
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-list-summary-info}{KuCoin Get Sub-Account List Summary Info}
+
+Verified: 2026-02-01
 }
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Inventory Management}: Fetch periodically to maintain an updated sub-account list, using \code{uid} for balance queries.
-\item \strong{Permission Audit}: Check \code{access} to ensure sub-accounts align with intended trading scopes, alerting on mismatches.
-\item \strong{Creation Tracking}: Use \code{createdDatetime} to monitor sub-account age, flagging old accounts for review or cleanup.
+\item \strong{Inventory Check}: Periodically poll sub-account lists to verify all strategy sub-accounts are active.
+\item \strong{Audit Trail}: Use \code{datetime_created} to track when sub-accounts were provisioned.
+\item \strong{Filtering}: Post-filter the returned \code{data.table} by \code{access} type to find all Spot-enabled sub-accounts.
 }
 }
+
+\subsection{curl}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET 'https://api.kucoin.com/api/v2/sub/user?currentPage=1&pageSize=100' \\
+  --header 'KC-API-KEY: your-api-key' \\
+  --header 'KC-API-SIGN: your-signature' \\
+  --header 'KC-API-TIMESTAMP: 1729176273859' \\
+  --header 'KC-API-PASSPHRASE: your-passphrase' \\
+  --header 'KC-API-KEY-VERSION: 2'
+}\if{html}{\out{</div>}}
 }
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": \{
+    "currentPage": 1,
+    "pageSize": 100,
+    "totalNum": 2,
+    "totalPage": 1,
+    "items": [
+      \{
+        "userId": "641e7f09df0db80001f1e5ac",
+        "uid": 169630809,
+        "subName": "mysubacct1",
+        "status": 2,
+        "type": 0,
+        "access": "Spot",
+        "remarks": "bot-alpha",
+        "createdAt": 1679726345000
+      \},
+      \{
+        "userId": "641e8027df0db80001f1e6bb",
+        "uid": 169630810,
+        "subName": "futuresbot1",
+        "status": 2,
+        "type": 0,
+        "access": "Futures",
+        "remarks": null,
+        "createdAt": 1679726400000
+      \}
+    ]
+  \}
+\}
+}\if{html}{\out{</div>}}
 }
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-KucoinSubAccount-get_subaccount_list_summary"></a>}}
-\if{latex}{\out{\hypertarget{method-KucoinSubAccount-get_subaccount_list_summary}{}}}
-\subsection{Method \code{get_subaccount_list_summary()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinSubAccount$get_subaccount_list_summary(page_size = 100, max_pages = Inf)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinSubAccount$get_sub_account_list(page_size = 100, max_pages = Inf)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{page_size}}{Integer; results per page (1-100, default 100).}
+\item{\code{page_size}}{Integer; number of results per page, between 1 and 100. Default \code{100}.}
 
-\item{\code{max_pages}}{Numeric; max pages to fetch (default \code{Inf}).}
+\item{\code{max_pages}}{Numeric; maximum number of pages to retrieve. Use \code{Inf} (default) to fetch all available pages.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Promise resolving to a \code{data.table} with:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
-\item \code{uid} (integer): Sub-account ID.
-\item \code{subName} (character): Sub-account name.
-\item \code{access} (character): Permission type.
-\item \code{createdDatetime} (POSIXct): Creation time.
-\item Full schema in implementation docs.
+\item \code{user_id} (character): Internal user ID string.
+\item \code{uid} (integer): Numeric user ID for the sub-account.
+\item \code{sub_name} (character): Sub-account login name.
+\item \code{status} (integer): Account status code (2 = active).
+\item \code{type} (integer): Account type code.
+\item \code{access} (character): Permission type (\code{"Spot"}, \code{"Futures"}, \code{"Margin"}).
+\item \code{remarks} (character): Optional remarks string.
+\item \code{datetime_created} (POSIXct): Creation datetime.
 }
-\subsection{JSON Response Example}{
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+sub <- KucoinSubAccount$new()
 
-\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{"code": "200000", "data": \{"items": [\{"uid": 169579801, "subName": "TestSub123", "access": "Spot", "createdAt": 1668562696000\}]\}\}
-}\if{html}{\out{</div>}}
+# Fetch all sub-accounts
+all_subs <- sub$get_sub_account_list()
+print(all_subs)
 
+# Fetch only first page with 10 results
+first_page <- sub$get_sub_account_list(page_size = 10, max_pages = 1)
+print(first_page[, .(sub_name, access, datetime_created)])
+
+# Filter for Spot sub-accounts
+spot_subs <- all_subs[access == "Spot"]
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-KucoinSubAccount-get_detail_balance"></a>}}
+\if{latex}{\out{\hypertarget{method-KucoinSubAccount-get_detail_balance}{}}}
+\subsection{Method \code{get_detail_balance()}}{
 Get Sub-Account Detail Balance
-}
 
-\subsection{Description}{
-
-Retrieves detailed balance information for a specific sub-account asynchronously via a GET request to \verb{/api/v1/sub-accounts/\{subUserId\}}.
-Calls \code{get_subaccount_detail_balance_impl}.
-}
-
-\subsection{Workflow Overview}{
+Retrieves detailed balance information for a specific sub-account, broken
+down by account type (main, trade, margin). Each currency held in the
+sub-account is returned as a separate row with balance, available, and
+holds amounts.
+\subsection{Workflow}{
 \enumerate{
-\item \strong{Request}: Constructs authenticated GET request with \code{subUserId} and \code{includeBaseAmount}.
-\item \strong{Response}: Aggregates balances across account types into a \code{data.table}.
+\item \strong{Request}: Authenticated GET to the sub-account detail endpoint with the \code{subUserId} in the URL path.
+\item \strong{Iteration}: Loops over \code{mainAccounts}, \code{tradeAccounts}, and \code{marginAccounts} arrays in the response.
+\item \strong{Assembly}: Binds all account entries into a single \code{data.table} with \code{account_type}, \code{sub_user_id}, and \code{sub_name} columns appended.
 }
 }
 
 \subsection{API Endpoint}{
 
-\verb{GET https://api.kucoin.com/api/v1/sub-accounts/\{subUserId\}?includeBaseAmount=\{includeBaseAmount\}}
-}
-
-\subsection{Usage}{
-
-Utilised to monitor financial details for a specific sub-account across various account types.
+\verb{GET https://api.kucoin.com/api/v1/sub-accounts/\{subUserId\}}
 }
 
 \subsection{Official Documentation}{
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-detail-balance}{KuCoin Get Sub-Account Detail Balance}
+
+Verified: 2026-02-01
 }
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Fund Monitoring}: Check \code{available} per \code{accountType} to manage sub-account liquidity, triggering transfers if low.
-\item \strong{Zero Balance Inclusion}: Set \code{includeBaseAmount = TRUE} to audit unused currencies, initializing them as needed.
-\item \strong{Sub-Account Focus}: Use \code{subUserId} from \code{get_subaccount_list_summary} to drill down into critical accounts, logging balances.
+\item \strong{Pre-Trade Check}: Query a sub-account's available balance before placing orders to avoid insufficient-funds errors.
+\item \strong{Risk Monitoring}: Periodically check \code{holds} across sub-accounts to track capital locked in open orders.
+\item \strong{Rebalancing}: Compare \code{available} balances across sub-accounts to decide on internal transfers.
 }
 }
+
+\subsection{curl}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET 'https://api.kucoin.com/api/v1/sub-accounts/169630809?includeBaseAmount=false' \\
+  --header 'KC-API-KEY: your-api-key' \\
+  --header 'KC-API-SIGN: your-signature' \\
+  --header 'KC-API-TIMESTAMP: 1729176273859' \\
+  --header 'KC-API-PASSPHRASE: your-passphrase' \\
+  --header 'KC-API-KEY-VERSION: 2'
+}\if{html}{\out{</div>}}
 }
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": \{
+    "subUserId": "169630809",
+    "subName": "mysubacct1",
+    "mainAccounts": [
+      \{
+        "currency": "USDT",
+        "balance": "1500.00000000",
+        "available": "1200.00000000",
+        "holds": "300.00000000",
+        "baseCurrency": "USDT",
+        "baseCurrencyPrice": "1",
+        "baseAmount": "1500.00000000",
+        "tag": ""
+      \},
+      \{
+        "currency": "BTC",
+        "balance": "0.05000000",
+        "available": "0.05000000",
+        "holds": "0.00000000",
+        "baseCurrency": "USDT",
+        "baseCurrencyPrice": "96500",
+        "baseAmount": "4825.00000000",
+        "tag": ""
+      \}
+    ],
+    "tradeAccounts": [
+      \{
+        "currency": "USDT",
+        "balance": "500.00000000",
+        "available": "450.00000000",
+        "holds": "50.00000000",
+        "baseCurrency": "USDT",
+        "baseCurrencyPrice": "1",
+        "baseAmount": "500.00000000",
+        "tag": ""
+      \}
+    ],
+    "marginAccounts": [
+      \{
+        "currency": "ETH",
+        "balance": "2.50000000",
+        "available": "2.50000000",
+        "holds": "0.00000000",
+        "baseCurrency": "USDT",
+        "baseCurrencyPrice": "3200",
+        "baseAmount": "8000.00000000",
+        "tag": ""
+      \}
+    ]
+  \}
+\}
+}\if{html}{\out{</div>}}
 }
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-KucoinSubAccount-get_subaccount_detail_balance"></a>}}
-\if{latex}{\out{\hypertarget{method-KucoinSubAccount-get_subaccount_detail_balance}{}}}
-\subsection{Method \code{get_subaccount_detail_balance()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinSubAccount$get_subaccount_detail_balance(
-  subUserId,
-  includeBaseAmount = FALSE
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinSubAccount$get_detail_balance(subUserId, includeBaseAmount = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{subUserId}}{Character string; sub-account user ID (e.g., from \code{get_subaccount_list_summary}). Required.}
+\item{\code{subUserId}}{Character; the sub-account user ID (numeric UID as a string, e.g., \code{"169630809"}).}
 
-\item{\code{includeBaseAmount}}{Logical; include zero-balance currencies (default \code{FALSE}).}
+\item{\code{includeBaseAmount}}{Logical; if \code{TRUE}, includes currencies with zero balances in the response. Default \code{FALSE}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Promise resolving to a \code{data.table} with:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
-\item \code{subUserId} (character): Sub-account ID.
-\item \code{subName} (character): Sub-account name.
-\item \code{accountType} (character): Account type (e.g., "mainAccounts").
-\item \code{currency} (character): Currency code.
-\item \code{balance} (numeric): Total balance.
-\item Full schema in implementation docs.
+\item \code{currency} (character): Currency code (e.g., \code{"USDT"}, \code{"BTC"}).
+\item \code{balance} (character): Total balance for that currency.
+\item \code{available} (character): Available (unfrozen) balance.
+\item \code{holds} (character): Amount held in open orders or pending withdrawals.
+\item \code{base_currency} (character): Base currency for value conversion.
+\item \code{base_currency_price} (character): Price of the currency in base currency terms.
+\item \code{base_amount} (character): Total value in base currency.
+\item \code{tag} (character): Currency tag (if applicable).
+\item \code{account_type} (character): One of \code{"main"}, \code{"trade"}, \code{"margin"}.
+\item \code{sub_user_id} (character): The sub-account user ID.
+\item \code{sub_name} (character): The sub-account name.
 }
-\subsection{JSON Response Example}{
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+sub <- KucoinSubAccount$new()
 
-\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{"code": "200000", "data": \{"subUserId": "123", "subName": "TestSub", "mainAccounts": [\{"currency": "USDT", "balance": "0.01"\}]\}\}
-}\if{html}{\out{</div>}}
+# Get balances for a specific sub-account
+balances <- sub$get_detail_balance(subUserId = "169630809")
+print(balances)
 
+# Include zero-balance currencies
+all_balances <- sub$get_detail_balance(
+  subUserId = "169630809",
+  includeBaseAmount = TRUE
+)
+
+# Filter for trade account balances only
+trade_bal <- balances[account_type == "trade"]
+print(trade_bal[, .(currency, available, holds)])
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-KucoinSubAccount-get_all_spot_balances"></a>}}
+\if{latex}{\out{\hypertarget{method-KucoinSubAccount-get_all_spot_balances}{}}}
+\subsection{Method \code{get_all_spot_balances()}}{
 Get Spot Sub-Account List (V2)
-}
 
-\subsection{Description}{
-
-Retrieves paginated Spot sub-account balance details for all sub-accounts asynchronously via a GET request to \verb{/api/v2/sub-accounts}.
-Calls \code{get_subaccount_spot_v2_impl}.
-}
-
-\subsection{Workflow Overview}{
+Retrieves paginated Spot sub-account balance details for all sub-accounts
+at once via the V2 endpoint. Each sub-account's balances are broken down
+by account type (main, trade, margin) and combined into a single
+\code{data.table} with \code{sub_user_id} and \code{sub_name} identifiers.
+\subsection{Workflow}{
 \enumerate{
-\item \strong{Pagination}: Fetches pages with \code{page_size} up to \code{max_pages}.
-\item \strong{Request}: Constructs authenticated GET request.
-\item \strong{Response}: Aggregates balances across account types into a \code{data.table}.
+\item \strong{Pagination}: Fetches pages of sub-account balance data via the V2 endpoint, \code{page_size} records per page up to \code{max_pages}.
+\item \strong{Nested Iteration}: For each sub-account in each page, iterates over \code{mainAccounts}, \code{tradeAccounts}, and \code{marginAccounts}.
+\item \strong{Assembly}: Binds all entries into a single \code{data.table} with \code{account_type}, \code{sub_user_id}, and \code{sub_name} columns appended.
 }
 }
 
@@ -406,58 +613,148 @@ Calls \code{get_subaccount_spot_v2_impl}.
 \verb{GET https://api.kucoin.com/api/v2/sub-accounts}
 }
 
-\subsection{Usage}{
-
-Utilised to obtain a comprehensive view of Spot sub-account balances across all sub-accounts.
-}
-
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-list-spot-balance-v2}{KuCoin Get Sub-Account List - Spot Balance (V2)}
+\href{https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-list-spot-balance-v2}{KuCoin Get Sub-Account List Spot Balance V2}
+
+Verified: 2026-02-01
 }
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Portfolio Overview}: Aggregate \code{balance} across \code{subUserId} and \code{accountType} to monitor total sub-account funds, reallocating as needed.
-\item \strong{Risk Assessment}: Filter by \code{holds} to identify locked funds, adjusting trading limits per sub-account.
-\item \strong{Batch Processing}: Use with small \code{page_size} for frequent updates, caching results to reduce API load.
+\item \strong{Portfolio Dashboard}: Aggregate balances across all sub-accounts for a unified portfolio view.
+\item \strong{Threshold Alerts}: Check \code{available} balances across all sub-accounts and trigger alerts when below thresholds.
+\item \strong{Capital Allocation}: Compare balances across sub-accounts to identify idle capital for reallocation.
 }
 }
+
+\subsection{curl}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET 'https://api.kucoin.com/api/v2/sub-accounts?currentPage=1&pageSize=100' \\
+  --header 'KC-API-KEY: your-api-key' \\
+  --header 'KC-API-SIGN: your-signature' \\
+  --header 'KC-API-TIMESTAMP: 1729176273859' \\
+  --header 'KC-API-PASSPHRASE: your-passphrase' \\
+  --header 'KC-API-KEY-VERSION: 2'
+}\if{html}{\out{</div>}}
 }
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": \{
+    "currentPage": 1,
+    "pageSize": 100,
+    "totalNum": 2,
+    "totalPage": 1,
+    "items": [
+      \{
+        "subUserId": "169630809",
+        "subName": "mysubacct1",
+        "mainAccounts": [
+          \{
+            "currency": "USDT",
+            "balance": "1500.00000000",
+            "available": "1200.00000000",
+            "holds": "300.00000000",
+            "baseCurrency": "USDT",
+            "baseCurrencyPrice": "1",
+            "baseAmount": "1500.00000000",
+            "tag": ""
+          \}
+        ],
+        "tradeAccounts": [
+          \{
+            "currency": "BTC",
+            "balance": "0.01000000",
+            "available": "0.01000000",
+            "holds": "0.00000000",
+            "baseCurrency": "USDT",
+            "baseCurrencyPrice": "96500",
+            "baseAmount": "965.00000000",
+            "tag": ""
+          \}
+        ],
+        "marginAccounts": []
+      \},
+      \{
+        "subUserId": "169630810",
+        "subName": "futuresbot1",
+        "mainAccounts": [
+          \{
+            "currency": "ETH",
+            "balance": "5.00000000",
+            "available": "5.00000000",
+            "holds": "0.00000000",
+            "baseCurrency": "USDT",
+            "baseCurrencyPrice": "3200",
+            "baseAmount": "16000.00000000",
+            "tag": ""
+          \}
+        ],
+        "tradeAccounts": [],
+        "marginAccounts": []
+      \}
+    ]
+  \}
+\}
+}\if{html}{\out{</div>}}
 }
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-KucoinSubAccount-get_subaccount_spot_v2"></a>}}
-\if{latex}{\out{\hypertarget{method-KucoinSubAccount-get_subaccount_spot_v2}{}}}
-\subsection{Method \code{get_subaccount_spot_v2()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinSubAccount$get_subaccount_spot_v2(page_size = 100, max_pages = Inf)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinSubAccount$get_all_spot_balances(page_size = 100, max_pages = Inf)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{page_size}}{Integer; results per page (10-100, default 100).}
+\item{\code{page_size}}{Integer; number of results per page, between 10 and 100. Default \code{100}.}
 
-\item{\code{max_pages}}{Numeric; max pages to fetch (default \code{Inf}).}
+\item{\code{max_pages}}{Numeric; maximum number of pages to retrieve. Use \code{Inf} (default) to fetch all available pages.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Promise resolving to a \code{data.table} with:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
-\item \code{subUserId} (character): Sub-account ID.
-\item \code{subName} (character): Sub-account name.
-\item \code{accountType} (character): Account type (e.g., "tradeAccounts").
-\item \code{currency} (character): Currency code.
-\item \code{balance} (numeric): Total balance.
-\item Full schema in implementation docs.
+\item \code{sub_user_id} (character): The sub-account user ID.
+\item \code{sub_name} (character): The sub-account name.
+\item \code{account_type} (character): One of \code{"main"}, \code{"trade"}, \code{"margin"}.
+\item \code{currency} (character): Currency code (e.g., \code{"USDT"}, \code{"BTC"}, \code{"ETH"}).
+\item \code{balance} (character): Total balance for that currency.
+\item \code{available} (character): Available (unfrozen) balance.
+\item \code{holds} (character): Amount held in open orders or pending withdrawals.
+\item \code{base_currency} (character): Base currency for value conversion.
+\item \code{base_currency_price} (character): Price of the currency in base currency terms.
+\item \code{base_amount} (character): Total value in base currency.
+\item \code{tag} (character): Currency tag (if applicable).
 }
-\subsection{JSON Response Example}{
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+sub <- KucoinSubAccount$new()
 
-\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{"code": "200000", "data": \{"items": [\{"subUserId": "123", "subName": "TestSub", "tradeAccounts": [\{"currency": "USDT", "balance": "0.01"\}]\}]\}\}
-}\if{html}{\out{</div>}}
+# Fetch all sub-account Spot balances
+all_balances <- sub$get_all_spot_balances()
+print(all_balances)
+
+# Fetch first page only with 10 results per page
+first_page <- sub$get_all_spot_balances(page_size = 10, max_pages = 1)
+
+# Summarise total available USDT across all sub-accounts
+usdt <- all_balances[currency == "USDT"]
+total_avail <- sum(as.numeric(usdt$available))
+cat("Total available USDT:", total_avail, "\\\\n")
+
+# Group by sub-account
+all_balances[, .(n_currencies = .N), by = .(sub_name, account_type)]
 }
 }
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinSubAccount-clone"></a>}}

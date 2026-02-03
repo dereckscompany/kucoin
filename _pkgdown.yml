@@ -1,0 +1,70 @@
+url: https://dereckmezquita.github.io/kucoin/
+
+figures:
+  fig.path: "man/figures/"
+
+authors:
+  Dereck Mezquita:
+    href: https://derecksnotes.com
+
+template:
+  bootstrap: 5
+
+navbar:
+  structure:
+    left: [home, reference, articles]
+    right: [github, search]
+  components:
+    github:
+      icon: fa-github fa-lg
+      href: https://github.com/dereckmezquita/kucoin
+      target: _blank
+
+reference:
+  - title: API Client Classes
+    desc: R6 classes for interacting with KuCoin REST API
+    contents:
+      - KucoinBase
+      - KucoinMarketData
+      - KucoinTrading
+      - KucoinStopOrders
+      - KucoinOcoOrders
+      - KucoinAccount
+      - KucoinDeposit
+      - KucoinTransfer
+      - KucoinWithdrawal
+      - KucoinSubAccount
+
+  - title: Configuration
+    desc: API credential and endpoint helpers
+    contents:
+      - get_api_keys
+      - get_base_url
+      - get_sub_account
+
+  - title: Low-Level Request Helpers
+    desc: Functions for building and executing KuCoin API requests
+    contents:
+      - kucoin_build_request
+      - kucoin_paginate
+
+  - title: Backfill and Data
+    desc: Bulk data download and included datasets
+    contents:
+      - kucoin_backfill_klines
+      - kucoin_btc_usdt_4h_ohlcv
+
+  - title: Utilities
+    desc: Time conversion and validation helpers
+    contents:
+      - time_convert_from_kucoin
+      - time_convert_to_kucoin
+      - verify_symbol
+
+articles:
+  - title: Getting Started
+    navbar: ~
+    contents:
+      - getting-started
+      - async-usage
+

@@ -1,286 +1,479 @@
-# File: ./R/KucoinDeposit.R
+# File: R/KucoinDeposit.R
+# R6 class for KuCoin deposit operations.
 
-# box::use(
-#     ./impl_account_deposit[
-#         add_deposit_address_v3_impl,
-#         get_deposit_addresses_v3_impl,
-#         get_deposit_history_impl
-#     ],
-#     ./utils[get_api_keys, get_base_url]
-# )
-
-#' KucoinDeposit Class for KuCoin Deposit Management
+#' KucoinDeposit: Deposit Management
 #'
-#' The `KucoinDeposit` class provides an asynchronous interface for managing deposit operations on KuCoin.
-#' It leverages the `coro` package for non-blocking HTTP requests, returning promises that resolve to `data.table` objects.
-#' This class supports creating new deposit addresses, retrieving existing deposit addresses, and fetching deposit history,
-#' all requiring authentication via API keys.
+#' Provides methods for managing deposit addresses and retrieving deposit
+#' history on KuCoin. Inherits from [KucoinBase].
 #'
 #' ### Purpose and Scope
-#' This class is designed to handle deposit-related tasks in the KuCoin ecosystem, including:
-#' - **Address Creation**: Generating new deposit addresses for various currencies and chains.
-#' - **Address Retrieval**: Listing all deposit addresses for a currency.
-#' - **History Tracking**: Querying deposit records with filtering and pagination.
+#' - **Address Creation**: Create new deposit addresses for any supported currency and chain.
+#' - **Address Retrieval**: Query existing deposit addresses with optional chain filtering.
+#' - **Deposit History**: Retrieve paginated deposit transaction records with status tracking,
+#'   timestamps, and wallet transaction IDs for on-chain verification.
 #'
 #' ### Usage
-#' Utilised by traders and developers to programmatically manage deposits on KuCoin. The class is initialized with API credentials,
-#' automatically sourced from `get_api_keys()` if not provided, and a base URL from `get_base_url()`. All methods require authentication.
-#' For detailed endpoint information, parameters, and response schemas, refer to the official [KuCoin API Documentation](https://www.kucoin.com/docs-new).
+#' All methods require authentication (valid API key, secret, passphrase).
+#' Deposit operations are read/write for address creation and read-only for
+#' history retrieval. Use `get_deposit_addresses()` to check if an address
+#' already exists before calling `add_deposit_address()` to avoid creating
+#' duplicates.
 #'
 #' ### Official Documentation
-#' [KuCoin API Documentation - Deposit](https://www.kucoin.com/docs-new/rest/account-info/deposit/introduction)
+#' [KuCoin Deposit Endpoints](https://www.kucoin.com/docs-new/rest/account-info/deposit/add-deposit-address-v3)
 #'
-#' @section Methods:
-#' - **initialize(keys, base_url):** Initialises the object with API credentials and base URL.
-#' - **add_deposit_address(currency, chain, to, amount):** Creates a new deposit address for a currency.
-#' - **get_deposit_addresses(currency, chain, amount):** Retrieves all deposit addresses for a currency.
-#' - **get_deposit_history(currency, status, startAt, endAt, page_size, max_pages):** Fetches paginated deposit history.
+#' ### Endpoints Covered
+#' | Method | Endpoint | HTTP |
+#' |--------|----------|------|
+#' | add_deposit_address | POST /api/v3/deposit-address/create | POST |
+#' | get_deposit_addresses | GET /api/v3/deposit-addresses | GET |
+#' | get_deposit_history | GET /api/v1/deposits | GET |
 #'
 #' @examples
 #' \dontrun{
-#' # Comprehensive example demonstrating key methods
-#' main_async <- coro::async(function() {
-#'   # Initialise the class
-#'   deposit <- KucoinDeposit$new()
+#' # Synchronous
+#' deposit <- KucoinDeposit$new()
+#' addresses <- deposit$get_deposit_addresses(currency = "BTC")
+#' print(addresses)
 #'
-#'   # Add a new deposit address for USDT on TRON
-#'   new_address <- await(deposit$add_deposit_address(
-#'     currency = "USDT",
-#'     chain = "trx",
-#'     to = "trade"
-#'   ))
-#'   print("New Deposit Address:"); print(new_address)
-#'
-#'   # Get all deposit addresses for USDT
-#'   addresses <- await(deposit$get_deposit_addresses(currency = "USDT"))
-#'   print("USDT Deposit Addresses:"); print(addresses)
-#'
-#'   # Get deposit history for USDT over a specific period
-#'   history <- await(deposit$get_deposit_history(
-#'     currency = "USDT",
-#'     status = "SUCCESS",
-#'     startAt = as.integer(Sys.time() - 24*3600) * 1000,
-#'     endAt = as.integer(Sys.time()) * 1000,
-#'     page_size = 10,
-#'     max_pages = 2
-#'   ))
-#'   print("USDT Deposit History:"); print(history)
+#' # Asynchronous
+#' deposit_async <- KucoinDeposit$new(async = TRUE)
+#' main <- coro::async(function() {
+#'   addrs <- await(deposit_async$get_deposit_addresses(currency = "ETH"))
+#'   print(addrs)
 #' })
-#' main_async()
+#' main()
 #' while (!later::loop_empty()) later::run_now()
 #' }
 #'
 #' @importFrom R6 R6Class
+#' @importFrom data.table data.table as.data.table rbindlist setcolorder
 #' @export
 KucoinDeposit <- R6::R6Class(
-    "KucoinDeposit",
-    public = list(
-        #' @field keys List containing KuCoin API keys (`api_key`, `api_secret`, `api_passphrase`, `key_version`).
-        keys = NULL,
-        #' @field base_url Character string representing the base URL for KuCoin API endpoints.
-        base_url = NULL,
+  "KucoinDeposit",
+  inherit = KucoinBase,
+  public = list(
+    #' @description
+    #' Add Deposit Address
+    #'
+    #' Creates a new deposit address for a currency. Each currency/chain
+    #' combination can have a limited number of addresses. If an address
+    #' already exists for the given currency and chain, the API may return
+    #' an error; use `get_deposit_addresses()` first to check.
+    #'
+    #' ### Workflow
+    #' 1. **Build Body**: Constructs JSON body with `currency` and optional `chain`, `to`, `amount` fields.
+    #' 2. **Request**: Authenticated POST to the deposit address creation endpoint.
+    #' 3. **Parsing**: Returns `data.table` with the newly created address, memo, and chain details.
+    #'
+    #' ### API Endpoint
+    #' `POST https://api.kucoin.com/api/v3/deposit-address/create`
+    #'
+    #' ### Official Documentation
+    #' [KuCoin Add Deposit Address V3](https://www.kucoin.com/docs-new/rest/account-info/deposit/add-deposit-address-v3)
+    #'
+    #' Verified: 2026-02-01
+    #'
+    #' ### Automated Trading Usage
+    #' - **Multi-Chain Support**: Specify `chain` (e.g., `"ERC20"`, `"TRC20"`) to create addresses on the correct network for your deposit workflow.
+    #' - **Address Pre-Provisioning**: Create deposit addresses at bot startup so they are ready when funds need to be received.
+    #' - **Account Routing**: Use the `to` parameter to direct deposits to `"main"` or `"trade"` accounts for immediate trading use.
+    #'
+    #' ### curl
+    #' ```
+    #' curl --location --request POST 'https://api.kucoin.com/api/v3/deposit-address/create' \
+    #'   --header 'Content-Type: application/json' \
+    #'   --header 'KC-API-KEY: your-api-key' \
+    #'   --header 'KC-API-SIGN: your-signature' \
+    #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
+    #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
+    #'   --header 'KC-API-KEY-VERSION: 2' \
+    #'   --data-raw '{"currency":"BTC","chain":"btc"}'
+    #' ```
+    #'
+    #' ### JSON Response
+    #' ```json
+    #' {
+    #'   "code": "200000",
+    #'   "data": {
+    #'     "address": "bc1qxz47arp3kx8f0smu4j5dqylecgn3r7sft2wkgq",
+    #'     "memo": "",
+    #'     "chain": "btc",
+    #'     "chainId": "btc",
+    #'     "to": "main",
+    #'     "currency": "BTC",
+    #'     "contractAddress": ""
+    #'   }
+    #' }
+    #' ```
+    #'
+    #' @param currency Character; currency code (e.g., `"BTC"`, `"ETH"`, `"USDT"`).
+    #'   Must be a valid KuCoin-supported currency symbol.
+    #' @param chain Character or NULL; blockchain network identifier (e.g., `"ERC20"`,
+    #'   `"TRC20"`, `"btc"`). When NULL, the default chain for the currency is used.
+    #' @param to Character or NULL; target account type for the deposit. Accepted values
+    #'   include `"main"` (funding account) and `"trade"` (trading account).
+    #' @param amount Character or NULL; deposit amount. Required for some invoice-based
+    #'   deposit addresses (e.g., Lightning Network).
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #'   - `address` (character): The generated deposit address.
+    #'   - `memo` (character): Memo/tag for the address (empty string if not applicable).
+    #'   - `chain` (character): Blockchain network name.
+    #'   - `chain_id` (character): Chain identifier.
+    #'   - `to` (character): Target account type.
+    #'   - `currency` (character): Currency code.
+    #'   - `contract_address` (character): Token contract address (empty for native coins).
+    #'
+    #' @examples
+    #' \dontrun{
+    #' deposit <- KucoinDeposit$new()
+    #'
+    #' # Create a BTC deposit address on the default chain
+    #' btc_addr <- deposit$add_deposit_address(currency = "BTC")
+    #' print(btc_addr$address)
+    #'
+    #' # Create a USDT deposit address on TRC20 network
+    #' usdt_addr <- deposit$add_deposit_address(
+    #'   currency = "USDT",
+    #'   chain = "TRC20",
+    #'   to = "trade"
+    #' )
+    #' print(usdt_addr[, .(address, chain, to)])
+    #' }
+    add_deposit_address = function(currency, chain = NULL, to = NULL, amount = NULL) {
+      body <- list(currency = currency)
+      if (!is.null(chain)) {
+        body$chain <- chain
+      }
+      if (!is.null(to)) {
+        body$to <- to
+      }
+      if (!is.null(amount)) {
+        body$amount <- amount
+      }
 
-        #' Initialise a New KucoinDeposit Object
-        #'
-        #' ### Description
-        #' Initialises a `KucoinDeposit` object with API credentials and a base URL for managing deposit operations
-        #' asynchronously. All methods require authentication, so valid credentials are essential.
-        #'
-        #' ### Workflow Overview
-        #' 1. **Credential Assignment**: Sets `self$keys` to the provided or default API keys from `get_api_keys()`.
-        #' 2. **URL Assignment**: Sets `self$base_url` to the provided or default base URL from `get_base_url()`.
-        #'
-        #' ### API Endpoint
-        #' Not applicable (initialisation method).
-        #'
-        #' ### Usage
-        #' Creates an instance for managing KuCoin deposits, requiring authenticated API access for all operations.
-        #'
-        #' ### Official Documentation
-        #' [KuCoin API Authentication](https://www.kucoin.com/docs-new/rest/introduction#authentication)
-        #'
-        #' ### Automated Trading Usage
-        #' - **Deposit Automation**: Use as the core object for deposit workflows in your bot, integrating with wallet management systems.
-        #' - **Secure Setup**: Provide explicit `keys` or use `get_api_keys()` from a secure vault for production-grade security.
-        #' - **Scalability**: Instantiate once and reuse across deposit cycles, pairing with withdrawal classes for full fund management.
-        #'
-        #' @param keys List containing API configuration parameters from `get_api_keys()`, including:
-        #'   - `api_key`: Character string; your KuCoin API key.
-        #'   - `api_secret`: Character string; your KuCoin API secret.
-        #'   - `api_passphrase`: Character string; your KuCoin API passphrase.
-        #'   - `key_version`: Character string; API key version (e.g., `"2"`).
-        #'   Defaults to `get_api_keys()`.
-        #' @param base_url Character string representing the base URL for the API. Defaults to `get_base_url()`.
-        #'
-        #' @return A new instance of the `KucoinDeposit` class.
-        initialize = function(keys = get_api_keys(), base_url = get_base_url()) {
-            self$keys <- keys
-            self$base_url <- base_url
-        },
-
-        #' Add Deposit Address
-        #'
-        #' ### Description
-        #' Creates a new deposit address for a specified currency asynchronously via a POST request to `/api/v3/deposit-address/create`.
-        #' Calls `add_deposit_address_v3_impl`.
-        #'
-        #' ### Workflow Overview
-        #' 1. **Validation**: Ensures `currency` is valid within the implementation.
-        #' 2. **Request Body**: Constructs JSON with `currency`, `chain`, `to`, and optional `amount`.
-        #' 3. **Authentication**: Generates headers with API keys.
-        #' 4. **API Call**: Sends POST request.
-        #' 5. **Response**: Returns address details as a `data.table`.
-        #'
-        #' ### API Endpoint
-        #' `POST https://api.kucoin.com/api/v3/deposit-address/create`
-        #'
-        #' ### Usage
-        #' Utilised to generate new deposit addresses for funding KuCoin accounts, supporting various chains and account types.
-        #'
-        #' ### Official Documentation
-        #' [KuCoin Add Deposit Address (V3)](https://www.kucoin.com/docs-new/rest/account-info/deposit/add-deposit-address-v3)
-        #'
-        #' ### Automated Trading Usage
-        #' - **Fund Allocation**: Generate addresses for `to = "trade"` to direct funds to trading accounts, automating wallet-to-exchange transfers.
-        #' - **Chain Selection**: Specify `chain` (e.g., "trx" for USDT) to optimize fees, integrating with fee analysis from market data.
-        #' - **Address Rotation**: Create new addresses periodically for security, tracking via `chainId` and auditing with `get_deposit_addresses`.
-        #'
-        #' @param currency Character string; currency code (e.g., "BTC", "USDT"). Required.
-        #' @param chain Character string; chain identifier (e.g., "trx", "erc20"). Optional.
-        #' @param to Character string; account type ("main" or "trade"). Optional, defaults to "main".
-        #' @param amount Character string; amount for Lightning Network invoices. Optional.
-        #' @return Promise resolving to a `data.table` with:
-        #'   - `address` (character): Deposit address.
-        #'   - `memo` (character): Address remark (if any).
-        #'   - `chainId` (character): Chain identifier.
-        #'   - `to` (character): Account type.
-        #'   - `expirationDate` (integer): Expiration (Lightning Network).
-        #'   - `currency` (character): Currency code.
-        #'   - `chainName` (character): Chain name.
-        #' ### JSON Response Example
-        #' ```json
-        #' {"code": "200000", "data": {"address": "T...x", "memo": "", "chainId": "trx", "to": "trade", "currency": "USDT", "chainName": "TRON"}}
-        #' ```
-        add_deposit_address = function(currency, chain = NULL, to = NULL, amount = NULL) {
-            return(add_deposit_address_v3_impl(
-                keys = self$keys,
-                base_url = self$base_url,
-                currency = currency,
-                chain = chain,
-                to = to,
-                amount = amount
-            ))
-        },
-
-        #' Get Deposit Addresses
-        #'
-        #' ### Description
-        #' Retrieves all deposit addresses for a specified currency asynchronously via a GET request to `/api/v3/deposit-addresses`.
-        #' Calls `get_deposit_addresses_v3_impl`.
-        #'
-        #' ### Workflow Overview
-        #' 1. **Validation**: Ensures `currency` is valid within the implementation.
-        #' 2. **Query**: Builds query with `currency`, optional `chain`, and `amount`.
-        #' 3. **Authentication**: Generates headers with API keys.
-        #' 4. **API Call**: Sends GET request.
-        #' 5. **Response**: Returns a `data.table` of all addresses, empty if none exist.
-        #'
-        #' ### API Endpoint
-        #' `GET https://api.kucoin.com/api/v3/deposit-addresses`
-        #'
-        #' ### Usage
-        #' Utilised to list all existing deposit addresses for a currency, aiding in deposit management.
-        #'
-        #' ### Official Documentation
-        #' [KuCoin Get Deposit Address (V3)](https://www.kucoin.com/docs-new/rest/account-info/deposit/get-deposit-address-v3)
-        #'
-        #' ### Automated Trading Usage
-        #' - **Address Inventory**: Fetch all addresses for a currency to manage multiple deposit points, selecting based on `to` or `chainName`.
-        #' - **Verification**: Confirm address availability before initiating deposits, retrying `add_deposit_address` if none exist.
-        #' - **Chain Preference**: Filter by `chain` to use low-fee networks, integrating with deposit history to track usage.
-        #'
-        #' @param currency Character string; currency code (e.g., "BTC", "USDT"). Required.
-        #' @param chain Character string; chain identifier (e.g., "trx"). Optional.
-        #' @param amount Character string; amount for Lightning Network invoices. Optional.
-        #' @return Promise resolving to a `data.table` with:
-        #'   - `address` (character): Deposit address.
-        #'   - `memo` (character): Address remark (if any).
-        #'   - `chainId` (character): Chain identifier.
-        #'   - `to` (character): Account type.
-        #'   - `expirationDate` (integer): Expiration (Lightning Network).
-        #'   - `currency` (character): Currency code.
-        #'   - `contractAddress` (character): Token contract address.
-        #'   - `chainName` (character): Chain name.
-        #' ### JSON Response Example
-        #' ```json
-        #' {"code": "200000", "data": [{"address": "T...x", "memo": "", "chainId": "trx", "to": "trade", "currency": "USDT", "chainName": "TRON"}]}
-        #' ```
-        get_deposit_addresses = function(currency, chain = NULL, amount = NULL) {
-            return(get_deposit_addresses_v3_impl(
-                keys = self$keys,
-                base_url = self$base_url,
-                currency = currency,
-                chain = chain,
-                amount = amount
-            ))
-        },
-
-        #' Get Deposit History
-        #'
-        #' ### Description
-        #' Retrieves paginated deposit history asynchronously via a GET request to `/api/v1/deposits`.
-        #' Calls `get_deposit_history_impl`.
-        #'
-        #' ### Workflow Overview
-        #' 1. **Validation**: Ensures parameters meet API constraints (e.g., `page_size` 10-500).
-        #' 2. **Query**: Constructs query with filters and pagination settings.
-        #' 3. **Authentication**: Generates headers with API keys.
-        #' 4. **API Call**: Fetches pages up to `max_pages`.
-        #' 5. **Response**: Aggregates history into a `data.table` with datetime conversion.
-        #'
-        #' ### API Endpoint
-        #' `GET https://api.kucoin.com/api/v1/deposits`
-        #'
-        #' ### Usage
-        #' Utilised to track deposit transactions, with filtering by currency, status, and time range.
-        #'
-        #' ### Official Documentation
-        #' [KuCoin Get Deposit History](https://www.kucoin.com/docs-new/rest/account-info/deposit/get-deposit-history)
-        #'
-        #' ### Automated Trading Usage
-        #' - **Fund Tracking**: Monitor `status = "SUCCESS"` deposits to confirm fund availability, triggering trading actions.
-        #' - **Reconciliation**: Use `createdAtDatetime` and `amount` to reconcile with external wallet records, polling daily with time filters.
-        #' - **Error Handling**: Filter `status = "FAILURE"` to investigate issues, alerting users or retrying deposits automatically.
-        #'
-        #' @param currency Character string; currency code (e.g., "BTC", "USDT"). Required.
-        #' @param status Character string; status filter ("PROCESSING", "SUCCESS", "FAILURE"). Optional.
-        #' @param startAt Integer; start time (ms). Optional.
-        #' @param endAt Integer; end time (ms). Optional.
-        #' @param page_size Integer; results per page (10-500, default 50).
-        #' @param max_pages Numeric; max pages to fetch (default `Inf`).
-        #' @return Promise resolving to a `data.table` with:
-        #'   - `currency` (character): Currency code.
-        #'   - `chain` (character): Chain identifier.
-        #'   - `status` (character): Deposit status.
-        #'   - `address` (character): Deposit address.
-        #'   - `amount` (character): Deposit amount.
-        #'   - `createdAtDatetime` (POSIXct): Creation time.
-        #'   - Full schema in implementation docs.
-        #' ### JSON Response Example
-        #' ```json
-        #' {"code": "200000", "data": {"items": [{"currency": "USDT", "status": "SUCCESS", "amount": "100", "createdAt": 1733049198863}]}}
-        #' ```
-        get_deposit_history = function(currency, status = NULL, startAt = NULL, endAt = NULL, page_size = 50, max_pages = Inf) {
-            return(get_deposit_history_impl(
-                keys = self$keys,
-                base_url = self$base_url,
-                currency = currency,
-                status = status,
-                startAt = startAt,
-                endAt = endAt,
-                page_size = page_size,
-                max_pages = max_pages
-            ))
+      return(private$.request(
+        endpoint = "/api/v3/deposit-address/create",
+        method = "POST",
+        body = body,
+        .parser = function(data) {
+          dt <- as_dt_row(data)
+          if (nrow(dt) == 0L) {
+            return(dt)
+          }
+          data.table::setcolorder(
+            dt,
+            intersect(
+              c("address", "memo", "chain", "chain_id", "to", "currency", "contract_address"),
+              names(dt)
+            )
+          )
+          return(dt)
         }
-    )
+      ))
+    },
+
+    #' @description
+    #' Get Deposit Addresses
+    #'
+    #' Retrieves existing deposit addresses for a currency. Returns all
+    #' addresses if no chain is specified, or a single address for the
+    #' given chain. Useful for looking up addresses before creating new ones.
+    #'
+    #' ### Workflow
+    #' 1. **Request**: Authenticated GET with `currency` (required) and optional `amount`, `chain` query parameters.
+    #' 2. **Parsing**: Normalises response into a `data.table` whether the API returns a single object or an array.
+    #' 3. **Result**: Returns one row per deposit address with chain and memo details.
+    #'
+    #' ### API Endpoint
+    #' `GET https://api.kucoin.com/api/v3/deposit-addresses`
+    #'
+    #' ### Official Documentation
+    #' [KuCoin Get Deposit Addresses V3](https://www.kucoin.com/docs-new/rest/account-info/deposit/get-deposit-address-v3/en)
+    #'
+    #' Verified: 2026-02-01
+    #'
+    #' ### Automated Trading Usage
+    #' - **Address Verification**: Query addresses before initiating external transfers to confirm the correct chain and memo.
+    #' - **Multi-Chain Inventory**: Retrieve all addresses for a currency to manage deposits across networks (e.g., ERC20 vs TRC20 for USDT).
+    #' - **Idempotent Setup**: Check if an address exists before calling `add_deposit_address()` to avoid duplicate creation errors.
+    #'
+    #' ### curl
+    #' ```
+    #' curl --location --request GET \
+    #'   'https://api.kucoin.com/api/v3/deposit-addresses?currency=BTC' \
+    #'   --header 'KC-API-KEY: your-api-key' \
+    #'   --header 'KC-API-SIGN: your-signature' \
+    #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
+    #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
+    #'   --header 'KC-API-KEY-VERSION: 2'
+    #' ```
+    #'
+    #' ### JSON Response
+    #' ```json
+    #' {
+    #'   "code": "200000",
+    #'   "data": [
+    #'     {
+    #'       "address": "bc1qxz47arp3kx8f0smu4j5dqylecgn3r7sft2wkgq",
+    #'       "memo": "",
+    #'       "chain": "btc",
+    #'       "chainId": "btc",
+    #'       "to": "main",
+    #'       "currency": "BTC",
+    #'       "contractAddress": ""
+    #'     },
+    #'     {
+    #'       "address": "0x7a1f3d8b2c9e4f5a6b7c8d9e0f1a2b3c4d5e6f7a",
+    #'       "memo": "",
+    #'       "chain": "ERC20",
+    #'       "chainId": "eth",
+    #'       "to": "main",
+    #'       "currency": "BTC",
+    #'       "contractAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+    #'     }
+    #'   ]
+    #' }
+    #' ```
+    #'
+    #' @param currency Character; currency code (e.g., `"BTC"`, `"ETH"`, `"USDT"`).
+    #'   Must be a valid KuCoin-supported currency symbol. Required.
+    #' @param amount Character or NULL; deposit amount. Some chains require an amount
+    #'   to generate invoice-based addresses (e.g., Lightning Network).
+    #' @param chain Character or NULL; blockchain network identifier (e.g., `"ERC20"`,
+    #'   `"TRC20"`, `"btc"`). When NULL, returns addresses for all chains.
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #'   - `address` (character): The deposit address string.
+    #'   - `memo` (character): Memo/tag for the address (empty string if not applicable).
+    #'   - `chain` (character): Blockchain network name.
+    #'   - `chain_id` (character): Chain identifier.
+    #'   - `to` (character): Target account type.
+    #'   - `currency` (character): Currency code.
+    #'   - `contract_address` (character): Token contract address (empty for native coins).
+    #'
+    #'   Returns an empty `data.table` if no addresses exist for the currency.
+    #'
+    #' @examples
+    #' \dontrun{
+    #' deposit <- KucoinDeposit$new()
+    #'
+    #' # Get all BTC deposit addresses across all chains
+    #' btc_addrs <- deposit$get_deposit_addresses(currency = "BTC")
+    #' print(btc_addrs[, .(address, chain, to)])
+    #'
+    #' # Get USDT address for a specific chain
+    #' usdt_erc20 <- deposit$get_deposit_addresses(
+    #'   currency = "USDT",
+    #'   chain = "ERC20"
+    #' )
+    #' print(usdt_erc20$address)
+    #' }
+    get_deposit_addresses = function(currency, amount = NULL, chain = NULL) {
+      return(private$.request(
+        endpoint = "/api/v3/deposit-addresses",
+        query = list(currency = currency, amount = amount, chain = chain),
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table())
+          }
+          # Single object (named list) vs array of objects
+          if (is.list(data) && !is.null(names(data))) {
+            dt <- as_dt_row(data)
+          } else {
+            dt <- data.table::rbindlist(lapply(data, as_dt_row), fill = TRUE)
+          }
+          if (nrow(dt) == 0L) {
+            return(dt)
+          }
+          data.table::setcolorder(
+            dt,
+            intersect(
+              c("address", "memo", "chain", "chain_id", "to", "currency", "contract_address"),
+              names(dt)
+            )
+          )
+          return(dt)
+        }
+      ))
+    },
+
+    #' @description
+    #' Get Deposit History
+    #'
+    #' Retrieves paginated deposit history with optional filtering by currency,
+    #' status, and time range. Automatically converts `created_at` timestamps
+    #' to POSIXct datetime objects for convenient analysis.
+    #'
+    #' ### Workflow
+    #' 1. **Pagination**: Uses `private$.paginate()` to fetch all pages of deposit records up to `max_pages`.
+    #' 2. **Flattening**: Combines all pages into a single `data.table` via `flatten_pages()`.
+    #' 3. **Timestamp Conversion**: Converts `created_at` (milliseconds) to `datetime_created` (POSIXct).
+    #'
+    #' ### API Endpoint
+    #' `GET https://api.kucoin.com/api/v1/deposits`
+    #'
+    #' ### Official Documentation
+    #' [KuCoin Get Deposit History](https://www.kucoin.com/docs-new/rest/account-info/deposit/get-deposit-history)
+    #'
+    #' Verified: 2026-02-01
+    #'
+    #' ### Automated Trading Usage
+    #' - **Deposit Monitoring**: Poll for `"SUCCESS"` status deposits to trigger trading logic when funds arrive.
+    #' - **Reconciliation**: Match `wallet_tx_id` against on-chain transaction hashes for audit and verification.
+    #' - **Time-Windowed Queries**: Use `startAt`/`endAt` timestamps to retrieve deposits within a specific period for daily reporting.
+    #'
+    #' ### curl
+    #' ```
+    #' curl --location --request GET \
+    #'   'https://api.kucoin.com/api/v1/deposits?currency=BTC&status=SUCCESS&currentPage=1&pageSize=50' \
+    #'   --header 'KC-API-KEY: your-api-key' \
+    #'   --header 'KC-API-SIGN: your-signature' \
+    #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
+    #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
+    #'   --header 'KC-API-KEY-VERSION: 2'
+    #' ```
+    #'
+    #' ### JSON Response
+    #' ```json
+    #' {
+    #'   "code": "200000",
+    #'   "data": {
+    #'     "currentPage": 1,
+    #'     "pageSize": 50,
+    #'     "totalNum": 2,
+    #'     "totalPage": 1,
+    #'     "items": [
+    #'       {
+    #'         "currency": "BTC",
+    #'         "chain": "btc",
+    #'         "status": "SUCCESS",
+    #'         "address": "bc1qxz47arp3kx8f0smu4j5dqylecgn3r7sft2wkgq",
+    #'         "memo": "",
+    #'         "isInner": false,
+    #'         "amount": "0.05000000",
+    #'         "fee": "0.00000000",
+    #'         "walletTxId": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2",
+    #'         "createdAt": 1729577515473,
+    #'         "updatedAt": 1729577815473,
+    #'         "remark": ""
+    #'       },
+    #'       {
+    #'         "currency": "BTC",
+    #'         "chain": "btc",
+    #'         "status": "SUCCESS",
+    #'         "address": "bc1qxz47arp3kx8f0smu4j5dqylecgn3r7sft2wkgq",
+    #'         "memo": "",
+    #'         "isInner": true,
+    #'         "amount": "0.10000000",
+    #'         "fee": "0.00000000",
+    #'         "walletTxId": "f0e1d2c3b4a5968778695a4b3c2d1e0f9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d",
+    #'         "createdAt": 1729491115473,
+    #'         "updatedAt": 1729491415473,
+    #'         "remark": ""
+    #'       }
+    #'     ]
+    #'   }
+    #' }
+    #' ```
+    #'
+    #' @param currency Character or NULL; filter by currency code (e.g., `"BTC"`, `"USDT"`).
+    #'   When NULL, returns deposits for all currencies.
+    #' @param status Character or NULL; filter by deposit status. Accepted values:
+    #'   `"PROCESSING"`, `"WALLET_PROCESSING"`, `"SUCCESS"`, `"FAILURE"`.
+    #'   When NULL, returns deposits of all statuses.
+    #' @param startAt Integer or NULL; start timestamp in milliseconds (inclusive).
+    #'   Used to filter deposits created on or after this time.
+    #' @param endAt Integer or NULL; end timestamp in milliseconds (inclusive).
+    #'   Used to filter deposits created on or before this time.
+    #' @param page_size Integer; number of results per page (default 50, max 100).
+    #' @param max_pages Numeric; maximum number of pages to fetch (default `Inf` for all pages).
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #'   - `currency` (character): Deposited currency code.
+    #'   - `chain` (character): Blockchain network used for the deposit.
+    #'   - `status` (character): Deposit status (`"PROCESSING"`, `"SUCCESS"`, `"FAILURE"`).
+    #'   - `address` (character): Deposit address.
+    #'   - `memo` (character): Memo/tag (empty string if not applicable).
+    #'   - `is_inner` (logical): Whether this was an internal KuCoin transfer.
+    #'   - `amount` (character): Deposit amount.
+    #'   - `fee` (character): Deposit fee charged.
+    #'   - `wallet_tx_id` (character): On-chain transaction hash.
+    #'   - `updated_at` (numeric): Last update timestamp in milliseconds.
+    #'   - `remark` (character): Optional remark.
+    #'   - `datetime_created` (POSIXct): Creation datetime.
+    #'
+    #'   Returns an empty `data.table` if no deposits match the filters.
+    #'
+    #' @examples
+    #' \dontrun{
+    #' deposit <- KucoinDeposit$new()
+    #'
+    #' # Get all successful BTC deposits
+    #' btc_deposits <- deposit$get_deposit_history(
+    #'   currency = "BTC",
+    #'   status = "SUCCESS"
+    #' )
+    #' print(btc_deposits[, .(amount, status, datetime_created)])
+    #'
+    #' # Get deposits from the last 24 hours
+    #' now_ms <- as.numeric(lubridate::now()) * 1000
+    #' recent <- deposit$get_deposit_history(
+    #'   startAt = as.integer(now_ms - 86400000),
+    #'   endAt = as.integer(now_ms),
+    #'   page_size = 100,
+    #'   max_pages = 5
+    #' )
+    #' print(recent[, .(currency, amount, wallet_tx_id, datetime_created)])
+    #' }
+    get_deposit_history = function(
+      currency = NULL,
+      status = NULL,
+      startAt = NULL,
+      endAt = NULL,
+      page_size = 50,
+      max_pages = Inf
+    ) {
+      return(private$.paginate(
+        endpoint = "/api/v1/deposits",
+        query = list(
+          currency = currency,
+          status = status,
+          startAt = startAt,
+          endAt = endAt
+        ),
+        page_size = page_size,
+        max_pages = max_pages,
+        .parser = function(pages) {
+          dt <- flatten_pages(pages)
+          if (nrow(dt) == 0L) {
+            return(dt)
+          }
+          if ("created_at" %in% names(dt)) {
+            dt[, datetime_created := ms_to_datetime(created_at)]
+            dt[, created_at := NULL]
+          }
+          data.table::setcolorder(
+            dt,
+            intersect(
+              c(
+                "currency",
+                "chain",
+                "status",
+                "address",
+                "memo",
+                "is_inner",
+                "amount",
+                "fee",
+                "wallet_tx_id",
+                "datetime_created",
+                "updated_at",
+                "remark"
+              ),
+              names(dt)
+            )
+          )
+          return(dt)
+        }
+      ))
+    }
+  )
 )

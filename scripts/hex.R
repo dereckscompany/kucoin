@@ -1,6 +1,4 @@
-# Install packages if needed
-# install.packages(c("box", "hexSticker", "magick", "sysfonts", "showtext"))
-
+#!/usr/bin/env Rscript
 box::use(
     hexSticker[sticker],
     magick[image_read],
@@ -22,22 +20,22 @@ img <- image_read("./.graphics/kucoin-logo.png")
 
 # Create hex sticker
 sticker <- sticker(
-    subplot = img,
-    s_x = 1,
-    s_y = 1,
-    s_width = 1.25,
-    s_height = 1.25,
+  subplot = img,
+  s_x = 1,
+  s_y = 1,
+  s_width = 1.25,
+  s_height = 1.25,
 
-    package = "",
-    p_color = brand_color,
-    p_size = 20,
-    p_family = "open_sans",
+  package = "",
+  p_color = brand_color,
+  p_size = 20,
+  p_family = "open_sans",
 
-    h_fill = "white",
-    h_color = "white",
+  h_fill = "white",
+  h_color = "white",
 
-    filename = "man/figures/logo-small.png",
-    dpi = 120
+  filename = "man/figures/logo-small.png",
+  dpi = 120
 )
 
 # Save the sticker
