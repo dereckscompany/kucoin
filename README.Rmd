@@ -309,7 +309,7 @@ market_async <- KucoinMarketData$new(keys = KEYS, base_url = BASE, async = TRUE)
 
 main <- coro$async(function() {
   ticker <- await(market_async$get_ticker("BTC-USDT"))
-  klines <- await(market_async$get_klines("BTC-USDT", "1hour", limit = 10))
+  klines <- await(market_async$get_klines("BTC-USDT", "1hour"))
 
   print(ticker)
   print(klines)
