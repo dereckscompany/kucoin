@@ -127,7 +127,7 @@
 * Class-level docs include endpoint tables, example usage, and curl equivalents.
 * Two vignettes: "Getting Started" (all 9 classes, synchronous) and "Async Usage" (promise-based patterns).
 * README with evaluated code examples using invisible mocked HTTP.
-* pkgdown site at <https://dereckmezquita.github.io/kucoin/>.
+* pkgdown site at <https://dereckscompany.github.io/kucoin/>.
 
 ## LICENCE
 

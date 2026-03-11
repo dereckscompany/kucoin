@@ -1,4 +1,4 @@
-url: https://dereckmezquita.github.io/kucoin/
+url: https://dereckscompany.github.io/kucoin/
 
 figures:
   fig.path: "man/figures/"
@@ -17,7 +17,7 @@ navbar:
   components:
     github:
       icon: fa-github fa-lg
-      href: https://github.com/dereckmezquita/kucoin
+      href: https://github.com/dereckscompany/kucoin
       target: _blank
 
 reference:
