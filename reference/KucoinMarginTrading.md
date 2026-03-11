@@ -1,0 +1,1620 @@
+# KucoinMarginTrading: Margin Order and Debit Management
+
+KucoinMarginTrading: Margin Order and Debit Management
+
+KucoinMarginTrading: Margin Order and Debit Management
+
+## Details
+
+Provides intent-based methods for margin trading on KuCoin. Instead of
+raw `side = "buy"` / `side = "sell"` parameters (which are ambiguous in
+a margin context), this class exposes four clear actions:
+
+- **`open_long()`**: Buy an asset with borrowed funds (leveraged long).
+
+- **`close_long()`**: Sell a previously-bought asset and repay the loan.
+
+- **`open_short()`**: Borrow and sell an asset you don't own (short
+  sell).
+
+- **`close_short()`**: Buy back a previously-shorted asset and repay the
+  loan.
+
+Additionally provides methods for manual borrowing, repaying, interest
+queries, and leverage configuration. Inherits from
+[KucoinBase](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md).
+
+### How Margin Short Selling Works
+
+1.  **`open_short()`** borrows the base asset (e.g. BTC) and immediately
+    sells it at market price. You now hold the proceeds (e.g. USDT) but
+    owe the borrowed BTC plus interest.
+
+2.  If the price drops, **`close_short()`** buys back the asset at the
+    lower price and automatically repays the loan. The difference is
+    profit.
+
+3.  If the price rises instead, you lose money — margin trading carries
+    liquidation risk.
+
+### Cross vs Isolated Margin
+
+- **Cross margin** (default): All margin positions share the same
+  collateral pool. A loss in one pair can be offset by gains in another,
+  but a liquidation affects your entire margin account.
+
+- **Isolated margin** (`isIsolated = TRUE`): Each trading pair has its
+  own collateral. Losses are contained to that pair, but you need to
+  allocate collateral per pair.
+
+### Usage
+
+All methods require authentication (valid API key, secret, passphrase)
+with Margin permission enabled.
+
+### Official Documentation
+
+[KuCoin Margin
+Trading](https://www.kucoin.com/docs-new/rest/margin-trading/orders/add-order)
+
+### Endpoints Covered
+
+|                                                   |                                            |      |
+|---------------------------------------------------|--------------------------------------------|------|
+| Method                                            | Endpoint                                   | HTTP |
+| open_long / close_long / open_short / close_short | POST /api/v3/hf/margin/order               | POST |
+| borrow                                            | POST /api/v3/margin/borrow                 | POST |
+| repay                                             | POST /api/v3/margin/repay                  | POST |
+| get_borrow_history                                | GET /api/v3/margin/borrow                  | GET  |
+| get_repay_history                                 | GET /api/v3/margin/repay                   | GET  |
+| get_interest_history                              | GET /api/v3/margin/interest                | GET  |
+| get_borrow_rate                                   | GET /api/v3/margin/borrowRate              | GET  |
+| modify_leverage                                   | POST /api/v3/position/update-user-leverage | POST |
+
+## Super class
+
+[`kucoin::KucoinBase`](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md)
+-\> `KucoinMarginTrading`
+
+## Methods
+
+### Public methods
+
+- [`KucoinMarginTrading$open_short()`](#method-KucoinMarginTrading-open_short)
+
+- [`KucoinMarginTrading$close_short()`](#method-KucoinMarginTrading-close_short)
+
+- [`KucoinMarginTrading$open_long()`](#method-KucoinMarginTrading-open_long)
+
+- [`KucoinMarginTrading$close_long()`](#method-KucoinMarginTrading-close_long)
+
+- [`KucoinMarginTrading$borrow()`](#method-KucoinMarginTrading-borrow)
+
+- [`KucoinMarginTrading$repay()`](#method-KucoinMarginTrading-repay)
+
+- [`KucoinMarginTrading$get_borrow_history()`](#method-KucoinMarginTrading-get_borrow_history)
+
+- [`KucoinMarginTrading$get_repay_history()`](#method-KucoinMarginTrading-get_repay_history)
+
+- [`KucoinMarginTrading$get_interest_history()`](#method-KucoinMarginTrading-get_interest_history)
+
+- [`KucoinMarginTrading$get_borrow_rate()`](#method-KucoinMarginTrading-get_borrow_rate)
+
+- [`KucoinMarginTrading$modify_leverage()`](#method-KucoinMarginTrading-modify_leverage)
+
+- [`KucoinMarginTrading$clone()`](#method-KucoinMarginTrading-clone)
+
+Inherited methods
+
+- [`kucoin::KucoinBase$initialize()`](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+
+------------------------------------------------------------------------
+
+### Method `open_short()`
+
+Open a Short Position (Borrow and Sell)
+
+Borrows the base asset and sells it immediately. This is how you bet
+that an asset's price will go **down**. The exchange automatically
+borrows the asset you are selling (you don't need to call `borrow()`
+separately).
+
+**What happens under the hood:**
+
+1.  KuCoin borrows the base asset (e.g. BTC) on your behalf.
+
+2.  That borrowed asset is immediately sold on the market.
+
+3.  You now owe the borrowed amount plus interest.
+
+4.  Use `close_short()` later to buy it back and repay.
+
+#### API Endpoint
+
+`POST https://api.kucoin.com/api/v3/hf/margin/order`
+
+#### Official Documentation
+
+[KuCoin Margin Add
+Order](https://www.kucoin.com/docs-new/rest/margin-trading/orders/add-order)
+
+Verified: 2026-03-10
+
+#### curl
+
+    curl --location --request POST 'https://api.kucoin.com/api/v3/hf/margin/order' \
+      --header 'Content-Type: application/json' \
+      --header 'KC-API-KEY: your-api-key' \
+      --header 'KC-API-SIGN: your-signature' \
+      --header 'KC-API-TIMESTAMP: 1729176273859' \
+      --header 'KC-API-PASSPHRASE: your-passphrase' \
+      --header 'KC-API-KEY-VERSION: 2' \
+      --data-raw '{"clientOid":"my-short-001","side":"sell","symbol":"BTC-USDT","type":"market","size":"0.001","autoBorrow":true,"autoRepay":false}'
+
+#### JSON Request
+
+    {
+      "clientOid": "my-short-001",
+      "side": "sell",
+      "symbol": "BTC-USDT",
+      "type": "market",
+      "size": "0.001",
+      "autoBorrow": true,
+      "autoRepay": false
+    }
+
+#### JSON Response
+
+    {
+      "code": "200000",
+      "data": {
+        "orderId": "6745e8f3a7b2c1d4e5f6a7b8",
+        "clientOid": "my-short-001",
+        "borrowSize": "0.001",
+        "loanApplyId": "7856f9a4b8c3d2e5f6a7b8c9"
+      }
+    }
+
+#### Usage
+
+    KucoinMarginTrading$open_short(
+      symbol,
+      size = NULL,
+      funds = NULL,
+      type = "market",
+      price = NULL,
+      isIsolated = FALSE,
+      clientOid = NULL,
+      stp = NULL,
+      remark = NULL,
+      timeInForce = NULL,
+      cancelAfter = NULL,
+      postOnly = NULL,
+      hidden = NULL,
+      iceberg = NULL,
+      visibleSize = NULL,
+      dry_run = FALSE
+    )
+
+#### Arguments
+
+- `symbol`:
+
+  Character; trading pair to short (e.g., `"BTC-USDT"`). You will borrow
+  and sell the base currency (BTC in this example).
+
+- `size`:
+
+  Numeric or NULL; quantity of the base asset to short. For market
+  orders, specify either `size` (base qty) or `funds` (quote qty), not
+  both.
+
+- `funds`:
+
+  Numeric or NULL; amount in quote currency to receive from the short
+  sale. Only for market orders; mutually exclusive with `size`.
+
+- `type`:
+
+  Character; `"limit"` or `"market"` (default `"market"`).
+
+- `price`:
+
+  Numeric or NULL; required for limit orders. The price at which to
+  sell.
+
+- `isIsolated`:
+
+  Logical; `TRUE` for isolated margin (risk limited to this pair),
+  `FALSE` (default) for cross margin (shared collateral pool).
+
+- `clientOid`:
+
+  Character or NULL; your own unique order ID (max 40 chars).
+  Auto-generated if not provided (required by KuCoin for margin orders).
+
+- `stp`:
+
+  Character or NULL; self-trade prevention: `"CN"`, `"CO"`, `"CB"`,
+  `"DC"`.
+
+- `remark`:
+
+  Character or NULL; order remark (max 20 ASCII chars).
+
+- `timeInForce`:
+
+  Character or NULL; `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
+
+- `cancelAfter`:
+
+  Numeric or NULL; auto-cancel seconds (requires `timeInForce = "GTT"`).
+
+- `postOnly`:
+
+  Logical or NULL; if TRUE, order rejected if it would match
+  immediately.
+
+- `hidden`:
+
+  Logical or NULL; if TRUE, order hidden from order book.
+
+- `iceberg`:
+
+  Logical or NULL; if TRUE, only `visibleSize` is shown.
+
+- `visibleSize`:
+
+  Numeric or NULL; visible quantity for iceberg orders.
+
+- `dry_run`:
+
+  Logical; if `TRUE`, validates the order without actually placing it.
+  Useful for testing your parameters. Default `FALSE`.
+
+#### Returns
+
+`data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with columns:
+
+- `order_id` (character): KuCoin-assigned order identifier.
+
+- `client_oid` (character): Client-provided order identifier.
+
+- `borrow_size` (character): Amount borrowed.
+
+- `loan_apply_id` (character): Loan application ID.
+
+#### Examples
+
+    \dontrun{
+    margin <- KucoinMarginTrading$new()
+
+    # Market short: sell 0.001 BTC you don't own
+    order <- margin$open_short(symbol = "BTC-USDT", size = 0.001)
+
+    # Limit short: sell at a specific price
+    order <- margin$open_short(
+      symbol = "BTC-USDT", type = "limit",
+      price = 100000, size = 0.001
+    )
+
+    # Dry run (test without placing)
+    margin$open_short(symbol = "BTC-USDT", size = 0.001, dry_run = TRUE)
+    }
+
+------------------------------------------------------------------------
+
+### Method `close_short()`
+
+Close a Short Position (Buy Back and Repay)
+
+Buys back the base asset and automatically repays the loan. This closes
+a short position opened with `open_short()`.
+
+**What happens under the hood:**
+
+1.  KuCoin buys the base asset (e.g. BTC) on the market.
+
+2.  The purchased asset is automatically used to repay your loan.
+
+3.  If the price dropped since you opened the short, you profit.
+
+#### API Endpoint
+
+`POST https://api.kucoin.com/api/v3/hf/margin/order`
+
+#### Official Documentation
+
+[KuCoin Margin Add
+Order](https://www.kucoin.com/docs-new/rest/margin-trading/orders/add-order)
+
+Verified: 2026-03-10
+
+#### curl
+
+    curl --location --request POST 'https://api.kucoin.com/api/v3/hf/margin/order' \
+      --header 'Content-Type: application/json' \
+      --header 'KC-API-KEY: your-api-key' \
+      --header 'KC-API-SIGN: your-signature' \
+      --header 'KC-API-TIMESTAMP: 1729176273859' \
+      --header 'KC-API-PASSPHRASE: your-passphrase' \
+      --header 'KC-API-KEY-VERSION: 2' \
+      --data-raw '{"clientOid":"my-close-short-001","side":"buy","symbol":"BTC-USDT","type":"market","size":"0.001","autoBorrow":false,"autoRepay":true}'
+
+#### JSON Request
+
+    {
+      "clientOid": "my-close-short-001",
+      "side": "buy",
+      "symbol": "BTC-USDT",
+      "type": "market",
+      "size": "0.001",
+      "autoBorrow": false,
+      "autoRepay": true
+    }
+
+#### JSON Response
+
+    {
+      "code": "200000",
+      "data": {
+        "orderId": "6745e8f3a7b2c1d4e5f6a7b9",
+        "clientOid": "my-close-short-001"
+      }
+    }
+
+#### Usage
+
+    KucoinMarginTrading$close_short(
+      symbol,
+      size = NULL,
+      funds = NULL,
+      type = "market",
+      price = NULL,
+      isIsolated = FALSE,
+      clientOid = NULL,
+      stp = NULL,
+      remark = NULL,
+      timeInForce = NULL,
+      cancelAfter = NULL,
+      postOnly = NULL,
+      hidden = NULL,
+      iceberg = NULL,
+      visibleSize = NULL,
+      dry_run = FALSE
+    )
+
+#### Arguments
+
+- `symbol`:
+
+  Character; trading pair to close (must match the pair you shorted).
+
+- `size`:
+
+  Numeric or NULL; quantity of the base asset to buy back. Should match
+  the size you shorted. For market orders, specify either `size` or
+  `funds`, not both.
+
+- `funds`:
+
+  Numeric or NULL; amount in quote currency to spend buying back. Only
+  for market orders; mutually exclusive with `size`.
+
+- `type`:
+
+  Character; `"limit"` or `"market"` (default `"market"`).
+
+- `price`:
+
+  Numeric or NULL; required for limit orders.
+
+- `isIsolated`:
+
+  Logical; must match the margin mode used in `open_short()`.
+
+- `clientOid`:
+
+  Character or NULL; your own unique order ID.
+
+- `stp`:
+
+  Character or NULL; self-trade prevention.
+
+- `remark`:
+
+  Character or NULL; order remark.
+
+- `timeInForce`:
+
+  Character or NULL; `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
+
+- `cancelAfter`:
+
+  Numeric or NULL; auto-cancel seconds.
+
+- `postOnly`:
+
+  Logical or NULL; passive order flag.
+
+- `hidden`:
+
+  Logical or NULL; hidden order flag.
+
+- `iceberg`:
+
+  Logical or NULL; iceberg order flag.
+
+- `visibleSize`:
+
+  Numeric or NULL; visible quantity for iceberg.
+
+- `dry_run`:
+
+  Logical; if `TRUE`, validates without placing. Default `FALSE`.
+
+#### Returns
+
+`data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with columns:
+
+- `order_id` (character): KuCoin-assigned order identifier.
+
+- `client_oid` (character): Client-provided order identifier (NA if not
+  supplied).
+
+#### Examples
+
+    \dontrun{
+    margin <- KucoinMarginTrading$new()
+    order <- margin$close_short(symbol = "BTC-USDT", size = 0.001)
+    print(order)
+    }
+
+------------------------------------------------------------------------
+
+### Method `open_long()`
+
+Open a Leveraged Long Position (Borrow and Buy)
+
+Borrows quote currency (e.g. USDT) and uses it to buy the base asset
+(e.g. BTC). This is how you take a leveraged bet that an asset's price
+will go **up**. The exchange automatically borrows the funds needed.
+
+**What happens under the hood:**
+
+1.  KuCoin borrows the quote currency (e.g. USDT) on your behalf.
+
+2.  That borrowed currency is used to buy the base asset.
+
+3.  You now hold the asset but owe the borrowed amount plus interest.
+
+4.  Use `close_long()` later to sell and repay.
+
+#### API Endpoint
+
+`POST https://api.kucoin.com/api/v3/hf/margin/order`
+
+#### Official Documentation
+
+[KuCoin Margin Add
+Order](https://www.kucoin.com/docs-new/rest/margin-trading/orders/add-order)
+
+Verified: 2026-03-10
+
+#### curl
+
+    curl --location --request POST 'https://api.kucoin.com/api/v3/hf/margin/order' \
+      --header 'Content-Type: application/json' \
+      --header 'KC-API-KEY: your-api-key' \
+      --header 'KC-API-SIGN: your-signature' \
+      --header 'KC-API-TIMESTAMP: 1729176273859' \
+      --header 'KC-API-PASSPHRASE: your-passphrase' \
+      --header 'KC-API-KEY-VERSION: 2' \
+      --data-raw '{"clientOid":"my-long-001","side":"buy","symbol":"BTC-USDT","type":"market","size":"0.001","autoBorrow":true,"autoRepay":false}'
+
+#### JSON Request
+
+    {
+      "clientOid": "my-long-001",
+      "side": "buy",
+      "symbol": "BTC-USDT",
+      "type": "market",
+      "size": "0.001",
+      "autoBorrow": true,
+      "autoRepay": false
+    }
+
+#### JSON Response
+
+    {
+      "code": "200000",
+      "data": {
+        "orderId": "6745e8f3a7b2c1d4e5f6a7c0",
+        "clientOid": "my-long-001",
+        "borrowSize": "95.50",
+        "loanApplyId": "7856f9a4b8c3d2e5f6a7b8d0"
+      }
+    }
+
+#### Usage
+
+    KucoinMarginTrading$open_long(
+      symbol,
+      size = NULL,
+      funds = NULL,
+      type = "market",
+      price = NULL,
+      isIsolated = FALSE,
+      clientOid = NULL,
+      stp = NULL,
+      remark = NULL,
+      timeInForce = NULL,
+      cancelAfter = NULL,
+      postOnly = NULL,
+      hidden = NULL,
+      iceberg = NULL,
+      visibleSize = NULL,
+      dry_run = FALSE
+    )
+
+#### Arguments
+
+- `symbol`:
+
+  Character; trading pair to go long on (e.g., `"BTC-USDT"`). You will
+  borrow quote currency (USDT) and buy the base (BTC).
+
+- `size`:
+
+  Numeric or NULL; quantity of the base asset to buy.
+
+- `funds`:
+
+  Numeric or NULL; amount in quote currency to spend. Only for market
+  orders; mutually exclusive with `size`.
+
+- `type`:
+
+  Character; `"limit"` or `"market"` (default `"market"`).
+
+- `price`:
+
+  Numeric or NULL; required for limit orders.
+
+- `isIsolated`:
+
+  Logical; `TRUE` for isolated margin, `FALSE` (default) for cross.
+
+- `clientOid`:
+
+  Character or NULL; your own unique order ID.
+
+- `stp`:
+
+  Character or NULL; self-trade prevention.
+
+- `remark`:
+
+  Character or NULL; order remark.
+
+- `timeInForce`:
+
+  Character or NULL; `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
+
+- `cancelAfter`:
+
+  Numeric or NULL; auto-cancel seconds.
+
+- `postOnly`:
+
+  Logical or NULL; passive order flag.
+
+- `hidden`:
+
+  Logical or NULL; hidden order flag.
+
+- `iceberg`:
+
+  Logical or NULL; iceberg order flag.
+
+- `visibleSize`:
+
+  Numeric or NULL; visible quantity for iceberg.
+
+- `dry_run`:
+
+  Logical; if `TRUE`, validates without placing. Default `FALSE`.
+
+#### Returns
+
+`data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with columns:
+
+- `order_id` (character): KuCoin-assigned order identifier.
+
+- `client_oid` (character): Client-provided order identifier.
+
+- `borrow_size` (character): Amount borrowed.
+
+- `loan_apply_id` (character): Loan application ID.
+
+#### Examples
+
+    \dontrun{
+    margin <- KucoinMarginTrading$new()
+
+    # Market long: buy 0.001 BTC with borrowed USDT
+    order <- margin$open_long(symbol = "BTC-USDT", size = 0.001)
+
+    # Limit long: buy at a specific price
+    order <- margin$open_long(
+      symbol = "BTC-USDT", type = "limit",
+      price = 50000, size = 0.001
+    )
+    }
+
+------------------------------------------------------------------------
+
+### Method `close_long()`
+
+Close a Leveraged Long Position (Sell and Repay)
+
+Sells the base asset and automatically repays the borrowed quote
+currency. This closes a long position opened with `open_long()`.
+
+**What happens under the hood:**
+
+1.  KuCoin sells the base asset (e.g. BTC) on the market.
+
+2.  The proceeds are automatically used to repay your loan.
+
+3.  If the price rose since you opened the long, you profit.
+
+#### API Endpoint
+
+`POST https://api.kucoin.com/api/v3/hf/margin/order`
+
+#### Official Documentation
+
+[KuCoin Margin Add
+Order](https://www.kucoin.com/docs-new/rest/margin-trading/orders/add-order)
+
+Verified: 2026-03-10
+
+#### curl
+
+    curl --location --request POST 'https://api.kucoin.com/api/v3/hf/margin/order' \
+      --header 'Content-Type: application/json' \
+      --header 'KC-API-KEY: your-api-key' \
+      --header 'KC-API-SIGN: your-signature' \
+      --header 'KC-API-TIMESTAMP: 1729176273859' \
+      --header 'KC-API-PASSPHRASE: your-passphrase' \
+      --header 'KC-API-KEY-VERSION: 2' \
+      --data-raw '{"clientOid":"my-close-long-001","side":"sell","symbol":"BTC-USDT","type":"market","size":"0.001","autoBorrow":false,"autoRepay":true}'
+
+#### JSON Request
+
+    {
+      "clientOid": "my-close-long-001",
+      "side": "sell",
+      "symbol": "BTC-USDT",
+      "type": "market",
+      "size": "0.001",
+      "autoBorrow": false,
+      "autoRepay": true
+    }
+
+#### JSON Response
+
+    {
+      "code": "200000",
+      "data": {
+        "orderId": "6745e8f3a7b2c1d4e5f6a7c1",
+        "clientOid": "my-close-long-001"
+      }
+    }
+
+#### Usage
+
+    KucoinMarginTrading$close_long(
+      symbol,
+      size = NULL,
+      funds = NULL,
+      type = "market",
+      price = NULL,
+      isIsolated = FALSE,
+      clientOid = NULL,
+      stp = NULL,
+      remark = NULL,
+      timeInForce = NULL,
+      cancelAfter = NULL,
+      postOnly = NULL,
+      hidden = NULL,
+      iceberg = NULL,
+      visibleSize = NULL,
+      dry_run = FALSE
+    )
+
+#### Arguments
+
+- `symbol`:
+
+  Character; trading pair to close (must match the pair you longed).
+
+- `size`:
+
+  Numeric or NULL; quantity of the base asset to sell.
+
+- `funds`:
+
+  Numeric or NULL; amount in quote currency. Only for market orders;
+  mutually exclusive with `size`.
+
+- `type`:
+
+  Character; `"limit"` or `"market"` (default `"market"`).
+
+- `price`:
+
+  Numeric or NULL; required for limit orders.
+
+- `isIsolated`:
+
+  Logical; must match the margin mode used in `open_long()`.
+
+- `clientOid`:
+
+  Character or NULL; your own unique order ID.
+
+- `stp`:
+
+  Character or NULL; self-trade prevention.
+
+- `remark`:
+
+  Character or NULL; order remark.
+
+- `timeInForce`:
+
+  Character or NULL; `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
+
+- `cancelAfter`:
+
+  Numeric or NULL; auto-cancel seconds.
+
+- `postOnly`:
+
+  Logical or NULL; passive order flag.
+
+- `hidden`:
+
+  Logical or NULL; hidden order flag.
+
+- `iceberg`:
+
+  Logical or NULL; iceberg order flag.
+
+- `visibleSize`:
+
+  Numeric or NULL; visible quantity for iceberg.
+
+- `dry_run`:
+
+  Logical; if `TRUE`, validates without placing. Default `FALSE`.
+
+#### Returns
+
+`data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with columns:
+
+- `order_id` (character): KuCoin-assigned order identifier.
+
+- `client_oid` (character): Client-provided order identifier (NA if not
+  supplied).
+
+#### Examples
+
+    \dontrun{
+    margin <- KucoinMarginTrading$new()
+    order <- margin$close_long(symbol = "BTC-USDT", size = 0.001)
+    print(order)
+    }
+
+------------------------------------------------------------------------
+
+### Method `borrow()`
+
+Borrow Assets for Margin Trading
+
+Manually borrows a specified amount of a currency for margin trading.
+You typically don't need this if you use `open_short()` or `open_long()`
+which auto-borrow for you. Use this for advanced workflows where you
+want explicit control over the borrow/trade/repay lifecycle.
+
+#### Workflow
+
+1.  **Validation**: Checks required fields and types.
+
+2.  **Request**: Authenticated POST to borrow endpoint.
+
+3.  **Parsing**: Returns `data.table` with loan details.
+
+#### API Endpoint
+
+`POST https://api.kucoin.com/api/v3/margin/borrow`
+
+#### Official Documentation
+
+[KuCoin Margin
+Borrow](https://www.kucoin.com/docs-new/rest/margin-trading/debit/borrow)
+
+Verified: 2026-03-10
+
+#### curl
+
+    curl --location --request POST 'https://api.kucoin.com/api/v3/margin/borrow' \
+      --header 'Content-Type: application/json' \
+      --header 'KC-API-KEY: your-api-key' \
+      --header 'KC-API-SIGN: your-signature' \
+      --header 'KC-API-TIMESTAMP: 1729176273859' \
+      --header 'KC-API-PASSPHRASE: your-passphrase' \
+      --header 'KC-API-KEY-VERSION: 2' \
+      --data-raw '{"currency":"USDT","size":"100","timeInForce":"IOC","isIsolated":false,"isHf":false}'
+
+#### JSON Request
+
+    {
+      "currency": "USDT",
+      "size": "100",
+      "timeInForce": "IOC",
+      "isIsolated": false,
+      "isHf": false
+    }
+
+#### JSON Response
+
+    {
+      "code": "200000",
+      "data": {
+        "orderNo": "abc123",
+        "actualSize": "100"
+      }
+    }
+
+#### Usage
+
+    KucoinMarginTrading$borrow(
+      currency,
+      size,
+      timeInForce = "IOC",
+      isIsolated = FALSE,
+      symbol = NULL,
+      isHf = FALSE
+    )
+
+#### Arguments
+
+- `currency`:
+
+  Character; the currency to borrow (e.g., `"USDT"`, `"BTC"`).
+
+- `size`:
+
+  Numeric; the amount to borrow.
+
+- `timeInForce`:
+
+  Character; order time-in-force policy (default `"IOC"`). Valid values:
+  `"IOC"` (immediate-or-cancel), `"FOK"` (fill-or-kill).
+
+- `isIsolated`:
+
+  Logical; `TRUE` for isolated margin, `FALSE` (default) for cross.
+
+- `symbol`:
+
+  Character or NULL; required when `isIsolated = TRUE`. Trading pair
+  (e.g., `"BTC-USDT"`).
+
+- `isHf`:
+
+  Logical; `TRUE` for high-frequency trading mode, `FALSE` (default).
+
+#### Returns
+
+`data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with columns:
+
+- `order_no` (character): Borrow order number.
+
+- `actual_size` (character): Amount actually borrowed.
+
+#### Examples
+
+    \dontrun{
+    margin <- KucoinMarginTrading$new()
+
+    # Cross margin borrow
+    loan <- margin$borrow(currency = "USDT", size = 100)
+    print(loan)
+
+    # Isolated margin borrow
+    loan <- margin$borrow(
+      currency = "BTC", size = 0.01,
+      isIsolated = TRUE, symbol = "BTC-USDT"
+    )
+    }
+
+------------------------------------------------------------------------
+
+### Method `repay()`
+
+Repay Borrowed Assets
+
+Manually repays a specified amount of a borrowed currency. You typically
+don't need this if you use `close_short()` or `close_long()` which
+auto-repay for you. Use this for advanced workflows or to repay interest
+independently.
+
+#### API Endpoint
+
+`POST https://api.kucoin.com/api/v3/margin/repay`
+
+#### Official Documentation
+
+[KuCoin Margin
+Repay](https://www.kucoin.com/docs-new/rest/margin-trading/debit/repay)
+
+Verified: 2026-03-10
+
+#### curl
+
+    curl --location --request POST 'https://api.kucoin.com/api/v3/margin/repay' \
+      --header 'Content-Type: application/json' \
+      --header 'KC-API-KEY: your-api-key' \
+      --header 'KC-API-SIGN: your-signature' \
+      --header 'KC-API-TIMESTAMP: 1729176273859' \
+      --header 'KC-API-PASSPHRASE: your-passphrase' \
+      --header 'KC-API-KEY-VERSION: 2' \
+      --data-raw '{"currency":"USDT","size":"100"}'
+
+#### JSON Request
+
+    {
+      "currency": "USDT",
+      "size": "100"
+    }
+
+#### JSON Response
+
+    {
+      "code": "200000",
+      "data": {
+        "timestamp": 1729655606816,
+        "orderNo": "abc123",
+        "actualSize": "100"
+      }
+    }
+
+#### Usage
+
+    KucoinMarginTrading$repay(currency, size)
+
+#### Arguments
+
+- `currency`:
+
+  Character; the currency to repay (e.g., `"USDT"`, `"BTC"`).
+
+- `size`:
+
+  Numeric; the amount to repay.
+
+#### Returns
+
+`data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with columns:
+
+- `order_no` (character): Repayment order number.
+
+- `actual_size` (character): Amount actually repaid.
+
+#### Examples
+
+    \dontrun{
+    margin <- KucoinMarginTrading$new()
+    result <- margin$repay(currency = "USDT", size = 100)
+    print(result)
+    }
+
+------------------------------------------------------------------------
+
+### Method `get_borrow_history()`
+
+Get Borrow History
+
+Retrieves paginated borrow history records.
+
+#### API Endpoint
+
+`GET https://api.kucoin.com/api/v3/margin/borrow`
+
+#### Official Documentation
+
+[KuCoin Get Borrow
+History](https://www.kucoin.com/docs-new/rest/margin-trading/debit/get-borrow-history)
+
+Verified: 2026-03-10
+
+#### curl
+
+    curl --location --request GET \
+      'https://api.kucoin.com/api/v3/margin/borrow?currency=USDT&currentPage=1&pageSize=50' \
+      --header 'KC-API-KEY: your-api-key' \
+      --header 'KC-API-SIGN: your-signature' \
+      --header 'KC-API-TIMESTAMP: 1729176273859' \
+      --header 'KC-API-PASSPHRASE: your-passphrase' \
+      --header 'KC-API-KEY-VERSION: 2'
+
+#### JSON Response
+
+    {
+      "code": "200000",
+      "data": {
+        "currentPage": 1,
+        "pageSize": 50,
+        "totalNum": 1,
+        "totalPage": 1,
+        "items": [
+          {
+            "orderNo": "abc123456",
+            "symbol": "BTC-USDT",
+            "currency": "USDT",
+            "size": "100",
+            "actualSize": "100",
+            "status": "DONE",
+            "createdTime": 1729577515473
+          }
+        ]
+      }
+    }
+
+#### Usage
+
+    KucoinMarginTrading$get_borrow_history(query = list())
+
+#### Arguments
+
+- `query`:
+
+  Named list; optional filter parameters. Supported keys:
+
+  - `currency` (character): Filter by currency.
+
+  - `isIsolated` (logical): Filter by margin type.
+
+  - `symbol` (character): Filter by trading pair.
+
+  - `orderNo` (character): Filter by order number.
+
+  - `startTime` (integer): Start timestamp in milliseconds.
+
+  - `endTime` (integer): End timestamp in milliseconds.
+
+  - `currentPage` (integer): Page number.
+
+  - `pageSize` (integer): Items per page.
+
+#### Returns
+
+`data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with borrow records.
+
+#### Examples
+
+    \dontrun{
+    margin <- KucoinMarginTrading$new()
+    history <- margin$get_borrow_history(query = list(currency = "USDT"))
+    print(history)
+    }
+
+------------------------------------------------------------------------
+
+### Method `get_repay_history()`
+
+Get Repay History
+
+Retrieves paginated repayment history records.
+
+#### API Endpoint
+
+`GET https://api.kucoin.com/api/v3/margin/repay`
+
+#### Official Documentation
+
+[KuCoin Get Repay
+History](https://www.kucoin.com/docs-new/rest/margin-trading/debit/get-repay-history)
+
+Verified: 2026-03-10
+
+#### curl
+
+    curl --location --request GET \
+      'https://api.kucoin.com/api/v3/margin/repay?currency=USDT&currentPage=1&pageSize=50' \
+      --header 'KC-API-KEY: your-api-key' \
+      --header 'KC-API-SIGN: your-signature' \
+      --header 'KC-API-TIMESTAMP: 1729176273859' \
+      --header 'KC-API-PASSPHRASE: your-passphrase' \
+      --header 'KC-API-KEY-VERSION: 2'
+
+#### JSON Response
+
+    {
+      "code": "200000",
+      "data": {
+        "currentPage": 1,
+        "pageSize": 50,
+        "totalNum": 1,
+        "totalPage": 1,
+        "items": [
+          {
+            "orderNo": "def456789",
+            "symbol": "BTC-USDT",
+            "currency": "USDT",
+            "size": "100",
+            "actualSize": "100",
+            "status": "DONE",
+            "createdTime": 1729577815473
+          }
+        ]
+      }
+    }
+
+#### Usage
+
+    KucoinMarginTrading$get_repay_history(query = list())
+
+#### Arguments
+
+- `query`:
+
+  Named list; optional filter parameters. Same keys as
+  `get_borrow_history()`.
+
+#### Returns
+
+`data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with repay records.
+
+#### Examples
+
+    \dontrun{
+    margin <- KucoinMarginTrading$new()
+    history <- margin$get_repay_history(query = list(currency = "USDT"))
+    print(history)
+    }
+
+------------------------------------------------------------------------
+
+### Method `get_interest_history()`
+
+Get Interest History
+
+Retrieves paginated interest accrual history for margin borrowing.
+
+#### API Endpoint
+
+`GET https://api.kucoin.com/api/v3/margin/interest`
+
+#### Official Documentation
+
+[KuCoin Get Interest
+History](https://www.kucoin.com/docs-new/rest/margin-trading/debit/get-interest-history)
+
+Verified: 2026-03-10
+
+#### curl
+
+    curl --location --request GET \
+      'https://api.kucoin.com/api/v3/margin/interest?currency=USDT&currentPage=1&pageSize=50' \
+      --header 'KC-API-KEY: your-api-key' \
+      --header 'KC-API-SIGN: your-signature' \
+      --header 'KC-API-TIMESTAMP: 1729176273859' \
+      --header 'KC-API-PASSPHRASE: your-passphrase' \
+      --header 'KC-API-KEY-VERSION: 2'
+
+#### JSON Response
+
+    {
+      "code": "200000",
+      "data": {
+        "currentPage": 1,
+        "pageSize": 50,
+        "totalNum": 1,
+        "totalPage": 1,
+        "items": [
+          {
+            "currency": "USDT",
+            "dayRatio": "0.0001",
+            "interestAmount": "0.01",
+            "createdTime": 1729577515473
+          }
+        ]
+      }
+    }
+
+#### Usage
+
+    KucoinMarginTrading$get_interest_history(query = list())
+
+#### Arguments
+
+- `query`:
+
+  Named list; optional filter parameters. Supported keys:
+
+  - `currency` (character): Filter by currency.
+
+  - `isIsolated` (logical): Cross vs isolated.
+
+  - `symbol` (character): Trading pair.
+
+  - `startTime` (integer): Start timestamp in milliseconds.
+
+  - `endTime` (integer): End timestamp in milliseconds.
+
+  - `currentPage` (integer): Page number.
+
+  - `pageSize` (integer): Items per page.
+
+#### Returns
+
+`data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with interest records.
+
+#### Examples
+
+    \dontrun{
+    margin <- KucoinMarginTrading$new()
+    interest <- margin$get_interest_history(query = list(currency = "USDT"))
+    print(interest)
+    }
+
+------------------------------------------------------------------------
+
+### Method `get_borrow_rate()`
+
+Get Borrow Interest Rate
+
+Retrieves current borrow interest rates for one or more currencies.
+
+#### API Endpoint
+
+`GET https://api.kucoin.com/api/v3/margin/borrowRate`
+
+#### Official Documentation
+
+[KuCoin Get Borrow Interest
+Rate](https://www.kucoin.com/docs-new/rest/margin-trading/debit/get-borrow-interest-rate)
+
+Verified: 2026-03-10
+
+#### curl
+
+    curl --location --request GET \
+      'https://api.kucoin.com/api/v3/margin/borrowRate?currency=BTC,USDT' \
+      --header 'KC-API-KEY: your-api-key' \
+      --header 'KC-API-SIGN: your-signature' \
+      --header 'KC-API-TIMESTAMP: 1729176273859' \
+      --header 'KC-API-PASSPHRASE: your-passphrase' \
+      --header 'KC-API-KEY-VERSION: 2'
+
+#### JSON Response
+
+    {
+      "code": "200000",
+      "data": [
+        {
+          "currency": "BTC",
+          "hourlyBorrowRate": "0.000004",
+          "annualizedBorrowRate": "0.035"
+        },
+        {
+          "currency": "USDT",
+          "hourlyBorrowRate": "0.000006",
+          "annualizedBorrowRate": "0.0526"
+        }
+      ]
+    }
+
+#### Usage
+
+    KucoinMarginTrading$get_borrow_rate(query = list())
+
+#### Arguments
+
+- `query`:
+
+  Named list; optional filter parameters. Supported keys:
+
+  - `currency` (character): Comma-separated currency list (e.g.,
+    `"BTC,USDT"`).
+
+  - `vipLevel` (integer): VIP tier level.
+
+#### Returns
+
+`data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with columns:
+
+- `currency` (character): Currency code.
+
+- `hourly_borrow_rate` (character): Hourly interest rate.
+
+- `annualized_borrow_rate` (character): Annualized interest rate.
+
+#### Examples
+
+    \dontrun{
+    margin <- KucoinMarginTrading$new()
+    rates <- margin$get_borrow_rate(query = list(currency = "BTC,USDT,ETH"))
+    print(rates)
+    }
+
+------------------------------------------------------------------------
+
+### Method `modify_leverage()`
+
+Modify Leverage
+
+Updates the leverage multiplier for the margin account. Higher leverage
+means you can borrow more relative to your collateral, but also
+increases liquidation risk.
+
+#### API Endpoint
+
+`POST https://api.kucoin.com/api/v3/position/update-user-leverage`
+
+#### Official Documentation
+
+[KuCoin Modify
+Leverage](https://www.kucoin.com/docs-new/rest/margin-trading/debit/modify-leverage)
+
+Verified: 2026-03-10
+
+#### curl
+
+    curl --location --request POST 'https://api.kucoin.com/api/v3/position/update-user-leverage' \
+      --header 'Content-Type: application/json' \
+      --header 'KC-API-KEY: your-api-key' \
+      --header 'KC-API-SIGN: your-signature' \
+      --header 'KC-API-TIMESTAMP: 1729176273859' \
+      --header 'KC-API-PASSPHRASE: your-passphrase' \
+      --header 'KC-API-KEY-VERSION: 2' \
+      --data-raw '{"leverage":"5"}'
+
+#### JSON Request
+
+    {
+      "leverage": "5"
+    }
+
+#### JSON Response
+
+    {
+      "code": "200000",
+      "data": null
+    }
+
+#### Usage
+
+    KucoinMarginTrading$modify_leverage(leverage)
+
+#### Arguments
+
+- `leverage`:
+
+  Numeric; the desired leverage multiplier (e.g., `3`, `5`, `10`).
+
+#### Returns
+
+`data.table` (or `promise<data.table>` if `async = TRUE`), single row
+with columns:
+
+- `leverage` (numeric): The new leverage multiplier.
+
+- `status` (character): `"success"`.
+
+#### Examples
+
+    \dontrun{
+    margin <- KucoinMarginTrading$new()
+    margin$modify_leverage(leverage = 5)
+    }
+
+------------------------------------------------------------------------
+
+### Method `clone()`
+
+The objects of this class are cloneable with this method.
+
+#### Usage
+
+    KucoinMarginTrading$clone(deep = FALSE)
+
+#### Arguments
+
+- `deep`:
+
+  Whether to make a deep clone.
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+margin <- KucoinMarginTrading$new()
+
+# --- Short selling workflow ---
+# 1. Open short: borrow BTC and sell it immediately
+order <- margin$open_short(symbol = "BTC-USDT", size = 0.001)
+print(order)
+
+# 2. Close short: buy back BTC and repay the loan
+order <- margin$close_short(symbol = "BTC-USDT", size = 0.001)
+print(order)
+
+# --- Leveraged long workflow ---
+# 1. Open long: borrow USDT and buy BTC with it
+order <- margin$open_long(symbol = "BTC-USDT", size = 0.001)
+print(order)
+
+# 2. Close long: sell BTC and repay borrowed USDT
+order <- margin$close_long(symbol = "BTC-USDT", size = 0.001)
+print(order)
+
+# --- Manual borrow/repay ---
+loan <- margin$borrow(currency = "USDT", size = 100)
+margin$repay(currency = "USDT", size = 100)
+
+# --- Check rates before trading ---
+rates <- margin$get_borrow_rate(query = list(currency = "BTC,USDT"))
+print(rates)
+} # }
+
+
+## ------------------------------------------------
+## Method `KucoinMarginTrading$open_short`
+## ------------------------------------------------
+
+if (FALSE) { # \dontrun{
+margin <- KucoinMarginTrading$new()
+
+# Market short: sell 0.001 BTC you don't own
+order <- margin$open_short(symbol = "BTC-USDT", size = 0.001)
+
+# Limit short: sell at a specific price
+order <- margin$open_short(
+  symbol = "BTC-USDT", type = "limit",
+  price = 100000, size = 0.001
+)
+
+# Dry run (test without placing)
+margin$open_short(symbol = "BTC-USDT", size = 0.001, dry_run = TRUE)
+} # }
+
+## ------------------------------------------------
+## Method `KucoinMarginTrading$close_short`
+## ------------------------------------------------
+
+if (FALSE) { # \dontrun{
+margin <- KucoinMarginTrading$new()
+order <- margin$close_short(symbol = "BTC-USDT", size = 0.001)
+print(order)
+} # }
+
+## ------------------------------------------------
+## Method `KucoinMarginTrading$open_long`
+## ------------------------------------------------
+
+if (FALSE) { # \dontrun{
+margin <- KucoinMarginTrading$new()
+
+# Market long: buy 0.001 BTC with borrowed USDT
+order <- margin$open_long(symbol = "BTC-USDT", size = 0.001)
+
+# Limit long: buy at a specific price
+order <- margin$open_long(
+  symbol = "BTC-USDT", type = "limit",
+  price = 50000, size = 0.001
+)
+} # }
+
+## ------------------------------------------------
+## Method `KucoinMarginTrading$close_long`
+## ------------------------------------------------
+
+if (FALSE) { # \dontrun{
+margin <- KucoinMarginTrading$new()
+order <- margin$close_long(symbol = "BTC-USDT", size = 0.001)
+print(order)
+} # }
+
+## ------------------------------------------------
+## Method `KucoinMarginTrading$borrow`
+## ------------------------------------------------
+
+if (FALSE) { # \dontrun{
+margin <- KucoinMarginTrading$new()
+
+# Cross margin borrow
+loan <- margin$borrow(currency = "USDT", size = 100)
+print(loan)
+
+# Isolated margin borrow
+loan <- margin$borrow(
+  currency = "BTC", size = 0.01,
+  isIsolated = TRUE, symbol = "BTC-USDT"
+)
+} # }
+
+## ------------------------------------------------
+## Method `KucoinMarginTrading$repay`
+## ------------------------------------------------
+
+if (FALSE) { # \dontrun{
+margin <- KucoinMarginTrading$new()
+result <- margin$repay(currency = "USDT", size = 100)
+print(result)
+} # }
+
+## ------------------------------------------------
+## Method `KucoinMarginTrading$get_borrow_history`
+## ------------------------------------------------
+
+if (FALSE) { # \dontrun{
+margin <- KucoinMarginTrading$new()
+history <- margin$get_borrow_history(query = list(currency = "USDT"))
+print(history)
+} # }
+
+## ------------------------------------------------
+## Method `KucoinMarginTrading$get_repay_history`
+## ------------------------------------------------
+
+if (FALSE) { # \dontrun{
+margin <- KucoinMarginTrading$new()
+history <- margin$get_repay_history(query = list(currency = "USDT"))
+print(history)
+} # }
+
+## ------------------------------------------------
+## Method `KucoinMarginTrading$get_interest_history`
+## ------------------------------------------------
+
+if (FALSE) { # \dontrun{
+margin <- KucoinMarginTrading$new()
+interest <- margin$get_interest_history(query = list(currency = "USDT"))
+print(interest)
+} # }
+
+## ------------------------------------------------
+## Method `KucoinMarginTrading$get_borrow_rate`
+## ------------------------------------------------
+
+if (FALSE) { # \dontrun{
+margin <- KucoinMarginTrading$new()
+rates <- margin$get_borrow_rate(query = list(currency = "BTC,USDT,ETH"))
+print(rates)
+} # }
+
+## ------------------------------------------------
+## Method `KucoinMarginTrading$modify_leverage`
+## ------------------------------------------------
+
+if (FALSE) { # \dontrun{
+margin <- KucoinMarginTrading$new()
+margin$modify_leverage(leverage = 5)
+} # }
+```
