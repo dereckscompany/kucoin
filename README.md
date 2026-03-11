@@ -3,7 +3,7 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/dereckmezquita/kucoin/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/dereckmezquita/kucoin/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/dereckscompany/kucoin/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/dereckscompany/kucoin/actions/workflows/R-CMD-check.yaml)
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
@@ -34,7 +34,7 @@ a bug or wish to make an improvement.
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("dereckmezquita/kucoin")
+remotes::install_github("dereckscompany/kucoin")
 ```
 
 ## Setup
@@ -100,7 +100,7 @@ market <- KucoinMarketData$new(keys = KEYS, base_url = BASE)
 ### Price Ticker
 
 ``` r
-market$get_ticker("BTC-USDT")
+market$get_ticker(symbol = "BTC-USDT")
 ```
 
     #>                   time      sequence   price       size best_bid best_bid_size
@@ -113,7 +113,7 @@ market$get_ticker("BTC-USDT")
 ### 24hr Statistics
 
 ``` r
-market$get_24hr_stats("BTC-USDT")
+market$get_24hr_stats(symbol = "BTC-USDT")
 ```
 
     #>                   time   symbol     buy    sell change_rate change_price
@@ -129,7 +129,9 @@ market$get_24hr_stats("BTC-USDT")
 ### Klines (Candlestick Data)
 
 ``` r
-market$get_klines("BTC-USDT", "1hour",
+market$get_klines(
+  symbol = "BTC-USDT",
+  timeframe = "1hour",
   from = ymd_hms("2025-01-01 00:00:00"),
   to = ymd_hms("2025-01-02 00:00:00")
 )
@@ -169,7 +171,7 @@ trading$add_order_test(
 ### Get Open Orders
 
 ``` r
-trading$get_open_orders("BTC-USDT")
+trading$get_open_orders(symbol = "BTC-USDT")
 ```
 
     #>                          id   symbol op_type   type   side  price   size  funds
@@ -347,7 +349,7 @@ futures_market <- KucoinFuturesMarketData$new(keys = KEYS, base_url = FBASE)
 #### Contract Details
 
 ``` r
-futures_market$get_contract("XBTUSDTM")
+futures_market$get_contract(symbol = "XBTUSDTM")
 ```
 
     #>      symbol root_symbol   type first_open_date base_currency quote_currency
@@ -378,7 +380,7 @@ futures_market$get_contract("XBTUSDTM")
 #### Futures Ticker
 
 ``` r
-futures_market$get_ticker("XBTUSDTM")
+futures_market$get_ticker(symbol = "XBTUSDTM")
 ```
 
     #>      sequence   symbol   side  size   price best_bid_size best_bid_price
@@ -440,8 +442,8 @@ box::use(coro, later)
 market_async <- KucoinMarketData$new(keys = KEYS, base_url = BASE, async = TRUE)
 
 main <- coro$async(function() {
-  ticker <- await(market_async$get_ticker("BTC-USDT"))
-  klines <- await(market_async$get_klines("BTC-USDT", "1hour"))
+  ticker <- await(market_async$get_ticker(symbol = "BTC-USDT"))
+  klines <- await(market_async$get_klines(symbol = "BTC-USDT", timeframe = "1hour"))
 
   print(ticker)
   print(klines)
