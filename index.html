@@ -494,7 +494,7 @@
 <span></span>
 <span><span class="va">main</span> <span class="op">&lt;-</span> <span class="va">coro</span><span class="op">$</span><span class="fu">async</span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">ticker</span> <span class="op">&lt;-</span> <span class="fu">await</span><span class="op">(</span><span class="va">market_async</span><span class="op">$</span><span class="fu">get_ticker</span><span class="op">(</span><span class="st">"BTC-USDT"</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">klines</span> <span class="op">&lt;-</span> <span class="fu">await</span><span class="op">(</span><span class="va">market_async</span><span class="op">$</span><span class="fu">get_klines</span><span class="op">(</span><span class="st">"BTC-USDT"</span>, <span class="st">"1hour"</span>, limit <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">klines</span> <span class="op">&lt;-</span> <span class="fu">await</span><span class="op">(</span><span class="va">market_async</span><span class="op">$</span><span class="fu">get_klines</span><span class="op">(</span><span class="st">"BTC-USDT"</span>, <span class="st">"1hour"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">ticker</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">klines</span><span class="op">)</span></span>
@@ -505,36 +505,47 @@
 <span><span class="kw">while</span> <span class="op">(</span><span class="op">!</span><span class="va">later</span><span class="op">$</span><span class="fu">loop_empty</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">later</span><span class="op">$</span><span class="fu">run_now</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a><span class="co">#&gt;                   time      sequence   price       size best_bid best_bid_size</span></span>
+<span id="cb39-2"><a href="#cb39-2" tabindex="-1"></a><span class="co">#&gt;                 &lt;POSc&gt;        &lt;char&gt;  &lt;char&gt;     &lt;char&gt;   &lt;char&gt;        &lt;char&gt;</span></span>
+<span id="cb39-3"><a href="#cb39-3" tabindex="-1"></a><span class="co">#&gt; 1: 2024-10-17 10:04:19 1550467636704 67232.9 0.00007682  67232.8    0.41861839</span></span>
+<span id="cb39-4"><a href="#cb39-4" tabindex="-1"></a><span class="co">#&gt;    best_ask best_ask_size</span></span>
+<span id="cb39-5"><a href="#cb39-5" tabindex="-1"></a><span class="co">#&gt;      &lt;char&gt;        &lt;char&gt;</span></span>
+<span id="cb39-6"><a href="#cb39-6" tabindex="-1"></a><span class="co">#&gt; 1:  67232.9    1.24808993</span></span>
+<span id="cb39-7"><a href="#cb39-7" tabindex="-1"></a><span class="co">#&gt;               datetime     open     high      low    close   volume turnover</span></span>
+<span id="cb39-8"><a href="#cb39-8" tabindex="-1"></a><span class="co">#&gt;                 &lt;POSc&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;</span></span>
+<span id="cb39-9"><a href="#cb39-9" tabindex="-1"></a><span class="co">#&gt; 1: 2025-07-26 12:00:00 117775.9 118221.2 117766.4 118128.9 264.6461 31241540</span></span>
+<span id="cb39-10"><a href="#cb39-10" tabindex="-1"></a><span class="co">#&gt; 2: 2025-07-26 16:00:00 118129.0 118291.8 117940.3 118227.4 197.8112 23355797</span></span>
+<span id="cb39-11"><a href="#cb39-11" tabindex="-1"></a><span class="co">#&gt; 3: 2025-07-26 20:00:00 118227.3 118299.3 117880.4 117915.0 252.9352 29854685</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="sample-data">Sample Data<a class="anchor" aria-label="anchor" href="#sample-data"></a>
 </h2>
 <p>The package includes bundled historical OHLCV data for BTC-USDT at 4-hour intervals (October 2017 through March 2026):</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">kucoin_btc_usdt_4h_ohlcv</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">kucoin_btc_usdt_4h_ohlcv</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb40"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a><span class="co">#&gt;      symbol            datetime     open     high      low    close     volume</span></span>
-<span id="cb40-2"><a href="#cb40-2" tabindex="-1"></a><span class="co">#&gt;      &lt;char&gt;              &lt;POSc&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;      &lt;num&gt;</span></span>
-<span id="cb40-3"><a href="#cb40-3" tabindex="-1"></a><span class="co">#&gt; 1: BTC-USDT 2017-10-18 16:00:00 3996.866 4318.733 3806.382 3811.101 0.12096412</span></span>
-<span id="cb40-4"><a href="#cb40-4" tabindex="-1"></a><span class="co">#&gt; 2: BTC-USDT 2017-10-18 20:00:00 3811.101 4088.281 3811.101 3812.004 0.06215084</span></span>
-<span id="cb40-5"><a href="#cb40-5" tabindex="-1"></a><span class="co">#&gt; 3: BTC-USDT 2017-10-19 00:00:00 3812.004 5548.231 3812.000 4060.403 0.13683638</span></span>
-<span id="cb40-6"><a href="#cb40-6" tabindex="-1"></a><span class="co">#&gt; 4: BTC-USDT 2017-10-19 04:00:00 4060.021 5693.211 3806.382 5123.414 0.37534149</span></span>
-<span id="cb40-7"><a href="#cb40-7" tabindex="-1"></a><span class="co">#&gt; 5: BTC-USDT 2017-10-19 08:00:00 5093.211 5693.211 5093.211 5093.211 0.93088201</span></span>
-<span id="cb40-8"><a href="#cb40-8" tabindex="-1"></a><span class="co">#&gt; 6: BTC-USDT 2017-10-19 12:00:00 5094.149 5693.000 5093.211 5408.350 0.47226735</span></span>
-<span id="cb40-9"><a href="#cb40-9" tabindex="-1"></a><span class="co">#&gt;     turnover   freq</span></span>
-<span id="cb40-10"><a href="#cb40-10" tabindex="-1"></a><span class="co">#&gt;        &lt;num&gt; &lt;char&gt;</span></span>
-<span id="cb40-11"><a href="#cb40-11" tabindex="-1"></a><span class="co">#&gt; 1:  467.0677     4h</span></span>
-<span id="cb40-12"><a href="#cb40-12" tabindex="-1"></a><span class="co">#&gt; 2:  241.1115     4h</span></span>
-<span id="cb40-13"><a href="#cb40-13" tabindex="-1"></a><span class="co">#&gt; 3:  545.1717     4h</span></span>
-<span id="cb40-14"><a href="#cb40-14" tabindex="-1"></a><span class="co">#&gt; 4: 1647.8900     4h</span></span>
-<span id="cb40-15"><a href="#cb40-15" tabindex="-1"></a><span class="co">#&gt; 5: 5071.2131     4h</span></span>
-<span id="cb40-16"><a href="#cb40-16" tabindex="-1"></a><span class="co">#&gt; 6: 2535.2478     4h</span></span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a><span class="co">#&gt;      symbol            datetime     open     high      low    close     volume</span></span>
+<span id="cb41-2"><a href="#cb41-2" tabindex="-1"></a><span class="co">#&gt;      &lt;char&gt;              &lt;POSc&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;      &lt;num&gt;</span></span>
+<span id="cb41-3"><a href="#cb41-3" tabindex="-1"></a><span class="co">#&gt; 1: BTC-USDT 2017-10-18 16:00:00 3996.866 4318.733 3806.382 3811.101 0.12096412</span></span>
+<span id="cb41-4"><a href="#cb41-4" tabindex="-1"></a><span class="co">#&gt; 2: BTC-USDT 2017-10-18 20:00:00 3811.101 4088.281 3811.101 3812.004 0.06215084</span></span>
+<span id="cb41-5"><a href="#cb41-5" tabindex="-1"></a><span class="co">#&gt; 3: BTC-USDT 2017-10-19 00:00:00 3812.004 5548.231 3812.000 4060.403 0.13683638</span></span>
+<span id="cb41-6"><a href="#cb41-6" tabindex="-1"></a><span class="co">#&gt; 4: BTC-USDT 2017-10-19 04:00:00 4060.021 5693.211 3806.382 5123.414 0.37534149</span></span>
+<span id="cb41-7"><a href="#cb41-7" tabindex="-1"></a><span class="co">#&gt; 5: BTC-USDT 2017-10-19 08:00:00 5093.211 5693.211 5093.211 5093.211 0.93088201</span></span>
+<span id="cb41-8"><a href="#cb41-8" tabindex="-1"></a><span class="co">#&gt; 6: BTC-USDT 2017-10-19 12:00:00 5094.149 5693.000 5093.211 5408.350 0.47226735</span></span>
+<span id="cb41-9"><a href="#cb41-9" tabindex="-1"></a><span class="co">#&gt;     turnover   freq</span></span>
+<span id="cb41-10"><a href="#cb41-10" tabindex="-1"></a><span class="co">#&gt;        &lt;num&gt; &lt;char&gt;</span></span>
+<span id="cb41-11"><a href="#cb41-11" tabindex="-1"></a><span class="co">#&gt; 1:  467.0677     4h</span></span>
+<span id="cb41-12"><a href="#cb41-12" tabindex="-1"></a><span class="co">#&gt; 2:  241.1115     4h</span></span>
+<span id="cb41-13"><a href="#cb41-13" tabindex="-1"></a><span class="co">#&gt; 3:  545.1717     4h</span></span>
+<span id="cb41-14"><a href="#cb41-14" tabindex="-1"></a><span class="co">#&gt; 4: 1647.8900     4h</span></span>
+<span id="cb41-15"><a href="#cb41-15" tabindex="-1"></a><span class="co">#&gt; 5: 5071.2131     4h</span></span>
+<span id="cb41-16"><a href="#cb41-16" tabindex="-1"></a><span class="co">#&gt; 6: 2535.2478     4h</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
 <p>If you use this package in your work, please cite it:</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"kucoin"</span><span class="op">)</span></span></code></pre></div>
 <blockquote>
 <p>Mezquita, D. (2026). kucoin: R API Wrapper to KuCoin Cryptocurrency Exchange. R package version 4.0.0.</p>

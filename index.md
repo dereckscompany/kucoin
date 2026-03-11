@@ -463,7 +463,7 @@ market_async <- KucoinMarketData$new(keys = KEYS, base_url = BASE, async = TRUE)
 
 main <- coro$async(function() {
   ticker <- await(market_async$get_ticker("BTC-USDT"))
-  klines <- await(market_async$get_klines("BTC-USDT", "1hour", limit = 10))
+  klines <- await(market_async$get_klines("BTC-USDT", "1hour"))
 
   print(ticker)
   print(klines)
@@ -474,6 +474,20 @@ main()
 while (!later$loop_empty()) {
   later$run_now()
 }
+```
+
+``` R
+#>                   time      sequence   price       size best_bid best_bid_size
+#>                 <POSc>        <char>  <char>     <char>   <char>        <char>
+#> 1: 2024-10-17 10:04:19 1550467636704 67232.9 0.00007682  67232.8    0.41861839
+#>    best_ask best_ask_size
+#>      <char>        <char>
+#> 1:  67232.9    1.24808993
+#>               datetime     open     high      low    close   volume turnover
+#>                 <POSc>    <num>    <num>    <num>    <num>    <num>    <num>
+#> 1: 2025-07-26 12:00:00 117775.9 118221.2 117766.4 118128.9 264.6461 31241540
+#> 2: 2025-07-26 16:00:00 118129.0 118291.8 117940.3 118227.4 197.8112 23355797
+#> 3: 2025-07-26 20:00:00 118227.3 118299.3 117880.4 117915.0 252.9352 29854685
 ```
 
 ## Sample Data
