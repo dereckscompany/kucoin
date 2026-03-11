@@ -208,7 +208,8 @@ trading$cancel_all_by_symbol("BTC-USDT")
 
 \dontrun{
 trading <- KucoinTrading$new()
-trading$cancel_all()
+result <- trading$cancel_all()
+print(result[status == "failed"])
 }
 
 ## ------------------------------------------------
@@ -238,9 +239,8 @@ print(order)
 \dontrun{
 trading <- KucoinTrading$new()
 fills <- trading$get_fills("BTC-USDT")
-# Calculate total fees
-total_fees <- fills[, sum(as.numeric(fee))]
-print(paste("Total fees:", total_fees, "USDT"))
+# Get all fills across symbols
+all_fills <- trading$get_fills()
 }
 
 ## ------------------------------------------------
@@ -260,7 +260,6 @@ print(active$symbols)
 \dontrun{
 trading <- KucoinTrading$new()
 open_orders <- trading$get_open_orders("BTC-USDT")
-print(open_orders[, .(order_id, side, price, size, datetime_created)])
 }
 
 ## ------------------------------------------------
@@ -270,7 +269,8 @@ print(open_orders[, .(order_id, side, price, size, datetime_created)])
 \dontrun{
 trading <- KucoinTrading$new()
 closed <- trading$get_closed_orders("BTC-USDT", limit = 20)
-print(closed[, .(order_id, side, price, size, datetime_created)])
+# Get all closed orders across symbols
+all_closed <- trading$get_closed_orders()
 }
 
 ## ------------------------------------------------
@@ -449,6 +449,20 @@ Verified: 2026-02-01
 }\if{html}{\out{</div>}}
 }
 
+\subsection{JSON Request}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "type": "limit",
+  "symbol": "BTC-USDT",
+  "side": "buy",
+  "price": "50000",
+  "size": "0.00001",
+  "clientOid": "5c52e11203aa677f33e493fb",
+  "timeInForce": "GTC"
+\}
+}\if{html}{\out{</div>}}
+}
+
 \subsection{JSON Response}{
 
 \if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
@@ -598,6 +612,20 @@ Verified: 2026-02-01
 }\if{html}{\out{</div>}}
 }
 
+\subsection{JSON Request}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "type": "limit",
+  "symbol": "BTC-USDT",
+  "side": "buy",
+  "price": "50000",
+  "size": "0.00001",
+  "clientOid": "5c52e11203aa677f33e493fb",
+  "timeInForce": "GTC"
+\}
+}\if{html}{\out{</div>}}
+}
+
 \subsection{JSON Response}{
 
 \if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
@@ -732,6 +760,31 @@ Verified: 2026-02-01
   --header 'KC-API-PASSPHRASE: your-passphrase' \\
   --header 'KC-API-KEY-VERSION: 2' \\
   --data-raw '\{"orderList":[\{"clientOid":"id1","symbol":"BTC-USDT","type":"limit","side":"buy","price":"30000","size":"0.00001"\}]\}'
+}\if{html}{\out{</div>}}
+}
+
+\subsection{JSON Request}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "orderList": [
+    \{
+      "clientOid": "id1",
+      "symbol": "BTC-USDT",
+      "type": "limit",
+      "side": "buy",
+      "price": "30000",
+      "size": "0.00001"
+    \},
+    \{
+      "clientOid": "id2",
+      "symbol": "ETH-USDT",
+      "type": "limit",
+      "side": "buy",
+      "price": "2000",
+      "size": "0.001"
+    \}
+  ]
+\}
 }\if{html}{\out{</div>}}
 }
 
@@ -976,6 +1029,18 @@ Verified: 2026-02-01
   --header 'KC-API-KEY-VERSION: 2'
 }\if{html}{\out{</div>}}
 }
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": \{
+    "orderId": "671124f9365ccb00073debd4",
+    "cancelSize": "0.00001"
+  \}
+\}
+}\if{html}{\out{</div>}}
+}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$cancel_partial_order(orderId, symbol, cancelSize)}\if{html}{\out{</div>}}
 }
@@ -1045,6 +1110,15 @@ Verified: 2026-02-01
   --header 'KC-API-KEY-VERSION: 2'
 }\if{html}{\out{</div>}}
 }
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": "success"
+\}
+}\if{html}{\out{</div>}}
+}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$cancel_all_by_symbol(symbol)}\if{html}{\out{</div>}}
 }
@@ -1057,7 +1131,7 @@ Verified: 2026-02-01
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Character (or \verb{promise<character>} if constructed with \code{async = TRUE}); the cancelled order result.
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with column \code{result} containing the cancellation response.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1108,18 +1182,37 @@ Verified: 2026-02-01
   --header 'KC-API-KEY-VERSION: 2'
 }\if{html}{\out{</div>}}
 }
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": \{
+    "succeedSymbols": ["BTC-USDT", "ETH-USDT"],
+    "failedSymbols": []
+  \}
+\}
+}\if{html}{\out{</div>}}
+}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$cancel_all()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-Character (or \verb{promise<character>} if constructed with \code{async = TRUE}); the cancellation result.
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\itemize{
+\item \code{symbol} (character): Trading pair symbol.
+\item \code{status} (character): \code{"succeed"} or \code{"failed"}.
+}
+
+Returns an empty \code{data.table} if no orders were open.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{\dontrun{
 trading <- KucoinTrading$new()
-trading$cancel_all()
+result <- trading$cancel_all()
+print(result[status == "failed"])
 }
 }
 \if{html}{\out{</div>}}
@@ -1157,6 +1250,50 @@ Verified: 2026-02-01
   --header 'KC-API-KEY-VERSION: 2'
 }\if{html}{\out{</div>}}
 }
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": \{
+    "id": "671124f9365ccb00073debd4",
+    "symbol": "BTC-USDT",
+    "opType": "DEAL",
+    "type": "limit",
+    "side": "buy",
+    "price": "50000",
+    "size": "0.00001",
+    "funds": "0",
+    "dealSize": "0.00001",
+    "dealFunds": "0.50000",
+    "fee": "0.00050000",
+    "feeCurrency": "USDT",
+    "stp": "",
+    "timeInForce": "GTC",
+    "postOnly": false,
+    "hidden": false,
+    "iceberg": false,
+    "visibleSize": "0",
+    "cancelAfter": 0,
+    "channel": "API",
+    "clientOid": "5c52e11203aa677f33e493fb",
+    "remark": "",
+    "tags": "",
+    "cancelExist": false,
+    "createdAt": 1729176273859,
+    "lastUpdatedAt": 1729176273952,
+    "tradeType": "TRADE",
+    "inOrderBook": false,
+    "cancelledSize": "0",
+    "cancelledFunds": "0",
+    "remainSize": "0",
+    "remainFunds": "0",
+    "active": false,
+    "tax": "0"
+  \}
+\}
+}\if{html}{\out{</div>}}
+}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$get_order_by_id(orderId, symbol)}\if{html}{\out{</div>}}
 }
@@ -1171,8 +1308,8 @@ Verified: 2026-02-01
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with full order details including \code{datetime_created}
-and \code{datetime_updated} if timestamps are present.
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with full order details
+including \code{created_at} and \code{last_updated_at} (POSIXct) if timestamps are present.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1217,6 +1354,50 @@ Verified: 2026-02-01
   --header 'KC-API-KEY-VERSION: 2'
 }\if{html}{\out{</div>}}
 }
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": \{
+    "id": "671124f9365ccb00073debd4",
+    "symbol": "BTC-USDT",
+    "opType": "DEAL",
+    "type": "limit",
+    "side": "buy",
+    "price": "50000",
+    "size": "0.00001",
+    "funds": "0",
+    "dealSize": "0.00001",
+    "dealFunds": "0.50000",
+    "fee": "0.00050000",
+    "feeCurrency": "USDT",
+    "stp": "",
+    "timeInForce": "GTC",
+    "postOnly": false,
+    "hidden": false,
+    "iceberg": false,
+    "visibleSize": "0",
+    "cancelAfter": 0,
+    "channel": "API",
+    "clientOid": "myClientOid123",
+    "remark": "",
+    "tags": "",
+    "cancelExist": false,
+    "createdAt": 1729176273859,
+    "lastUpdatedAt": 1729176273952,
+    "tradeType": "TRADE",
+    "inOrderBook": false,
+    "cancelledSize": "0",
+    "cancelledFunds": "0",
+    "remainSize": "0",
+    "remainFunds": "0",
+    "active": false,
+    "tax": "0"
+  \}
+\}
+}\if{html}{\out{</div>}}
+}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$get_order_by_client_oid(clientOid, symbol)}\if{html}{\out{</div>}}
 }
@@ -1231,8 +1412,8 @@ Verified: 2026-02-01
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with full order details including \code{datetime_created}
-and \code{datetime_updated} datetime columns.
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with full order details
+including \code{created_at} and \code{last_updated_at} (POSIXct) columns.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1259,7 +1440,7 @@ Returns detailed fill information including fees, liquidity type, and trade IDs.
 \enumerate{
 \item \strong{Request}: Authenticated GET with symbol (required) and optional filters.
 \item \strong{Parsing}: Extracts \code{items} array, converts to \code{data.table}.
-\item \strong{Timestamp Conversion}: Converts \code{created_at} (ms) to \code{datetime_created}.
+\item \strong{Timestamp Conversion}: Coerces \code{created_at} (ms) to POSIXct in-place.
 }
 }
 
@@ -1331,7 +1512,7 @@ Verified: 2026-02-01
 }
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$get_fills(
-  symbol,
+  symbol = NULL,
   orderId = NULL,
   side = NULL,
   type = NULL,
@@ -1345,7 +1526,8 @@ Verified: 2026-02-01
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}). Required.}
+\item{\code{symbol}}{Character or NULL; trading pair (e.g., \code{"BTC-USDT"}).
+If NULL, returns fills across all symbols.}
 
 \item{\code{orderId}}{Character or NULL; filter by specific order ID.}
 
@@ -1380,7 +1562,7 @@ Verified: 2026-02-01
 \item \code{fee} (character): Fee charged.
 \item \code{fee_rate} (character): Fee rate applied.
 \item \code{fee_currency} (character): Currency of fee.
-\item \code{datetime_created} (POSIXct): Creation datetime.
+\item \code{created_at} (POSIXct): Creation datetime (coerced from epoch milliseconds).
 }
 }
 \subsection{Examples}{
@@ -1388,9 +1570,8 @@ Verified: 2026-02-01
 \preformatted{\dontrun{
 trading <- KucoinTrading$new()
 fills <- trading$get_fills("BTC-USDT")
-# Calculate total fees
-total_fees <- fills[, sum(as.numeric(fee))]
-print(paste("Total fees:", total_fees, "USDT"))
+# Get all fills across symbols
+all_fills <- trading$get_fills()
 }
 }
 \if{html}{\out{</div>}}
@@ -1508,26 +1689,71 @@ Verified: 2026-02-01
   --header 'KC-API-KEY-VERSION: 2'
 }\if{html}{\out{</div>}}
 }
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": [
+    \{
+      "id": "671124f9365ccb00073debd4",
+      "symbol": "BTC-USDT",
+      "opType": "DEAL",
+      "type": "limit",
+      "side": "buy",
+      "price": "50000",
+      "size": "0.00001",
+      "funds": "0",
+      "dealSize": "0",
+      "dealFunds": "0",
+      "fee": "0",
+      "feeCurrency": "USDT",
+      "stp": "",
+      "timeInForce": "GTC",
+      "postOnly": false,
+      "hidden": false,
+      "iceberg": false,
+      "visibleSize": "0",
+      "cancelAfter": 0,
+      "channel": "API",
+      "clientOid": "5c52e11203aa677f33e493fb",
+      "remark": "",
+      "tags": "",
+      "cancelExist": false,
+      "createdAt": 1729176273859,
+      "lastUpdatedAt": 1729176273952,
+      "tradeType": "TRADE",
+      "inOrderBook": true,
+      "cancelledSize": "0",
+      "cancelledFunds": "0",
+      "remainSize": "0.00001",
+      "remainFunds": "0",
+      "active": true,
+      "tax": "0"
+    \}
+  ]
+\}
+}\if{html}{\out{</div>}}
+}
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$get_open_orders(symbol)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$get_open_orders(symbol = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
+\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}). \strong{Required} by the API.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with open order details including \code{datetime_created}.
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with open order details including \code{created_at} (POSIXct).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{\dontrun{
 trading <- KucoinTrading$new()
 open_orders <- trading$get_open_orders("BTC-USDT")
-print(open_orders[, .(order_id, side, price, size, datetime_created)])
 }
 }
 \if{html}{\out{</div>}}
@@ -1574,9 +1800,58 @@ Verified: 2026-02-01
   --header 'KC-API-KEY-VERSION: 2'
 }\if{html}{\out{</div>}}
 }
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": \{
+    "lastId": 19814995255305,
+    "items": [
+      \{
+        "id": "671124f9365ccb00073debd4",
+        "symbol": "BTC-USDT",
+        "opType": "DEAL",
+        "type": "limit",
+        "side": "buy",
+        "price": "50000",
+        "size": "0.00001",
+        "funds": "0",
+        "dealSize": "0.00001",
+        "dealFunds": "0.50000",
+        "fee": "0.00050000",
+        "feeCurrency": "USDT",
+        "stp": "",
+        "timeInForce": "GTC",
+        "postOnly": false,
+        "hidden": false,
+        "iceberg": false,
+        "visibleSize": "0",
+        "cancelAfter": 0,
+        "channel": "API",
+        "clientOid": "5c52e11203aa677f33e493fb",
+        "remark": "",
+        "tags": "",
+        "cancelExist": false,
+        "createdAt": 1729176273859,
+        "lastUpdatedAt": 1729176273952,
+        "tradeType": "TRADE",
+        "inOrderBook": false,
+        "cancelledSize": "0",
+        "cancelledFunds": "0",
+        "remainSize": "0",
+        "remainFunds": "0",
+        "active": false,
+        "tax": "0"
+      \}
+    ]
+  \}
+\}
+}\if{html}{\out{</div>}}
+}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$get_closed_orders(
-  symbol,
+  symbol = NULL,
   side = NULL,
   type = NULL,
   startAt = NULL,
@@ -1589,7 +1864,8 @@ Verified: 2026-02-01
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
+\item{\code{symbol}}{Character or NULL; trading pair (e.g., \code{"BTC-USDT"}).
+If NULL, returns closed orders across all symbols.}
 
 \item{\code{side}}{Character or NULL; \code{"buy"} or \code{"sell"}.}
 
@@ -1606,14 +1882,15 @@ Verified: 2026-02-01
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with closed order details including \code{datetime_created}.
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with closed order details including \code{created_at} (POSIXct).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{\dontrun{
 trading <- KucoinTrading$new()
 closed <- trading$get_closed_orders("BTC-USDT", limit = 20)
-print(closed[, .(order_id, side, price, size, datetime_created)])
+# Get all closed orders across symbols
+all_closed <- trading$get_closed_orders()
 }
 }
 \if{html}{\out{</div>}}
@@ -1648,6 +1925,50 @@ Verified: 2026-02-03
 \item \strong{Market Orders}: Ideal for market orders where immediate fill confirmation is critical.
 \item \strong{Race-Free}: No gap between order placement and status check.
 }
+}
+
+\subsection{curl}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request POST 'https://api.kucoin.com/api/v1/hf/orders/sync' \\
+  --header 'Content-Type: application/json' \\
+  --header 'KC-API-KEY: your-api-key' \\
+  --header 'KC-API-SIGN: your-signature' \\
+  --header 'KC-API-TIMESTAMP: 1729176273859' \\
+  --header 'KC-API-PASSPHRASE: your-passphrase' \\
+  --header 'KC-API-KEY-VERSION: 2' \\
+  --data-raw '\{"type":"limit","symbol":"BTC-USDT","side":"buy","price":"50000","size":"0.00001"\}'
+}\if{html}{\out{</div>}}
+}
+
+\subsection{JSON Request}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "type": "limit",
+  "symbol": "BTC-USDT",
+  "side": "buy",
+  "price": "50000",
+  "size": "0.00001",
+  "clientOid": "5c52e11203aa677f33e493fb"
+\}
+}\if{html}{\out{</div>}}
+}
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": \{
+    "orderId": "670fd33bf9406e0007ab3945",
+    "orderTime": 1729176273859,
+    "originSize": "0.00001",
+    "dealSize": "0.00001",
+    "remainSize": "0",
+    "canceledSize": "0",
+    "status": "done",
+    "matchTime": 1729176273952
+  \}
+\}
+}\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$add_order_sync(
@@ -1711,6 +2032,7 @@ Verified: 2026-02-03
 \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{order_id} (character): KuCoin-assigned order identifier.
+\item \code{client_oid} (character): Client-provided order identifier (NA if not supplied).
 \item \code{order_time} (numeric): Order placement time in milliseconds.
 \item \code{origin_size} (character): Original order size.
 \item \code{deal_size} (character): Filled size.
@@ -1761,6 +2083,76 @@ Verified: 2026-02-03
 \item \strong{Rebalancing}: Submit multiple orders with guaranteed fill confirmation.
 }
 }
+
+\subsection{curl}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request POST 'https://api.kucoin.com/api/v1/hf/orders/multi/sync' \\
+  --header 'Content-Type: application/json' \\
+  --header 'KC-API-KEY: your-api-key' \\
+  --header 'KC-API-SIGN: your-signature' \\
+  --header 'KC-API-TIMESTAMP: 1729176273859' \\
+  --header 'KC-API-PASSPHRASE: your-passphrase' \\
+  --header 'KC-API-KEY-VERSION: 2' \\
+  --data-raw '\{"orderList":[\{"clientOid":"id1","symbol":"BTC-USDT","type":"limit","side":"buy","price":"30000","size":"0.00001"\}]\}'
+}\if{html}{\out{</div>}}
+}
+
+\subsection{JSON Request}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "orderList": [
+    \{
+      "clientOid": "id1",
+      "symbol": "BTC-USDT",
+      "type": "limit",
+      "side": "buy",
+      "price": "30000",
+      "size": "0.00001"
+    \},
+    \{
+      "clientOid": "id2",
+      "symbol": "ETH-USDT",
+      "type": "limit",
+      "side": "buy",
+      "price": "2000",
+      "size": "0.001"
+    \}
+  ]
+\}
+}\if{html}{\out{</div>}}
+}
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": [
+    \{
+      "orderId": "6710d8336afcdb0007319c27",
+      "clientOid": "id1",
+      "success": true,
+      "orderTime": 1729176273859,
+      "originSize": "0.00001",
+      "dealSize": "0.00001",
+      "remainSize": "0",
+      "canceledSize": "0",
+      "status": "done"
+    \},
+    \{
+      "orderId": "6710d8336afcdb0007319c28",
+      "clientOid": "id2",
+      "success": true,
+      "orderTime": 1729176273860,
+      "originSize": "0.001",
+      "dealSize": "0",
+      "remainSize": "0.001",
+      "canceledSize": "0",
+      "status": "open"
+    \}
+  ]
+\}
+}\if{html}{\out{</div>}}
+}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$add_order_batch_sync(order_list)}\if{html}{\out{</div>}}
 }
@@ -1773,8 +2165,16 @@ Verified: 2026-02-03
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with per-order results
-including \code{order_id}, \code{success}, \code{status}, \code{deal_size}, \code{remain_size}, \code{canceled_size}.
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with per-order results:
+\itemize{
+\item \code{order_id} (character): KuCoin-assigned order identifier.
+\item \code{client_oid} (character): Client-provided order identifier (NA if not supplied).
+\item \code{success} (logical): Whether the order was accepted.
+\item \code{status} (character): Fill status.
+\item \code{deal_size} (character): Filled quantity.
+\item \code{remain_size} (character): Remaining unfilled quantity.
+\item \code{canceled_size} (character): Cancelled quantity.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1819,6 +2219,34 @@ Verified: 2026-02-03
 \item \strong{Atomic Cancel}: Confirm cancellation and get final fill state in one call.
 \item \strong{Partial Fill Detection}: Check \code{deal_size} to know if any fills occurred before cancellation.
 }
+}
+
+\subsection{curl}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request DELETE \\
+  'https://api.kucoin.com/api/v1/hf/orders/sync/671128ee365ccb0007534d45?symbol=BTC-USDT' \\
+  --header 'KC-API-KEY: your-api-key' \\
+  --header 'KC-API-SIGN: your-signature' \\
+  --header 'KC-API-TIMESTAMP: 1729176273859' \\
+  --header 'KC-API-PASSPHRASE: your-passphrase' \\
+  --header 'KC-API-KEY-VERSION: 2'
+}\if{html}{\out{</div>}}
+}
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": \{
+    "orderId": "671128ee365ccb0007534d45",
+    "originSize": "0.00001",
+    "dealSize": "0",
+    "remainSize": "0",
+    "canceledSize": "0.00001",
+    "status": "done"
+  \}
+\}
+}\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$cancel_order_by_id_sync(orderId, symbol)}\if{html}{\out{</div>}}
@@ -1874,6 +2302,35 @@ Cancels an order by client OID and waits for completion before returning.
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid-sync}{KuCoin Cancel Order By ClientOid Sync}
 
 Verified: 2026-02-03
+}
+
+\subsection{curl}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request DELETE \\
+  'https://api.kucoin.com/api/v1/hf/orders/sync/client-order/myClientOid123?symbol=BTC-USDT' \\
+  --header 'KC-API-KEY: your-api-key' \\
+  --header 'KC-API-SIGN: your-signature' \\
+  --header 'KC-API-TIMESTAMP: 1729176273859' \\
+  --header 'KC-API-PASSPHRASE: your-passphrase' \\
+  --header 'KC-API-KEY-VERSION: 2'
+}\if{html}{\out{</div>}}
+}
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": \{
+    "orderId": "671128ee365ccb0007534d45",
+    "clientOid": "myClientOid123",
+    "originSize": "0.00001",
+    "dealSize": "0",
+    "remainSize": "0",
+    "canceledSize": "0.00001",
+    "status": "done"
+  \}
+\}
+}\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$cancel_order_by_client_oid_sync(clientOid, symbol)}\if{html}{\out{</div>}}
@@ -1940,6 +2397,41 @@ Verified: 2026-02-03
 \item \strong{Size Adjustment}: Increase or decrease order size atomically.
 \item \strong{Trailing Logic}: Continuously adjust price as the market moves.
 }
+}
+
+\subsection{curl}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request POST 'https://api.kucoin.com/api/v1/hf/orders/alter' \\
+  --header 'Content-Type: application/json' \\
+  --header 'KC-API-KEY: your-api-key' \\
+  --header 'KC-API-SIGN: your-signature' \\
+  --header 'KC-API-TIMESTAMP: 1729176273859' \\
+  --header 'KC-API-PASSPHRASE: your-passphrase' \\
+  --header 'KC-API-KEY-VERSION: 2' \\
+  --data-raw '\{"symbol":"BTC-USDT","orderId":"671124f9365ccb00073debd4","newPrice":"51000"\}'
+}\if{html}{\out{</div>}}
+}
+
+\subsection{JSON Request}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "symbol": "BTC-USDT",
+  "orderId": "671124f9365ccb00073debd4",
+  "newPrice": "51000",
+  "newSize": "0.00002"
+\}
+}\if{html}{\out{</div>}}
+}
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": \{
+    "newOrderId": "671124f9365ccb00073debff"
+  \}
+\}
+}\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$modify_order(
@@ -2018,6 +2510,40 @@ Verified: 2026-02-03
 \item \strong{Selective Protection}: Specify symbols to protect only active trading pairs.
 }
 }
+
+\subsection{curl}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request POST 'https://api.kucoin.com/api/v1/hf/orders/dead-cancel-all' \\
+  --header 'Content-Type: application/json' \\
+  --header 'KC-API-KEY: your-api-key' \\
+  --header 'KC-API-SIGN: your-signature' \\
+  --header 'KC-API-TIMESTAMP: 1729176273859' \\
+  --header 'KC-API-PASSPHRASE: your-passphrase' \\
+  --header 'KC-API-KEY-VERSION: 2' \\
+  --data-raw '\{"timeout":30,"symbols":"BTC-USDT"\}'
+}\if{html}{\out{</div>}}
+}
+
+\subsection{JSON Request}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "timeout": 30,
+  "symbols": "BTC-USDT,ETH-USDT"
+\}
+}\if{html}{\out{</div>}}
+}
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": \{
+    "currentTime": 1729176273,
+    "triggerTime": 1729176303
+  \}
+\}
+}\if{html}{\out{</div>}}
+}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$set_dcp(timeout, symbols = NULL)}\if{html}{\out{</div>}}
 }
@@ -2074,6 +2600,32 @@ configuration. Returns an empty \code{data.table} if DCP is not configured.
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-dcp}{KuCoin Get DCP}
 
 Verified: 2026-02-03
+}
+
+\subsection{curl}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET \\
+  'https://api.kucoin.com/api/v1/hf/orders/dead-cancel-all/query' \\
+  --header 'KC-API-KEY: your-api-key' \\
+  --header 'KC-API-SIGN: your-signature' \\
+  --header 'KC-API-TIMESTAMP: 1729176273859' \\
+  --header 'KC-API-PASSPHRASE: your-passphrase' \\
+  --header 'KC-API-KEY-VERSION: 2'
+}\if{html}{\out{</div>}}
+}
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": \{
+    "timeout": 30,
+    "symbols": "BTC-USDT,ETH-USDT",
+    "currentTime": 1729176273,
+    "triggerTime": 1729176303
+  \}
+\}
+}\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$get_dcp()}\if{html}{\out{</div>}}

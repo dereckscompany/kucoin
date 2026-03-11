@@ -89,7 +89,7 @@ market <- KucoinMarketData$new()
 
 # Get latest announcements
 anns <- market$get_announcements()
-print(anns[, .(ann_id, ann_title, datetime_created)])
+print(anns[, .(ann_id, ann_title, c_time)])
 
 # Filter by type and language
 listings <- market$get_announcements(
@@ -244,7 +244,7 @@ print(head(klines))
 # 7 days of hourly candles
 klines_7d <- market$get_klines(
   symbol = "ETH-USDT",
-  freq = "1hour",
+  timeframe = "1hour",
   from = lubridate::now() - lubridate::days(7),
   to = lubridate::now()
 )
@@ -329,7 +329,7 @@ new listings, delistings, maintenance notices, and other platform updates.
 \item \strong{Request}: Sends paginated GET request with optional filters.
 \item \strong{Pagination}: Automatically fetches multiple pages via \code{.paginate()}.
 \item \strong{Parsing}: Flattens paginated results into a single \code{data.table}.
-\item \strong{Timestamp Conversion}: Converts \code{c_time} (ms) to \code{datetime_created} POSIXct.
+\item \strong{Timestamp Conversion}: Coerces \code{c_time} (ms) to POSIXct in-place.
 }
 }
 
@@ -342,7 +342,7 @@ new listings, delistings, maintenance notices, and other platform updates.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-announcements}{KuCoin Get Announcements}
 
-Verified: 2026-02-01
+Verified: 2026-03-10
 }
 
 \subsection{Automated Trading Usage}{
@@ -417,7 +417,7 @@ Verified: 2026-02-01
 \item \code{ann_title} (character): Announcement title.
 \item \code{ann_type} (list): Category tags as character vector.
 \item \code{ann_desc} (character): Short description text.
-\item \code{datetime_created} (POSIXct): Creation datetime.
+\item \code{c_time} (POSIXct): Creation datetime (coerced from epoch milliseconds).
 \item \code{language} (character): Language code.
 \item \code{ann_url} (character): Full URL to the announcement page.
 }
@@ -429,7 +429,7 @@ market <- KucoinMarketData$new()
 
 # Get latest announcements
 anns <- market$get_announcements()
-print(anns[, .(ann_id, ann_title, datetime_created)])
+print(anns[, .(ann_id, ann_title, c_time)])
 
 # Filter by type and language
 listings <- market$get_announcements(
@@ -469,7 +469,7 @@ withdrawal details (fees, minimums, confirmations, contract addresses).
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-currency}{KuCoin Get Currency}
 
-Verified: 2026-02-01
+Verified: 2026-03-10
 }
 
 \subsection{Automated Trading Usage}{
@@ -601,7 +601,7 @@ deposit/withdrawal details. Useful for building currency reference tables.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-currencies}{KuCoin Get All Currencies}
 
-Verified: 2026-02-01
+Verified: 2026-03-10
 }
 
 \subsection{Automated Trading Usage}{
@@ -658,8 +658,8 @@ Verified: 2026-02-01
 }
 
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with currency metadata and chain details.
-Same columns as \code{get_currency()}, one row per currency-chain combination.
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with currency metadata
+and chain details. Same columns as \code{get_currency()}, one row per currency-chain combination.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -700,7 +700,7 @@ increments, size limits, fee rates, and trading status.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-symbols}{KuCoin Get Symbol}
 
-Verified: 2026-02-01
+Verified: 2026-03-10
 }
 
 \subsection{Automated Trading Usage}{
@@ -820,7 +820,7 @@ segment. Returns the same fields as \code{get_symbol()} for every pair.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-symbols}{KuCoin Get All Symbols}
 
-Verified: 2026-02-01
+Verified: 2026-03-10
 }
 
 \subsection{Automated Trading Usage}{
@@ -837,6 +837,111 @@ before placing orders.
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET 'https://api.kucoin.com/api/v2/symbols?market=USDS'
 }\if{html}{\out{</div>}}
+}
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": [
+    \{
+      "symbol": "BTC-USDT",
+      "name": "BTC-USDT",
+      "baseCurrency": "BTC",
+      "quoteCurrency": "USDT",
+      "feeCurrency": "USDT",
+      "market": "USDS",
+      "baseMinSize": "0.00001",
+      "quoteMinSize": "0.1",
+      "baseMaxSize": "10000000000",
+      "quoteMaxSize": "99999999",
+      "baseIncrement": "0.00000001",
+      "quoteIncrement": "0.000001",
+      "priceIncrement": "0.1",
+      "priceLimitRate": "0.1",
+      "minFunds": "0.1",
+      "isMarginEnabled": true,
+      "enableTrading": true,
+      "feeCategory": 1,
+      "makerFeeCoefficient": "1.00",
+      "takerFeeCoefficient": "1.00",
+      "st": false
+    \},
+    \{
+      "symbol": "ETH-USDT",
+      "name": "ETH-USDT",
+      "baseCurrency": "ETH",
+      "quoteCurrency": "USDT",
+      "feeCurrency": "USDT",
+      "market": "USDS",
+      "baseMinSize": "0.0001",
+      "quoteMinSize": "0.1",
+      "baseMaxSize": "10000000000",
+      "quoteMaxSize": "99999999",
+      "baseIncrement": "0.0000001",
+      "quoteIncrement": "0.000001",
+      "priceIncrement": "0.01",
+      "priceLimitRate": "0.1",
+      "minFunds": "0.1",
+      "isMarginEnabled": true,
+      "enableTrading": true,
+      "feeCategory": 1,
+      "makerFeeCoefficient": "1.00",
+      "takerFeeCoefficient": "1.00",
+      "st": false
+    \}
+  ]
+\}
+}\if{html}{\out{</div>}}
+
+[
+{
+"symbol": "BTC-USDT",
+"name": "BTC-USDT",
+"baseCurrency": "BTC",
+"quoteCurrency": "USDT",
+"feeCurrency": "USDT",
+"market": "USDS",
+"baseMinSize": "0.00001",
+"quoteMinSize": "0.1",
+"baseMaxSize": "10000000000",
+"quoteMaxSize": "99999999",
+"baseIncrement": "0.00000001",
+"quoteIncrement": "0.000001",
+"priceIncrement": "0.1",
+"priceLimitRate": "0.1",
+"minFunds": "0.1",
+"isMarginEnabled": true,
+"enableTrading": true,
+"feeCategory": 1,
+"makerFeeCoefficient": "1.00",
+"takerFeeCoefficient": "1.00",
+"st": false
+},
+{
+"symbol": "ETH-USDT",
+"name": "ETH-USDT",
+"baseCurrency": "ETH",
+"quoteCurrency": "USDT",
+"feeCurrency": "USDT",
+"market": "USDS",
+"baseMinSize": "0.0001",
+"quoteMinSize": "0.1",
+"baseMaxSize": "10000000000",
+"quoteMaxSize": "99999999",
+"baseIncrement": "0.0000001",
+"quoteIncrement": "0.000001",
+"priceIncrement": "0.01",
+"priceLimitRate": "0.1",
+"minFunds": "0.1",
+"isMarginEnabled": true,
+"enableTrading": true,
+"feeCategory": 1,
+"makerFeeCoefficient": "1.00",
+"takerFeeCoefficient": "1.00",
+"st": false
+}
+]: R:\%0A\%20\%20\%20\%20\%7B\%0A\%20\%20\%20\%20\%20\%20\%22symbol\%22:\%20\%22BTC-USDT\%22,\%0A\%20\%20\%20\%20\%20\%20\%22name\%22:\%20\%22BTC-USDT\%22,\%0A\%20\%20\%20\%20\%20\%20\%22baseCurrency\%22:\%20\%22BTC\%22,\%0A\%20\%20\%20\%20\%20\%20\%22quoteCurrency\%22:\%20\%22USDT\%22,\%0A\%20\%20\%20\%20\%20\%20\%22feeCurrency\%22:\%20\%22USDT\%22,\%0A\%20\%20\%20\%20\%20\%20\%22market\%22:\%20\%22USDS\%22,\%0A\%20\%20\%20\%20\%20\%20\%22baseMinSize\%22:\%20\%220.00001\%22,\%0A\%20\%20\%20\%20\%20\%20\%22quoteMinSize\%22:\%20\%220.1\%22,\%0A\%20\%20\%20\%20\%20\%20\%22baseMaxSize\%22:\%20\%2210000000000\%22,\%0A\%20\%20\%20\%20\%20\%20\%22quoteMaxSize\%22:\%20\%2299999999\%22,\%0A\%20\%20\%20\%20\%20\%20\%22baseIncrement\%22:\%20\%220.00000001\%22,\%0A\%20\%20\%20\%20\%20\%20\%22quoteIncrement\%22:\%20\%220.000001\%22,\%0A\%20\%20\%20\%20\%20\%20\%22priceIncrement\%22:\%20\%220.1\%22,\%0A\%20\%20\%20\%20\%20\%20\%22priceLimitRate\%22:\%20\%220.1\%22,\%0A\%20\%20\%20\%20\%20\%20\%22minFunds\%22:\%20\%220.1\%22,\%0A\%20\%20\%20\%20\%20\%20\%22isMarginEnabled\%22:\%20true,\%0A\%20\%20\%20\%20\%20\%20\%22enableTrading\%22:\%20true,\%0A\%20\%20\%20\%20\%20\%20\%22feeCategory\%22:\%201,\%0A\%20\%20\%20\%20\%20\%20\%22makerFeeCoefficient\%22:\%20\%221.00\%22,\%0A\%20\%20\%20\%20\%20\%20\%22takerFeeCoefficient\%22:\%20\%221.00\%22,\%0A\%20\%20\%20\%20\%20\%20\%22st\%22:\%20false\%0A\%20\%20\%20\%20\%7D,\%0A\%20\%20\%20\%20\%7B\%0A\%20\%20\%20\%20\%20\%20\%22symbol\%22:\%20\%22ETH-USDT\%22,\%0A\%20\%20\%20\%20\%20\%20\%22name\%22:\%20\%22ETH-USDT\%22,\%0A\%20\%20\%20\%20\%20\%20\%22baseCurrency\%22:\%20\%22ETH\%22,\%0A\%20\%20\%20\%20\%20\%20\%22quoteCurrency\%22:\%20\%22USDT\%22,\%0A\%20\%20\%20\%20\%20\%20\%22feeCurrency\%22:\%20\%22USDT\%22,\%0A\%20\%20\%20\%20\%20\%20\%22market\%22:\%20\%22USDS\%22,\%0A\%20\%20\%20\%20\%20\%20\%22baseMinSize\%22:\%20\%220.0001\%22,\%0A\%20\%20\%20\%20\%20\%20\%22quoteMinSize\%22:\%20\%220.1\%22,\%0A\%20\%20\%20\%20\%20\%20\%22baseMaxSize\%22:\%20\%2210000000000\%22,\%0A\%20\%20\%20\%20\%20\%20\%22quoteMaxSize\%22:\%20\%2299999999\%22,\%0A\%20\%20\%20\%20\%20\%20\%22baseIncrement\%22:\%20\%220.0000001\%22,\%0A\%20\%20\%20\%20\%20\%20\%22quoteIncrement\%22:\%20\%220.000001\%22,\%0A\%20\%20\%20\%20\%20\%20\%22priceIncrement\%22:\%20\%220.01\%22,\%0A\%20\%20\%20\%20\%20\%20\%22priceLimitRate\%22:\%20\%220.1\%22,\%0A\%20\%20\%20\%20\%20\%20\%22minFunds\%22:\%20\%220.1\%22,\%0A\%20\%20\%20\%20\%20\%20\%22isMarginEnabled\%22:\%20true,\%0A\%20\%20\%20\%20\%20\%20\%22enableTrading\%22:\%20true,\%0A\%20\%20\%20\%20\%20\%20\%22feeCategory\%22:\%201,\%0A\%20\%20\%20\%20\%20\%20\%22makerFeeCoefficient\%22:\%20\%221.00\%22,\%0A\%20\%20\%20\%20\%20\%20\%22takerFeeCoefficient\%22:\%20\%221.00\%22,\%0A\%20\%20\%20\%20\%20\%20\%22st\%22:\%20false\%0A\%20\%20\%20\%20\%7D\%0A\%20\%20
 }
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{KucoinMarketData$get_all_symbols(market = NULL)}\if{html}{\out{</div>}}
@@ -880,7 +985,7 @@ prices, sizes, and the most recent trade price and size.
 \enumerate{
 \item \strong{Request}: GET with \code{symbol} query parameter.
 \item \strong{Parsing}: Single-row \code{data.table} with ticker fields.
-\item \strong{Timestamp Conversion}: Converts \code{time} (ms) to \code{datetime} POSIXct.
+\item \strong{Timestamp Conversion}: Coerces \code{time} (ms) to POSIXct in-place.
 }
 }
 
@@ -893,7 +998,7 @@ prices, sizes, and the most recent trade price and size.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-ticker}{KuCoin Get Ticker}
 
-Verified: 2026-02-01
+Verified: 2026-03-10
 }
 
 \subsection{Automated Trading Usage}{
@@ -942,7 +1047,7 @@ Verified: 2026-02-01
 \subsection{Returns}{
 \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
-\item \code{datetime} (POSIXct): Server datetime.
+\item \code{time} (POSIXct): Server datetime (coerced from epoch milliseconds).
 \item \code{sequence} (character): Order book sequence number.
 \item \code{price} (character): Last trade price.
 \item \code{size} (character): Last trade size.
@@ -978,7 +1083,7 @@ Snapshots are captured every 2 seconds on the server side.
 \enumerate{
 \item \strong{Request}: GET with no parameters (public, rate limit weight 15).
 \item \strong{Parsing}: Extracts global \code{time} and array of \code{ticker} objects.
-\item \strong{Flattening}: Converts ticker array to \code{data.table}, adds \code{datetime}.
+\item \strong{Flattening}: Converts ticker array to \code{data.table}, adds \code{time}.
 }
 }
 
@@ -991,7 +1096,7 @@ Snapshots are captured every 2 seconds on the server side.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-tickers}{KuCoin Get All Tickers}
 
-Verified: 2026-02-01
+Verified: 2026-03-10
 }
 
 \subsection{Automated Trading Usage}{
@@ -1063,7 +1168,7 @@ Verified: 2026-02-01
 \item \code{average_price} (character): 24h average price.
 \item \code{taker_fee_rate} (character): Taker fee rate.
 \item \code{maker_fee_rate} (character): Maker fee rate.
-\item \code{datetime} (POSIXct): Snapshot datetime.
+\item \code{time} (POSIXct): Snapshot datetime (coerced from epoch milliseconds).
 }
 }
 \subsection{Examples}{
@@ -1094,7 +1199,7 @@ the price, size, side (buy/sell), and nanosecond-precision timestamp.
 \enumerate{
 \item \strong{Request}: GET with \code{symbol} query parameter.
 \item \strong{Parsing}: Converts array of trade objects to \code{data.table}.
-\item \strong{Timestamp Conversion}: Converts \code{time} (nanoseconds) to \code{datetime} POSIXct.
+\item \strong{Timestamp Conversion}: Coerces \code{time} (nanoseconds) to POSIXct in-place.
 }
 }
 
@@ -1107,7 +1212,7 @@ the price, size, side (buy/sell), and nanosecond-precision timestamp.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-trade-history}{KuCoin Get Trade History}
 
-Verified: 2026-02-01
+Verified: 2026-03-10
 }
 
 \subsection{Automated Trading Usage}{
@@ -1159,7 +1264,7 @@ Verified: 2026-02-01
 \item \code{price} (character): Trade price.
 \item \code{size} (character): Trade quantity.
 \item \code{side} (character): Trade direction (\code{"buy"} or \code{"sell"}).
-\item \code{datetime} (POSIXct): Trade datetime.
+\item \code{time} (POSIXct): Trade datetime (coerced from nanosecond timestamp).
 }
 }
 \subsection{Examples}{
@@ -1204,7 +1309,7 @@ into a long-format \code{data.table} with \code{side}, \code{price}, and \code{s
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-part-orderbook}{KuCoin Get Part Orderbook}
 
-Verified: 2026-02-01
+Verified: 2026-03-10
 }
 
 \subsection{Automated Trading Usage}{
@@ -1251,11 +1356,11 @@ Verified: 2026-02-01
 \subsection{Returns}{
 \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) in long format with columns:
 \itemize{
-\item \code{datetime} (POSIXct): Server timestamp converted from milliseconds.
+\item \code{time} (POSIXct): Server timestamp (coerced from epoch milliseconds).
 \item \code{sequence} (character): Order book sequence number.
 \item \code{side} (character): \code{"bid"} or \code{"ask"}.
 \item \code{price} (numeric): Price level.
-\item \code{size} (numeric): Quantity at that price.
+\item \code{size} (numeric): Size at that price.
 }
 }
 \subsection{Examples}{
@@ -1297,7 +1402,7 @@ Retrieves the complete order book for a symbol with all price levels.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-full-orderbook}{KuCoin Get Full Orderbook}
 
-Verified: 2026-02-01
+Verified: 2026-03-10
 }
 
 \subsection{Automated Trading Usage}{
@@ -1347,11 +1452,11 @@ Verified: 2026-02-01
 \subsection{Returns}{
 \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) in long format with columns:
 \itemize{
-\item \code{datetime} (POSIXct): Server timestamp converted from milliseconds.
+\item \code{time} (POSIXct): Server timestamp (coerced from epoch milliseconds).
 \item \code{sequence} (character): Order book sequence number.
 \item \code{side} (character): \code{"bid"} or \code{"ask"}.
 \item \code{price} (numeric): Price level.
-\item \code{size} (numeric): Quantity at that price.
+\item \code{size} (numeric): Size at that price.
 }
 }
 \subsection{Examples}{
@@ -1381,7 +1486,7 @@ OHLCV data, change rate, average price, and fee rates.
 \enumerate{
 \item \strong{Request}: GET with \code{symbol} query parameter.
 \item \strong{Parsing}: Single-row \code{data.table} with all statistics fields.
-\item \strong{Timestamp Conversion}: Converts \code{time} (ms) to \code{datetime} POSIXct.
+\item \strong{Timestamp Conversion}: Coerces \code{time} (ms) to POSIXct in-place.
 }
 }
 
@@ -1394,7 +1499,7 @@ OHLCV data, change rate, average price, and fee rates.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-24hr-stats}{KuCoin Get 24hr Stats}
 
-Verified: 2026-02-01
+Verified: 2026-03-10
 }
 
 \subsection{Automated Trading Usage}{
@@ -1451,7 +1556,7 @@ Verified: 2026-02-01
 \subsection{Returns}{
 \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
-\item \code{datetime} (POSIXct): Server datetime.
+\item \code{time} (POSIXct): Server datetime (coerced from epoch milliseconds).
 \item \code{symbol} (character): Trading pair.
 \item \code{buy} (character): Best bid price.
 \item \code{sell} (character): Best ask price.
@@ -1505,7 +1610,7 @@ Market segments group trading pairs by theme (e.g., DeFi, Meme, Layer 1).
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-market-list}{KuCoin Get Market List}
 
-Verified: 2026-02-01
+Verified: 2026-03-10
 }
 
 \subsection{Automated Trading Usage}{
@@ -1536,7 +1641,7 @@ Verified: 2026-02-01
 }
 
 \subsection{Returns}{
-Character vector of market segment identifiers (or \verb{promise<character>} if constructed with \code{async = TRUE}).
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with column \code{market} containing segment identifiers.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1565,7 +1670,7 @@ fetching and combining as many segments as needed to cover the requested
 time range.
 \subsection{Workflow}{
 \enumerate{
-\item \strong{Validation}: Validates frequency string against allowed intervals.
+\item \strong{Validation}: Validates timeframe string against allowed intervals.
 \item \strong{Segmentation}: Splits the \verb{[from, to]} range into chunks of up to 1500 candles.
 \item \strong{Fetching}: Requests each segment sequentially (sync) or in parallel (async).
 \item \strong{Parsing}: Each segment's array-of-arrays response is converted to a typed \code{data.table}.
@@ -1583,7 +1688,7 @@ time range.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-klines}{KuCoin Get Klines}
 
-Verified: 2026-02-01
+Verified: 2026-03-10
 }
 
 \subsection{Automated Trading Usage}{
@@ -1617,7 +1722,7 @@ Each candle is an array: \verb{[timestamp, open, close, high, low, volume, turno
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{KucoinMarketData$get_klines(
   symbol,
-  freq = "15min",
+  timeframe = "15min",
   from = lubridate::now() - lubridate::dhours(24),
   to = lubridate::now()
 )}\if{html}{\out{</div>}}
@@ -1628,7 +1733,7 @@ Each candle is an array: \verb{[timestamp, open, close, high, low, volume, turno
 \describe{
 \item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
 
-\item{\code{freq}}{Character; candle interval. One of:
+\item{\code{timeframe}}{Character; candle interval. One of:
 \code{"1min"}, \code{"3min"}, \code{"5min"}, \code{"15min"}, \code{"30min"},
 \code{"1hour"}, \code{"2hour"}, \code{"4hour"}, \code{"6hour"}, \code{"8hour"}, \code{"12hour"},
 \code{"1day"}, \code{"1week"}, \code{"1month"}. Default \code{"15min"}.}
@@ -1663,7 +1768,7 @@ print(head(klines))
 # 7 days of hourly candles
 klines_7d <- market$get_klines(
   symbol = "ETH-USDT",
-  freq = "1hour",
+  timeframe = "1hour",
   from = lubridate::now() - lubridate::days(7),
   to = lubridate::now()
 )
@@ -1692,7 +1797,22 @@ Useful for detecting clock drift and ensuring HMAC signatures are valid.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-server-time}{KuCoin Get Server Time}
 
-Verified: 2026-02-03
+Verified: 2026-03-10
+}
+
+\subsection{curl}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET 'https://api.kucoin.com/api/v1/timestamp'
+}\if{html}{\out{</div>}}
+}
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": 1729176273859
+\}
+}\if{html}{\out{</div>}}
 }
 
 \subsection{Automated Trading Usage}{
@@ -1745,7 +1865,25 @@ during maintenance windows.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-service-status}{KuCoin Get Service Status}
 
-Verified: 2026-02-03
+Verified: 2026-03-10
+}
+
+\subsection{curl}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET 'https://api.kucoin.com/api/v1/status'
+}\if{html}{\out{</div>}}
+}
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": \{
+    "status": "open",
+    "msg": ""
+  \}
+\}
+}\if{html}{\out{</div>}}
 }
 
 \subsection{Automated Trading Usage}{
@@ -1798,7 +1936,27 @@ Useful for portfolio valuation and P&L reporting in fiat terms.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-fiat-price}{KuCoin Get Fiat Price}
 
-Verified: 2026-02-03
+Verified: 2026-03-10
+}
+
+\subsection{curl}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET \\
+  'https://api.kucoin.com/api/v1/prices?base=USD&currencies=BTC,ETH,USDT'
+}\if{html}{\out{</div>}}
+}
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": \{
+    "BTC": "67269.15",
+    "ETH": "2485.73",
+    "USDT": "1.0002"
+  \}
+\}
+}\if{html}{\out{</div>}}
 }
 
 \subsection{Automated Trading Usage}{

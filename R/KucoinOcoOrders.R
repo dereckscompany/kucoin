@@ -65,7 +65,6 @@
 #' }
 #'
 #' @importFrom R6 R6Class
-#' @importFrom data.table data.table as.data.table rbindlist setcolorder
 #' @export
 KucoinOcoOrders <- R6::R6Class(
   "KucoinOcoOrders",
@@ -136,6 +135,7 @@ KucoinOcoOrders <- R6::R6Class(
     #' @param tradeType Character; trade type, defaults to `"TRADE"` for spot trading.
     #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
     #'   - `order_id` (character): KuCoin-assigned OCO order identifier.
+    #'   - `client_oid` (character): Client-provided order identifier (NA if not supplied).
     #'
     #' @examples
     #' \dontrun{
@@ -195,8 +195,11 @@ KucoinOcoOrders <- R6::R6Class(
         body = body,
         .parser = function(data) {
           dt <- as_dt_row(data)
-          data.table::setcolorder(dt, intersect("order_id", names(dt)))
-          return(dt)
+          if (is.null(dt$client_oid)) {
+            dt[, client_oid := NA_character_]
+          }
+          data.table::setcolorder(dt, intersect(c("order_id", "client_oid"), names(dt)))
+          return(dt[])
         }
       ))
     },
@@ -475,7 +478,7 @@ KucoinOcoOrders <- R6::R6Class(
     #'   - `order_id` (character): OCO order identifier.
     #'   - `symbol` (character): Trading pair (e.g., `"BTC-USDT"`).
     #'   - `client_oid` (character): Client-assigned order identifier.
-    #'   - `datetime_order` (POSIXct): Order creation datetime.
+    #'   - `order_time` (POSIXct): Order creation datetime (coerced from epoch milliseconds).
     #'   - `status` (character): Order status (e.g., `"NEW"`, `"DONE"`, `"TRIGGERED"`).
     #'
     #' @examples
@@ -493,12 +496,11 @@ KucoinOcoOrders <- R6::R6Class(
         .parser = function(data) {
           dt <- as_dt_row(data)
           if ("order_time" %in% names(dt)) {
-            dt[, datetime_order := ms_to_datetime(order_time)]
-            dt[, order_time := NULL]
+            dt[, order_time := ms_to_datetime(order_time)]
           }
-          expected <- c("order_id", "symbol", "client_oid", "datetime_order", "status")
+          expected <- c("order_id", "symbol", "client_oid", "order_time", "status")
           data.table::setcolorder(dt, intersect(expected, names(dt)))
-          return(dt)
+          return(dt[])
         }
       ))
     },
@@ -558,7 +560,7 @@ KucoinOcoOrders <- R6::R6Class(
     #'   - `order_id` (character): KuCoin-assigned OCO order identifier.
     #'   - `symbol` (character): Trading pair (e.g., `"BTC-USDT"`).
     #'   - `client_oid` (character): Client-assigned order identifier.
-    #'   - `datetime_order` (POSIXct): Order creation datetime.
+    #'   - `order_time` (POSIXct): Order creation datetime (coerced from epoch milliseconds).
     #'   - `status` (character): Order status (e.g., `"NEW"`, `"DONE"`, `"TRIGGERED"`).
     #'
     #' @examples
@@ -576,12 +578,11 @@ KucoinOcoOrders <- R6::R6Class(
         .parser = function(data) {
           dt <- as_dt_row(data)
           if ("order_time" %in% names(dt)) {
-            dt[, datetime_order := ms_to_datetime(order_time)]
-            dt[, order_time := NULL]
+            dt[, order_time := ms_to_datetime(order_time)]
           }
-          expected <- c("order_id", "symbol", "client_oid", "datetime_order", "status")
+          expected <- c("order_id", "symbol", "client_oid", "order_time", "status")
           data.table::setcolorder(dt, intersect(expected, names(dt)))
-          return(dt)
+          return(dt[])
         }
       ))
     },
@@ -660,7 +661,7 @@ KucoinOcoOrders <- R6::R6Class(
     #'   - `order_id` (character): OCO order identifier.
     #'   - `symbol` (character): Trading pair (e.g., `"BTC-USDT"`).
     #'   - `client_oid` (character): Client-assigned order identifier.
-    #'   - `datetime_order` (POSIXct): Order creation datetime.
+    #'   - `order_time` (POSIXct): Order creation datetime (coerced from epoch milliseconds).
     #'   - `status` (character): Overall OCO order status.
     #'   - `orders` (list): List of sub-order details, each containing `id`, `symbol`,
     #'     `side`, `price`, `size`, `status`, and optionally `stop_price`.
@@ -680,12 +681,11 @@ KucoinOcoOrders <- R6::R6Class(
         .parser = function(data) {
           dt <- as_dt_row(data)
           if ("order_time" %in% names(dt)) {
-            dt[, datetime_order := ms_to_datetime(order_time)]
-            dt[, order_time := NULL]
+            dt[, order_time := ms_to_datetime(order_time)]
           }
-          expected <- c("order_id", "symbol", "client_oid", "datetime_order", "status", "orders")
+          expected <- c("order_id", "symbol", "client_oid", "order_time", "status", "orders")
           data.table::setcolorder(dt, intersect(expected, names(dt)))
-          return(dt)
+          return(dt[])
         }
       ))
     },
@@ -765,7 +765,7 @@ KucoinOcoOrders <- R6::R6Class(
     #'   - `order_id` (character): OCO order identifier.
     #'   - `symbol` (character): Trading pair (e.g., `"BTC-USDT"`).
     #'   - `client_oid` (character): Client-assigned order identifier.
-    #'   - `datetime_order` (POSIXct): Order creation datetime.
+    #'   - `order_time` (POSIXct): Order creation datetime (coerced from epoch milliseconds).
     #'   - `status` (character): Order status (e.g., `"NEW"`, `"DONE"`, `"TRIGGERED"`).
     #'   Returns an empty `data.table` if no orders match.
     #'
@@ -798,16 +798,15 @@ KucoinOcoOrders <- R6::R6Class(
         .parser = function(data) {
           items <- data$items %||% data
           if (is.null(items) || length(items) == 0) {
-            return(data.table::data.table())
+            return(data.table::data.table()[])
           }
           dt <- data.table::rbindlist(lapply(items, as_dt_row), fill = TRUE)
           if ("order_time" %in% names(dt)) {
-            dt[, datetime_order := ms_to_datetime(order_time)]
-            dt[, order_time := NULL]
+            dt[, order_time := ms_to_datetime(order_time)]
           }
-          expected <- c("order_id", "symbol", "client_oid", "datetime_order", "status")
+          expected <- c("order_id", "symbol", "client_oid", "order_time", "status")
           data.table::setcolorder(dt, intersect(expected, names(dt)))
-          return(dt)
+          return(dt[])
         }
       ))
     }

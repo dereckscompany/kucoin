@@ -93,7 +93,7 @@ test_that("cancel_all returns data.table", {
 
 # -- get_order_by_id --
 
-test_that("get_order_by_id returns data.table with datetime_order and column reorder", {
+test_that("get_order_by_id returns data.table with order_time and column reorder", {
   resp <- mock_kucoin_response(
     data = list(
       orderId = "674c40d38b4b2f00073deef3",
@@ -108,9 +108,9 @@ test_that("get_order_by_id returns data.table with datetime_order and column reo
   dt <- new_oco()$get_order_by_id("674c40d38b4b2f00073deef3")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
-  expect_true("datetime_order" %in% names(dt))
-  expect_false("order_time" %in% names(dt))
-  expect_s3_class(dt$datetime_order, "POSIXct")
+  expect_true("order_time" %in% names(dt))
+  expect_false("datetime_order" %in% names(dt))
+  expect_s3_class(dt$order_time, "POSIXct")
   expect_equal(dt$status, "NEW")
   # Check column ordering
   expect_equal(names(dt)[1], "order_id")
@@ -118,7 +118,7 @@ test_that("get_order_by_id returns data.table with datetime_order and column reo
 
 # -- get_order_by_client_oid --
 
-test_that("get_order_by_client_oid returns data.table with datetime_order", {
+test_that("get_order_by_client_oid returns data.table with order_time", {
   resp <- mock_kucoin_response(
     data = list(
       orderId = "674c40d38b4b2f00073deef3",
@@ -132,7 +132,7 @@ test_that("get_order_by_client_oid returns data.table with datetime_order", {
 
   dt <- new_oco()$get_order_by_client_oid("my-bot-oco-001")
   expect_s3_class(dt, "data.table")
-  expect_true("datetime_order" %in% names(dt))
+  expect_true("order_time" %in% names(dt))
   expect_equal(dt$order_id, "674c40d38b4b2f00073deef3")
 })
 
@@ -172,14 +172,14 @@ test_that("get_order_detail_by_id returns data.table with orders list-column", {
   dt <- new_oco()$get_order_detail_by_id("674c40d38b4b2f00073deef3")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
-  expect_true("datetime_order" %in% names(dt))
+  expect_true("order_time" %in% names(dt))
   expect_true("orders" %in% names(dt))
   expect_equal(dt$status, "NEW")
 })
 
 # -- get_order_list --
 
-test_that("get_order_list returns orders with datetime_order and column reorder", {
+test_that("get_order_list returns orders with order_time and column reorder", {
   resp <- mock_kucoin_response(
     data = list(
       currentPage = 1,
@@ -209,8 +209,8 @@ test_that("get_order_list returns orders with datetime_order and column reorder"
   dt <- new_oco()$get_order_list()
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 2L)
-  expect_true("datetime_order" %in% names(dt))
-  expect_false("order_time" %in% names(dt))
+  expect_true("order_time" %in% names(dt))
+  expect_false("datetime_order" %in% names(dt))
   expect_equal(names(dt)[1], "order_id")
 })
 

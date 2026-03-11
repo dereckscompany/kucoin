@@ -4,7 +4,7 @@
 # -- get_base_url --
 
 test_that("get_base_url returns default when no env var set", {
-  withr::with_envvar(c("KC-API-ENDPOINT" = ""), {
+  withr::with_envvar(c("KUCOIN_API_ENDPOINT" = ""), {
     expect_equal(get_base_url(), "https://api.kucoin.com")
   })
 })
@@ -17,7 +17,7 @@ test_that("get_base_url returns explicit url when provided", {
 })
 
 test_that("get_base_url returns env var when set", {
-  withr::with_envvar(c("KC-API-ENDPOINT" = "https://custom.kucoin.com"), {
+  withr::with_envvar(c("KUCOIN_API_ENDPOINT" = "https://custom.kucoin.com"), {
     expect_equal(get_base_url(), "https://custom.kucoin.com")
   })
 })

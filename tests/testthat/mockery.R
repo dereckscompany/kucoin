@@ -530,3 +530,870 @@ mock_eth_ticker_data <- function() {
     time = 1729159459033
   ))
 }
+
+# ---------------------------------------------------------------------------
+# Margin Trading fixtures
+# ---------------------------------------------------------------------------
+
+#' Margin order placement response (open_long, close_long, open_short, close_short)
+#' @export
+mock_margin_order_response <- function() {
+  return(list(
+    orderId = "6789abcd1234ef0007ab1234",
+    clientOid = "margin-order-001",
+    borrowSize = "0.001",
+    loanApplyId = "loan-apply-001"
+  ))
+}
+
+#' Margin borrow response
+#' @export
+mock_margin_borrow_response <- function() {
+  return(list(
+    orderNo = "borrow-order-001",
+    actualSize = "1000"
+  ))
+}
+
+#' Margin repay response
+#' @export
+mock_margin_repay_response <- function() {
+  return(list(
+    orderNo = "repay-order-001",
+    actualSize = "1000",
+    timestamp = 1729655606816
+  ))
+}
+
+#' Borrow history — 2 records
+#' @export
+mock_borrow_history_data <- function() {
+  return(list(
+    items = list(
+      list(
+        orderNo = "borrow-order-001",
+        currency = "USDT",
+        principal = "1000",
+        interest = "0.5",
+        createdTime = 1729655606816
+      ),
+      list(
+        orderNo = "borrow-order-002",
+        currency = "USDT",
+        principal = "500",
+        interest = "0.2",
+        createdTime = 1729655706816
+      )
+    )
+  ))
+}
+
+#' Repay history — 1 record
+#' @export
+mock_repay_history_data <- function() {
+  return(list(
+    items = list(
+      list(
+        orderNo = "repay-order-001",
+        currency = "USDT",
+        principal = "1000",
+        interest = "0.5",
+        createdTime = 1729655606816
+      )
+    )
+  ))
+}
+
+#' Interest history — 1 record
+#' @export
+mock_interest_history_data <- function() {
+  return(list(
+    items = list(
+      list(
+        currency = "USDT",
+        interestPaymentAmount = "0.5",
+        createdTime = 1729655606816
+      )
+    )
+  ))
+}
+
+#' Borrow rates — BTC, USDT, ETH
+#' @export
+mock_borrow_rate_data <- function() {
+  return(list(
+    items = list(
+      list(currency = "BTC", hourlyBorrowRate = "0.000021", annualizedBorrowRate = "0.1839"),
+      list(currency = "USDT", hourlyBorrowRate = "0.000015", annualizedBorrowRate = "0.1314"),
+      list(currency = "ETH", hourlyBorrowRate = "0.000018", annualizedBorrowRate = "0.1577")
+    )
+  ))
+}
+
+#' Empty response for endpoints that return invisible(NULL)
+#' @export
+mock_empty_response <- function() {
+  return(list())
+}
+
+# ---------------------------------------------------------------------------
+# Margin Data fixtures
+# ---------------------------------------------------------------------------
+
+#' Cross margin symbols — BTC-USDT + ETH-USDT
+#' @export
+mock_cross_margin_symbols_data <- function() {
+  return(list(
+    timestamp = 1772993986642,
+    items = list(
+      list(
+        symbol = "BTC-USDT",
+        name = "BTC-USDT",
+        baseCurrency = "BTC",
+        quoteCurrency = "USDT",
+        baseIncrement = "0.00000001",
+        baseMinSize = "0.00001",
+        baseMaxSize = "10000000000",
+        quoteIncrement = "0.000001",
+        quoteMinSize = "0.1",
+        quoteMaxSize = "99999999",
+        priceIncrement = "0.1",
+        feeCurrency = "USDT",
+        priceLimitRate = "0.01",
+        minFunds = "0.1",
+        enableTrading = TRUE,
+        market = "USDS"
+      ),
+      list(
+        symbol = "ETH-USDT",
+        name = "ETH-USDT",
+        baseCurrency = "ETH",
+        quoteCurrency = "USDT",
+        baseIncrement = "0.0000001",
+        baseMinSize = "0.0001",
+        baseMaxSize = "10000000000",
+        quoteIncrement = "0.000001",
+        quoteMinSize = "0.1",
+        quoteMaxSize = "99999999",
+        priceIncrement = "0.01",
+        feeCurrency = "USDT",
+        priceLimitRate = "0.01",
+        minFunds = "0.1",
+        enableTrading = TRUE,
+        market = "USDS"
+      )
+    )
+  ))
+}
+
+#' Isolated margin symbols — BTC-USDT + ETH-USDT
+#' @export
+mock_isolated_margin_symbols_data <- function() {
+  return(list(
+    list(
+      symbol = "BTC-USDT",
+      symbolName = "BTC-USDT",
+      baseCurrency = "BTC",
+      quoteCurrency = "USDT",
+      maxLeverage = 10L,
+      flDebtRatio = "0.97",
+      tradeEnable = TRUE,
+      baseBorrowEnable = TRUE,
+      quoteBorrowEnable = TRUE,
+      baseTransferInEnable = TRUE,
+      quoteTransferInEnable = TRUE
+    ),
+    list(
+      symbol = "ETH-USDT",
+      symbolName = "ETH-USDT",
+      baseCurrency = "ETH",
+      quoteCurrency = "USDT",
+      maxLeverage = 5L,
+      flDebtRatio = "0.97",
+      tradeEnable = TRUE,
+      baseBorrowEnable = TRUE,
+      quoteBorrowEnable = TRUE,
+      baseTransferInEnable = TRUE,
+      quoteTransferInEnable = TRUE
+    )
+  ))
+}
+
+#' Margin config — global settings
+#' @export
+mock_margin_config_data <- function() {
+  return(list(
+    maxLeverage = 10L,
+    warningDebtRatio = "0.95",
+    liqDebtRatio = "0.97",
+    currencyList = list("BTC", "ETH", "USDT", "KCS")
+  ))
+}
+
+#' Collateral ratios — BTC + ETH
+#' @export
+mock_collateral_ratio_data <- function() {
+  return(list(
+    list(
+      currencyList = list("BTC"),
+      items = list(
+        list(lowerLimit = "0", upperLimit = "10", collateralRatio = "1.0"),
+        list(lowerLimit = "10", upperLimit = "100", collateralRatio = "0.9")
+      )
+    ),
+    list(
+      currencyList = list("ETH"),
+      items = list(
+        list(lowerLimit = "0", upperLimit = "50", collateralRatio = "0.95"),
+        list(lowerLimit = "50", upperLimit = "500", collateralRatio = "0.85")
+      )
+    )
+  ))
+}
+
+#' Risk limits — BTC + USDT
+#' @export
+mock_risk_limit_data <- function() {
+  return(list(
+    list(
+      currency = "BTC",
+      borrowMaxAmount = "100",
+      buyMaxAmount = "100",
+      holdMaxAmount = "100",
+      borrowCoefficient = "1",
+      marginCoefficient = "1",
+      precision = 8L,
+      borrowMinAmount = "0.001",
+      borrowMinUnit = "0.001",
+      borrowEnabled = TRUE
+    ),
+    list(
+      currency = "USDT",
+      borrowMaxAmount = "1000000",
+      buyMaxAmount = "1000000",
+      holdMaxAmount = "1000000",
+      borrowCoefficient = "1",
+      marginCoefficient = "1",
+      precision = 2L,
+      borrowMinAmount = "10",
+      borrowMinUnit = "0.01",
+      borrowEnabled = TRUE
+    )
+  ))
+}
+
+# ---------------------------------------------------------------------------
+# Lending fixtures
+# ---------------------------------------------------------------------------
+
+#' Loan market — USDT + BTC
+#' @export
+mock_loan_market_data <- function() {
+  return(list(
+    list(
+      currency = "USDT",
+      purchaseEnable = TRUE,
+      redeemEnable = TRUE,
+      increment = "0.01",
+      minPurchaseSize = "10",
+      maxPurchaseSize = "1000000",
+      interestIncrement = "0.0001",
+      minInterestRate = "0.004",
+      marketInterestRate = "0.05",
+      maxInterestRate = "0.1",
+      autoPurchaseEnable = TRUE
+    ),
+    list(
+      currency = "BTC",
+      purchaseEnable = TRUE,
+      redeemEnable = TRUE,
+      increment = "0.00001",
+      minPurchaseSize = "0.001",
+      maxPurchaseSize = "100",
+      interestIncrement = "0.0001",
+      minInterestRate = "0.003",
+      marketInterestRate = "0.04",
+      maxInterestRate = "0.08",
+      autoPurchaseEnable = TRUE
+    )
+  ))
+}
+
+#' Loan market rates — 3 days
+#' @export
+mock_loan_market_rate_data <- function() {
+  return(list(
+    list(time = "202603070000", marketInterestRate = "0.05"),
+    list(time = "202603060000", marketInterestRate = "0.048"),
+    list(time = "202603050000", marketInterestRate = "0.052")
+  ))
+}
+
+#' Purchase (lend) response
+#' @export
+mock_purchase_response <- function() {
+  return(list(orderNo = "lending-purchase-001"))
+}
+
+#' Purchase orders — 1 record
+#' @export
+mock_purchase_orders_data <- function() {
+  return(list(
+    currentPage = 1L,
+    pageSize = 50L,
+    totalNum = 1L,
+    totalPage = 1L,
+    items = list(
+      list(
+        currency = "USDT",
+        purchaseOrderNo = "lending-purchase-001",
+        purchaseSize = "1000",
+        matchSize = "800",
+        interestRate = "0.05",
+        incomeSize = "3.42",
+        applyTime = 1729655606816,
+        status = "DONE"
+      )
+    )
+  ))
+}
+
+#' Redeem response
+#' @export
+mock_redeem_response <- function() {
+  return(list(orderNo = "lending-redeem-001"))
+}
+
+#' Redeem orders — 1 record
+#' @export
+mock_redeem_orders_data <- function() {
+  return(list(
+    currentPage = 1L,
+    pageSize = 50L,
+    totalNum = 1L,
+    totalPage = 1L,
+    items = list(
+      list(
+        currency = "USDT",
+        purchaseOrderNo = "lending-purchase-001",
+        redeemOrderNo = "lending-redeem-001",
+        redeemSize = "500",
+        receiptSize = "500",
+        applyTime = 1729655606816,
+        status = "DONE"
+      )
+    )
+  ))
+}
+
+# ---------------------------------------------------------------------------
+# Futures Market Data fixtures
+# ---------------------------------------------------------------------------
+
+#' Futures contract details — XBTUSDTM
+#' @export
+mock_futures_contract_data <- function() {
+  return(list(
+    symbol = "XBTUSDTM",
+    rootSymbol = "USDT",
+    type = "FFWCSX",
+    firstOpenDate = 1585555200000,
+    baseCurrency = "XBT",
+    quoteCurrency = "USDT",
+    settleCurrency = "USDT",
+    maxOrderQty = 1000000,
+    maxPrice = 1000000,
+    lotSize = 1,
+    tickSize = 0.1,
+    indexPriceTickSize = 0.01,
+    multiplier = 0.001,
+    initialMargin = 0.008,
+    maintainMargin = 0.004,
+    maxRiskLimit = 100000,
+    minRiskLimit = 100000,
+    riskStep = 50000,
+    makerFeeRate = 0.0002,
+    takerFeeRate = 0.0006,
+    makerFixFee = 0,
+    takerFixFee = 0,
+    isDeleverage = TRUE,
+    isQuanto = FALSE,
+    isInverse = FALSE,
+    markMethod = "FairPrice",
+    fairMethod = "FundingRate",
+    status = "Open",
+    fundingFeeRate = 0.0001,
+    predictedFundingFeeRate = 0.0001,
+    openInterest = "27228",
+    turnoverOf24h = 23472917.51,
+    volumeOf24h = 239,
+    markPrice = 98252.1,
+    indexPrice = 98232.45,
+    lastTradePrice = 98260.0,
+    nextFundingRateTime = 21467281,
+    maxLeverage = 125,
+    fundingRateSymbol = ".XBTUSDTMFPI8H",
+    lowPrice = 96891.0,
+    highPrice = 99133.0
+  ))
+}
+
+#' All active futures contracts (2 items)
+#' @export
+mock_futures_all_contracts_data <- function() {
+  return(list(
+    mock_futures_contract_data(),
+    list(
+      symbol = "ETHUSDTM",
+      rootSymbol = "USDT",
+      type = "FFWCSX",
+      baseCurrency = "ETH",
+      quoteCurrency = "USDT",
+      settleCurrency = "USDT",
+      maxOrderQty = 10000000,
+      lotSize = 1,
+      tickSize = 0.01,
+      multiplier = 0.01,
+      initialMargin = 0.02,
+      maintainMargin = 0.01,
+      makerFeeRate = 0.0002,
+      takerFeeRate = 0.0006,
+      status = "Open",
+      maxLeverage = 100,
+      markPrice = 3456.78,
+      lastTradePrice = 3455.50,
+      lowPrice = 3400.00,
+      highPrice = 3500.00
+    )
+  ))
+}
+
+#' Futures ticker — XBTUSDTM
+#' @export
+mock_futures_ticker_data <- function() {
+  return(list(
+    sequence = 1729159460,
+    symbol = "XBTUSDTM",
+    side = "sell",
+    size = 1,
+    price = "98250.0",
+    bestBidSize = 50,
+    bestBidPrice = "98249.9",
+    bestAskPrice = "98250.1",
+    bestAskSize = 30,
+    tradeId = "67fd1234abcd5678",
+    ts = 1729159459033000000
+  ))
+}
+
+#' All futures tickers (2 items)
+#' @export
+mock_futures_all_tickers_data <- function() {
+  return(list(
+    mock_futures_ticker_data(),
+    list(
+      sequence = 1729159461,
+      symbol = "ETHUSDTM",
+      side = "buy",
+      size = 5,
+      price = "3456.78",
+      bestBidSize = 100,
+      bestBidPrice = "3456.50",
+      bestAskPrice = "3457.00",
+      bestAskSize = 80,
+      tradeId = "67fd5678efgh9012",
+      ts = 1729159459034000000
+    )
+  ))
+}
+
+#' Futures partial orderbook — XBTUSDTM
+#' @export
+mock_futures_orderbook_data <- function() {
+  return(list(
+    symbol = "XBTUSDTM",
+    sequence = 100,
+    ts = 1729159459033000000,
+    bids = list(
+      list(98249.9, 50),
+      list(98249.0, 100)
+    ),
+    asks = list(
+      list(98250.1, 30),
+      list(98251.0, 75)
+    )
+  ))
+}
+
+#' Futures trade history — XBTUSDTM
+#' @export
+mock_futures_trade_history_data <- function() {
+  return(list(
+    list(
+      sequence = 100,
+      tradeId = "trade-001",
+      takerOrderId = "order-001",
+      makerOrderId = "order-002",
+      price = "98250.0",
+      size = 1,
+      side = "buy",
+      ts = 1729159459033000000
+    ),
+    list(
+      sequence = 101,
+      tradeId = "trade-002",
+      takerOrderId = "order-003",
+      makerOrderId = "order-004",
+      price = "98251.0",
+      size = 2,
+      side = "sell",
+      ts = 1729159459034000000
+    )
+  ))
+}
+
+#' Futures klines — XBTUSDTM
+#' @export
+mock_futures_klines_data <- function() {
+  return(list(
+    list(1729155600000, 98100.0, 98300.0, 98000.0, 98250.0, 150, 14737500),
+    list(1729159200000, 98250.0, 98400.0, 98200.0, 98350.0, 120, 11802000),
+    list(1729162800000, 98350.0, 98500.0, 98300.0, 98450.0, 100, 9845000)
+  ))
+}
+
+#' Futures mark price — XBTUSDTM
+#' @export
+mock_futures_mark_price_data <- function() {
+  return(list(
+    symbol = "XBTUSDTM",
+    granularity = 1000,
+    timePoint = 1729159459000,
+    value = 98252.1,
+    indexPrice = 98232.45
+  ))
+}
+
+#' Futures funding rate — XBTUSDTM
+#' @export
+mock_futures_funding_rate_data <- function() {
+  return(list(
+    symbol = "XBTUSDTM",
+    granularity = 28800000,
+    timePoint = 1729152000000,
+    value = 0.0001,
+    predictedValue = 0.0001,
+    fundingTime = 1729180800000
+  ))
+}
+
+#' Futures funding rate history — XBTUSDTM
+#' @export
+mock_futures_funding_history_data <- function() {
+  return(list(
+    list(
+      symbol = "XBTUSDTM",
+      fundingRate = 0.0001,
+      timepoint = 1729152000000
+    ),
+    list(
+      symbol = "XBTUSDTM",
+      fundingRate = 0.00012,
+      timepoint = 1729123200000
+    )
+  ))
+}
+
+#' Futures server time
+#' @export
+mock_futures_server_time_data <- function() {
+  return(1729159459033)
+}
+
+#' Futures service status
+#' @export
+mock_futures_service_status_data <- function() {
+  return(list(
+    status = "open",
+    msg = ""
+  ))
+}
+
+# ---------------------------------------------------------------------------
+# Futures Trading fixtures
+# ---------------------------------------------------------------------------
+
+#' Futures order response
+#' @export
+mock_futures_order_response <- function() {
+  return(list(
+    orderId = "futures-order-001",
+    clientOid = "futures-client-001"
+  ))
+}
+
+#' Futures cancel order response
+#' @export
+mock_futures_cancel_order_data <- function() {
+  return(list(
+    cancelledOrderIds = list("futures-order-001")
+  ))
+}
+
+#' Futures order detail
+#' @export
+mock_futures_order_detail_data <- function() {
+  return(list(
+    id = "futures-order-001",
+    symbol = "XBTUSDTM",
+    type = "limit",
+    side = "buy",
+    price = "98000",
+    size = 1,
+    value = "98",
+    dealValue = "0",
+    dealSize = 0,
+    leverage = 5,
+    marginMode = "ISOLATED",
+    positionSide = "BOTH",
+    status = "open",
+    createdAt = 1729159459033,
+    updatedAt = 1729159459033,
+    clientOid = "futures-client-001"
+  ))
+}
+
+#' Futures order list (paginated)
+#' @export
+mock_futures_order_list_data <- function() {
+  return(list(
+    currentPage = 1L,
+    pageSize = 50L,
+    totalNum = 1L,
+    totalPage = 1L,
+    items = list(
+      mock_futures_order_detail_data()
+    )
+  ))
+}
+
+#' Futures recent fills
+#' @export
+mock_futures_fills_data <- function() {
+  return(list(
+    list(
+      symbol = "XBTUSDTM",
+      tradeId = "fill-001",
+      orderId = "futures-order-001",
+      side = "buy",
+      liquidity = "taker",
+      forceTaker = TRUE,
+      price = "98250.0",
+      size = 1,
+      value = "98.25",
+      feeRate = "0.0006",
+      fixFee = "0",
+      feeCurrency = "USDT",
+      fee = "0.05895",
+      orderType = "limit",
+      tradeType = "trade",
+      tradeTime = 1729159459033000000,
+      createdAt = 1729159459033
+    )
+  ))
+}
+
+#' Futures open order value
+#' @export
+mock_futures_open_order_value_data <- function() {
+  return(list(
+    openOrderBuyQty = 1,
+    openOrderSellQty = 0,
+    openOrderBuyCost = "0.0196",
+    openOrderSellCost = "0",
+    settleCurrency = "USDT"
+  ))
+}
+
+#' Futures DCP settings
+#' @export
+mock_futures_dcp_data <- function() {
+  return(list(
+    timeout = 5,
+    symbols = "",
+    currentTime = 1729159459033
+  ))
+}
+
+# ---------------------------------------------------------------------------
+# Futures Account fixtures
+# ---------------------------------------------------------------------------
+
+#' Futures account overview
+#' @export
+mock_futures_account_overview_data <- function() {
+  return(list(
+    accountEquity = 100000.5,
+    unrealisedPNL = 50.25,
+    marginBalance = 100050.75,
+    positionMargin = 1000.0,
+    orderMargin = 500.0,
+    frozenFunds = 0,
+    availableBalance = 98550.75,
+    currency = "USDT"
+  ))
+}
+
+#' Futures position detail
+#' @export
+mock_futures_position_data <- function() {
+  return(list(
+    list(
+      id = "pos-001",
+      symbol = "XBTUSDTM",
+      autoDeposit = FALSE,
+      realLeverage = 5.0,
+      crossMode = FALSE,
+      delevPercentage = 0.5,
+      openingTimestamp = 1729159459033,
+      currentTimestamp = 1729162000000,
+      currentQty = 1,
+      currentCost = "98.25",
+      currentComm = "0.05895",
+      unrealisedCost = "98.25",
+      realisedGrossCost = "0",
+      realisedCost = "0.05895",
+      isOpen = TRUE,
+      markPrice = 98350.0,
+      markValue = "98.35",
+      posCost = "98.25",
+      posCross = "0",
+      posInit = "19.65",
+      posComm = "0.07861",
+      posLoss = "0",
+      posMargin = "19.72861",
+      posMaint = "0.4423",
+      maintMargin = "19.82861",
+      realisedGrossPnl = "0",
+      realisedPnl = "-0.05895",
+      unrealisedPnl = "0.1",
+      unrealisedPnlPcnt = 0.001,
+      avgEntryPrice = "98250.0",
+      liquidationPrice = "79000.0",
+      bankruptPrice = "78500.0",
+      settleCurrency = "USDT",
+      marginMode = "ISOLATED",
+      positionSide = "BOTH"
+    )
+  ))
+}
+
+#' Futures positions history
+#' @export
+mock_futures_positions_history_data <- function() {
+  return(list(
+    items = list(
+      list(
+        symbol = "XBTUSDTM",
+        settleCurrency = "USDT",
+        realisedGrossPnl = "10.50",
+        realisedPnl = "10.25",
+        openTime = 1729100000000,
+        closeTime = 1729159459033,
+        leverage = 5,
+        type = "Close"
+      )
+    )
+  ))
+}
+
+#' Futures margin mode
+#' @export
+mock_futures_margin_mode_data <- function() {
+  return(list(
+    symbol = "XBTUSDTM",
+    marginMode = "ISOLATED"
+  ))
+}
+
+#' Futures cross margin leverage
+#' @export
+mock_futures_cross_leverage_data <- function() {
+  return(list(
+    symbol = "XBTUSDTM",
+    leverage = "5"
+  ))
+}
+
+#' Futures max open size
+#' @export
+mock_futures_max_open_size_data <- function() {
+  return(list(
+    symbol = "XBTUSDTM",
+    maxBuyOpenSize = 500,
+    maxSellOpenSize = 500
+  ))
+}
+
+#' Futures max withdraw margin
+#' @export
+mock_futures_max_withdraw_margin_data <- function() {
+  return("15.00")
+}
+
+#' Futures add/remove margin response
+#' @export
+mock_futures_margin_response <- function() {
+  return(list(
+    id = "margin-001",
+    symbol = "XBTUSDTM",
+    margin = "10.00",
+    marginType = "ADD"
+  ))
+}
+
+#' Futures risk limit tiers
+#' @export
+mock_futures_risk_limit_data <- function() {
+  return(list(
+    list(
+      symbol = "XBTUSDTM",
+      level = 1,
+      maxRiskLimit = 100000,
+      minRiskLimit = 0,
+      maxLeverage = 125,
+      initialMargin = 0.008,
+      maintainMargin = 0.004
+    ),
+    list(
+      symbol = "XBTUSDTM",
+      level = 2,
+      maxRiskLimit = 200000,
+      minRiskLimit = 100000,
+      maxLeverage = 100,
+      initialMargin = 0.01,
+      maintainMargin = 0.005
+    )
+  ))
+}
+
+#' Futures private funding history
+#' @export
+mock_futures_private_funding_data <- function() {
+  return(list(
+    dataList = list(
+      list(
+        id = 1,
+        symbol = "XBTUSDTM",
+        timePoint = 1729152000000,
+        fundingRate = 0.0001,
+        markPrice = 98250.0,
+        positionQty = 1,
+        positionCost = "98.25",
+        funding = "-0.009825",
+        settleCurrency = "USDT"
+      )
+    ),
+    hasMore = FALSE
+  ))
+}

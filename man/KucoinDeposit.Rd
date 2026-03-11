@@ -112,7 +112,7 @@ btc_deposits <- deposit$get_deposit_history(
   currency = "BTC",
   status = "SUCCESS"
 )
-print(btc_deposits[, .(amount, status, datetime_created)])
+print(btc_deposits[, .(amount, status, created_at)])
 
 # Get deposits from the last 24 hours
 now_ms <- as.numeric(lubridate::now()) * 1000
@@ -122,7 +122,7 @@ recent <- deposit$get_deposit_history(
   page_size = 100,
   max_pages = 5
 )
-print(recent[, .(currency, amount, wallet_tx_id, datetime_created)])
+print(recent[, .(currency, amount, wallet_tx_id, created_at)])
 }
 }
 \section{Super class}{
@@ -226,11 +226,11 @@ Verified: 2026-02-01
 \item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"ETH"}, \code{"USDT"}).
 Must be a valid KuCoin-supported currency symbol.}
 
-\item{\code{chain}}{Character or NULL; blockchain network identifier (e.g., \code{"ERC20"},
-\code{"TRC20"}, \code{"btc"}). When NULL, the default chain for the currency is used.}
+\item{\code{chain}}{Character; blockchain network identifier (e.g., \code{"ERC20"},
+\code{"TRC20"}, \code{"btc"}). Required by the KuCoin API.}
 
-\item{\code{to}}{Character or NULL; target account type for the deposit. Accepted values
-include \code{"main"} (funding account) and \code{"trade"} (trading account).}
+\item{\code{to}}{Character; target account type for the deposit. Accepted values
+include \code{"main"} (funding account) and \code{"trade"} (trading account). Required by the KuCoin API.}
 
 \item{\code{amount}}{Character or NULL; deposit amount. Required for some invoice-based
 deposit addresses (e.g., Lightning Network).}
@@ -355,8 +355,7 @@ Verified: 2026-02-01
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"ETH"}, \code{"USDT"}).
-Must be a valid KuCoin-supported currency symbol. Required.}
+\item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"ETH"}, \code{"USDT"}). \strong{Required} by the API.}
 
 \item{\code{amount}}{Character or NULL; deposit amount. Some chains require an amount
 to generate invoice-based addresses (e.g., Lightning Network).}
@@ -409,13 +408,13 @@ print(usdt_erc20$address)
 Get Deposit History
 
 Retrieves paginated deposit history with optional filtering by currency,
-status, and time range. Automatically converts \code{created_at} timestamps
-to POSIXct datetime objects for convenient analysis.
+status, and time range. Automatically coerces \code{created_at} timestamps
+to POSIXct for convenient analysis.
 \subsection{Workflow}{
 \enumerate{
 \item \strong{Pagination}: Uses \code{private$.paginate()} to fetch all pages of deposit records up to \code{max_pages}.
 \item \strong{Flattening}: Combines all pages into a single \code{data.table} via \code{flatten_pages()}.
-\item \strong{Timestamp Conversion}: Converts \code{created_at} (milliseconds) to \code{datetime_created} (POSIXct).
+\item \strong{Timestamp Conversion}: Coerces \code{created_at} (milliseconds) to POSIXct in-place.
 }
 }
 
@@ -541,7 +540,7 @@ Used to filter deposits created on or before this time.}
 \item \code{wallet_tx_id} (character): On-chain transaction hash.
 \item \code{updated_at} (numeric): Last update timestamp in milliseconds.
 \item \code{remark} (character): Optional remark.
-\item \code{datetime_created} (POSIXct): Creation datetime.
+\item \code{created_at} (POSIXct): Creation datetime (coerced from epoch milliseconds).
 }
 
 Returns an empty \code{data.table} if no deposits match the filters.
@@ -556,7 +555,7 @@ btc_deposits <- deposit$get_deposit_history(
   currency = "BTC",
   status = "SUCCESS"
 )
-print(btc_deposits[, .(amount, status, datetime_created)])
+print(btc_deposits[, .(amount, status, created_at)])
 
 # Get deposits from the last 24 hours
 now_ms <- as.numeric(lubridate::now()) * 1000
@@ -566,7 +565,7 @@ recent <- deposit$get_deposit_history(
   page_size = 100,
   max_pages = 5
 )
-print(recent[, .(currency, amount, wallet_tx_id, datetime_created)])
+print(recent[, .(currency, amount, wallet_tx_id, created_at)])
 }
 }
 \if{html}{\out{</div>}}

@@ -61,7 +61,6 @@
 #' }
 #'
 #' @importFrom R6 R6Class
-#' @importFrom data.table data.table as.data.table rbindlist setcolorder
 #' @export
 KucoinWithdrawal <- R6::R6Class(
   "KucoinWithdrawal",
@@ -120,8 +119,8 @@ KucoinWithdrawal <- R6::R6Class(
     #' @param toAddress Character; withdrawal destination address, UID, email, or phone number.
     #' @param amount Character; withdrawal amount (must be positive, multiple of currency precision).
     #' @param withdrawType Character; withdrawal type: `"ADDRESS"`, `"UID"`, `"MAIL"`, or `"PHONE"`.
-    #' @param chain Character or NULL; blockchain network identifier (e.g., `"eth"`, `"trx"`, `"bsc"`).
-    #'   When NULL, the default chain for the currency is used.
+    #' @param chain Character; blockchain network identifier (e.g., `"eth"`, `"trx"`, `"bsc"`).
+    #'   Required by the KuCoin API.
     #' @param memo Character or NULL; address memo/tag (required for some currencies like XRP, XLM).
     #' @param isInner Logical or NULL; if `TRUE`, this is an internal KuCoin transfer (no on-chain fee).
     #' @param remark Character or NULL; optional remark for the withdrawal.
@@ -179,6 +178,10 @@ KucoinWithdrawal <- R6::R6Class(
           paste(valid_types, collapse = ", "),
           "."
         ))
+      }
+
+      if (is.null(chain)) {
+        rlang::abort("Parameter 'chain' is required by the KuCoin API.")
       }
 
       body <- list(
@@ -275,7 +278,7 @@ KucoinWithdrawal <- R6::R6Class(
         endpoint = paste0("/api/v1/withdrawals/", withdrawalId),
         method = "DELETE",
         .parser = function(data) {
-          return(data.table::data.table(withdrawal_id = withdrawalId))
+          return(data.table::data.table(withdrawal_id = withdrawalId)[])
         }
       ))
     },
@@ -385,7 +388,7 @@ KucoinWithdrawal <- R6::R6Class(
         .parser = function(data) {
           dt <- as_dt_row(data)
           if (nrow(dt) == 0L) {
-            return(dt)
+            return(dt[])
           }
           expected <- c(
             "currency",
@@ -402,7 +405,7 @@ KucoinWithdrawal <- R6::R6Class(
             "locked_amount"
           )
           data.table::setcolorder(dt, intersect(expected, names(dt)))
-          return(dt)
+          return(dt[])
         }
       ))
     },
@@ -412,12 +415,12 @@ KucoinWithdrawal <- R6::R6Class(
     #'
     #' Retrieves paginated withdrawal history with optional filtering by currency,
     #' status, and time range. Automatically converts `created_at` timestamps
-    #' to POSIXct datetime objects.
+    #' to POSIXct for convenient analysis.
     #'
     #' ### Workflow
     #' 1. **Pagination**: Uses `private$.paginate()` to fetch all pages of withdrawal records up to `max_pages`.
     #' 2. **Flattening**: Combines all pages into a single `data.table` via `flatten_pages()`.
-    #' 3. **Timestamp Conversion**: Converts `created_at` (milliseconds) to `datetime_created` (POSIXct).
+    #' 3. **Timestamp Conversion**: Coerces `created_at` (milliseconds) to POSIXct in-place.
     #'
     #' ### API Endpoint
     #' `GET https://api.kucoin.com/api/v1/withdrawals`
@@ -473,7 +476,8 @@ KucoinWithdrawal <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param currency Character; currency code (e.g., `"BTC"`, `"USDT"`). Required.
+    #' @param currency Character or NULL; currency code (e.g., `"BTC"`, `"USDT"`).
+    #'   If NULL, returns withdrawals for all currencies.
     #' @param status Character or NULL; filter by withdrawal status. Accepted values:
     #'   `"PROCESSING"`, `"REVIEW"`, `"WALLET_PROCESSING"`, `"SUCCESS"`, `"FAILURE"`.
     #'   When NULL, returns withdrawals of all statuses.
@@ -494,7 +498,7 @@ KucoinWithdrawal <- R6::R6Class(
     #'   - `updated_at` (numeric): Last update timestamp in milliseconds.
     #'   - `remark` (character): Optional remark.
     #'   - `arrears` (logical): Whether the withdrawal is in arrears.
-    #'   - `datetime_created` (POSIXct): Creation datetime.
+    #'   - `created_at` (POSIXct): Creation datetime (coerced from epoch milliseconds).
     #'
     #'   Returns an empty `data.table` if no withdrawals match the filters.
     #'
@@ -507,7 +511,7 @@ KucoinWithdrawal <- R6::R6Class(
     #'   currency = "USDT",
     #'   status = "SUCCESS"
     #' )
-    #' print(history[, .(amount, status, datetime_created)])
+    #' print(history[, .(amount, status, created_at)])
     #'
     #' # Get withdrawals from the last 24 hours
     #' now_ms <- as.integer(as.numeric(lubridate::now()) * 1000)
@@ -518,14 +522,14 @@ KucoinWithdrawal <- R6::R6Class(
     #' )
     #' }
     get_withdrawal_history = function(
-      currency,
+      currency = NULL,
       status = NULL,
       startAt = NULL,
       endAt = NULL,
       page_size = 50,
       max_pages = Inf
     ) {
-      if (!is.character(currency) || !nzchar(currency)) {
+      if (!is.null(currency) && (!is.character(currency) || !nzchar(currency))) {
         rlang::abort("Parameter 'currency' must be a non-empty string.")
       }
 
@@ -542,11 +546,10 @@ KucoinWithdrawal <- R6::R6Class(
         .parser = function(pages) {
           dt <- flatten_pages(pages)
           if (nrow(dt) == 0L) {
-            return(dt)
+            return(dt[])
           }
           if ("created_at" %in% names(dt)) {
-            dt[, datetime_created := ms_to_datetime(created_at)]
-            dt[, created_at := NULL]
+            dt[, created_at := ms_to_datetime(created_at)]
           }
           data.table::setcolorder(
             dt,
@@ -561,7 +564,7 @@ KucoinWithdrawal <- R6::R6Class(
                 "amount",
                 "fee",
                 "wallet_tx_id",
-                "datetime_created",
+                "created_at",
                 "updated_at",
                 "remark",
                 "arrears"
@@ -569,7 +572,7 @@ KucoinWithdrawal <- R6::R6Class(
               names(dt)
             )
           )
-          return(dt)
+          return(dt[])
         }
       ))
     },
@@ -648,7 +651,7 @@ KucoinWithdrawal <- R6::R6Class(
     #'   - `cancel_type` (character): `"CANCELABLE"`, `"CANCELING"`, or `"NON_CANCELABLE"`.
     #'   - `failure_reason` (character): Failure reason code (or NA).
     #'   - `failure_reason_msg` (character): Human-readable failure message (or NA).
-    #'   - `datetime_created` (POSIXct): Creation datetime.
+    #'   - `created_at` (POSIXct): Creation datetime (coerced from epoch milliseconds).
     #'
     #' @examples
     #' \dontrun{
@@ -673,11 +676,10 @@ KucoinWithdrawal <- R6::R6Class(
         .parser = function(data) {
           dt <- as_dt_row(data)
           if (nrow(dt) == 0L) {
-            return(dt)
+            return(dt[])
           }
           if ("created_at" %in% names(dt)) {
-            dt[, datetime_created := ms_to_datetime(created_at)]
-            dt[, created_at := NULL]
+            dt[, created_at := ms_to_datetime(created_at)]
           }
           expected <- c(
             "id",
@@ -691,11 +693,11 @@ KucoinWithdrawal <- R6::R6Class(
             "amount",
             "fee",
             "wallet_tx_id",
-            "datetime_created",
+            "created_at",
             "cancel_type"
           )
           data.table::setcolorder(dt, intersect(expected, names(dt)))
-          return(dt)
+          return(dt[])
         }
       ))
     }

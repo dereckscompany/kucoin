@@ -201,6 +201,97 @@ validate_order_params <- function(
   return(params)
 }
 
+#' Validate Margin Order Parameters
+#'
+#' Validates and normalises parameters for a margin order. Extends spot order
+#' validation with margin-specific fields (`isIsolated`, `autoBorrow`,
+#' `autoRepay`). Delegates core order validation to `validate_order_params()`.
+#'
+#' @inheritParams validate_order_params
+#' @param isIsolated Logical or NULL; `TRUE` for isolated margin, `FALSE`
+#'   (default) for cross margin.
+#' @param autoBorrow Logical or NULL; if `TRUE`, auto-borrow any shortfall at
+#'   the lowest market rate.
+#' @param autoRepay Logical or NULL; if `TRUE`, auto-repay when closing
+#'   positions.
+#' @return Named list of validated order parameters (NULLs removed).
+#'
+#' @importFrom rlang abort
+#' @keywords internal
+#' @noRd
+validate_margin_order_params <- function(
+  type,
+  symbol,
+  side,
+  clientOid = NULL,
+  price = NULL,
+  size = NULL,
+  funds = NULL,
+  stp = NULL,
+  tags = NULL,
+  remark = NULL,
+  timeInForce = NULL,
+  cancelAfter = NULL,
+  postOnly = NULL,
+  hidden = NULL,
+  iceberg = NULL,
+  visibleSize = NULL,
+  isIsolated = NULL,
+  autoBorrow = NULL,
+  autoRepay = NULL
+) {
+  # clientOid is required for margin orders; auto-generate UUID if not provided
+  if (is.null(clientOid)) {
+    clientOid <- as.character(
+      paste0(
+        sprintf("%04x", sample.int(65536, 4, replace = TRUE) - 1L),
+        collapse = "-"
+      )
+    )
+  }
+
+  # Validate core order params via existing helper
+  params <- validate_order_params(
+    type = type,
+    symbol = symbol,
+    side = side,
+    clientOid = clientOid,
+    price = price,
+    size = size,
+    funds = funds,
+    stp = stp,
+    tags = tags,
+    remark = remark,
+    timeInForce = timeInForce,
+    cancelAfter = cancelAfter,
+    postOnly = postOnly,
+    hidden = hidden,
+    iceberg = iceberg,
+    visibleSize = visibleSize
+  )
+
+  # Margin-specific validation
+  if (!is.null(isIsolated) && !is.logical(isIsolated)) {
+    rlang::abort("Parameter 'isIsolated' must be logical.")
+  }
+  if (!is.null(autoBorrow) && !is.logical(autoBorrow)) {
+    rlang::abort("Parameter 'autoBorrow' must be logical.")
+  }
+  if (!is.null(autoRepay) && !is.logical(autoRepay)) {
+    rlang::abort("Parameter 'autoRepay' must be logical.")
+  }
+
+  # Append margin-specific fields
+  params$isIsolated <- isIsolated
+  params$autoBorrow <- autoBorrow
+  params$autoRepay <- autoRepay
+
+  # Drop NULLs again
+  params <- params[!vapply(params, is.null, logical(1))]
+
+  return(params)
+}
+
 #' Validate a Single Order in a Batch
 #'
 #' Validates one order within a batch request by delegating to

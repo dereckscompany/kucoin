@@ -178,7 +178,14 @@ kucoin_build_request <- function(
     parsed_url <- httr2::url_parse(req$url)
     sign_path <- parsed_url$path
     if (length(parsed_url$query) > 0) {
-      qs <- paste0(names(parsed_url$query), "=", parsed_url$query, collapse = "&")
+      encoded_vals <- vapply(
+        parsed_url$query,
+        function(v) {
+          utils::URLencode(as.character(v), reserved = TRUE)
+        },
+        character(1)
+      )
+      qs <- paste0(names(parsed_url$query), "=", encoded_vals, collapse = "&")
       sign_path <- paste0(sign_path, "?", qs)
     }
 
@@ -259,6 +266,9 @@ parse_kucoin_response <- function(resp) {
 #' @param page_size Integer; results per page. Default `50`.
 #' @param max_pages Numeric; maximum pages to fetch. Default `Inf`.
 #' @param items_field Character; name of the items field. Default `"items"`.
+#' @param timeout Numeric; request timeout in seconds. Default `30`.
+#' @param .get_timestamp_ms Function or NULL; custom timestamp provider for
+#'   request signing. If `NULL`, uses the default internal timestamp function.
 #' @return Parsed and post-processed result, or a promise thereof.
 #'
 #' @export
@@ -274,7 +284,9 @@ kucoin_paginate <- function(
   is_async = FALSE,
   page_size = 50,
   max_pages = Inf,
-  items_field = "items"
+  items_field = "items",
+  timeout = 30,
+  .get_timestamp_ms = NULL
 ) {
   accumulator <- list()
 
@@ -291,7 +303,9 @@ kucoin_paginate <- function(
       body = body,
       keys = keys,
       .perform = .perform,
-      is_async = is_async
+      is_async = is_async,
+      timeout = timeout,
+      .get_timestamp_ms = .get_timestamp_ms
     )
 
     return(then_or_now(

@@ -71,7 +71,6 @@
 #' }
 #'
 #' @importFrom R6 R6Class
-#' @importFrom data.table data.table as.data.table rbindlist setcolorder
 #' @export
 KucoinAccount <- R6::R6Class(
   "KucoinAccount",
@@ -132,12 +131,18 @@ KucoinAccount <- R6::R6Class(
     #' ```
     #'
     #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   `level` (integer, VIP tier),
-    #'   `sub_quantity` (integer, total sub-accounts), `max_default_sub_quantity` (integer),
-    #'   `max_sub_quantity` (integer), `spot_sub_quantity` (integer), `margin_sub_quantity` (integer),
-    #'   `futures_sub_quantity` (integer), `option_sub_quantity` (integer),
-    #'   `max_spot_sub_quantity` (integer), `max_margin_sub_quantity` (integer),
-    #'   `max_futures_sub_quantity` (integer), `max_option_sub_quantity` (integer).
+    #' - `level` (integer): VIP tier.
+    #' - `sub_quantity` (integer): Total sub-accounts.
+    #' - `max_default_sub_quantity` (integer): Max default sub-accounts.
+    #' - `max_sub_quantity` (integer): Max sub-accounts.
+    #' - `spot_sub_quantity` (integer): Spot sub-accounts.
+    #' - `margin_sub_quantity` (integer): Margin sub-accounts.
+    #' - `futures_sub_quantity` (integer): Futures sub-accounts.
+    #' - `option_sub_quantity` (integer): Option sub-accounts.
+    #' - `max_spot_sub_quantity` (integer): Max spot sub-accounts.
+    #' - `max_margin_sub_quantity` (integer): Max margin sub-accounts.
+    #' - `max_futures_sub_quantity` (integer): Max futures sub-accounts.
+    #' - `max_option_sub_quantity` (integer): Max option sub-accounts.
     #'
     #' @examples
     #' \dontrun{
@@ -204,11 +209,14 @@ KucoinAccount <- R6::R6Class(
     #' ```
     #'
     #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   `remark` (character, key label),
-    #'   `api_key` (character, API key ID), `api_version` (integer, key version),
-    #'   `permission` (character, comma-separated permissions e.g. `"General,Spot"`),
-    #'   `ip_whitelist` (character, allowed IPs), `created_at` (numeric, epoch ms),
-    #'   `uid` (numeric, user ID), `is_master` (logical, TRUE if master account key).
+    #' - `remark` (character): Key label.
+    #' - `api_key` (character): API key ID.
+    #' - `api_version` (integer): Key version.
+    #' - `permission` (character): Comma-separated permissions e.g. `"General,Spot"`.
+    #' - `ip_whitelist` (character): Allowed IPs.
+    #' - `created_at` (numeric): Epoch ms.
+    #' - `uid` (numeric): User ID.
+    #' - `is_master` (logical): TRUE if master account key.
     #'
     #' @examples
     #' \dontrun{
@@ -264,25 +272,20 @@ KucoinAccount <- R6::R6Class(
     #' ```json
     #' {
     #'   "code": "200000",
-    #'   "data": {
-    #'     "type": "trade",
-    #'     "isOpened": true
-    #'   }
+    #'   "data": false
     #' }
     #' ```
     #'
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   `type` (character, account type e.g. `"trade"`),
-    #'   `is_opened` (logical, whether the account type is active). Returns an empty
-    #'   `data.table` if no account types are found.
+    #' @return Logical scalar: `TRUE` if the user is a spot high-frequency user
+    #'   (use `trade_hf` for transfers/queries), `FALSE` for low-frequency
+    #'   (use `trade`). This is a compatibility interface for users who enabled
+    #'   HF trading before 2024.
     #'
     #' @examples
     #' \dontrun{
     #' account <- KucoinAccount$new()
-    #' types <- account$get_spot_account_type()
-    #' print(types)
-    #' # Check if trade account is opened
-    #' if (nrow(types) > 0 && any(types$is_opened)) {
+    #' is_hf <- account$get_spot_account_type()
+    #' if (is_hf) {
     #'   cat("HF trading account is active.\n")
     #' }
     #' }
@@ -290,13 +293,7 @@ KucoinAccount <- R6::R6Class(
       return(private$.request(
         endpoint = "/api/v1/hf/accounts/opened",
         .parser = function(data) {
-          if (is.null(data) || length(data) == 0) {
-            return(data.table::data.table())
-          }
-          if (is.list(data) && !is.null(names(data))) {
-            return(as_dt_row(data))
-          }
-          return(data.table::rbindlist(lapply(data, as_dt_row), fill = TRUE))
+          return(isTRUE(data))
         }
       ))
     },
@@ -366,11 +363,14 @@ KucoinAccount <- R6::R6Class(
     #'   - `type` (character): Filter by account type: `"main"`, `"trade"`, or `"margin"`.
     #'
     #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   `id` (character, account ID),
-    #'   `currency` (character, currency code), `type` (character, account type),
-    #'   `balance` (character, total balance), `available` (character, available for trading),
-    #'   `holds` (character, amount on hold in open orders). Returns an empty
-    #'   `data.table` if no accounts match.
+    #' - `id` (character): Account ID.
+    #' - `currency` (character): Currency code.
+    #' - `type` (character): Account type.
+    #' - `balance` (character): Total balance.
+    #' - `available` (character): Available for trading.
+    #' - `holds` (character): Amount on hold in open orders.
+    #'
+    #'   Returns an empty `data.table` if no accounts match.
     #'
     #' @examples
     #' \dontrun{
@@ -442,9 +442,10 @@ KucoinAccount <- R6::R6Class(
     #'   Obtain account IDs from `get_spot_accounts()`.
     #'
     #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   `currency` (character, currency code),
-    #'   `balance` (character, total balance), `available` (character, available for use),
-    #'   `holds` (character, amount held in open orders).
+    #' - `currency` (character): Currency code.
+    #' - `balance` (character): Total balance.
+    #' - `available` (character): Available for use.
+    #' - `holds` (character): Amount held in open orders.
     #'
     #' @examples
     #' \dontrun{
@@ -511,20 +512,24 @@ KucoinAccount <- R6::R6Class(
     #'     "accounts": [
     #'       {
     #'         "currency": "USDT",
-    #'         "totalBalance": "10000.00",
-    #'         "availableBalance": "8500.00",
-    #'         "holdBalance": "1500.00",
+    #'         "total": "10000.00",
+    #'         "available": "8500.00",
+    #'         "hold": "1500.00",
     #'         "liability": "2500.00",
+    #'         "liabilityPrincipal": "2400.00",
+    #'         "liabilityInterest": "100.00",
     #'         "maxBorrowSize": "50000.00",
     #'         "borrowEnabled": true,
     #'         "transferInEnabled": true
     #'       },
     #'       {
     #'         "currency": "BTC",
-    #'         "totalBalance": "0.15",
-    #'         "availableBalance": "0.15",
-    #'         "holdBalance": "0",
+    #'         "total": "0.15",
+    #'         "available": "0.15",
+    #'         "hold": "0",
     #'         "liability": "0",
+    #'         "liabilityPrincipal": "0",
+    #'         "liabilityInterest": "0",
     #'         "maxBorrowSize": "2.5",
     #'         "borrowEnabled": true,
     #'         "transferInEnabled": true
@@ -539,10 +544,18 @@ KucoinAccount <- R6::R6Class(
     #'   - `queryType` (character): Query type e.g. `"MARGIN"`, `"MARGIN_V2"`.
     #'
     #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   `currency` (character),
-    #'   `total_balance` (character), `available_balance` (character), `hold_balance` (character),
-    #'   `liability` (character), `max_borrow_size` (character), `borrow_enabled` (logical),
-    #'   `transfer_in_enabled` (logical). Returns an empty `data.table` if no margin accounts exist.
+    #' - `currency` (character): Currency code.
+    #' - `total` (character): Total balance.
+    #' - `available` (character): Available balance.
+    #' - `hold` (character): Amount on hold.
+    #' - `liability` (character): Total liability.
+    #' - `liability_principal` (character): Liability principal.
+    #' - `liability_interest` (character): Liability interest.
+    #' - `max_borrow_size` (character): Maximum borrowable amount.
+    #' - `borrow_enabled` (logical): Whether borrowing is enabled.
+    #' - `transfer_in_enabled` (logical): Whether transfer-in is enabled.
+    #'
+    #'   Returns an empty `data.table` if no margin accounts exist.
     #'
     #' @examples
     #' \dontrun{
@@ -559,9 +572,9 @@ KucoinAccount <- R6::R6Class(
         .parser = function(data) {
           accounts <- data$accounts %||% data
           if (is.null(accounts) || length(accounts) == 0) {
-            return(data.table::data.table())
+            return(data.table::data.table()[])
           }
-          return(data.table::rbindlist(lapply(accounts, as_dt_row), fill = TRUE))
+          return(data.table::rbindlist(lapply(accounts, as_dt_row), fill = TRUE)[])
         }
       ))
     },
@@ -616,21 +629,27 @@ KucoinAccount <- R6::R6Class(
     #'         "debtRatio": "0.1912",
     #'         "baseAsset": {
     #'           "currency": "BTC",
-    #'           "totalBalance": "0.1",
-    #'           "holdBalance": "0",
-    #'           "availableBalance": "0.1",
+    #'           "borrowEnabled": true,
+    #'           "transferInEnabled": true,
     #'           "liability": "0",
-    #'           "interest": "0",
-    #'           "borrowableAmount": "1.5"
+    #'           "liabilityPrincipal": "0",
+    #'           "liabilityInterest": "0",
+    #'           "total": "0.1",
+    #'           "available": "0.1",
+    #'           "hold": "0",
+    #'           "maxBorrowSize": "1.5"
     #'         },
     #'         "quoteAsset": {
     #'           "currency": "USDT",
-    #'           "totalBalance": "5000.00",
-    #'           "holdBalance": "500.00",
-    #'           "availableBalance": "4500.00",
+    #'           "borrowEnabled": true,
+    #'           "transferInEnabled": true,
     #'           "liability": "1000.00",
-    #'           "interest": "0.42",
-    #'           "borrowableAmount": "25000.00"
+    #'           "liabilityPrincipal": "950.00",
+    #'           "liabilityInterest": "50.00",
+    #'           "total": "5000.00",
+    #'           "available": "4500.00",
+    #'           "hold": "500.00",
+    #'           "maxBorrowSize": "25000.00"
     #'         }
     #'       }
     #'     ]
@@ -646,8 +665,8 @@ KucoinAccount <- R6::R6Class(
     #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
     #'   Columns are flattened from the nested response and may include:
     #'   `symbol` (character), `status` (character), `debt_ratio` (character),
-    #'   and nested `base_asset.*` and `quote_asset.*` fields (currency, total_balance, hold_balance,
-    #'   available_balance, liability, interest, borrowable_amount). Returns an empty `data.table`
+    #'   and nested `base_asset.*` and `quote_asset.*` fields (currency, total, available, hold,
+    #'   liability, liability_principal, liability_interest, max_borrow_size). Returns an empty `data.table`
     #'   if no isolated margin accounts exist.
     #'
     #' @examples
@@ -665,9 +684,9 @@ KucoinAccount <- R6::R6Class(
         .parser = function(data) {
           assets <- data$assets %||% data
           if (is.null(assets) || length(assets) == 0) {
-            return(data.table::data.table())
+            return(data.table::data.table()[])
           }
-          return(data.table::rbindlist(lapply(assets, as_dt_row), fill = TRUE))
+          return(data.table::rbindlist(lapply(assets, as_dt_row), fill = TRUE)[])
         }
       ))
     },
@@ -677,15 +696,14 @@ KucoinAccount <- R6::R6Class(
     #'
     #' Retrieves paginated account ledger (transaction history) for spot and margin
     #' accounts. Each entry represents a balance change event such as a trade fill,
-    #' deposit, withdrawal, transfer, or fee charge. Automatically converts the
-    #' `created_at` millisecond timestamp to a `datetime_created` POSIXct column.
+    #' deposit, withdrawal, transfer, or fee charge. Automatically coerces the
+    #' `created_at` millisecond timestamp to POSIXct.
     #'
     #' ### Workflow
     #' 1. **Pagination**: Calls the internal `$.paginate()` method which fetches successive
     #'    pages until all results are retrieved or `max_pages` is reached.
     #' 2. **Flattening**: Combines all pages into a single `data.table` via `flatten_pages()`.
-    #' 3. **Datetime Conversion**: If `created_at` is present, adds a `datetime_created`
-    #'    column by converting epoch milliseconds to POSIXct.
+    #' 3. **Datetime Conversion**: If `created_at` is present, coerces it to POSIXct in-place.
     #'
     #' ### API Endpoint
     #' `GET https://api.kucoin.com/api/v1/accounts/ledgers`
@@ -762,13 +780,17 @@ KucoinAccount <- R6::R6Class(
     #'   (fetch all pages). Set to a finite number to limit API calls.
     #'
     #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   `id` (character, ledger entry ID),
-    #'   `currency` (character), `amount` (character, transaction amount),
-    #'   `fee` (character, fee charged), `balance` (character, balance after transaction),
-    #'   `account_type` (character, e.g. `"TRADE"`, `"MAIN"`),
-    #'   `biz_type` (character, business type), `direction` (character, `"in"` or `"out"`),
-    #'   `context` (character, JSON metadata),
-    #'   `datetime_created` (POSIXct, converted from `created_at`).
+    #' - `id` (character): Ledger entry ID.
+    #' - `currency` (character): Currency code.
+    #' - `amount` (character): Transaction amount.
+    #' - `fee` (character): Fee charged.
+    #' - `balance` (character): Balance after transaction.
+    #' - `account_type` (character): Account type e.g. `"TRADE"`, `"MAIN"`.
+    #' - `biz_type` (character): Business type.
+    #' - `direction` (character): `"in"` or `"out"`.
+    #' - `context` (character): JSON metadata.
+    #' - `created_at` (POSIXct): Coerced from epoch milliseconds.
+    #'
     #'   Returns an empty `data.table` if no ledger entries match.
     #'
     #' @examples
@@ -788,7 +810,7 @@ KucoinAccount <- R6::R6Class(
     #' ledger_24h <- account$get_spot_ledger(
     #'   query = list(startAt = now_ms - 86400000, endAt = now_ms)
     #' )
-    #' print(ledger_24h[, .(currency, amount, direction, datetime_created)])
+    #' print(ledger_24h[, .(currency, amount, direction, created_at)])
     #' }
     get_spot_ledger = function(query = list(), page_size = 50, max_pages = Inf) {
       return(private$.paginate(
@@ -799,13 +821,30 @@ KucoinAccount <- R6::R6Class(
         .parser = function(pages) {
           dt <- flatten_pages(pages)
           if (nrow(dt) == 0) {
-            return(dt)
+            return(dt[])
           }
           if ("created_at" %in% names(dt)) {
-            dt[, datetime_created := ms_to_datetime(created_at)]
-            dt[, created_at := NULL]
+            dt[, created_at := ms_to_datetime(created_at)]
           }
-          return(dt)
+          data.table::setcolorder(
+            dt,
+            intersect(
+              c(
+                "id",
+                "currency",
+                "amount",
+                "fee",
+                "balance",
+                "account_type",
+                "biz_type",
+                "direction",
+                "context",
+                "created_at"
+              ),
+              names(dt)
+            )
+          )
+          return(dt[])
         }
       ))
     },
@@ -825,7 +864,53 @@ KucoinAccount <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Account Ledgers Trade_hf](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-ledgers-tradehf)
     #'
-    #' Verified: 2026-02-03
+    #' Verified: 2026-03-10
+    #'
+    #' ### curl
+    #' ```
+    #' curl --location --request GET \
+    #'   'https://api.kucoin.com/api/v1/hf/accounts/ledgers?currency=USDT&bizType=TRADE_EXCHANGE&limit=100' \
+    #'   --header 'KC-API-KEY: your-api-key' \
+    #'   --header 'KC-API-SIGN: your-signature' \
+    #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
+    #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
+    #'   --header 'KC-API-KEY-VERSION: 2'
+    #' ```
+    #'
+    #' ### JSON Response
+    #' ```json
+    #' {
+    #'   "code": "200000",
+    #'   "data": [
+    #'     {
+    #'       "id": "611a1e7c6a053300067a99ab",
+    #'       "currency": "USDT",
+    #'       "amount": "50.25",
+    #'       "fee": "0.0503",
+    #'       "tax": "0",
+    #'       "balance": "5230.75",
+    #'       "accountType": "TRADE_HF",
+    #'       "bizType": "TRADE_EXCHANGE",
+    #'       "direction": "in",
+    #'       "createdAt": 1729176273859,
+    #'       "context": "{\"orderId\":\"670fd33bf9406e0007ab3945\",\"symbol\":\"BTC-USDT\"}"
+    #'     },
+    #'     {
+    #'       "id": "611a1e7c6a053300067a99ac",
+    #'       "currency": "USDT",
+    #'       "amount": "100.00",
+    #'       "fee": "0.1000",
+    #'       "tax": "0",
+    #'       "balance": "5180.50",
+    #'       "accountType": "TRADE_HF",
+    #'       "bizType": "TRADE_EXCHANGE",
+    #'       "direction": "out",
+    #'       "createdAt": 1729170000000,
+    #'       "context": "{\"orderId\":\"670fd22af9406e0007ab3901\",\"symbol\":\"ETH-USDT\"}"
+    #'     }
+    #'   ]
+    #' }
+    #' ```
     #'
     #' ### Automated Trading Usage
     #' - **PnL Tracking**: Filter by `bizType = "TRADE_EXCHANGE"` to track trading gains/losses.
@@ -841,17 +926,23 @@ KucoinAccount <- R6::R6Class(
     #' @param startAt Integer or NULL; start timestamp in milliseconds.
     #' @param endAt Integer or NULL; end timestamp in milliseconds.
     #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   `id` (character), `currency` (character), `amount` (character),
-    #'   `fee` (character), `tax` (character), `balance` (character),
-    #'   `account_type` (character), `biz_type` (character),
-    #'   `direction` (character), `context` (character),
-    #'   `datetime_created` (POSIXct).
+    #' - `id` (character): Ledger entry ID.
+    #' - `currency` (character): Currency code.
+    #' - `amount` (character): Transaction amount.
+    #' - `fee` (character): Fee charged.
+    #' - `tax` (character): Tax amount.
+    #' - `balance` (character): Balance after transaction.
+    #' - `account_type` (character): Account type.
+    #' - `biz_type` (character): Business type.
+    #' - `direction` (character): `"in"` or `"out"`.
+    #' - `context` (character): JSON metadata.
+    #' - `created_at` (POSIXct): Coerced from epoch milliseconds.
     #'
     #' @examples
     #' \dontrun{
     #' account <- KucoinAccount$new()
     #' hf <- account$get_hf_ledger(currency = "USDT", bizType = "TRADE_EXCHANGE")
-    #' print(hf[, .(currency, amount, fee, direction, datetime_created)])
+    #' print(hf[, .(currency, amount, fee, direction, created_at)])
     #' }
     get_hf_ledger = function(
       currency = NULL,
@@ -876,17 +967,35 @@ KucoinAccount <- R6::R6Class(
         .parser = function(data) {
           items <- data$items %||% data
           if (is.null(items) || length(items) == 0) {
-            return(data.table::data.table())
+            return(data.table::data.table()[])
           }
           dt <- data.table::rbindlist(
             lapply(items, as_dt_row),
             fill = TRUE
           )
           if ("created_at" %in% names(dt)) {
-            dt[, datetime_created := ms_to_datetime(created_at)]
-            dt[, created_at := NULL]
+            dt[, created_at := ms_to_datetime(created_at)]
           }
-          return(dt)
+          data.table::setcolorder(
+            dt,
+            intersect(
+              c(
+                "id",
+                "currency",
+                "amount",
+                "fee",
+                "tax",
+                "balance",
+                "account_type",
+                "biz_type",
+                "direction",
+                "context",
+                "created_at"
+              ),
+              names(dt)
+            )
+          )
+          return(dt[])
         }
       ))
     },
@@ -906,7 +1015,29 @@ KucoinAccount <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Basic Fee](https://www.kucoin.com/docs-new/rest/account-info/trade-fee/get-basic-fee-spot-margin)
     #'
-    #' Verified: 2026-02-03
+    #' Verified: 2026-03-10
+    #'
+    #' ### curl
+    #' ```
+    #' curl --location --request GET \
+    #'   'https://api.kucoin.com/api/v1/base-fee?currencyType=0' \
+    #'   --header 'KC-API-KEY: your-api-key' \
+    #'   --header 'KC-API-SIGN: your-signature' \
+    #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
+    #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
+    #'   --header 'KC-API-KEY-VERSION: 2'
+    #' ```
+    #'
+    #' ### JSON Response
+    #' ```json
+    #' {
+    #'   "code": "200000",
+    #'   "data": {
+    #'     "takerFeeRate": "0.001",
+    #'     "makerFeeRate": "0.001"
+    #'   }
+    #' }
+    #' ```
     #'
     #' ### Automated Trading Usage
     #' - **Tier Awareness**: Know your default fee tier for cost estimation.
@@ -943,7 +1074,37 @@ KucoinAccount <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Actual Fee](https://www.kucoin.com/docs-new/rest/account-info/trade-fee/get-actual-fee-spot-margin)
     #'
-    #' Verified: 2026-02-03
+    #' Verified: 2026-03-10
+    #'
+    #' ### curl
+    #' ```
+    #' curl --location --request GET \
+    #'   'https://api.kucoin.com/api/v1/trade-fees?symbols=BTC-USDT,ETH-USDT' \
+    #'   --header 'KC-API-KEY: your-api-key' \
+    #'   --header 'KC-API-SIGN: your-signature' \
+    #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
+    #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
+    #'   --header 'KC-API-KEY-VERSION: 2'
+    #' ```
+    #'
+    #' ### JSON Response
+    #' ```json
+    #' {
+    #'   "code": "200000",
+    #'   "data": [
+    #'     {
+    #'       "symbol": "BTC-USDT",
+    #'       "takerFeeRate": "0.001",
+    #'       "makerFeeRate": "0.001"
+    #'     },
+    #'     {
+    #'       "symbol": "ETH-USDT",
+    #'       "takerFeeRate": "0.001",
+    #'       "makerFeeRate": "0.001"
+    #'     }
+    #'   ]
+    #' }
+    #' ```
     #'
     #' ### Automated Trading Usage
     #' - **Precise PnL**: Use actual rates for accurate profit/loss calculations.
@@ -973,12 +1134,14 @@ KucoinAccount <- R6::R6Class(
         query = list(symbols = symbols),
         .parser = function(data) {
           if (is.null(data) || length(data) == 0) {
-            return(data.table::data.table())
+            return(data.table::data.table()[])
           }
-          return(data.table::rbindlist(
+          dt <- data.table::rbindlist(
             lapply(data, as_dt_row),
             fill = TRUE
-          ))
+          )
+          data.table::setcolorder(dt, intersect(c("symbol", "taker_fee_rate", "maker_fee_rate"), names(dt)))
+          return(dt[])
         }
       ))
     }

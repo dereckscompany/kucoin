@@ -1,9 +1,9 @@
 # tests/testthat/test-impl_klines.R
 # Tests for the shared klines fetching implementation.
 
-# -- kucoin_freq_map --
+# -- kucoin_timeframe_map --
 
-test_that("kucoin_freq_map contains all expected frequencies", {
+test_that("kucoin_timeframe_map contains all expected timeframes", {
   expected <- c(
     "1min",
     "3min",
@@ -20,30 +20,30 @@ test_that("kucoin_freq_map contains all expected frequencies", {
     "1week",
     "1month"
   )
-  expect_equal(sort(names(kucoin_freq_map)), sort(expected))
+  expect_equal(sort(names(kucoin_timeframe_map)), sort(expected))
 })
 
-test_that("kucoin_freq_map values are correct durations in seconds", {
-  expect_equal(kucoin_freq_map[["1min"]], 60L)
-  expect_equal(kucoin_freq_map[["15min"]], 900L)
-  expect_equal(kucoin_freq_map[["1hour"]], 3600L)
-  expect_equal(kucoin_freq_map[["1day"]], 86400L)
-  expect_equal(kucoin_freq_map[["1week"]], 604800L)
+test_that("kucoin_timeframe_map values are correct durations in seconds", {
+  expect_equal(kucoin_timeframe_map[["1min"]], 60L)
+  expect_equal(kucoin_timeframe_map[["15min"]], 900L)
+  expect_equal(kucoin_timeframe_map[["1hour"]], 3600L)
+  expect_equal(kucoin_timeframe_map[["1day"]], 86400L)
+  expect_equal(kucoin_timeframe_map[["1week"]], 604800L)
 })
 
 # -- kucoin_fetch_klines validation --
 
-test_that("kucoin_fetch_klines rejects invalid frequency", {
+test_that("kucoin_fetch_klines rejects invalid timeframe", {
   fake_fn <- function(...) stop("Should not be called")
   expect_error(
     kucoin_fetch_klines(
       symbol = "BTC-USDT",
-      freq = "2min",
+      timeframe = "2min",
       from = 1729100000,
       to = 1729200000,
       .req_fn = fake_fn
     ),
-    "Invalid frequency.*2min"
+    "Invalid timeframe.*2min"
   )
 })
 
@@ -51,7 +51,7 @@ test_that("kucoin_fetch_klines returns empty data.table for zero-width range", {
   fake_fn <- function(...) stop("Should not be called")
   result <- kucoin_fetch_klines(
     symbol = "BTC-USDT",
-    freq = "15min",
+    timeframe = "15min",
     from = 1729100000,
     to = 1729100000,
     .req_fn = fake_fn
@@ -81,7 +81,7 @@ test_that("kucoin_fetch_klines fetches single segment correctly", {
 
   result <- kucoin_fetch_klines(
     symbol = "BTC-USDT",
-    freq = "15min",
+    timeframe = "15min",
     from = from_ts,
     to = to_ts,
     .req_fn = fake_req_fn
@@ -116,7 +116,7 @@ test_that("kucoin_fetch_klines segments large time ranges", {
 
   result <- kucoin_fetch_klines(
     symbol = "BTC-USDT",
-    freq = "15min",
+    timeframe = "15min",
     from = from_ts,
     to = to_ts,
     .req_fn = fake_req_fn
@@ -143,7 +143,7 @@ test_that("kucoin_fetch_klines deduplicates by datetime", {
 
   result <- kucoin_fetch_klines(
     symbol = "BTC-USDT",
-    freq = "15min",
+    timeframe = "15min",
     from = from_ts,
     to = to_ts,
     .req_fn = fake_req_fn
@@ -169,7 +169,7 @@ test_that("kucoin_fetch_klines sorts by datetime ascending", {
 
   result <- kucoin_fetch_klines(
     symbol = "BTC-USDT",
-    freq = "15min",
+    timeframe = "15min",
     from = from_ts,
     to = to_ts,
     .req_fn = fake_req_fn
@@ -190,7 +190,7 @@ test_that("kucoin_fetch_klines uses correct endpoint", {
 
   kucoin_fetch_klines(
     symbol = "BTC-USDT",
-    freq = "1day",
+    timeframe = "1day",
     from = 1729100000,
     to = 1729200000,
     .req_fn = fake_req_fn
@@ -209,7 +209,7 @@ test_that("kucoin_fetch_klines sets auth = FALSE", {
 
   kucoin_fetch_klines(
     symbol = "BTC-USDT",
-    freq = "1day",
+    timeframe = "1day",
     from = 1729100000,
     to = 1729200000,
     .req_fn = fake_req_fn
@@ -225,7 +225,7 @@ test_that("kucoin_fetch_klines handles empty API responses", {
 
   result <- kucoin_fetch_klines(
     symbol = "BTC-USDT",
-    freq = "15min",
+    timeframe = "15min",
     from = 1729100000,
     to = 1729200000,
     .req_fn = fake_req_fn
@@ -253,7 +253,7 @@ test_that("kucoin_fetch_klines segments overlap by 1 candle", {
 
   kucoin_fetch_klines(
     symbol = "BTC-USDT",
-    freq = "15min",
+    timeframe = "15min",
     from = from_ts,
     to = to_ts,
     .req_fn = fake_req_fn
@@ -261,7 +261,7 @@ test_that("kucoin_fetch_klines segments overlap by 1 candle", {
 
   expect_equal(call_count, 2L)
 
-  # Second segment's startAt should be first segment's endAt minus freq_seconds (900)
+  # Second segment's startAt should be first segment's endAt minus timeframe_seconds (900)
   seg1_end <- captured_queries[[1]]$endAt
   seg2_start <- captured_queries[[2]]$startAt
   expect_equal(seg2_start, seg1_end - 900)

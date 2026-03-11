@@ -165,7 +165,7 @@ test_that("get_withdrawal_quotas validates currency", {
 
 # -- get_withdrawal_history --
 
-test_that("get_withdrawal_history returns paginated data with datetime_created", {
+test_that("get_withdrawal_history returns paginated data with created_at", {
   resp <- mock_kucoin_response(
     data = list(
       currentPage = 1,
@@ -196,9 +196,9 @@ test_that("get_withdrawal_history returns paginated data with datetime_created",
   dt <- new_withdrawal()$get_withdrawal_history(currency = "USDT", status = "SUCCESS")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
-  expect_true("datetime_created" %in% names(dt))
-  expect_false("created_at" %in% names(dt))
-  expect_s3_class(dt$datetime_created, "POSIXct")
+  expect_true("created_at" %in% names(dt))
+  expect_false("datetime_created" %in% names(dt))
+  expect_s3_class(dt$created_at, "POSIXct")
   expect_equal(dt$currency, "USDT")
   expect_equal(dt$status, "SUCCESS")
   # Check column ordering
@@ -231,7 +231,7 @@ test_that("get_withdrawal_history validates currency", {
 
 # -- get_withdrawal_by_id --
 
-test_that("get_withdrawal_by_id returns detailed data.table with datetime_created", {
+test_that("get_withdrawal_by_id returns detailed data.table with created_at", {
   resp <- mock_kucoin_response(
     data = list(
       id = "67e6515f7960ba0007b42025",
@@ -266,9 +266,9 @@ test_that("get_withdrawal_by_id returns detailed data.table with datetime_create
   dt <- new_withdrawal()$get_withdrawal_by_id("67e6515f7960ba0007b42025")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
-  expect_true("datetime_created" %in% names(dt))
-  expect_false("created_at" %in% names(dt))
-  expect_s3_class(dt$datetime_created, "POSIXct")
+  expect_true("created_at" %in% names(dt))
+  expect_false("datetime_created" %in% names(dt))
+  expect_s3_class(dt$created_at, "POSIXct")
   expect_equal(dt$id, "67e6515f7960ba0007b42025")
   expect_equal(dt$currency, "USDT")
   expect_equal(dt$status, "SUCCESS")

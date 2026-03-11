@@ -113,10 +113,8 @@ cat("Is Master:", key_info$is_master, "\\\\n")
 
 \dontrun{
 account <- KucoinAccount$new()
-types <- account$get_spot_account_type()
-print(types)
-# Check if trade account is opened
-if (nrow(types) > 0 && any(types$is_opened)) {
+is_hf <- account$get_spot_account_type()
+if (is_hf) {
   cat("HF trading account is active.\n")
 }
 }
@@ -197,7 +195,7 @@ now_ms <- as.numeric(lubridate::now()) * 1000
 ledger_24h <- account$get_spot_ledger(
   query = list(startAt = now_ms - 86400000, endAt = now_ms)
 )
-print(ledger_24h[, .(currency, amount, direction, datetime_created)])
+print(ledger_24h[, .(currency, amount, direction, created_at)])
 }
 
 ## ------------------------------------------------
@@ -207,7 +205,7 @@ print(ledger_24h[, .(currency, amount, direction, datetime_created)])
 \dontrun{
 account <- KucoinAccount$new()
 hf <- account$get_hf_ledger(currency = "USDT", bizType = "TRADE_EXCHANGE")
-print(hf[, .(currency, amount, fee, direction, datetime_created)])
+print(hf[, .(currency, amount, fee, direction, created_at)])
 }
 
 ## ------------------------------------------------
@@ -330,12 +328,20 @@ Verified: 2026-02-01
 
 \subsection{Returns}{
 \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\code{level} (integer, VIP tier),
-\code{sub_quantity} (integer, total sub-accounts), \code{max_default_sub_quantity} (integer),
-\code{max_sub_quantity} (integer), \code{spot_sub_quantity} (integer), \code{margin_sub_quantity} (integer),
-\code{futures_sub_quantity} (integer), \code{option_sub_quantity} (integer),
-\code{max_spot_sub_quantity} (integer), \code{max_margin_sub_quantity} (integer),
-\code{max_futures_sub_quantity} (integer), \code{max_option_sub_quantity} (integer).
+\itemize{
+\item \code{level} (integer): VIP tier.
+\item \code{sub_quantity} (integer): Total sub-accounts.
+\item \code{max_default_sub_quantity} (integer): Max default sub-accounts.
+\item \code{max_sub_quantity} (integer): Max sub-accounts.
+\item \code{spot_sub_quantity} (integer): Spot sub-accounts.
+\item \code{margin_sub_quantity} (integer): Margin sub-accounts.
+\item \code{futures_sub_quantity} (integer): Futures sub-accounts.
+\item \code{option_sub_quantity} (integer): Option sub-accounts.
+\item \code{max_spot_sub_quantity} (integer): Max spot sub-accounts.
+\item \code{max_margin_sub_quantity} (integer): Max margin sub-accounts.
+\item \code{max_futures_sub_quantity} (integer): Max futures sub-accounts.
+\item \code{max_option_sub_quantity} (integer): Max option sub-accounts.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -420,11 +426,16 @@ Verified: 2026-02-01
 
 \subsection{Returns}{
 \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\code{remark} (character, key label),
-\code{api_key} (character, API key ID), \code{api_version} (integer, key version),
-\code{permission} (character, comma-separated permissions e.g. \code{"General,Spot"}),
-\code{ip_whitelist} (character, allowed IPs), \code{created_at} (numeric, epoch ms),
-\code{uid} (numeric, user ID), \code{is_master} (logical, TRUE if master account key).
+\itemize{
+\item \code{remark} (character): Key label.
+\item \code{api_key} (character): API key ID.
+\item \code{api_version} (integer): Key version.
+\item \code{permission} (character): Comma-separated permissions e.g. \code{"General,Spot"}.
+\item \code{ip_whitelist} (character): Allowed IPs.
+\item \code{created_at} (numeric): Epoch ms.
+\item \code{uid} (numeric): User ID.
+\item \code{is_master} (logical): TRUE if master account key.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -493,10 +504,7 @@ Verified: 2026-02-01
 
 \if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
   "code": "200000",
-  "data": \{
-    "type": "trade",
-    "isOpened": true
-  \}
+  "data": false
 \}
 }\if{html}{\out{</div>}}
 }
@@ -505,19 +513,17 @@ Verified: 2026-02-01
 }
 
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\code{type} (character, account type e.g. \code{"trade"}),
-\code{is_opened} (logical, whether the account type is active). Returns an empty
-\code{data.table} if no account types are found.
+Logical scalar: \code{TRUE} if the user is a spot high-frequency user
+(use \code{trade_hf} for transfers/queries), \code{FALSE} for low-frequency
+(use \code{trade}). This is a compatibility interface for users who enabled
+HF trading before 2024.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{\dontrun{
 account <- KucoinAccount$new()
-types <- account$get_spot_account_type()
-print(types)
-# Check if trade account is opened
-if (nrow(types) > 0 && any(types$is_opened)) {
+is_hf <- account$get_spot_account_type()
+if (is_hf) {
   cat("HF trading account is active.\n")
 }
 }
@@ -617,11 +623,16 @@ Verified: 2026-02-01
 }
 \subsection{Returns}{
 \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\code{id} (character, account ID),
-\code{currency} (character, currency code), \code{type} (character, account type),
-\code{balance} (character, total balance), \code{available} (character, available for trading),
-\code{holds} (character, amount on hold in open orders). Returns an empty
-\code{data.table} if no accounts match.
+\itemize{
+\item \code{id} (character): Account ID.
+\item \code{currency} (character): Currency code.
+\item \code{type} (character): Account type.
+\item \code{balance} (character): Total balance.
+\item \code{available} (character): Available for trading.
+\item \code{holds} (character): Amount on hold in open orders.
+
+Returns an empty \code{data.table} if no accounts match.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -715,9 +726,12 @@ Obtain account IDs from \code{get_spot_accounts()}.}
 }
 \subsection{Returns}{
 \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\code{currency} (character, currency code),
-\code{balance} (character, total balance), \code{available} (character, available for use),
-\code{holds} (character, amount held in open orders).
+\itemize{
+\item \code{currency} (character): Currency code.
+\item \code{balance} (character): Total balance.
+\item \code{available} (character): Available for use.
+\item \code{holds} (character): Amount held in open orders.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -797,20 +811,24 @@ Verified: 2026-02-01
     "accounts": [
       \{
         "currency": "USDT",
-        "totalBalance": "10000.00",
-        "availableBalance": "8500.00",
-        "holdBalance": "1500.00",
+        "total": "10000.00",
+        "available": "8500.00",
+        "hold": "1500.00",
         "liability": "2500.00",
+        "liabilityPrincipal": "2400.00",
+        "liabilityInterest": "100.00",
         "maxBorrowSize": "50000.00",
         "borrowEnabled": true,
         "transferInEnabled": true
       \},
       \{
         "currency": "BTC",
-        "totalBalance": "0.15",
-        "availableBalance": "0.15",
-        "holdBalance": "0",
+        "total": "0.15",
+        "available": "0.15",
+        "hold": "0",
         "liability": "0",
+        "liabilityPrincipal": "0",
+        "liabilityInterest": "0",
         "maxBorrowSize": "2.5",
         "borrowEnabled": true,
         "transferInEnabled": true
@@ -837,10 +855,20 @@ Verified: 2026-02-01
 }
 \subsection{Returns}{
 \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\code{currency} (character),
-\code{total_balance} (character), \code{available_balance} (character), \code{hold_balance} (character),
-\code{liability} (character), \code{max_borrow_size} (character), \code{borrow_enabled} (logical),
-\code{transfer_in_enabled} (logical). Returns an empty \code{data.table} if no margin accounts exist.
+\itemize{
+\item \code{currency} (character): Currency code.
+\item \code{total} (character): Total balance.
+\item \code{available} (character): Available balance.
+\item \code{hold} (character): Amount on hold.
+\item \code{liability} (character): Total liability.
+\item \code{liability_principal} (character): Liability principal.
+\item \code{liability_interest} (character): Liability interest.
+\item \code{max_borrow_size} (character): Maximum borrowable amount.
+\item \code{borrow_enabled} (logical): Whether borrowing is enabled.
+\item \code{transfer_in_enabled} (logical): Whether transfer-in is enabled.
+
+Returns an empty \code{data.table} if no margin accounts exist.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -920,21 +948,27 @@ Verified: 2026-02-01
         "debtRatio": "0.1912",
         "baseAsset": \{
           "currency": "BTC",
-          "totalBalance": "0.1",
-          "holdBalance": "0",
-          "availableBalance": "0.1",
+          "borrowEnabled": true,
+          "transferInEnabled": true,
           "liability": "0",
-          "interest": "0",
-          "borrowableAmount": "1.5"
+          "liabilityPrincipal": "0",
+          "liabilityInterest": "0",
+          "total": "0.1",
+          "available": "0.1",
+          "hold": "0",
+          "maxBorrowSize": "1.5"
         \},
         "quoteAsset": \{
           "currency": "USDT",
-          "totalBalance": "5000.00",
-          "holdBalance": "500.00",
-          "availableBalance": "4500.00",
+          "borrowEnabled": true,
+          "transferInEnabled": true,
           "liability": "1000.00",
-          "interest": "0.42",
-          "borrowableAmount": "25000.00"
+          "liabilityPrincipal": "950.00",
+          "liabilityInterest": "50.00",
+          "total": "5000.00",
+          "available": "4500.00",
+          "hold": "500.00",
+          "maxBorrowSize": "25000.00"
         \}
       \}
     ]
@@ -962,8 +996,8 @@ Verified: 2026-02-01
 \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 Columns are flattened from the nested response and may include:
 \code{symbol} (character), \code{status} (character), \code{debt_ratio} (character),
-and nested \verb{base_asset.*} and \verb{quote_asset.*} fields (currency, total_balance, hold_balance,
-available_balance, liability, interest, borrowable_amount). Returns an empty \code{data.table}
+and nested \verb{base_asset.*} and \verb{quote_asset.*} fields (currency, total, available, hold,
+liability, liability_principal, liability_interest, max_borrow_size). Returns an empty \code{data.table}
 if no isolated margin accounts exist.
 }
 \subsection{Examples}{
@@ -989,15 +1023,14 @@ Get Spot Account Ledger
 
 Retrieves paginated account ledger (transaction history) for spot and margin
 accounts. Each entry represents a balance change event such as a trade fill,
-deposit, withdrawal, transfer, or fee charge. Automatically converts the
-\code{created_at} millisecond timestamp to a \code{datetime_created} POSIXct column.
+deposit, withdrawal, transfer, or fee charge. Automatically coerces the
+\code{created_at} millisecond timestamp to POSIXct.
 \subsection{Workflow}{
 \enumerate{
 \item \strong{Pagination}: Calls the internal \verb{$.paginate()} method which fetches successive
 pages until all results are retrieved or \code{max_pages} is reached.
 \item \strong{Flattening}: Combines all pages into a single \code{data.table} via \code{flatten_pages()}.
-\item \strong{Datetime Conversion}: If \code{created_at} is present, adds a \code{datetime_created}
-column by converting epoch milliseconds to POSIXct.
+\item \strong{Datetime Conversion}: If \code{created_at} is present, coerces it to POSIXct in-place.
 }
 }
 
@@ -1098,14 +1131,20 @@ Default \code{50}.}
 }
 \subsection{Returns}{
 \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\code{id} (character, ledger entry ID),
-\code{currency} (character), \code{amount} (character, transaction amount),
-\code{fee} (character, fee charged), \code{balance} (character, balance after transaction),
-\code{account_type} (character, e.g. \code{"TRADE"}, \code{"MAIN"}),
-\code{biz_type} (character, business type), \code{direction} (character, \code{"in"} or \code{"out"}),
-\code{context} (character, JSON metadata),
-\code{datetime_created} (POSIXct, converted from \code{created_at}).
+\itemize{
+\item \code{id} (character): Ledger entry ID.
+\item \code{currency} (character): Currency code.
+\item \code{amount} (character): Transaction amount.
+\item \code{fee} (character): Fee charged.
+\item \code{balance} (character): Balance after transaction.
+\item \code{account_type} (character): Account type e.g. \code{"TRADE"}, \code{"MAIN"}.
+\item \code{biz_type} (character): Business type.
+\item \code{direction} (character): \code{"in"} or \code{"out"}.
+\item \code{context} (character): JSON metadata.
+\item \code{created_at} (POSIXct): Coerced from epoch milliseconds.
+
 Returns an empty \code{data.table} if no ledger entries match.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1125,7 +1164,7 @@ now_ms <- as.numeric(lubridate::now()) * 1000
 ledger_24h <- account$get_spot_ledger(
   query = list(startAt = now_ms - 86400000, endAt = now_ms)
 )
-print(ledger_24h[, .(currency, amount, direction, datetime_created)])
+print(ledger_24h[, .(currency, amount, direction, created_at)])
 }
 }
 \if{html}{\out{</div>}}
@@ -1151,7 +1190,55 @@ Data is limited to a rolling 7-day window.
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-ledgers-tradehf}{KuCoin Get Account Ledgers Trade_hf}
 
-Verified: 2026-02-03
+Verified: 2026-03-10
+}
+
+\subsection{curl}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET \\
+  'https://api.kucoin.com/api/v1/hf/accounts/ledgers?currency=USDT&bizType=TRADE_EXCHANGE&limit=100' \\
+  --header 'KC-API-KEY: your-api-key' \\
+  --header 'KC-API-SIGN: your-signature' \\
+  --header 'KC-API-TIMESTAMP: 1729176273859' \\
+  --header 'KC-API-PASSPHRASE: your-passphrase' \\
+  --header 'KC-API-KEY-VERSION: 2'
+}\if{html}{\out{</div>}}
+}
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": [
+    \{
+      "id": "611a1e7c6a053300067a99ab",
+      "currency": "USDT",
+      "amount": "50.25",
+      "fee": "0.0503",
+      "tax": "0",
+      "balance": "5230.75",
+      "accountType": "TRADE_HF",
+      "bizType": "TRADE_EXCHANGE",
+      "direction": "in",
+      "createdAt": 1729176273859,
+      "context": "\{\\"orderId\\":\\"670fd33bf9406e0007ab3945\\",\\"symbol\\":\\"BTC-USDT\\"\}"
+    \},
+    \{
+      "id": "611a1e7c6a053300067a99ac",
+      "currency": "USDT",
+      "amount": "100.00",
+      "fee": "0.1000",
+      "tax": "0",
+      "balance": "5180.50",
+      "accountType": "TRADE_HF",
+      "bizType": "TRADE_EXCHANGE",
+      "direction": "out",
+      "createdAt": 1729170000000,
+      "context": "\{\\"orderId\\":\\"670fd22af9406e0007ab3901\\",\\"symbol\\":\\"ETH-USDT\\"\}"
+    \}
+  ]
+\}
+}\if{html}{\out{</div>}}
 }
 
 \subsection{Automated Trading Usage}{
@@ -1195,18 +1282,26 @@ Verified: 2026-02-03
 }
 \subsection{Returns}{
 \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\code{id} (character), \code{currency} (character), \code{amount} (character),
-\code{fee} (character), \code{tax} (character), \code{balance} (character),
-\code{account_type} (character), \code{biz_type} (character),
-\code{direction} (character), \code{context} (character),
-\code{datetime_created} (POSIXct).
+\itemize{
+\item \code{id} (character): Ledger entry ID.
+\item \code{currency} (character): Currency code.
+\item \code{amount} (character): Transaction amount.
+\item \code{fee} (character): Fee charged.
+\item \code{tax} (character): Tax amount.
+\item \code{balance} (character): Balance after transaction.
+\item \code{account_type} (character): Account type.
+\item \code{biz_type} (character): Business type.
+\item \code{direction} (character): \code{"in"} or \code{"out"}.
+\item \code{context} (character): JSON metadata.
+\item \code{created_at} (POSIXct): Coerced from epoch milliseconds.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{\dontrun{
 account <- KucoinAccount$new()
 hf <- account$get_hf_ledger(currency = "USDT", bizType = "TRADE_EXCHANGE")
-print(hf[, .(currency, amount, fee, direction, datetime_created)])
+print(hf[, .(currency, amount, fee, direction, created_at)])
 }
 }
 \if{html}{\out{</div>}}
@@ -1232,7 +1327,31 @@ any per-symbol discounts.
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/trade-fee/get-basic-fee-spot-margin}{KuCoin Get Basic Fee}
 
-Verified: 2026-02-03
+Verified: 2026-03-10
+}
+
+\subsection{curl}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET \\
+  'https://api.kucoin.com/api/v1/base-fee?currencyType=0' \\
+  --header 'KC-API-KEY: your-api-key' \\
+  --header 'KC-API-SIGN: your-signature' \\
+  --header 'KC-API-TIMESTAMP: 1729176273859' \\
+  --header 'KC-API-PASSPHRASE: your-passphrase' \\
+  --header 'KC-API-KEY-VERSION: 2'
+}\if{html}{\out{</div>}}
+}
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": \{
+    "takerFeeRate": "0.001",
+    "makerFeeRate": "0.001"
+  \}
+\}
+}\if{html}{\out{</div>}}
 }
 
 \subsection{Automated Trading Usage}{
@@ -1289,7 +1408,39 @@ VIP/KCS discounts. Supports up to 10 trading pairs per request.
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/trade-fee/get-actual-fee-spot-margin}{KuCoin Get Actual Fee}
 
-Verified: 2026-02-03
+Verified: 2026-03-10
+}
+
+\subsection{curl}{
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET \\
+  'https://api.kucoin.com/api/v1/trade-fees?symbols=BTC-USDT,ETH-USDT' \\
+  --header 'KC-API-KEY: your-api-key' \\
+  --header 'KC-API-SIGN: your-signature' \\
+  --header 'KC-API-TIMESTAMP: 1729176273859' \\
+  --header 'KC-API-PASSPHRASE: your-passphrase' \\
+  --header 'KC-API-KEY-VERSION: 2'
+}\if{html}{\out{</div>}}
+}
+
+\subsection{JSON Response}{
+
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "code": "200000",
+  "data": [
+    \{
+      "symbol": "BTC-USDT",
+      "takerFeeRate": "0.001",
+      "makerFeeRate": "0.001"
+    \},
+    \{
+      "symbol": "ETH-USDT",
+      "takerFeeRate": "0.001",
+      "makerFeeRate": "0.001"
+    \}
+  ]
+\}
+}\if{html}{\out{</div>}}
 }
 
 \subsection{Automated Trading Usage}{

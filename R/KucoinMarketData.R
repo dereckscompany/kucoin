@@ -66,7 +66,6 @@
 #' }
 #'
 #' @importFrom R6 R6Class
-#' @importFrom data.table data.table as.data.table rbindlist setnames setcolorder setorder
 #' @importFrom lubridate as_datetime now dhours
 #' @export
 KucoinMarketData <- R6::R6Class(
@@ -83,7 +82,7 @@ KucoinMarketData <- R6::R6Class(
     #' 1. **Request**: Sends paginated GET request with optional filters.
     #' 2. **Pagination**: Automatically fetches multiple pages via `.paginate()`.
     #' 3. **Parsing**: Flattens paginated results into a single `data.table`.
-    #' 4. **Timestamp Conversion**: Converts `c_time` (ms) to `datetime_created` POSIXct.
+    #' 4. **Timestamp Conversion**: Coerces `c_time` (ms) to POSIXct in-place.
     #'
     #' ### API Endpoint
     #' `GET https://api.kucoin.com/api/v3/announcements`
@@ -91,7 +90,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Announcements](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-announcements)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-03-10
     #'
     #' ### Automated Trading Usage
     #' - **New Listing Detection**: Monitor for new token listings to automate early trading strategies.
@@ -141,7 +140,7 @@ KucoinMarketData <- R6::R6Class(
     #'   - `ann_title` (character): Announcement title.
     #'   - `ann_type` (list): Category tags as character vector.
     #'   - `ann_desc` (character): Short description text.
-    #'   - `datetime_created` (POSIXct): Creation datetime.
+    #'   - `c_time` (POSIXct): Creation datetime (coerced from epoch milliseconds).
     #'   - `language` (character): Language code.
     #'   - `ann_url` (character): Full URL to the announcement page.
     #'
@@ -151,7 +150,7 @@ KucoinMarketData <- R6::R6Class(
     #'
     #' # Get latest announcements
     #' anns <- market$get_announcements()
-    #' print(anns[, .(ann_id, ann_title, datetime_created)])
+    #' print(anns[, .(ann_id, ann_title, c_time)])
     #'
     #' # Filter by type and language
     #' listings <- market$get_announcements(
@@ -168,10 +167,9 @@ KucoinMarketData <- R6::R6Class(
         .parser = function(pages) {
           dt <- flatten_pages(pages)
           if (nrow(dt) > 0 && "c_time" %in% names(dt)) {
-            dt[, datetime_created := ms_to_datetime(c_time)]
-            dt[, c_time := NULL]
+            dt[, c_time := ms_to_datetime(c_time)]
           }
-          return(dt)
+          return(dt[])
         },
         page_size = page_size,
         max_pages = max_pages
@@ -195,7 +193,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Currency](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-currency)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-03-10
     #'
     #' ### Automated Trading Usage
     #' - **Deposit Monitoring**: Check `is_deposit_enabled` and `deposit_min_size` before initiating deposits.
@@ -292,6 +290,11 @@ KucoinMarketData <- R6::R6Class(
               fill = TRUE
             )
             if (nrow(summary_dt) > 0 && nrow(chains_dt) > 0) {
+              # Remove columns from summary that also exist in chains to avoid duplicates
+              dup_cols <- intersect(names(summary_dt), names(chains_dt))
+              if (length(dup_cols) > 0) {
+                summary_dt[, (dup_cols) := NULL]
+              }
               return(cbind(summary_dt, chains_dt))
             }
             return(chains_dt)
@@ -318,7 +321,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get All Currencies](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-currencies)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-03-10
     #'
     #' ### Automated Trading Usage
     #' - **Universe Construction**: Build a reference table of all supported assets.
@@ -365,8 +368,8 @@ KucoinMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with currency metadata and chain details.
-    #'   Same columns as `get_currency()`, one row per currency-chain combination.
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with currency metadata
+    #'   and chain details. Same columns as `get_currency()`, one row per currency-chain combination.
     #'
     #' @examples
     #' \dontrun{
@@ -382,7 +385,7 @@ KucoinMarketData <- R6::R6Class(
         auth = FALSE,
         .parser = function(data) {
           if (is.null(data) || length(data) == 0) {
-            return(data.table::data.table())
+            return(data.table::data.table()[])
           }
           rows <- lapply(data, function(item) {
             chains <- item$chains
@@ -397,7 +400,7 @@ KucoinMarketData <- R6::R6Class(
             }
             return(summary_row)
           })
-          return(data.table::rbindlist(rows, fill = TRUE))
+          return(data.table::rbindlist(rows, fill = TRUE)[])
         }
       ))
     },
@@ -418,7 +421,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Symbol](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-symbols)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-03-10
     #'
     #' ### Automated Trading Usage
     #' - **Order Validation**: Read `price_increment`, `base_increment`, `base_min_size`, and
@@ -513,7 +516,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get All Symbols](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-symbols)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-03-10
     #'
     #' ### Automated Trading Usage
     #' - **Universe Filtering**: Filter by `market`, `enable_trading`, `is_margin_enabled` to
@@ -525,6 +528,61 @@ KucoinMarketData <- R6::R6Class(
     #' ### curl
     #' ```
     #' curl --location --request GET 'https://api.kucoin.com/api/v2/symbols?market=USDS'
+    #' ```
+    #'
+    #' ### JSON Response
+    #' ```json
+    #' {
+    #'   "code": "200000",
+    #'   "data": [
+    #'     {
+    #'       "symbol": "BTC-USDT",
+    #'       "name": "BTC-USDT",
+    #'       "baseCurrency": "BTC",
+    #'       "quoteCurrency": "USDT",
+    #'       "feeCurrency": "USDT",
+    #'       "market": "USDS",
+    #'       "baseMinSize": "0.00001",
+    #'       "quoteMinSize": "0.1",
+    #'       "baseMaxSize": "10000000000",
+    #'       "quoteMaxSize": "99999999",
+    #'       "baseIncrement": "0.00000001",
+    #'       "quoteIncrement": "0.000001",
+    #'       "priceIncrement": "0.1",
+    #'       "priceLimitRate": "0.1",
+    #'       "minFunds": "0.1",
+    #'       "isMarginEnabled": true,
+    #'       "enableTrading": true,
+    #'       "feeCategory": 1,
+    #'       "makerFeeCoefficient": "1.00",
+    #'       "takerFeeCoefficient": "1.00",
+    #'       "st": false
+    #'     },
+    #'     {
+    #'       "symbol": "ETH-USDT",
+    #'       "name": "ETH-USDT",
+    #'       "baseCurrency": "ETH",
+    #'       "quoteCurrency": "USDT",
+    #'       "feeCurrency": "USDT",
+    #'       "market": "USDS",
+    #'       "baseMinSize": "0.0001",
+    #'       "quoteMinSize": "0.1",
+    #'       "baseMaxSize": "10000000000",
+    #'       "quoteMaxSize": "99999999",
+    #'       "baseIncrement": "0.0000001",
+    #'       "quoteIncrement": "0.000001",
+    #'       "priceIncrement": "0.01",
+    #'       "priceLimitRate": "0.1",
+    #'       "minFunds": "0.1",
+    #'       "isMarginEnabled": true,
+    #'       "enableTrading": true,
+    #'       "feeCategory": 1,
+    #'       "makerFeeCoefficient": "1.00",
+    #'       "takerFeeCoefficient": "1.00",
+    #'       "st": false
+    #'     }
+    #'   ]
+    #' }
     #' ```
     #'
     #' @param market Character or NULL; market segment filter (e.g., `"USDS"`, `"BTC"`,
@@ -546,12 +604,12 @@ KucoinMarketData <- R6::R6Class(
         auth = FALSE,
         .parser = function(data) {
           if (is.null(data) || length(data) == 0) {
-            return(data.table::data.table())
+            return(data.table::data.table()[])
           }
           return(data.table::rbindlist(
             lapply(data, as_dt_row),
             fill = TRUE
-          ))
+          )[])
         }
       ))
     },
@@ -565,7 +623,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Workflow
     #' 1. **Request**: GET with `symbol` query parameter.
     #' 2. **Parsing**: Single-row `data.table` with ticker fields.
-    #' 3. **Timestamp Conversion**: Converts `time` (ms) to `datetime` POSIXct.
+    #' 3. **Timestamp Conversion**: Coerces `time` (ms) to POSIXct in-place.
     #'
     #' ### API Endpoint
     #' `GET https://api.kucoin.com/api/v1/market/orderbook/level1`
@@ -573,7 +631,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Ticker](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-ticker)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-03-10
     #'
     #' ### Automated Trading Usage
     #' - **Spread Monitoring**: Calculate `best_ask - best_bid` for spread-based strategies.
@@ -605,7 +663,7 @@ KucoinMarketData <- R6::R6Class(
     #'
     #' @param symbol Character; trading symbol (e.g., `"BTC-USDT"`).
     #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `datetime` (POSIXct): Server datetime.
+    #'   - `time` (POSIXct): Server datetime (coerced from epoch milliseconds).
     #'   - `sequence` (character): Order book sequence number.
     #'   - `price` (character): Last trade price.
     #'   - `size` (character): Last trade size.
@@ -629,11 +687,10 @@ KucoinMarketData <- R6::R6Class(
         .parser = function(data) {
           dt <- as_dt_row(data)
           if (nrow(dt) > 0 && "time" %in% names(dt)) {
-            dt[, datetime := ms_to_datetime(time)]
-            dt[, time := NULL]
-            data.table::setcolorder(dt, c("datetime"))
+            dt[, time := ms_to_datetime(time)]
+            data.table::setcolorder(dt, c("time"))
           }
-          return(dt)
+          return(dt[])
         }
       ))
     },
@@ -647,7 +704,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Workflow
     #' 1. **Request**: GET with no parameters (public, rate limit weight 15).
     #' 2. **Parsing**: Extracts global `time` and array of `ticker` objects.
-    #' 3. **Flattening**: Converts ticker array to `data.table`, adds `datetime`.
+    #' 3. **Flattening**: Converts ticker array to `data.table`, adds `time`.
     #'
     #' ### API Endpoint
     #' `GET https://api.kucoin.com/api/v1/market/allTickers`
@@ -655,7 +712,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get All Tickers](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-tickers)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-03-10
     #'
     #' ### Automated Trading Usage
     #' - **Market Screening**: Scan all pairs for volume, change rate, or spread anomalies.
@@ -716,7 +773,7 @@ KucoinMarketData <- R6::R6Class(
     #'   - `average_price` (character): 24h average price.
     #'   - `taker_fee_rate` (character): Taker fee rate.
     #'   - `maker_fee_rate` (character): Maker fee rate.
-    #'   - `datetime` (POSIXct): Snapshot datetime.
+    #'   - `time` (POSIXct): Snapshot datetime (coerced from epoch milliseconds).
     #'
     #' @examples
     #' \dontrun{
@@ -735,15 +792,15 @@ KucoinMarketData <- R6::R6Class(
           global_time <- data$time
           tickers <- data$ticker
           if (is.null(tickers) || length(tickers) == 0) {
-            return(data.table::data.table())
+            return(data.table::data.table()[])
           }
           dt <- data.table::rbindlist(
             lapply(tickers, as_dt_row),
             fill = TRUE
           )
-          dt[, datetime := ms_to_datetime(global_time)]
+          dt[, time := ms_to_datetime(global_time)]
           data.table::setcolorder(dt, c("symbol", "symbol_name"))
-          return(dt)
+          return(dt[])
         }
       ))
     },
@@ -757,7 +814,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Workflow
     #' 1. **Request**: GET with `symbol` query parameter.
     #' 2. **Parsing**: Converts array of trade objects to `data.table`.
-    #' 3. **Timestamp Conversion**: Converts `time` (nanoseconds) to `datetime` POSIXct.
+    #' 3. **Timestamp Conversion**: Coerces `time` (nanoseconds) to POSIXct in-place.
     #'
     #' ### API Endpoint
     #' `GET https://api.kucoin.com/api/v1/market/histories`
@@ -765,7 +822,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Trade History](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-trade-history)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-03-10
     #'
     #' ### Automated Trading Usage
     #' - **Volume Analysis**: Aggregate recent trade sizes to estimate real-time volume flow.
@@ -800,7 +857,7 @@ KucoinMarketData <- R6::R6Class(
     #'   - `price` (character): Trade price.
     #'   - `size` (character): Trade quantity.
     #'   - `side` (character): Trade direction (`"buy"` or `"sell"`).
-    #'   - `datetime` (POSIXct): Trade datetime.
+    #'   - `time` (POSIXct): Trade datetime (coerced from nanosecond timestamp).
     #'
     #' @examples
     #' \dontrun{
@@ -818,18 +875,17 @@ KucoinMarketData <- R6::R6Class(
         auth = FALSE,
         .parser = function(data) {
           if (is.null(data) || length(data) == 0) {
-            return(data.table::data.table())
+            return(data.table::data.table()[])
           }
           dt <- data.table::rbindlist(
             lapply(data, as_dt_row),
             fill = TRUE
           )
           if ("time" %in% names(dt)) {
-            dt[, datetime := ns_to_datetime(time)]
-            dt[, time := NULL]
+            dt[, time := ns_to_datetime(time)]
           }
-          data.table::setcolorder(dt, c("sequence", "side", "price", "size", "datetime"))
-          return(dt)
+          data.table::setcolorder(dt, c("sequence", "side", "price", "size", "time"))
+          return(dt[])
         }
       ))
     },
@@ -852,7 +908,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Part Orderbook](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-part-orderbook)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-03-10
     #'
     #' ### Automated Trading Usage
     #' - **Depth Analysis**: Assess liquidity at various price levels for slippage estimation.
@@ -881,11 +937,11 @@ KucoinMarketData <- R6::R6Class(
     #' @param symbol Character; trading symbol (e.g., `"BTC-USDT"`).
     #' @param size Integer; depth levels: `20` or `100` (default `20`).
     #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) in long format with columns:
-    #'   - `datetime` (POSIXct): Server timestamp converted from milliseconds.
+    #'   - `time` (POSIXct): Server timestamp (coerced from epoch milliseconds).
     #'   - `sequence` (character): Order book sequence number.
     #'   - `side` (character): `"bid"` or `"ask"`.
     #'   - `price` (numeric): Price level.
-    #'   - `size` (numeric): Quantity at that price.
+    #'   - `size` (numeric): Size at that price.
     #'
     #' @examples
     #' \dontrun{
@@ -924,7 +980,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Full Orderbook](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-full-orderbook)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-03-10
     #'
     #' ### Automated Trading Usage
     #' - **Full Depth Analysis**: Build complete order book profiles for advanced strategies.
@@ -957,11 +1013,11 @@ KucoinMarketData <- R6::R6Class(
     #'
     #' @param symbol Character; trading symbol (e.g., `"BTC-USDT"`).
     #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) in long format with columns:
-    #'   - `datetime` (POSIXct): Server timestamp converted from milliseconds.
+    #'   - `time` (POSIXct): Server timestamp (coerced from epoch milliseconds).
     #'   - `sequence` (character): Order book sequence number.
     #'   - `side` (character): `"bid"` or `"ask"`.
     #'   - `price` (numeric): Price level.
-    #'   - `size` (numeric): Quantity at that price.
+    #'   - `size` (numeric): Size at that price.
     #'
     #' @examples
     #' \dontrun{
@@ -989,7 +1045,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Workflow
     #' 1. **Request**: GET with `symbol` query parameter.
     #' 2. **Parsing**: Single-row `data.table` with all statistics fields.
-    #' 3. **Timestamp Conversion**: Converts `time` (ms) to `datetime` POSIXct.
+    #' 3. **Timestamp Conversion**: Coerces `time` (ms) to POSIXct in-place.
     #'
     #' ### API Endpoint
     #' `GET https://api.kucoin.com/api/v1/market/stats`
@@ -997,7 +1053,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get 24hr Stats](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-24hr-stats)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-03-10
     #'
     #' ### Automated Trading Usage
     #' - **Volatility Assessment**: Use `high - low` range or `change_rate` for volatility signals.
@@ -1037,7 +1093,7 @@ KucoinMarketData <- R6::R6Class(
     #'
     #' @param symbol Character; trading symbol (e.g., `"BTC-USDT"`).
     #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `datetime` (POSIXct): Server datetime.
+    #'   - `time` (POSIXct): Server datetime (coerced from epoch milliseconds).
     #'   - `symbol` (character): Trading pair.
     #'   - `buy` (character): Best bid price.
     #'   - `sell` (character): Best ask price.
@@ -1067,11 +1123,10 @@ KucoinMarketData <- R6::R6Class(
         .parser = function(data) {
           dt <- as_dt_row(data)
           if (nrow(dt) > 0 && "time" %in% names(dt)) {
-            dt[, datetime := ms_to_datetime(time)]
-            dt[, time := NULL]
-            data.table::setcolorder(dt, c("datetime", "symbol"))
+            dt[, time := ms_to_datetime(time)]
+            data.table::setcolorder(dt, c("time", "symbol"))
           }
-          return(dt)
+          return(dt[])
         }
       ))
     },
@@ -1092,7 +1147,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Market List](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-market-list)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-03-10
     #'
     #' ### Automated Trading Usage
     #' - **Market Discovery**: Enumerate available segments for the `market` filter in `get_all_symbols()`.
@@ -1113,7 +1168,7 @@ KucoinMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return Character vector of market segment identifiers (or `promise<character>` if constructed with `async = TRUE`).
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with column `market` containing segment identifiers.
     #'
     #' @examples
     #' \dontrun{
@@ -1128,7 +1183,7 @@ KucoinMarketData <- R6::R6Class(
         endpoint = "/api/v1/markets",
         auth = FALSE,
         .parser = function(data) {
-          return(as.character(unlist(data)))
+          return(data.table::data.table(market = as.character(unlist(data)))[])
         }
       ))
     },
@@ -1142,7 +1197,7 @@ KucoinMarketData <- R6::R6Class(
     #' time range.
     #'
     #' ### Workflow
-    #' 1. **Validation**: Validates frequency string against allowed intervals.
+    #' 1. **Validation**: Validates timeframe string against allowed intervals.
     #' 2. **Segmentation**: Splits the `[from, to]` range into chunks of up to 1500 candles.
     #' 3. **Fetching**: Requests each segment sequentially (sync) or in parallel (async).
     #' 4. **Parsing**: Each segment's array-of-arrays response is converted to a typed `data.table`.
@@ -1155,7 +1210,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Klines](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-klines)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-03-10
     #'
     #' ### Automated Trading Usage
     #' - **Backtesting**: Fetch large historical ranges for strategy backtesting.
@@ -1181,7 +1236,7 @@ KucoinMarketData <- R6::R6Class(
     #' ```
     #'
     #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`).
-    #' @param freq Character; candle interval. One of:
+    #' @param timeframe Character; candle interval. One of:
     #'   `"1min"`, `"3min"`, `"5min"`, `"15min"`, `"30min"`,
     #'   `"1hour"`, `"2hour"`, `"4hour"`, `"6hour"`, `"8hour"`, `"12hour"`,
     #'   `"1day"`, `"1week"`, `"1month"`. Default `"15min"`.
@@ -1207,7 +1262,7 @@ KucoinMarketData <- R6::R6Class(
     #' # 7 days of hourly candles
     #' klines_7d <- market$get_klines(
     #'   symbol = "ETH-USDT",
-    #'   freq = "1hour",
+    #'   timeframe = "1hour",
     #'   from = lubridate::now() - lubridate::days(7),
     #'   to = lubridate::now()
     #' )
@@ -1215,13 +1270,13 @@ KucoinMarketData <- R6::R6Class(
     #' }
     get_klines = function(
       symbol,
-      freq = "15min",
+      timeframe = "15min",
       from = lubridate::now() - lubridate::dhours(24),
       to = lubridate::now()
     ) {
       return(kucoin_fetch_klines(
         symbol = symbol,
-        freq = freq,
+        timeframe = timeframe,
         from = from,
         to = to,
         .req_fn = private$.request,
@@ -1243,7 +1298,20 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Server Time](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-server-time)
     #'
-    #' Verified: 2026-02-03
+    #' Verified: 2026-03-10
+    #'
+    #' ### curl
+    #' ```
+    #' curl --location --request GET 'https://api.kucoin.com/api/v1/timestamp'
+    #' ```
+    #'
+    #' ### JSON Response
+    #' ```json
+    #' {
+    #'   "code": "200000",
+    #'   "data": 1729176273859
+    #' }
+    #' ```
     #'
     #' ### Automated Trading Usage
     #' - **Clock Drift Detection**: Compare server time against local clock to detect drift.
@@ -1270,7 +1338,7 @@ KucoinMarketData <- R6::R6Class(
           return(data.table::data.table(
             server_time = ts,
             datetime = ms_to_datetime(ts)
-          ))
+          )[])
         }
       ))
     },
@@ -1288,7 +1356,23 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Service Status](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-service-status)
     #'
-    #' Verified: 2026-02-03
+    #' Verified: 2026-03-10
+    #'
+    #' ### curl
+    #' ```
+    #' curl --location --request GET 'https://api.kucoin.com/api/v1/status'
+    #' ```
+    #'
+    #' ### JSON Response
+    #' ```json
+    #' {
+    #'   "code": "200000",
+    #'   "data": {
+    #'     "status": "open",
+    #'     "msg": ""
+    #'   }
+    #' }
+    #' ```
     #'
     #' ### Automated Trading Usage
     #' - **Pre-Flight Check**: Verify `status == "open"` before placing orders.
@@ -1327,7 +1411,25 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Fiat Price](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-fiat-price)
     #'
-    #' Verified: 2026-02-03
+    #' Verified: 2026-03-10
+    #'
+    #' ### curl
+    #' ```
+    #' curl --location --request GET \
+    #'   'https://api.kucoin.com/api/v1/prices?base=USD&currencies=BTC,ETH,USDT'
+    #' ```
+    #'
+    #' ### JSON Response
+    #' ```json
+    #' {
+    #'   "code": "200000",
+    #'   "data": {
+    #'     "BTC": "67269.15",
+    #'     "ETH": "2485.73",
+    #'     "USDT": "1.0002"
+    #'   }
+    #' }
+    #' ```
     #'
     #' ### Automated Trading Usage
     #' - **Portfolio Valuation**: Convert all holdings to USD/EUR for dashboard reporting.
@@ -1354,12 +1456,12 @@ KucoinMarketData <- R6::R6Class(
         auth = FALSE,
         .parser = function(data) {
           if (is.null(data) || length(data) == 0) {
-            return(data.table::data.table())
+            return(data.table::data.table()[])
           }
           return(data.table::data.table(
             currency = names(data),
             price = as.character(unlist(data))
-          ))
+          )[])
         }
       ))
     }

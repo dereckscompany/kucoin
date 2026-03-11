@@ -4,11 +4,11 @@
 \alias{get_base_url}
 \title{Retrieve KuCoin API Base URL}
 \usage{
-get_base_url(url = Sys.getenv("KC-API-ENDPOINT"))
+get_base_url(url = Sys.getenv("KUCOIN_API_ENDPOINT"))
 }
 \arguments{
 \item{url}{Character string; explicit base URL. Defaults to
-\code{Sys.getenv("KC-API-ENDPOINT")}.}
+\code{Sys.getenv("KUCOIN_API_ENDPOINT")}.}
 }
 \value{
 Character string; the API base URL.
@@ -17,7 +17,7 @@ Character string; the API base URL.
 Returns the base URL for the KuCoin API in the following priority:
 \enumerate{
 \item The explicitly provided \code{url} parameter.
-\item The \code{KC-API-ENDPOINT} environment variable.
+\item The \code{KUCOIN_API_ENDPOINT} environment variable.
 \item The default \code{"https://api.kucoin.com"}.
 }
 }

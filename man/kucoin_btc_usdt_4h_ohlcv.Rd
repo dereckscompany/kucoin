@@ -5,17 +5,17 @@
 \alias{kucoin_btc_usdt_4h_ohlcv}
 \title{BTC-USDT 4-Hour OHLCV Data from KuCoin}
 \format{
-A \link[data.table:data.table]{data.table::data.table} with 18,141 rows and 9 columns:
-\describe{
-\item{symbol}{Character. Trading pair identifier, e.g. \code{"BTC-USDT"}.}
-\item{datetime}{POSIXct. Candle open time in UTC.}
-\item{open}{Numeric. Opening price.}
-\item{high}{Numeric. Highest price during the interval.}
-\item{low}{Numeric. Lowest price during the interval.}
-\item{close}{Numeric. Closing price.}
-\item{volume}{Numeric. Trading volume in base currency (BTC).}
-\item{turnover}{Numeric. Trading turnover in quote currency (USDT).}
-\item{freq}{Character. Candle interval, \code{"4h"}.}
+A \link[data.table:data.table]{data.table::data.table} with 18,351 rows and 9 columns:
+\itemize{
+\item \code{symbol} (character): Trading pair identifier, e.g. \code{"BTC-USDT"}.
+\item \code{datetime} (POSIXct): Candle open time in UTC.
+\item \code{open} (numeric): Opening price.
+\item \code{high} (numeric): Highest price during the interval.
+\item \code{low} (numeric): Lowest price during the interval.
+\item \code{close} (numeric): Closing price.
+\item \code{volume} (numeric): Trading volume in base currency (BTC).
+\item \code{turnover} (numeric): Trading turnover in quote currency (USDT).
+\item \code{freq} (character): Candle interval, \code{"4h"}.
 }
 }
 \source{
@@ -26,8 +26,8 @@ kucoin_btc_usdt_4h_ohlcv
 }
 \description{
 Historical candlestick (OHLCV) data for BTC-USDT on the KuCoin exchange
-at 4-hour intervals. Contains 18,141 candles from October 2017 through
-February 2026. Produced by \code{\link[=kucoin_backfill_klines]{kucoin_backfill_klines()}}.
+at 4-hour intervals. Contains 18,351 candles from October 2017 through
+March 2026. Produced by \code{KucoinMarketData$get_klines()}.
 }
 \examples{
 data(kucoin_btc_usdt_4h_ohlcv)

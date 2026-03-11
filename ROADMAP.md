@@ -1,8 +1,8 @@
 # kucoin — Roadmap
 
-> Version 3.0.0 (unreleased) · Last updated 2026-02-03
+> Version 4.0.0 · Last updated 2026-03-11
 
-**77 endpoints implemented** across 9 R6 classes. MarketData (16), Trading (21), StopOrders (7), OcoOrders (8), Account (11), Deposit (3), Withdrawal (5), Transfer (2), SubAccount (4) — all complete for spot trading scope.
+**98 endpoints implemented** across 12 R6 classes. MarketData (16), Trading (21), StopOrders (7), OcoOrders (8), Account (11), Deposit (3), Withdrawal (5), Transfer (2), SubAccount (4), MarginTrading (9), MarginData (5), Lending (7) — all complete for spot + margin trading scope.
 
 ## Naming convention
 
@@ -58,16 +58,33 @@ Implemented: `get_fiat_prices` (1 endpoint).
 
 ---
 
+### ~~10. Margin Trading — `KucoinMarginTrading` class~~ ✓
+
+Implemented: `open_short`, `close_short`, `open_long`, `close_long` (intent-based wrappers around private `.add_order`), `borrow`, `repay`, `get_borrow_history`, `get_repay_history`, `get_interest_history`, `get_borrow_rate`, `modify_leverage` (9 endpoints).
+
+### ~~11. Margin Market Data — `KucoinMarginData` class~~ ✓
+
+Implemented: `get_cross_margin_symbols`, `get_isolated_margin_symbols`, `get_margin_config`, `get_collateral_ratio`, `get_risk_limit` (5 endpoints).
+
+### ~~12. Lending — `KucoinLending` class~~ ✓
+
+Implemented: `get_loan_market`, `get_loan_market_rate`, `purchase`, `modify_purchase`, `get_purchase_orders`, `redeem`, `get_redeem_orders` (7 endpoints).
+
+---
+
+### ~~13. Futures — `KucoinFuturesMarketData`, `KucoinFuturesTrading`, `KucoinFuturesAccount` classes~~ ✓
+
+Implemented: 44 endpoints across 3 R6 classes covering contracts, tickers, orderbooks, klines, order lifecycle, positions, margin management, risk limits, and funding history.
+
+---
+
 ## Won't do (for now)
 
-- **Margin**: borrow/repay, margin HF orders, margin ledger — out of scope for spot
-- **Futures**: entirely different API domain (`futures.kucoin.com`)
 - **Sub-account admin**: API key CRUD, permission management — operational, not trading
-- **WebSocket**: real-time feeds — significant separate architecture, post-3.0.0
-- **UTA-specific**: collateral ratio, leverage, unified account mode
+- **WebSocket**: real-time feeds — significant separate architecture
 - **Call auction**: pre-market orderbook + clearing data — niche, listing-sniper only
 - **Other**: KYC regions, broker endpoints, client IP lookup
 
 ---
 
-## All items complete. Roadmap fulfilled for v3.0.0 spot trading scope.
+## All items complete. Roadmap fulfilled for v4.0.0 spot + margin + futures trading scope.

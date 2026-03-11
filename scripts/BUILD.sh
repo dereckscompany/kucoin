@@ -21,12 +21,12 @@ SCRIPT_NAME=$(basename "$0")
 
 # Colours for output
 if [[ -t 1 ]]; then
-    RED='\033[0;31m'
-    GREEN='\033[0;32m'
-    YELLOW='\033[1;33m'
-    BLUE='\033[0;34m'
-    BOLD='\033[1m'
-    NC='\033[0m' # No Colour
+    RED=$'\033[0;31m'
+    GREEN=$'\033[0;32m'
+    YELLOW=$'\033[1;33m'
+    BLUE=$'\033[0;34m'
+    BOLD=$'\033[1m'
+    NC=$'\033[0m' # No Colour
 else
     RED=''
     GREEN=''
@@ -66,61 +66,62 @@ print_info() {
 
 show_help() {
     cat << EOF
-${BOLD}USAGE:${NC}
-    $SCRIPT_NAME [OPTIONS] [COMMAND]
+${YELLOW}USAGE:${NC}
+    ${BOLD}$SCRIPT_NAME${NC} [OPTIONS] [COMMAND]
 
-${BOLD}DESCRIPTION:${NC}
+${YELLOW}DESCRIPTION:${NC}
     Build, check, install, and document R packages with ease.
 
-${BOLD}COMMANDS:${NC}
-    ${BOLD}all${NC}              Run full workflow: document → clean → build → check → install → readme → pkgdown
-    ${BOLD}document${NC}         Generate package documentation (roxygen2)
-    ${BOLD}clean${NC}            Remove previous build artifacts
-    ${BOLD}build${NC}            Build the package tarball
-    ${BOLD}check${NC}            Run R CMD check with --as-cran
-    ${BOLD}install${NC}          Install the package locally
-    ${BOLD}pkgdown${NC}          Build pkgdown website
-    ${BOLD}pkgdown-preview${NC}  Build and preview pkgdown website
-    ${BOLD}readme${NC}           Render README.Rmd to README.md
-    ${BOLD}quick${NC}            Quick workflow: document → install (skip check)
-    ${BOLD}help${NC}             Show this help message
+${YELLOW}COMMANDS:${NC}
+    ${GREEN}all${NC}              Run full workflow: document → vignettes → clean → build → check → install → readme → pkgdown
+    ${GREEN}vignettes${NC}        Pre-compile vignettes from .Rmd.orig sources
+    ${GREEN}document${NC}         Generate package documentation (roxygen2)
+    ${GREEN}clean${NC}            Remove previous build artifacts
+    ${GREEN}build${NC}            Build the package tarball
+    ${GREEN}check${NC}            Run R CMD check with --as-cran
+    ${GREEN}install${NC}          Install the package locally
+    ${GREEN}pkgdown${NC}          Build pkgdown website
+    ${GREEN}pkgdown-preview${NC}  Build and preview pkgdown website
+    ${GREEN}readme${NC}           Render README.Rmd to README.md
+    ${GREEN}quick${NC}            Quick workflow: document → install (skip check)
+    ${GREEN}help${NC}             Show this help message
 
-${BOLD}FORMATTING:${NC}
-    For code formatting, use scripts/FORMAT.sh instead.
-    Run: ./scripts/FORMAT.sh --help
+${YELLOW}FORMATTING:${NC}
+    For code formatting, use ${BLUE}scripts/FORMAT.sh${NC} instead.
+    Run: ${BOLD}./scripts/FORMAT.sh --help${NC}
 
-${BOLD}OPTIONS:${NC}
-    ${BOLD}-h, --help${NC}       Show this help message
-    ${BOLD}-n, --dry-run${NC}    Show what would be executed without running commands
-    ${BOLD}-v, --verbose${NC}    Enable verbose output
-    ${BOLD}--no-clean${NC}       Skip cleaning step in 'all' command
-    ${BOLD}--no-manual${NC}      Skip manual/vignette building (faster checks)
+${YELLOW}OPTIONS:${NC}
+    ${GREEN}-h, --help${NC}       Show this help message
+    ${GREEN}-n, --dry-run${NC}    Show what would be executed without running commands
+    ${GREEN}-v, --verbose${NC}    Enable verbose output
+    ${GREEN}--no-clean${NC}       Skip cleaning step in 'all' command
+    ${GREEN}--no-manual${NC}      Skip manual/vignette building (faster checks)
 
-${BOLD}EXAMPLES:${NC}
-    # Full build and check workflow
+${YELLOW}EXAMPLES:${NC}
+    ${BLUE}# Full build and check workflow${NC}
     $SCRIPT_NAME all
 
-    # Quick development iteration (no check)
+    ${BLUE}# Quick development iteration (no check)${NC}
     $SCRIPT_NAME quick
 
-    # Just update documentation
+    ${BLUE}# Just update documentation${NC}
     $SCRIPT_NAME document
 
-    # Build and preview documentation website
+    ${BLUE}# Build and preview documentation website${NC}
     $SCRIPT_NAME pkgdown-preview
 
-    # Dry run to see what would happen
+    ${BLUE}# Dry run to see what would happen${NC}
     $SCRIPT_NAME --dry-run all
 
-    # Check without building manual (faster)
+    ${BLUE}# Check without building manual (faster)${NC}
     $SCRIPT_NAME --no-manual check
 
-    # Render README
+    ${BLUE}# Render README${NC}
     $SCRIPT_NAME readme
 
-${BOLD}NOTES:${NC}
+${YELLOW}NOTES:${NC}
     - Package name is auto-detected from current directory: ${BOLD}$PACKAGE_NAME${NC}
-    - For CRAN submission, upload to: https://win-builder.r-project.org/upload.aspx
+    - For CRAN submission, upload to: ${BLUE}https://win-builder.r-project.org/upload.aspx${NC}
     - Requires: R, devtools, pkgdown (for documentation)
 
 EOF
@@ -180,6 +181,8 @@ cmd_check() {
         check_opts="$check_opts --no-manual"
         print_info "Skipping manual checks"
     fi
+    # Don't fail on missing Suggests (renv may not have all optional deps)
+    export _R_CHECK_FORCE_SUGGESTS_=false
     # Don't fail script on check errors (common without LaTeX)
     if run_cmd R CMD check $check_opts ${PACKAGE_NAME}_*.tar.gz; then
         print_success "Package check completed with no errors"
@@ -206,6 +209,16 @@ cmd_pkgdown_preview() {
     print_success "pkgdown site built"
     print_header "Opening preview..."
     run_cmd Rscript -e "pkgdown::preview_site()"
+}
+
+cmd_vignettes() {
+    print_header "Pre-compiling vignettes..."
+    if [[ ! -f "scripts/VIGNETTES.R" ]]; then
+        print_error "scripts/VIGNETTES.R not found"
+        exit 1
+    fi
+    run_cmd Rscript scripts/VIGNETTES.R
+    print_success "Vignettes pre-compiled"
 }
 
 cmd_readme() {
@@ -237,6 +250,9 @@ cmd_all() {
     echo ""
 
     cmd_install
+    echo ""
+
+    cmd_vignettes
     echo ""
 
     # Build README if README.Rmd exists
@@ -298,7 +314,7 @@ while [[ $# -gt 0 ]]; do
             NO_MANUAL=1
             shift
             ;;
-        all|document|clean|build|check|install|pkgdown|pkgdown-preview|readme|quick)
+        all|document|vignettes|clean|build|check|install|pkgdown|pkgdown-preview|readme|quick)
             COMMAND=$1
             shift
             ;;
@@ -327,6 +343,9 @@ case $COMMAND in
         ;;
     document)
         cmd_document
+        ;;
+    vignettes)
+        cmd_vignettes
         ;;
     clean)
         cmd_clean

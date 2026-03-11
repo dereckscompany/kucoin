@@ -24,7 +24,37 @@ box::use(./mockery[
   mock_stop_order_response, mock_oco_order_response,
   mock_deposit_addresses_data,
   mock_sub_accounts_page_data, mock_sub_accounts_empty_page,
-  mock_eth_ticker_data
+  mock_eth_ticker_data,
+  # Margin Trading
+  mock_margin_order_response, mock_margin_borrow_response,
+  mock_margin_repay_response, mock_borrow_history_data,
+  mock_repay_history_data, mock_interest_history_data,
+  mock_borrow_rate_data, mock_empty_response,
+  # Margin Data
+  mock_cross_margin_symbols_data, mock_isolated_margin_symbols_data,
+  mock_margin_config_data, mock_collateral_ratio_data, mock_risk_limit_data,
+  # Lending
+  mock_loan_market_data, mock_loan_market_rate_data,
+  mock_purchase_response, mock_purchase_orders_data,
+  mock_redeem_response, mock_redeem_orders_data,
+  # Futures Market Data
+  mock_futures_contract_data, mock_futures_all_contracts_data,
+  mock_futures_ticker_data, mock_futures_all_tickers_data,
+  mock_futures_orderbook_data, mock_futures_trade_history_data,
+  mock_futures_klines_data, mock_futures_mark_price_data,
+  mock_futures_funding_rate_data, mock_futures_funding_history_data,
+  mock_futures_server_time_data, mock_futures_service_status_data,
+  # Futures Trading
+  mock_futures_order_response, mock_futures_cancel_order_data,
+  mock_futures_order_detail_data, mock_futures_order_list_data,
+  mock_futures_fills_data, mock_futures_open_order_value_data,
+  mock_futures_dcp_data,
+  # Futures Account
+  mock_futures_account_overview_data, mock_futures_position_data,
+  mock_futures_positions_history_data, mock_futures_margin_mode_data,
+  mock_futures_cross_leverage_data, mock_futures_max_open_size_data,
+  mock_futures_max_withdraw_margin_data, mock_futures_margin_response,
+  mock_futures_risk_limit_data, mock_futures_private_funding_data
 ])
 
 #' Route table: URL pattern -> fixture thunk
@@ -39,6 +69,69 @@ box::use(./mockery[
   list(pattern = "market/stats", fixture = function() mock_24hr_stats_data()),
   list(pattern = "market/histories", fixture = function() mock_trade_history_data()),
   list(pattern = "market/candles", fixture = function() mock_klines_data(n = 3)),
+  # Margin Trading (before generic patterns — order matters for substring matching)
+  list(pattern = "hf/margin/order/test", fixture = function() mock_margin_order_response()),
+  list(pattern = "hf/margin/order", fixture = function() mock_margin_order_response()),
+  list(pattern = "margin/borrowRate", fixture = function() mock_borrow_rate_data()),
+  list(pattern = "margin/borrow", fixture = function() mock_margin_borrow_response(), method = "POST"),
+  list(pattern = "margin/borrow", fixture = function() mock_borrow_history_data()),
+  list(pattern = "margin/repay", fixture = function() mock_margin_repay_response(), method = "POST"),
+  list(pattern = "margin/repay", fixture = function() mock_repay_history_data()),
+  list(pattern = "margin/interest", fixture = function() mock_interest_history_data()),
+  list(pattern = "position/update-user-leverage", fixture = function() mock_empty_response()),
+  # Margin Data (before generic "currencies" and "symbols")
+  list(pattern = "margin/symbols", fixture = function() mock_cross_margin_symbols_data()),
+  list(pattern = "isolated/symbols", fixture = function() mock_isolated_margin_symbols_data()),
+  list(pattern = "margin/config", fixture = function() mock_margin_config_data()),
+  list(pattern = "margin/collateralRatio", fixture = function() mock_collateral_ratio_data()),
+  list(pattern = "margin/currencies", fixture = function() mock_risk_limit_data()),
+  # Lending (specific patterns before generic "purchase"/"redeem")
+  list(pattern = "project/marketInterestRate", fixture = function() mock_loan_market_rate_data()),
+  list(pattern = "project/list", fixture = function() mock_loan_market_data()),
+  list(pattern = "lend/purchase/update", fixture = function() mock_empty_response()),
+  list(pattern = "purchase/orders", fixture = function() mock_purchase_orders_data()),
+  list(pattern = "/api/v3/purchase", fixture = function() mock_purchase_response(), method = "POST"),
+  list(pattern = "redeem/orders", fixture = function() mock_redeem_orders_data()),
+  list(pattern = "/api/v3/redeem", fixture = function() mock_redeem_response(), method = "POST"),
+  # Futures Market Data (before generic patterns)
+  list(pattern = "contracts/risk-limit", fixture = function() mock_futures_risk_limit_data()),
+  list(pattern = "contracts/active", fixture = function() mock_futures_all_contracts_data()),
+  list(pattern = "contracts/", fixture = function() mock_futures_contract_data()),
+  list(pattern = "api/v1/allTickers", fixture = function() mock_futures_all_tickers_data()),
+  list(pattern = "api/v1/ticker", fixture = function() mock_futures_ticker_data()),
+  list(pattern = "level2/depth", fixture = function() mock_futures_orderbook_data()),
+  list(pattern = "level2/snapshot", fixture = function() mock_futures_orderbook_data()),
+  list(pattern = "trade/history", fixture = function() mock_futures_trade_history_data()),
+  list(pattern = "kline/query", fixture = function() mock_futures_klines_data()),
+  list(pattern = "mark-price", fixture = function() mock_futures_mark_price_data()),
+  list(pattern = "funding-rate", fixture = function() mock_futures_funding_rate_data()),
+  list(pattern = "contract/funding-rates", fixture = function() mock_futures_funding_history_data()),
+  list(pattern = "api/v1/timestamp", fixture = function() mock_futures_server_time_data()),
+  list(pattern = "api/v1/status", fixture = function() mock_futures_service_status_data()),
+  # Futures Trading
+  list(pattern = "orders/dead-cancel-all/query", fixture = function() mock_futures_dcp_data()),
+  list(pattern = "orders/dead-cancel-all", fixture = function() mock_futures_dcp_data(), method = "POST"),
+  list(pattern = "orders/test", fixture = function() mock_futures_order_response(), method = "POST"),
+  list(pattern = "orders/multi", fixture = function() list(mock_futures_order_response()), method = "POST"),
+  list(pattern = "orders/byClientOid", fixture = function() mock_futures_order_detail_data()),
+  list(pattern = "orders/client-order", fixture = function() mock_futures_cancel_order_data(), method = "DELETE"),
+  list(pattern = "recentDoneOrders", fixture = function() list(mock_futures_order_detail_data())),
+  list(pattern = "recentFills", fixture = function() mock_futures_fills_data()),
+  list(pattern = "openOrderStatistics", fixture = function() mock_futures_open_order_value_data()),
+  list(pattern = "stopOrders", fixture = function() mock_futures_cancel_order_data(), method = "DELETE"),
+  # Futures Account
+  list(pattern = "account-overview", fixture = function() mock_futures_account_overview_data()),
+  list(pattern = "api/v2/position", fixture = function() mock_futures_position_data()),
+  list(pattern = "history-positions", fixture = function() mock_futures_positions_history_data()),
+  list(pattern = "api/v1/positions", fixture = function() mock_futures_position_data()),
+  list(pattern = "marginMode", fixture = function() mock_futures_margin_mode_data()),
+  list(pattern = "crossMarginLeverage", fixture = function() mock_futures_cross_leverage_data()),
+  list(pattern = "maxOpenSize", fixture = function() mock_futures_max_open_size_data()),
+  list(pattern = "maxWithdrawMargin", fixture = function() mock_futures_max_withdraw_margin_data()),
+  list(pattern = "marginDepositIn", fixture = function() mock_futures_margin_response()),
+  list(pattern = "marginWithdrawOut", fixture = function() mock_futures_margin_response()),
+  list(pattern = "funding-history", fixture = function() mock_futures_private_funding_data()),
+  # Generic market data (after margin-specific patterns)
   list(pattern = "currencies", fixture = function() mock_currency_data()),
   list(pattern = "symbols", fixture = function() mock_symbol_data()),
   # Trading (order matters: test before active before generic hf/orders)

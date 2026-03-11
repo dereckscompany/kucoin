@@ -5,18 +5,18 @@
 \title{Retrieve KuCoin API Credentials}
 \usage{
 get_api_keys(
-  api_key = Sys.getenv("KC-API-KEY"),
-  api_secret = Sys.getenv("KC-API-SECRET"),
-  api_passphrase = Sys.getenv("KC-API-PASSPHRASE"),
+  api_key = Sys.getenv("KUCOIN_API_KEY"),
+  api_secret = Sys.getenv("KUCOIN_API_SECRET"),
+  api_passphrase = Sys.getenv("KUCOIN_API_PASSPHRASE"),
   key_version = "2"
 )
 }
 \arguments{
-\item{api_key}{Character string; KuCoin API key. Defaults to \code{Sys.getenv("KC-API-KEY")}.}
+\item{api_key}{Character string; KuCoin API key. Defaults to \code{Sys.getenv("KUCOIN_API_KEY")}.}
 
-\item{api_secret}{Character string; KuCoin API secret. Defaults to \code{Sys.getenv("KC-API-SECRET")}.}
+\item{api_secret}{Character string; KuCoin API secret. Defaults to \code{Sys.getenv("KUCOIN_API_SECRET")}.}
 
-\item{api_passphrase}{Character string; KuCoin API passphrase. Defaults to \code{Sys.getenv("KC-API-PASSPHRASE")}.}
+\item{api_passphrase}{Character string; KuCoin API passphrase. Defaults to \code{Sys.getenv("KUCOIN_API_PASSPHRASE")}.}
 
 \item{key_version}{Character string; API key version. Defaults to \code{"2"}.}
 }
@@ -25,7 +25,7 @@ Named list with \code{api_key}, \code{api_secret}, \code{api_passphrase}, \code{
 }
 \description{
 Fetches API credentials from environment variables or explicit arguments.
-Required environment variables: \code{KC-API-KEY}, \code{KC-API-SECRET}, \code{KC-API-PASSPHRASE}.
+Required environment variables: \code{KUCOIN_API_KEY}, \code{KUCOIN_API_SECRET}, \code{KUCOIN_API_PASSPHRASE}.
 }
 \examples{
 \dontrun{

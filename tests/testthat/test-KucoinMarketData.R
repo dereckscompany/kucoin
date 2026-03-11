@@ -31,12 +31,12 @@ test_that("get_ticker returns data.table with correct columns and types", {
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
 
-  # datetime should be first column and POSIXct
-  expect_equal(names(dt)[1], "datetime")
-  expect_s3_class(dt$datetime, "POSIXct")
+  # time should be first column and POSIXct
+  expect_equal(names(dt)[1], "time")
+  expect_s3_class(dt$time, "POSIXct")
 
-  # Raw 'time' column should be removed
-  expect_false("time" %in% names(dt))
+  # Raw 'datetime' column should not exist
+  expect_false("datetime" %in% names(dt))
 
   # Other fields should be present
   expect_true("price" %in% names(dt))
@@ -57,8 +57,8 @@ test_that("get_all_tickers returns multi-row data.table", {
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 2L)
   expect_true("symbol" %in% names(dt))
-  expect_true("datetime" %in% names(dt))
-  expect_s3_class(dt$datetime, "POSIXct")
+  expect_true("time" %in% names(dt))
+  expect_s3_class(dt$time, "POSIXct")
 
   # Both symbols should be present
   expect_equal(sort(dt$symbol), c("BTC-USDT", "ETH-USDT"))
@@ -77,15 +77,15 @@ test_that("get_trade_history returns correct columns and types", {
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 3L)
 
-  expect_true("datetime" %in% names(dt))
+  expect_true("time" %in% names(dt))
   expect_true("sequence" %in% names(dt))
   expect_true("side" %in% names(dt))
   expect_true("price" %in% names(dt))
   expect_true("size" %in% names(dt))
-  expect_s3_class(dt$datetime, "POSIXct")
+  expect_s3_class(dt$time, "POSIXct")
 
-  # Raw 'time' should be gone
-  expect_false("time" %in% names(dt))
+  # Raw 'datetime' should not exist
+  expect_false("datetime" %in% names(dt))
 
   # Side values should be buy/sell
   expect_true(all(dt$side %in% c("buy", "sell")))
@@ -102,9 +102,9 @@ test_that("get_part_orderbook returns orderbook with correct structure", {
   dt <- market$get_part_orderbook("BTC-USDT", size = 20)
 
   expect_s3_class(dt, "data.table")
-  expect_equal(names(dt), c("datetime", "sequence", "side", "price", "size"))
+  expect_equal(names(dt), c("time", "sequence", "side", "price", "size"))
   expect_equal(nrow(dt), 6L)
-  expect_s3_class(dt$datetime, "POSIXct")
+  expect_s3_class(dt$time, "POSIXct")
   expect_type(dt$price, "double")
   expect_type(dt$size, "double")
 })
@@ -141,13 +141,13 @@ test_that("get_24hr_stats returns correct data.table", {
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
 
-  # datetime and symbol should be first two columns
-  expect_equal(names(dt)[1], "datetime")
+  # time and symbol should be first two columns
+  expect_equal(names(dt)[1], "time")
   expect_equal(names(dt)[2], "symbol")
 
-  expect_s3_class(dt$datetime, "POSIXct")
+  expect_s3_class(dt$time, "POSIXct")
   expect_equal(dt$symbol, "BTC-USDT")
-  expect_false("time" %in% names(dt))
+  expect_false("datetime" %in% names(dt))
 
   # Check some fields
   expect_true("change_rate" %in% names(dt))
@@ -156,7 +156,7 @@ test_that("get_24hr_stats returns correct data.table", {
 
 # -- get_market_list --
 
-test_that("get_market_list returns character vector", {
+test_that("get_market_list returns data.table", {
   resp <- mock_kucoin_response(data = mock_market_list_data())
   httr2::local_mocked_responses(function(req) resp)
 
@@ -164,10 +164,11 @@ test_that("get_market_list returns character vector", {
   market <- KucoinMarketData$new(keys = keys, base_url = "https://api.kucoin.com")
   result <- market$get_market_list()
 
-  expect_type(result, "character")
-  expect_true("USDS" %in% result)
-  expect_true("BTC" %in% result)
-  expect_true(length(result) > 0)
+  expect_s3_class(result, "data.table")
+  expect_true("market" %in% names(result))
+  expect_true("USDS" %in% result$market)
+  expect_true("BTC" %in% result$market)
+  expect_true(nrow(result) > 0)
 })
 
 # -- get_currency --
@@ -248,7 +249,7 @@ test_that("get_klines returns OHLCV data.table via kucoin_fetch_klines", {
   market <- KucoinMarketData$new(keys = keys, base_url = "https://api.kucoin.com")
   dt <- market$get_klines(
     symbol = "BTC-USDT",
-    freq = "15min",
+    timeframe = "15min",
     from = 1729100000,
     to = 1729110000
   )

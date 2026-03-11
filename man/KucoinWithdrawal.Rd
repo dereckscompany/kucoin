@@ -141,7 +141,7 @@ history <- withdrawal$get_withdrawal_history(
   currency = "USDT",
   status = "SUCCESS"
 )
-print(history[, .(amount, status, datetime_created)])
+print(history[, .(amount, status, created_at)])
 
 # Get withdrawals from the last 24 hours
 now_ms <- as.integer(as.numeric(lubridate::now()) * 1000)
@@ -277,8 +277,8 @@ Verified: 2026-02-02
 
 \item{\code{withdrawType}}{Character; withdrawal type: \code{"ADDRESS"}, \code{"UID"}, \code{"MAIL"}, or \code{"PHONE"}.}
 
-\item{\code{chain}}{Character or NULL; blockchain network identifier (e.g., \code{"eth"}, \code{"trx"}, \code{"bsc"}).
-When NULL, the default chain for the currency is used.}
+\item{\code{chain}}{Character; blockchain network identifier (e.g., \code{"eth"}, \code{"trx"}, \code{"bsc"}).
+Required by the KuCoin API.}
 
 \item{\code{memo}}{Character or NULL; address memo/tag (required for some currencies like XRP, XLM).}
 
@@ -550,12 +550,12 @@ Get Withdrawal History
 
 Retrieves paginated withdrawal history with optional filtering by currency,
 status, and time range. Automatically converts \code{created_at} timestamps
-to POSIXct datetime objects.
+to POSIXct for convenient analysis.
 \subsection{Workflow}{
 \enumerate{
 \item \strong{Pagination}: Uses \code{private$.paginate()} to fetch all pages of withdrawal records up to \code{max_pages}.
 \item \strong{Flattening}: Combines all pages into a single \code{data.table} via \code{flatten_pages()}.
-\item \strong{Timestamp Conversion}: Converts \code{created_at} (milliseconds) to \code{datetime_created} (POSIXct).
+\item \strong{Timestamp Conversion}: Coerces \code{created_at} (milliseconds) to POSIXct in-place.
 }
 }
 
@@ -623,7 +623,7 @@ Verified: 2026-02-02
 }
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{KucoinWithdrawal$get_withdrawal_history(
-  currency,
+  currency = NULL,
   status = NULL,
   startAt = NULL,
   endAt = NULL,
@@ -635,7 +635,8 @@ Verified: 2026-02-02
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"USDT"}). Required.}
+\item{\code{currency}}{Character or NULL; currency code (e.g., \code{"BTC"}, \code{"USDT"}).
+If NULL, returns withdrawals for all currencies.}
 
 \item{\code{status}}{Character or NULL; filter by withdrawal status. Accepted values:
 \code{"PROCESSING"}, \code{"REVIEW"}, \code{"WALLET_PROCESSING"}, \code{"SUCCESS"}, \code{"FAILURE"}.
@@ -666,7 +667,7 @@ When NULL, returns withdrawals of all statuses.}
 \item \code{updated_at} (numeric): Last update timestamp in milliseconds.
 \item \code{remark} (character): Optional remark.
 \item \code{arrears} (logical): Whether the withdrawal is in arrears.
-\item \code{datetime_created} (POSIXct): Creation datetime.
+\item \code{created_at} (POSIXct): Creation datetime (coerced from epoch milliseconds).
 }
 
 Returns an empty \code{data.table} if no withdrawals match the filters.
@@ -681,7 +682,7 @@ history <- withdrawal$get_withdrawal_history(
   currency = "USDT",
   status = "SUCCESS"
 )
-print(history[, .(amount, status, datetime_created)])
+print(history[, .(amount, status, created_at)])
 
 # Get withdrawals from the last 24 hours
 now_ms <- as.integer(as.numeric(lubridate::now()) * 1000)
@@ -796,7 +797,7 @@ Verified: 2026-02-02
 \item \code{cancel_type} (character): \code{"CANCELABLE"}, \code{"CANCELING"}, or \code{"NON_CANCELABLE"}.
 \item \code{failure_reason} (character): Failure reason code (or NA).
 \item \code{failure_reason_msg} (character): Human-readable failure message (or NA).
-\item \code{datetime_created} (POSIXct): Creation datetime.
+\item \code{created_at} (POSIXct): Creation datetime (coerced from epoch milliseconds).
 }
 }
 \subsection{Examples}{

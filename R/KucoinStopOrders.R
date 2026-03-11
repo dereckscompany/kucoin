@@ -101,7 +101,6 @@
 #' }
 #'
 #' @importFrom R6 R6Class
-#' @importFrom data.table data.table as.data.table rbindlist
 #' @export
 KucoinStopOrders <- R6::R6Class(
   "KucoinStopOrders",
@@ -312,7 +311,14 @@ KucoinStopOrders <- R6::R6Class(
         endpoint = "/api/v1/stop-order",
         method = "POST",
         body = body,
-        .parser = as_dt_row
+        .parser = function(data) {
+          dt <- as_dt_row(data)
+          if (is.null(dt$client_oid)) {
+            dt[, client_oid := NA_character_]
+          }
+          data.table::setcolorder(dt, intersect(c("order_id", "client_oid"), names(dt)))
+          return(dt[])
+        }
       ))
     },
 
@@ -600,7 +606,7 @@ KucoinStopOrders <- R6::R6Class(
     #'   - `size` (character): Order quantity in base currency.
     #'   - `stop_price` (character): Trigger price for the stop order.
     #'   - `stop` (character): Stop direction (`"loss"` or `"entry"`).
-    #'   - `datetime_created` (POSIXct): Creation datetime.
+    #'   - `created_at` (POSIXct): Creation datetime (coerced from epoch milliseconds).
     #'
     #' @examples
     #' \dontrun{
@@ -617,10 +623,16 @@ KucoinStopOrders <- R6::R6Class(
         .parser = function(data) {
           dt <- as_dt_row(data)
           if ("created_at" %in% names(dt)) {
-            dt[, datetime_created := ms_to_datetime(created_at)]
-            dt[, created_at := NULL]
+            dt[, created_at := ms_to_datetime(created_at)]
           }
-          return(dt)
+          data.table::setcolorder(
+            dt,
+            intersect(
+              c("id", "symbol", "type", "side", "price", "size", "stop_price", "stop", "created_at"),
+              names(dt)
+            )
+          )
+          return(dt[])
         }
       ))
     },
@@ -707,7 +719,7 @@ KucoinStopOrders <- R6::R6Class(
     #'   - `size` (character): Order quantity in base currency.
     #'   - `stop_price` (character): Trigger price for the stop order.
     #'   - `client_oid` (character): The client-assigned order ID.
-    #'   - `datetime_created` (POSIXct): Creation datetime.
+    #'   - `created_at` (POSIXct): Creation datetime (coerced from epoch milliseconds).
     #'
     #' @examples
     #' \dontrun{
@@ -729,10 +741,16 @@ KucoinStopOrders <- R6::R6Class(
             dt <- as_dt_row(data)
           }
           if ("created_at" %in% names(dt)) {
-            dt[, datetime_created := ms_to_datetime(created_at)]
-            dt[, created_at := NULL]
+            dt[, created_at := ms_to_datetime(created_at)]
           }
-          return(dt)
+          data.table::setcolorder(
+            dt,
+            intersect(
+              c("id", "symbol", "type", "side", "price", "size", "stop_price", "client_oid", "created_at"),
+              names(dt)
+            )
+          )
+          return(dt[])
         }
       ))
     },
@@ -834,7 +852,7 @@ KucoinStopOrders <- R6::R6Class(
     #'   - `stop_price` (character): Trigger price for the stop order.
     #'   - `stop` (character): Stop direction (`"loss"` or `"entry"`).
     #'   - `time_in_force` (character): Time-in-force policy.
-    #'   - `datetime_created` (POSIXct): Creation datetime.
+    #'   - `created_at` (POSIXct): Creation datetime (coerced from epoch milliseconds).
     #'
     #' @examples
     #' \dontrun{
@@ -865,14 +883,31 @@ KucoinStopOrders <- R6::R6Class(
         .parser = function(data) {
           items <- data$items %||% data
           if (is.null(items) || length(items) == 0) {
-            return(data.table::data.table())
+            return(data.table::data.table()[])
           }
           dt <- data.table::rbindlist(lapply(items, as_dt_row), fill = TRUE)
           if ("created_at" %in% names(dt)) {
-            dt[, datetime_created := ms_to_datetime(created_at)]
-            dt[, created_at := NULL]
+            dt[, created_at := ms_to_datetime(created_at)]
           }
-          return(dt)
+          data.table::setcolorder(
+            dt,
+            intersect(
+              c(
+                "id",
+                "symbol",
+                "type",
+                "side",
+                "price",
+                "size",
+                "stop_price",
+                "stop",
+                "time_in_force",
+                "created_at"
+              ),
+              names(dt)
+            )
+          )
+          return(dt[])
         }
       ))
     }

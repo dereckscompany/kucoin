@@ -89,7 +89,6 @@
 #' }
 #'
 #' @importFrom R6 R6Class
-#' @importFrom data.table data.table as.data.table rbindlist
 #' @export
 KucoinTrading <- R6::R6Class(
   "KucoinTrading",
@@ -132,6 +131,19 @@ KucoinTrading <- R6::R6Class(
     #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
     #'   --header 'KC-API-KEY-VERSION: 2' \
     #'   --data-raw '{"type":"limit","symbol":"BTC-USDT","side":"buy","price":"50000","size":"0.00001"}'
+    #' ```
+    #'
+    #' ### JSON Request
+    #' ```json
+    #' {
+    #'   "type": "limit",
+    #'   "symbol": "BTC-USDT",
+    #'   "side": "buy",
+    #'   "price": "50000",
+    #'   "size": "0.00001",
+    #'   "clientOid": "5c52e11203aa677f33e493fb",
+    #'   "timeInForce": "GTC"
+    #' }
     #' ```
     #'
     #' ### JSON Response
@@ -232,7 +244,7 @@ KucoinTrading <- R6::R6Class(
             dt[, client_oid := NA_character_]
           }
           data.table::setcolorder(dt, c("order_id", "client_oid"))
-          return(dt)
+          return(dt[])
         }
       ))
     },
@@ -269,6 +281,19 @@ KucoinTrading <- R6::R6Class(
     #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
     #'   --header 'KC-API-KEY-VERSION: 2' \
     #'   --data-raw '{"type":"limit","symbol":"BTC-USDT","side":"buy","price":"50000","size":"0.00001"}'
+    #' ```
+    #'
+    #' ### JSON Request
+    #' ```json
+    #' {
+    #'   "type": "limit",
+    #'   "symbol": "BTC-USDT",
+    #'   "side": "buy",
+    #'   "price": "50000",
+    #'   "size": "0.00001",
+    #'   "clientOid": "5c52e11203aa677f33e493fb",
+    #'   "timeInForce": "GTC"
+    #' }
     #' ```
     #'
     #' ### JSON Response
@@ -356,7 +381,7 @@ KucoinTrading <- R6::R6Class(
             dt[, client_oid := NA_character_]
           }
           data.table::setcolorder(dt, c("order_id", "client_oid"))
-          return(dt)
+          return(dt[])
         }
       ))
     },
@@ -395,6 +420,30 @@ KucoinTrading <- R6::R6Class(
     #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
     #'   --header 'KC-API-KEY-VERSION: 2' \
     #'   --data-raw '{"orderList":[{"clientOid":"id1","symbol":"BTC-USDT","type":"limit","side":"buy","price":"30000","size":"0.00001"}]}'
+    #' ```
+    #'
+    #' ### JSON Request
+    #' ```json
+    #' {
+    #'   "orderList": [
+    #'     {
+    #'       "clientOid": "id1",
+    #'       "symbol": "BTC-USDT",
+    #'       "type": "limit",
+    #'       "side": "buy",
+    #'       "price": "30000",
+    #'       "size": "0.00001"
+    #'     },
+    #'     {
+    #'       "clientOid": "id2",
+    #'       "symbol": "ETH-USDT",
+    #'       "type": "limit",
+    #'       "side": "buy",
+    #'       "price": "2000",
+    #'       "size": "0.001"
+    #'     }
+    #'   ]
+    #' }
     #' ```
     #'
     #' ### JSON Response
@@ -449,12 +498,17 @@ KucoinTrading <- R6::R6Class(
         body = body,
         .parser = function(data) {
           if (is.null(data) || length(data) == 0) {
-            return(data.table::data.table())
+            return(data.table::data.table()[])
           }
-          return(data.table::rbindlist(
+          dt <- data.table::rbindlist(
             lapply(data, as_dt_row),
             fill = TRUE
-          ))
+          )
+          if (is.null(dt$client_oid)) {
+            dt[, client_oid := NA_character_]
+          }
+          data.table::setcolorder(dt, intersect(c("order_id", "client_oid", "success", "fail_msg"), names(dt)))
+          return(dt[])
         }
       ))
     },
@@ -519,7 +573,7 @@ KucoinTrading <- R6::R6Class(
         method = "DELETE",
         query = list(symbol = symbol),
         .parser = function(data) {
-          return(data.table::data.table(order_id = as.character(data$orderId %||% orderId)))
+          return(data.table::data.table(order_id = as.character(data$orderId %||% orderId))[])
         }
       ))
     },
@@ -582,7 +636,7 @@ KucoinTrading <- R6::R6Class(
         method = "DELETE",
         query = list(symbol = symbol),
         .parser = function(data) {
-          return(data.table::data.table(client_oid = as.character(data$clientOid %||% clientOid)))
+          return(data.table::data.table(client_oid = as.character(data$clientOid %||% clientOid))[])
         }
       ))
     },
@@ -613,6 +667,17 @@ KucoinTrading <- R6::R6Class(
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
     #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
     #'   --header 'KC-API-KEY-VERSION: 2'
+    #' ```
+    #'
+    #' ### JSON Response
+    #' ```json
+    #' {
+    #'   "code": "200000",
+    #'   "data": {
+    #'     "orderId": "671124f9365ccb00073debd4",
+    #'     "cancelSize": "0.00001"
+    #'   }
+    #' }
     #' ```
     #'
     #' @param orderId Character; order ID.
@@ -671,8 +736,16 @@ KucoinTrading <- R6::R6Class(
     #'   --header 'KC-API-KEY-VERSION: 2'
     #' ```
     #'
+    #' ### JSON Response
+    #' ```json
+    #' {
+    #'   "code": "200000",
+    #'   "data": "success"
+    #' }
+    #' ```
+    #'
     #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`).
-    #' @return Character (or `promise<character>` if constructed with `async = TRUE`); the cancelled order result.
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with column `result` containing the cancellation response.
     #'
     #' @examples
     #' \dontrun{
@@ -689,7 +762,7 @@ KucoinTrading <- R6::R6Class(
         method = "DELETE",
         query = list(symbol = symbol),
         .parser = function(data) {
-          return(as.character(data))
+          return(data.table::data.table(result = as.character(data))[])
         }
       ))
     },
@@ -722,19 +795,49 @@ KucoinTrading <- R6::R6Class(
     #'   --header 'KC-API-KEY-VERSION: 2'
     #' ```
     #'
-    #' @return Character (or `promise<character>` if constructed with `async = TRUE`); the cancellation result.
+    #' ### JSON Response
+    #' ```json
+    #' {
+    #'   "code": "200000",
+    #'   "data": {
+    #'     "succeedSymbols": ["BTC-USDT", "ETH-USDT"],
+    #'     "failedSymbols": []
+    #'   }
+    #' }
+    #' ```
+    #'
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #'   - `symbol` (character): Trading pair symbol.
+    #'   - `status` (character): `"succeed"` or `"failed"`.
+    #'
+    #'   Returns an empty `data.table` if no orders were open.
     #'
     #' @examples
     #' \dontrun{
     #' trading <- KucoinTrading$new()
-    #' trading$cancel_all()
+    #' result <- trading$cancel_all()
+    #' print(result[status == "failed"])
     #' }
     cancel_all = function() {
       return(private$.request(
         endpoint = "/api/v1/hf/orders/cancelAll",
         method = "DELETE",
         .parser = function(data) {
-          return(as.character(data))
+          if (is.character(data)) {
+            if (length(data) == 0 || identical(data, "success")) {
+              return(data.table::data.table(symbol = character(), status = character())[])
+            }
+            return(data.table::data.table(symbol = data, status = "succeed")[])
+          }
+          succeed <- as.character(unlist(data$succeedSymbols %||% list()))
+          failed <- as.character(unlist(data$failedSymbols %||% list()))
+          if (length(succeed) == 0 && length(failed) == 0) {
+            return(data.table::data.table(symbol = character(), status = character())[])
+          }
+          return(data.table::rbindlist(list(
+            if (length(succeed) > 0) data.table::data.table(symbol = succeed, status = "succeed"),
+            if (length(failed) > 0) data.table::data.table(symbol = failed, status = "failed")
+          ))[])
         }
       ))
     },
@@ -765,10 +868,53 @@ KucoinTrading <- R6::R6Class(
     #'   --header 'KC-API-KEY-VERSION: 2'
     #' ```
     #'
+    #' ### JSON Response
+    #' ```json
+    #' {
+    #'   "code": "200000",
+    #'   "data": {
+    #'     "id": "671124f9365ccb00073debd4",
+    #'     "symbol": "BTC-USDT",
+    #'     "opType": "DEAL",
+    #'     "type": "limit",
+    #'     "side": "buy",
+    #'     "price": "50000",
+    #'     "size": "0.00001",
+    #'     "funds": "0",
+    #'     "dealSize": "0.00001",
+    #'     "dealFunds": "0.50000",
+    #'     "fee": "0.00050000",
+    #'     "feeCurrency": "USDT",
+    #'     "stp": "",
+    #'     "timeInForce": "GTC",
+    #'     "postOnly": false,
+    #'     "hidden": false,
+    #'     "iceberg": false,
+    #'     "visibleSize": "0",
+    #'     "cancelAfter": 0,
+    #'     "channel": "API",
+    #'     "clientOid": "5c52e11203aa677f33e493fb",
+    #'     "remark": "",
+    #'     "tags": "",
+    #'     "cancelExist": false,
+    #'     "createdAt": 1729176273859,
+    #'     "lastUpdatedAt": 1729176273952,
+    #'     "tradeType": "TRADE",
+    #'     "inOrderBook": false,
+    #'     "cancelledSize": "0",
+    #'     "cancelledFunds": "0",
+    #'     "remainSize": "0",
+    #'     "remainFunds": "0",
+    #'     "active": false,
+    #'     "tax": "0"
+    #'   }
+    #' }
+    #' ```
+    #'
     #' @param orderId Character; the KuCoin order ID.
     #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with full order details including `datetime_created`
-    #'   and `datetime_updated` if timestamps are present.
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with full order details
+    #'   including `created_at` and `last_updated_at` (POSIXct) if timestamps are present.
     #'
     #' @examples
     #' \dontrun{
@@ -790,14 +936,12 @@ KucoinTrading <- R6::R6Class(
         .parser = function(data) {
           dt <- as_dt_row(data)
           if ("created_at" %in% names(dt)) {
-            dt[, datetime_created := ms_to_datetime(created_at)]
-            dt[, created_at := NULL]
+            dt[, created_at := ms_to_datetime(created_at)]
           }
           if ("last_updated_at" %in% names(dt)) {
-            dt[, datetime_updated := ms_to_datetime(last_updated_at)]
-            dt[, last_updated_at := NULL]
+            dt[, last_updated_at := ms_to_datetime(last_updated_at)]
           }
-          return(dt)
+          return(dt[])
         }
       ))
     },
@@ -826,10 +970,53 @@ KucoinTrading <- R6::R6Class(
     #'   --header 'KC-API-KEY-VERSION: 2'
     #' ```
     #'
+    #' ### JSON Response
+    #' ```json
+    #' {
+    #'   "code": "200000",
+    #'   "data": {
+    #'     "id": "671124f9365ccb00073debd4",
+    #'     "symbol": "BTC-USDT",
+    #'     "opType": "DEAL",
+    #'     "type": "limit",
+    #'     "side": "buy",
+    #'     "price": "50000",
+    #'     "size": "0.00001",
+    #'     "funds": "0",
+    #'     "dealSize": "0.00001",
+    #'     "dealFunds": "0.50000",
+    #'     "fee": "0.00050000",
+    #'     "feeCurrency": "USDT",
+    #'     "stp": "",
+    #'     "timeInForce": "GTC",
+    #'     "postOnly": false,
+    #'     "hidden": false,
+    #'     "iceberg": false,
+    #'     "visibleSize": "0",
+    #'     "cancelAfter": 0,
+    #'     "channel": "API",
+    #'     "clientOid": "myClientOid123",
+    #'     "remark": "",
+    #'     "tags": "",
+    #'     "cancelExist": false,
+    #'     "createdAt": 1729176273859,
+    #'     "lastUpdatedAt": 1729176273952,
+    #'     "tradeType": "TRADE",
+    #'     "inOrderBook": false,
+    #'     "cancelledSize": "0",
+    #'     "cancelledFunds": "0",
+    #'     "remainSize": "0",
+    #'     "remainFunds": "0",
+    #'     "active": false,
+    #'     "tax": "0"
+    #'   }
+    #' }
+    #' ```
+    #'
     #' @param clientOid Character; client order ID.
     #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with full order details including `datetime_created`
-    #'   and `datetime_updated` datetime columns.
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with full order details
+    #'   including `created_at` and `last_updated_at` (POSIXct) columns.
     #'
     #' @examples
     #' \dontrun{
@@ -851,14 +1038,12 @@ KucoinTrading <- R6::R6Class(
         .parser = function(data) {
           dt <- as_dt_row(data)
           if ("created_at" %in% names(dt)) {
-            dt[, datetime_created := ms_to_datetime(created_at)]
-            dt[, created_at := NULL]
+            dt[, created_at := ms_to_datetime(created_at)]
           }
           if ("last_updated_at" %in% names(dt)) {
-            dt[, datetime_updated := ms_to_datetime(last_updated_at)]
-            dt[, last_updated_at := NULL]
+            dt[, last_updated_at := ms_to_datetime(last_updated_at)]
           }
-          return(dt)
+          return(dt[])
         }
       ))
     },
@@ -872,7 +1057,7 @@ KucoinTrading <- R6::R6Class(
     #' ### Workflow
     #' 1. **Request**: Authenticated GET with symbol (required) and optional filters.
     #' 2. **Parsing**: Extracts `items` array, converts to `data.table`.
-    #' 3. **Timestamp Conversion**: Converts `created_at` (ms) to `datetime_created`.
+    #' 3. **Timestamp Conversion**: Coerces `created_at` (ms) to POSIXct in-place.
     #'
     #' ### API Endpoint
     #' `GET https://api.kucoin.com/api/v1/hf/fills`
@@ -932,7 +1117,8 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`). Required.
+    #' @param symbol Character or NULL; trading pair (e.g., `"BTC-USDT"`).
+    #'   If NULL, returns fills across all symbols.
     #' @param orderId Character or NULL; filter by specific order ID.
     #' @param side Character or NULL; `"buy"` or `"sell"`.
     #' @param type Character or NULL; `"limit"` or `"market"`.
@@ -955,18 +1141,17 @@ KucoinTrading <- R6::R6Class(
     #'   - `fee` (character): Fee charged.
     #'   - `fee_rate` (character): Fee rate applied.
     #'   - `fee_currency` (character): Currency of fee.
-    #'   - `datetime_created` (POSIXct): Creation datetime.
+    #'   - `created_at` (POSIXct): Creation datetime (coerced from epoch milliseconds).
     #'
     #' @examples
     #' \dontrun{
     #' trading <- KucoinTrading$new()
     #' fills <- trading$get_fills("BTC-USDT")
-    #' # Calculate total fees
-    #' total_fees <- fills[, sum(as.numeric(fee))]
-    #' print(paste("Total fees:", total_fees, "USDT"))
+    #' # Get all fills across symbols
+    #' all_fills <- trading$get_fills()
     #' }
     get_fills = function(
-      symbol,
+      symbol = NULL,
       orderId = NULL,
       side = NULL,
       type = NULL,
@@ -975,7 +1160,7 @@ KucoinTrading <- R6::R6Class(
       startAt = NULL,
       endAt = NULL
     ) {
-      if (!verify_symbol(symbol)) {
+      if (!is.null(symbol) && !verify_symbol(symbol)) {
         rlang::abort("Parameter 'symbol' must be a valid ticker.")
       }
 
@@ -994,17 +1179,39 @@ KucoinTrading <- R6::R6Class(
         .parser = function(data) {
           items <- data$items %||% data
           if (is.null(items) || length(items) == 0) {
-            return(data.table::data.table())
+            return(data.table::data.table()[])
           }
           dt <- data.table::rbindlist(
             lapply(items, as_dt_row),
             fill = TRUE
           )
           if ("created_at" %in% names(dt)) {
-            dt[, datetime_created := ms_to_datetime(created_at)]
-            dt[, created_at := NULL]
+            dt[, created_at := ms_to_datetime(created_at)]
           }
-          return(dt)
+          data.table::setcolorder(
+            dt,
+            intersect(
+              c(
+                "id",
+                "order_id",
+                "counter_order_id",
+                "trade_id",
+                "symbol",
+                "side",
+                "liquidity",
+                "type",
+                "price",
+                "size",
+                "funds",
+                "fee",
+                "fee_rate",
+                "fee_currency",
+                "created_at"
+              ),
+              names(dt)
+            )
+          )
+          return(dt[])
         }
       ))
     },
@@ -1063,9 +1270,9 @@ KucoinTrading <- R6::R6Class(
         .parser = function(data) {
           symbols <- data$symbols %||% data
           if (is.null(symbols) || length(symbols) == 0) {
-            return(data.table::data.table(symbols = character()))
+            return(data.table::data.table(symbols = character())[])
           }
-          return(data.table::data.table(symbols = as.character(unlist(symbols))))
+          return(data.table::data.table(symbols = as.character(unlist(symbols)))[])
         }
       ))
     },
@@ -1099,17 +1306,61 @@ KucoinTrading <- R6::R6Class(
     #'   --header 'KC-API-KEY-VERSION: 2'
     #' ```
     #'
-    #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with open order details including `datetime_created`.
+    #' ### JSON Response
+    #' ```json
+    #' {
+    #'   "code": "200000",
+    #'   "data": [
+    #'     {
+    #'       "id": "671124f9365ccb00073debd4",
+    #'       "symbol": "BTC-USDT",
+    #'       "opType": "DEAL",
+    #'       "type": "limit",
+    #'       "side": "buy",
+    #'       "price": "50000",
+    #'       "size": "0.00001",
+    #'       "funds": "0",
+    #'       "dealSize": "0",
+    #'       "dealFunds": "0",
+    #'       "fee": "0",
+    #'       "feeCurrency": "USDT",
+    #'       "stp": "",
+    #'       "timeInForce": "GTC",
+    #'       "postOnly": false,
+    #'       "hidden": false,
+    #'       "iceberg": false,
+    #'       "visibleSize": "0",
+    #'       "cancelAfter": 0,
+    #'       "channel": "API",
+    #'       "clientOid": "5c52e11203aa677f33e493fb",
+    #'       "remark": "",
+    #'       "tags": "",
+    #'       "cancelExist": false,
+    #'       "createdAt": 1729176273859,
+    #'       "lastUpdatedAt": 1729176273952,
+    #'       "tradeType": "TRADE",
+    #'       "inOrderBook": true,
+    #'       "cancelledSize": "0",
+    #'       "cancelledFunds": "0",
+    #'       "remainSize": "0.00001",
+    #'       "remainFunds": "0",
+    #'       "active": true,
+    #'       "tax": "0"
+    #'     }
+    #'   ]
+    #' }
+    #' ```
+    #'
+    #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`). **Required** by the API.
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with open order details including `created_at` (POSIXct).
     #'
     #' @examples
     #' \dontrun{
     #' trading <- KucoinTrading$new()
     #' open_orders <- trading$get_open_orders("BTC-USDT")
-    #' print(open_orders[, .(order_id, side, price, size, datetime_created)])
     #' }
-    get_open_orders = function(symbol) {
-      if (!verify_symbol(symbol)) {
+    get_open_orders = function(symbol = NULL) {
+      if (!is.null(symbol) && !verify_symbol(symbol)) {
         rlang::abort("Parameter 'symbol' must be a valid ticker.")
       }
 
@@ -1118,17 +1369,19 @@ KucoinTrading <- R6::R6Class(
         query = list(symbol = symbol),
         .parser = function(data) {
           if (is.null(data) || length(data) == 0) {
-            return(data.table::data.table())
+            return(data.table::data.table()[])
           }
           dt <- data.table::rbindlist(
             lapply(data, as_dt_row),
             fill = TRUE
           )
           if ("created_at" %in% names(dt)) {
-            dt[, datetime_created := ms_to_datetime(created_at)]
-            dt[, created_at := NULL]
+            dt[, created_at := ms_to_datetime(created_at)]
           }
-          return(dt)
+          if ("last_updated_at" %in% names(dt)) {
+            dt[, last_updated_at := ms_to_datetime(last_updated_at)]
+          }
+          return(dt[])
         }
       ))
     },
@@ -1163,23 +1416,73 @@ KucoinTrading <- R6::R6Class(
     #'   --header 'KC-API-KEY-VERSION: 2'
     #' ```
     #'
-    #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`).
+    #' ### JSON Response
+    #' ```json
+    #' {
+    #'   "code": "200000",
+    #'   "data": {
+    #'     "lastId": 19814995255305,
+    #'     "items": [
+    #'       {
+    #'         "id": "671124f9365ccb00073debd4",
+    #'         "symbol": "BTC-USDT",
+    #'         "opType": "DEAL",
+    #'         "type": "limit",
+    #'         "side": "buy",
+    #'         "price": "50000",
+    #'         "size": "0.00001",
+    #'         "funds": "0",
+    #'         "dealSize": "0.00001",
+    #'         "dealFunds": "0.50000",
+    #'         "fee": "0.00050000",
+    #'         "feeCurrency": "USDT",
+    #'         "stp": "",
+    #'         "timeInForce": "GTC",
+    #'         "postOnly": false,
+    #'         "hidden": false,
+    #'         "iceberg": false,
+    #'         "visibleSize": "0",
+    #'         "cancelAfter": 0,
+    #'         "channel": "API",
+    #'         "clientOid": "5c52e11203aa677f33e493fb",
+    #'         "remark": "",
+    #'         "tags": "",
+    #'         "cancelExist": false,
+    #'         "createdAt": 1729176273859,
+    #'         "lastUpdatedAt": 1729176273952,
+    #'         "tradeType": "TRADE",
+    #'         "inOrderBook": false,
+    #'         "cancelledSize": "0",
+    #'         "cancelledFunds": "0",
+    #'         "remainSize": "0",
+    #'         "remainFunds": "0",
+    #'         "active": false,
+    #'         "tax": "0"
+    #'       }
+    #'     ]
+    #'   }
+    #' }
+    #' ```
+    #'
+    #' @param symbol Character or NULL; trading pair (e.g., `"BTC-USDT"`).
+    #'   If NULL, returns closed orders across all symbols.
     #' @param side Character or NULL; `"buy"` or `"sell"`.
     #' @param type Character or NULL; `"limit"` or `"market"`.
     #' @param startAt Integer or NULL; start timestamp in milliseconds.
     #' @param endAt Integer or NULL; end timestamp in milliseconds.
     #' @param limit Integer or NULL; results per page (max 200).
     #' @param lastId Character or NULL; pagination cursor.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with closed order details including `datetime_created`.
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with closed order details including `created_at` (POSIXct).
     #'
     #' @examples
     #' \dontrun{
     #' trading <- KucoinTrading$new()
     #' closed <- trading$get_closed_orders("BTC-USDT", limit = 20)
-    #' print(closed[, .(order_id, side, price, size, datetime_created)])
+    #' # Get all closed orders across symbols
+    #' all_closed <- trading$get_closed_orders()
     #' }
     get_closed_orders = function(
-      symbol,
+      symbol = NULL,
       side = NULL,
       type = NULL,
       startAt = NULL,
@@ -1187,7 +1490,7 @@ KucoinTrading <- R6::R6Class(
       limit = NULL,
       lastId = NULL
     ) {
-      if (!verify_symbol(symbol)) {
+      if (!is.null(symbol) && !verify_symbol(symbol)) {
         rlang::abort("Parameter 'symbol' must be a valid ticker.")
       }
 
@@ -1205,17 +1508,19 @@ KucoinTrading <- R6::R6Class(
         .parser = function(data) {
           items <- data$items %||% data
           if (is.null(items) || length(items) == 0) {
-            return(data.table::data.table())
+            return(data.table::data.table()[])
           }
           dt <- data.table::rbindlist(
             lapply(items, as_dt_row),
             fill = TRUE
           )
           if ("created_at" %in% names(dt)) {
-            dt[, datetime_created := ms_to_datetime(created_at)]
-            dt[, created_at := NULL]
+            dt[, created_at := ms_to_datetime(created_at)]
           }
-          return(dt)
+          if ("last_updated_at" %in% names(dt)) {
+            dt[, last_updated_at := ms_to_datetime(last_updated_at)]
+          }
+          return(dt[])
         }
       ))
     },
@@ -1242,6 +1547,47 @@ KucoinTrading <- R6::R6Class(
     #' - **Market Orders**: Ideal for market orders where immediate fill confirmation is critical.
     #' - **Race-Free**: No gap between order placement and status check.
     #'
+    #' ### curl
+    #' ```
+    #' curl --location --request POST 'https://api.kucoin.com/api/v1/hf/orders/sync' \
+    #'   --header 'Content-Type: application/json' \
+    #'   --header 'KC-API-KEY: your-api-key' \
+    #'   --header 'KC-API-SIGN: your-signature' \
+    #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
+    #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
+    #'   --header 'KC-API-KEY-VERSION: 2' \
+    #'   --data-raw '{"type":"limit","symbol":"BTC-USDT","side":"buy","price":"50000","size":"0.00001"}'
+    #' ```
+    #'
+    #' ### JSON Request
+    #' ```json
+    #' {
+    #'   "type": "limit",
+    #'   "symbol": "BTC-USDT",
+    #'   "side": "buy",
+    #'   "price": "50000",
+    #'   "size": "0.00001",
+    #'   "clientOid": "5c52e11203aa677f33e493fb"
+    #' }
+    #' ```
+    #'
+    #' ### JSON Response
+    #' ```json
+    #' {
+    #'   "code": "200000",
+    #'   "data": {
+    #'     "orderId": "670fd33bf9406e0007ab3945",
+    #'     "orderTime": 1729176273859,
+    #'     "originSize": "0.00001",
+    #'     "dealSize": "0.00001",
+    #'     "remainSize": "0",
+    #'     "canceledSize": "0",
+    #'     "status": "done",
+    #'     "matchTime": 1729176273952
+    #'   }
+    #' }
+    #' ```
+    #'
     #' @param type Character; `"limit"` or `"market"`.
     #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`).
     #' @param side Character; `"buy"` or `"sell"`.
@@ -1260,6 +1606,7 @@ KucoinTrading <- R6::R6Class(
     #' @param visibleSize Numeric or NULL; visible quantity for iceberg orders.
     #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
     #'   - `order_id` (character): KuCoin-assigned order identifier.
+    #'   - `client_oid` (character): Client-provided order identifier (NA if not supplied).
     #'   - `order_time` (numeric): Order placement time in milliseconds.
     #'   - `origin_size` (character): Original order size.
     #'   - `deal_size` (character): Filled size.
@@ -1319,14 +1666,32 @@ KucoinTrading <- R6::R6Class(
         body = body,
         .parser = function(data) {
           dt <- as_dt_row(data)
+          if (is.null(dt$client_oid)) {
+            dt[, client_oid := NA_character_]
+          }
           if ("order_time" %in% names(dt)) {
-            dt[, datetime_order := ms_to_datetime(order_time)]
+            dt[, order_time := ms_to_datetime(order_time)]
           }
           if ("match_time" %in% names(dt)) {
-            dt[, datetime_match := ms_to_datetime(match_time)]
-            dt[, match_time := NULL]
+            dt[, match_time := ms_to_datetime(match_time)]
           }
-          return(dt)
+          data.table::setcolorder(
+            dt,
+            intersect(
+              c(
+                "order_id",
+                "client_oid",
+                "order_time",
+                "origin_size",
+                "deal_size",
+                "remain_size",
+                "canceled_size",
+                "status"
+              ),
+              names(dt)
+            )
+          )
+          return(dt[])
         }
       ))
     },
@@ -1349,9 +1714,82 @@ KucoinTrading <- R6::R6Class(
     #' - **Grid Trading**: Place a grid of limit orders and get immediate fill status for all.
     #' - **Rebalancing**: Submit multiple orders with guaranteed fill confirmation.
     #'
+    #' ### curl
+    #' ```
+    #' curl --location --request POST 'https://api.kucoin.com/api/v1/hf/orders/multi/sync' \
+    #'   --header 'Content-Type: application/json' \
+    #'   --header 'KC-API-KEY: your-api-key' \
+    #'   --header 'KC-API-SIGN: your-signature' \
+    #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
+    #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
+    #'   --header 'KC-API-KEY-VERSION: 2' \
+    #'   --data-raw '{"orderList":[{"clientOid":"id1","symbol":"BTC-USDT","type":"limit","side":"buy","price":"30000","size":"0.00001"}]}'
+    #' ```
+    #'
+    #' ### JSON Request
+    #' ```json
+    #' {
+    #'   "orderList": [
+    #'     {
+    #'       "clientOid": "id1",
+    #'       "symbol": "BTC-USDT",
+    #'       "type": "limit",
+    #'       "side": "buy",
+    #'       "price": "30000",
+    #'       "size": "0.00001"
+    #'     },
+    #'     {
+    #'       "clientOid": "id2",
+    #'       "symbol": "ETH-USDT",
+    #'       "type": "limit",
+    #'       "side": "buy",
+    #'       "price": "2000",
+    #'       "size": "0.001"
+    #'     }
+    #'   ]
+    #' }
+    #' ```
+    #'
+    #' ### JSON Response
+    #' ```json
+    #' {
+    #'   "code": "200000",
+    #'   "data": [
+    #'     {
+    #'       "orderId": "6710d8336afcdb0007319c27",
+    #'       "clientOid": "id1",
+    #'       "success": true,
+    #'       "orderTime": 1729176273859,
+    #'       "originSize": "0.00001",
+    #'       "dealSize": "0.00001",
+    #'       "remainSize": "0",
+    #'       "canceledSize": "0",
+    #'       "status": "done"
+    #'     },
+    #'     {
+    #'       "orderId": "6710d8336afcdb0007319c28",
+    #'       "clientOid": "id2",
+    #'       "success": true,
+    #'       "orderTime": 1729176273860,
+    #'       "originSize": "0.001",
+    #'       "dealSize": "0",
+    #'       "remainSize": "0.001",
+    #'       "canceledSize": "0",
+    #'       "status": "open"
+    #'     }
+    #'   ]
+    #' }
+    #' ```
+    #'
     #' @param order_list List of named lists; each containing order parameters. Maximum 20 orders.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with per-order results
-    #'   including `order_id`, `success`, `status`, `deal_size`, `remain_size`, `canceled_size`.
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with per-order results:
+    #'   - `order_id` (character): KuCoin-assigned order identifier.
+    #'   - `client_oid` (character): Client-provided order identifier (NA if not supplied).
+    #'   - `success` (logical): Whether the order was accepted.
+    #'   - `status` (character): Fill status.
+    #'   - `deal_size` (character): Filled quantity.
+    #'   - `remain_size` (character): Remaining unfilled quantity.
+    #'   - `canceled_size` (character): Cancelled quantity.
     #'
     #' @examples
     #' \dontrun{
@@ -1378,12 +1816,23 @@ KucoinTrading <- R6::R6Class(
         body = body,
         .parser = function(data) {
           if (is.null(data) || length(data) == 0) {
-            return(data.table::data.table())
+            return(data.table::data.table()[])
           }
-          return(data.table::rbindlist(
+          dt <- data.table::rbindlist(
             lapply(data, as_dt_row),
             fill = TRUE
-          ))
+          )
+          if (is.null(dt$client_oid)) {
+            dt[, client_oid := NA_character_]
+          }
+          data.table::setcolorder(
+            dt,
+            intersect(
+              c("order_id", "client_oid", "success", "status", "deal_size", "remain_size", "canceled_size"),
+              names(dt)
+            )
+          )
+          return(dt[])
         }
       ))
     },
@@ -1405,6 +1854,32 @@ KucoinTrading <- R6::R6Class(
     #' ### Automated Trading Usage
     #' - **Atomic Cancel**: Confirm cancellation and get final fill state in one call.
     #' - **Partial Fill Detection**: Check `deal_size` to know if any fills occurred before cancellation.
+    #'
+    #' ### curl
+    #' ```
+    #' curl --location --request DELETE \
+    #'   'https://api.kucoin.com/api/v1/hf/orders/sync/671128ee365ccb0007534d45?symbol=BTC-USDT' \
+    #'   --header 'KC-API-KEY: your-api-key' \
+    #'   --header 'KC-API-SIGN: your-signature' \
+    #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
+    #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
+    #'   --header 'KC-API-KEY-VERSION: 2'
+    #' ```
+    #'
+    #' ### JSON Response
+    #' ```json
+    #' {
+    #'   "code": "200000",
+    #'   "data": {
+    #'     "orderId": "671128ee365ccb0007534d45",
+    #'     "originSize": "0.00001",
+    #'     "dealSize": "0",
+    #'     "remainSize": "0",
+    #'     "canceledSize": "0.00001",
+    #'     "status": "done"
+    #'   }
+    #' }
+    #' ```
     #'
     #' @param orderId Character; the KuCoin order ID to cancel.
     #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`).
@@ -1450,6 +1925,33 @@ KucoinTrading <- R6::R6Class(
     #' [KuCoin Cancel Order By ClientOid Sync](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid-sync)
     #'
     #' Verified: 2026-02-03
+    #'
+    #' ### curl
+    #' ```
+    #' curl --location --request DELETE \
+    #'   'https://api.kucoin.com/api/v1/hf/orders/sync/client-order/myClientOid123?symbol=BTC-USDT' \
+    #'   --header 'KC-API-KEY: your-api-key' \
+    #'   --header 'KC-API-SIGN: your-signature' \
+    #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
+    #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
+    #'   --header 'KC-API-KEY-VERSION: 2'
+    #' ```
+    #'
+    #' ### JSON Response
+    #' ```json
+    #' {
+    #'   "code": "200000",
+    #'   "data": {
+    #'     "orderId": "671128ee365ccb0007534d45",
+    #'     "clientOid": "myClientOid123",
+    #'     "originSize": "0.00001",
+    #'     "dealSize": "0",
+    #'     "remainSize": "0",
+    #'     "canceledSize": "0.00001",
+    #'     "status": "done"
+    #'   }
+    #' }
+    #' ```
     #'
     #' @param clientOid Character; client order ID.
     #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`).
@@ -1505,6 +2007,38 @@ KucoinTrading <- R6::R6Class(
     #' - **Price Adjustment**: Move a resting limit order to a new price level without cancel+replace gap.
     #' - **Size Adjustment**: Increase or decrease order size atomically.
     #' - **Trailing Logic**: Continuously adjust price as the market moves.
+    #'
+    #' ### curl
+    #' ```
+    #' curl --location --request POST 'https://api.kucoin.com/api/v1/hf/orders/alter' \
+    #'   --header 'Content-Type: application/json' \
+    #'   --header 'KC-API-KEY: your-api-key' \
+    #'   --header 'KC-API-SIGN: your-signature' \
+    #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
+    #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
+    #'   --header 'KC-API-KEY-VERSION: 2' \
+    #'   --data-raw '{"symbol":"BTC-USDT","orderId":"671124f9365ccb00073debd4","newPrice":"51000"}'
+    #' ```
+    #'
+    #' ### JSON Request
+    #' ```json
+    #' {
+    #'   "symbol": "BTC-USDT",
+    #'   "orderId": "671124f9365ccb00073debd4",
+    #'   "newPrice": "51000",
+    #'   "newSize": "0.00002"
+    #' }
+    #' ```
+    #'
+    #' ### JSON Response
+    #' ```json
+    #' {
+    #'   "code": "200000",
+    #'   "data": {
+    #'     "newOrderId": "671124f9365ccb00073debff"
+    #'   }
+    #' }
+    #' ```
     #'
     #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`). Required.
     #' @param orderId Character or NULL; KuCoin order ID. At least one of `orderId` or `clientOid` required.
@@ -1580,6 +2114,37 @@ KucoinTrading <- R6::R6Class(
     #' - **Network Failsafe**: Protects against network outages leaving stale orders.
     #' - **Selective Protection**: Specify symbols to protect only active trading pairs.
     #'
+    #' ### curl
+    #' ```
+    #' curl --location --request POST 'https://api.kucoin.com/api/v1/hf/orders/dead-cancel-all' \
+    #'   --header 'Content-Type: application/json' \
+    #'   --header 'KC-API-KEY: your-api-key' \
+    #'   --header 'KC-API-SIGN: your-signature' \
+    #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
+    #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
+    #'   --header 'KC-API-KEY-VERSION: 2' \
+    #'   --data-raw '{"timeout":30,"symbols":"BTC-USDT"}'
+    #' ```
+    #'
+    #' ### JSON Request
+    #' ```json
+    #' {
+    #'   "timeout": 30,
+    #'   "symbols": "BTC-USDT,ETH-USDT"
+    #' }
+    #' ```
+    #'
+    #' ### JSON Response
+    #' ```json
+    #' {
+    #'   "code": "200000",
+    #'   "data": {
+    #'     "currentTime": 1729176273,
+    #'     "triggerTime": 1729176303
+    #'   }
+    #' }
+    #' ```
+    #'
     #' @param timeout Integer; trigger duration in seconds. Use `-1` to disable, or `5` to `86400`.
     #' @param symbols Character or NULL; comma-separated trading pairs (max 50).
     #'   Empty or NULL applies to all pairs.
@@ -1632,6 +2197,30 @@ KucoinTrading <- R6::R6Class(
     #'
     #' Verified: 2026-02-03
     #'
+    #' ### curl
+    #' ```
+    #' curl --location --request GET \
+    #'   'https://api.kucoin.com/api/v1/hf/orders/dead-cancel-all/query' \
+    #'   --header 'KC-API-KEY: your-api-key' \
+    #'   --header 'KC-API-SIGN: your-signature' \
+    #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
+    #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
+    #'   --header 'KC-API-KEY-VERSION: 2'
+    #' ```
+    #'
+    #' ### JSON Response
+    #' ```json
+    #' {
+    #'   "code": "200000",
+    #'   "data": {
+    #'     "timeout": 30,
+    #'     "symbols": "BTC-USDT,ETH-USDT",
+    #'     "currentTime": 1729176273,
+    #'     "triggerTime": 1729176303
+    #'   }
+    #' }
+    #' ```
+    #'
     #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
     #'   - `timeout` (integer): Auto-cancel trigger time in seconds. `-1` if unset.
     #'   - `symbols` (character): Comma-separated trading pairs, or empty for all.
@@ -1652,7 +2241,7 @@ KucoinTrading <- R6::R6Class(
         endpoint = "/api/v1/hf/orders/dead-cancel-all/query",
         .parser = function(data) {
           if (is.null(data) || length(data) == 0) {
-            return(data.table::data.table())
+            return(data.table::data.table()[])
           }
           return(as_dt_row(data))
         }

@@ -1,18 +1,18 @@
 # File: R/backfill.R
-# Batch backfill of kline (OHLCV) data across multiple symbols and frequencies,
+# Batch backfill of kline (OHLCV) data across multiple symbols and timeframes,
 # with CSV-based resume support.
 
 #' Backfill KuCoin Kline Data to CSV
 #'
 #' Downloads historical OHLCV candlestick data for one or more trading pairs and
-#' frequencies, writing results incrementally to a CSV file. Supports resuming
+#' timeframes, writing results incrementally to a CSV file. Supports resuming
 #' from a partially completed backfill by reading the existing file and skipping
-#' symbol-frequency combinations that are already up to date.
+#' symbol-timeframe combinations that are already up to date.
 #'
 #' @param symbols Character vector of trading pair symbols (e.g.,
 #'   `c("BTC-USDT", "ETH-USDT")`). Must not be NULL or empty.
-#' @param freqs Character vector of candle frequencies (e.g., `c("1day", "1hour")`).
-#'   Valid values are the names of the internal frequency map: `"1min"`, `"3min"`,
+#' @param timeframes Character vector of candle timeframes (e.g., `c("1day", "1hour")`).
+#'   Valid values are the names of the internal timeframe map: `"1min"`, `"3min"`,
 #'   `"5min"`, `"15min"`, `"30min"`, `"1hour"`, `"2hour"`, `"4hour"`, `"6hour"`,
 #'   `"8hour"`, `"12hour"`, `"1day"`, `"1week"`, `"1month"`.
 #' @param from POSIXct or numeric; start of the backfill window. Defaults to one
@@ -23,15 +23,14 @@
 #' @param file Character; path to the output CSV file. Data is appended
 #'   incrementally so progress is saved even if the process is interrupted.
 #' @param base_url Character; KuCoin API base URL.
-#' @param sleep Numeric; seconds to sleep between each symbol-frequency
+#' @param sleep Numeric; seconds to sleep between each symbol-timeframe
 #'   combination to respect rate limits.
 #' @param verbose Logical; if `TRUE`, prints progress messages via [rlang::inform()].
 #'
-#' @return The file path (invisibly). If any symbol-frequency combinations
+#' @return The file path (invisibly). If any symbol-timeframe combinations
 #'   failed, a `"failures"` attribute is attached containing a
-#'   [data.table::data.table] with columns `symbol`, `freq`, and `error`.
+#'   [data.table::data.table] with columns `symbol`, `timeframe`, and `error`.
 #'
-#' @importFrom data.table fread fwrite data.table rbindlist
 #' @importFrom httr2 req_perform
 #' @importFrom lubridate as_datetime now
 #' @importFrom rlang abort inform warn
@@ -41,14 +40,14 @@
 #' \dontrun{
 #' kucoin_backfill_klines(
 #'   symbols = c("BTC-USDT", "ETH-USDT"),
-#'   freqs = c("1day", "1hour"),
+#'   timeframes = c("1day", "1hour"),
 #'   from = lubridate::as_datetime("2020-01-01"),
 #'   file = "my_klines.csv"
 #' )
 #' }
 kucoin_backfill_klines <- function(
   symbols,
-  freqs = "1day",
+  timeframes = "1day",
   from = lubridate::now("UTC") - lubridate::ddays(365),
   to = lubridate::now("UTC"),
   file = "kucoin_klines.csv",
@@ -83,12 +82,12 @@ kucoin_backfill_klines <- function(
   resume <- NULL
   if (file.exists(file)) {
     existing <- tryCatch(
-      data.table::fread(file, select = c("symbol", "freq", "datetime")),
+      data.table::fread(file, select = c("symbol", "timeframe", "datetime")),
       error = function(e) NULL
     )
     if (!is.null(existing) && nrow(existing) > 0L) {
       existing[, datetime := lubridate::as_datetime(datetime, tz = "UTC")]
-      resume <- existing[, .(last_dt = max(datetime)), by = .(symbol, freq)]
+      resume <- existing[, .(last_dt = max(datetime)), by = .(symbol, timeframe)]
     }
   }
 
@@ -110,7 +109,7 @@ kucoin_backfill_klines <- function(
   # --- Build combo grid ---
   combos <- expand.grid(
     symbol = symbols,
-    freq = freqs,
+    timeframe = timeframes,
     stringsAsFactors = FALSE
   )
   total <- nrow(combos)
@@ -120,14 +119,14 @@ kucoin_backfill_klines <- function(
 
   for (i in seq_len(total)) {
     sym <- combos$symbol[i]
-    frq <- combos$freq[i]
+    frq <- combos$timeframe[i]
 
     # Determine effective from for this combo
     combo_from <- from
     resumed_from <- NULL
 
     if (!is.null(resume)) {
-      match_row <- resume[symbol == sym & freq == frq]
+      match_row <- resume[symbol == sym & timeframe == frq]
       if (nrow(match_row) > 0L) {
         last_dt <- match_row$last_dt[1L]
         if (last_dt >= to) {
@@ -136,7 +135,7 @@ kucoin_backfill_klines <- function(
           }
           next
         }
-        combo_from <- last_dt
+        combo_from <- last_dt + 1 # Offset by 1 second to avoid re-fetching the last candle
         resumed_from <- last_dt
       }
     }
@@ -145,7 +144,7 @@ kucoin_backfill_klines <- function(
       {
         result <- kucoin_fetch_klines(
           symbol = sym,
-          freq = frq,
+          timeframe = frq,
           from = combo_from,
           to = to,
           .req_fn = sync_req_fn,
@@ -156,7 +155,7 @@ kucoin_backfill_klines <- function(
       error = function(e) {
         failures[[length(failures) + 1L]] <<- data.table::data.table(
           symbol = sym,
-          freq = frq,
+          timeframe = frq,
           error = conditionMessage(e)
         )
         rlang::warn(sprintf("[%d/%d] %s %s: FAILED - %s", i, total, sym, frq, conditionMessage(e)))
@@ -166,7 +165,7 @@ kucoin_backfill_klines <- function(
 
     if (!is.null(dt) && nrow(dt) > 0L) {
       dt[, symbol := sym]
-      dt[, freq := frq]
+      dt[, timeframe := frq]
 
       if (!file_exists) {
         data.table::fwrite(dt, file, append = FALSE)

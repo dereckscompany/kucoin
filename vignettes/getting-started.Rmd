@@ -10,7 +10,7 @@ vignette: >
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
+  results = "hold",
   comment = "#>"
 )
 
@@ -461,5 +461,7 @@ The `time_source` parameter is available on all class constructors:
 ## Next Steps
 
 - See `vignette("async-usage")` for promise-based asynchronous operation.
+- See `vignette("margin-trading")` for margin trading, short selling, and lending.
+- See `vignette("futures-trading")` for perpetual futures contracts.
 - Browse the [pkgdown site](https://dereckmezquita.github.io/kucoin/) for full method documentation.
 - For bulk historical data downloads, see `?kucoin_backfill_klines`.

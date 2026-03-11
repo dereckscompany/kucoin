@@ -51,7 +51,7 @@ test_that("add_sub_account validates access parameter", {
 
 # -- get_sub_account_list --
 
-test_that("get_sub_account_list returns paginated data with datetime_created", {
+test_that("get_sub_account_list returns paginated data with created_at", {
   resp <- mock_kucoin_response(
     data = list(
       currentPage = 1,
@@ -87,9 +87,9 @@ test_that("get_sub_account_list returns paginated data with datetime_created", {
   dt <- new_sub()$get_sub_account_list()
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 2L)
-  expect_true("datetime_created" %in% names(dt))
-  expect_false("created_at" %in% names(dt))
-  expect_s3_class(dt$datetime_created, "POSIXct")
+  expect_true("created_at" %in% names(dt))
+  expect_false("datetime_created" %in% names(dt))
+  expect_s3_class(dt$created_at, "POSIXct")
 })
 
 test_that("get_sub_account_list handles empty items", {

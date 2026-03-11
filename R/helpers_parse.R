@@ -31,12 +31,11 @@ to_snake_case <- function(names) {
 #' @param x A named list.
 #' @return A single-row [data.table::data.table] with snake_case column names.
 #'
-#' @importFrom data.table as.data.table setnames
 #' @keywords internal
 #' @noRd
 as_dt_row <- function(x) {
   if (is.null(x) || length(x) == 0) {
-    return(data.table::data.table())
+    return(data.table::data.table()[])
   }
   x <- lapply(x, function(val) {
     if (is.null(val)) {
@@ -45,17 +44,17 @@ as_dt_row <- function(x) {
     if (is.list(val) && length(val) == 0) {
       return(NA)
     }
-    # NOTE: multi-element lists (e.g. annType = list("a", "b")) must be wrapped
+    # NOTE: lists with length >= 1 (e.g. annType = list("a", "b")) must be wrapped
     # in list() so data.table stores them as a single list-column entry instead
     # of recycling rows.
-    if (is.list(val) && length(val) > 1) {
+    if (is.list(val) && length(val) >= 1) {
       return(list(val))
     }
     return(val)
   })
   dt <- data.table::as.data.table(x)
   data.table::setnames(dt, to_snake_case(names(dt)))
-  return(dt)
+  return(dt[])
 }
 
 #' Convert a List of Lists to a data.table
@@ -66,16 +65,14 @@ as_dt_row <- function(x) {
 #' @param items A list of named lists, or NULL.
 #' @return A [data.table::data.table]. Returns an empty data.table if `items` is NULL or empty.
 #'
-#' @importFrom data.table rbindlist setnames
 #' @keywords internal
 #' @noRd
 as_dt_list <- function(items) {
   if (is.null(items) || length(items) == 0) {
-    return(data.table::data.table())
+    return(data.table::data.table()[])
   }
-  dt <- data.table::rbindlist(items, fill = TRUE)
-  data.table::setnames(dt, to_snake_case(names(dt)))
-  return(dt)
+  dt <- data.table::rbindlist(lapply(items, as_dt_row), fill = TRUE)
+  return(dt[])
 }
 
 #' Convert a KuCoin Millisecond Timestamp to POSIXct
@@ -115,10 +112,9 @@ ns_to_datetime <- function(ns) {
 #'
 #' @param data List; the parsed KuCoin orderbook response data containing
 #'   `bids`, `asks`, `time`, and `sequence` fields.
-#' @return A [data.table::data.table] with columns: `datetime`, `sequence`,
+#' @return A [data.table::data.table] with columns: `time`, `sequence`,
 #'   `side`, `price`, `size`.
 #'
-#' @importFrom data.table data.table rbindlist
 #' @keywords internal
 #' @noRd
 parse_orderbook <- function(data) {
@@ -128,25 +124,25 @@ parse_orderbook <- function(data) {
         side = character(),
         price = numeric(),
         size = numeric()
-      ))
+      )[])
     }
-    # Each entry is a list of two strings: [price, size].
+    # Each entry is a list of two strings: [price, quantity].
     return(data.table::data.table(
       side = side_label,
       price = as.numeric(vapply(entries, `[[`, character(1), 1L)),
       size = as.numeric(vapply(entries, `[[`, character(1), 2L))
-    ))
+    )[])
   }
 
   bids_dt <- parse_side(data$bids, "bid")
   asks_dt <- parse_side(data$asks, "ask")
   result <- data.table::rbindlist(list(bids_dt, asks_dt))
 
-  result[, datetime := ms_to_datetime(data$time)]
+  result[, time := ms_to_datetime(data$time)]
   result[, sequence := as.character(data$sequence)]
-  data.table::setcolorder(result, c("datetime", "sequence", "side", "price", "size"))
+  data.table::setcolorder(result, c("time", "sequence", "side", "price", "size"))
 
-  return(result)
+  return(result[])
 }
 
 #' Parse Raw KuCoin Kline Data into a data.table
@@ -160,13 +156,12 @@ parse_orderbook <- function(data) {
 #'   `low`, `close`, `volume`, `turnover`. Returns empty data.table if input is
 #'   NULL or empty.
 #'
-#' @importFrom data.table data.table
 #' @importFrom lubridate as_datetime
 #' @keywords internal
 #' @noRd
 parse_klines <- function(data) {
   if (is.null(data) || length(data) == 0) {
-    return(data.table::data.table())
+    return(data.table::data.table()[])
   }
   # KuCoin returns: [timestamp, open, close, high, low, volume, turnover]
   # We reorder to standard OHLCV: datetime, open, high, low, close, volume, turnover
@@ -180,7 +175,7 @@ parse_klines <- function(data) {
     volume = as.numeric(vapply(data, `[[`, character(1), 6L)),
     turnover = as.numeric(vapply(data, `[[`, character(1), 7L))
   )
-  return(dt)
+  return(dt[])
 }
 
 #' Flatten Paginated Results into a data.table
@@ -191,12 +186,11 @@ parse_klines <- function(data) {
 #' @param pages List of lists; each element is one page's items from the API.
 #' @return A [data.table::data.table].
 #'
-#' @importFrom data.table rbindlist setnames
 #' @keywords internal
 #' @noRd
 flatten_pages <- function(pages) {
   if (length(pages) == 0) {
-    return(data.table::data.table())
+    return(data.table::data.table()[])
   }
 
   dt <- data.table::rbindlist(
@@ -210,7 +204,7 @@ flatten_pages <- function(pages) {
             if (is.list(v) && length(v) == 0) {
               return(NA)
             }
-            if (is.list(v) && length(v) > 1) {
+            if (is.list(v) && length(v) >= 1) {
               return(list(v))
             }
             return(v)
@@ -223,5 +217,5 @@ flatten_pages <- function(pages) {
     fill = TRUE
   )
   data.table::setnames(dt, to_snake_case(names(dt)))
-  return(dt)
+  return(dt[])
 }

@@ -132,7 +132,7 @@ KucoinBase <- R6::R6Class(
       body = NULL,
       auth = TRUE,
       .parser = identity,
-      timeout = 10
+      timeout = 30
     ) {
       return(kucoin_build_request(
         base_url = private$.base_url,
@@ -140,7 +140,13 @@ KucoinBase <- R6::R6Class(
         method = method,
         query = query,
         body = body,
-        keys = if (auth) private$.keys else NULL,
+        keys = {
+          keys <- NULL
+          if (auth) {
+            keys <- private$.keys
+          }
+          keys
+        },
         .perform = private$.perform,
         .parser = .parser,
         is_async = private$.is_async,
@@ -170,7 +176,13 @@ KucoinBase <- R6::R6Class(
         method = method,
         query = query,
         body = body,
-        keys = if (auth) private$.keys else NULL,
+        keys = {
+          keys <- NULL
+          if (auth) {
+            keys <- private$.keys
+          }
+          keys
+        },
         .perform = private$.perform,
         .parser = .parser,
         is_async = private$.is_async,

@@ -70,7 +70,6 @@
 #' }
 #'
 #' @importFrom R6 R6Class
-#' @importFrom data.table data.table as.data.table setcolorder
 #' @export
 KucoinTransfer <- R6::R6Class(
   "KucoinTransfer",

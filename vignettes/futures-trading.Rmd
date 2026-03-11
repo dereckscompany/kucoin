@@ -1,0 +1,402 @@
+---
+title: "Futures Trading with kucoin"
+author: "Dereck Mezquita"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Futures Trading with kucoin}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  results = "hold",
+  comment = "#>"
+)
+
+box::use(
+  kucoin[
+    KucoinFuturesMarketData, KucoinFuturesTrading, KucoinFuturesAccount,
+    get_api_keys, get_futures_base_url
+  ]
+)
+
+box::use(../tests/testthat/mock_router[mock_router])
+
+KEYS <- get_api_keys(
+  api_key = "fake-key",
+  api_secret = "fake-secret",
+  api_passphrase = "fake-passphrase"
+)
+BASE <- "https://api-futures.kucoin.com"
+
+options(httr2_mock = mock_router)
+```
+
+This vignette covers KuCoin Futures trading using the `kucoin` package.
+Futures contracts let you trade with leverage — amplifying both gains and
+losses — on perpetual contracts like XBTUSDTM (BTC) and ETHUSDTM (ETH).
+
+## Overview
+
+The package provides three classes for futures operations:
+
+| Class | Purpose |
+|-------|---------|
+| `KucoinFuturesMarketData` | Contract specs, tickers, orderbooks, klines, funding rates |
+| `KucoinFuturesTrading` | Place, cancel, and query futures orders |
+| `KucoinFuturesAccount` | Positions, margin, leverage, risk limits |
+
+All futures classes use a separate base URL (`https://api-futures.kucoin.com`)
+but share the same API key credentials as spot trading.
+
+## Setup
+
+```{r load}
+box::use(
+  kucoin[
+    KucoinFuturesMarketData, KucoinFuturesTrading, KucoinFuturesAccount,
+    get_api_keys
+  ]
+)
+
+keys <- get_api_keys(
+  api_key = "your-api-key",
+  api_secret = "your-api-secret",
+  api_passphrase = "your-api-passphrase"
+)
+
+market <- KucoinFuturesMarketData$new(keys = keys)
+trading <- KucoinFuturesTrading$new(keys = keys)
+account <- KucoinFuturesAccount$new(keys = keys)
+```
+
+```{r keys, echo = FALSE}
+keys <- KEYS
+base <- BASE
+market <- KucoinFuturesMarketData$new(keys = keys, base_url = base)
+trading <- KucoinFuturesTrading$new(keys = keys, base_url = base)
+account <- KucoinFuturesAccount$new(keys = keys, base_url = base)
+```
+
+---
+
+## Market Data
+
+### Contract Details
+
+Query the specification of a futures contract — lot sizes, tick sizes,
+leverage limits, and fee rates:
+
+```{r contract}
+contract <- market$get_contract("XBTUSDTM")
+contract[, .(symbol, max_leverage, tick_size, maker_fee_rate, taker_fee_rate)]
+```
+
+### All Active Contracts
+
+```{r all-contracts}
+contracts <- market$get_all_contracts()
+contracts[, .(symbol, status)]
+```
+
+### Ticker
+
+Real-time price and best bid/ask for a single contract:
+
+```{r ticker}
+ticker <- market$get_ticker("XBTUSDTM")
+ticker[, .(symbol, price, best_bid_price, best_ask_price, ts)]
+```
+
+### All Tickers
+
+```{r all-tickers}
+tickers <- market$get_all_tickers()
+tickers[, .(symbol, price, ts)]
+```
+
+### Orderbook
+
+The partial orderbook returns the top 20 or 100 price levels:
+
+```{r orderbook}
+ob <- market$get_part_orderbook("XBTUSDTM", size = 20)
+ob
+```
+
+### Trade History
+
+```{r trades}
+trades <- market$get_trade_history("XBTUSDTM")
+trades[, .(side, price, size, ts)]
+```
+
+### Klines (Candlesticks)
+
+Retrieve historical OHLCV data. Granularity is in minutes:
+
+```{r klines}
+klines <- market$get_klines("XBTUSDTM", granularity = 60)
+klines
+```
+
+### Mark Price
+
+The mark price is used for liquidation calculations and PNL:
+
+```{r mark-price}
+mark <- market$get_mark_price("XBTUSDTM")
+mark
+```
+
+### Funding Rate
+
+Perpetual futures settle funding every 8 hours. Positive rates mean longs
+pay shorts; negative means shorts pay longs:
+
+```{r funding-rate}
+rate <- market$get_funding_rate("XBTUSDTM")
+rate
+```
+
+### Server Time and Status
+
+```{r server}
+market$get_server_time()
+market$get_service_status()
+```
+
+---
+
+## Trading
+
+All trading methods require API keys with **Futures trading permission**
+enabled on KuCoin.
+
+### Place an Order (Dry Run)
+
+Use `add_order_test()` to validate parameters without placing a real order:
+
+```{r order-test}
+result <- trading$add_order_test(
+  clientOid = "my-test-001",
+  symbol = "XBTUSDTM",
+  side = "buy",
+  type = "limit",
+  leverage = 5,
+  size = 1,
+  price = "98000"
+)
+result
+```
+
+### Place a Real Order
+
+```{r order, eval = FALSE}
+# Market order — no price needed
+order <- trading$add_order(
+  clientOid = "my-market-001",
+  symbol = "XBTUSDTM",
+  side = "buy",
+  type = "market",
+  leverage = 10,
+  size = 1
+)
+
+# Limit order
+order <- trading$add_order(
+  clientOid = "my-limit-001",
+  symbol = "XBTUSDTM",
+  side = "buy",
+  type = "limit",
+  leverage = 5,
+  size = 1,
+  price = "95000",
+  timeInForce = "GTC"
+)
+```
+
+### Cancel Orders
+
+```{r cancel, eval = FALSE}
+# Cancel by system order ID
+trading$cancel_order_by_id("order-id-here")
+
+# Cancel by client order ID
+trading$cancel_order_by_client_oid("my-limit-001", symbol = "XBTUSDTM")
+
+# Cancel all orders for a symbol
+trading$cancel_all(symbol = "XBTUSDTM")
+
+# Cancel all stop orders
+trading$cancel_all_stop_orders(symbol = "XBTUSDTM")
+```
+
+### Query Orders
+
+```{r query-orders, eval = FALSE}
+# Get a specific order
+order <- trading$get_order_by_id("order-id")
+
+# Get open orders
+open <- trading$get_order_list(query = list(status = "active"))
+
+# Get recent closed orders
+closed <- trading$get_recent_closed_orders(symbol = "XBTUSDTM")
+```
+
+### Fills (Trade History)
+
+```{r fills, eval = FALSE}
+# All fills
+fills <- trading$get_fills(query = list(symbol = "XBTUSDTM"))
+
+# Recent fills (last 24h)
+recent <- trading$get_recent_fills(symbol = "XBTUSDTM")
+```
+
+### Dead Connection Protection (DCP)
+
+A dead-man's switch that auto-cancels orders if your bot stops sending
+heartbeats:
+
+```{r dcp}
+# Set DCP with 5-second timeout
+trading$set_dcp(timeout = 5)
+
+# Check current DCP settings
+trading$get_dcp()
+```
+
+---
+
+## Account and Positions
+
+### Account Overview
+
+```{r account-overview}
+overview <- account$get_account_overview(currency = "USDT")
+overview[, .(account_equity, available_balance, unrealised_pnl, currency)]
+```
+
+### Positions
+
+```{r positions}
+# All open positions
+positions <- account$get_positions()
+positions[, .(symbol, current_qty, avg_entry_price, unrealised_pnl, margin_mode)]
+```
+
+### Position History
+
+```{r position-history}
+history <- account$get_positions_history()
+history
+```
+
+### Margin Mode
+
+Switch between isolated and cross margin:
+
+```{r margin-mode}
+# Check current mode
+account$get_margin_mode("XBTUSDTM")
+```
+
+```{r set-margin, eval = FALSE}
+# Switch to cross margin
+account$set_margin_mode("XBTUSDTM", "CROSS")
+```
+
+### Leverage
+
+```{r leverage}
+account$get_cross_margin_leverage("XBTUSDTM")
+```
+
+```{r set-leverage, eval = FALSE}
+account$set_cross_margin_leverage("XBTUSDTM", 10)
+```
+
+### Risk Limits
+
+Each contract has tiered risk limits that reduce maximum leverage as
+position size increases:
+
+```{r risk-limits}
+limits <- account$get_risk_limit("XBTUSDTM")
+limits[, .(level, max_leverage, max_risk_limit, initial_margin)]
+```
+
+### Funding Fee History
+
+Track funding fees you've paid or received:
+
+```{r funding-history}
+funding <- account$get_funding_history("XBTUSDTM")
+funding
+```
+
+---
+
+## Method Reference
+
+### KucoinFuturesMarketData
+
+| Method | Description |
+|--------|-------------|
+| `get_contract()` | Single contract specification |
+| `get_all_contracts()` | All active contracts |
+| `get_ticker()` | Real-time ticker for one contract |
+| `get_all_tickers()` | Tickers for all contracts |
+| `get_part_orderbook()` | Top 20 or 100 orderbook levels |
+| `get_full_orderbook()` | Full L2 orderbook (auth required) |
+| `get_trade_history()` | Recent trades |
+| `get_klines()` | OHLCV candlestick data |
+| `get_mark_price()` | Current mark price |
+| `get_funding_rate()` | Current funding rate |
+| `get_funding_history()` | Historical funding rates |
+| `get_server_time()` | Server timestamp |
+| `get_service_status()` | Exchange operational status |
+
+### KucoinFuturesTrading
+
+| Method | Description |
+|--------|-------------|
+| `add_order()` | Place a futures order |
+| `add_order_test()` | Dry-run order validation |
+| `add_order_batch()` | Place multiple orders |
+| `cancel_order_by_id()` | Cancel by system ID |
+| `cancel_order_by_client_oid()` | Cancel by client ID |
+| `cancel_all()` | Cancel all open orders |
+| `cancel_all_stop_orders()` | Cancel all stop orders |
+| `get_order_by_id()` | Query order by system ID |
+| `get_order_by_client_oid()` | Query order by client ID |
+| `get_order_list()` | Paginated order list |
+| `get_recent_closed_orders()` | Recent closed orders |
+| `get_stop_orders()` | Untriggered stop orders |
+| `get_fills()` | Paginated fill history |
+| `get_recent_fills()` | Recent fills (24h) |
+| `get_open_order_value()` | Open order statistics |
+| `set_dcp()` | Set dead connection protection |
+| `get_dcp()` | Query DCP settings |
+
+### KucoinFuturesAccount
+
+| Method | Description |
+|--------|-------------|
+| `get_account_overview()` | Balance, equity, margin summary |
+| `get_position()` | Position for one symbol |
+| `get_positions()` | All open positions |
+| `get_positions_history()` | Historical closed positions |
+| `get_margin_mode()` | Query margin mode |
+| `set_margin_mode()` | Switch isolated/cross |
+| `get_cross_margin_leverage()` | Query cross leverage |
+| `set_cross_margin_leverage()` | Set cross leverage |
+| `get_max_open_size()` | Max contracts openable |
+| `get_max_withdraw_margin()` | Max withdrawable margin |
+| `add_isolated_margin()` | Deposit margin to position |
+| `remove_isolated_margin()` | Withdraw margin from position |
+| `get_risk_limit()` | Risk limit tiers |
+| `get_funding_history()` | Personal funding fee records |

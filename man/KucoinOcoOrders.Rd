@@ -338,6 +338,7 @@ stop is triggered. This is the price at which the stop-limit order is placed.}
 \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{order_id} (character): KuCoin-assigned OCO order identifier.
+\item \code{client_oid} (character): Client-provided order identifier (NA if not supplied).
 }
 }
 \subsection{Examples}{
@@ -742,7 +743,7 @@ Verified: 2026-02-01
 \item \code{order_id} (character): OCO order identifier.
 \item \code{symbol} (character): Trading pair (e.g., \code{"BTC-USDT"}).
 \item \code{client_oid} (character): Client-assigned order identifier.
-\item \code{datetime_order} (POSIXct): Order creation datetime.
+\item \code{order_time} (POSIXct): Order creation datetime (coerced from epoch milliseconds).
 \item \code{status} (character): Order status (e.g., \code{"NEW"}, \code{"DONE"}, \code{"TRIGGERED"}).
 }
 }
@@ -842,7 +843,7 @@ the OCO order (e.g., \code{"my-bot-oco-001"}).}
 \item \code{order_id} (character): KuCoin-assigned OCO order identifier.
 \item \code{symbol} (character): Trading pair (e.g., \code{"BTC-USDT"}).
 \item \code{client_oid} (character): Client-assigned order identifier.
-\item \code{datetime_order} (POSIXct): Order creation datetime.
+\item \code{order_time} (POSIXct): Order creation datetime (coerced from epoch milliseconds).
 \item \code{status} (character): Order status (e.g., \code{"NEW"}, \code{"DONE"}, \code{"TRIGGERED"}).
 }
 }
@@ -961,7 +962,7 @@ Verified: 2026-02-01
 \item \code{order_id} (character): OCO order identifier.
 \item \code{symbol} (character): Trading pair (e.g., \code{"BTC-USDT"}).
 \item \code{client_oid} (character): Client-assigned order identifier.
-\item \code{datetime_order} (POSIXct): Order creation datetime.
+\item \code{order_time} (POSIXct): Order creation datetime (coerced from epoch milliseconds).
 \item \code{status} (character): Overall OCO order status.
 \item \code{orders} (list): List of sub-order details, each containing \code{id}, \code{symbol},
 \code{side}, \code{price}, \code{size}, \code{status}, and optionally \code{stop_price}.
@@ -1085,7 +1086,7 @@ Verified: 2026-02-01
 \item \code{order_id} (character): OCO order identifier.
 \item \code{symbol} (character): Trading pair (e.g., \code{"BTC-USDT"}).
 \item \code{client_oid} (character): Client-assigned order identifier.
-\item \code{datetime_order} (POSIXct): Order creation datetime.
+\item \code{order_time} (POSIXct): Order creation datetime (coerced from epoch milliseconds).
 \item \code{status} (character): Order status (e.g., \code{"NEW"}, \code{"DONE"}, \code{"TRIGGERED"}).
 Returns an empty \code{data.table} if no orders match.
 }

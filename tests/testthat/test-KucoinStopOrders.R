@@ -180,7 +180,7 @@ test_that("cancel_all returns data.table", {
 
 # -- get_order_by_id --
 
-test_that("get_order_by_id returns data.table with datetime_created", {
+test_that("get_order_by_id returns data.table with created_at", {
   resp <- mock_kucoin_response(
     data = list(
       id = "vs8hoo8q2ceshiue003b67c0",
@@ -199,9 +199,9 @@ test_that("get_order_by_id returns data.table with datetime_created", {
   dt <- new_stop()$get_order_by_id("vs8hoo8q2ceshiue003b67c0")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
-  expect_true("datetime_created" %in% names(dt))
-  expect_false("created_at" %in% names(dt))
-  expect_s3_class(dt$datetime_created, "POSIXct")
+  expect_true("created_at" %in% names(dt))
+  expect_false("datetime_created" %in% names(dt))
+  expect_s3_class(dt$created_at, "POSIXct")
   expect_equal(dt$symbol, "BTC-USDT")
 })
 
@@ -223,7 +223,7 @@ test_that("get_order_by_client_oid handles array response", {
   dt <- new_stop()$get_order_by_client_oid("my-stop-001", symbol = "BTC-USDT")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
-  expect_true("datetime_created" %in% names(dt))
+  expect_true("created_at" %in% names(dt))
   expect_equal(dt$client_oid, "my-stop-001")
 })
 
@@ -245,7 +245,7 @@ test_that("get_order_by_client_oid handles single object response", {
 
 # -- get_order_list --
 
-test_that("get_order_list returns orders with datetime_created", {
+test_that("get_order_list returns orders with created_at", {
   resp <- mock_kucoin_response(
     data = list(
       currentPage = 1,
@@ -270,8 +270,8 @@ test_that("get_order_list returns orders with datetime_created", {
   dt <- new_stop()$get_order_list(query = list(symbol = "BTC-USDT"))
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
-  expect_true("datetime_created" %in% names(dt))
-  expect_false("created_at" %in% names(dt))
+  expect_true("created_at" %in% names(dt))
+  expect_false("datetime_created" %in% names(dt))
 })
 
 test_that("get_order_list handles empty items", {

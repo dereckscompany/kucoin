@@ -6,7 +6,7 @@
 \usage{
 kucoin_backfill_klines(
   symbols,
-  freqs = "1day",
+  timeframes = "1day",
   from = lubridate::now("UTC") - lubridate::ddays(365),
   to = lubridate::now("UTC"),
   file = "kucoin_klines.csv",
@@ -19,8 +19,8 @@ kucoin_backfill_klines(
 \item{symbols}{Character vector of trading pair symbols (e.g.,
 \code{c("BTC-USDT", "ETH-USDT")}). Must not be NULL or empty.}
 
-\item{freqs}{Character vector of candle frequencies (e.g., \code{c("1day", "1hour")}).
-Valid values are the names of the internal frequency map: \code{"1min"}, \code{"3min"},
+\item{timeframes}{Character vector of candle timeframes (e.g., \code{c("1day", "1hour")}).
+Valid values are the names of the internal timeframe map: \code{"1min"}, \code{"3min"},
 \code{"5min"}, \code{"15min"}, \code{"30min"}, \code{"1hour"}, \code{"2hour"}, \code{"4hour"}, \code{"6hour"},
 \code{"8hour"}, \code{"12hour"}, \code{"1day"}, \code{"1week"}, \code{"1month"}.}
 
@@ -36,27 +36,27 @@ incrementally so progress is saved even if the process is interrupted.}
 
 \item{base_url}{Character; KuCoin API base URL.}
 
-\item{sleep}{Numeric; seconds to sleep between each symbol-frequency
+\item{sleep}{Numeric; seconds to sleep between each symbol-timeframe
 combination to respect rate limits.}
 
 \item{verbose}{Logical; if \code{TRUE}, prints progress messages via \code{\link[rlang:abort]{rlang::inform()}}.}
 }
 \value{
-The file path (invisibly). If any symbol-frequency combinations
+The file path (invisibly). If any symbol-timeframe combinations
 failed, a \code{"failures"} attribute is attached containing a
-\link[data.table:data.table]{data.table::data.table} with columns \code{symbol}, \code{freq}, and \code{error}.
+\link[data.table:data.table]{data.table::data.table} with columns \code{symbol}, \code{timeframe}, and \code{error}.
 }
 \description{
 Downloads historical OHLCV candlestick data for one or more trading pairs and
-frequencies, writing results incrementally to a CSV file. Supports resuming
+timeframes, writing results incrementally to a CSV file. Supports resuming
 from a partially completed backfill by reading the existing file and skipping
-symbol-frequency combinations that are already up to date.
+symbol-timeframe combinations that are already up to date.
 }
 \examples{
 \dontrun{
 kucoin_backfill_klines(
   symbols = c("BTC-USDT", "ETH-USDT"),
-  freqs = c("1day", "1hour"),
+  timeframes = c("1day", "1hour"),
   from = lubridate::as_datetime("2020-01-01"),
   file = "my_klines.csv"
 )

@@ -831,7 +831,7 @@ Verified: 2026-02-01
 \item \code{size} (character): Order quantity in base currency.
 \item \code{stop_price} (character): Trigger price for the stop order.
 \item \code{stop} (character): Stop direction (\code{"loss"} or \code{"entry"}).
-\item \code{datetime_created} (POSIXct): Creation datetime.
+\item \code{created_at} (POSIXct): Creation datetime (coerced from epoch milliseconds).
 }
 }
 \subsection{Examples}{
@@ -958,7 +958,7 @@ scope the search to a specific trading pair.}
 \item \code{size} (character): Order quantity in base currency.
 \item \code{stop_price} (character): Trigger price for the stop order.
 \item \code{client_oid} (character): The client-assigned order ID.
-\item \code{datetime_created} (POSIXct): Creation datetime.
+\item \code{created_at} (POSIXct): Creation datetime (coerced from epoch milliseconds).
 }
 }
 \subsection{Examples}{
@@ -1101,7 +1101,7 @@ stop orders match the query. Key columns include:
 \item \code{stop_price} (character): Trigger price for the stop order.
 \item \code{stop} (character): Stop direction (\code{"loss"} or \code{"entry"}).
 \item \code{time_in_force} (character): Time-in-force policy.
-\item \code{datetime_created} (POSIXct): Creation datetime.
+\item \code{created_at} (POSIXct): Creation datetime (coerced from epoch milliseconds).
 }
 }
 \subsection{Examples}{

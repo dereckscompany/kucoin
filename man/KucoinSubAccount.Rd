@@ -111,7 +111,7 @@ print(all_subs)
 
 # Fetch only first page with 10 results
 first_page <- sub$get_sub_account_list(page_size = 10, max_pages = 1)
-print(first_page[, .(sub_name, access, datetime_created)])
+print(first_page[, .(sub_name, access, created_at)])
 
 # Filter for Spot sub-accounts
 spot_subs <- all_subs[access == "Spot"]
@@ -307,12 +307,12 @@ Get Sub-Account List Summary
 
 Retrieves a paginated summary of all sub-accounts under the master account.
 Automatically handles pagination, fetching up to \code{max_pages} pages of results.
-A \code{datetime_created} column is appended by converting the millisecond timestamp.
+The \code{created_at} column is coerced from epoch milliseconds to POSIXct.
 \subsection{Workflow}{
 \enumerate{
 \item \strong{Pagination}: Calls the paginated endpoint, fetching \code{page_size} records per page up to \code{max_pages}.
 \item \strong{Flattening}: Combines all pages into a single \code{data.table} via \code{flatten_pages()}.
-\item \strong{Timestamp Conversion}: Converts \code{created_at} (ms epoch) to POSIXct in \code{datetime_created}.
+\item \strong{Timestamp Conversion}: Coerces \code{created_at} (ms epoch) to POSIXct in-place.
 }
 }
 
@@ -331,7 +331,7 @@ Verified: 2026-02-01
 \subsection{Automated Trading Usage}{
 \itemize{
 \item \strong{Inventory Check}: Periodically poll sub-account lists to verify all strategy sub-accounts are active.
-\item \strong{Audit Trail}: Use \code{datetime_created} to track when sub-accounts were provisioned.
+\item \strong{Audit Trail}: Use \code{created_at} to track when sub-accounts were provisioned.
 \item \strong{Filtering}: Post-filter the returned \code{data.table} by \code{access} type to find all Spot-enabled sub-accounts.
 }
 }
@@ -405,7 +405,7 @@ Verified: 2026-02-01
 \item \code{type} (integer): Account type code.
 \item \code{access} (character): Permission type (\code{"Spot"}, \code{"Futures"}, \code{"Margin"}).
 \item \code{remarks} (character): Optional remarks string.
-\item \code{datetime_created} (POSIXct): Creation datetime.
+\item \code{created_at} (POSIXct): Creation datetime (coerced from epoch milliseconds).
 }
 }
 \subsection{Examples}{
@@ -419,7 +419,7 @@ print(all_subs)
 
 # Fetch only first page with 10 results
 first_page <- sub$get_sub_account_list(page_size = 10, max_pages = 1)
-print(first_page[, .(sub_name, access, datetime_created)])
+print(first_page[, .(sub_name, access, created_at)])
 
 # Filter for Spot sub-accounts
 spot_subs <- all_subs[access == "Spot"]

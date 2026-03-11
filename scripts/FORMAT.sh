@@ -14,12 +14,12 @@ SCRIPT_NAME=$(basename "$0")
 
 # Colours for output
 if [[ -t 1 ]]; then
-    RED='\033[0;31m'
-    GREEN='\033[0;32m'
-    YELLOW='\033[1;33m'
-    BLUE='\033[0;34m'
-    BOLD='\033[1m'
-    NC='\033[0m' # No Colour
+    RED=$'\033[0;31m'
+    GREEN=$'\033[0;32m'
+    YELLOW=$'\033[1;33m'
+    BLUE=$'\033[0;34m'
+    BOLD=$'\033[1m'
+    NC=$'\033[0m' # No Colour
 else
     RED=''
     GREEN=''
@@ -59,42 +59,42 @@ print_info() {
 
 show_help() {
     cat << EOF
-${BOLD}USAGE:${NC}
-    $SCRIPT_NAME [OPTIONS] [COMMAND]
+${YELLOW}USAGE:${NC}
+    ${BOLD}$SCRIPT_NAME${NC} [OPTIONS] [COMMAND]
 
-${BOLD}DESCRIPTION:${NC}
+${YELLOW}DESCRIPTION:${NC}
     Format R and C++ code in the package.
 
-${BOLD}COMMANDS:${NC}
-    ${BOLD}r${NC}            Format R code using air (extremely fast formatter)
-    ${BOLD}r-check${NC}      Check if R code is formatted (no changes)
-    ${BOLD}cpp${NC}          Format C++ code using clang-format
-    ${BOLD}cpp-check${NC}    Check if C++ code is formatted (no changes)
-    ${BOLD}all${NC}          Format both R and C++ code (default)
-    ${BOLD}check${NC}        Check formatting for both R and C++ code
-    ${BOLD}help${NC}         Show this help message
+${YELLOW}COMMANDS:${NC}
+    ${GREEN}r${NC}            Format R code using air (extremely fast formatter)
+    ${GREEN}r-check${NC}      Check if R code is formatted (no changes)
+    ${GREEN}cpp${NC}          Format C++ code using clang-format
+    ${GREEN}cpp-check${NC}    Check if C++ code is formatted (no changes)
+    ${GREEN}all${NC}          Format both R and C++ code (default)
+    ${GREEN}check${NC}        Check formatting for both R and C++ code
+    ${GREEN}help${NC}         Show this help message
 
-${BOLD}OPTIONS:${NC}
-    ${BOLD}-h, --help${NC}   Show this help message
-    ${BOLD}-v, --verbose${NC} Enable verbose output
+${YELLOW}OPTIONS:${NC}
+    ${GREEN}-h, --help${NC}   Show this help message
+    ${GREEN}-v, --verbose${NC} Enable verbose output
 
-${BOLD}EXAMPLES:${NC}
-    # Format all code
+${YELLOW}EXAMPLES:${NC}
+    ${BLUE}# Format all code${NC}
     $SCRIPT_NAME
 
-    # Format only R code
+    ${BLUE}# Format only R code${NC}
     $SCRIPT_NAME r
 
-    # Format only C++ code
+    ${BLUE}# Format only C++ code${NC}
     $SCRIPT_NAME cpp
 
-    # Check all formatting (for CI)
+    ${BLUE}# Check all formatting (for CI)${NC}
     $SCRIPT_NAME check
 
-${BOLD}NOTES:${NC}
+${YELLOW}NOTES:${NC}
     - Requires: air (R formatter), clang-format (C++ formatter)
-    - Install air: curl -LsSf https://github.com/posit-dev/air/releases/latest/download/air-installer.sh | sh
-    - Install clang-format: brew install clang-format
+    - Install air: ${BLUE}curl -LsSf https://github.com/posit-dev/air/releases/latest/download/air-installer.sh | sh${NC}
+    - Install clang-format: ${BLUE}brew install clang-format${NC}
 
 EOF
 }

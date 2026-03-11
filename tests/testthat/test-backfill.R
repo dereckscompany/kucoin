@@ -5,14 +5,14 @@
 
 test_that("backfill rejects NULL symbols", {
   expect_error(
-    kucoin_backfill_klines(symbols = NULL, freqs = "1day"),
+    kucoin_backfill_klines(symbols = NULL, timeframes = "1day"),
     "non-empty"
   )
 })
 
 test_that("backfill rejects empty symbols", {
   expect_error(
-    kucoin_backfill_klines(symbols = character(0), freqs = "1day"),
+    kucoin_backfill_klines(symbols = character(0), timeframes = "1day"),
     "non-empty"
   )
 })
@@ -31,7 +31,7 @@ test_that("backfill writes CSV and returns file path", {
 
   result <- kucoin_backfill_klines(
     symbols = "BTC-USDT",
-    freqs = "1day",
+    timeframes = "1day",
     from = lubridate::as_datetime("2024-10-16", tz = "UTC"),
     to = lubridate::as_datetime("2024-10-17", tz = "UTC"),
     file = outfile,
@@ -45,10 +45,10 @@ test_that("backfill writes CSV and returns file path", {
   dt <- data.table::fread(outfile)
   expect_true(nrow(dt) > 0L)
   expect_true("symbol" %in% names(dt))
-  expect_true("freq" %in% names(dt))
+  expect_true("timeframe" %in% names(dt))
   expect_true("datetime" %in% names(dt))
   expect_equal(unique(dt$symbol), "BTC-USDT")
-  expect_equal(unique(dt$freq), "1day")
+  expect_equal(unique(dt$timeframe), "1day")
 })
 
 # -- Resume Support --
@@ -67,7 +67,7 @@ test_that("backfill skips completed combos on resume", {
     volume = 100,
     turnover = 6700000,
     symbol = "BTC-USDT",
-    freq = "1day"
+    timeframe = "1day"
   )
   data.table::fwrite(existing, outfile)
 
@@ -80,7 +80,7 @@ test_that("backfill skips completed combos on resume", {
 
   kucoin_backfill_klines(
     symbols = "BTC-USDT",
-    freqs = "1day",
+    timeframes = "1day",
     from = lubridate::as_datetime("2024-10-16", tz = "UTC"),
     to = lubridate::as_datetime("2024-10-17", tz = "UTC"),
     file = outfile,
@@ -104,7 +104,7 @@ test_that("backfill clamps -Inf from to 2017-01-01", {
   # Should not error with -Inf from
   result <- kucoin_backfill_klines(
     symbols = "BTC-USDT",
-    freqs = "1day",
+    timeframes = "1day",
     from = -Inf,
     to = lubridate::as_datetime("2017-01-02", tz = "UTC"),
     file = outfile,
@@ -128,7 +128,7 @@ test_that("backfill attaches failures attribute on error", {
 
   result <- suppressWarnings(kucoin_backfill_klines(
     symbols = "BTC-USDT",
-    freqs = "1day",
+    timeframes = "1day",
     from = lubridate::as_datetime("2024-10-16", tz = "UTC"),
     to = lubridate::as_datetime("2024-10-17", tz = "UTC"),
     file = outfile,
@@ -140,12 +140,12 @@ test_that("backfill attaches failures attribute on error", {
   expect_s3_class(failures, "data.table")
   expect_equal(nrow(failures), 1L)
   expect_equal(failures$symbol, "BTC-USDT")
-  expect_equal(failures$freq, "1day")
+  expect_equal(failures$timeframe, "1day")
 })
 
-# -- Multiple Symbols/Freqs --
+# -- Multiple Symbols/Timeframes --
 
-test_that("backfill handles multiple symbol-freq combos", {
+test_that("backfill handles multiple symbol-timeframe combos", {
   outfile <- tempfile(fileext = ".csv")
   on.exit(unlink(outfile), add = TRUE)
 
@@ -154,7 +154,7 @@ test_that("backfill handles multiple symbol-freq combos", {
 
   result <- kucoin_backfill_klines(
     symbols = c("BTC-USDT", "ETH-USDT"),
-    freqs = c("1day"),
+    timeframes = c("1day"),
     from = lubridate::as_datetime("2024-10-16", tz = "UTC"),
     to = lubridate::as_datetime("2024-10-17", tz = "UTC"),
     file = outfile,

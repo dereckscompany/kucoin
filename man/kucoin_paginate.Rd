@@ -16,7 +16,9 @@ kucoin_paginate(
   is_async = FALSE,
   page_size = 50,
   max_pages = Inf,
-  items_field = "items"
+  items_field = "items",
+  timeout = 30,
+  .get_timestamp_ms = NULL
 )
 }
 \arguments{
@@ -44,6 +46,11 @@ Default \code{identity}.}
 \item{max_pages}{Numeric; maximum pages to fetch. Default \code{Inf}.}
 
 \item{items_field}{Character; name of the items field. Default \code{"items"}.}
+
+\item{timeout}{Numeric; request timeout in seconds. Default \code{30}.}
+
+\item{.get_timestamp_ms}{Function or NULL; custom timestamp provider for
+request signing. If \code{NULL}, uses the default internal timestamp function.}
 }
 \value{
 Parsed and post-processed result, or a promise thereof.

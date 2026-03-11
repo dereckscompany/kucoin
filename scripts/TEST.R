@@ -1,2 +1,10 @@
 #!/usr/bin/env Rscript
-devtools::test(reporter = "progress", stop_on_failure = TRUE)
+
+# First time to create snapshots
+devtools::test(reporter = "progress")
+
+# Review snapshots
+testthat::snapshot_review()
+
+# After reviewing, to accept the snapshots
+testthat::snapshot_accept()

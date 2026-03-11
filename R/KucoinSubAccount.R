@@ -60,7 +60,6 @@
 #' }
 #'
 #' @importFrom R6 R6Class
-#' @importFrom data.table data.table as.data.table rbindlist setcolorder
 #' @export
 KucoinSubAccount <- R6::R6Class(
   "KucoinSubAccount",
@@ -172,12 +171,12 @@ KucoinSubAccount <- R6::R6Class(
     #'
     #' Retrieves a paginated summary of all sub-accounts under the master account.
     #' Automatically handles pagination, fetching up to `max_pages` pages of results.
-    #' A `datetime_created` column is appended by converting the millisecond timestamp.
+    #' The `created_at` column is coerced from epoch milliseconds to POSIXct.
     #'
     #' ### Workflow
     #' 1. **Pagination**: Calls the paginated endpoint, fetching `page_size` records per page up to `max_pages`.
     #' 2. **Flattening**: Combines all pages into a single `data.table` via `flatten_pages()`.
-    #' 3. **Timestamp Conversion**: Converts `created_at` (ms epoch) to POSIXct in `datetime_created`.
+    #' 3. **Timestamp Conversion**: Coerces `created_at` (ms epoch) to POSIXct in-place.
     #'
     #' ### API Endpoint
     #' `GET https://api.kucoin.com/api/v2/sub/user`
@@ -189,7 +188,7 @@ KucoinSubAccount <- R6::R6Class(
     #'
     #' ### Automated Trading Usage
     #' - **Inventory Check**: Periodically poll sub-account lists to verify all strategy sub-accounts are active.
-    #' - **Audit Trail**: Use `datetime_created` to track when sub-accounts were provisioned.
+    #' - **Audit Trail**: Use `created_at` to track when sub-accounts were provisioned.
     #' - **Filtering**: Post-filter the returned `data.table` by `access` type to find all Spot-enabled sub-accounts.
     #'
     #' ### curl
@@ -247,7 +246,7 @@ KucoinSubAccount <- R6::R6Class(
     #'   - `type` (integer): Account type code.
     #'   - `access` (character): Permission type (`"Spot"`, `"Futures"`, `"Margin"`).
     #'   - `remarks` (character): Optional remarks string.
-    #'   - `datetime_created` (POSIXct): Creation datetime.
+    #'   - `created_at` (POSIXct): Creation datetime (coerced from epoch milliseconds).
     #'
     #' @examples
     #' \dontrun{
@@ -259,7 +258,7 @@ KucoinSubAccount <- R6::R6Class(
     #'
     #' # Fetch only first page with 10 results
     #' first_page <- sub$get_sub_account_list(page_size = 10, max_pages = 1)
-    #' print(first_page[, .(sub_name, access, datetime_created)])
+    #' print(first_page[, .(sub_name, access, created_at)])
     #'
     #' # Filter for Spot sub-accounts
     #' spot_subs <- all_subs[access == "Spot"]
@@ -272,13 +271,12 @@ KucoinSubAccount <- R6::R6Class(
         .parser = function(pages) {
           dt <- flatten_pages(pages)
           if (nrow(dt) == 0L) {
-            return(dt)
+            return(dt[])
           }
           if ("created_at" %in% names(dt)) {
-            dt[, datetime_created := ms_to_datetime(created_at)]
-            dt[, created_at := NULL]
+            dt[, created_at := ms_to_datetime(created_at)]
           }
-          return(dt)
+          return(dt[])
         }
       ))
     },
@@ -434,7 +432,7 @@ KucoinSubAccount <- R6::R6Class(
           }
 
           if (length(rows) == 0L) {
-            return(data.table::data.table())
+            return(data.table::data.table()[])
           }
 
           dt <- data.table::rbindlist(rows, fill = TRUE)
@@ -450,7 +448,7 @@ KucoinSubAccount <- R6::R6Class(
               "holds"
             )
           )
-          return(dt)
+          return(dt[])
         }
       ))
     },
@@ -594,7 +592,7 @@ KucoinSubAccount <- R6::R6Class(
         max_pages = max_pages,
         .parser = function(pages) {
           if (length(pages) == 0L) {
-            return(data.table::data.table())
+            return(data.table::data.table()[])
           }
 
           account_types <- c("mainAccounts", "tradeAccounts", "marginAccounts")
@@ -624,7 +622,7 @@ KucoinSubAccount <- R6::R6Class(
           }
 
           if (length(all_rows) == 0L) {
-            return(data.table::data.table())
+            return(data.table::data.table()[])
           }
 
           dt <- data.table::rbindlist(all_rows, fill = TRUE)
@@ -640,7 +638,7 @@ KucoinSubAccount <- R6::R6Class(
               "holds"
             )
           )
-          return(dt)
+          return(dt[])
         }
       ))
     }

@@ -34,12 +34,19 @@ reference:
       - KucoinTransfer
       - KucoinWithdrawal
       - KucoinSubAccount
+      - KucoinMarginTrading
+      - KucoinMarginData
+      - KucoinLending
+      - KucoinFuturesMarketData
+      - KucoinFuturesTrading
+      - KucoinFuturesAccount
 
   - title: Configuration
     desc: API credential and endpoint helpers
     contents:
       - get_api_keys
       - get_base_url
+      - get_futures_base_url
       - get_sub_account
 
   - title: Low-Level Request Helpers
@@ -67,4 +74,6 @@ articles:
     contents:
       - getting-started
       - async-usage
+      - margin-trading
+      - futures-trading
 

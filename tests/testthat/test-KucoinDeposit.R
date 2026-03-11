@@ -32,7 +32,7 @@ test_that("add_deposit_address returns data.table with column reorder", {
   )
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_deposit()$add_deposit_address(currency = "BTC")
+  dt <- new_deposit()$add_deposit_address(currency = "BTC", chain = "btc", to = "main")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
   expect_equal(dt$address, "bc1qxz47arp3kx8f0smu4j5dqylecgn3r7sft2wkgq")
@@ -104,7 +104,7 @@ test_that("get_deposit_addresses handles empty response", {
 
 # -- get_deposit_history --
 
-test_that("get_deposit_history returns paginated data with datetime_created and column reorder", {
+test_that("get_deposit_history returns paginated data with created_at and column reorder", {
   resp <- mock_kucoin_response(
     data = list(
       currentPage = 1,
@@ -134,9 +134,9 @@ test_that("get_deposit_history returns paginated data with datetime_created and 
   dt <- new_deposit()$get_deposit_history(currency = "BTC", status = "SUCCESS")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
-  expect_true("datetime_created" %in% names(dt))
-  expect_false("created_at" %in% names(dt))
-  expect_s3_class(dt$datetime_created, "POSIXct")
+  expect_true("created_at" %in% names(dt))
+  expect_false("datetime_created" %in% names(dt))
+  expect_s3_class(dt$created_at, "POSIXct")
   expect_equal(dt$currency, "BTC")
   expect_equal(dt$status, "SUCCESS")
   # Check column ordering

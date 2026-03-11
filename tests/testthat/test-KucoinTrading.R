@@ -146,12 +146,13 @@ test_that("cancel_partial_order returns data.table", {
 
 # -- cancel_all_by_symbol --
 
-test_that("cancel_all_by_symbol returns character", {
+test_that("cancel_all_by_symbol returns data.table", {
   resp <- mock_kucoin_response(data = "success")
   httr2::local_mocked_responses(function(req) resp)
 
   result <- new_trading()$cancel_all_by_symbol("BTC-USDT")
-  expect_type(result, "character")
+  expect_s3_class(result, "data.table")
+  expect_true("result" %in% names(result))
 })
 
 test_that("cancel_all_by_symbol validates symbol", {
@@ -160,12 +161,29 @@ test_that("cancel_all_by_symbol validates symbol", {
 
 # -- cancel_all --
 
-test_that("cancel_all returns character", {
+test_that("cancel_all returns data.table with succeed/failed symbols", {
+  resp <- mock_kucoin_response(
+    data = list(
+      succeedSymbols = list("BTC-USDT", "ETH-USDT"),
+      failedSymbols = list("DOGE-USDT")
+    )
+  )
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_trading()$cancel_all()
+  expect_s3_class(dt, "data.table")
+  expect_equal(nrow(dt), 3L)
+  expect_equal(dt[status == "succeed", symbol], c("BTC-USDT", "ETH-USDT"))
+  expect_equal(dt[status == "failed", symbol], "DOGE-USDT")
+})
+
+test_that("cancel_all returns empty data.table for legacy 'success' response", {
   resp <- mock_kucoin_response(data = "success")
   httr2::local_mocked_responses(function(req) resp)
 
-  result <- new_trading()$cancel_all()
-  expect_type(result, "character")
+  dt <- new_trading()$cancel_all()
+  expect_s3_class(dt, "data.table")
+  expect_equal(nrow(dt), 0L)
 })
 
 # -- get_order_by_id --
@@ -187,16 +205,16 @@ test_that("get_order_by_id converts timestamps and returns data.table", {
 
   dt <- new_trading()$get_order_by_id("671124f9365ccb00073debd4", "BTC-USDT")
   expect_s3_class(dt, "data.table")
-  expect_true("datetime_created" %in% names(dt))
-  expect_true("datetime_updated" %in% names(dt))
-  expect_s3_class(dt$datetime_created, "POSIXct")
-  expect_false("created_at" %in% names(dt))
-  expect_false("last_updated_at" %in% names(dt))
+  expect_true("created_at" %in% names(dt))
+  expect_true("last_updated_at" %in% names(dt))
+  expect_s3_class(dt$created_at, "POSIXct")
+  expect_false("datetime_created" %in% names(dt))
+  expect_false("datetime_updated" %in% names(dt))
 })
 
 # -- get_order_by_client_oid --
 
-test_that("get_order_by_client_oid converts timestamps", {
+test_that("get_order_by_client_oid converts timestamps to created_at", {
   resp <- mock_kucoin_response(
     data = list(
       clientOid = "myOid",
@@ -209,12 +227,12 @@ test_that("get_order_by_client_oid converts timestamps", {
 
   dt <- new_trading()$get_order_by_client_oid("myOid", "BTC-USDT")
   expect_s3_class(dt, "data.table")
-  expect_true("datetime_created" %in% names(dt))
+  expect_true("created_at" %in% names(dt))
 })
 
 # -- get_fills --
 
-test_that("get_fills returns fills with datetime_created", {
+test_that("get_fills returns fills with created_at", {
   resp <- mock_kucoin_response(
     data = list(
       items = list(
@@ -239,8 +257,8 @@ test_that("get_fills returns fills with datetime_created", {
   dt <- new_trading()$get_fills("BTC-USDT")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
-  expect_true("datetime_created" %in% names(dt))
-  expect_false("created_at" %in% names(dt))
+  expect_true("created_at" %in% names(dt))
+  expect_false("datetime_created" %in% names(dt))
   expect_true("fee" %in% names(dt))
 })
 
@@ -288,7 +306,7 @@ test_that("get_open_orders returns order list with timestamps", {
   dt <- new_trading()$get_open_orders("BTC-USDT")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 2L)
-  expect_true("datetime_created" %in% names(dt))
+  expect_true("created_at" %in% names(dt))
 })
 
 test_that("get_open_orders handles empty response", {
@@ -317,7 +335,7 @@ test_that("get_closed_orders returns orders with timestamps", {
   dt <- new_trading()$get_closed_orders("BTC-USDT")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 2L)
-  expect_true("datetime_created" %in% names(dt))
+  expect_true("created_at" %in% names(dt))
 })
 
 # -- add_order_sync --
@@ -350,7 +368,7 @@ test_that("add_order_sync returns fill result with status", {
   expect_equal(dt$order_id, "sync123")
   expect_equal(dt$status, "done")
   expect_true("deal_size" %in% names(dt))
-  expect_true("datetime_match" %in% names(dt))
+  expect_true("match_time" %in% names(dt))
 })
 
 test_that("add_order_sync hits sync endpoint", {

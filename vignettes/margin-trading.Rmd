@@ -1,0 +1,338 @@
+---
+title: "Margin Trading with kucoin"
+author: "Dereck Mezquita"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Margin Trading with kucoin}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  results = "hold",
+  comment = "#>"
+)
+
+box::use(
+  kucoin[
+    KucoinMarginTrading, KucoinMarginData, KucoinLending, get_api_keys
+  ]
+)
+
+box::use(../tests/testthat/mock_router[mock_router])
+
+KEYS <- get_api_keys(
+  api_key = "fake-key",
+  api_secret = "fake-secret",
+  api_passphrase = "fake-passphrase"
+)
+BASE <- "https://api.kucoin.com"
+
+options(httr2_mock = mock_router)
+```
+
+This vignette covers margin trading, lending, and margin market data using
+the `kucoin` package. All examples assume synchronous usage.
+
+## Overview
+
+The package provides three classes for margin operations:
+
+| Class | Purpose |
+|-------|---------|
+| `KucoinMarginTrading` | Open/close short and long positions, borrow, repay, manage leverage |
+| `KucoinMarginData` | Query margin-enabled symbols, config, risk limits, collateral ratios |
+| `KucoinLending` | Lend assets to earn interest, manage lending orders |
+
+## Setup
+
+```{r load}
+box::use(
+  kucoin[
+    KucoinMarginTrading, KucoinMarginData, KucoinLending, get_api_keys
+  ]
+)
+
+keys <- get_api_keys(
+  api_key = "your-api-key",
+  api_secret = "your-api-secret",
+  api_passphrase = "your-api-passphrase"
+)
+
+margin <- KucoinMarginTrading$new(keys = keys)
+margin_data <- KucoinMarginData$new(keys = keys)
+lending <- KucoinLending$new(keys = keys)
+```
+
+```{r keys, echo = FALSE}
+keys <- KEYS
+base <- BASE
+margin <- KucoinMarginTrading$new(keys = keys, base_url = base)
+margin_data <- KucoinMarginData$new(keys = keys, base_url = base)
+lending <- KucoinLending$new(keys = keys, base_url = base)
+```
+
+---
+
+## Margin Trading
+
+### Short Selling
+
+Short selling lets you profit from a price decline. The package uses
+intent-based methods that handle borrowing and repayment automatically:
+
+```{r short}
+# Open a short: borrows BTC and sells it
+order <- margin$open_short(
+  symbol = "BTC-USDT",
+  size = 0.001
+)
+order
+
+# Later, close the short: buys BTC back and repays the loan
+close <- margin$close_short(
+  symbol = "BTC-USDT",
+  size = 0.001
+)
+close
+```
+
+### Leveraged Long
+
+A leveraged long lets you buy more of an asset than your balance allows:
+
+```{r long}
+# Open a leveraged long: borrows USDT and buys BTC
+order <- margin$open_long(
+  symbol = "BTC-USDT",
+  size = 0.001
+)
+order
+
+# Later, close the long: sells BTC and repays the USDT loan
+close <- margin$close_long(
+  symbol = "BTC-USDT",
+  size = 0.001
+)
+close
+```
+
+### Limit Orders
+
+All four methods default to market orders. Use `type = "limit"` for limit
+orders:
+
+```{r limit}
+order <- margin$open_short(
+  symbol = "BTC-USDT",
+  type = "limit",
+  price = 100000,
+  size = 0.001,
+  timeInForce = "GTC"
+)
+order
+```
+
+### Cross vs Isolated Margin
+
+By default, all methods use **cross margin** (shared collateral pool).
+For **isolated margin** (risk limited to one pair), set `isIsolated = TRUE`:
+
+```{r isolated}
+order <- margin$open_short(
+  symbol = "BTC-USDT",
+  size = 0.001,
+  isIsolated = TRUE
+)
+order
+```
+
+### Dry Run (Test Orders)
+
+Validate parameters without placing a real order:
+
+```{r dry-run}
+test <- margin$open_short(
+  symbol = "BTC-USDT",
+  size = 0.001,
+  dry_run = TRUE
+)
+test
+```
+
+### Client Order IDs
+
+Track orders with your own identifiers:
+
+```{r client-oid}
+order <- margin$open_short(
+  symbol = "BTC-USDT",
+  size = 0.001,
+  clientOid = "my-strategy-short-001"
+)
+order$client_oid
+```
+
+---
+
+## Manual Borrow and Repay
+
+The intent-based methods (`open_short`, `close_short`, etc.) handle
+borrowing and repayment automatically. For advanced workflows where you
+want explicit control:
+
+```{r borrow-repay}
+# Manually borrow USDT
+loan <- margin$borrow(currency = "USDT", size = 1000)
+loan
+
+# ... do your trading ...
+
+# Manually repay
+result <- margin$repay(currency = "USDT", size = 1000)
+result
+```
+
+### Borrow History and Interest
+
+```{r history}
+# Check borrow history
+borrows <- margin$get_borrow_history(query = list(currency = "USDT"))
+borrows
+
+# Check repayment history
+repays <- margin$get_repay_history(query = list(currency = "USDT"))
+repays
+
+# Check interest accrued
+interest <- margin$get_interest_history(query = list(currency = "USDT"))
+interest
+
+# Current borrow rates
+rates <- margin$get_borrow_rate(query = list(currency = "BTC,USDT,ETH"))
+rates
+```
+
+### Leverage
+
+```{r leverage}
+# Set leverage multiplier
+margin$modify_leverage(leverage = 5)
+```
+
+---
+
+## Margin Market Data
+
+Query margin-specific market information:
+
+```{r margin-data}
+# Available cross margin trading pairs
+symbols <- margin_data$get_cross_margin_symbols()
+symbols[, .(symbol, enable_trading)]
+
+# Available isolated margin trading pairs
+iso_symbols <- margin_data$get_isolated_margin_symbols()
+iso_symbols[, .(symbol, max_leverage, trade_enable)]
+
+# Global margin config
+config <- margin_data$get_margin_config()
+cat("Max leverage:", config$max_leverage, "\n")
+cat("Liquidation debt ratio:", config$liq_debt_ratio, "\n")
+
+# Collateral ratios
+ratios <- margin_data$get_collateral_ratio()
+ratios
+```
+
+```{r risk-limit}
+# Risk limits (requires auth)
+limits <- margin_data$get_risk_limit(isIsolated = FALSE)
+limits[, .(currency, borrow_max_amount, borrow_enabled)]
+```
+
+---
+
+## Lending
+
+Earn passive income by lending your assets to the margin lending pool:
+
+```{r lending}
+# Check available lending currencies
+market <- lending$get_loan_market()
+market
+
+# Check market interest rates (last 7 days)
+rates <- lending$get_loan_market_rate(currency = "USDT")
+rates
+
+# Lend 1000 USDT at 5% interest
+order <- lending$purchase(currency = "USDT", size = 1000, interestRate = 0.05)
+order$order_no
+
+# Update the interest rate
+lending$modify_purchase(
+  currency = "USDT",
+  purchaseOrderNo = order$order_no,
+  interestRate = 0.06
+)
+
+# Check your lending orders
+orders <- lending$get_purchase_orders(query = list(currency = "USDT", status = "DONE"))
+orders
+
+# Redeem (withdraw) lent assets
+result <- lending$redeem(
+  currency = "USDT",
+  size = 500,
+  purchaseOrderNo = order$order_no
+)
+result$order_no
+
+# Check redemption history
+redeems <- lending$get_redeem_orders(query = list(currency = "USDT", status = "DONE"))
+redeems
+```
+
+---
+
+## Method Reference
+
+### KucoinMarginTrading
+
+| Method | Description |
+|--------|-------------|
+| `open_short()` | Borrow + sell (profit from price decline) |
+| `close_short()` | Buy back + repay (close a short position) |
+| `open_long()` | Borrow + buy (leveraged long) |
+| `close_long()` | Sell + repay (close a leveraged long) |
+| `borrow()` | Manually borrow assets |
+| `repay()` | Manually repay borrowed assets |
+| `get_borrow_history()` | Query borrow records |
+| `get_repay_history()` | Query repayment records |
+| `get_interest_history()` | Query interest accrual history |
+| `get_borrow_rate()` | Current borrow interest rates |
+| `modify_leverage()` | Update leverage multiplier |
+
+### KucoinMarginData
+
+| Method | Description |
+|--------|-------------|
+| `get_cross_margin_symbols()` | Cross margin trading pairs |
+| `get_isolated_margin_symbols()` | Isolated margin trading pairs |
+| `get_margin_config()` | Global margin config (leverage, ratios) |
+| `get_collateral_ratio()` | Collateral ratio tiers |
+| `get_risk_limit()` | Borrow/hold limits per currency |
+
+### KucoinLending
+
+| Method | Description |
+|--------|-------------|
+| `get_loan_market()` | Available lending currencies |
+| `get_loan_market_rate()` | Market interest rate history |
+| `purchase()` | Lend assets to earn interest |
+| `modify_purchase()` | Update lending interest rate |
+| `get_purchase_orders()` | Query lending orders |
+| `redeem()` | Withdraw lent assets |
+| `get_redeem_orders()` | Query redemption orders |

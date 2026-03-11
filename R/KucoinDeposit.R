@@ -47,7 +47,6 @@
 #' }
 #'
 #' @importFrom R6 R6Class
-#' @importFrom data.table data.table as.data.table rbindlist setcolorder
 #' @export
 KucoinDeposit <- R6::R6Class(
   "KucoinDeposit",
@@ -109,10 +108,10 @@ KucoinDeposit <- R6::R6Class(
     #'
     #' @param currency Character; currency code (e.g., `"BTC"`, `"ETH"`, `"USDT"`).
     #'   Must be a valid KuCoin-supported currency symbol.
-    #' @param chain Character or NULL; blockchain network identifier (e.g., `"ERC20"`,
-    #'   `"TRC20"`, `"btc"`). When NULL, the default chain for the currency is used.
-    #' @param to Character or NULL; target account type for the deposit. Accepted values
-    #'   include `"main"` (funding account) and `"trade"` (trading account).
+    #' @param chain Character; blockchain network identifier (e.g., `"ERC20"`,
+    #'   `"TRC20"`, `"btc"`). Required by the KuCoin API.
+    #' @param to Character; target account type for the deposit. Accepted values
+    #'   include `"main"` (funding account) and `"trade"` (trading account). Required by the KuCoin API.
     #' @param amount Character or NULL; deposit amount. Required for some invoice-based
     #'   deposit addresses (e.g., Lightning Network).
     #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
@@ -141,6 +140,12 @@ KucoinDeposit <- R6::R6Class(
     #' print(usdt_addr[, .(address, chain, to)])
     #' }
     add_deposit_address = function(currency, chain = NULL, to = NULL, amount = NULL) {
+      if (is.null(chain)) {
+        rlang::abort("Parameter 'chain' is required by the KuCoin API.")
+      }
+      if (is.null(to)) {
+        rlang::abort("Parameter 'to' is required by the KuCoin API.")
+      }
       body <- list(currency = currency)
       if (!is.null(chain)) {
         body$chain <- chain
@@ -159,7 +164,7 @@ KucoinDeposit <- R6::R6Class(
         .parser = function(data) {
           dt <- as_dt_row(data)
           if (nrow(dt) == 0L) {
-            return(dt)
+            return(dt[])
           }
           data.table::setcolorder(
             dt,
@@ -168,7 +173,7 @@ KucoinDeposit <- R6::R6Class(
               names(dt)
             )
           )
-          return(dt)
+          return(dt[])
         }
       ))
     },
@@ -236,8 +241,7 @@ KucoinDeposit <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param currency Character; currency code (e.g., `"BTC"`, `"ETH"`, `"USDT"`).
-    #'   Must be a valid KuCoin-supported currency symbol. Required.
+    #' @param currency Character; currency code (e.g., `"BTC"`, `"ETH"`, `"USDT"`). **Required** by the API.
     #' @param amount Character or NULL; deposit amount. Some chains require an amount
     #'   to generate invoice-based addresses (e.g., Lightning Network).
     #' @param chain Character or NULL; blockchain network identifier (e.g., `"ERC20"`,
@@ -274,7 +278,7 @@ KucoinDeposit <- R6::R6Class(
         query = list(currency = currency, amount = amount, chain = chain),
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
-            return(data.table::data.table())
+            return(data.table::data.table()[])
           }
           # Single object (named list) vs array of objects
           if (is.list(data) && !is.null(names(data))) {
@@ -283,7 +287,7 @@ KucoinDeposit <- R6::R6Class(
             dt <- data.table::rbindlist(lapply(data, as_dt_row), fill = TRUE)
           }
           if (nrow(dt) == 0L) {
-            return(dt)
+            return(dt[])
           }
           data.table::setcolorder(
             dt,
@@ -292,7 +296,7 @@ KucoinDeposit <- R6::R6Class(
               names(dt)
             )
           )
-          return(dt)
+          return(dt[])
         }
       ))
     },
@@ -301,13 +305,13 @@ KucoinDeposit <- R6::R6Class(
     #' Get Deposit History
     #'
     #' Retrieves paginated deposit history with optional filtering by currency,
-    #' status, and time range. Automatically converts `created_at` timestamps
-    #' to POSIXct datetime objects for convenient analysis.
+    #' status, and time range. Automatically coerces `created_at` timestamps
+    #' to POSIXct for convenient analysis.
     #'
     #' ### Workflow
     #' 1. **Pagination**: Uses `private$.paginate()` to fetch all pages of deposit records up to `max_pages`.
     #' 2. **Flattening**: Combines all pages into a single `data.table` via `flatten_pages()`.
-    #' 3. **Timestamp Conversion**: Converts `created_at` (milliseconds) to `datetime_created` (POSIXct).
+    #' 3. **Timestamp Conversion**: Coerces `created_at` (milliseconds) to POSIXct in-place.
     #'
     #' ### API Endpoint
     #' `GET https://api.kucoin.com/api/v1/deposits`
@@ -399,7 +403,7 @@ KucoinDeposit <- R6::R6Class(
     #'   - `wallet_tx_id` (character): On-chain transaction hash.
     #'   - `updated_at` (numeric): Last update timestamp in milliseconds.
     #'   - `remark` (character): Optional remark.
-    #'   - `datetime_created` (POSIXct): Creation datetime.
+    #'   - `created_at` (POSIXct): Creation datetime (coerced from epoch milliseconds).
     #'
     #'   Returns an empty `data.table` if no deposits match the filters.
     #'
@@ -412,7 +416,7 @@ KucoinDeposit <- R6::R6Class(
     #'   currency = "BTC",
     #'   status = "SUCCESS"
     #' )
-    #' print(btc_deposits[, .(amount, status, datetime_created)])
+    #' print(btc_deposits[, .(amount, status, created_at)])
     #'
     #' # Get deposits from the last 24 hours
     #' now_ms <- as.numeric(lubridate::now()) * 1000
@@ -422,7 +426,7 @@ KucoinDeposit <- R6::R6Class(
     #'   page_size = 100,
     #'   max_pages = 5
     #' )
-    #' print(recent[, .(currency, amount, wallet_tx_id, datetime_created)])
+    #' print(recent[, .(currency, amount, wallet_tx_id, created_at)])
     #' }
     get_deposit_history = function(
       currency = NULL,
@@ -445,11 +449,10 @@ KucoinDeposit <- R6::R6Class(
         .parser = function(pages) {
           dt <- flatten_pages(pages)
           if (nrow(dt) == 0L) {
-            return(dt)
+            return(dt[])
           }
           if ("created_at" %in% names(dt)) {
-            dt[, datetime_created := ms_to_datetime(created_at)]
-            dt[, created_at := NULL]
+            dt[, created_at := ms_to_datetime(created_at)]
           }
           data.table::setcolorder(
             dt,
@@ -464,14 +467,14 @@ KucoinDeposit <- R6::R6Class(
                 "amount",
                 "fee",
                 "wallet_tx_id",
-                "datetime_created",
+                "created_at",
                 "updated_at",
                 "remark"
               ),
               names(dt)
             )
           )
-          return(dt)
+          return(dt[])
         }
       ))
     }

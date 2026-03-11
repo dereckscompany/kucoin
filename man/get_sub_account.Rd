@@ -5,16 +5,16 @@
 \title{Retrieve KuCoin Sub-Account Configuration}
 \usage{
 get_sub_account(
-  sub_account_name = Sys.getenv("KC-ACCOUNT-SUBACCOUNT-NAME"),
-  sub_account_password = Sys.getenv("KC-ACCOUNT-SUBACCOUNT-PASSWORD")
+  sub_account_name = Sys.getenv("KUCOIN_SUBACCOUNT_NAME"),
+  sub_account_password = Sys.getenv("KUCOIN_SUBACCOUNT_PASSWORD")
 )
 }
 \arguments{
 \item{sub_account_name}{Character string; sub-account name.
-Defaults to \code{Sys.getenv("KC-ACCOUNT-SUBACCOUNT-NAME")}.}
+Defaults to \code{Sys.getenv("KUCOIN_SUBACCOUNT_NAME")}.}
 
 \item{sub_account_password}{Character string; sub-account password.
-Defaults to \code{Sys.getenv("KC-ACCOUNT-SUBACCOUNT-PASSWORD")}.}
+Defaults to \code{Sys.getenv("KUCOIN_SUBACCOUNT_PASSWORD")}.}
 }
 \value{
 Named list with \code{sub_account_name} and \code{sub_account_password}.

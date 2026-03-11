@@ -73,38 +73,30 @@ test_that("get_apikey_info returns data.table with key details", {
 
 # -- get_spot_account_type --
 
-test_that("get_spot_account_type returns single named object as data.table", {
-  resp <- mock_kucoin_response(data = list(type = "trade", isOpened = TRUE))
+test_that("get_spot_account_type returns TRUE for HF user", {
+  resp <- mock_kucoin_response(data = TRUE)
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_account()$get_spot_account_type()
-  expect_s3_class(dt, "data.table")
-  expect_equal(nrow(dt), 1L)
-  expect_equal(dt$type, "trade")
-  expect_true(dt$is_opened)
+  result <- new_account()$get_spot_account_type()
+  expect_true(is.logical(result))
+  expect_true(result)
 })
 
-test_that("get_spot_account_type returns array as multi-row data.table", {
-  resp <- mock_kucoin_response(
-    data = list(
-      list(type = "trade", isOpened = TRUE),
-      list(type = "margin", isOpened = FALSE)
-    )
-  )
+test_that("get_spot_account_type returns FALSE for non-HF user", {
+  resp <- mock_kucoin_response(data = FALSE)
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_account()$get_spot_account_type()
-  expect_s3_class(dt, "data.table")
-  expect_equal(nrow(dt), 2L)
+  result <- new_account()$get_spot_account_type()
+  expect_true(is.logical(result))
+  expect_false(result)
 })
 
-test_that("get_spot_account_type handles empty response", {
-  resp <- mock_kucoin_response(data = list())
+test_that("get_spot_account_type returns FALSE for NULL data", {
+  resp <- mock_kucoin_response(data = NULL)
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_account()$get_spot_account_type()
-  expect_s3_class(dt, "data.table")
-  expect_equal(nrow(dt), 0L)
+  result <- new_account()$get_spot_account_type()
+  expect_false(result)
 })
 
 # -- get_spot_accounts --
@@ -241,7 +233,7 @@ test_that("get_isolated_margin_account handles empty assets", {
 
 # -- get_spot_ledger --
 
-test_that("get_spot_ledger returns paginated data with datetime_created", {
+test_that("get_spot_ledger returns paginated data with created_at", {
   resp <- mock_kucoin_response(
     data = list(
       currentPage = 1,
@@ -269,9 +261,9 @@ test_that("get_spot_ledger returns paginated data with datetime_created", {
   dt <- new_account()$get_spot_ledger()
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
-  expect_true("datetime_created" %in% names(dt))
-  expect_false("created_at" %in% names(dt))
-  expect_s3_class(dt$datetime_created, "POSIXct")
+  expect_true("created_at" %in% names(dt))
+  expect_false("datetime_created" %in% names(dt))
+  expect_s3_class(dt$created_at, "POSIXct")
   expect_equal(dt$currency, "USDT")
 })
 
@@ -294,7 +286,7 @@ test_that("get_spot_ledger handles empty items", {
 
 # -- get_hf_ledger --
 
-test_that("get_hf_ledger returns ledger entries with datetime", {
+test_that("get_hf_ledger returns ledger entries with created_at", {
   resp <- mock_kucoin_response(
     data = list(
       items = list(
@@ -319,8 +311,9 @@ test_that("get_hf_ledger returns ledger entries with datetime", {
   dt <- new_account()$get_hf_ledger(currency = "USDT")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
-  expect_true("datetime_created" %in% names(dt))
-  expect_false("created_at" %in% names(dt))
+  expect_true("created_at" %in% names(dt))
+  expect_false("datetime_created" %in% names(dt))
+  expect_s3_class(dt$created_at, "POSIXct")
   expect_equal(dt$biz_type, "TRADE_EXCHANGE")
 })
 
