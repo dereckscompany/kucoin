@@ -9,7 +9,7 @@ KucoinMarginData: Margin Market Information
 Provides methods for querying margin-specific market data including
 supported symbols, configuration, risk limits, and collateral ratios.
 Inherits from
-[KucoinBase](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md).
+[KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
 
 ### Purpose and Scope
 
@@ -49,7 +49,7 @@ Info](https://www.kucoin.com/docs-new/rest/margin-trading/risk-limit/get-margin-
 
 ## Super class
 
-[`kucoin::KucoinBase`](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinMarginData`
 
 ## Methods
@@ -70,7 +70,7 @@ Info](https://www.kucoin.com/docs-new/rest/margin-trading/risk-limit/get-margin-
 
 Inherited methods
 
-- [`kucoin::KucoinBase$initialize()`](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 

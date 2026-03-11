@@ -50,7 +50,7 @@ Query the specification of a futures contract — lot sizes, tick sizes,
 leverage limits, and fee rates:
 
 ``` r
-contract <- market$get_contract("XBTUSDTM")
+contract <- market$get_contract(symbol = "XBTUSDTM")
 contract[, .(symbol, max_leverage, tick_size, maker_fee_rate, taker_fee_rate)]
 ```
 
@@ -75,7 +75,7 @@ contracts[, .(symbol, status)]
 Real-time price and best bid/ask for a single contract:
 
 ``` r
-ticker <- market$get_ticker("XBTUSDTM")
+ticker <- market$get_ticker(symbol = "XBTUSDTM")
 ticker[, .(symbol, price, best_bid_price, best_ask_price, ts)]
 ```
 
@@ -100,7 +100,7 @@ tickers[, .(symbol, price, ts)]
 The partial orderbook returns the top 20 or 100 price levels:
 
 ``` r
-ob <- market$get_part_orderbook("XBTUSDTM", size = 20)
+ob <- market$get_part_orderbook(symbol = "XBTUSDTM", size = 20)
 ob
 ```
 
@@ -114,7 +114,7 @@ ob
 ### Trade History
 
 ``` r
-trades <- market$get_trade_history("XBTUSDTM")
+trades <- market$get_trade_history(symbol = "XBTUSDTM")
 trades[, .(side, price, size, ts)]
 ```
 
@@ -128,7 +128,7 @@ trades[, .(side, price, size, ts)]
 Retrieve historical OHLCV data. Granularity is in minutes:
 
 ``` r
-klines <- market$get_klines("XBTUSDTM", granularity = 60)
+klines <- market$get_klines(symbol = "XBTUSDTM", granularity = 60)
 klines
 ```
 
@@ -143,7 +143,7 @@ klines
 The mark price is used for liquidation calculations and PNL:
 
 ``` r
-mark <- market$get_mark_price("XBTUSDTM")
+mark <- market$get_mark_price(symbol = "XBTUSDTM")
 mark
 ```
 
@@ -157,7 +157,7 @@ Perpetual futures settle funding every 8 hours. Positive rates mean
 longs pay shorts; negative means shorts pay longs:
 
 ``` r
-rate <- market$get_funding_rate("XBTUSDTM")
+rate <- market$get_funding_rate(symbol = "XBTUSDTM")
 rate
 ```
 
@@ -241,10 +241,10 @@ order <- trading$add_order(
 
 ``` r
 # Cancel by system order ID
-trading$cancel_order_by_id("order-id-here")
+trading$cancel_order_by_id(orderId = "order-id-here")
 
 # Cancel by client order ID
-trading$cancel_order_by_client_oid("my-limit-001", symbol = "XBTUSDTM")
+trading$cancel_order_by_client_oid(clientOid = "my-limit-001", symbol = "XBTUSDTM")
 
 # Cancel all orders for a symbol
 trading$cancel_all(symbol = "XBTUSDTM")
@@ -257,7 +257,7 @@ trading$cancel_all_stop_orders(symbol = "XBTUSDTM")
 
 ``` r
 # Get a specific order
-order <- trading$get_order_by_id("order-id")
+order <- trading$get_order_by_id(orderId = "order-id")
 
 # Get open orders
 open <- trading$get_order_list(query = list(status = "active"))
@@ -336,7 +336,7 @@ Switch between isolated and cross margin:
 
 ``` r
 # Check current mode
-account$get_margin_mode("XBTUSDTM")
+account$get_margin_mode(symbol = "XBTUSDTM")
 ```
 
     #>      symbol margin_mode
@@ -345,13 +345,13 @@ account$get_margin_mode("XBTUSDTM")
 
 ``` r
 # Switch to cross margin
-account$set_margin_mode("XBTUSDTM", "CROSS")
+account$set_margin_mode(symbol = "XBTUSDTM", marginMode = "CROSS")
 ```
 
 ### Leverage
 
 ``` r
-account$get_cross_margin_leverage("XBTUSDTM")
+account$get_cross_margin_leverage(symbol = "XBTUSDTM")
 ```
 
     #>      symbol leverage
@@ -359,7 +359,7 @@ account$get_cross_margin_leverage("XBTUSDTM")
     #> 1: XBTUSDTM        5
 
 ``` r
-account$set_cross_margin_leverage("XBTUSDTM", 10)
+account$set_cross_margin_leverage(symbol = "XBTUSDTM", leverage = 10)
 ```
 
 ### Risk Limits
@@ -368,7 +368,7 @@ Each contract has tiered risk limits that reduce maximum leverage as
 position size increases:
 
 ``` r
-limits <- account$get_risk_limit("XBTUSDTM")
+limits <- account$get_risk_limit(symbol = "XBTUSDTM")
 limits[, .(level, max_leverage, max_risk_limit, initial_margin)]
 ```
 
@@ -382,7 +382,7 @@ limits[, .(level, max_leverage, max_risk_limit, initial_margin)]
 Track funding fees you’ve paid or received:
 
 ``` r
-funding <- account$get_funding_history("XBTUSDTM")
+funding <- account$get_funding_history(symbol = "XBTUSDTM")
 funding
 ```
 

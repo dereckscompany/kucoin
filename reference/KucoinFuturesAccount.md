@@ -9,7 +9,7 @@ KucoinFuturesAccount: Futures Account and Position Management
 Provides methods for querying futures account details, managing
 positions, configuring margin mode and leverage, and tracking funding
 fee history. Inherits from
-[KucoinBase](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md).
+[KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
 
 ### Official Documentation
 
@@ -38,7 +38,7 @@ Positions](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-po
 
 ## Super class
 
-[`kucoin::KucoinBase`](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinFuturesAccount`
 
 ## Methods
@@ -97,12 +97,12 @@ Create a new KucoinFuturesAccount instance.
 - `keys`:
 
   List; API credentials from
-  [`get_api_keys()`](https://dereckmezquita.github.io/kucoin/reference/get_api_keys.md).
+  [`get_api_keys()`](https://dereckscompany.github.io/kucoin/reference/get_api_keys.md).
 
 - `base_url`:
 
   Character; Futures API base URL. Defaults to
-  [`get_futures_base_url()`](https://dereckmezquita.github.io/kucoin/reference/get_futures_base_url.md).
+  [`get_futures_base_url()`](https://dereckscompany.github.io/kucoin/reference/get_futures_base_url.md).
 
 - `async`:
 

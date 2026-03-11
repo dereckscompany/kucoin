@@ -22,7 +22,7 @@ a margin context), this class exposes four clear actions:
 
 Additionally provides methods for manual borrowing, repaying, interest
 queries, and leverage configuration. Inherits from
-[KucoinBase](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md).
+[KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
 
 ### How Margin Short Selling Works
 
@@ -73,7 +73,7 @@ Trading](https://www.kucoin.com/docs-new/rest/margin-trading/orders/add-order)
 
 ## Super class
 
-[`kucoin::KucoinBase`](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinMarginTrading`
 
 ## Methods
@@ -106,7 +106,7 @@ Trading](https://www.kucoin.com/docs-new/rest/margin-trading/orders/add-order)
 
 Inherited methods
 
-- [`kucoin::KucoinBase$initialize()`](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 

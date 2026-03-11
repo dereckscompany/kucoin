@@ -9,7 +9,7 @@ KucoinFuturesMarketData: Futures Market Data Retrieval
 Provides methods for querying KuCoin Futures public market data,
 including contract details, tickers, orderbooks, trade history, klines,
 mark prices, and funding rates. Inherits from
-[KucoinBase](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md).
+[KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
 
 ### Purpose and Scope
 
@@ -60,7 +60,7 @@ Data](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-all-s
 
 ## Super class
 
-[`kucoin::KucoinBase`](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinFuturesMarketData`
 
 ## Methods
@@ -117,12 +117,12 @@ Create a new KucoinFuturesMarketData instance.
 - `keys`:
 
   List; API credentials from
-  [`get_api_keys()`](https://dereckmezquita.github.io/kucoin/reference/get_api_keys.md).
+  [`get_api_keys()`](https://dereckscompany.github.io/kucoin/reference/get_api_keys.md).
 
 - `base_url`:
 
   Character; Futures API base URL. Defaults to
-  [`get_futures_base_url()`](https://dereckmezquita.github.io/kucoin/reference/get_futures_base_url.md).
+  [`get_futures_base_url()`](https://dereckscompany.github.io/kucoin/reference/get_futures_base_url.md).
 
 - `async`:
 

@@ -9,7 +9,7 @@ KucoinFuturesTrading: Futures Order Management
 Provides methods for placing, cancelling, and querying futures orders on
 KuCoin. Supports limit and market orders, stop orders, batch operations,
 and Dead Connection Protection (DCP). Inherits from
-[KucoinBase](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md).
+[KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
 
 ### Purpose and Scope
 
@@ -66,7 +66,7 @@ Orders](https://www.kucoin.com/docs-new/rest/futures-trading/orders/add-order)
 
 ## Super class
 
-[`kucoin::KucoinBase`](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinFuturesTrading`
 
 ## Methods
@@ -131,12 +131,12 @@ Create a new KucoinFuturesTrading instance.
 - `keys`:
 
   List; API credentials from
-  [`get_api_keys()`](https://dereckmezquita.github.io/kucoin/reference/get_api_keys.md).
+  [`get_api_keys()`](https://dereckscompany.github.io/kucoin/reference/get_api_keys.md).
 
 - `base_url`:
 
   Character; Futures API base URL. Defaults to
-  [`get_futures_base_url()`](https://dereckmezquita.github.io/kucoin/reference/get_futures_base_url.md).
+  [`get_futures_base_url()`](https://dereckscompany.github.io/kucoin/reference/get_futures_base_url.md).
 
 - `async`:
 

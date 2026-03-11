@@ -8,7 +8,7 @@ KucoinTransfer: Internal Transfer Management
 
 Provides methods for transferring funds between KuCoin accounts (main,
 trade, margin, etc.) and between master and sub-accounts. Inherits from
-[KucoinBase](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md).
+[KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
 
 ### Purpose and Scope
 
@@ -76,7 +76,7 @@ KuCoin uses separate accounts for different purposes:
 
 ## Super class
 
-[`kucoin::KucoinBase`](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinTransfer`
 
 ## Methods
@@ -91,7 +91,7 @@ KuCoin uses separate accounts for different purposes:
 
 Inherited methods
 
-- [`kucoin::KucoinBase$initialize()`](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 

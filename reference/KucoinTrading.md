@@ -9,7 +9,7 @@ KucoinTrading: Spot Order Management
 Provides methods for placing, cancelling, and querying spot orders on
 KuCoin. All order operations use the HF (High-Frequency) trading
 endpoints. Inherits from
-[KucoinBase](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md).
+[KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
 
 ### Purpose and Scope
 
@@ -98,7 +98,7 @@ match each other:
 
 ## Super class
 
-[`kucoin::KucoinBase`](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinTrading`
 
 ## Methods
@@ -151,7 +151,7 @@ match each other:
 
 Inherited methods
 
-- [`kucoin::KucoinBase$initialize()`](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 

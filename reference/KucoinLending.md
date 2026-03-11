@@ -9,7 +9,7 @@ KucoinLending: Margin Lending Operations
 Provides methods for lending assets on the KuCoin margin lending market,
 managing purchase (lend) orders, and redeeming lent assets. Inherits
 from
-[KucoinBase](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md).
+[KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
 
 ### Purpose and Scope
 
@@ -49,7 +49,7 @@ Market](https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-loan-mark
 
 ## Super class
 
-[`kucoin::KucoinBase`](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinLending`
 
 ## Methods
@@ -74,7 +74,7 @@ Market](https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-loan-mark
 
 Inherited methods
 
-- [`kucoin::KucoinBase$initialize()`](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 

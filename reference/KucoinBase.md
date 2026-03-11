@@ -46,8 +46,8 @@ request signing:
 ### Design
 
 This class is not meant to be instantiated directly. Subclasses (e.g.,
-[KucoinMarketData](https://dereckmezquita.github.io/kucoin/reference/KucoinMarketData.md),
-[KucoinTrading](https://dereckmezquita.github.io/kucoin/reference/KucoinTrading.md))
+[KucoinMarketData](https://dereckscompany.github.io/kucoin/reference/KucoinMarketData.md),
+[KucoinTrading](https://dereckscompany.github.io/kucoin/reference/KucoinTrading.md))
 inherit from it and define their own public methods that delegate to
 `private$.request()` and `private$.paginate()`.
 
@@ -56,10 +56,10 @@ inherit from it and define their own public methods that delegate to
 All fields are private:
 
 - `.keys`: List; API credentials from
-  [`get_api_keys()`](https://dereckmezquita.github.io/kucoin/reference/get_api_keys.md).
+  [`get_api_keys()`](https://dereckscompany.github.io/kucoin/reference/get_api_keys.md).
 
 - `.base_url`: Character; API base URL from
-  [`get_base_url()`](https://dereckmezquita.github.io/kucoin/reference/get_base_url.md).
+  [`get_base_url()`](https://dereckscompany.github.io/kucoin/reference/get_base_url.md).
 
 - `.perform`: Function; either
   [httr2::req_perform](https://httr2.r-lib.org/reference/req_perform.html)
@@ -113,14 +113,14 @@ Initialise a KucoinBase Object
 - `keys`:
 
   List; API credentials from
-  [`get_api_keys()`](https://dereckmezquita.github.io/kucoin/reference/get_api_keys.md).
+  [`get_api_keys()`](https://dereckscompany.github.io/kucoin/reference/get_api_keys.md).
   Defaults to
-  [`get_api_keys()`](https://dereckmezquita.github.io/kucoin/reference/get_api_keys.md).
+  [`get_api_keys()`](https://dereckscompany.github.io/kucoin/reference/get_api_keys.md).
 
 - `base_url`:
 
   Character; API base URL. Defaults to
-  [`get_base_url()`](https://dereckmezquita.github.io/kucoin/reference/get_base_url.md).
+  [`get_base_url()`](https://dereckscompany.github.io/kucoin/reference/get_base_url.md).
 
 - `async`:
 

@@ -7,7 +7,7 @@ KucoinStopOrders: Stop Order Management
 ## Details
 
 Provides methods for managing stop orders on KuCoin Spot. Inherits from
-[KucoinBase](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md).
+[KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
 
 ### Purpose and Scope
 
@@ -113,7 +113,7 @@ match each other:
 
 ## Super class
 
-[`kucoin::KucoinBase`](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinStopOrders`
 
 ## Methods
@@ -138,7 +138,7 @@ match each other:
 
 Inherited methods
 
-- [`kucoin::KucoinBase$initialize()`](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 
@@ -242,7 +242,7 @@ Verified: 2026-02-01
 
   Character; trading pair symbol (e.g., `"BTC-USDT"`). Must match the
   `BASE-QUOTE` format validated by
-  [`verify_symbol()`](https://dereckmezquita.github.io/kucoin/reference/verify_symbol.md).
+  [`verify_symbol()`](https://dereckscompany.github.io/kucoin/reference/verify_symbol.md).
 
 - `side`:
 

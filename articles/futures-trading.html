@@ -41,7 +41,7 @@
 </li>
       </ul>
 <ul class="navbar-nav">
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/dereckmezquita/kucoin" target="_blank"><span class="fa fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/dereckscompany/kucoin" target="_blank"><span class="fa fa-github fa-lg"></span></a></li>
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
@@ -63,7 +63,7 @@
 Mezquita</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/dereckmezquita/kucoin/blob/v4.0.0/vignettes/futures-trading.Rmd" class="external-link"><code>vignettes/futures-trading.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.0.0/vignettes/futures-trading.Rmd" class="external-link"><code>vignettes/futures-trading.Rmd</code></a></small>
       <div class="d-none name"><code>futures-trading.Rmd</code></div>
     </div>
 
@@ -136,7 +136,7 @@ credentials as spot trading.</p>
 <p>Query the specification of a futures contract — lot sizes, tick
 sizes, leverage limits, and fee rates:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">contract</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_contract</span><span class="op">(</span><span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">contract</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_contract</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
 <span><span class="va">contract</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span><span class="va">symbol</span>, <span class="va">max_leverage</span>, <span class="va">tick_size</span>, <span class="va">maker_fee_rate</span>, <span class="va">taker_fee_rate</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;      symbol max_leverage tick_size maker_fee_rate taker_fee_rate</span></span>
 <span><span class="co">#&gt;      &lt;char&gt;        &lt;int&gt;     &lt;num&gt;          &lt;num&gt;          &lt;num&gt;</span></span>
@@ -158,7 +158,7 @@ sizes, leverage limits, and fee rates:</p>
 </h3>
 <p>Real-time price and best bid/ask for a single contract:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ticker</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_ticker</span><span class="op">(</span><span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">ticker</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_ticker</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
 <span><span class="va">ticker</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span><span class="va">symbol</span>, <span class="va">price</span>, <span class="va">best_bid_price</span>, <span class="va">best_ask_price</span>, <span class="va">ts</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;      symbol   price best_bid_price best_ask_price                  ts</span></span>
 <span><span class="co">#&gt;      &lt;char&gt;  &lt;char&gt;         &lt;char&gt;         &lt;char&gt;              &lt;POSc&gt;</span></span>
@@ -180,7 +180,7 @@ sizes, leverage limits, and fee rates:</p>
 </h3>
 <p>The partial orderbook returns the top 20 or 100 price levels:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ob</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_part_orderbook</span><span class="op">(</span><span class="st">"XBTUSDTM"</span>, size <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">ob</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_part_orderbook</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span>, size <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
 <span><span class="va">ob</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;                     ts sequence   side   price  size   symbol</span></span>
 <span><span class="co">#&gt;                 &lt;POSc&gt;   &lt;char&gt; &lt;char&gt;   &lt;num&gt; &lt;num&gt;   &lt;char&gt;</span></span>
@@ -193,7 +193,7 @@ sizes, leverage limits, and fee rates:</p>
 <h3 id="trade-history">Trade History<a class="anchor" aria-label="anchor" href="#trade-history"></a>
 </h3>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">trades</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_trade_history</span><span class="op">(</span><span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">trades</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_trade_history</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
 <span><span class="va">trades</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span><span class="va">side</span>, <span class="va">price</span>, <span class="va">size</span>, <span class="va">ts</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;      side   price  size                  ts</span></span>
 <span><span class="co">#&gt;    &lt;char&gt;  &lt;char&gt; &lt;int&gt;              &lt;POSc&gt;</span></span>
@@ -205,7 +205,7 @@ sizes, leverage limits, and fee rates:</p>
 </h3>
 <p>Retrieve historical OHLCV data. Granularity is in minutes:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">klines</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_klines</span><span class="op">(</span><span class="st">"XBTUSDTM"</span>, granularity <span class="op">=</span> <span class="fl">60</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">klines</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_klines</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span>, granularity <span class="op">=</span> <span class="fl">60</span><span class="op">)</span></span>
 <span><span class="va">klines</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;               datetime  open  high   low close volume turnover</span></span>
 <span><span class="co">#&gt;                 &lt;POSc&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt;  &lt;num&gt;    &lt;num&gt;</span></span>
@@ -218,7 +218,7 @@ sizes, leverage limits, and fee rates:</p>
 </h3>
 <p>The mark price is used for liquidation calculations and PNL:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mark</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_mark_price</span><span class="op">(</span><span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">mark</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_mark_price</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
 <span><span class="va">mark</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;      symbol granularity          time_point   value index_price</span></span>
 <span><span class="co">#&gt;      &lt;char&gt;       &lt;int&gt;              &lt;POSc&gt;   &lt;num&gt;       &lt;num&gt;</span></span>
@@ -230,7 +230,7 @@ sizes, leverage limits, and fee rates:</p>
 <p>Perpetual futures settle funding every 8 hours. Positive rates mean
 longs pay shorts; negative means shorts pay longs:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rate</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_funding_rate</span><span class="op">(</span><span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">rate</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_funding_rate</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
 <span><span class="va">rate</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;      symbol granularity          time_point value predicted_value</span></span>
 <span><span class="co">#&gt;      &lt;char&gt;       &lt;int&gt;              &lt;POSc&gt; &lt;num&gt;           &lt;num&gt;</span></span>
@@ -310,10 +310,10 @@ placing a real order:</p>
 </h3>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Cancel by system order ID</span></span>
-<span><span class="va">trading</span><span class="op">$</span><span class="fu">cancel_order_by_id</span><span class="op">(</span><span class="st">"order-id-here"</span><span class="op">)</span></span>
+<span><span class="va">trading</span><span class="op">$</span><span class="fu">cancel_order_by_id</span><span class="op">(</span>orderId <span class="op">=</span> <span class="st">"order-id-here"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Cancel by client order ID</span></span>
-<span><span class="va">trading</span><span class="op">$</span><span class="fu">cancel_order_by_client_oid</span><span class="op">(</span><span class="st">"my-limit-001"</span>, symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
+<span><span class="va">trading</span><span class="op">$</span><span class="fu">cancel_order_by_client_oid</span><span class="op">(</span>clientOid <span class="op">=</span> <span class="st">"my-limit-001"</span>, symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Cancel all orders for a symbol</span></span>
 <span><span class="va">trading</span><span class="op">$</span><span class="fu">cancel_all</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
@@ -326,7 +326,7 @@ placing a real order:</p>
 </h3>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get a specific order</span></span>
-<span><span class="va">order</span> <span class="op">&lt;-</span> <span class="va">trading</span><span class="op">$</span><span class="fu">get_order_by_id</span><span class="op">(</span><span class="st">"order-id"</span><span class="op">)</span></span>
+<span><span class="va">order</span> <span class="op">&lt;-</span> <span class="va">trading</span><span class="op">$</span><span class="fu">get_order_by_id</span><span class="op">(</span>orderId <span class="op">=</span> <span class="st">"order-id"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Get open orders</span></span>
 <span><span class="va">open</span> <span class="op">&lt;-</span> <span class="va">trading</span><span class="op">$</span><span class="fu">get_order_list</span><span class="op">(</span>query <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>status <span class="op">=</span> <span class="st">"active"</span><span class="op">)</span><span class="op">)</span></span>
@@ -401,24 +401,24 @@ sending heartbeats:</p>
 <p>Switch between isolated and cross margin:</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Check current mode</span></span>
-<span><span class="va">account</span><span class="op">$</span><span class="fu">get_margin_mode</span><span class="op">(</span><span class="st">"XBTUSDTM"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">account</span><span class="op">$</span><span class="fu">get_margin_mode</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;      symbol margin_mode</span></span>
 <span><span class="co">#&gt;      &lt;char&gt;      &lt;char&gt;</span></span>
 <span><span class="co">#&gt; 1: XBTUSDTM    ISOLATED</span></span></code></pre>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Switch to cross margin</span></span>
-<span><span class="va">account</span><span class="op">$</span><span class="fu">set_margin_mode</span><span class="op">(</span><span class="st">"XBTUSDTM"</span>, <span class="st">"CROSS"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">account</span><span class="op">$</span><span class="fu">set_margin_mode</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span>, marginMode <span class="op">=</span> <span class="st">"CROSS"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="leverage">Leverage<a class="anchor" aria-label="anchor" href="#leverage"></a>
 </h3>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">account</span><span class="op">$</span><span class="fu">get_cross_margin_leverage</span><span class="op">(</span><span class="st">"XBTUSDTM"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">account</span><span class="op">$</span><span class="fu">get_cross_margin_leverage</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;      symbol leverage</span></span>
 <span><span class="co">#&gt;      &lt;char&gt;   &lt;char&gt;</span></span>
 <span><span class="co">#&gt; 1: XBTUSDTM        5</span></span></code></pre>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">account</span><span class="op">$</span><span class="fu">set_cross_margin_leverage</span><span class="op">(</span><span class="st">"XBTUSDTM"</span>, <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">account</span><span class="op">$</span><span class="fu">set_cross_margin_leverage</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span>, leverage <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="risk-limits">Risk Limits<a class="anchor" aria-label="anchor" href="#risk-limits"></a>
@@ -426,7 +426,7 @@ sending heartbeats:</p>
 <p>Each contract has tiered risk limits that reduce maximum leverage as
 position size increases:</p>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">limits</span> <span class="op">&lt;-</span> <span class="va">account</span><span class="op">$</span><span class="fu">get_risk_limit</span><span class="op">(</span><span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">limits</span> <span class="op">&lt;-</span> <span class="va">account</span><span class="op">$</span><span class="fu">get_risk_limit</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
 <span><span class="va">limits</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span><span class="va">level</span>, <span class="va">max_leverage</span>, <span class="va">max_risk_limit</span>, <span class="va">initial_margin</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;    level max_leverage max_risk_limit initial_margin</span></span>
 <span><span class="co">#&gt;    &lt;int&gt;        &lt;int&gt;          &lt;int&gt;          &lt;num&gt;</span></span>
@@ -438,7 +438,7 @@ position size increases:</p>
 </h3>
 <p>Track funding fees you’ve paid or received:</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">funding</span> <span class="op">&lt;-</span> <span class="va">account</span><span class="op">$</span><span class="fu">get_funding_history</span><span class="op">(</span><span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">funding</span> <span class="op">&lt;-</span> <span class="va">account</span><span class="op">$</span><span class="fu">get_funding_history</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
 <span><span class="va">funding</span></span></code></pre></div>
 <hr>
 </div>

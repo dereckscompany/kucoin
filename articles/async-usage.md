@@ -59,12 +59,14 @@ market <- KucoinMarketData$new(async = TRUE)
 
 ``` r
 get_stats <- async(function() {
-  stats <- await(market$get_24hr_stats("BTC-USDT"))
+  stats <- await(market$get_24hr_stats(symbol = "BTC-USDT"))
   return(stats)
 })
 
 get_stats()
-while (!loop_empty()) run_now()
+while (!loop_empty()) {
+  run_now()
+}
 ```
 
 > **Key pattern**: define an `async` function, `await` each API call,
@@ -82,13 +84,15 @@ next begins, just like `await` in TypeScript:
 results <- NULL
 
 fetch_tickers <- async(function() {
-  btc <- await(market$get_ticker("BTC-USDT"))
-  eth <- await(market$get_ticker("ETH-USDT"))
+  btc <- await(market$get_ticker(symbol = "BTC-USDT"))
+  eth <- await(market$get_ticker(symbol = "ETH-USDT"))
   results <<- list(btc = btc, eth = eth)
 })
 
 fetch_tickers()
-while (!loop_empty()) run_now()
+while (!loop_empty()) {
+  run_now()
+}
 results$btc
 results$eth
 ```
@@ -118,15 +122,17 @@ results <- NULL
 
 fetch_parallel <- async(function() {
   # Launch both requests concurrently — no await yet, just collect promises
-  btc_promise <- market$get_ticker("BTC-USDT")
-  eth_promise <- market$get_ticker("ETH-USDT")
+  btc_promise <- market$get_ticker(symbol = "BTC-USDT")
+  eth_promise <- market$get_ticker(symbol = "ETH-USDT")
   # Await them together — like Promise.all([btc, eth])
   res <- await(promise_all(btc = btc_promise, eth = eth_promise))
   results <<- res
 })
 
 fetch_parallel()
-while (!loop_empty()) run_now()
+while (!loop_empty()) {
+  run_now()
+}
 results$btc
 results$eth
 ```
@@ -170,7 +176,9 @@ account$get_summary() |>
     message("Error: ", conditionMessage(err))
   })
 
-while (!loop_empty()) run_now()
+while (!loop_empty()) {
+  run_now()
+}
 chain_result
 ```
 
@@ -216,13 +224,15 @@ place_and_check <- async(function() {
   ))
 
   # Query open orders
-  open <- await(trading$get_open_orders("BTC-USDT"))
+  open <- await(trading$get_open_orders(symbol = "BTC-USDT"))
 
   results <<- list(order = order, open = open)
 })
 
 place_and_check()
-while (!loop_empty()) run_now()
+while (!loop_empty()) {
+  run_now()
+}
 results$order
 results$open
 ```
@@ -256,7 +266,7 @@ for structured error handling — just like `try`/`catch` in TypeScript:
 ``` r
 safe_fetch <- async(function() {
   result <- tryCatch(
-    await(market$get_ticker("INVALID-PAIR")),
+    await(market$get_ticker(symbol = "INVALID-PAIR")),
     error = function(e) {
       message("Caught error: ", conditionMessage(e))
       return(NULL)
@@ -266,7 +276,9 @@ safe_fetch <- async(function() {
 })
 
 safe_fetch()
-while (!loop_empty()) run_now()
+while (!loop_empty()) {
+  run_now()
+}
 ```
 
 ------------------------------------------------------------------------
@@ -280,7 +292,9 @@ must drive it manually.
 
 ``` r
 # Idiomatic event loop drain
-while (!later::loop_empty()) later::run_now()
+while (!later::loop_empty()) {
+  later::run_now()
+}
 ```
 
 Or with a timeout guard:
@@ -327,20 +341,20 @@ automatically.
 | Scripts fetching one endpoint | **Sync** — no event loop needed                                                                                                                   |
 | Bots polling multiple symbols | **Async** — concurrent requests reduce latency                                                                                                    |
 | Shiny dashboards              | **Async** — keeps the UI responsive                                                                                                               |
-| Bulk data downloads           | Use [`kucoin_backfill_klines()`](https://dereckmezquita.github.io/kucoin/reference/kucoin_backfill_klines.md) (sync, handles batching internally) |
+| Bulk data downloads           | Use [`kucoin_backfill_klines()`](https://dereckscompany.github.io/kucoin/reference/kucoin_backfill_klines.md) (sync, handles batching internally) |
 
 ------------------------------------------------------------------------
 
 ## Next Steps
 
 - See
-  [`vignette("getting-started")`](https://dereckmezquita.github.io/kucoin/articles/getting-started.md)
+  [`vignette("getting-started")`](https://dereckscompany.github.io/kucoin/articles/getting-started.md)
   for a full tour of all spot classes in sync mode.
 - See
-  [`vignette("margin-trading")`](https://dereckmezquita.github.io/kucoin/articles/margin-trading.md)
+  [`vignette("margin-trading")`](https://dereckscompany.github.io/kucoin/articles/margin-trading.md)
   for margin trading, short selling, and lending.
 - See
-  [`vignette("futures-trading")`](https://dereckmezquita.github.io/kucoin/articles/futures-trading.md)
+  [`vignette("futures-trading")`](https://dereckscompany.github.io/kucoin/articles/futures-trading.md)
   for perpetual futures contracts.
-- Browse the [pkgdown site](https://dereckmezquita.github.io/kucoin/)
+- Browse the [pkgdown site](https://dereckscompany.github.io/kucoin/)
   for full method documentation.

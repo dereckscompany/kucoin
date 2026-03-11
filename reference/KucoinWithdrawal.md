@@ -8,7 +8,7 @@ KucoinWithdrawal: Withdrawal Management
 
 Provides methods for creating, cancelling, and querying cryptocurrency
 withdrawals on KuCoin. Inherits from
-[KucoinBase](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md).
+[KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
 
 ### Purpose and Scope
 
@@ -63,7 +63,7 @@ Endpoints](https://www.kucoin.com/docs-new/rest/account-info/withdrawals/withdra
 
 ## Super class
 
-[`kucoin::KucoinBase`](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinWithdrawal`
 
 ## Methods
@@ -84,7 +84,7 @@ Endpoints](https://www.kucoin.com/docs-new/rest/account-info/withdrawals/withdra
 
 Inherited methods
 
-- [`kucoin::KucoinBase$initialize()`](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 

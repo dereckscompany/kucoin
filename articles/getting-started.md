@@ -39,7 +39,7 @@ market <- KucoinMarketData$new()
 ### Ticker
 
 ``` r
-ticker <- market$get_ticker("BTC-USDT")
+ticker <- market$get_ticker(symbol = "BTC-USDT")
 ticker
 ```
 
@@ -53,7 +53,7 @@ ticker
 ### 24hr Statistics
 
 ``` r
-stats <- market$get_24hr_stats("BTC-USDT")
+stats <- market$get_24hr_stats(symbol = "BTC-USDT")
 stats
 ```
 
@@ -90,7 +90,7 @@ tickers
 ### Trade History
 
 ``` r
-trades <- market$get_trade_history("BTC-USDT")
+trades <- market$get_trade_history(symbol = "BTC-USDT")
 trades
 ```
 
@@ -103,7 +103,7 @@ trades
 ### Partial Orderbook
 
 ``` r
-book <- market$get_part_orderbook("BTC-USDT", size = 20)
+book <- market$get_part_orderbook(symbol = "BTC-USDT", size = 20)
 book
 ```
 
@@ -119,7 +119,9 @@ book
 ### Klines (Candlestick Data)
 
 ``` r
-klines <- market$get_klines("BTC-USDT", "15min",
+klines <- market$get_klines(
+  symbol = "BTC-USDT",
+  timeframe = "15min",
   from = ymd_hms("2024-10-16 20:00:00"),
   to = ymd_hms("2024-10-16 21:00:00")
 )
@@ -135,7 +137,7 @@ klines
 ### Currency Info
 
 ``` r
-btc <- market$get_currency("BTC")
+btc <- market$get_currency(currency = "BTC")
 btc
 ```
 
@@ -163,7 +165,7 @@ btc
 ### Symbol Info
 
 ``` r
-sym <- market$get_symbol("BTC-USDT")
+sym <- market$get_symbol(symbol = "BTC-USDT")
 sym
 ```
 
@@ -220,7 +222,7 @@ result
 ### Cancel an Order
 
 ``` r
-cancelled <- trading$cancel_order_by_id("670fd33bf9406e0007ab3945", symbol = "BTC-USDT")
+cancelled <- trading$cancel_order_by_id(orderId = "670fd33bf9406e0007ab3945", symbol = "BTC-USDT")
 cancelled
 ```
 
@@ -231,7 +233,7 @@ cancelled
 ### Query Open Orders
 
 ``` r
-open_orders <- trading$get_open_orders("BTC-USDT")
+open_orders <- trading$get_open_orders(symbol = "BTC-USDT")
 open_orders
 ```
 
@@ -434,7 +436,7 @@ base_fees <- account$get_base_fee_rate()
 cat("Base taker:", base_fees$taker_fee_rate, "\n")
 
 # Per-symbol actual rates (after VIP/KCS discounts)
-actual_fees <- account$get_fee_rate("BTC-USDT,ETH-USDT")
+actual_fees <- account$get_fee_rate(symbols = "BTC-USDT,ETH-USDT")
 actual_fees
 ```
 
@@ -586,15 +588,15 @@ The `time_source` parameter is available on all class constructors:
 ## Next Steps
 
 - See
-  [`vignette("async-usage")`](https://dereckmezquita.github.io/kucoin/articles/async-usage.md)
+  [`vignette("async-usage")`](https://dereckscompany.github.io/kucoin/articles/async-usage.md)
   for promise-based asynchronous operation.
 - See
-  [`vignette("margin-trading")`](https://dereckmezquita.github.io/kucoin/articles/margin-trading.md)
+  [`vignette("margin-trading")`](https://dereckscompany.github.io/kucoin/articles/margin-trading.md)
   for margin trading, short selling, and lending.
 - See
-  [`vignette("futures-trading")`](https://dereckmezquita.github.io/kucoin/articles/futures-trading.md)
+  [`vignette("futures-trading")`](https://dereckscompany.github.io/kucoin/articles/futures-trading.md)
   for perpetual futures contracts.
-- Browse the [pkgdown site](https://dereckmezquita.github.io/kucoin/)
+- Browse the [pkgdown site](https://dereckscompany.github.io/kucoin/)
   for full method documentation.
 - For bulk historical data downloads, see
-  [`?kucoin_backfill_klines`](https://dereckmezquita.github.io/kucoin/reference/kucoin_backfill_klines.md).
+  [`?kucoin_backfill_klines`](https://dereckscompany.github.io/kucoin/reference/kucoin_backfill_klines.md).

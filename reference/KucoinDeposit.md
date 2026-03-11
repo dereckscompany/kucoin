@@ -8,7 +8,7 @@ KucoinDeposit: Deposit Management
 
 Provides methods for managing deposit addresses and retrieving deposit
 history on KuCoin. Inherits from
-[KucoinBase](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md).
+[KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
 
 ### Purpose and Scope
 
@@ -46,7 +46,7 @@ Endpoints](https://www.kucoin.com/docs-new/rest/account-info/deposit/add-deposit
 
 ## Super class
 
-[`kucoin::KucoinBase`](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinDeposit`
 
 ## Methods
@@ -63,7 +63,7 @@ Endpoints](https://www.kucoin.com/docs-new/rest/account-info/deposit/add-deposit
 
 Inherited methods
 
-- [`kucoin::KucoinBase$initialize()`](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 

@@ -26,7 +26,7 @@ a bug or wish to make an improvement.
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("dereckmezquita/kucoin")
+remotes::install_github("dereckscompany/kucoin")
 ```
 
 ## Setup
@@ -92,7 +92,7 @@ market <- KucoinMarketData$new(keys = KEYS, base_url = BASE)
 ### Price Ticker
 
 ``` r
-market$get_ticker("BTC-USDT")
+market$get_ticker(symbol = "BTC-USDT")
 ```
 
 ``` R
@@ -107,7 +107,7 @@ market$get_ticker("BTC-USDT")
 ### 24hr Statistics
 
 ``` r
-market$get_24hr_stats("BTC-USDT")
+market$get_24hr_stats(symbol = "BTC-USDT")
 ```
 
 ``` R
@@ -125,7 +125,9 @@ market$get_24hr_stats("BTC-USDT")
 ### Klines (Candlestick Data)
 
 ``` r
-market$get_klines("BTC-USDT", "1hour",
+market$get_klines(
+  symbol = "BTC-USDT",
+  timeframe = "1hour",
   from = ymd_hms("2025-01-01 00:00:00"),
   to = ymd_hms("2025-01-02 00:00:00")
 )
@@ -169,7 +171,7 @@ trading$add_order_test(
 ### Get Open Orders
 
 ``` r
-trading$get_open_orders("BTC-USDT")
+trading$get_open_orders(symbol = "BTC-USDT")
 ```
 
 ``` R
@@ -343,7 +345,7 @@ lending$get_loan_market()
 ```
 
 For full margin documentation see
-[`vignette("margin-trading")`](https://dereckmezquita.github.io/kucoin/articles/margin-trading.md).
+[`vignette("margin-trading")`](https://dereckscompany.github.io/kucoin/articles/margin-trading.md).
 
 ## Futures Trading
 
@@ -360,7 +362,7 @@ futures_market <- KucoinFuturesMarketData$new(keys = KEYS, base_url = FBASE)
 #### Contract Details
 
 ``` r
-futures_market$get_contract("XBTUSDTM")
+futures_market$get_contract(symbol = "XBTUSDTM")
 ```
 
 ``` R
@@ -393,7 +395,7 @@ futures_market$get_contract("XBTUSDTM")
 #### Futures Ticker
 
 ``` r
-futures_market$get_ticker("XBTUSDTM")
+futures_market$get_ticker(symbol = "XBTUSDTM")
 ```
 
 ``` R
@@ -439,7 +441,7 @@ futures_account$get_positions()
 ```
 
 For full futures documentation see
-[`vignette("futures-trading")`](https://dereckmezquita.github.io/kucoin/articles/futures-trading.md).
+[`vignette("futures-trading")`](https://dereckscompany.github.io/kucoin/articles/futures-trading.md).
 
 ## Async Usage
 
@@ -462,8 +464,8 @@ box::use(coro, later)
 market_async <- KucoinMarketData$new(keys = KEYS, base_url = BASE, async = TRUE)
 
 main <- coro$async(function() {
-  ticker <- await(market_async$get_ticker("BTC-USDT"))
-  klines <- await(market_async$get_klines("BTC-USDT", "1hour"))
+  ticker <- await(market_async$get_ticker(symbol = "BTC-USDT"))
+  klines <- await(market_async$get_klines(symbol = "BTC-USDT", timeframe = "1hour"))
 
   print(ticker)
   print(klines)
@@ -534,5 +536,5 @@ citation("kucoin")
 
 MIT © [Dereck Mezquita](https://github.com/dereckmezquita)
 [![ORCID](https://img.shields.io/badge/ORCID-0000--0002--9307--6762-green)](https://orcid.org/0000-0002-9307-6762).
-See [LICENSE.md](https://dereckmezquita.github.io/kucoin/LICENSE.md) for
+See [LICENSE.md](https://dereckscompany.github.io/kucoin/LICENSE.md) for
 the full text, including the citation clause.

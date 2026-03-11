@@ -41,7 +41,7 @@
 </li>
       </ul>
 <ul class="navbar-nav">
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/dereckmezquita/kucoin" target="_blank"><span class="fa fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/dereckscompany/kucoin" target="_blank"><span class="fa fa-github fa-lg"></span></a></li>
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
@@ -63,7 +63,7 @@
 Mezquita</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/dereckmezquita/kucoin/blob/v4.0.0/vignettes/getting-started.Rmd" class="external-link"><code>vignettes/getting-started.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.0.0/vignettes/getting-started.Rmd" class="external-link"><code>vignettes/getting-started.Rmd</code></a></small>
       <div class="d-none name"><code>getting-started.Rmd</code></div>
     </div>
 
@@ -105,7 +105,7 @@ market endpoints.</p>
 <h3 id="ticker">Ticker<a class="anchor" aria-label="anchor" href="#ticker"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ticker</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_ticker</span><span class="op">(</span><span class="st">"BTC-USDT"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">ticker</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_ticker</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"BTC-USDT"</span><span class="op">)</span></span>
 <span><span class="va">ticker</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;                   time      sequence   price       size best_bid best_bid_size</span></span>
 <span><span class="co">#&gt;                 &lt;POSc&gt;        &lt;char&gt;  &lt;char&gt;     &lt;char&gt;   &lt;char&gt;        &lt;char&gt;</span></span>
@@ -118,7 +118,7 @@ market endpoints.</p>
 <h3 id="hr-statistics">24hr Statistics<a class="anchor" aria-label="anchor" href="#hr-statistics"></a>
 </h3>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">stats</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_24hr_stats</span><span class="op">(</span><span class="st">"BTC-USDT"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">stats</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_24hr_stats</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"BTC-USDT"</span><span class="op">)</span></span>
 <span><span class="va">stats</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;                   time   symbol     buy    sell change_rate change_price</span></span>
 <span><span class="co">#&gt;                 &lt;POSc&gt;   &lt;char&gt;  &lt;char&gt;  &lt;char&gt;      &lt;char&gt;       &lt;char&gt;</span></span>
@@ -153,7 +153,7 @@ market endpoints.</p>
 <h3 id="trade-history">Trade History<a class="anchor" aria-label="anchor" href="#trade-history"></a>
 </h3>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">trades</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_trade_history</span><span class="op">(</span><span class="st">"BTC-USDT"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">trades</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_trade_history</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"BTC-USDT"</span><span class="op">)</span></span>
 <span><span class="va">trades</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;         sequence   side   price       size                time</span></span>
 <span><span class="co">#&gt;           &lt;char&gt; &lt;char&gt;  &lt;char&gt;     &lt;char&gt;              &lt;POSc&gt;</span></span>
@@ -165,7 +165,7 @@ market endpoints.</p>
 <h3 id="partial-orderbook">Partial Orderbook<a class="anchor" aria-label="anchor" href="#partial-orderbook"></a>
 </h3>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">book</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_part_orderbook</span><span class="op">(</span><span class="st">"BTC-USDT"</span>, size <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">book</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_part_orderbook</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"BTC-USDT"</span>, size <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
 <span><span class="va">book</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;                   time      sequence   side   price      size</span></span>
 <span><span class="co">#&gt;                 &lt;POSc&gt;        &lt;char&gt; &lt;char&gt;   &lt;num&gt;     &lt;num&gt;</span></span>
@@ -180,7 +180,9 @@ market endpoints.</p>
 <h3 id="klines-candlestick-data">Klines (Candlestick Data)<a class="anchor" aria-label="anchor" href="#klines-candlestick-data"></a>
 </h3>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">klines</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_klines</span><span class="op">(</span><span class="st">"BTC-USDT"</span>, <span class="st">"15min"</span>,</span>
+<code class="sourceCode R"><span><span class="va">klines</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_klines</span><span class="op">(</span></span>
+<span>  symbol <span class="op">=</span> <span class="st">"BTC-USDT"</span>,</span>
+<span>  timeframe <span class="op">=</span> <span class="st">"15min"</span>,</span>
 <span>  from <span class="op">=</span> <span class="fu">ymd_hms</span><span class="op">(</span><span class="st">"2024-10-16 20:00:00"</span><span class="op">)</span>,</span>
 <span>  to <span class="op">=</span> <span class="fu">ymd_hms</span><span class="op">(</span><span class="st">"2024-10-16 21:00:00"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -195,7 +197,7 @@ market endpoints.</p>
 <h3 id="currency-info">Currency Info<a class="anchor" aria-label="anchor" href="#currency-info"></a>
 </h3>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">btc</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_currency</span><span class="op">(</span><span class="st">"BTC"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">btc</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_currency</span><span class="op">(</span>currency <span class="op">=</span> <span class="st">"BTC"</span><span class="op">)</span></span>
 <span><span class="va">btc</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;    currency   name full_name precision is_margin_enabled is_debit_enabled</span></span>
 <span><span class="co">#&gt;      &lt;char&gt; &lt;char&gt;    &lt;char&gt;     &lt;int&gt;            &lt;lgcl&gt;           &lt;lgcl&gt;</span></span>
@@ -222,7 +224,7 @@ market endpoints.</p>
 <h3 id="symbol-info">Symbol Info<a class="anchor" aria-label="anchor" href="#symbol-info"></a>
 </h3>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sym</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_symbol</span><span class="op">(</span><span class="st">"BTC-USDT"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">sym</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_symbol</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"BTC-USDT"</span><span class="op">)</span></span>
 <span><span class="va">sym</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;      symbol     name base_currency quote_currency fee_currency market</span></span>
 <span><span class="co">#&gt;      &lt;char&gt;   &lt;char&gt;        &lt;char&gt;         &lt;char&gt;       &lt;char&gt; &lt;char&gt;</span></span>
@@ -273,7 +275,7 @@ trading endpoints require authentication.</p>
 <h3 id="cancel-an-order">Cancel an Order<a class="anchor" aria-label="anchor" href="#cancel-an-order"></a>
 </h3>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cancelled</span> <span class="op">&lt;-</span> <span class="va">trading</span><span class="op">$</span><span class="fu">cancel_order_by_id</span><span class="op">(</span><span class="st">"670fd33bf9406e0007ab3945"</span>, symbol <span class="op">=</span> <span class="st">"BTC-USDT"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">cancelled</span> <span class="op">&lt;-</span> <span class="va">trading</span><span class="op">$</span><span class="fu">cancel_order_by_id</span><span class="op">(</span>orderId <span class="op">=</span> <span class="st">"670fd33bf9406e0007ab3945"</span>, symbol <span class="op">=</span> <span class="st">"BTC-USDT"</span><span class="op">)</span></span>
 <span><span class="va">cancelled</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;                    order_id</span></span>
 <span><span class="co">#&gt;                      &lt;char&gt;</span></span>
@@ -283,7 +285,7 @@ trading endpoints require authentication.</p>
 <h3 id="query-open-orders">Query Open Orders<a class="anchor" aria-label="anchor" href="#query-open-orders"></a>
 </h3>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">open_orders</span> <span class="op">&lt;-</span> <span class="va">trading</span><span class="op">$</span><span class="fu">get_open_orders</span><span class="op">(</span><span class="st">"BTC-USDT"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">open_orders</span> <span class="op">&lt;-</span> <span class="va">trading</span><span class="op">$</span><span class="fu">get_open_orders</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"BTC-USDT"</span><span class="op">)</span></span>
 <span><span class="va">open_orders</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;                          id   symbol op_type   type   side  price   size  funds</span></span>
 <span><span class="co">#&gt;                      &lt;char&gt;   &lt;char&gt;  &lt;char&gt; &lt;char&gt; &lt;char&gt; &lt;char&gt; &lt;char&gt; &lt;char&gt;</span></span>
@@ -466,7 +468,7 @@ heartbeating:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Base taker:"</span>, <span class="va">base_fees</span><span class="op">$</span><span class="va">taker_fee_rate</span>, <span class="st">"\n"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Per-symbol actual rates (after VIP/KCS discounts)</span></span>
-<span><span class="va">actual_fees</span> <span class="op">&lt;-</span> <span class="va">account</span><span class="op">$</span><span class="fu">get_fee_rate</span><span class="op">(</span><span class="st">"BTC-USDT,ETH-USDT"</span><span class="op">)</span></span>
+<span><span class="va">actual_fees</span> <span class="op">&lt;-</span> <span class="va">account</span><span class="op">$</span><span class="fu">get_fee_rate</span><span class="op">(</span>symbols <span class="op">=</span> <span class="st">"BTC-USDT,ETH-USDT"</span><span class="op">)</span></span>
 <span><span class="va">actual_fees</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -613,7 +615,7 @@ asynchronous operation.</li>
 short selling, and lending.</li>
 <li>See <code><a href="../articles/futures-trading.html">vignette("futures-trading")</a></code> for perpetual futures
 contracts.</li>
-<li>Browse the <a href="https://dereckmezquita.github.io/kucoin/">pkgdown site</a> for
+<li>Browse the <a href="https://dereckscompany.github.io/kucoin/">pkgdown site</a> for
 full method documentation.</li>
 <li>For bulk historical data downloads, see
 <code><a href="../reference/kucoin_backfill_klines.html">?kucoin_backfill_klines</a></code>.</li>

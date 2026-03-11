@@ -11,7 +11,7 @@ API, including announcements, klines, currencies, symbols, tickers,
 orderbooks, trade history, and 24-hour statistics.
 
 Inherits from
-[KucoinBase](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md).
+[KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
 All methods support both synchronous and asynchronous execution
 depending on the `async` parameter at construction.
 
@@ -78,7 +78,7 @@ Data](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-announce
 
 ## Super class
 
-[`kucoin::KucoinBase`](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinMarketData`
 
 ## Methods
@@ -121,7 +121,7 @@ Data](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-announce
 
 Inherited methods
 
-- [`kucoin::KucoinBase$initialize()`](https://dereckmezquita.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 

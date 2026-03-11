@@ -25,7 +25,7 @@
   - `KucoinFuturesAccount` (14 endpoints): account overview, positions,
     position history, margin mode, cross margin leverage, max open size,
     add/remove isolated margin, risk limits, funding history.
-- **[`get_futures_base_url()`](https://dereckmezquita.github.io/kucoin/reference/get_futures_base_url.md)**:
+- **[`get_futures_base_url()`](https://dereckscompany.github.io/kucoin/reference/get_futures_base_url.md)**:
   New helper for the Futures API base URL
   (`https://api-futures.kucoin.com`), configurable via
   `KUCOIN_FUTURES_API_ENDPOINT` env var.
@@ -53,7 +53,7 @@
   - `datetime_applied` → `apply_time` (`KucoinLending`)
   - `datetime` → `time` (ticker, trade history, orderbook, 24hr stats)
 - **Kline parameter renamed**: `freq` → `timeframe` in
-  [`kucoin_backfill_klines()`](https://dereckmezquita.github.io/kucoin/reference/kucoin_backfill_klines.md)
+  [`kucoin_backfill_klines()`](https://dereckscompany.github.io/kucoin/reference/kucoin_backfill_klines.md)
   and related functions.
 - **`KucoinDeposit$get_deposit_addresses()`**: `currency` is now a
   required argument (removed `NULL` default) to match KuCoin API
@@ -145,7 +145,7 @@
 - API credentials are now managed via environment variables
   (`KC-API-KEY`, `KC-API-SECRET`, `KC-API-PASSPHRASE`) or passed
   directly to class constructors through
-  [`get_api_keys()`](https://dereckmezquita.github.io/kucoin/reference/get_api_keys.md).
+  [`get_api_keys()`](https://dereckscompany.github.io/kucoin/reference/get_api_keys.md).
 
 ### NEW FEATURES
 
@@ -201,18 +201,18 @@
 - **Async support**: All R6 classes support `async = TRUE` mode
   returning `promises` for non-blocking I/O via
   [`httr2::req_perform_promise()`](https://httr2.r-lib.org/reference/req_perform_promise.html).
-- **[`kucoin_backfill_klines()`](https://dereckmezquita.github.io/kucoin/reference/kucoin_backfill_klines.md)**:
+- **[`kucoin_backfill_klines()`](https://dereckscompany.github.io/kucoin/reference/kucoin_backfill_klines.md)**:
   Bulk historical kline download with resume support, automatic
   time-range segmentation, and CSV output.
 - **Bundled dataset**: `kucoin_btc_usdt_4h_ohlcv` — 20,000+ rows of real
   BTC-USDT 4-hour OHLCV data for examples and testing.
 - **Automatic pagination**:
-  [`kucoin_paginate()`](https://dereckmezquita.github.io/kucoin/reference/kucoin_paginate.md)
+  [`kucoin_paginate()`](https://dereckscompany.github.io/kucoin/reference/kucoin_paginate.md)
   handles multi-page API responses transparently.
 - **Timestamp handling**:
-  [`time_convert_from_kucoin()`](https://dereckmezquita.github.io/kucoin/reference/time_convert_from_kucoin.md)
+  [`time_convert_from_kucoin()`](https://dereckscompany.github.io/kucoin/reference/time_convert_from_kucoin.md)
   and
-  [`time_convert_to_kucoin()`](https://dereckmezquita.github.io/kucoin/reference/time_convert_to_kucoin.md)
+  [`time_convert_to_kucoin()`](https://dereckscompany.github.io/kucoin/reference/time_convert_to_kucoin.md)
   for millisecond/nanosecond epoch conversion.
 
 ### IMPROVEMENTS
@@ -251,7 +251,7 @@
 - Two vignettes: “Getting Started” (all 9 classes, synchronous) and
   “Async Usage” (promise-based patterns).
 - README with evaluated code examples using invisible mocked HTTP.
-- pkgdown site at <https://dereckmezquita.github.io/kucoin/>.
+- pkgdown site at <https://dereckscompany.github.io/kucoin/>.
 
 ### LICENCE
 
