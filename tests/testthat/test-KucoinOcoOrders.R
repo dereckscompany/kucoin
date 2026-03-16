@@ -171,10 +171,11 @@ test_that("get_order_detail_by_id returns data.table with orders list-column", {
 
   dt <- new_oco()$get_order_detail_by_id("674c40d38b4b2f00073deef3")
   expect_s3_class(dt, "data.table")
-  expect_equal(nrow(dt), 1L)
+  expect_equal(nrow(dt), 2L)
   expect_true("order_time" %in% names(dt))
-  expect_true("orders" %in% names(dt))
-  expect_equal(dt$status, "NEW")
+  expect_true("sub_order_id" %in% names(dt))
+  expect_false("orders" %in% names(dt))
+  expect_equal(dt$status[1], "NEW")
 })
 
 # -- get_order_list --

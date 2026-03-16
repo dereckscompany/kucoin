@@ -270,7 +270,17 @@ KucoinOcoOrders <- R6::R6Class(
       return(private$.request(
         endpoint = paste0("/api/v3/oco/order/", orderId),
         method = "DELETE",
-        .parser = as_dt_row
+        .parser = function(data) {
+          ids <- data$cancelledOrderIds
+          data$cancelledOrderIds <- NULL
+          dt <- as_dt_row(data)
+          if (!is.null(ids) && length(ids) > 0) {
+            id_vals <- unlist(ids)
+            dt <- dt[rep(1L, length(id_vals))]
+            dt[, cancelled_order_id := id_vals]
+          }
+          return(dt[])
+        }
       ))
     },
 
@@ -341,7 +351,17 @@ KucoinOcoOrders <- R6::R6Class(
       return(private$.request(
         endpoint = paste0("/api/v3/oco/client-order/", clientOid),
         method = "DELETE",
-        .parser = as_dt_row
+        .parser = function(data) {
+          ids <- data$cancelledOrderIds
+          data$cancelledOrderIds <- NULL
+          dt <- as_dt_row(data)
+          if (!is.null(ids) && length(ids) > 0) {
+            id_vals <- unlist(ids)
+            dt <- dt[rep(1L, length(id_vals))]
+            dt[, cancelled_order_id := id_vals]
+          }
+          return(dt[])
+        }
       ))
     },
 
@@ -419,7 +439,17 @@ KucoinOcoOrders <- R6::R6Class(
         endpoint = "/api/v3/oco/orders",
         method = "DELETE",
         query = query,
-        .parser = as_dt_row
+        .parser = function(data) {
+          ids <- data$cancelledOrderIds
+          data$cancelledOrderIds <- NULL
+          dt <- as_dt_row(data)
+          if (!is.null(ids) && length(ids) > 0) {
+            id_vals <- unlist(ids)
+            dt <- dt[rep(1L, length(id_vals))]
+            dt[, cancelled_order_id := id_vals]
+          }
+          return(dt[])
+        }
       ))
     },
 
@@ -679,11 +709,22 @@ KucoinOcoOrders <- R6::R6Class(
       return(private$.request(
         endpoint = paste0("/api/v3/oco/order/details/", orderId),
         .parser = function(data) {
+          orders <- data$orders
+          data$orders <- NULL
           dt <- as_dt_row(data)
           if ("order_time" %in% names(dt)) {
             dt[, order_time := ms_to_datetime(order_time)]
           }
-          expected <- c("order_id", "symbol", "client_oid", "order_time", "status", "orders")
+          # Expand orders to long format: one row per sub-order
+          if (!is.null(orders) && length(orders) > 0) {
+            orders_dt <- as_dt_list(orders)
+            order_names <- names(orders_dt)
+            new_names <- paste0("sub_order_", order_names)
+            data.table::setnames(orders_dt, order_names, new_names)
+            dt <- dt[rep(1L, nrow(orders_dt))]
+            dt <- cbind(dt, orders_dt)
+          }
+          expected <- c("order_id", "symbol", "client_oid", "order_time", "status")
           data.table::setcolorder(dt, intersect(expected, names(dt)))
           return(dt[])
         }

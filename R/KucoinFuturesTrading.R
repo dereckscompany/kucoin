@@ -599,7 +599,15 @@ KucoinFuturesTrading <- R6::R6Class(
         endpoint = paste0("/api/v1/orders/", orderId),
         method = "DELETE",
         .parser = function(data) {
-          return(as_dt_row(data))
+          ids <- data$cancelledOrderIds
+          data$cancelledOrderIds <- NULL
+          dt <- as_dt_row(data)
+          if (!is.null(ids) && length(ids) > 0) {
+            id_vals <- unlist(ids)
+            dt <- dt[rep(1L, length(id_vals))]
+            dt[, cancelled_order_id := id_vals]
+          }
+          return(dt[])
         }
       ))
     },
@@ -738,7 +746,15 @@ KucoinFuturesTrading <- R6::R6Class(
         method = "DELETE",
         query = list(symbol = symbol),
         .parser = function(data) {
-          return(as_dt_row(data))
+          ids <- data$cancelledOrderIds
+          data$cancelledOrderIds <- NULL
+          dt <- as_dt_row(data)
+          if (!is.null(ids) && length(ids) > 0) {
+            id_vals <- unlist(ids)
+            dt <- dt[rep(1L, length(id_vals))]
+            dt[, cancelled_order_id := id_vals]
+          }
+          return(dt[])
         }
       ))
     },
@@ -811,7 +827,15 @@ KucoinFuturesTrading <- R6::R6Class(
         method = "DELETE",
         query = list(symbol = symbol),
         .parser = function(data) {
-          return(as_dt_row(data))
+          ids <- data$cancelledOrderIds
+          data$cancelledOrderIds <- NULL
+          dt <- as_dt_row(data)
+          if (!is.null(ids) && length(ids) > 0) {
+            id_vals <- unlist(ids)
+            dt <- dt[rep(1L, length(id_vals))]
+            dt[, cancelled_order_id := id_vals]
+          }
+          return(dt[])
         }
       ))
     },

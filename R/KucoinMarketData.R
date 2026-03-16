@@ -165,10 +165,45 @@ KucoinMarketData <- R6::R6Class(
         query = query,
         auth = FALSE,
         .parser = function(pages) {
-          dt <- flatten_pages(pages)
-          if (nrow(dt) > 0 && "c_time" %in% names(dt)) {
+          if (length(pages) == 0) {
+            return(data.table::data.table()[])
+          }
+          # Extract annType arrays before flattening to avoid list-columns
+          ann_types_list <- list()
+          idx <- 0L
+          for (page in pages) {
+            for (item in page) {
+              idx <- idx + 1L
+              types <- item[["annType"]]
+              if (is.null(types) || length(types) == 0) {
+                ann_types_list[[idx]] <- NA_character_
+              } else {
+                ann_types_list[[idx]] <- as.character(unlist(types))
+              }
+              item[["annType"]] <- NULL
+            }
+          }
+          # Remove annType from items before flatten_pages
+          pages_clean <- lapply(pages, function(page) {
+            lapply(page, function(item) {
+              item[["annType"]] <- NULL
+              return(item)
+            })
+          })
+          dt <- flatten_pages(pages_clean)
+          if (nrow(dt) == 0) {
+            return(dt[])
+          }
+          if ("c_time" %in% names(dt)) {
             dt[, c_time := ms_to_datetime(c_time)]
           }
+          # Expand ann_type to long format: one row per type tag
+          dt[, .ann_idx := .I]
+          types_dt <- data.table::rbindlist(lapply(seq_along(ann_types_list), function(i) {
+            data.table::data.table(.ann_idx = i, ann_type = ann_types_list[[i]])
+          }))
+          dt <- dt[types_dt, on = ".ann_idx"]
+          dt[, .ann_idx := NULL]
           return(dt[])
         },
         page_size = page_size,

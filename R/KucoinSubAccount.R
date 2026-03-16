@@ -412,22 +412,28 @@ KucoinSubAccount <- R6::R6Class(
         endpoint = paste0("/api/v1/sub-accounts/", subUserId),
         query = list(includeBaseAmount = tolower(as.character(includeBaseAmount))),
         .parser = function(data) {
-          account_types <- c("mainAccounts", "tradeAccounts", "marginAccounts")
-          type_labels <- c("main", "trade", "margin")
           rows <- list()
+          sub_id <- as.character(data$subUserId)
+          sub_name <- as.character(data$subName)
 
-          for (i in seq_along(account_types)) {
-            accounts <- data[[account_types[i]]]
-            if (is.null(accounts) || length(accounts) == 0L) {
+          # Dynamically detect account type arrays by checking for currency/balance fields
+          for (field_name in names(data)) {
+            accounts <- data[[field_name]]
+            if (!is.list(accounts) || length(accounts) == 0L) {
               next
             }
+            first <- accounts[[1]]
+            if (!is.list(first) || !all(c("currency", "balance") %in% names(first))) {
+              next
+            }
+
             acct_dt <- data.table::rbindlist(
               lapply(accounts, as_dt_row),
               fill = TRUE
             )
-            acct_dt[, account_type := type_labels[i]]
-            acct_dt[, sub_user_id := as.character(data$subUserId)]
-            acct_dt[, sub_name := as.character(data$subName)]
+            acct_dt[, account_type := to_snake_case(field_name)]
+            acct_dt[, sub_user_id := sub_id]
+            acct_dt[, sub_name := sub_name]
             rows[[length(rows) + 1L]] <- acct_dt
           }
 
@@ -436,18 +442,8 @@ KucoinSubAccount <- R6::R6Class(
           }
 
           dt <- data.table::rbindlist(rows, fill = TRUE)
-          data.table::setcolorder(
-            dt,
-            c(
-              "sub_user_id",
-              "sub_name",
-              "account_type",
-              "currency",
-              "balance",
-              "available",
-              "holds"
-            )
-          )
+          expected <- c("sub_user_id", "sub_name", "account_type", "currency", "balance", "available", "holds")
+          data.table::setcolorder(dt, intersect(expected, names(dt)))
           return(dt[])
         }
       ))
@@ -595,27 +591,31 @@ KucoinSubAccount <- R6::R6Class(
             return(data.table::data.table()[])
           }
 
-          account_types <- c("mainAccounts", "tradeAccounts", "marginAccounts")
-          type_labels <- c("main", "trade", "margin")
           all_rows <- list()
 
           for (page in pages) {
             for (item in page) {
-              sub_id <- item$subUserId
-              sub_name <- item$subName
+              sub_id <- as.character(item$subUserId)
+              sub_name <- as.character(item$subName)
 
-              for (i in seq_along(account_types)) {
-                accounts <- item[[account_types[i]]]
-                if (is.null(accounts) || length(accounts) == 0L) {
+              # Dynamically detect account type arrays
+              for (field_name in names(item)) {
+                accounts <- item[[field_name]]
+                if (!is.list(accounts) || length(accounts) == 0L) {
                   next
                 }
+                first <- accounts[[1]]
+                if (!is.list(first) || !all(c("currency", "balance") %in% names(first))) {
+                  next
+                }
+
                 acct_dt <- data.table::rbindlist(
                   lapply(accounts, as_dt_row),
                   fill = TRUE
                 )
-                acct_dt[, account_type := type_labels[i]]
-                acct_dt[, sub_user_id := as.character(sub_id)]
-                acct_dt[, sub_name := as.character(sub_name)]
+                acct_dt[, account_type := to_snake_case(field_name)]
+                acct_dt[, sub_user_id := sub_id]
+                acct_dt[, sub_name := sub_name]
                 all_rows[[length(all_rows) + 1L]] <- acct_dt
               }
             }
@@ -626,18 +626,8 @@ KucoinSubAccount <- R6::R6Class(
           }
 
           dt <- data.table::rbindlist(all_rows, fill = TRUE)
-          data.table::setcolorder(
-            dt,
-            c(
-              "sub_user_id",
-              "sub_name",
-              "account_type",
-              "currency",
-              "balance",
-              "available",
-              "holds"
-            )
-          )
+          expected <- c("sub_user_id", "sub_name", "account_type", "currency", "balance", "available", "holds")
+          data.table::setcolorder(dt, intersect(expected, names(dt)))
           return(dt[])
         }
       ))
