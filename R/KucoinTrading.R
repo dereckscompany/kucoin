@@ -912,7 +912,7 @@ KucoinTrading <- R6::R6Class(
     #' ```
     #'
     #' @param orderId Character; the KuCoin order ID.
-    #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`).
+    #' @param symbol Character (optional); trading pair (e.g., `"BTC-USDT"`). Defaults to `NULL`.
     #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with full order details
     #'   including `created_at` and `last_updated_at` (POSIXct) if timestamps are present.
     #'
@@ -922,17 +922,17 @@ KucoinTrading <- R6::R6Class(
     #' order <- trading$get_order_by_id("671124f9365ccb00073debd4", "BTC-USDT")
     #' print(order)
     #' }
-    get_order_by_id = function(orderId, symbol) {
+    get_order_by_id = function(orderId, symbol = NULL) {
       if (!is.character(orderId) || !nzchar(orderId)) {
         rlang::abort("Parameter 'orderId' must be a non-empty string.")
       }
-      if (!verify_symbol(symbol)) {
+      if (!is.null(symbol) && !verify_symbol(symbol)) {
         rlang::abort("Parameter 'symbol' must be a valid ticker.")
       }
 
       return(private$.request(
         endpoint = paste0("/api/v1/hf/orders/", orderId),
-        query = list(symbol = symbol),
+        query = if (!is.null(symbol)) list(symbol = symbol) else list(),
         .parser = function(data) {
           dt <- as_dt_row(data)
           if ("created_at" %in% names(dt)) {
