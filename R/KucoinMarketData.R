@@ -1275,8 +1275,9 @@ KucoinMarketData <- R6::R6Class(
     #'   `"1min"`, `"3min"`, `"5min"`, `"15min"`, `"30min"`,
     #'   `"1hour"`, `"2hour"`, `"4hour"`, `"6hour"`, `"8hour"`, `"12hour"`,
     #'   `"1day"`, `"1week"`, `"1month"`. Default `"15min"`.
-    #' @param from POSIXct; start time (default 24 hours ago).
-    #' @param to POSIXct; end time (default now).
+    #' @param from POSIXct or NULL; start time. When both `from` and `to` are
+    #'   `NULL`, the API returns up to 1500 most recent candles.
+    #' @param to POSIXct or NULL; end time.
     #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
     #'   - `datetime` (POSIXct): Candle open datetime.
     #'   - `open` (numeric): Opening price.
@@ -1290,7 +1291,7 @@ KucoinMarketData <- R6::R6Class(
     #' \dontrun{
     #' market <- KucoinMarketData$new()
     #'
-    #' # Last 24 hours of 15-minute candles
+    #' # Most recent candles (up to 1500)
     #' klines <- market$get_klines("BTC-USDT")
     #' print(head(klines))
     #'
@@ -1306,8 +1307,8 @@ KucoinMarketData <- R6::R6Class(
     get_klines = function(
       symbol,
       timeframe = "15min",
-      from = lubridate::now() - lubridate::dhours(24),
-      to = lubridate::now()
+      from = NULL,
+      to = NULL
     ) {
       return(kucoin_fetch_klines(
         symbol = symbol,

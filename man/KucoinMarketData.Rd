@@ -237,7 +237,7 @@ defi_symbols <- market$get_all_symbols(market = "DeFi")
 \dontrun{
 market <- KucoinMarketData$new()
 
-# Last 24 hours of 15-minute candles
+# Most recent candles (up to 1500)
 klines <- market$get_klines("BTC-USDT")
 print(head(klines))
 
@@ -1723,8 +1723,8 @@ Each candle is an array: \verb{[timestamp, open, close, high, low, volume, turno
 \if{html}{\out{<div class="r">}}\preformatted{KucoinMarketData$get_klines(
   symbol,
   timeframe = "15min",
-  from = lubridate::now() - lubridate::dhours(24),
-  to = lubridate::now()
+  from = NULL,
+  to = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -1738,9 +1738,10 @@ Each candle is an array: \verb{[timestamp, open, close, high, low, volume, turno
 \code{"1hour"}, \code{"2hour"}, \code{"4hour"}, \code{"6hour"}, \code{"8hour"}, \code{"12hour"},
 \code{"1day"}, \code{"1week"}, \code{"1month"}. Default \code{"15min"}.}
 
-\item{\code{from}}{POSIXct; start time (default 24 hours ago).}
+\item{\code{from}}{POSIXct or NULL; start time. When both \code{from} and \code{to} are
+\code{NULL}, the API returns up to 1500 most recent candles.}
 
-\item{\code{to}}{POSIXct; end time (default now).}
+\item{\code{to}}{POSIXct or NULL; end time.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1761,7 +1762,7 @@ Each candle is an array: \verb{[timestamp, open, close, high, low, volume, turno
 \preformatted{\dontrun{
 market <- KucoinMarketData$new()
 
-# Last 24 hours of 15-minute candles
+# Most recent candles (up to 1500)
 klines <- market$get_klines("BTC-USDT")
 print(head(klines))
 

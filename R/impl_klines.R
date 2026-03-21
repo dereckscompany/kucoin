@@ -36,8 +36,8 @@ kucoin_timeframe_map <- list(
 kucoin_fetch_klines <- function(
   symbol,
   timeframe = "15min",
-  from = lubridate::now("UTC") - lubridate::dhours(24),
-  to = lubridate::now("UTC"),
+  from = NULL,
+  to = NULL,
   .req_fn,
   is_async = FALSE
 ) {
@@ -49,6 +49,33 @@ kucoin_fetch_klines <- function(
       paste(names(kucoin_timeframe_map), collapse = ", ")
     ))
   }
+
+  # When no time range specified, make a single request without startAt/endAt.
+  # The KuCoin API returns up to 1500 most recent candles.
+  if (is.null(from) && is.null(to)) {
+    fetch_no_range <- function() {
+      return(.req_fn(
+        endpoint = "/api/v1/market/candles",
+        method = "GET",
+        query = list(type = timeframe, symbol = symbol),
+        auth = FALSE,
+        .parser = parse_klines
+      ))
+    }
+    if (is_async) {
+      return(fetch_no_range()$then(function(dt) {
+        if (nrow(dt) > 0L) data.table::setorder(dt, datetime)
+        return(dt[])
+      }))
+    }
+    dt <- fetch_no_range()
+    if (nrow(dt) > 0L) data.table::setorder(dt, datetime)
+    return(dt[])
+  }
+
+  # Fill in whichever bound is missing
+  if (is.null(to)) to <- lubridate::now("UTC")
+  if (is.null(from)) from <- lubridate::now("UTC") - lubridate::dhours(24)
 
   timeframe_seconds <- kucoin_timeframe_map[[timeframe]]
   from_s <- as.integer(as.numeric(from))
