@@ -256,3 +256,151 @@ test_that("get_service_status returns data.table", {
   expect_true("status" %in% names(dt))
   expect_equal(dt$status, "open")
 })
+
+# -- Data-shape convention: no list columns, one entity = one row -------------
+#
+# Cross-package convention from `binance::vignette("data-shapes")`. For each
+# method we check that the parser yields a list-column-free `data.table` and
+# that empty responses produce empty `data.table`s (not stubs or errors).
+
+n_list_cols <- function(dt) {
+  length(names(dt)[vapply(dt, is.list, logical(1))])
+}
+
+test_that("get_contract has no list columns; empty response yields empty dt", {
+  resp <- mock_kucoin_response(data = mock_futures_contract_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_market()$get_contract("XBTUSDTM")
+  expect_equal(n_list_cols(dt), 0L)
+
+  resp_empty <- mock_kucoin_response(data = NULL)
+  httr2::local_mocked_responses(function(req) resp_empty)
+  dt_empty <- new_market()$get_contract("XBTUSDTM")
+  expect_s3_class(dt_empty, "data.table")
+  expect_equal(nrow(dt_empty), 0L)
+})
+
+test_that("get_all_contracts has no list columns; empty response yields empty dt", {
+  resp <- mock_kucoin_response(data = mock_futures_all_contracts_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_market()$get_all_contracts()
+  expect_equal(n_list_cols(dt), 0L)
+
+  resp_empty <- mock_kucoin_response(data = list())
+  httr2::local_mocked_responses(function(req) resp_empty)
+  dt_empty <- new_market()$get_all_contracts()
+  expect_s3_class(dt_empty, "data.table")
+  expect_equal(nrow(dt_empty), 0L)
+})
+
+test_that("get_ticker has no list columns; ts is POSIXct", {
+  resp <- mock_kucoin_response(data = mock_futures_ticker_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_market()$get_ticker("XBTUSDTM")
+  expect_equal(n_list_cols(dt), 0L)
+  expect_s3_class(dt$ts, "POSIXct")
+})
+
+test_that("get_all_tickers has no list columns; ts is POSIXct; empty array yields empty dt", {
+  resp <- mock_kucoin_response(data = mock_futures_all_tickers_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_market()$get_all_tickers()
+  expect_equal(n_list_cols(dt), 0L)
+  expect_s3_class(dt$ts, "POSIXct")
+
+  resp_empty <- mock_kucoin_response(data = list())
+  httr2::local_mocked_responses(function(req) resp_empty)
+  dt_empty <- new_market()$get_all_tickers()
+  expect_s3_class(dt_empty, "data.table")
+  expect_equal(nrow(dt_empty), 0L)
+})
+
+test_that("get_part_orderbook has no list columns; long-format bids/asks", {
+  resp <- mock_kucoin_response(data = mock_futures_orderbook_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_market()$get_part_orderbook("XBTUSDTM", size = 20)
+  expect_equal(n_list_cols(dt), 0L)
+  expect_true(all(c("ts", "sequence", "side", "price", "size") %in% names(dt)))
+  expect_s3_class(dt$ts, "POSIXct")
+})
+
+test_that("get_trade_history has no list columns; empty array yields empty dt", {
+  resp <- mock_kucoin_response(data = mock_futures_trade_history_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_market()$get_trade_history("XBTUSDTM")
+  expect_equal(n_list_cols(dt), 0L)
+  expect_s3_class(dt$ts, "POSIXct")
+
+  resp_empty <- mock_kucoin_response(data = list())
+  httr2::local_mocked_responses(function(req) resp_empty)
+  dt_empty <- new_market()$get_trade_history("XBTUSDTM")
+  expect_s3_class(dt_empty, "data.table")
+  expect_equal(nrow(dt_empty), 0L)
+})
+
+test_that("get_klines has no list columns; empty array yields empty dt", {
+  resp <- mock_kucoin_response(data = mock_futures_klines_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_market()$get_klines("XBTUSDTM", granularity = 60)
+  expect_equal(n_list_cols(dt), 0L)
+})
+
+test_that("get_mark_price has no list columns; time_point is POSIXct", {
+  resp <- mock_kucoin_response(data = mock_futures_mark_price_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_market()$get_mark_price("XBTUSDTM")
+  expect_equal(n_list_cols(dt), 0L)
+  expect_s3_class(dt$time_point, "POSIXct")
+})
+
+test_that("get_funding_rate has no list columns; timestamps are POSIXct", {
+  resp <- mock_kucoin_response(data = mock_futures_funding_rate_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_market()$get_funding_rate("XBTUSDTM")
+  expect_equal(n_list_cols(dt), 0L)
+  expect_s3_class(dt$time_point, "POSIXct")
+  expect_s3_class(dt$funding_time, "POSIXct")
+})
+
+test_that("get_funding_history has no list columns; empty array yields empty dt", {
+  resp <- mock_kucoin_response(data = mock_futures_funding_history_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  from_time <- as.POSIXct("2024-10-17 00:00:00", tz = "UTC")
+  to_time <- as.POSIXct("2024-10-18 00:00:00", tz = "UTC")
+  dt <- new_market()$get_funding_history("XBTUSDTM", from = from_time, to = to_time)
+  expect_equal(n_list_cols(dt), 0L)
+  expect_s3_class(dt$timepoint, "POSIXct")
+
+  resp_empty <- mock_kucoin_response(data = list())
+  httr2::local_mocked_responses(function(req) resp_empty)
+  dt_empty <- new_market()$get_funding_history("XBTUSDTM", from = from_time, to = to_time)
+  expect_s3_class(dt_empty, "data.table")
+  expect_equal(nrow(dt_empty), 0L)
+})
+
+test_that("get_server_time has no list columns; server_time is POSIXct", {
+  resp <- mock_kucoin_response(data = mock_futures_server_time_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_market()$get_server_time()
+  expect_equal(n_list_cols(dt), 0L)
+  expect_s3_class(dt$server_time, "POSIXct")
+})
+
+test_that("get_service_status has no list columns", {
+  resp <- mock_kucoin_response(data = mock_futures_service_status_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_market()$get_service_status()
+  expect_equal(n_list_cols(dt), 0L)
+})
