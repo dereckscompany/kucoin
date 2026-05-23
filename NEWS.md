@@ -76,6 +76,10 @@
 
 * Refreshed bundled `kucoin_btc_usdt_4h_ohlcv` dataset (18,351 rows, Oct 2017 – Mar 2026).
 
+## LICENCE
+
+* **`LICENSE` consolidated to a single full MIT file**. The package previously shipped both a 2-line DCF stub (`LICENSE`) and the full MIT text (`LICENSE.md`), to satisfy the CRAN `License: MIT + file LICENSE` template alongside GitHub's licensee detector. Those two requirements conflict in practice. `DESCRIPTION` now declares `License: MIT` (non-CRAN form), so R CMD check skips the DCF parse of the LICENSE file while GitHub still detects MIT. The previously bundled **Citation Clause has been dropped** — the package is now plain MIT, matching the sibling `alpaca` and `binance` packages. `LICENSE.md` was removed; `LICENSE` carries the full text.
+
 # kucoin 3.0.0
 
 ## BREAKING CHANGES
