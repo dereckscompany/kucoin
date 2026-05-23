@@ -64,18 +64,26 @@ kucoin_fetch_klines <- function(
     }
     if (is_async) {
       return(fetch_no_range()$then(function(dt) {
-        if (nrow(dt) > 0L) data.table::setorder(dt, datetime)
+        if (nrow(dt) > 0L) {
+          data.table::setorder(dt, datetime)
+        }
         return(dt[])
       }))
     }
     dt <- fetch_no_range()
-    if (nrow(dt) > 0L) data.table::setorder(dt, datetime)
+    if (nrow(dt) > 0L) {
+      data.table::setorder(dt, datetime)
+    }
     return(dt[])
   }
 
   # Fill in whichever bound is missing
-  if (is.null(to)) to <- lubridate::now("UTC")
-  if (is.null(from)) from <- lubridate::now("UTC") - lubridate::dhours(24)
+  if (is.null(to)) {
+    to <- lubridate::now("UTC")
+  }
+  if (is.null(from)) {
+    from <- lubridate::now("UTC") - lubridate::dhours(24)
+  }
 
   timeframe_seconds <- kucoin_timeframe_map[[timeframe]]
   from_s <- as.integer(as.numeric(from))

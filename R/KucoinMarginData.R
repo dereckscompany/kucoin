@@ -121,7 +121,10 @@ KucoinMarginData <- R6::R6Class(
         auth = FALSE,
         .parser = function(data) {
           # API wraps response in {timestamp, items} envelope
-          items <- data$items %||% data
+          items <- data
+          if (!is.null(data$items)) {
+            items <- data$items
+          }
           if (is.null(items) || length(items) == 0) {
             return(data.table::data.table()[])
           }
@@ -345,9 +348,9 @@ KucoinMarginData <- R6::R6Class(
               for (cur in currencies) {
                 rows[[length(rows) + 1L]] <- data.table::data.table(
                   currency = cur,
-                  lower_limit = as.character(item$lowerLimit %||% NA),
-                  upper_limit = as.character(item$upperLimit %||% NA),
-                  collateral_ratio = as.character(item$collateralRatio %||% NA)
+                  lower_limit = as.character(if (is.null(item$lowerLimit)) NA else item$lowerLimit),
+                  upper_limit = as.character(if (is.null(item$upperLimit)) NA else item$upperLimit),
+                  collateral_ratio = as.character(if (is.null(item$collateralRatio)) NA else item$collateralRatio)
                 )
               }
             }

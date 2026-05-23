@@ -881,7 +881,10 @@ KucoinStopOrders <- R6::R6Class(
         endpoint = "/api/v1/stop-order",
         query = query,
         .parser = function(data) {
-          items <- data$items %||% data
+          items <- data
+          if (!is.null(data$items)) {
+            items <- data$items
+          }
           if (is.null(items) || length(items) == 0) {
             return(data.table::data.table()[])
           }

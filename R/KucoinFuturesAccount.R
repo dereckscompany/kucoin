@@ -399,7 +399,10 @@ KucoinFuturesAccount <- R6::R6Class(
         endpoint = "/api/v1/history-positions",
         query = query,
         .parser = function(data) {
-          items <- data$items %||% data
+          items <- data
+          if (!is.null(data$items)) {
+            items <- data$items
+          }
           dt <- as_dt_list(items)
           if (nrow(dt) > 0 && "open_time" %in% names(dt)) {
             dt[, open_time := ms_to_datetime(open_time)]
@@ -1047,7 +1050,10 @@ KucoinFuturesAccount <- R6::R6Class(
         endpoint = "/api/v1/funding-history",
         query = query,
         .parser = function(data) {
-          items <- data$dataList %||% data
+          items <- data
+          if (!is.null(data$dataList)) {
+            items <- data$dataList
+          }
           dt <- as_dt_list(items)
           if (nrow(dt) > 0 && "time_point" %in% names(dt)) {
             dt[, time_point := ms_to_datetime(time_point)]

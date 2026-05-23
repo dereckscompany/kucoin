@@ -439,7 +439,10 @@ KucoinLending <- R6::R6Class(
         endpoint = "/api/v3/purchase/orders",
         query = query,
         .parser = function(data) {
-          items <- data$items %||% data
+          items <- data
+          if (!is.null(data$items)) {
+            items <- data$items
+          }
           if (is.null(items) || length(items) == 0) {
             return(data.table::data.table()[])
           }
@@ -619,7 +622,10 @@ KucoinLending <- R6::R6Class(
         endpoint = "/api/v3/redeem/orders",
         query = query,
         .parser = function(data) {
-          items <- data$items %||% data
+          items <- data
+          if (!is.null(data$items)) {
+            items <- data$items
+          }
           if (is.null(items) || length(items) == 0) {
             return(data.table::data.table()[])
           }

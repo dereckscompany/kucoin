@@ -570,7 +570,10 @@ KucoinAccount <- R6::R6Class(
         endpoint = "/api/v3/margin/accounts",
         query = query,
         .parser = function(data) {
-          accounts <- data$accounts %||% data
+          accounts <- data
+          if (!is.null(data$accounts)) {
+            accounts <- data$accounts
+          }
           if (is.null(accounts) || length(accounts) == 0) {
             return(data.table::data.table()[])
           }
@@ -682,7 +685,10 @@ KucoinAccount <- R6::R6Class(
         endpoint = "/api/v3/isolated/accounts",
         query = query,
         .parser = function(data) {
-          assets <- data$assets %||% data
+          assets <- data
+          if (!is.null(data$assets)) {
+            assets <- data$assets
+          }
           if (is.null(assets) || length(assets) == 0) {
             return(data.table::data.table()[])
           }
@@ -965,7 +971,10 @@ KucoinAccount <- R6::R6Class(
           endAt = endAt
         ),
         .parser = function(data) {
-          items <- data$items %||% data
+          items <- data
+          if (!is.null(data$items)) {
+            items <- data$items
+          }
           if (is.null(items) || length(items) == 0) {
             return(data.table::data.table()[])
           }

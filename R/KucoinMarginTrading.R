@@ -893,7 +893,10 @@ KucoinMarginTrading <- R6::R6Class(
         endpoint = "/api/v3/margin/borrow",
         query = query,
         .parser = function(data) {
-          items <- data$items %||% data
+          items <- data
+          if (!is.null(data$items)) {
+            items <- data$items
+          }
           if (is.null(items) || length(items) == 0) {
             return(data.table::data.table()[])
           }
@@ -968,7 +971,10 @@ KucoinMarginTrading <- R6::R6Class(
         endpoint = "/api/v3/margin/repay",
         query = query,
         .parser = function(data) {
-          items <- data$items %||% data
+          items <- data
+          if (!is.null(data$items)) {
+            items <- data$items
+          }
           if (is.null(items) || length(items) == 0) {
             return(data.table::data.table()[])
           }
@@ -1047,7 +1053,10 @@ KucoinMarginTrading <- R6::R6Class(
         endpoint = "/api/v3/margin/interest",
         query = query,
         .parser = function(data) {
-          items <- data$items %||% data
+          items <- data
+          if (!is.null(data$items)) {
+            items <- data$items
+          }
           if (is.null(items) || length(items) == 0) {
             return(data.table::data.table()[])
           }
@@ -1122,7 +1131,10 @@ KucoinMarginTrading <- R6::R6Class(
         endpoint = "/api/v3/margin/borrowRate",
         query = query,
         .parser = function(data) {
-          items <- data$items %||% data
+          items <- data
+          if (!is.null(data$items)) {
+            items <- data$items
+          }
           if (is.null(items) || length(items) == 0) {
             return(data.table::data.table()[])
           }
