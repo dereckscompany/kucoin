@@ -254,9 +254,11 @@ KucoinOcoOrders <- R6::R6Class(
     #'
     #' @param orderId Character; the KuCoin-assigned OCO order ID to cancel
     #'   (e.g., `"674c40d38b4b2f00073deef3"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `cancelled_order_ids` (list): List of cancelled order IDs including the
-    #'     parent OCO and its sub-orders.
+    #' @return `data.table` (or `promise<data.table>` if constructed with
+    #'   `async = TRUE`) with one row per cancelled order, and column:
+    #'   - `cancelled_order_id` (character): Cancelled order ID (the parent
+    #'     OCO and each of its sub-orders appear as separate rows). Empty
+    #'     `data.table` if nothing matched.
     #'
     #' @examples
     #' \dontrun{
@@ -264,18 +266,26 @@ KucoinOcoOrders <- R6::R6Class(
     #'
     #' # Cancel a specific OCO order
     #' result <- oco$cancel_order_by_id("674c40d38b4b2f00073deef3")
-    #' print(result$cancelled_order_ids)
+    #' print(result$cancelled_order_id)
     #' }
     cancel_order_by_id = function(orderId) {
       return(private$.request(
         endpoint = paste0("/api/v3/oco/order/", orderId),
         method = "DELETE",
         .parser = function(data) {
-          ids <- data$cancelledOrderIds
-          data$cancelledOrderIds <- NULL
+          ids <- NULL
+          if (!is.null(data)) {
+            ids <- data$cancelledOrderIds
+            data$cancelledOrderIds <- NULL
+          }
+          if (is.null(ids) || length(ids) == 0) {
+            return(data.table::data.table()[])
+          }
           dt <- as_dt_row(data)
-          if (!is.null(ids) && length(ids) > 0) {
-            id_vals <- unlist(ids)
+          id_vals <- as.character(unlist(ids, use.names = FALSE))
+          if (nrow(dt) == 0L) {
+            dt <- data.table::data.table(cancelled_order_id = id_vals)
+          } else {
             dt <- dt[rep(1L, length(id_vals))]
             dt[, cancelled_order_id := id_vals]
           }
@@ -335,9 +345,11 @@ KucoinOcoOrders <- R6::R6Class(
     #'
     #' @param clientOid Character; the client-assigned order ID used when placing
     #'   the OCO order (e.g., `"my-bot-oco-001"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `cancelled_order_ids` (list): List of cancelled order IDs including the
-    #'     parent OCO and its sub-orders.
+    #' @return `data.table` (or `promise<data.table>` if constructed with
+    #'   `async = TRUE`) with one row per cancelled order, and column:
+    #'   - `cancelled_order_id` (character): Cancelled order ID (the parent
+    #'     OCO and each of its sub-orders appear as separate rows). Empty
+    #'     `data.table` if nothing matched.
     #'
     #' @examples
     #' \dontrun{
@@ -345,18 +357,26 @@ KucoinOcoOrders <- R6::R6Class(
     #'
     #' # Cancel by client-assigned ID
     #' result <- oco$cancel_order_by_client_oid("my-bot-oco-001")
-    #' print(result$cancelled_order_ids)
+    #' print(result$cancelled_order_id)
     #' }
     cancel_order_by_client_oid = function(clientOid) {
       return(private$.request(
         endpoint = paste0("/api/v3/oco/client-order/", clientOid),
         method = "DELETE",
         .parser = function(data) {
-          ids <- data$cancelledOrderIds
-          data$cancelledOrderIds <- NULL
+          ids <- NULL
+          if (!is.null(data)) {
+            ids <- data$cancelledOrderIds
+            data$cancelledOrderIds <- NULL
+          }
+          if (is.null(ids) || length(ids) == 0) {
+            return(data.table::data.table()[])
+          }
           dt <- as_dt_row(data)
-          if (!is.null(ids) && length(ids) > 0) {
-            id_vals <- unlist(ids)
+          id_vals <- as.character(unlist(ids, use.names = FALSE))
+          if (nrow(dt) == 0L) {
+            dt <- data.table::data.table(cancelled_order_id = id_vals)
+          } else {
             dt <- dt[rep(1L, length(id_vals))]
             dt[, cancelled_order_id := id_vals]
           }
@@ -420,8 +440,10 @@ KucoinOcoOrders <- R6::R6Class(
     #'   - `symbol` (character): Optional. Trading pair to filter by (e.g., `"BTC-USDT"`).
     #'   - `orderIds` (character): Optional. Comma-separated order IDs to cancel specifically.
     #'   If empty, all active OCO orders are cancelled.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `cancelled_order_ids` (list): List of all cancelled order IDs.
+    #' @return `data.table` (or `promise<data.table>` if constructed with
+    #'   `async = TRUE`) with one row per cancelled order, and column:
+    #'   - `cancelled_order_id` (character): Cancelled order ID. Empty
+    #'     `data.table` if no active OCO orders matched the filter.
     #'
     #' @examples
     #' \dontrun{
@@ -429,7 +451,7 @@ KucoinOcoOrders <- R6::R6Class(
     #'
     #' # Cancel all OCO orders for BTC-USDT
     #' result <- oco$cancel_all(query = list(symbol = "BTC-USDT"))
-    #' print(result$cancelled_order_ids)
+    #' print(result$cancelled_order_id)
     #'
     #' # Cancel all OCO orders (no filter)
     #' result <- oco$cancel_all()
@@ -440,11 +462,19 @@ KucoinOcoOrders <- R6::R6Class(
         method = "DELETE",
         query = query,
         .parser = function(data) {
-          ids <- data$cancelledOrderIds
-          data$cancelledOrderIds <- NULL
+          ids <- NULL
+          if (!is.null(data)) {
+            ids <- data$cancelledOrderIds
+            data$cancelledOrderIds <- NULL
+          }
+          if (is.null(ids) || length(ids) == 0) {
+            return(data.table::data.table()[])
+          }
           dt <- as_dt_row(data)
-          if (!is.null(ids) && length(ids) > 0) {
-            id_vals <- unlist(ids)
+          id_vals <- as.character(unlist(ids, use.names = FALSE))
+          if (nrow(dt) == 0L) {
+            dt <- data.table::data.table(cancelled_order_id = id_vals)
+          } else {
             dt <- dt[rep(1L, length(id_vals))]
             dt[, cancelled_order_id := id_vals]
           }
@@ -693,8 +723,18 @@ KucoinOcoOrders <- R6::R6Class(
     #'   - `client_oid` (character): Client-assigned order identifier.
     #'   - `order_time` (POSIXct): Order creation datetime (coerced from epoch milliseconds).
     #'   - `status` (character): Overall OCO order status.
-    #'   - `orders` (list): List of sub-order details, each containing `id`, `symbol`,
-    #'     `side`, `price`, `size`, `status`, and optionally `stop_price`.
+    #'
+    #'   The nested `orders` array (one entry per sub-order — typically the
+    #'   limit leg + the stop-limit leg) is exploded to long format: the
+    #'   parent OCO row is replicated once per sub-order, and each sub-order's
+    #'   fields are added with a `sub_order_` prefix. Typical sub-order columns:
+    #'   - `sub_order_id` (character)
+    #'   - `sub_order_symbol` (character)
+    #'   - `sub_order_side` (character)
+    #'   - `sub_order_price` (character)
+    #'   - `sub_order_size` (character)
+    #'   - `sub_order_status` (character)
+    #'   - `sub_order_stop_price` (character; only present on the stop leg)
     #'
     #' @examples
     #' \dontrun{

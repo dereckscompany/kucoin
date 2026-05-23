@@ -297,8 +297,16 @@ KucoinMarginData <- R6::R6Class(
         endpoint = "/api/v1/margin/config",
         auth = FALSE,
         .parser = function(data) {
+          # Schema-stable empty `data.table` — same columns as a populated
+          # response, just zero rows. Documented in NEWS as the contract.
+          empty_dt <- data.table::data.table(
+            currency = character(),
+            max_leverage = integer(),
+            warning_debt_ratio = character(),
+            liq_debt_ratio = character()
+          )
           if (is.null(data) || length(data) == 0L) {
-            return(data.table::data.table()[])
+            return(empty_dt[])
           }
           # Treatment B: explode `currencyList` (array of plain strings) so
           # each supported currency gets its own row with the config-level
@@ -307,10 +315,7 @@ KucoinMarginData <- R6::R6Class(
           data$currencyList <- NULL
           dt <- as_dt_row(data)
           if (length(currencies) == 0L) {
-            # Schema-stable zero-row table with the same column set.
-            dt[, currency := character()]
-            data.table::setcolorder(dt, c("currency", setdiff(names(dt), "currency")))
-            return(dt[0L][])
+            return(empty_dt[])
           }
           dt <- dt[rep(1L, length(currencies))]
           dt[, currency := currencies]

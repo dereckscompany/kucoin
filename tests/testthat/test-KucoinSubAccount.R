@@ -172,9 +172,9 @@ test_that("get_detail_balance returns rows across account types", {
   expect_true("account_type" %in% names(dt))
   expect_true("sub_user_id" %in% names(dt))
   expect_true("sub_name" %in% names(dt))
-  expect_equal(sum(dt$account_type == "main_accounts"), 2L)
-  expect_equal(sum(dt$account_type == "trade_accounts"), 1L)
-  expect_equal(sum(dt$account_type == "margin_accounts"), 1L)
+  expect_equal(sum(dt$account_type == "main"), 2L)
+  expect_equal(sum(dt$account_type == "trade"), 1L)
+  expect_equal(sum(dt$account_type == "margin"), 1L)
   # Check column ordering
   expect_equal(names(dt)[1:3], c("sub_user_id", "sub_name", "account_type"))
 })

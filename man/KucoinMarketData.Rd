@@ -415,7 +415,11 @@ Verified: 2026-03-10
 \itemize{
 \item \code{ann_id} (integer): Announcement identifier.
 \item \code{ann_title} (character): Announcement title.
-\item \code{ann_type} (list): Category tags as character vector.
+\item \code{ann_type} (character): Category tag for the announcement.
+KuCoin returns \code{annType} as an array; the parser explodes to
+long format so an announcement tagged with N types appears in
+N rows with the other columns replicated. \code{NA_character_} if
+KuCoin returned no tags for an announcement.
 \item \code{ann_desc} (character): Short description text.
 \item \code{c_time} (POSIXct): Creation datetime (coerced from epoch milliseconds).
 \item \code{language} (character): Language code.

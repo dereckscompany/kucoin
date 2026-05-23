@@ -316,10 +316,6 @@ kucoin_paginate <- function(
           accumulator[[length(accumulator) + 1L]] <<- page_items
         }
 
-        current <- page
-        if (!is.null(data$currentPage)) {
-          current <- data$currentPage
-        }
         total <- 1L
         if (!is.null(data$totalPage)) {
           total <- data$totalPage

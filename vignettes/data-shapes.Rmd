@@ -1,0 +1,144 @@
+---
+title: "Data shapes and the one-row-per-entity convention"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Data shapes and the one-row-per-entity convention}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
+```
+
+## The rule
+
+Every `kucoin` method that returns nested API data follows one rule:
+
+> **Identify the entity for the endpoint, and return one row per entity.**
+
+A trade gets a row. An order gets a row. An asset balance gets a row. A
+candle gets a row. Anything nested under the entity becomes a flat column
+on the same row or an additional row on a different axis — **never a list
+column**.
+
+The same rule applies in the sister `alpaca` and `binance` packages, so
+that switching between exchanges does not mean switching mental models of
+how the data looks.
+
+## The five shape treatments
+
+There are five shapes a nested API field can take, and five treatments. A
+few endpoints use two treatments together when their nesting has two
+layers.
+
+### Treatment A — `;` collapse for arrays of plain strings
+
+When a field is an array of short, plain string values (codes, tags,
+permissions) and the user mostly filters by them, collapse with `;` into a
+single character column. Filter with `grepl`, recover the original vector
+with `strsplit(x, ";", fixed = TRUE)[[1]]`.
+
+The package ships a shared helper `collapse_string_array_fields(x,
+fields)` that does this (NA-safe; emits a once-per-session warning if any
+value contains a literal `;`).
+
+### Treatment B — Long format for arrays of objects
+
+When the array elements are themselves records (each has multiple fields),
+explode to one row per element with the parent fields replicated. Add a
+1-indexed position column where order matters.
+
+```{r}
+# `KucoinSubAccount::get_detail_balance()` returns one row per (sub-account
+# × wallet bucket × asset). The sub-account-level fields (`sub_user_id`,
+# `sub_name`, `account_type`) are replicated on each row.
+sub <- KucoinSubAccount$new()
+bal <- sub$get_detail_balance(sub_user_id)
+bal[account_type == "trade", .(currency, balance, available, holds)]
+```
+
+```{r}
+# `KucoinOcoOrders::get_order_detail_by_id()` explodes the `orders` array
+# into `sub_order_*` columns — one row per child leg.
+oco <- KucoinOcoOrders$new()
+detail <- oco$get_order_detail_by_id(order_id)
+detail[, .(order_id, sub_order_id, sub_order_side, sub_order_price)]
+```
+
+**Schema stability**: when the array is empty, the `<noun>_` columns are
+still present on the row, filled with `NA`. So downstream code that
+always reads `dt$sub_order_id` keeps working whether the OCO had children
+or not.
+
+### Treatment C — Wide prefix for fixed-schema nested objects
+
+When the field is a single nested object with a known fixed key set,
+flatten it to `parent_child` columns.
+
+```{r}
+# `KucoinAccount::get_isolated_margin_account()` flattens the nested
+# `baseAsset` / `quoteAsset` per-pair objects into wide columns.
+acct <- KucoinAccount$new()
+iso <- acct$get_isolated_margin_account()
+iso[, .(symbol, base_asset_currency, base_asset_borrow_enabled,
+        quote_asset_currency, quote_asset_borrow_enabled)]
+```
+
+### Treatment D — Re-route to a sibling method
+
+When a response bundles a collection that doesn't fit the per-entity row
+of the calling endpoint — typically heterogeneous siblings (e.g. an
+account-level summary bundled with per-asset rows) — the parser keeps the
+rows for the entity the method names, and the rest is exposed via a
+dedicated sibling method. Every method still returns one `data.table`; no
+data is lost.
+
+KuCoin uses this less frequently than `binance` because the KuCoin REST
+API tends to namespace different entities to different endpoints already.
+
+### Treatment E — JSON string for dynamic-key or array-of-array objects
+
+When a nested object has dynamic keys (different products have different
+key sets) or is an array of arrays where the inner grouping carries
+semantic meaning, neither `;`-collapse nor wide-prefix preserves the
+structure. Serialise the whole field as a JSON string; recover with
+`jsonlite::fromJSON`.
+
+## Two cross-cutting rules
+
+These apply to every shape treatment:
+
+1. **Empty / null array → `NA_character_`** (no list cells). An order
+   with no fills returns `fill_id = NA`, not `fill_id = list()`.
+2. **Empty response → empty `data.table`** (no synthetic stub rows).
+   `KucoinTrading::cancel_all()` with no open orders returns a zero-row
+   table, not a 1-row `(symbol, status = "cancelled")` fabrication. The
+   absence of an error is the success signal.
+
+## Why this shape works for `data.table`
+
+`data.table` is fast and ergonomic on rectangular long-format data. List
+columns make filtering, grouping, joining, and writing to disk awkward.
+The convention above is what lets you write:
+
+```{r}
+# Top 5 highest-priced asks in the book
+depth[side == "ask"][order(-price)][1:5]
+
+# All BTC-USDT orders that filled at > 50k
+orders <- KucoinTrading$new()$get_all_orders(query = list(symbol = "BTC-USDT"))
+orders[as.numeric(deal_funds) > 50000]
+```
+
+…without escape hatches into `lapply` over hidden lists.
+
+## See also
+
+- `vignette("getting-started", package = "kucoin")` — the package tour.
+- `vignette("async-usage", package = "kucoin")` — using the same methods
+  with `async = TRUE`.
+- The sister `alpaca` and `binance` packages — same convention applied to
+  different exchanges. `binance`'s `vignette("data-shapes")` has a fuller
+  per-class catalogue if you want to see every method's shape in one
+  place.

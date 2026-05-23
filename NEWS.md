@@ -26,6 +26,7 @@
     - `datetime_applied` → `apply_time` (`KucoinLending`)
     - `datetime` → `time` (ticker, trade history, orderbook, 24hr stats)
 * **Kline parameter renamed**: `freq` → `timeframe` in `kucoin_backfill_klines()` and related functions.
+* **`KucoinMarketData$get_klines()` default window changed**: with `from = NULL`/`to = NULL` the method now returns the most recent candles for the requested timeframe rather than the previous "last 24 hours" window. Pass explicit `from`/`to` to restore deterministic ranges.
 * **`KucoinDeposit$get_deposit_addresses()`**: `currency` is now a required argument (removed `NULL` default) to match KuCoin API requirement.
 
 ## BUG FIXES

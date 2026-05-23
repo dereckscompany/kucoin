@@ -111,7 +111,7 @@ oco <- KucoinOcoOrders$new()
 
 # Cancel a specific OCO order
 result <- oco$cancel_order_by_id("674c40d38b4b2f00073deef3")
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 }
 
 ## ------------------------------------------------
@@ -123,7 +123,7 @@ oco <- KucoinOcoOrders$new()
 
 # Cancel by client-assigned ID
 result <- oco$cancel_order_by_client_oid("my-bot-oco-001")
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 }
 
 ## ------------------------------------------------
@@ -135,7 +135,7 @@ oco <- KucoinOcoOrders$new()
 
 # Cancel all OCO orders for BTC-USDT
 result <- oco$cancel_all(query = list(symbol = "BTC-USDT"))
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 
 # Cancel all OCO orders (no filter)
 result <- oco$cancel_all()
@@ -442,10 +442,12 @@ Verified: 2026-02-01
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\code{data.table} (or \verb{promise<data.table>} if constructed with
+\code{async = TRUE}) with one row per cancelled order, and column:
 \itemize{
-\item \code{cancelled_order_ids} (list): List of cancelled order IDs including the
-parent OCO and its sub-orders.
+\item \code{cancelled_order_id} (character): Cancelled order ID (the parent
+OCO and each of its sub-orders appear as separate rows). Empty
+\code{data.table} if nothing matched.
 }
 }
 \subsection{Examples}{
@@ -455,7 +457,7 @@ oco <- KucoinOcoOrders$new()
 
 # Cancel a specific OCO order
 result <- oco$cancel_order_by_id("674c40d38b4b2f00073deef3")
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 }
 }
 \if{html}{\out{</div>}}
@@ -538,10 +540,12 @@ the OCO order (e.g., \code{"my-bot-oco-001"}).}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\code{data.table} (or \verb{promise<data.table>} if constructed with
+\code{async = TRUE}) with one row per cancelled order, and column:
 \itemize{
-\item \code{cancelled_order_ids} (list): List of cancelled order IDs including the
-parent OCO and its sub-orders.
+\item \code{cancelled_order_id} (character): Cancelled order ID (the parent
+OCO and each of its sub-orders appear as separate rows). Empty
+\code{data.table} if nothing matched.
 }
 }
 \subsection{Examples}{
@@ -551,7 +555,7 @@ oco <- KucoinOcoOrders$new()
 
 # Cancel by client-assigned ID
 result <- oco$cancel_order_by_client_oid("my-bot-oco-001")
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 }
 }
 \if{html}{\out{</div>}}
@@ -640,9 +644,11 @@ If empty, all active OCO orders are cancelled.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\code{data.table} (or \verb{promise<data.table>} if constructed with
+\code{async = TRUE}) with one row per cancelled order, and column:
 \itemize{
-\item \code{cancelled_order_ids} (list): List of all cancelled order IDs.
+\item \code{cancelled_order_id} (character): Cancelled order ID. Empty
+\code{data.table} if no active OCO orders matched the filter.
 }
 }
 \subsection{Examples}{
@@ -652,7 +658,7 @@ oco <- KucoinOcoOrders$new()
 
 # Cancel all OCO orders for BTC-USDT
 result <- oco$cancel_all(query = list(symbol = "BTC-USDT"))
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 
 # Cancel all OCO orders (no filter)
 result <- oco$cancel_all()
@@ -964,8 +970,20 @@ Verified: 2026-02-01
 \item \code{client_oid} (character): Client-assigned order identifier.
 \item \code{order_time} (POSIXct): Order creation datetime (coerced from epoch milliseconds).
 \item \code{status} (character): Overall OCO order status.
-\item \code{orders} (list): List of sub-order details, each containing \code{id}, \code{symbol},
-\code{side}, \code{price}, \code{size}, \code{status}, and optionally \code{stop_price}.
+}
+
+The nested \code{orders} array (one entry per sub-order — typically the
+limit leg + the stop-limit leg) is exploded to long format: the
+parent OCO row is replicated once per sub-order, and each sub-order's
+fields are added with a \code{sub_order_} prefix. Typical sub-order columns:
+\itemize{
+\item \code{sub_order_id} (character)
+\item \code{sub_order_symbol} (character)
+\item \code{sub_order_side} (character)
+\item \code{sub_order_price} (character)
+\item \code{sub_order_size} (character)
+\item \code{sub_order_status} (character)
+\item \code{sub_order_stop_price} (character; only present on the stop leg)
 }
 }
 \subsection{Examples}{

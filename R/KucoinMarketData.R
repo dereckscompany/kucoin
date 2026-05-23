@@ -138,7 +138,11 @@ KucoinMarketData <- R6::R6Class(
     #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
     #'   - `ann_id` (integer): Announcement identifier.
     #'   - `ann_title` (character): Announcement title.
-    #'   - `ann_type` (list): Category tags as character vector.
+    #'   - `ann_type` (character): Category tag for the announcement.
+    #'     KuCoin returns `annType` as an array; the parser explodes to
+    #'     long format so an announcement tagged with N types appears in
+    #'     N rows with the other columns replicated. `NA_character_` if
+    #'     KuCoin returned no tags for an announcement.
     #'   - `ann_desc` (character): Short description text.
     #'   - `c_time` (POSIXct): Creation datetime (coerced from epoch milliseconds).
     #'   - `language` (character): Language code.

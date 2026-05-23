@@ -431,7 +431,13 @@ KucoinSubAccount <- R6::R6Class(
               lapply(accounts, as_dt_row),
               fill = TRUE
             )
-            acct_dt[, account_type := to_snake_case(field_name)]
+            # Map raw response field names back to semantic labels
+            # (`mainAccounts` -> `"main"`, `tradeAccounts` -> `"trade"`,
+            # `marginAccounts` -> `"margin"`, future-proofed for any
+            # other `<x>Accounts` shape). This keeps the documented
+            # filter idiom `balances[account_type == "trade"]` working
+            # across schema additions.
+            acct_dt[, account_type := sub("_?accounts?$", "", to_snake_case(field_name))]
             acct_dt[, sub_user_id := sub_id]
             acct_dt[, sub_name := sub_name]
             rows[[length(rows) + 1L]] <- acct_dt
@@ -613,7 +619,13 @@ KucoinSubAccount <- R6::R6Class(
                   lapply(accounts, as_dt_row),
                   fill = TRUE
                 )
-                acct_dt[, account_type := to_snake_case(field_name)]
+                # Map raw response field names back to semantic labels
+                # (`mainAccounts` -> `"main"`, `tradeAccounts` -> `"trade"`,
+                # `marginAccounts` -> `"margin"`, future-proofed for any
+                # other `<x>Accounts` shape). This keeps the documented
+                # filter idiom `balances[account_type == "trade"]` working
+                # across schema additions.
+                acct_dt[, account_type := sub("_?accounts?$", "", to_snake_case(field_name))]
                 acct_dt[, sub_user_id := sub_id]
                 acct_dt[, sub_name := sub_name]
                 all_rows[[length(all_rows) + 1L]] <- acct_dt
