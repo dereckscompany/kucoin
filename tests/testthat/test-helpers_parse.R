@@ -84,7 +84,7 @@ test_that("parse_orderbook creates correct data.table from bid/ask arrays", {
 
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 6L) # 3 bids + 3 asks
-  expect_equal(names(dt), c("time", "sequence", "side", "price", "size"))
+  expect_equal(names(dt), c("time", "sequence", "side", "level", "price", "size"))
 
   # Check sides
   expect_equal(sum(dt$side == "bid"), 3L)
@@ -92,8 +92,13 @@ test_that("parse_orderbook creates correct data.table from bid/ask arrays", {
 
   # Check types
   expect_s3_class(dt$time, "POSIXct")
+  expect_type(dt$level, "integer")
   expect_type(dt$price, "double")
   expect_type(dt$size, "double")
+
+  # `level` resets to 1 per side and increments with source order.
+  expect_equal(dt[side == "bid", level], 1:3)
+  expect_equal(dt[side == "ask", level], 1:3)
 
   # Check values
   expect_equal(dt[side == "bid"][1]$price, 67232.8)

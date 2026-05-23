@@ -190,9 +190,9 @@ print(paste("Buy/Sell ratio:", round(buys / sells, 3)))
 \dontrun{
 market <- KucoinMarketData$new()
 ob <- market$get_part_orderbook("BTC-USDT", size = 20)
-bids <- ob[side == "bid"]
-asks <- ob[side == "ask"]
-print(paste("Best bid:", bids$price[1], "Best ask:", asks$price[1]))
+best_bid <- ob[side == "bid" & level == 1L]
+best_ask <- ob[side == "ask" & level == 1L]
+print(paste("Best bid:", best_bid$price, "Best ask:", best_ask$price))
 }
 
 ## ------------------------------------------------
@@ -1305,7 +1305,7 @@ depth on each side (bids and asks). Public endpoint, no authentication required.
 \item \strong{Validation}: Ensures \code{size} is 20 or 100.
 \item \strong{Request}: GET with size embedded in endpoint path.
 \item \strong{Parsing}: Calls \code{parse_orderbook()} to convert nested bid/ask arrays
-into a long-format \code{data.table} with \code{side}, \code{price}, and \code{size} columns.
+into a long-format \code{data.table} with \code{side}, \code{level}, \code{price}, and \code{size} columns.
 }
 }
 
@@ -1368,6 +1368,8 @@ Verified: 2026-03-10
 \item \code{time} (POSIXct): Server timestamp (coerced from epoch milliseconds).
 \item \code{sequence} (character): Order book sequence number.
 \item \code{side} (character): \code{"bid"} or \code{"ask"}.
+\item \code{level} (integer): 1-indexed depth from top-of-book within the side
+(\code{level == 1} is best bid / best ask).
 \item \code{price} (numeric): Price level.
 \item \code{size} (numeric): Size at that price.
 }
@@ -1377,9 +1379,9 @@ Verified: 2026-03-10
 \preformatted{\dontrun{
 market <- KucoinMarketData$new()
 ob <- market$get_part_orderbook("BTC-USDT", size = 20)
-bids <- ob[side == "bid"]
-asks <- ob[side == "ask"]
-print(paste("Best bid:", bids$price[1], "Best ask:", asks$price[1]))
+best_bid <- ob[side == "bid" & level == 1L]
+best_ask <- ob[side == "ask" & level == 1L]
+print(paste("Best bid:", best_bid$price, "Best ask:", best_ask$price))
 }
 }
 \if{html}{\out{</div>}}
@@ -1464,6 +1466,8 @@ Verified: 2026-03-10
 \item \code{time} (POSIXct): Server timestamp (coerced from epoch milliseconds).
 \item \code{sequence} (character): Order book sequence number.
 \item \code{side} (character): \code{"bid"} or \code{"ask"}.
+\item \code{level} (integer): 1-indexed depth from top-of-book within the side
+(\code{level == 1} is best bid / best ask).
 \item \code{price} (numeric): Price level.
 \item \code{size} (numeric): Size at that price.
 }

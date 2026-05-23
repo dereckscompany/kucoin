@@ -211,12 +211,15 @@ coerce_cols <- function(dt, cols, fn) {
 #' Process Orderbook Data into a data.table
 #'
 #' Transforms the bids/asks arrays from a KuCoin orderbook response into a
-#' tidy [data.table::data.table] with `side`, `price`, and `size` columns.
+#' tidy [data.table::data.table]. KuCoin returns best price first, so the
+#' `level` column captures the 1-indexed depth from top-of-book (1 = best
+#' bid / best ask); the position would otherwise be lost after any sort or
+#' filter. Matches the cross-package long-format convention.
 #'
 #' @param data List; the parsed KuCoin orderbook response data containing
 #'   `bids`, `asks`, `time`, and `sequence` fields.
 #' @return A [data.table::data.table] with columns: `time`, `sequence`,
-#'   `side`, `price`, `size`.
+#'   `side`, `level`, `price`, `size`.
 #'
 #' @keywords internal
 #' @noRd
@@ -225,13 +228,19 @@ parse_orderbook <- function(data) {
     if (is.null(entries) || length(entries) == 0) {
       return(data.table::data.table(
         side = character(),
+        level = integer(),
         price = numeric(),
         size = numeric()
       )[])
     }
-    # Each entry is a list of two strings: [price, quantity].
+    # Each entry is a list of two strings: [price, quantity]. KuCoin
+    # returns best price first, so the 1-indexed position is depth from
+    # top-of-book (`level = 1` is the best bid / best ask). Matches the
+    # cross-package long-format convention (alpaca / binance both add a
+    # position-index column where the source order is meaningful).
     return(data.table::data.table(
       side = side_label,
+      level = seq_along(entries),
       price = as.numeric(vapply(entries, `[[`, character(1), 1L)),
       size = as.numeric(vapply(entries, `[[`, character(1), 2L))
     )[])
@@ -243,7 +252,7 @@ parse_orderbook <- function(data) {
 
   result[, time := ms_to_datetime(data$time)]
   result[, sequence := as.character(data$sequence)]
-  data.table::setcolorder(result, c("time", "sequence", "side", "price", "size"))
+  data.table::setcolorder(result, c("time", "sequence", "side", "level", "price", "size"))
 
   return(result[])
 }

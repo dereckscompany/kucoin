@@ -119,7 +119,7 @@ print(all_tickers[, .(symbol, price, best_bid_price, best_ask_price)])
 \dontrun{
 futures_market <- KucoinFuturesMarketData$new()
 ob <- futures_market$get_part_orderbook("XBTUSDTM", size = 20)
-print(ob[side == "bid"][1:5])
+print(ob[side == "bid"][order(level)][1:5])
 }
 
 ## ------------------------------------------------
@@ -831,6 +831,8 @@ A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{asy
 \item \code{ts} (POSIXct): Snapshot timestamp (coerced from nanoseconds).
 \item \code{sequence} (character): Sequence number for change detection.
 \item \code{side} (character): \code{"bid"} or \code{"ask"}.
+\item \code{level} (integer): 1-indexed depth from top-of-book within the side
+(\code{level == 1} is best bid / best ask).
 \item \code{price} (numeric): Price level.
 \item \code{size} (numeric): Size at this price level.
 }
@@ -840,7 +842,7 @@ A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{asy
 \preformatted{\dontrun{
 futures_market <- KucoinFuturesMarketData$new()
 ob <- futures_market$get_part_orderbook("XBTUSDTM", size = 20)
-print(ob[side == "bid"][1:5])
+print(ob[side == "bid"][order(level)][1:5])
 }
 }
 \if{html}{\out{</div>}}
@@ -935,6 +937,8 @@ A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{asy
 \item \code{ts} (POSIXct): Snapshot timestamp (coerced from nanoseconds).
 \item \code{sequence} (character): Sequence number for change detection.
 \item \code{side} (character): \code{"bid"} or \code{"ask"}.
+\item \code{level} (integer): 1-indexed depth from top-of-book within the side
+(\code{level == 1} is best bid / best ask).
 \item \code{price} (numeric): Price level.
 \item \code{size} (numeric): Size at this price level.
 }

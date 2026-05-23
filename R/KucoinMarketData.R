@@ -922,7 +922,7 @@ KucoinMarketData <- R6::R6Class(
     #' 1. **Validation**: Ensures `size` is 20 or 100.
     #' 2. **Request**: GET with size embedded in endpoint path.
     #' 3. **Parsing**: Calls `parse_orderbook()` to convert nested bid/ask arrays
-    #'    into a long-format `data.table` with `side`, `price`, and `size` columns.
+    #'    into a long-format `data.table` with `side`, `level`, `price`, and `size` columns.
     #'
     #' ### API Endpoint
     #' `GET https://api.kucoin.com/api/v1/market/orderbook/level2_{20|100}`
@@ -962,6 +962,8 @@ KucoinMarketData <- R6::R6Class(
     #'   - `time` (POSIXct): Server timestamp (coerced from epoch milliseconds).
     #'   - `sequence` (character): Order book sequence number.
     #'   - `side` (character): `"bid"` or `"ask"`.
+    #'   - `level` (integer): 1-indexed depth from top-of-book within the side
+    #'     (`level == 1` is best bid / best ask).
     #'   - `price` (numeric): Price level.
     #'   - `size` (numeric): Size at that price.
     #'
@@ -969,9 +971,9 @@ KucoinMarketData <- R6::R6Class(
     #' \dontrun{
     #' market <- KucoinMarketData$new()
     #' ob <- market$get_part_orderbook("BTC-USDT", size = 20)
-    #' bids <- ob[side == "bid"]
-    #' asks <- ob[side == "ask"]
-    #' print(paste("Best bid:", bids$price[1], "Best ask:", asks$price[1]))
+    #' best_bid <- ob[side == "bid" & level == 1L]
+    #' best_ask <- ob[side == "ask" & level == 1L]
+    #' print(paste("Best bid:", best_bid$price, "Best ask:", best_ask$price))
     #' }
     get_part_orderbook = function(symbol, size = 20) {
       if (!size %in% c(20, 100)) {
@@ -1038,6 +1040,8 @@ KucoinMarketData <- R6::R6Class(
     #'   - `time` (POSIXct): Server timestamp (coerced from epoch milliseconds).
     #'   - `sequence` (character): Order book sequence number.
     #'   - `side` (character): `"bid"` or `"ask"`.
+    #'   - `level` (integer): 1-indexed depth from top-of-book within the side
+    #'     (`level == 1` is best bid / best ask).
     #'   - `price` (numeric): Price level.
     #'   - `size` (numeric): Size at that price.
     #'

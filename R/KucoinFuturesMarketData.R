@@ -541,6 +541,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #'   - `ts` (POSIXct): Snapshot timestamp (coerced from nanoseconds).
     #'   - `sequence` (character): Sequence number for change detection.
     #'   - `side` (character): `"bid"` or `"ask"`.
+    #'   - `level` (integer): 1-indexed depth from top-of-book within the side
+    #'     (`level == 1` is best bid / best ask).
     #'   - `price` (numeric): Price level.
     #'   - `size` (numeric): Size at this price level.
     #'
@@ -548,7 +550,7 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' \dontrun{
     #' futures_market <- KucoinFuturesMarketData$new()
     #' ob <- futures_market$get_part_orderbook("XBTUSDTM", size = 20)
-    #' print(ob[side == "bid"][1:5])
+    #' print(ob[side == "bid"][order(level)][1:5])
     #' }
     get_part_orderbook = function(symbol, size = 20) {
       size <- match.arg(as.character(size), c("20", "100"))
@@ -623,6 +625,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #'   - `ts` (POSIXct): Snapshot timestamp (coerced from nanoseconds).
     #'   - `sequence` (character): Sequence number for change detection.
     #'   - `side` (character): `"bid"` or `"ask"`.
+    #'   - `level` (integer): 1-indexed depth from top-of-book within the side
+    #'     (`level == 1` is best bid / best ask).
     #'   - `price` (numeric): Price level.
     #'   - `size` (numeric): Size at this price level.
     #'
@@ -1260,12 +1264,17 @@ parse_futures_orderbook <- function(data) {
     if (is.null(entries) || length(entries) == 0) {
       return(data.table::data.table(
         side = character(),
+        level = integer(),
         price = numeric(),
         size = numeric()
       )[])
     }
+    # KuCoin returns best price first; `level = 1` is the top of the
+    # book for the given side. Matches `parse_orderbook` (spot) and the
+    # cross-package long-format convention.
     return(data.table::data.table(
       side = side_label,
+      level = seq_along(entries),
       price = vapply(entries, function(e) as.numeric(e[[1]]), numeric(1)),
       size = vapply(entries, function(e) as.numeric(e[[2]]), numeric(1))
     )[])
@@ -1280,7 +1289,7 @@ parse_futures_orderbook <- function(data) {
   if (!is.null(data$symbol)) {
     result[, symbol := data$symbol]
   }
-  data.table::setcolorder(result, c("ts", "sequence", "side", "price", "size"))
+  data.table::setcolorder(result, c("ts", "sequence", "side", "level", "price", "size"))
 
   return(result[])
 }

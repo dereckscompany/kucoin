@@ -101,13 +101,28 @@ test_that("get_part_orderbook returns data.table with bids and asks", {
   dt <- new_market()$get_part_orderbook("XBTUSDTM", size = 20)
   expect_s3_class(dt, "data.table")
   expect_true(nrow(dt) > 0)
-  expect_true(all(c("ts", "sequence", "side", "price", "size") %in% names(dt)))
+  expect_true(all(c("ts", "sequence", "side", "level", "price", "size") %in% names(dt)))
   expect_s3_class(dt$ts, "POSIXct")
+  expect_type(dt$level, "integer")
   expect_true("bid" %in% dt$side)
   expect_true("ask" %in% dt$side)
   # Prices should be numeric
   expect_true(is.numeric(dt$price))
   expect_true(is.numeric(dt$size))
+})
+
+test_that("get_part_orderbook level column is 1-indexed depth within each side", {
+  resp <- mock_kucoin_response(data = mock_futures_orderbook_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_market()$get_part_orderbook("XBTUSDTM", size = 20)
+
+  expect_equal(dt[side == "bid", level], seq_len(sum(dt$side == "bid")))
+  expect_equal(dt[side == "ask", level], seq_len(sum(dt$side == "ask")))
+  best_bid <- dt[side == "bid"][level == 1L, price]
+  best_ask <- dt[side == "ask"][level == 1L, price]
+  expect_equal(best_bid, max(dt[side == "bid", price]))
+  expect_equal(best_ask, min(dt[side == "ask", price]))
 })
 
 test_that("get_part_orderbook validates size parameter", {
@@ -325,7 +340,7 @@ test_that("get_part_orderbook has no list columns; long-format bids/asks", {
 
   dt <- new_market()$get_part_orderbook("XBTUSDTM", size = 20)
   expect_equal(n_list_cols(dt), 0L)
-  expect_true(all(c("ts", "sequence", "side", "price", "size") %in% names(dt)))
+  expect_true(all(c("ts", "sequence", "side", "level", "price", "size") %in% names(dt)))
   expect_s3_class(dt$ts, "POSIXct")
 })
 
