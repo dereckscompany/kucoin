@@ -138,11 +138,16 @@ KucoinMarketData <- R6::R6Class(
     #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
     #'   - `ann_id` (integer): Announcement identifier.
     #'   - `ann_title` (character): Announcement title.
-    #'   - `ann_type` (character): Category tag for the announcement.
-    #'     KuCoin returns `annType` as an array; the parser explodes to
-    #'     long format so an announcement tagged with N types appears in
-    #'     N rows with the other columns replicated. `NA_character_` if
-    #'     KuCoin returned no tags for an announcement.
+    #'   - `ann_type` (character): `;`-separated category tags for the
+    #'     announcement. KuCoin returns `annType` as an array; the parser
+    #'     collapses it to a single character column via the shared
+    #'     `collapse_string_array_fields()` helper (Treatment A —
+    #'     matches the cross-package convention used by alpaca/binance
+    #'     for plain-string arrays). Filter with
+    #'     `grepl("latest-announcements", ann_type, fixed = TRUE)`;
+    #'     recover the vector via
+    #'     `strsplit(ann_type, ";", fixed = TRUE)[[1]]`. `NA_character_`
+    #'     if KuCoin returned no tags.
     #'   - `ann_desc` (character): Short description text.
     #'   - `c_time` (POSIXct): Creation datetime (coerced from epoch milliseconds).
     #'   - `language` (character): Language code.
@@ -172,42 +177,20 @@ KucoinMarketData <- R6::R6Class(
           if (length(pages) == 0) {
             return(data.table::data.table()[])
           }
-          # Extract annType arrays before flattening to avoid list-columns
-          ann_types_list <- list()
-          idx <- 0L
-          for (page in pages) {
-            for (item in page) {
-              idx <- idx + 1L
-              types <- item[["annType"]]
-              if (is.null(types) || length(types) == 0) {
-                ann_types_list[[idx]] <- NA_character_
-              } else {
-                ann_types_list[[idx]] <- as.character(unlist(types))
-              }
-              item[["annType"]] <- NULL
-            }
-          }
-          # Remove annType from items before flatten_pages
+          # Treatment A: `annType` is an array of plain strings (e.g.
+          # `c("latest-announcements", "new-listings")`). Collapse to a
+          # single `;`-separated character column via the shared helper
+          # so we keep one row per announcement (no list-column, no row
+          # multiplication). Matches the cross-package convention used
+          # by `alpaca`/`binance` for `permissions`, `order_types`, etc.
           pages_clean <- lapply(pages, function(page) {
-            lapply(page, function(item) {
-              item[["annType"]] <- NULL
-              return(item)
-            })
+            lapply(page, collapse_string_array_fields, "annType")
           })
           dt <- flatten_pages(pages_clean)
           if (nrow(dt) == 0) {
             return(dt[])
           }
-          if ("c_time" %in% names(dt)) {
-            dt[, c_time := ms_to_datetime(c_time)]
-          }
-          # Expand ann_type to long format: one row per type tag
-          dt[, .ann_idx := .I]
-          types_dt <- data.table::rbindlist(lapply(seq_along(ann_types_list), function(i) {
-            data.table::data.table(.ann_idx = i, ann_type = ann_types_list[[i]])
-          }))
-          dt <- dt[types_dt, on = ".ann_idx"]
-          dt[, .ann_idx := NULL]
+          coerce_cols(dt, "c_time", ms_to_datetime)
           return(dt[])
         },
         page_size = page_size,

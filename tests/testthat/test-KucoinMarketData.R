@@ -259,6 +259,55 @@ test_that("get_klines returns OHLCV data.table via kucoin_fetch_klines", {
   expect_gt(nrow(dt), 0L)
 })
 
+# -- get_announcements --
+
+test_that("get_announcements collapses ann_type to a `;`-separated string (Treatment A)", {
+  # Cross-package convention: arrays of plain strings -> single
+  # character column, recoverable via `strsplit(x, ";", fixed = TRUE)`.
+  # The mock has two announcements: the first with two tags, the second
+  # with one.
+  resp <- mock_kucoin_response(data = mock_announcements_page_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  market <- KucoinMarketData$new()
+  dt <- market$get_announcements(page_size = 50, max_pages = 1)
+
+  expect_s3_class(dt, "data.table")
+  # Two source records -> two rows (NOT four — Treatment A keeps one
+  # row per entity even when the array has multiple values).
+  expect_equal(nrow(dt), 2L)
+
+  # `ann_type` is a character column, `;`-collapsed.
+  expect_type(dt$ann_type, "character")
+  expect_equal(dt$ann_type[1], "latest-announcements;new-listings")
+  expect_equal(dt$ann_type[2], "latest-announcements")
+
+  # No list columns.
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
+
+  # c_time converted to POSIXct.
+  expect_s3_class(dt$c_time, "POSIXct")
+
+  # Recover the original vector for one record.
+  expect_equal(
+    strsplit(dt$ann_type[1], ";", fixed = TRUE)[[1]],
+    c("latest-announcements", "new-listings")
+  )
+})
+
+test_that("get_announcements handles announcements with no annType (NA_character_)", {
+  data <- mock_announcements_page_data()
+  data$items[[1]]$annType <- list()
+  resp <- mock_kucoin_response(data = data)
+  httr2::local_mocked_responses(function(req) resp)
+
+  market <- KucoinMarketData$new()
+  dt <- market$get_announcements(page_size = 50, max_pages = 1)
+
+  expect_true(is.na(dt$ann_type[1]))
+  expect_equal(dt$ann_type[2], "latest-announcements")
+})
+
 # -- get_full_orderbook (authenticated) --
 
 test_that("get_full_orderbook passes authentication headers", {
