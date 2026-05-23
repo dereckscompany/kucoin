@@ -106,7 +106,27 @@ KucoinMarginData <- R6::R6Class(
     #'
     #' @param query Named list; optional. Supported keys:
     #'   - `symbol` (character): Filter by specific symbol (e.g., `"BTC-USDT"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with margin symbol details.
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
+    #'   with **one row per cross-margin symbol** and the following columns
+    #'   (subset shown — KuCoin may add fields):
+    #'   - `symbol` (character): Trading pair identifier (e.g. `"BTC-USDT"`).
+    #'   - `name` (character): Display name.
+    #'   - `enable_trading` (logical): Whether trading is enabled.
+    #'   - `market` (character): Market category (e.g. `"USDS"`).
+    #'   - `base_currency` (character): Base asset code.
+    #'   - `quote_currency` (character): Quote asset code.
+    #'   - `base_increment` (character): Minimum base-quantity step.
+    #'   - `base_min_size` (character): Minimum order base quantity.
+    #'   - `base_max_size` (character): Maximum order base quantity.
+    #'   - `quote_increment` (character): Minimum quote-quantity step.
+    #'   - `quote_min_size` (character): Minimum order quote quantity.
+    #'   - `quote_max_size` (character): Maximum order quote quantity.
+    #'   - `price_increment` (character): Minimum price step.
+    #'   - `fee_currency` (character): Currency charged for trading fees.
+    #'   - `price_limit_rate` (character): Maximum allowed price deviation.
+    #'   - `min_funds` (character): Minimum order notional.
+    #'
+    #'   Empty response yields an empty `data.table`.
     #'
     #' @examples
     #' \dontrun{
@@ -180,7 +200,21 @@ KucoinMarginData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with isolated margin symbol details.
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
+    #'   with **one row per isolated-margin pair** and columns:
+    #'   - `symbol` (character): Trading pair identifier.
+    #'   - `symbol_name` (character): Display name.
+    #'   - `base_currency` (character): Base asset code.
+    #'   - `quote_currency` (character): Quote asset code.
+    #'   - `max_leverage` (integer): Maximum leverage available.
+    #'   - `fl_debt_ratio` (character): Forced-liquidation debt ratio.
+    #'   - `trade_enable` (logical): Whether trading is enabled.
+    #'   - `base_borrow_enable` (logical): Base-currency borrow allowed.
+    #'   - `quote_borrow_enable` (logical): Quote-currency borrow allowed.
+    #'   - `base_transfer_in_enable` (logical): Base-currency transfer-in allowed.
+    #'   - `quote_transfer_in_enable` (logical): Quote-currency transfer-in allowed.
+    #'
+    #'   Empty response yields an empty `data.table`.
     #'
     #' @examples
     #' \dontrun{
@@ -240,12 +274,16 @@ KucoinMarginData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row
-    #'   per supported currency, containing:
-    #' - `currency` (character): Supported margin currency (e.g., `"BTC"`, `"ETH"`).
-    #' - `max_leverage` (numeric): Maximum leverage.
-    #' - `warning_debt_ratio` (character): Warning debt ratio.
-    #' - `liq_debt_ratio` (character): Liquidation debt ratio.
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
+    #'   with **one row per supported currency** (the `currencyList` array is
+    #'   exploded so each currency gets its own row with the config-level fields
+    #'   replicated). Columns:
+    #'   - `currency` (character): Supported margin currency (e.g. `"BTC"`).
+    #'   - `max_leverage` (integer): Maximum leverage.
+    #'   - `warning_debt_ratio` (character): Warning debt ratio.
+    #'   - `liq_debt_ratio` (character): Liquidation debt ratio.
+    #'
+    #'   Empty `currencyList` yields a zero-row `data.table` with this schema.
     #'
     #' @examples
     #' \dontrun{
@@ -259,9 +297,21 @@ KucoinMarginData <- R6::R6Class(
         endpoint = "/api/v1/margin/config",
         auth = FALSE,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table()[])
+          }
+          # Treatment B: explode `currencyList` (array of plain strings) so
+          # each supported currency gets its own row with the config-level
+          # fields replicated.
           currencies <- as.character(unlist(data$currencyList))
           data$currencyList <- NULL
           dt <- as_dt_row(data)
+          if (length(currencies) == 0L) {
+            # Schema-stable zero-row table with the same column set.
+            dt[, currency := character()]
+            data.table::setcolorder(dt, c("currency", setdiff(names(dt), "currency")))
+            return(dt[0L][])
+          }
           dt <- dt[rep(1L, length(currencies))]
           dt[, currency := currencies]
           data.table::setcolorder(dt, c("currency", setdiff(names(dt), "currency")))
@@ -316,8 +366,16 @@ KucoinMarginData <- R6::R6Class(
     #'
     #' @param query Named list; optional. Supported keys:
     #'   - `currencyList` (character): Comma-separated currencies (e.g., `"BTC,ETH"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row per currency per tier.
-    #'   Columns: `currency`, `lower_limit`, `upper_limit`, `collateral_ratio`.
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
+    #'   with **one row per (currency, tier) pair**. The nested
+    #'   `currencyList`/`items` arrays are cross-joined to a flat long table.
+    #'   Columns:
+    #'   - `currency` (character): Currency code.
+    #'   - `lower_limit` (character): Lower bound of the collateral range.
+    #'   - `upper_limit` (character): Upper bound of the collateral range.
+    #'   - `collateral_ratio` (character): Ratio applied in that range.
+    #'
+    #'   Empty response yields a zero-row `data.table` with this schema.
     #'
     #' @examples
     #' \dontrun{
@@ -410,7 +468,22 @@ KucoinMarginData <- R6::R6Class(
     #' @param query Named list; optional additional filters. Supported keys:
     #'   - `currency` (character): Currency filter (cross margin).
     #'   - `symbol` (character): Symbol filter (isolated margin only).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with risk limit details.
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
+    #'   with **one row per currency** (cross) or **one row per (symbol, currency)
+    #'   pair** (isolated). Common columns:
+    #'   - `currency` (character): Currency code.
+    #'   - `borrow_max_amount` (character): Maximum borrowable amount.
+    #'   - `buy_max_amount` (character): Maximum buyable amount.
+    #'   - `hold_max_amount` (character): Maximum hold amount.
+    #'   - `borrow_coefficient` (character): Coefficient applied to borrows.
+    #'   - `margin_coefficient` (character): Coefficient applied to margin.
+    #'   - `precision` (integer): Decimal precision.
+    #'   - `borrow_min_amount` (character): Minimum borrowable amount.
+    #'   - `borrow_min_unit` (character): Minimum borrow step.
+    #'   - `borrow_enabled` (logical): Whether borrowing is currently enabled.
+    #'
+    #'   For isolated margin an extra `symbol` (character) column is present.
+    #'   Empty response yields an empty `data.table`.
     #'
     #' @examples
     #' \dontrun{
