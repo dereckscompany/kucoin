@@ -135,7 +135,7 @@ KucoinTransfer <- R6::R6Class(
     #' @param fromAccountTag Character or NULL; symbol for ISOLATED/ISOLATED_V2 source accounts (e.g., `"BTC-USDT"`).
     #' @param toUserId Character or NULL; destination user ID (required for `"PARENT_TO_SUB"` transfers).
     #' @param toAccountTag Character or NULL; symbol for ISOLATED/ISOLATED_V2 destination accounts (e.g., `"BTC-USDT"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row and columns:
     #'   - `order_id` (character): The transfer order identifier.
     #'
     #' @examples
@@ -292,7 +292,7 @@ KucoinTransfer <- R6::R6Class(
     #'   `"ISOLATED"`, `"MARGIN_V2"`, `"ISOLATED_V2"`.
     #' @param tag Character or NULL; trading pair symbol required for `"ISOLATED"`
     #'   account type (e.g., `"BTC-USDT"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row and columns:
     #'   - `currency` (character): Currency code.
     #'   - `balance` (character): Total funds in the account.
     #'   - `available` (character): Funds available to withdraw or trade.
@@ -330,11 +330,11 @@ KucoinTransfer <- R6::R6Class(
         .parser = function(data) {
           dt <- as_dt_row(data)
           if (nrow(dt) == 0L) {
-            return(dt)
+            return(dt[])
           }
           expected <- c("currency", "balance", "available", "holds", "transferable")
           data.table::setcolorder(dt, intersect(expected, names(dt)))
-          return(dt)
+          return(dt[])
         }
       ))
     }

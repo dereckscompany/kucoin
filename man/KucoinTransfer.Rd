@@ -259,7 +259,7 @@ Verified: 2026-02-02
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
 \itemize{
 \item \code{order_id} (character): The transfer order identifier.
 }
@@ -377,7 +377,7 @@ account type (e.g., \code{"BTC-USDT"}).}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
 \itemize{
 \item \code{currency} (character): Currency code.
 \item \code{balance} (character): Total funds in the account.
