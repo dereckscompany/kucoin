@@ -125,7 +125,7 @@ KucoinWithdrawal <- R6::R6Class(
     #' @param isInner Logical or NULL; if `TRUE`, this is an internal KuCoin transfer (no on-chain fee).
     #' @param remark Character or NULL; optional remark for the withdrawal.
     #' @param feeDeductType Character or NULL; fee deduction type: `"INTERNAL"` or `"EXTERNAL"`.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row and columns:
     #'   - `withdrawal_id` (character): The unique withdrawal identifier.
     #'
     #' @examples
@@ -258,8 +258,9 @@ KucoinWithdrawal <- R6::R6Class(
     #' ```
     #'
     #' @param withdrawalId Character; the unique withdrawal ID to cancel.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `withdrawal_id` (character): The cancelled withdrawal ID.
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row and columns:
+    #'   - `withdrawal_id` (character): The cancelled withdrawal ID (echoed from the input
+    #'     since KuCoin returns `null` data on a successful cancel).
     #'
     #' @examples
     #' \dontrun{
@@ -347,7 +348,7 @@ KucoinWithdrawal <- R6::R6Class(
     #' @param currency Character; currency code (e.g., `"BTC"`, `"USDT"`).
     #' @param chain Character or NULL; blockchain network identifier (e.g., `"eth"`, `"trx"`).
     #'   When NULL, returns quotas for the default chain.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row and columns:
     #'   - `currency` (character): Currency code.
     #'   - `limit_btc_amount` (character): Daily withdrawal limit in BTC equivalent.
     #'   - `used_btc_amount` (character): BTC equivalent already withdrawn today.
@@ -485,7 +486,7 @@ KucoinWithdrawal <- R6::R6Class(
     #' @param endAt Integer or NULL; end timestamp in milliseconds (inclusive).
     #' @param page_size Integer; number of results per page (default 50, max 500).
     #' @param max_pages Numeric; maximum number of pages to fetch (default `Inf` for all pages).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row per withdrawal and columns:
     #'   - `currency` (character): Withdrawn currency code.
     #'   - `chain` (character): Blockchain network used.
     #'   - `status` (character): Withdrawal status.
@@ -495,10 +496,10 @@ KucoinWithdrawal <- R6::R6Class(
     #'   - `amount` (character): Withdrawal amount.
     #'   - `fee` (character): Withdrawal fee charged.
     #'   - `wallet_tx_id` (character): On-chain transaction hash.
-    #'   - `updated_at` (numeric): Last update timestamp in milliseconds.
+    #'   - `created_at` (POSIXct): Creation datetime (coerced from epoch milliseconds).
+    #'   - `updated_at` (POSIXct): Last update datetime (coerced from epoch milliseconds).
     #'   - `remark` (character): Optional remark.
     #'   - `arrears` (logical): Whether the withdrawal is in arrears.
-    #'   - `created_at` (POSIXct): Creation datetime (coerced from epoch milliseconds).
     #'
     #'   Returns an empty `data.table` if no withdrawals match the filters.
     #'
@@ -548,9 +549,7 @@ KucoinWithdrawal <- R6::R6Class(
           if (nrow(dt) == 0L) {
             return(dt[])
           }
-          if ("created_at" %in% names(dt)) {
-            dt[, created_at := ms_to_datetime(created_at)]
-          }
+          coerce_cols(dt, c("created_at", "updated_at"), ms_to_datetime)
           data.table::setcolorder(
             dt,
             intersect(
@@ -636,7 +635,7 @@ KucoinWithdrawal <- R6::R6Class(
     #' ```
     #'
     #' @param withdrawalId Character; the unique withdrawal ID.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row and columns:
     #'   - `id` (character): Withdrawal ID.
     #'   - `currency` (character): Currency code.
     #'   - `chain_id` (character): Chain identifier (e.g., `"trx"`, `"eth"`).
