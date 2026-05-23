@@ -34,6 +34,8 @@
 * Fixed `KucoinLending$get_loan_market()` — KuCoin now requires authentication for `/api/v3/project/list`. Removed erroneous `auth = FALSE`.
 * Removed usage of `%||%` operator which was not defined or imported; replaced with explicit `if (is.null(...))` checks.
 * Fixed `URLencode()` in request signing to coerce query values to character before encoding, preventing errors on numeric parameters.
+* `KucoinMarginTrading$repay()` now coerces the response `timestamp` to `POSIXct` instead of leaving it as a raw millisecond `numeric`, matching the rest of the package's timestamp behaviour.
+* `KucoinMarginData$get_margin_config()` now returns a schema-stable zero-row `data.table` when `currencyList` is empty or `data` is `NULL`, rather than indexing into an empty row.
 
 ## IMPROVEMENTS
 
@@ -54,6 +56,7 @@
     - `KucoinLending$get_purchase_orders()` / `get_redeem_orders()`: `status` is **required** in the query list.
     - `KucoinLending$get_loan_market()`: now documented as authenticated.
 * Corrected `wrap_list_fields` / `as_dt_row` documentation to accurately describe `length >= 1` wrapping behavior.
+* Expanded `@return` blocks across `KucoinMarginData`, `KucoinMarginTrading`, and `KucoinLending`: every public method now spells out its columns and their R types, the per-method row entity, and how the empty case is shaped — matching the binance/alpaca data-shape vignette.
 * Updated `kucoin_btc_usdt_4h_ohlcv` dataset documentation to reflect 18,351 rows through March 2026.
 * Two new vignettes: "Margin Trading" and "Futures Trading".
 * Updated ROADMAP to v4.0.0 with Futures classes added to completed items.
@@ -66,6 +69,7 @@
 * New mocked test suites: `test-KucoinMarginTrading.R`, `test-KucoinMarginData.R`, `test-KucoinLending.R`, `test-KucoinFuturesMarketData.R`, `test-KucoinFuturesTrading.R`, `test-KucoinFuturesAccount.R`, `test-bug-hunt.R`, `test-fetch-all.R`.
 * All live tests use `Sys.sleep(0.5)` rate limiting between calls.
 * Write tests use only the `/orders/test` dry-run endpoint — no real orders placed.
+* Added data-shape regression tests on `KucoinMarginData`, `KucoinMarginTrading`, and `KucoinLending`: each public method asserts there are no list columns, the column types match the documented `@return` block, and the empty-response path yields a zero-row `data.table` rather than a stub row.
 
 ## DATA
 
