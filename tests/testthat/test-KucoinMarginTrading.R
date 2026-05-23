@@ -278,3 +278,181 @@ test_that("modify_leverage validates leverage", {
   expect_error(new_margin()$modify_leverage(leverage = -1), "positive")
   expect_error(new_margin()$modify_leverage(leverage = "abc"), "positive")
 })
+
+# -- Data-shape regression: no list columns, schema stability --
+#
+# Cross-package convention is "one entity = one row, no list columns".
+
+test_that("open_short returns no list columns", {
+  resp <- mock_kucoin_response(
+    data = list(
+      orderId = "o1",
+      clientOid = "c1",
+      borrowSize = "0.001",
+      loanApplyId = "loan-1"
+    )
+  )
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_margin()$open_short(symbol = "BTC-USDT", size = 0.001)
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
+  expect_true(is.character(dt$order_id))
+  expect_true(is.character(dt$client_oid))
+  expect_true(is.character(dt$borrow_size))
+  expect_true(is.character(dt$loan_apply_id))
+})
+
+test_that("close_long returns no list columns", {
+  resp <- mock_kucoin_response(data = list(orderId = "o4", clientOid = "c4"))
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_margin()$close_long(symbol = "BTC-USDT", size = 0.001)
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
+  expect_true(is.character(dt$order_id))
+  expect_true(is.character(dt$client_oid))
+})
+
+test_that("borrow returns no list columns", {
+  resp <- mock_kucoin_response(data = list(orderNo = "b1", actualSize = "100"))
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_margin()$borrow(currency = "USDT", size = 100)
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
+  expect_true(is.character(dt$order_no))
+  expect_true(is.character(dt$actual_size))
+})
+
+test_that("repay coerces timestamp to POSIXct with no list columns", {
+  resp <- mock_kucoin_response(
+    data = list(timestamp = 1729655606816, orderNo = "r1", actualSize = "100")
+  )
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_margin()$repay(currency = "USDT", size = 100)
+  expect_s3_class(dt, "data.table")
+  expect_equal(nrow(dt), 1L)
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
+  expect_s3_class(dt$timestamp, "POSIXct")
+  expect_true(is.character(dt$order_no))
+  expect_true(is.character(dt$actual_size))
+})
+
+test_that("get_borrow_history schema: no list columns, POSIXct created_time", {
+  resp <- mock_kucoin_response(
+    data = list(
+      items = list(
+        list(
+          orderNo = "b1",
+          symbol = "BTC-USDT",
+          currency = "USDT",
+          size = "100",
+          actualSize = "100",
+          status = "DONE",
+          createdTime = 1729655606816
+        )
+      )
+    )
+  )
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_margin()$get_borrow_history()
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
+  expect_s3_class(dt$created_time, "POSIXct")
+  expect_true(is.character(dt$order_no))
+  expect_true(is.character(dt$currency))
+})
+
+test_that("get_repay_history schema: no list columns, POSIXct created_time", {
+  resp <- mock_kucoin_response(
+    data = list(
+      items = list(
+        list(
+          orderNo = "r1",
+          symbol = "BTC-USDT",
+          currency = "USDT",
+          size = "100",
+          actualSize = "100",
+          status = "DONE",
+          createdTime = 1729655606816
+        )
+      )
+    )
+  )
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_margin()$get_repay_history()
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
+  expect_s3_class(dt$created_time, "POSIXct")
+})
+
+test_that("get_interest_history schema: no list columns, POSIXct created_time", {
+  resp <- mock_kucoin_response(
+    data = list(
+      items = list(
+        list(
+          currency = "USDT",
+          dayRatio = "0.0001",
+          interestAmount = "0.01",
+          createdTime = 1729655606816
+        )
+      )
+    )
+  )
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_margin()$get_interest_history()
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
+  expect_s3_class(dt$created_time, "POSIXct")
+  expect_true(is.character(dt$currency))
+})
+
+test_that("get_borrow_rate schema: no list columns", {
+  resp <- mock_kucoin_response(
+    data = list(
+      list(currency = "BTC", hourlyBorrowRate = "0.000004", annualizedBorrowRate = "0.035"),
+      list(currency = "USDT", hourlyBorrowRate = "0.000006", annualizedBorrowRate = "0.0526")
+    )
+  )
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_margin()$get_borrow_rate()
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
+  expect_true(is.character(dt$currency))
+  expect_true(is.character(dt$hourly_borrow_rate))
+  expect_true(is.character(dt$annualized_borrow_rate))
+})
+
+test_that("get_borrow_rate returns empty data.table for empty response", {
+  resp <- mock_kucoin_response(data = list())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_margin()$get_borrow_rate()
+  expect_s3_class(dt, "data.table")
+  expect_equal(nrow(dt), 0L)
+})
+
+test_that("get_interest_history returns empty data.table for empty items", {
+  resp <- mock_kucoin_response(data = list(items = list()))
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_margin()$get_interest_history()
+  expect_s3_class(dt, "data.table")
+  expect_equal(nrow(dt), 0L)
+})
+
+test_that("get_repay_history returns empty data.table for empty items", {
+  resp <- mock_kucoin_response(data = list(items = list()))
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_margin()$get_repay_history()
+  expect_s3_class(dt, "data.table")
+  expect_equal(nrow(dt), 0L)
+})
+
+test_that("modify_leverage returns no list columns", {
+  resp <- mock_kucoin_response(data = NULL)
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_margin()$modify_leverage(leverage = 5)
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
+})
