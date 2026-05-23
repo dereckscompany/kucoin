@@ -7,7 +7,14 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r, include = FALSE, purl = FALSE}
+# All example chunks below carry `purl = FALSE` individually so that
+# `R CMD check`'s vignette-tangling step does not extract them as
+# runnable R code (they reference placeholder identifiers like
+# `sub_user_id`, `order_id`, and `depth`). Setting `purl` here in
+# `opts_chunk$set()` does NOT work — `knitr::purl()` does a static
+# extraction and never evaluates this setup chunk, so the per-chunk
+# `purl = FALSE` on each example is what actually skips them.
 knitr::opts_chunk$set(eval = FALSE, collapse = TRUE, comment = "#>")
 ```
 
@@ -49,7 +56,7 @@ When the array elements are themselves records (each has multiple fields),
 explode to one row per element with the parent fields replicated. Add a
 1-indexed position column where order matters.
 
-```{r}
+```{r, purl = FALSE}
 # `KucoinSubAccount::get_detail_balance()` returns one row per (sub-account
 # × wallet bucket × asset). The sub-account-level fields (`sub_user_id`,
 # `sub_name`, `account_type`) are replicated on each row.
@@ -58,7 +65,7 @@ bal <- sub$get_detail_balance(sub_user_id)
 bal[account_type == "trade", .(currency, balance, available, holds)]
 ```
 
-```{r}
+```{r, purl = FALSE}
 # `KucoinOcoOrders::get_order_detail_by_id()` explodes the `orders` array
 # into `sub_order_*` columns — one row per child leg.
 oco <- KucoinOcoOrders$new()
@@ -66,17 +73,21 @@ detail <- oco$get_order_detail_by_id(order_id)
 detail[, .(order_id, sub_order_id, sub_order_side, sub_order_price)]
 ```
 
-**Schema stability**: when the array is empty, the `<noun>_` columns are
-still present on the row, filled with `NA`. So downstream code that
-always reads `dt$sub_order_id` keeps working whether the OCO had children
-or not.
+**Empty arrays**: KuCoin's Treatment B parsers don't know every
+possible child field up-front (some sub-orders carry `stopPrice`, others
+don't), so they don't synthesise an `NA`-filled `<noun>_*` schema when
+the array is empty. `KucoinOcoOrders::get_order_detail_by_id()` with no
+sub-orders returns just the parent columns; cancel parsers with an empty
+`cancelledOrderIds` return a zero-row table. Defensive callers should
+check `<noun>_*` columns with `"sub_order_id" %in% names(dt)` rather
+than assuming they're always present.
 
 ### Treatment C — Wide prefix for fixed-schema nested objects
 
 When the field is a single nested object with a known fixed key set,
 flatten it to `parent_child` columns.
 
-```{r}
+```{r, purl = FALSE}
 # `KucoinAccount::get_isolated_margin_account()` flattens the nested
 # `baseAsset` / `quoteAsset` per-pair objects into wide columns.
 acct <- KucoinAccount$new()
@@ -122,7 +133,7 @@ These apply to every shape treatment:
 columns make filtering, grouping, joining, and writing to disk awkward.
 The convention above is what lets you write:
 
-```{r}
+```{r, purl = FALSE}
 # Top 5 highest-priced asks in the book
 depth[side == "ask"][order(-price)][1:5]
 

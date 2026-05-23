@@ -740,10 +740,11 @@ KucoinOcoOrders <- R6::R6Class(
     #' \dontrun{
     #' oco <- KucoinOcoOrders$new()
     #'
-    #' # Get full OCO order details with sub-orders
+    #' # Get full OCO order details with sub-orders. The `orders` array
+    #' # is exploded to long format, so each sub-order is its own row
+    #' # with `sub_order_*` columns alongside the parent OCO fields.
     #' details <- oco$get_order_detail_by_id("674c40d38b4b2f00073deef3")
-    #' print(details$status)
-    #' print(details$orders)
+    #' details[, .(order_id, status, sub_order_id, sub_order_side, sub_order_price)]
     #' }
     get_order_detail_by_id = function(orderId) {
       return(private$.request(

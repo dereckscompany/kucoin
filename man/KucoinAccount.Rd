@@ -430,9 +430,7 @@ Verified: 2026-02-01
 \item \code{remark} (character): Key label.
 \item \code{api_key} (character): API key ID.
 \item \code{api_version} (integer): Key version.
-\item \code{permission} (character): Comma-separated permissions e.g. \code{"General,Spot"}.
-Already a single string from KuCoin (not a JSON array); recover the
-vector with \code{strsplit(dt$permission[1], ",", fixed = TRUE)[[1]]}.
+\item \code{permission} (character): Comma-separated permissions e.g. \code{"General,Spot"} (already a single string from KuCoin, not a JSON array; recover the vector with \code{strsplit(dt$permission[1], ",", fixed = TRUE)[[1]]}).
 \item \code{ip_whitelist} (character): Allowed IPs (comma-separated string).
 \item \code{created_at} (POSIXct): Key creation datetime (coerced from epoch milliseconds).
 \item \code{uid} (numeric): User ID.

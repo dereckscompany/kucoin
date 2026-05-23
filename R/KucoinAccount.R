@@ -212,9 +212,7 @@ KucoinAccount <- R6::R6Class(
     #' - `remark` (character): Key label.
     #' - `api_key` (character): API key ID.
     #' - `api_version` (integer): Key version.
-    #' - `permission` (character): Comma-separated permissions e.g. `"General,Spot"`.
-    #'   Already a single string from KuCoin (not a JSON array); recover the
-    #'   vector with `strsplit(dt$permission[1], ",", fixed = TRUE)[[1]]`.
+    #' - `permission` (character): Comma-separated permissions e.g. `"General,Spot"` (already a single string from KuCoin, not a JSON array; recover the vector with `strsplit(dt$permission[1], ",", fixed = TRUE)[[1]]`).
     #' - `ip_whitelist` (character): Allowed IPs (comma-separated string).
     #' - `created_at` (POSIXct): Key creation datetime (coerced from epoch milliseconds).
     #' - `uid` (numeric): User ID.
