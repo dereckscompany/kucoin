@@ -327,7 +327,7 @@ Verified: 2026-02-01
 }
 
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
 \itemize{
 \item \code{level} (integer): VIP tier.
 \item \code{sub_quantity} (integer): Total sub-accounts.
@@ -425,14 +425,14 @@ Verified: 2026-02-01
 }
 
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
 \itemize{
 \item \code{remark} (character): Key label.
 \item \code{api_key} (character): API key ID.
 \item \code{api_version} (integer): Key version.
-\item \code{permission} (character): Comma-separated permissions e.g. \code{"General,Spot"}.
-\item \code{ip_whitelist} (character): Allowed IPs.
-\item \code{created_at} (numeric): Epoch ms.
+\item \code{permission} (character): Comma-separated permissions e.g. \code{"General,Spot"} (already a single string from KuCoin, not a JSON array; recover the vector with \code{strsplit(dt$permission[1], ",", fixed = TRUE)[[1]]}).
+\item \code{ip_whitelist} (character): Allowed IPs (comma-separated string).
+\item \code{created_at} (POSIXct): Key creation datetime (coerced from epoch milliseconds).
 \item \code{uid} (numeric): User ID.
 \item \code{is_master} (logical): TRUE if master account key.
 }
@@ -854,9 +854,13 @@ Verified: 2026-02-01
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with
+one row per currency (Treatment B). The account-level summary fields
+(\code{total_asset_of_quote_currency}, \code{total_liability_of_quote_currency}, \code{debt_ratio},
+\code{status}) are replicated on every row so the caller never needs a sibling method.
+Columns (subset; the exact set depends on the KuCoin payload):
 \itemize{
-\item \code{currency} (character): Currency code.
+\item \code{currency} (character): Currency code (e.g. \code{"USDT"}, \code{"BTC"}).
 \item \code{total} (character): Total balance.
 \item \code{available} (character): Available balance.
 \item \code{hold} (character): Amount on hold.
@@ -866,9 +870,13 @@ Verified: 2026-02-01
 \item \code{max_borrow_size} (character): Maximum borrowable amount.
 \item \code{borrow_enabled} (logical): Whether borrowing is enabled.
 \item \code{transfer_in_enabled} (logical): Whether transfer-in is enabled.
+\item \code{total_asset_of_quote_currency} (character): Account-level total asset (repeated).
+\item \code{total_liability_of_quote_currency} (character): Account-level total liability (repeated).
+\item \code{debt_ratio} (character): Account-level debt ratio (repeated).
+\item \code{status} (character): Account-level status (repeated).
+}
 
 Returns an empty \code{data.table} if no margin accounts exist.
-}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -993,12 +1001,42 @@ Verified: 2026-02-01
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-Columns are flattened from the nested response and may include:
-\code{symbol} (character), \code{status} (character), \code{debt_ratio} (character),
-and nested \verb{base_asset.*} and \verb{quote_asset.*} fields (currency, total, available, hold,
-liability, liability_principal, liability_interest, max_borrow_size). Returns an empty \code{data.table}
-if no isolated margin accounts exist.
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with
+one row per isolated-margin pair (Treatment B) and the nested \code{baseAsset} / \code{quoteAsset}
+objects flattened wide-prefix (Treatment C). The account-level fields
+\code{total_asset_of_quote_currency}, \code{total_liability_of_quote_currency}, and \code{timestamp}
+are replicated on every row.
+Columns:
+\itemize{
+\item \code{symbol} (character): Isolated pair symbol (e.g. \code{"BTC-USDT"}).
+\item \code{status} (character): Account status (e.g. \code{"EFFECTIVE"}).
+\item \code{debt_ratio} (character): Liability-to-asset ratio.
+\item \code{base_asset_currency} (character): Base asset code.
+\item \code{base_asset_borrow_enabled} (logical): Whether borrowing the base asset is allowed.
+\item \code{base_asset_transfer_in_enabled} (logical): Whether transferring the base asset in is allowed.
+\item \code{base_asset_liability} (character): Total base-asset liability.
+\item \code{base_asset_liability_principal} (character): Base-asset liability principal.
+\item \code{base_asset_liability_interest} (character): Base-asset liability interest.
+\item \code{base_asset_total} (character): Base-asset total balance.
+\item \code{base_asset_available} (character): Base-asset available balance.
+\item \code{base_asset_hold} (character): Base-asset amount on hold.
+\item \code{base_asset_max_borrow_size} (character): Base-asset maximum borrowable.
+\item \code{quote_asset_currency} (character): Quote asset code.
+\item \code{quote_asset_borrow_enabled} (logical): Whether borrowing the quote asset is allowed.
+\item \code{quote_asset_transfer_in_enabled} (logical): Whether transferring the quote asset in is allowed.
+\item \code{quote_asset_liability} (character): Total quote-asset liability.
+\item \code{quote_asset_liability_principal} (character): Quote-asset liability principal.
+\item \code{quote_asset_liability_interest} (character): Quote-asset liability interest.
+\item \code{quote_asset_total} (character): Quote-asset total balance.
+\item \code{quote_asset_available} (character): Quote-asset available balance.
+\item \code{quote_asset_hold} (character): Quote-asset amount on hold.
+\item \code{quote_asset_max_borrow_size} (character): Quote-asset maximum borrowable.
+\item \code{total_asset_of_quote_currency} (character): Account-level total asset (repeated).
+\item \code{total_liability_of_quote_currency} (character): Account-level total liability (repeated).
+\item \code{timestamp} (POSIXct): Snapshot timestamp (repeated).
+}
+
+Returns an empty \code{data.table} if no isolated-margin pairs exist.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

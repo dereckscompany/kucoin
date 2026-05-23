@@ -130,7 +130,7 @@ KucoinAccount <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row and columns:
     #' - `level` (integer): VIP tier.
     #' - `sub_quantity` (integer): Total sub-accounts.
     #' - `max_default_sub_quantity` (integer): Max default sub-accounts.
@@ -208,13 +208,13 @@ KucoinAccount <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row and columns:
     #' - `remark` (character): Key label.
     #' - `api_key` (character): API key ID.
     #' - `api_version` (integer): Key version.
-    #' - `permission` (character): Comma-separated permissions e.g. `"General,Spot"`.
-    #' - `ip_whitelist` (character): Allowed IPs.
-    #' - `created_at` (numeric): Epoch ms.
+    #' - `permission` (character): Comma-separated permissions e.g. `"General,Spot"` (already a single string from KuCoin, not a JSON array; recover the vector with `strsplit(dt$permission[1], ",", fixed = TRUE)[[1]]`).
+    #' - `ip_whitelist` (character): Allowed IPs (comma-separated string).
+    #' - `created_at` (POSIXct): Key creation datetime (coerced from epoch milliseconds).
     #' - `uid` (numeric): User ID.
     #' - `is_master` (logical): TRUE if master account key.
     #'
@@ -229,7 +229,11 @@ KucoinAccount <- R6::R6Class(
     get_apikey_info = function() {
       return(private$.request(
         endpoint = "/api/v1/user/api-key",
-        .parser = as_dt_row
+        .parser = function(data) {
+          dt <- as_dt_row(data)
+          coerce_cols(dt, "created_at", ms_to_datetime)
+          return(dt[])
+        }
       ))
     },
 
@@ -543,17 +547,25 @@ KucoinAccount <- R6::R6Class(
     #'   - `quoteCurrency` (character): Quote currency for valuation e.g. `"USDT"`, `"BTC"`.
     #'   - `queryType` (character): Query type e.g. `"MARGIN"`, `"MARGIN_V2"`.
     #'
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #' - `currency` (character): Currency code.
-    #' - `total` (character): Total balance.
-    #' - `available` (character): Available balance.
-    #' - `hold` (character): Amount on hold.
-    #' - `liability` (character): Total liability.
-    #' - `liability_principal` (character): Liability principal.
-    #' - `liability_interest` (character): Liability interest.
-    #' - `max_borrow_size` (character): Maximum borrowable amount.
-    #' - `borrow_enabled` (logical): Whether borrowing is enabled.
-    #' - `transfer_in_enabled` (logical): Whether transfer-in is enabled.
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with
+    #'   one row per currency (Treatment B). The account-level summary fields
+    #'   (`total_asset_of_quote_currency`, `total_liability_of_quote_currency`, `debt_ratio`,
+    #'   `status`) are replicated on every row so the caller never needs a sibling method.
+    #'   Columns (subset; the exact set depends on the KuCoin payload):
+    #'   - `currency` (character): Currency code (e.g. `"USDT"`, `"BTC"`).
+    #'   - `total` (character): Total balance.
+    #'   - `available` (character): Available balance.
+    #'   - `hold` (character): Amount on hold.
+    #'   - `liability` (character): Total liability.
+    #'   - `liability_principal` (character): Liability principal.
+    #'   - `liability_interest` (character): Liability interest.
+    #'   - `max_borrow_size` (character): Maximum borrowable amount.
+    #'   - `borrow_enabled` (logical): Whether borrowing is enabled.
+    #'   - `transfer_in_enabled` (logical): Whether transfer-in is enabled.
+    #'   - `total_asset_of_quote_currency` (character): Account-level total asset (repeated).
+    #'   - `total_liability_of_quote_currency` (character): Account-level total liability (repeated).
+    #'   - `debt_ratio` (character): Account-level debt ratio (repeated).
+    #'   - `status` (character): Account-level status (repeated).
     #'
     #'   Returns an empty `data.table` if no margin accounts exist.
     #'
@@ -570,11 +582,33 @@ KucoinAccount <- R6::R6Class(
         endpoint = "/api/v3/margin/accounts",
         query = query,
         .parser = function(data) {
-          accounts <- data$accounts %||% data
-          if (is.null(accounts) || length(accounts) == 0) {
+          accounts <- NULL
+          if (!is.null(data$accounts)) {
+            accounts <- data$accounts
+          }
+          if (is.null(accounts) || length(accounts) == 0L) {
             return(data.table::data.table()[])
           }
-          return(data.table::rbindlist(lapply(accounts, as_dt_row), fill = TRUE)[])
+
+          child_dt <- as_dt_list(accounts)
+          if (nrow(child_dt) == 0L) {
+            return(data.table::data.table()[])
+          }
+
+          # Account-level summary fields replicated on each per-currency row
+          # (Treatment B with replicated parent). The spec prefers replication
+          # over Treatment D here because the parent fields are small scalars
+          # and the caller would otherwise need to refetch the same endpoint.
+          parent <- data
+          parent$accounts <- NULL
+          parent_dt <- as_dt_row(parent)
+          if (nrow(parent_dt) > 0L) {
+            parent_dt <- parent_dt[rep(1L, nrow(child_dt))]
+            dt <- cbind(child_dt, parent_dt)
+          } else {
+            dt <- child_dt
+          }
+          return(dt[])
         }
       ))
     },
@@ -662,12 +696,40 @@ KucoinAccount <- R6::R6Class(
     #'   - `quoteCurrency` (character): Quote currency for valuation e.g. `"USDT"`.
     #'   - `queryType` (character): Query type e.g. `"ISOLATED"`, `"ISOLATED_V2"`.
     #'
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   Columns are flattened from the nested response and may include:
-    #'   `symbol` (character), `status` (character), `debt_ratio` (character),
-    #'   and nested `base_asset.*` and `quote_asset.*` fields (currency, total, available, hold,
-    #'   liability, liability_principal, liability_interest, max_borrow_size). Returns an empty `data.table`
-    #'   if no isolated margin accounts exist.
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with
+    #'   one row per isolated-margin pair (Treatment B) and the nested `baseAsset` / `quoteAsset`
+    #'   objects flattened wide-prefix (Treatment C). The account-level fields
+    #'   `total_asset_of_quote_currency`, `total_liability_of_quote_currency`, and `timestamp`
+    #'   are replicated on every row.
+    #'   Columns:
+    #'   - `symbol` (character): Isolated pair symbol (e.g. `"BTC-USDT"`).
+    #'   - `status` (character): Account status (e.g. `"EFFECTIVE"`).
+    #'   - `debt_ratio` (character): Liability-to-asset ratio.
+    #'   - `base_asset_currency` (character): Base asset code.
+    #'   - `base_asset_borrow_enabled` (logical): Whether borrowing the base asset is allowed.
+    #'   - `base_asset_transfer_in_enabled` (logical): Whether transferring the base asset in is allowed.
+    #'   - `base_asset_liability` (character): Total base-asset liability.
+    #'   - `base_asset_liability_principal` (character): Base-asset liability principal.
+    #'   - `base_asset_liability_interest` (character): Base-asset liability interest.
+    #'   - `base_asset_total` (character): Base-asset total balance.
+    #'   - `base_asset_available` (character): Base-asset available balance.
+    #'   - `base_asset_hold` (character): Base-asset amount on hold.
+    #'   - `base_asset_max_borrow_size` (character): Base-asset maximum borrowable.
+    #'   - `quote_asset_currency` (character): Quote asset code.
+    #'   - `quote_asset_borrow_enabled` (logical): Whether borrowing the quote asset is allowed.
+    #'   - `quote_asset_transfer_in_enabled` (logical): Whether transferring the quote asset in is allowed.
+    #'   - `quote_asset_liability` (character): Total quote-asset liability.
+    #'   - `quote_asset_liability_principal` (character): Quote-asset liability principal.
+    #'   - `quote_asset_liability_interest` (character): Quote-asset liability interest.
+    #'   - `quote_asset_total` (character): Quote-asset total balance.
+    #'   - `quote_asset_available` (character): Quote-asset available balance.
+    #'   - `quote_asset_hold` (character): Quote-asset amount on hold.
+    #'   - `quote_asset_max_borrow_size` (character): Quote-asset maximum borrowable.
+    #'   - `total_asset_of_quote_currency` (character): Account-level total asset (repeated).
+    #'   - `total_liability_of_quote_currency` (character): Account-level total liability (repeated).
+    #'   - `timestamp` (POSIXct): Snapshot timestamp (repeated).
+    #'
+    #'   Returns an empty `data.table` if no isolated-margin pairs exist.
     #'
     #' @examples
     #' \dontrun{
@@ -682,11 +744,80 @@ KucoinAccount <- R6::R6Class(
         endpoint = "/api/v3/isolated/accounts",
         query = query,
         .parser = function(data) {
-          assets <- data$assets %||% data
-          if (is.null(assets) || length(assets) == 0) {
+          assets <- NULL
+          if (!is.null(data$assets)) {
+            assets <- data$assets
+          }
+          if (is.null(assets) || length(assets) == 0L) {
             return(data.table::data.table()[])
           }
-          return(data.table::rbindlist(lapply(assets, as_dt_row), fill = TRUE)[])
+
+          # Flatten each asset: nested baseAsset/quoteAsset objects -> wide-prefix
+          # (Treatment C). The result is a single flat record per pair so the
+          # outer `as_dt_list` doesn't have to deal with list columns.
+          flat_assets <- lapply(assets, function(a) {
+            for (nested in c("baseAsset", "quoteAsset")) {
+              obj <- a[[nested]]
+              prefix <- to_snake_case(nested)
+              if (!is.null(obj) && is.list(obj) && length(obj) > 0L) {
+                for (nm in names(obj)) {
+                  a[[paste0(prefix, "_", nm)]] <- obj[[nm]]
+                }
+              }
+              a[[nested]] <- NULL
+            }
+            return(a)
+          })
+
+          child_dt <- as_dt_list(flat_assets)
+          if (nrow(child_dt) == 0L) {
+            return(data.table::data.table()[])
+          }
+
+          # Account-level summary fields replicated on each row (Treatment B
+          # with replicated parent). Caller doesn't need a sibling method —
+          # the parent summary is small enough to inline.
+          parent <- data
+          parent$assets <- NULL
+          parent_dt <- as_dt_row(parent)
+          if (nrow(parent_dt) > 0L) {
+            coerce_cols(parent_dt, "timestamp", ms_to_datetime)
+            parent_dt <- parent_dt[rep(1L, nrow(child_dt))]
+            dt <- cbind(child_dt, parent_dt)
+          } else {
+            dt <- child_dt
+          }
+
+          expected <- c(
+            "symbol",
+            "status",
+            "debt_ratio",
+            "base_asset_currency",
+            "base_asset_borrow_enabled",
+            "base_asset_transfer_in_enabled",
+            "base_asset_liability",
+            "base_asset_liability_principal",
+            "base_asset_liability_interest",
+            "base_asset_total",
+            "base_asset_available",
+            "base_asset_hold",
+            "base_asset_max_borrow_size",
+            "quote_asset_currency",
+            "quote_asset_borrow_enabled",
+            "quote_asset_transfer_in_enabled",
+            "quote_asset_liability",
+            "quote_asset_liability_principal",
+            "quote_asset_liability_interest",
+            "quote_asset_total",
+            "quote_asset_available",
+            "quote_asset_hold",
+            "quote_asset_max_borrow_size",
+            "total_asset_of_quote_currency",
+            "total_liability_of_quote_currency",
+            "timestamp"
+          )
+          data.table::setcolorder(dt, intersect(expected, names(dt)))
+          return(dt[])
         }
       ))
     },
@@ -965,7 +1096,10 @@ KucoinAccount <- R6::R6Class(
           endAt = endAt
         ),
         .parser = function(data) {
-          items <- data$items %||% data
+          items <- data
+          if (!is.null(data$items)) {
+            items <- data$items
+          }
           if (is.null(items) || length(items) == 0) {
             return(data.table::data.table()[])
           }

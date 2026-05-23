@@ -291,7 +291,7 @@ Required by the KuCoin API.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
 \itemize{
 \item \code{withdrawal_id} (character): The unique withdrawal identifier.
 }
@@ -394,9 +394,10 @@ Verified: 2026-02-02
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
 \itemize{
-\item \code{withdrawal_id} (character): The cancelled withdrawal ID.
+\item \code{withdrawal_id} (character): The cancelled withdrawal ID (echoed from the input
+since KuCoin returns \code{null} data on a successful cancel).
 }
 }
 \subsection{Examples}{
@@ -503,7 +504,7 @@ When NULL, returns quotas for the default chain.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
 \itemize{
 \item \code{currency} (character): Currency code.
 \item \code{limit_btc_amount} (character): Daily withdrawal limit in BTC equivalent.
@@ -653,7 +654,7 @@ When NULL, returns withdrawals of all statuses.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row per withdrawal and columns:
 \itemize{
 \item \code{currency} (character): Withdrawn currency code.
 \item \code{chain} (character): Blockchain network used.
@@ -664,10 +665,10 @@ When NULL, returns withdrawals of all statuses.}
 \item \code{amount} (character): Withdrawal amount.
 \item \code{fee} (character): Withdrawal fee charged.
 \item \code{wallet_tx_id} (character): On-chain transaction hash.
-\item \code{updated_at} (numeric): Last update timestamp in milliseconds.
+\item \code{created_at} (POSIXct): Creation datetime (coerced from epoch milliseconds).
+\item \code{updated_at} (POSIXct): Last update datetime (coerced from epoch milliseconds).
 \item \code{remark} (character): Optional remark.
 \item \code{arrears} (logical): Whether the withdrawal is in arrears.
-\item \code{created_at} (POSIXct): Creation datetime (coerced from epoch milliseconds).
 }
 
 Returns an empty \code{data.table} if no withdrawals match the filters.
@@ -781,7 +782,7 @@ Verified: 2026-02-02
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
 \itemize{
 \item \code{id} (character): Withdrawal ID.
 \item \code{currency} (character): Currency code.

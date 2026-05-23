@@ -32,6 +32,7 @@ test_that("add_withdrawal returns data.table with withdrawal_id", {
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
   expect_equal(dt$withdrawal_id, "670deec84d64da0007d7c946")
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
 
 test_that("add_withdrawal validates currency", {
@@ -111,6 +112,7 @@ test_that("cancel_withdrawal returns data.table with withdrawal_id", {
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
   expect_equal(dt$withdrawal_id, "670deec84d64da0007d7c946")
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
 
 test_that("cancel_withdrawal validates withdrawalId", {
@@ -154,6 +156,8 @@ test_that("get_withdrawal_quotas returns data.table with quota details", {
   expect_equal(dt$precision, 8L)
   # Check column ordering starts with currency
   expect_equal(names(dt)[1], "currency")
+  # No list columns
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
 
 test_that("get_withdrawal_quotas validates currency", {
@@ -199,10 +203,14 @@ test_that("get_withdrawal_history returns paginated data with created_at", {
   expect_true("created_at" %in% names(dt))
   expect_false("datetime_created" %in% names(dt))
   expect_s3_class(dt$created_at, "POSIXct")
+  # updated_at now coerced to POSIXct
+  expect_s3_class(dt$updated_at, "POSIXct")
   expect_equal(dt$currency, "USDT")
   expect_equal(dt$status, "SUCCESS")
   # Check column ordering
   expect_equal(names(dt)[1], "currency")
+  # No list columns
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
 
 test_that("get_withdrawal_history handles empty items", {
@@ -275,6 +283,8 @@ test_that("get_withdrawal_by_id returns detailed data.table with created_at", {
   expect_equal(dt$cancel_type, "NON_CANCELABLE")
   # Check column ordering starts with id
   expect_equal(names(dt)[1], "id")
+  # No list columns
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
 
 test_that("get_withdrawal_by_id validates withdrawalId", {

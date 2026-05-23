@@ -176,7 +176,8 @@ Default \code{"USDT"}.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} with columns:
+A single-row \code{data.table} (or \verb{promise<data.table>} if
+constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{account_equity} (numeric): Total account equity.
 \item \code{unrealised_pnl} (numeric): Unrealised profit and loss.
@@ -277,22 +278,36 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{data.table} with columns:
+A single-row \code{data.table} (or \verb{promise<data.table>} if
+constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{id} (character): Position identifier.
 \item \code{symbol} (character): Contract symbol.
+\item \code{auto_deposit} (logical): Auto-deposit margin flag.
 \item \code{real_leverage} (numeric): Effective leverage.
 \item \code{cross_mode} (logical): Whether cross margin mode is active.
+\item \code{delev_percentage} (numeric): Auto-deleveraging percentage.
 \item \code{current_qty} (integer): Current position size in contracts.
 \item \code{current_cost} (character): Cost of the current position.
+\item \code{current_comm} (character): Current commission paid.
+\item \code{unrealised_cost} (character): Unrealised cost.
+\item \code{realised_gross_cost} (character): Realised gross cost.
+\item \code{realised_cost} (character): Realised cost.
 \item \code{is_open} (logical): Whether the position is open.
 \item \code{mark_price} (numeric): Current mark price.
 \item \code{mark_value} (character): Mark value of the position.
+\item \code{pos_cost} (character): Position cost.
+\item \code{pos_init} (character): Initial margin.
+\item \code{pos_comm} (character): Position commission.
 \item \code{pos_margin} (character): Position margin.
-\item \code{unrealised_pnl} (numeric): Unrealised profit and loss.
+\item \code{unrealised_pnl} (character): Unrealised profit and loss.
+\item \code{unrealised_pnl_pcnt} (numeric): Unrealised PnL as a percentage.
 \item \code{avg_entry_price} (character): Average entry price.
 \item \code{liquidation_price} (character): Estimated liquidation price.
+\item \code{bankrupt_price} (character): Bankruptcy price.
+\item \code{settle_currency} (character): Settlement currency.
 \item \code{margin_mode} (character): \code{"ISOLATED"} or \code{"CROSS"}.
+\item \code{position_side} (character): \code{"BOTH"}, \code{"LONG"}, or \code{"SHORT"}.
 \item \code{opening_timestamp} (POSIXct): Position opened time (coerced from milliseconds).
 \item \code{current_timestamp} (POSIXct): Current server time (coerced from milliseconds).
 }
@@ -394,7 +409,10 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{data.table}; same columns as \code{get_position()}.
+A \code{data.table} (or \verb{promise<data.table>} if constructed with
+\code{async = TRUE}) with one row per open position; same columns as
+\code{get_position()}. Returns an empty \code{data.table} when there are no
+open positions.
 }
 }
 \if{html}{\out{<hr>}}
@@ -484,14 +502,26 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{data.table} with columns:
+A \code{data.table} (or \verb{promise<data.table>} if constructed with
+\code{async = TRUE}) with one row per closed position record. Returns an
+empty \code{data.table} when no history records match. Columns:
 \itemize{
+\item \code{close_id} (character): Close-event identifier.
+\item \code{position_id} (character): Position identifier.
+\item \code{uid} (integer): Numeric user ID.
+\item \code{user_id} (character): String user ID.
 \item \code{symbol} (character): Contract symbol.
 \item \code{settle_currency} (character): Settlement currency.
-\item \code{realised_gross_pnl} (character): Gross realised PNL.
-\item \code{realised_pnl} (character): Net realised PNL (after fees).
-\item \code{leverage} (integer): Leverage used.
+\item \code{leverage} (character): Leverage used.
 \item \code{type} (character): Close type (e.g., \code{"Close"}).
+\item \code{pnl} (character): Realised PnL.
+\item \code{realised_gross_cost} (character): Gross realised cost.
+\item \code{withdraw_pnl} (character): Withdrawn PnL.
+\item \code{trade_fee} (character): Trading fee.
+\item \code{funding_fee} (character): Funding fee.
+\item \code{open_price} (character): Average open price.
+\item \code{close_price} (character): Average close price.
+\item \code{margin_mode} (character): \code{"ISOLATED"} or \code{"CROSS"}.
 \item \code{open_time} (POSIXct): Position opened time (coerced from milliseconds).
 \item \code{close_time} (POSIXct): Position closed time (coerced from milliseconds).
 }
@@ -558,7 +588,8 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} with columns:
+A single-row \code{data.table} (or \verb{promise<data.table>} if
+constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{symbol} (character): Contract symbol.
 \item \code{margin_mode} (character): \code{"ISOLATED"} or \code{"CROSS"}.
@@ -639,7 +670,8 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} with columns:
+A single-row \code{data.table} (or \verb{promise<data.table>} if
+constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{symbol} (character): Contract symbol.
 \item \code{margin_mode} (character): Updated margin mode.
@@ -707,7 +739,8 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} with columns:
+A single-row \code{data.table} (or \verb{promise<data.table>} if
+constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{symbol} (character): Contract symbol.
 \item \code{leverage} (character): Current leverage multiplier.
@@ -788,7 +821,8 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} with columns:
+A single-row \code{data.table} (or \verb{promise<data.table>} if
+constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{symbol} (character): Contract symbol.
 \item \code{leverage} (character): Updated leverage multiplier.
@@ -861,7 +895,8 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} with columns:
+A single-row \code{data.table} (or \verb{promise<data.table>} if
+constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{symbol} (character): Contract symbol.
 \item \code{max_buy_open_size} (integer): Maximum buy contracts.
@@ -927,7 +962,14 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} with the maximum withdrawable margin amount.
+A single-row \code{data.table} (or \verb{promise<data.table>} if
+constructed with \code{async = TRUE}) with columns:
+\itemize{
+\item \code{max_withdraw_margin} (character): Maximum amount of isolated
+margin that can be withdrawn from the position. Returned by
+KuCoin as a fixed-precision string so the caller controls
+numeric coercion.
+}
 }
 }
 \if{html}{\out{<hr>}}
@@ -1009,7 +1051,8 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} with columns:
+A single-row \code{data.table} (or \verb{promise<data.table>} if
+constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{id} (character): Margin operation ID.
 \item \code{symbol} (character): Contract symbol.
@@ -1094,7 +1137,8 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} with columns:
+A single-row \code{data.table} (or \verb{promise<data.table>} if
+constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{id} (character): Margin operation ID.
 \item \code{symbol} (character): Contract symbol.
@@ -1189,7 +1233,9 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{data.table} with columns:
+A \code{data.table} (or \verb{promise<data.table>} if constructed with
+\code{async = TRUE}) with one row per risk-limit tier. Returns an empty
+\code{data.table} when KuCoin returns no tiers. Columns:
 \itemize{
 \item \code{symbol} (character): Contract symbol.
 \item \code{level} (integer): Risk limit tier level.
@@ -1289,7 +1335,9 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{data.table} with columns:
+A \code{data.table} (or \verb{promise<data.table>} if constructed with
+\code{async = TRUE}) with one row per funding settlement. Returns an
+empty \code{data.table} when no records are returned. Columns:
 \itemize{
 \item \code{id} (integer): Record identifier.
 \item \code{symbol} (character): Contract symbol.

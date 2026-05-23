@@ -231,7 +231,23 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with lending currency info.
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+with \strong{one row per lending currency} and columns:
+\itemize{
+\item \code{currency} (character): Currency code (e.g. \code{"USDT"}).
+\item \code{purchase_enable} (logical): Whether new purchases are accepted.
+\item \code{redeem_enable} (logical): Whether redemptions are accepted.
+\item \code{increment} (character): Smallest purchase-size step.
+\item \code{min_purchase_size} (character): Minimum purchase amount.
+\item \code{max_purchase_size} (character): Maximum purchase amount.
+\item \code{interest_increment} (character): Smallest interest-rate step.
+\item \code{min_interest_rate} (character): Minimum permitted interest rate.
+\item \code{market_interest_rate} (character): Current market rate.
+\item \code{max_interest_rate} (character): Maximum permitted interest rate.
+\item \code{auto_purchase_enable} (logical): Whether auto-purchase is available.
+}
+
+Empty response yields an empty \code{data.table}.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -303,11 +319,14 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+with \strong{one row per observation} and columns:
 \itemize{
 \item \code{time} (character): Timestamp string (YYYYMMDDHHmm format).
 \item \code{market_interest_rate} (character): Market interest rate at that time.
 }
+
+Empty response yields an empty \code{data.table}.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -575,7 +594,20 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with purchase order records.
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+with \strong{one row per purchase order} and columns:
+\itemize{
+\item \code{currency} (character): Lent currency.
+\item \code{purchase_order_no} (character): Purchase order number.
+\item \code{purchase_size} (character): Amount lent.
+\item \code{match_size} (character): Amount that has been matched.
+\item \code{interest_rate} (character): Rate of the lending order.
+\item \code{income_size} (character): Accrued income so far.
+\item \code{apply_time} (POSIXct): Order creation time (millisecond epoch coerced).
+\item \code{status} (character): Order status (e.g. \code{"DONE"}).
+}
+
+Empty response yields an empty \code{data.table}.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -753,7 +785,19 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with redeem order records.
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+with \strong{one row per redemption order} and columns:
+\itemize{
+\item \code{currency} (character): Redeemed currency.
+\item \code{purchase_order_no} (character): Source purchase order.
+\item \code{redeem_order_no} (character): Redemption order number.
+\item \code{redeem_size} (character): Requested redeem amount.
+\item \code{receipt_size} (character): Amount actually received.
+\item \code{apply_time} (POSIXct): Order creation time (millisecond epoch coerced).
+\item \code{status} (character): Order status (e.g. \code{"DONE"}).
+}
+
+Empty response yields an empty \code{data.table}.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

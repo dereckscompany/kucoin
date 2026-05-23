@@ -1295,7 +1295,7 @@ Verified: 2026-02-01
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$get_order_by_id(orderId, symbol)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$get_order_by_id(orderId, symbol = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -1303,7 +1303,7 @@ Verified: 2026-02-01
 \describe{
 \item{\code{orderId}}{Character; the KuCoin order ID.}
 
-\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
+\item{\code{symbol}}{Character (optional); trading pair (e.g., \code{"BTC-USDT"}). Defaults to \code{NULL}.}
 }
 \if{html}{\out{</div>}}
 }

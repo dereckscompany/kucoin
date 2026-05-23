@@ -91,6 +91,50 @@ test_that("cancel_all returns data.table", {
   expect_s3_class(dt, "data.table")
 })
 
+# -- cancel parsers: NULL / empty payload regression --
+
+test_that("cancel_order_by_id returns 0-row data.table when data is NULL", {
+  resp <- mock_kucoin_response(data = NULL)
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_oco()$cancel_order_by_id("674c40d38b4b2f00073deef3")
+  expect_s3_class(dt, "data.table")
+  expect_equal(nrow(dt), 0L)
+})
+
+test_that("cancel_order_by_client_oid returns 0-row data.table on empty cancelledOrderIds", {
+  resp <- mock_kucoin_response(data = list(cancelledOrderIds = list()))
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_oco()$cancel_order_by_client_oid("my-bot-oco-001")
+  expect_s3_class(dt, "data.table")
+  expect_equal(nrow(dt), 0L)
+})
+
+test_that("cancel_all returns 0-row data.table on empty cancelledOrderIds", {
+  resp <- mock_kucoin_response(data = list(cancelledOrderIds = list()))
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_oco()$cancel_all(query = list(symbol = "BTC-USDT"))
+  expect_s3_class(dt, "data.table")
+  expect_equal(nrow(dt), 0L)
+})
+
+test_that("cancel_order_by_id explodes cancelledOrderIds into long-format rows", {
+  resp <- mock_kucoin_response(
+    data = list(cancelledOrderIds = list("id-a", "id-b", "id-c"))
+  )
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_oco()$cancel_order_by_id("id-a")
+  expect_s3_class(dt, "data.table")
+  expect_equal(nrow(dt), 3L)
+  expect_true("cancelled_order_id" %in% names(dt))
+  expect_type(dt$cancelled_order_id, "character")
+  expect_equal(dt$cancelled_order_id, c("id-a", "id-b", "id-c"))
+  expect_false("cancelled_order_ids" %in% names(dt))
+})
+
 # -- get_order_by_id --
 
 test_that("get_order_by_id returns data.table with order_time and column reorder", {
@@ -171,10 +215,11 @@ test_that("get_order_detail_by_id returns data.table with orders list-column", {
 
   dt <- new_oco()$get_order_detail_by_id("674c40d38b4b2f00073deef3")
   expect_s3_class(dt, "data.table")
-  expect_equal(nrow(dt), 1L)
+  expect_equal(nrow(dt), 2L)
   expect_true("order_time" %in% names(dt))
-  expect_true("orders" %in% names(dt))
-  expect_equal(dt$status, "NEW")
+  expect_true("sub_order_id" %in% names(dt))
+  expect_false("orders" %in% names(dt))
+  expect_equal(dt$status[1], "NEW")
 })
 
 # -- get_order_list --

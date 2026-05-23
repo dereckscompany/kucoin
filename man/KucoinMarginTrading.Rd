@@ -1071,8 +1071,10 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+with a single row and columns:
 \itemize{
+\item \code{timestamp} (POSIXct): Server-side acceptance time of the repay.
 \item \code{order_no} (character): Repayment order number.
 \item \code{actual_size} (character): Amount actually repaid.
 }
@@ -1167,7 +1169,19 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with borrow records.
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+with \strong{one row per borrow record} and columns:
+\itemize{
+\item \code{order_no} (character): Borrow order number.
+\item \code{symbol} (character): Trading pair (NA on cross-margin records).
+\item \code{currency} (character): Borrowed currency.
+\item \code{size} (character): Requested borrow amount.
+\item \code{actual_size} (character): Amount actually borrowed.
+\item \code{status} (character): Lifecycle status (e.g. \code{"DONE"}).
+\item \code{created_time} (POSIXct): Borrow timestamp (millisecond epoch coerced).
+}
+
+Empty response yields an empty \code{data.table}.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1249,7 +1263,19 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with repay records.
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+with \strong{one row per repay record} and columns:
+\itemize{
+\item \code{order_no} (character): Repay order number.
+\item \code{symbol} (character): Trading pair (NA on cross-margin records).
+\item \code{currency} (character): Repaid currency.
+\item \code{size} (character): Requested repay amount.
+\item \code{actual_size} (character): Amount actually repaid.
+\item \code{status} (character): Lifecycle status.
+\item \code{created_time} (POSIXct): Repay timestamp (millisecond epoch coerced).
+}
+
+Empty response yields an empty \code{data.table}.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1337,7 +1363,16 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with interest records.
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+with \strong{one row per interest record} and columns:
+\itemize{
+\item \code{currency} (character): Currency on which interest accrued.
+\item \code{day_ratio} (character): Daily rate applied.
+\item \code{interest_amount} (character): Interest charged in the period.
+\item \code{created_time} (POSIXct): Accrual timestamp (millisecond epoch coerced).
+}
+
+Empty response yields an empty \code{data.table}.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

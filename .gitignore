@@ -71,3 +71,6 @@ rsconnect/
 .DS_Store
 /doc/
 /Meta/
+
+# Claude Code local state (worktrees from parallel subagents, etc.)
+.claude/

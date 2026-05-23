@@ -84,9 +84,15 @@ as_dt_list <- function(items) {
 #' @keywords internal
 #' @noRd
 ms_to_datetime <- function(ms) {
-  if (is.null(ms) || all(is.na(ms))) {
+  if (is.null(ms)) {
     return(lubridate::NA_POSIXct_)
   }
+  # Don't short-circuit on `all(is.na(ms))` — returning the length-1
+  # `NA_POSIXct_` from there would get recycled by `data.table::set()`
+  # into the existing column's storage type rather than replacing the
+  # column with a POSIXct one. Always return a vector matching input
+  # length so columns documented as POSIXct actually land as POSIXct,
+  # even when every upstream value is missing. Matches binance/alpaca.
   return(lubridate::as_datetime(as.numeric(ms) / 1000))
 }
 
@@ -99,21 +105,121 @@ ms_to_datetime <- function(ms) {
 #' @keywords internal
 #' @noRd
 ns_to_datetime <- function(ns) {
-  if (is.null(ns) || all(is.na(ns))) {
+  if (is.null(ns)) {
     return(lubridate::NA_POSIXct_)
   }
+  # Same all-NA shape contract as `ms_to_datetime`.
   return(lubridate::as_datetime(as.numeric(ns) / 1e9))
+}
+
+#' Collapse a Plain-String Array Field on a Single Record
+#'
+#' Walks the named list `x` and replaces any named field whose value is a
+#' length >= 1 list of plain character strings (or atomic character vector)
+#' with a single semicolon-separated character scalar. Used to apply
+#' Treatment A (`;`-collapse for arrays of plain strings) so we get one row
+#' per entity instead of a list column or an exploded long row count.
+#'
+#' Ported from the same-named helper in binance/alpaca. Separator is `;`
+#' rather than `,` because semicolons are far less likely to appear inside
+#' any of the joined values themselves. Recover with
+#' `strsplit(x, ";", fixed = TRUE)[[1]]`.
+#'
+#' NA-safe: scalar `NA_character_` input is preserved as `NA_character_`;
+#' mixed vectors like `c("real", NA)` filter NAs before joining (without
+#' this, `paste(c("real", NA), collapse = ";")` would produce the literal
+#' string `"real;NA"`); all-NA vectors round-trip to `NA_character_`.
+#'
+#' If any individual value contains a literal `;`, emits a once-per-session
+#' warning so we catch silent corruption.
+#'
+#' @param x A named list representing a single API record.
+#' @param fields Character vector; names of fields to collapse.
+#' @return The same named list with the matching fields collapsed in place.
+#'
+#' @keywords internal
+#' @noRd
+collapse_string_array_fields <- function(x, fields) {
+  for (nm in fields) {
+    val <- x[[nm]]
+    if (is.null(val) || length(val) == 0L) {
+      x[[nm]] <- NA_character_
+      next
+    }
+    if (is.list(val)) {
+      val <- unlist(val, use.names = FALSE)
+    }
+    if (is.atomic(val) && length(val) >= 1L) {
+      val_chr <- as.character(val)
+      val_chr <- val_chr[!is.na(val_chr)]
+      if (length(val_chr) == 0L) {
+        x[[nm]] <- NA_character_
+        next
+      }
+      if (any(grepl(";", val_chr, fixed = TRUE), na.rm = TRUE)) {
+        rlang::warn(
+          paste0(
+            "Field `",
+            nm,
+            "` contains a literal `;` which collides with the ",
+            "collapse separator. Joining anyway; downstream code that splits ",
+            "on `;` will see corrupted values. Please report this so we can ",
+            "switch the separator for this field."
+          ),
+          .frequency = "once",
+          .frequency_id = paste0("collapse_sep_collision_", nm)
+        )
+      }
+      x[[nm]] <- paste(val_chr, collapse = ";")
+    }
+  }
+  return(x)
+}
+
+#' Apply a Function to Selected Columns of a data.table by Reference
+#'
+#' Walks `cols`; for each that exists in `dt`, replaces it in place with the
+#' result of `fn(dt[[col]])`. Columns that are not in `dt` are silently
+#' skipped — useful for endpoints whose payload sometimes omits optional
+#' fields. A zero-row `dt` short-circuits.
+#'
+#' Replaces the repeated boilerplate of
+#' `if (nrow(dt) > 0 && "X" %in% names(dt)) { dt[, X := fn(X)] }`
+#' with `coerce_cols(dt, "X", fn)`. Modifies `dt` by reference via
+#' `data.table::set()`. Same shape and contract as the same-named helper
+#' in binance/alpaca.
+#'
+#' @param dt A [data.table::data.table].
+#' @param cols Character; candidate column names to convert.
+#' @param fn Function; takes a column vector, returns the coerced vector.
+#' @return `dt`, modified by reference and returned invisibly.
+#'
+#' @keywords internal
+#' @noRd
+coerce_cols <- function(dt, cols, fn) {
+  if (nrow(dt) == 0L) {
+    return(invisible(dt))
+  }
+  for (col in cols) {
+    if (col %in% names(dt)) {
+      data.table::set(dt, j = col, value = fn(dt[[col]]))
+    }
+  }
+  return(invisible(dt))
 }
 
 #' Process Orderbook Data into a data.table
 #'
 #' Transforms the bids/asks arrays from a KuCoin orderbook response into a
-#' tidy [data.table::data.table] with `side`, `price`, and `size` columns.
+#' tidy [data.table::data.table]. KuCoin returns best price first, so the
+#' `level` column captures the 1-indexed depth from top-of-book (1 = best
+#' bid / best ask); the position would otherwise be lost after any sort or
+#' filter. Matches the cross-package long-format convention.
 #'
 #' @param data List; the parsed KuCoin orderbook response data containing
 #'   `bids`, `asks`, `time`, and `sequence` fields.
 #' @return A [data.table::data.table] with columns: `time`, `sequence`,
-#'   `side`, `price`, `size`.
+#'   `side`, `level`, `price`, `size`.
 #'
 #' @keywords internal
 #' @noRd
@@ -122,13 +228,19 @@ parse_orderbook <- function(data) {
     if (is.null(entries) || length(entries) == 0) {
       return(data.table::data.table(
         side = character(),
+        level = integer(),
         price = numeric(),
         size = numeric()
       )[])
     }
-    # Each entry is a list of two strings: [price, quantity].
+    # Each entry is a list of two strings: [price, quantity]. KuCoin
+    # returns best price first, so the 1-indexed position is depth from
+    # top-of-book (`level = 1` is the best bid / best ask). Matches the
+    # cross-package long-format convention (alpaca / binance both add a
+    # position-index column where the source order is meaningful).
     return(data.table::data.table(
       side = side_label,
+      level = seq_along(entries),
       price = as.numeric(vapply(entries, `[[`, character(1), 1L)),
       size = as.numeric(vapply(entries, `[[`, character(1), 2L))
     )[])
@@ -140,7 +252,7 @@ parse_orderbook <- function(data) {
 
   result[, time := ms_to_datetime(data$time)]
   result[, sequence := as.character(data$sequence)]
-  data.table::setcolorder(result, c("time", "sequence", "side", "price", "size"))
+  data.table::setcolorder(result, c("time", "sequence", "side", "level", "price", "size"))
 
   return(result[])
 }

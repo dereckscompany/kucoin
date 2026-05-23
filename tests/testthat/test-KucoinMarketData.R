@@ -102,11 +102,30 @@ test_that("get_part_orderbook returns orderbook with correct structure", {
   dt <- market$get_part_orderbook("BTC-USDT", size = 20)
 
   expect_s3_class(dt, "data.table")
-  expect_equal(names(dt), c("time", "sequence", "side", "price", "size"))
+  expect_equal(names(dt), c("time", "sequence", "side", "level", "price", "size"))
   expect_equal(nrow(dt), 6L)
   expect_s3_class(dt$time, "POSIXct")
+  expect_type(dt$level, "integer")
   expect_type(dt$price, "double")
   expect_type(dt$size, "double")
+})
+
+test_that("get_part_orderbook level column is 1-indexed depth within each side", {
+  resp <- mock_kucoin_response(data = mock_orderbook_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  keys <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
+  market <- KucoinMarketData$new(keys = keys, base_url = "https://api.kucoin.com")
+  dt <- market$get_part_orderbook("BTC-USDT", size = 20)
+
+  # Each side should start at level 1 and increment without gaps.
+  expect_equal(dt[side == "bid", level], seq_len(sum(dt$side == "bid")))
+  expect_equal(dt[side == "ask", level], seq_len(sum(dt$side == "ask")))
+  # level == 1 must correspond to best price (highest bid, lowest ask).
+  best_bid <- dt[side == "bid"][level == 1L, price]
+  best_ask <- dt[side == "ask"][level == 1L, price]
+  expect_equal(best_bid, max(dt[side == "bid", price]))
+  expect_equal(best_ask, min(dt[side == "ask", price]))
 })
 
 test_that("get_part_orderbook uses correct endpoint for size 20 vs 100", {
@@ -257,6 +276,78 @@ test_that("get_klines returns OHLCV data.table via kucoin_fetch_klines", {
   expect_s3_class(dt, "data.table")
   expect_equal(names(dt), c("datetime", "open", "high", "low", "close", "volume", "turnover"))
   expect_gt(nrow(dt), 0L)
+})
+
+# -- get_announcements --
+
+test_that("get_announcements collapses ann_type to a `;`-separated string (Treatment A)", {
+  # Cross-package convention: arrays of plain strings -> single
+  # character column, recoverable via `strsplit(x, ";", fixed = TRUE)`.
+  # The mock has two announcements: the first with two tags, the second
+  # with one.
+  resp <- mock_kucoin_response(data = mock_announcements_page_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  market <- KucoinMarketData$new()
+  dt <- market$get_announcements(page_size = 50, max_pages = 1)
+
+  expect_s3_class(dt, "data.table")
+  # Two source records -> two rows (NOT four — Treatment A keeps one
+  # row per entity even when the array has multiple values).
+  expect_equal(nrow(dt), 2L)
+
+  # `ann_type` is a character column, `;`-collapsed.
+  expect_type(dt$ann_type, "character")
+  expect_equal(dt$ann_type[1], "latest-announcements;new-listings")
+  expect_equal(dt$ann_type[2], "latest-announcements")
+
+  # No list columns.
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
+
+  # c_time converted to POSIXct.
+  expect_s3_class(dt$c_time, "POSIXct")
+
+  # Recover the original vector for one record.
+  expect_equal(
+    strsplit(dt$ann_type[1], ";", fixed = TRUE)[[1]],
+    c("latest-announcements", "new-listings")
+  )
+})
+
+test_that("get_announcements handles announcements with no annType (NA_character_)", {
+  data <- mock_announcements_page_data()
+  data$items[[1]]$annType <- list()
+  resp <- mock_kucoin_response(data = data)
+  httr2::local_mocked_responses(function(req) resp)
+
+  market <- KucoinMarketData$new()
+  dt <- market$get_announcements(page_size = 50, max_pages = 1)
+
+  expect_true(is.na(dt$ann_type[1]))
+  expect_equal(dt$ann_type[2], "latest-announcements")
+})
+
+test_that("get_announcements warns once when an annType value contains a literal `;`", {
+  # KuCoin tags don't contain `;` today, but the `;`-collapse contract
+  # is shared cross-package, so pin the warning behaviour: if any value
+  # ever does contain `;` the user gets a once-per-session warning
+  # (silent corruption would be much worse — downstream `strsplit` on
+  # `;` would produce extra spurious tokens).
+  rlang::reset_warning_verbosity("collapse_sep_collision_annType")
+
+  data <- mock_announcements_page_data()
+  data$items[[1]]$annType <- list("clean", "bad;tag")
+  resp <- mock_kucoin_response(data = data)
+  httr2::local_mocked_responses(function(req) resp)
+
+  market <- KucoinMarketData$new()
+  expect_warning(
+    dt <- market$get_announcements(page_size = 50, max_pages = 1),
+    "literal `;`"
+  )
+  # The collision warning does not block the collapse — value is still
+  # joined verbatim so callers see exactly what came off the wire.
+  expect_equal(dt$ann_type[1], "clean;bad;tag")
 })
 
 # -- get_full_orderbook (authenticated) --

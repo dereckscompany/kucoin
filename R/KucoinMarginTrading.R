@@ -790,7 +790,9 @@ KucoinMarginTrading <- R6::R6Class(
     #'
     #' @param currency Character; the currency to repay (e.g., `"USDT"`, `"BTC"`).
     #' @param size Numeric; the amount to repay.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
+    #'   with a single row and columns:
+    #'   - `timestamp` (POSIXct): Server-side acceptance time of the repay.
     #'   - `order_no` (character): Repayment order number.
     #'   - `actual_size` (character): Amount actually repaid.
     #'
@@ -817,7 +819,11 @@ KucoinMarginTrading <- R6::R6Class(
         endpoint = "/api/v3/margin/repay",
         method = "POST",
         body = body,
-        .parser = as_dt_row
+        .parser = function(data) {
+          dt <- as_dt_row(data)
+          coerce_cols(dt, "timestamp", ms_to_datetime)
+          return(dt[])
+        }
       ))
     },
 
@@ -880,7 +886,17 @@ KucoinMarginTrading <- R6::R6Class(
     #'   - `endTime` (integer): End timestamp in milliseconds.
     #'   - `currentPage` (integer): Page number.
     #'   - `pageSize` (integer): Items per page.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with borrow records.
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
+    #'   with **one row per borrow record** and columns:
+    #'   - `order_no` (character): Borrow order number.
+    #'   - `symbol` (character): Trading pair (NA on cross-margin records).
+    #'   - `currency` (character): Borrowed currency.
+    #'   - `size` (character): Requested borrow amount.
+    #'   - `actual_size` (character): Amount actually borrowed.
+    #'   - `status` (character): Lifecycle status (e.g. `"DONE"`).
+    #'   - `created_time` (POSIXct): Borrow timestamp (millisecond epoch coerced).
+    #'
+    #'   Empty response yields an empty `data.table`.
     #'
     #' @examples
     #' \dontrun{
@@ -893,7 +909,10 @@ KucoinMarginTrading <- R6::R6Class(
         endpoint = "/api/v3/margin/borrow",
         query = query,
         .parser = function(data) {
-          items <- data$items %||% data
+          items <- data
+          if (!is.null(data$items)) {
+            items <- data$items
+          }
           if (is.null(items) || length(items) == 0) {
             return(data.table::data.table()[])
           }
@@ -955,7 +974,17 @@ KucoinMarginTrading <- R6::R6Class(
     #' ```
     #'
     #' @param query Named list; optional filter parameters. Same keys as `get_borrow_history()`.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with repay records.
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
+    #'   with **one row per repay record** and columns:
+    #'   - `order_no` (character): Repay order number.
+    #'   - `symbol` (character): Trading pair (NA on cross-margin records).
+    #'   - `currency` (character): Repaid currency.
+    #'   - `size` (character): Requested repay amount.
+    #'   - `actual_size` (character): Amount actually repaid.
+    #'   - `status` (character): Lifecycle status.
+    #'   - `created_time` (POSIXct): Repay timestamp (millisecond epoch coerced).
+    #'
+    #'   Empty response yields an empty `data.table`.
     #'
     #' @examples
     #' \dontrun{
@@ -968,7 +997,10 @@ KucoinMarginTrading <- R6::R6Class(
         endpoint = "/api/v3/margin/repay",
         query = query,
         .parser = function(data) {
-          items <- data$items %||% data
+          items <- data
+          if (!is.null(data$items)) {
+            items <- data$items
+          }
           if (is.null(items) || length(items) == 0) {
             return(data.table::data.table()[])
           }
@@ -1034,7 +1066,14 @@ KucoinMarginTrading <- R6::R6Class(
     #'   - `endTime` (integer): End timestamp in milliseconds.
     #'   - `currentPage` (integer): Page number.
     #'   - `pageSize` (integer): Items per page.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with interest records.
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
+    #'   with **one row per interest record** and columns:
+    #'   - `currency` (character): Currency on which interest accrued.
+    #'   - `day_ratio` (character): Daily rate applied.
+    #'   - `interest_amount` (character): Interest charged in the period.
+    #'   - `created_time` (POSIXct): Accrual timestamp (millisecond epoch coerced).
+    #'
+    #'   Empty response yields an empty `data.table`.
     #'
     #' @examples
     #' \dontrun{
@@ -1047,7 +1086,10 @@ KucoinMarginTrading <- R6::R6Class(
         endpoint = "/api/v3/margin/interest",
         query = query,
         .parser = function(data) {
-          items <- data$items %||% data
+          items <- data
+          if (!is.null(data$items)) {
+            items <- data$items
+          }
           if (is.null(items) || length(items) == 0) {
             return(data.table::data.table()[])
           }
@@ -1122,7 +1164,10 @@ KucoinMarginTrading <- R6::R6Class(
         endpoint = "/api/v3/margin/borrowRate",
         query = query,
         .parser = function(data) {
-          items <- data$items %||% data
+          items <- data
+          if (!is.null(data$items)) {
+            items <- data$items
+          }
           if (is.null(items) || length(items) == 0) {
             return(data.table::data.table()[])
           }

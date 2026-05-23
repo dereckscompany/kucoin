@@ -119,7 +119,7 @@ print(all_tickers[, .(symbol, price, best_bid_price, best_ask_price)])
 \dontrun{
 futures_market <- KucoinFuturesMarketData$new()
 ob <- futures_market$get_part_orderbook("XBTUSDTM", size = 20)
-print(ob[side == "bid"][1:5])
+print(ob[side == "bid"][order(level)][1:5])
 }
 
 ## ------------------------------------------------
@@ -388,7 +388,9 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+A single-row \code{data.table} (or \verb{promise<data.table>} if
+constructed with \code{async = TRUE}) with the contract specification
+flattened to one row per symbol. Key columns:
 \itemize{
 \item \code{symbol} (character): Contract symbol.
 \item \code{root_symbol} (character): Root symbol (e.g., \code{"USDT"}).
@@ -406,8 +408,17 @@ A single-row \code{data.table} (or \verb{promise<data.table>} if constructed wit
 \item \code{taker_fee_rate} (numeric): Taker fee rate.
 \item \code{status} (character): Contract status (e.g., \code{"Open"}).
 \item \code{mark_price} (numeric): Current mark price.
+\item \code{index_price} (numeric): Underlying index price.
 \item \code{last_trade_price} (numeric): Last traded price.
 \item \code{funding_fee_rate} (numeric): Current funding fee rate.
+\item \code{predicted_funding_fee_rate} (numeric): Predicted next funding fee rate.
+\item \code{open_interest} (character): Current open interest.
+\item \code{turnover_of24h} (numeric): 24h turnover in settlement currency.
+\item \code{volume_of24h} (numeric): 24h trading volume.
+\item \code{low_price} (numeric): 24h low price.
+\item \code{high_price} (numeric): 24h high price.
+\item \code{price_chg_pct} (numeric): 24h price change percentage.
+\item \code{price_chg} (numeric): 24h price change.
 }
 }
 \subsection{Examples}{
@@ -518,7 +529,10 @@ Verified: 2026-03-10
 }
 
 \subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row per contract; same columns as \code{get_contract()}.
+A \code{data.table} (or \verb{promise<data.table>} if constructed with
+\code{async = TRUE}) with one row per active contract; columns match
+\code{get_contract()}. Returns an empty \code{data.table} if no active
+contracts are returned.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -606,12 +620,14 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+A single-row \code{data.table} (or \verb{promise<data.table>} if
+constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{sequence} (integer): Sequence number.
 \item \code{symbol} (character): Contract symbol.
 \item \code{side} (character): Side of the last trade (\code{"buy"} or \code{"sell"}).
 \item \code{size} (integer): Size of the last trade.
+\item \code{trade_id} (character): Identifier of the last trade.
 \item \code{price} (character): Last trade price.
 \item \code{best_bid_size} (integer): Quantity at best bid.
 \item \code{best_bid_price} (character): Best bid price.
@@ -712,7 +728,10 @@ Verified: 2026-03-10
 }
 
 \subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row per contract; same columns as \code{get_ticker()}.
+A \code{data.table} (or \verb{promise<data.table>} if constructed with
+\code{async = TRUE}) with one row per contract; columns match
+\code{get_ticker()}. Returns an empty \code{data.table} if no tickers are
+returned.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -812,6 +831,8 @@ A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{asy
 \item \code{ts} (POSIXct): Snapshot timestamp (coerced from nanoseconds).
 \item \code{sequence} (character): Sequence number for change detection.
 \item \code{side} (character): \code{"bid"} or \code{"ask"}.
+\item \code{level} (integer): 1-indexed depth from top-of-book within the side
+(\code{level == 1} is best bid / best ask).
 \item \code{price} (numeric): Price level.
 \item \code{size} (numeric): Size at this price level.
 }
@@ -821,7 +842,7 @@ A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{asy
 \preformatted{\dontrun{
 futures_market <- KucoinFuturesMarketData$new()
 ob <- futures_market$get_part_orderbook("XBTUSDTM", size = 20)
-print(ob[side == "bid"][1:5])
+print(ob[side == "bid"][order(level)][1:5])
 }
 }
 \if{html}{\out{</div>}}
@@ -916,6 +937,8 @@ A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{asy
 \item \code{ts} (POSIXct): Snapshot timestamp (coerced from nanoseconds).
 \item \code{sequence} (character): Sequence number for change detection.
 \item \code{side} (character): \code{"bid"} or \code{"ask"}.
+\item \code{level} (integer): 1-indexed depth from top-of-book within the side
+(\code{level == 1} is best bid / best ask).
 \item \code{price} (numeric): Price level.
 \item \code{size} (numeric): Size at this price level.
 }
@@ -1015,7 +1038,9 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+A \code{data.table} (or \verb{promise<data.table>} if constructed with
+\code{async = TRUE}) with one row per trade. Returns an empty
+\code{data.table} when KuCoin reports no recent trades. Columns:
 \itemize{
 \item \code{sequence} (integer): Trade sequence number.
 \item \code{trade_id} (character): Unique trade identifier.
@@ -1247,7 +1272,8 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+A single-row \code{data.table} (or \verb{promise<data.table>} if
+constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{symbol} (character): Contract symbol.
 \item \code{granularity} (integer): Price granularity in milliseconds.
@@ -1338,7 +1364,8 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+A single-row \code{data.table} (or \verb{promise<data.table>} if
+constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{symbol} (character): Contract symbol.
 \item \code{granularity} (integer): Funding interval in milliseconds.
@@ -1446,7 +1473,9 @@ If numeric, assumed to be milliseconds.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+A \code{data.table} (or \verb{promise<data.table>} if constructed with
+\code{async = TRUE}) with one row per funding settlement. Returns an
+empty \code{data.table} when no records cover the time range. Columns:
 \itemize{
 \item \code{symbol} (character): Contract symbol.
 \item \code{funding_rate} (numeric): Funding rate for the period.
@@ -1525,7 +1554,8 @@ Verified: 2026-03-10
 }
 
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+A single-row \code{data.table} (or \verb{promise<data.table>} if
+constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{server_time} (POSIXct): Server timestamp (coerced from milliseconds).
 }
@@ -1601,7 +1631,8 @@ Verified: 2026-03-10
 }
 
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+A single-row \code{data.table} (or \verb{promise<data.table>} if
+constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{status} (character): Service status (e.g., \code{"open"}, \code{"close"}).
 \item \code{msg} (character): Status message (empty when operational).

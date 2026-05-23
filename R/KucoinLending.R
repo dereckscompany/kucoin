@@ -106,7 +106,21 @@ KucoinLending <- R6::R6Class(
     #'
     #' @param query Named list; optional filter. Supported keys:
     #'   - `currency` (character): Filter by currency (e.g., `"USDT"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with lending currency info.
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
+    #'   with **one row per lending currency** and columns:
+    #'   - `currency` (character): Currency code (e.g. `"USDT"`).
+    #'   - `purchase_enable` (logical): Whether new purchases are accepted.
+    #'   - `redeem_enable` (logical): Whether redemptions are accepted.
+    #'   - `increment` (character): Smallest purchase-size step.
+    #'   - `min_purchase_size` (character): Minimum purchase amount.
+    #'   - `max_purchase_size` (character): Maximum purchase amount.
+    #'   - `interest_increment` (character): Smallest interest-rate step.
+    #'   - `min_interest_rate` (character): Minimum permitted interest rate.
+    #'   - `market_interest_rate` (character): Current market rate.
+    #'   - `max_interest_rate` (character): Maximum permitted interest rate.
+    #'   - `auto_purchase_enable` (logical): Whether auto-purchase is available.
+    #'
+    #'   Empty response yields an empty `data.table`.
     #'
     #' @examples
     #' \dontrun{
@@ -166,9 +180,12 @@ KucoinLending <- R6::R6Class(
     #' ```
     #'
     #' @param currency Character; the currency to query (e.g., `"USDT"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
+    #'   with **one row per observation** and columns:
     #'   - `time` (character): Timestamp string (YYYYMMDDHHmm format).
     #'   - `market_interest_rate` (character): Market interest rate at that time.
+    #'
+    #'   Empty response yields an empty `data.table`.
     #'
     #' @examples
     #' \dontrun{
@@ -426,7 +443,18 @@ KucoinLending <- R6::R6Class(
     #'   - `purchaseOrderNo` (character): Specific order number.
     #'   - `currentPage` (integer): Page number.
     #'   - `pageSize` (integer): Items per page.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with purchase order records.
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
+    #'   with **one row per purchase order** and columns:
+    #'   - `currency` (character): Lent currency.
+    #'   - `purchase_order_no` (character): Purchase order number.
+    #'   - `purchase_size` (character): Amount lent.
+    #'   - `match_size` (character): Amount that has been matched.
+    #'   - `interest_rate` (character): Rate of the lending order.
+    #'   - `income_size` (character): Accrued income so far.
+    #'   - `apply_time` (POSIXct): Order creation time (millisecond epoch coerced).
+    #'   - `status` (character): Order status (e.g. `"DONE"`).
+    #'
+    #'   Empty response yields an empty `data.table`.
     #'
     #' @examples
     #' \dontrun{
@@ -439,7 +467,10 @@ KucoinLending <- R6::R6Class(
         endpoint = "/api/v3/purchase/orders",
         query = query,
         .parser = function(data) {
-          items <- data$items %||% data
+          items <- data
+          if (!is.null(data$items)) {
+            items <- data$items
+          }
           if (is.null(items) || length(items) == 0) {
             return(data.table::data.table()[])
           }
@@ -606,7 +637,17 @@ KucoinLending <- R6::R6Class(
     #'   - `redeemOrderNo` (character): Specific redemption order number.
     #'   - `currentPage` (integer): Page number.
     #'   - `pageSize` (integer): Items per page.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with redeem order records.
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
+    #'   with **one row per redemption order** and columns:
+    #'   - `currency` (character): Redeemed currency.
+    #'   - `purchase_order_no` (character): Source purchase order.
+    #'   - `redeem_order_no` (character): Redemption order number.
+    #'   - `redeem_size` (character): Requested redeem amount.
+    #'   - `receipt_size` (character): Amount actually received.
+    #'   - `apply_time` (POSIXct): Order creation time (millisecond epoch coerced).
+    #'   - `status` (character): Order status (e.g. `"DONE"`).
+    #'
+    #'   Empty response yields an empty `data.table`.
     #'
     #' @examples
     #' \dontrun{
@@ -619,7 +660,10 @@ KucoinLending <- R6::R6Class(
         endpoint = "/api/v3/redeem/orders",
         query = query,
         .parser = function(data) {
-          items <- data$items %||% data
+          items <- data
+          if (!is.null(data$items)) {
+            items <- data$items
+          }
           if (is.null(items) || length(items) == 0) {
             return(data.table::data.table()[])
           }

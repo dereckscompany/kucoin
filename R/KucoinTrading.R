@@ -573,7 +573,9 @@ KucoinTrading <- R6::R6Class(
         method = "DELETE",
         query = list(symbol = symbol),
         .parser = function(data) {
-          return(data.table::data.table(order_id = as.character(data$orderId %||% orderId))[])
+          return(data.table::data.table(
+            order_id = as.character(if (is.null(data$orderId)) orderId else data$orderId)
+          )[])
         }
       ))
     },
@@ -636,7 +638,9 @@ KucoinTrading <- R6::R6Class(
         method = "DELETE",
         query = list(symbol = symbol),
         .parser = function(data) {
-          return(data.table::data.table(client_oid = as.character(data$clientOid %||% clientOid))[])
+          return(data.table::data.table(
+            client_oid = as.character(if (is.null(data$clientOid)) clientOid else data$clientOid)
+          )[])
         }
       ))
     },
@@ -829,8 +833,16 @@ KucoinTrading <- R6::R6Class(
             }
             return(data.table::data.table(symbol = data, status = "succeed")[])
           }
-          succeed <- as.character(unlist(data$succeedSymbols %||% list()))
-          failed <- as.character(unlist(data$failedSymbols %||% list()))
+          succeed_raw <- list()
+          if (!is.null(data$succeedSymbols)) {
+            succeed_raw <- data$succeedSymbols
+          }
+          failed_raw <- list()
+          if (!is.null(data$failedSymbols)) {
+            failed_raw <- data$failedSymbols
+          }
+          succeed <- as.character(unlist(succeed_raw))
+          failed <- as.character(unlist(failed_raw))
           if (length(succeed) == 0 && length(failed) == 0) {
             return(data.table::data.table(symbol = character(), status = character())[])
           }
@@ -912,7 +924,7 @@ KucoinTrading <- R6::R6Class(
     #' ```
     #'
     #' @param orderId Character; the KuCoin order ID.
-    #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`).
+    #' @param symbol Character (optional); trading pair (e.g., `"BTC-USDT"`). Defaults to `NULL`.
     #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with full order details
     #'   including `created_at` and `last_updated_at` (POSIXct) if timestamps are present.
     #'
@@ -922,17 +934,17 @@ KucoinTrading <- R6::R6Class(
     #' order <- trading$get_order_by_id("671124f9365ccb00073debd4", "BTC-USDT")
     #' print(order)
     #' }
-    get_order_by_id = function(orderId, symbol) {
+    get_order_by_id = function(orderId, symbol = NULL) {
       if (!is.character(orderId) || !nzchar(orderId)) {
         rlang::abort("Parameter 'orderId' must be a non-empty string.")
       }
-      if (!verify_symbol(symbol)) {
+      if (!is.null(symbol) && !verify_symbol(symbol)) {
         rlang::abort("Parameter 'symbol' must be a valid ticker.")
       }
 
       return(private$.request(
         endpoint = paste0("/api/v1/hf/orders/", orderId),
-        query = list(symbol = symbol),
+        query = if (!is.null(symbol)) list(symbol = symbol) else list(),
         .parser = function(data) {
           dt <- as_dt_row(data)
           if ("created_at" %in% names(dt)) {
@@ -1177,7 +1189,10 @@ KucoinTrading <- R6::R6Class(
           endAt = endAt
         ),
         .parser = function(data) {
-          items <- data$items %||% data
+          items <- data
+          if (!is.null(data$items)) {
+            items <- data$items
+          }
           if (is.null(items) || length(items) == 0) {
             return(data.table::data.table()[])
           }
@@ -1268,7 +1283,10 @@ KucoinTrading <- R6::R6Class(
       return(private$.request(
         endpoint = "/api/v1/hf/orders/active/symbols",
         .parser = function(data) {
-          symbols <- data$symbols %||% data
+          symbols <- data
+          if (!is.null(data$symbols)) {
+            symbols <- data$symbols
+          }
           if (is.null(symbols) || length(symbols) == 0) {
             return(data.table::data.table(symbols = character())[])
           }
@@ -1506,7 +1524,10 @@ KucoinTrading <- R6::R6Class(
           lastId = lastId
         ),
         .parser = function(data) {
-          items <- data$items %||% data
+          items <- data
+          if (!is.null(data$items)) {
+            items <- data$items
+          }
           if (is.null(items) || length(items) == 0) {
             return(data.table::data.table()[])
           }

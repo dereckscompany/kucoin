@@ -101,7 +101,7 @@ test_that("kucoin_paginate uses provided timeout, not default 10s", {
   # httr2 stores timeout in options
   req_options <- captured_req$options
   expect_equal(
-    req_options$timeout_ms %||% req_options$timeout,
+    if (is.null(req_options$timeout_ms)) req_options$timeout else req_options$timeout_ms,
     30000,
     info = "Paginated requests should use the specified timeout (30s), not default (10s)"
   )

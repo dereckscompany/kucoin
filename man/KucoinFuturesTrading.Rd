@@ -163,7 +163,7 @@ print(results[, .(order_id, client_oid, code)])
 \dontrun{
 ft <- KucoinFuturesTrading$new()
 result <- ft$cancel_order_by_id("234125150956625920")
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 }
 
 ## ------------------------------------------------
@@ -185,7 +185,7 @@ ft <- KucoinFuturesTrading$new()
 
 # Cancel all open orders for XBTUSDTM
 result <- ft$cancel_all(symbol = "XBTUSDTM")
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 
 # Cancel all open orders across all symbols
 result <- ft$cancel_all()
@@ -200,7 +200,7 @@ ft <- KucoinFuturesTrading$new()
 
 # Cancel all stop orders for XBTUSDTM
 result <- ft$cancel_all_stop_orders(symbol = "XBTUSDTM")
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 
 # Cancel all stop orders across all symbols
 result <- ft$cancel_all_stop_orders()
@@ -982,9 +982,11 @@ Verified: 2026-03-10
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\code{data.table} (or \verb{promise<data.table>} if constructed with
+\code{async = TRUE}) with one row per cancelled order, and column:
 \itemize{
-\item \code{cancelled_order_ids} (list): Vector of cancelled order IDs.
+\item \code{cancelled_order_id} (character): Cancelled order ID. Empty
+\code{data.table} (zero rows) if no orders matched.
 }
 }
 \subsection{Examples}{
@@ -992,7 +994,7 @@ A single-row \code{data.table} (or \verb{promise<data.table>} if constructed wit
 \preformatted{\dontrun{
 ft <- KucoinFuturesTrading$new()
 result <- ft$cancel_order_by_id("234125150956625920")
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 }
 }
 \if{html}{\out{</div>}}
@@ -1163,9 +1165,11 @@ cancels all open orders across all symbols.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\code{data.table} (or \verb{promise<data.table>} if constructed with
+\code{async = TRUE}) with one row per cancelled order, and column:
 \itemize{
-\item \code{cancelled_order_ids} (list): Vector of cancelled order IDs.
+\item \code{cancelled_order_id} (character): Cancelled order ID. Empty
+\code{data.table} (zero rows) if no orders matched.
 }
 }
 \subsection{Examples}{
@@ -1175,7 +1179,7 @@ ft <- KucoinFuturesTrading$new()
 
 # Cancel all open orders for XBTUSDTM
 result <- ft$cancel_all(symbol = "XBTUSDTM")
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 
 # Cancel all open orders across all symbols
 result <- ft$cancel_all()
@@ -1259,9 +1263,11 @@ cancels all untriggered stop orders across all symbols.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\code{data.table} (or \verb{promise<data.table>} if constructed with
+\code{async = TRUE}) with one row per cancelled order, and column:
 \itemize{
-\item \code{cancelled_order_ids} (list): Vector of cancelled order IDs.
+\item \code{cancelled_order_id} (character): Cancelled order ID. Empty
+\code{data.table} (zero rows) if no orders matched.
 }
 }
 \subsection{Examples}{
@@ -1271,7 +1277,7 @@ ft <- KucoinFuturesTrading$new()
 
 # Cancel all stop orders for XBTUSDTM
 result <- ft$cancel_all_stop_orders(symbol = "XBTUSDTM")
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 
 # Cancel all stop orders across all symbols
 result <- ft$cancel_all_stop_orders()

@@ -162,7 +162,7 @@ stop <- KucoinStopOrders$new()
 
 # Cancel a specific stop order
 result <- stop$cancel_order_by_id("vs8hoo8q2ceshiue003b67c0")
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 }
 
 ## ------------------------------------------------
@@ -186,11 +186,11 @@ stop <- KucoinStopOrders$new()
 
 # Cancel all stop orders for BTC-USDT
 result <- stop$cancel_all(query = list(symbol = "BTC-USDT"))
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 
 # Cancel all stop orders (no filter)
 result <- stop$cancel_all()
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 }
 
 ## ------------------------------------------------
@@ -514,9 +514,12 @@ Verified: 2026-02-01
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with column:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+with one row per cancelled stop order (Treatment B — long format):
 \itemize{
-\item \code{cancelled_order_ids} (character): Vector of cancelled stop order IDs.
+\item \code{cancelled_order_id} (character): KuCoin order ID of a cancelled stop order.
+Returns an empty \code{data.table} if no stop orders matched (per the
+"empty response -> empty data.table" cross-package convention).
 }
 }
 \subsection{Examples}{
@@ -526,7 +529,7 @@ stop <- KucoinStopOrders$new()
 
 # Cancel a specific stop order
 result <- stop$cancel_order_by_id("vs8hoo8q2ceshiue003b67c0")
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 }
 }
 \if{html}{\out{</div>}}
@@ -606,7 +609,8 @@ disambiguate client OIDs across different trading pairs.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+with a single row:
 \itemize{
 \item \code{cancelled_order_id} (character): The KuCoin order ID of the cancelled stop order.
 \item \code{client_oid} (character): The client-assigned order ID that was cancelled.
@@ -705,9 +709,12 @@ Verified: 2026-02-01
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with column:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+with one row per cancelled stop order (Treatment B — long format):
 \itemize{
-\item \code{cancelled_order_ids} (character): Vector of cancelled stop order IDs.
+\item \code{cancelled_order_id} (character): KuCoin order ID of a cancelled stop order.
+Returns an empty \code{data.table} if no stop orders matched the filters
+(per the "empty response -> empty data.table" cross-package convention).
 }
 }
 \subsection{Examples}{
@@ -717,11 +724,11 @@ stop <- KucoinStopOrders$new()
 
 # Cancel all stop orders for BTC-USDT
 result <- stop$cancel_all(query = list(symbol = "BTC-USDT"))
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 
 # Cancel all stop orders (no filter)
 result <- stop$cancel_all()
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 }
 }
 \if{html}{\out{</div>}}
@@ -821,7 +828,8 @@ Verified: 2026-02-01
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row containing order details. Key columns include:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+with a single row containing order details (no list columns). Key columns include:
 \itemize{
 \item \code{id} (character): Stop order identifier.
 \item \code{symbol} (character): Trading pair (e.g., \code{"BTC-USDT"}).
@@ -832,6 +840,9 @@ Verified: 2026-02-01
 \item \code{stop_price} (character): Trigger price for the stop order.
 \item \code{stop} (character): Stop direction (\code{"loss"} or \code{"entry"}).
 \item \code{created_at} (POSIXct): Creation datetime (coerced from epoch milliseconds).
+\item \code{order_time} (POSIXct): Order placement datetime (coerced from epoch nanoseconds).
+\item \code{stop_trigger_time} (POSIXct): Trigger datetime if triggered (coerced from
+epoch milliseconds), \code{NA} if not yet triggered.
 }
 }
 \subsection{Examples}{
@@ -948,7 +959,8 @@ scope the search to a specific trading pair.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one or more rows of order details. Key columns include:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+with one row per matching stop order (no list columns). Key columns include:
 \itemize{
 \item \code{id} (character): Stop order identifier.
 \item \code{symbol} (character): Trading pair (e.g., \code{"BTC-USDT"}).
@@ -959,6 +971,10 @@ scope the search to a specific trading pair.}
 \item \code{stop_price} (character): Trigger price for the stop order.
 \item \code{client_oid} (character): The client-assigned order ID.
 \item \code{created_at} (POSIXct): Creation datetime (coerced from epoch milliseconds).
+\item \code{order_time} (POSIXct): Order placement datetime (coerced from epoch nanoseconds).
+\item \code{stop_trigger_time} (POSIXct): Trigger datetime if triggered (coerced from
+epoch milliseconds), \code{NA} if not yet triggered.
+Returns an empty \code{data.table} if no stop orders match.
 }
 }
 \subsection{Examples}{
@@ -1089,8 +1105,9 @@ Verified: 2026-02-01
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with zero or more rows. Returns an empty \code{data.table} if no
-stop orders match the query. Key columns include:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+with one row per stop order (no list columns). Returns an empty \code{data.table}
+if no stop orders match the query. Key columns include:
 \itemize{
 \item \code{id} (character): Stop order identifier.
 \item \code{symbol} (character): Trading pair (e.g., \code{"BTC-USDT"}).
@@ -1102,6 +1119,9 @@ stop orders match the query. Key columns include:
 \item \code{stop} (character): Stop direction (\code{"loss"} or \code{"entry"}).
 \item \code{time_in_force} (character): Time-in-force policy.
 \item \code{created_at} (POSIXct): Creation datetime (coerced from epoch milliseconds).
+\item \code{order_time} (POSIXct): Order placement datetime (coerced from epoch nanoseconds).
+\item \code{stop_trigger_time} (POSIXct): Trigger datetime if triggered (coerced from
+epoch milliseconds), \code{NA} if not yet triggered.
 }
 }
 \subsection{Examples}{

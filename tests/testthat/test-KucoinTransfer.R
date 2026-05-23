@@ -33,6 +33,8 @@ test_that("add_transfer returns data.table with order_id", {
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
   expect_equal(dt$order_id, "6705f7248c6954000733ecac")
+  # No list columns
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
 
 test_that("add_transfer validates clientOid", {
@@ -160,6 +162,8 @@ test_that("get_transferable returns data.table with balance breakdown", {
   expect_equal(dt$transferable, "10.5")
   # Check column ordering
   expect_equal(names(dt)[1], "currency")
+  # No list columns
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
 
 test_that("get_transferable validates currency", {

@@ -43,7 +43,7 @@ fetch_server_time_ms <- function(base_url) {
       "Failed to fetch server time: KuCoin API error ",
       parsed$code,
       ": ",
-      parsed$msg %||% "No message."
+      if (is.null(parsed$msg)) "No message." else parsed$msg
     ))
   }
   return(as.numeric(parsed$data))
@@ -241,7 +241,7 @@ parse_kucoin_response <- function(resp) {
       "KuCoin API error ",
       parsed$code,
       ": ",
-      parsed$msg %||% "No error message provided."
+      if (is.null(parsed$msg)) "No error message provided." else parsed$msg
     ))
   }
 
@@ -316,8 +316,10 @@ kucoin_paginate <- function(
           accumulator[[length(accumulator) + 1L]] <<- page_items
         }
 
-        current <- data$currentPage %||% page
-        total <- data$totalPage %||% 1L
+        total <- 1L
+        if (!is.null(data$totalPage)) {
+          total <- data$totalPage
+        }
 
         if (page < total && page < max_pages) {
           return(fetch_page(page + 1L))

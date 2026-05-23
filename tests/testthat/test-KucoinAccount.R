@@ -44,6 +44,8 @@ test_that("get_summary returns data.table with expected columns", {
   expect_true("sub_quantity" %in% names(dt))
   expect_equal(dt$level, 1)
   expect_equal(dt$sub_quantity, 3)
+  # No list columns
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
 
 # -- get_apikey_info --
@@ -69,6 +71,10 @@ test_that("get_apikey_info returns data.table with key details", {
   expect_equal(dt$api_key, "670c42f1a24b1b0001a5c7e0")
   expect_equal(dt$permission, "General,Spot")
   expect_true(dt$is_master)
+  # created_at coerced to POSIXct
+  expect_s3_class(dt$created_at, "POSIXct")
+  # No list columns
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
 
 # -- get_spot_account_type --
@@ -115,6 +121,7 @@ test_that("get_spot_accounts returns list of accounts", {
   expect_equal(nrow(dt), 2L)
   expect_true("currency" %in% names(dt))
   expect_true("balance" %in% names(dt))
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
 
 test_that("get_spot_accounts handles empty response", {
@@ -144,6 +151,7 @@ test_that("get_spot_account_detail returns single-row data.table", {
   expect_equal(nrow(dt), 1L)
   expect_equal(dt$currency, "USDT")
   expect_equal(dt$balance, "1250.75")
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
 
 # -- get_cross_margin_account --
@@ -187,6 +195,15 @@ test_that("get_cross_margin_account extracts accounts sub-list", {
   expect_true("currency" %in% names(dt))
   expect_true("total_balance" %in% names(dt))
   expect_true("borrow_enabled" %in% names(dt))
+  # Account-level summary fields replicated on every row (Treatment B)
+  expect_true("total_asset_of_quote_currency" %in% names(dt))
+  expect_true("total_liability_of_quote_currency" %in% names(dt))
+  expect_true("debt_ratio" %in% names(dt))
+  expect_true("status" %in% names(dt))
+  expect_equal(unique(dt$total_asset_of_quote_currency), "15234.67")
+  expect_equal(unique(dt$debt_ratio), "0.1641")
+  # No list columns
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
 
 test_that("get_cross_margin_account handles empty accounts", {
@@ -205,12 +222,42 @@ test_that("get_cross_margin_account handles empty accounts", {
 
 # -- get_isolated_margin_account --
 
-test_that("get_isolated_margin_account extracts assets sub-list", {
+test_that("get_isolated_margin_account flattens baseAsset/quoteAsset wide-prefix", {
   resp <- mock_kucoin_response(
     data = list(
       totalAssetOfQuoteCurrency = "5234.67",
+      totalLiabilityOfQuoteCurrency = "1000.00",
+      timestamp = 1729176273859,
       assets = list(
-        list(symbol = "BTC-USDT", status = "EFFECTIVE", debtRatio = "0.19")
+        list(
+          symbol = "BTC-USDT",
+          status = "EFFECTIVE",
+          debtRatio = "0.1912",
+          baseAsset = list(
+            currency = "BTC",
+            borrowEnabled = TRUE,
+            transferInEnabled = TRUE,
+            liability = "0",
+            liabilityPrincipal = "0",
+            liabilityInterest = "0",
+            total = "0.1",
+            available = "0.1",
+            hold = "0",
+            maxBorrowSize = "1.5"
+          ),
+          quoteAsset = list(
+            currency = "USDT",
+            borrowEnabled = TRUE,
+            transferInEnabled = TRUE,
+            liability = "1000.00",
+            liabilityPrincipal = "950.00",
+            liabilityInterest = "50.00",
+            total = "5000.00",
+            available = "4500.00",
+            hold = "500.00",
+            maxBorrowSize = "25000.00"
+          )
+        )
       )
     )
   )
@@ -219,7 +266,60 @@ test_that("get_isolated_margin_account extracts assets sub-list", {
   dt <- new_account()$get_isolated_margin_account()
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
+  # Symbol and pair-level fields
   expect_true("symbol" %in% names(dt))
+  expect_equal(dt$symbol, "BTC-USDT")
+  expect_equal(dt$status, "EFFECTIVE")
+  # Wide-prefixed baseAsset columns (Treatment C)
+  expect_true("base_asset_currency" %in% names(dt))
+  expect_true("base_asset_total" %in% names(dt))
+  expect_true("base_asset_max_borrow_size" %in% names(dt))
+  expect_equal(dt$base_asset_currency, "BTC")
+  expect_equal(dt$base_asset_total, "0.1")
+  # Wide-prefixed quoteAsset columns
+  expect_true("quote_asset_currency" %in% names(dt))
+  expect_true("quote_asset_total" %in% names(dt))
+  expect_equal(dt$quote_asset_currency, "USDT")
+  expect_equal(dt$quote_asset_liability_principal, "950.00")
+  # Account-level summary replicated
+  expect_true("total_asset_of_quote_currency" %in% names(dt))
+  expect_true("total_liability_of_quote_currency" %in% names(dt))
+  expect_equal(dt$total_asset_of_quote_currency, "5234.67")
+  # Timestamp coerced to POSIXct
+  expect_s3_class(dt$timestamp, "POSIXct")
+  # No list columns anywhere
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
+})
+
+test_that("get_isolated_margin_account replicates parent across multiple pairs", {
+  resp <- mock_kucoin_response(
+    data = list(
+      totalAssetOfQuoteCurrency = "100",
+      timestamp = 1729176273859,
+      assets = list(
+        list(
+          symbol = "BTC-USDT",
+          status = "EFFECTIVE",
+          debtRatio = "0",
+          baseAsset = list(currency = "BTC", total = "0.1"),
+          quoteAsset = list(currency = "USDT", total = "100")
+        ),
+        list(
+          symbol = "ETH-USDT",
+          status = "EFFECTIVE",
+          debtRatio = "0",
+          baseAsset = list(currency = "ETH", total = "1.0"),
+          quoteAsset = list(currency = "USDT", total = "200")
+        )
+      )
+    )
+  )
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_account()$get_isolated_margin_account()
+  expect_equal(nrow(dt), 2L)
+  expect_equal(length(unique(dt$total_asset_of_quote_currency)), 1L)
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
 
 test_that("get_isolated_margin_account handles empty assets", {
@@ -265,6 +365,7 @@ test_that("get_spot_ledger returns paginated data with created_at", {
   expect_false("datetime_created" %in% names(dt))
   expect_s3_class(dt$created_at, "POSIXct")
   expect_equal(dt$currency, "USDT")
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
 
 test_that("get_spot_ledger handles empty items", {
@@ -315,6 +416,7 @@ test_that("get_hf_ledger returns ledger entries with created_at", {
   expect_false("datetime_created" %in% names(dt))
   expect_s3_class(dt$created_at, "POSIXct")
   expect_equal(dt$biz_type, "TRADE_EXCHANGE")
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
 
 test_that("get_hf_ledger handles empty response", {
@@ -342,6 +444,7 @@ test_that("get_base_fee_rate returns fee rates", {
   expect_equal(nrow(dt), 1L)
   expect_equal(dt$taker_fee_rate, "0.001")
   expect_equal(dt$maker_fee_rate, "0.001")
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
 
 # -- get_fee_rate --
@@ -360,6 +463,7 @@ test_that("get_fee_rate returns per-symbol rates", {
   expect_equal(nrow(dt), 2L)
   expect_true("symbol" %in% names(dt))
   expect_true("taker_fee_rate" %in% names(dt))
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
 
 test_that("get_fee_rate validates symbols parameter", {

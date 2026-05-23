@@ -255,3 +255,172 @@ test_that("get_funding_history passes symbol in query", {
   new_account()$get_funding_history("XBTUSDTM")
   expect_true(grepl("symbol=XBTUSDTM", captured_url))
 })
+
+# -- Data-shape convention: no list columns, one entity = one row -------------
+#
+# The cross-package convention is documented in
+# `binance::vignette("data-shapes")`. For each method we sanity-check:
+#   - The output is a `data.table`.
+#   - No column is a list (i.e. no list cells / nested objects).
+#   - Empty responses produce empty `data.table`s, not stub rows or errors.
+
+# Helper: count list columns on a data.table.
+n_list_cols <- function(dt) {
+  length(names(dt)[vapply(dt, is.list, logical(1))])
+}
+
+test_that("get_account_overview has no list columns", {
+  resp <- mock_kucoin_response(data = mock_futures_account_overview_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_account()$get_account_overview()
+  expect_equal(n_list_cols(dt), 0L)
+})
+
+test_that("get_position has no list columns; timestamps are POSIXct", {
+  resp <- mock_kucoin_response(data = mock_futures_position_data()[[1]])
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_account()$get_position("XBTUSDTM")
+  expect_equal(n_list_cols(dt), 0L)
+  expect_s3_class(dt$opening_timestamp, "POSIXct")
+  expect_s3_class(dt$current_timestamp, "POSIXct")
+})
+
+test_that("get_positions has no list columns; empty array yields empty dt", {
+  resp <- mock_kucoin_response(data = mock_futures_position_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_account()$get_positions()
+  expect_equal(n_list_cols(dt), 0L)
+  expect_s3_class(dt$opening_timestamp, "POSIXct")
+
+  resp_empty <- mock_kucoin_response(data = list())
+  httr2::local_mocked_responses(function(req) resp_empty)
+  dt_empty <- new_account()$get_positions()
+  expect_s3_class(dt_empty, "data.table")
+  expect_equal(nrow(dt_empty), 0L)
+})
+
+test_that("get_positions_history has no list columns; empty items yields empty dt", {
+  resp <- mock_kucoin_response(data = mock_futures_positions_history_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_account()$get_positions_history()
+  expect_equal(n_list_cols(dt), 0L)
+  expect_s3_class(dt$open_time, "POSIXct")
+  expect_s3_class(dt$close_time, "POSIXct")
+
+  resp_empty <- mock_kucoin_response(data = list(items = list()))
+  httr2::local_mocked_responses(function(req) resp_empty)
+  dt_empty <- new_account()$get_positions_history()
+  expect_s3_class(dt_empty, "data.table")
+  expect_equal(nrow(dt_empty), 0L)
+})
+
+test_that("get_margin_mode has no list columns", {
+  resp <- mock_kucoin_response(data = mock_futures_margin_mode_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_account()$get_margin_mode("XBTUSDTM")
+  expect_equal(n_list_cols(dt), 0L)
+})
+
+test_that("set_margin_mode has no list columns", {
+  resp <- mock_kucoin_response(data = mock_futures_margin_mode_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_account()$set_margin_mode("XBTUSDTM", "CROSS")
+  expect_equal(n_list_cols(dt), 0L)
+})
+
+test_that("get_cross_margin_leverage has no list columns", {
+  resp <- mock_kucoin_response(data = mock_futures_cross_leverage_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_account()$get_cross_margin_leverage("XBTUSDTM")
+  expect_equal(n_list_cols(dt), 0L)
+})
+
+test_that("set_cross_margin_leverage has no list columns", {
+  resp <- mock_kucoin_response(data = mock_futures_cross_leverage_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_account()$set_cross_margin_leverage("XBTUSDTM", 10)
+  expect_equal(n_list_cols(dt), 0L)
+})
+
+test_that("get_max_open_size has no list columns", {
+  resp <- mock_kucoin_response(data = mock_futures_max_open_size_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_account()$get_max_open_size("XBTUSDTM", price = "98000", leverage = 5)
+  expect_equal(n_list_cols(dt), 0L)
+})
+
+test_that("get_max_withdraw_margin returns named max_withdraw_margin column", {
+  resp <- mock_kucoin_response(data = mock_futures_max_withdraw_margin_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_account()$get_max_withdraw_margin("XBTUSDTM")
+  expect_s3_class(dt, "data.table")
+  expect_equal(nrow(dt), 1L)
+  expect_equal(names(dt), "max_withdraw_margin")
+  expect_type(dt$max_withdraw_margin, "character")
+  expect_equal(dt$max_withdraw_margin, "15.00")
+  expect_equal(n_list_cols(dt), 0L)
+})
+
+test_that("get_max_withdraw_margin handles empty response", {
+  resp <- mock_kucoin_response(data = NULL)
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_account()$get_max_withdraw_margin("XBTUSDTM")
+  expect_s3_class(dt, "data.table")
+  expect_equal(nrow(dt), 0L)
+})
+
+test_that("add_isolated_margin has no list columns", {
+  resp <- mock_kucoin_response(data = mock_futures_margin_response())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_account()$add_isolated_margin("XBTUSDTM", margin = 10, bizNo = "biz-001")
+  expect_equal(n_list_cols(dt), 0L)
+})
+
+test_that("remove_isolated_margin has no list columns", {
+  resp <- mock_kucoin_response(data = mock_futures_margin_response())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_account()$remove_isolated_margin("XBTUSDTM", withdrawAmount = 5)
+  expect_equal(n_list_cols(dt), 0L)
+})
+
+test_that("get_risk_limit has no list columns; empty array yields empty dt", {
+  resp <- mock_kucoin_response(data = mock_futures_risk_limit_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_account()$get_risk_limit("XBTUSDTM")
+  expect_equal(n_list_cols(dt), 0L)
+
+  resp_empty <- mock_kucoin_response(data = list())
+  httr2::local_mocked_responses(function(req) resp_empty)
+  dt_empty <- new_account()$get_risk_limit("XBTUSDTM")
+  expect_s3_class(dt_empty, "data.table")
+  expect_equal(nrow(dt_empty), 0L)
+})
+
+test_that("get_funding_history has no list columns; empty dataList yields empty dt", {
+  resp <- mock_kucoin_response(data = mock_futures_private_funding_data())
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_account()$get_funding_history("XBTUSDTM")
+  expect_equal(n_list_cols(dt), 0L)
+  expect_s3_class(dt$time_point, "POSIXct")
+
+  resp_empty <- mock_kucoin_response(data = list(dataList = list(), hasMore = FALSE))
+  httr2::local_mocked_responses(function(req) resp_empty)
+  dt_empty <- new_account()$get_funding_history("XBTUSDTM")
+  expect_s3_class(dt_empty, "data.table")
+  expect_equal(nrow(dt_empty), 0L)
+})

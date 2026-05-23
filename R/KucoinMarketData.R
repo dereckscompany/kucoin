@@ -138,7 +138,16 @@ KucoinMarketData <- R6::R6Class(
     #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
     #'   - `ann_id` (integer): Announcement identifier.
     #'   - `ann_title` (character): Announcement title.
-    #'   - `ann_type` (list): Category tags as character vector.
+    #'   - `ann_type` (character): `;`-separated category tags for the
+    #'     announcement. KuCoin returns `annType` as an array; the parser
+    #'     collapses it to a single character column via the shared
+    #'     `collapse_string_array_fields()` helper (Treatment A —
+    #'     matches the cross-package convention used by alpaca/binance
+    #'     for plain-string arrays). Filter with
+    #'     `grepl("latest-announcements", ann_type, fixed = TRUE)`;
+    #'     recover the vector via
+    #'     `strsplit(ann_type, ";", fixed = TRUE)[[1]]`. `NA_character_`
+    #'     if KuCoin returned no tags.
     #'   - `ann_desc` (character): Short description text.
     #'   - `c_time` (POSIXct): Creation datetime (coerced from epoch milliseconds).
     #'   - `language` (character): Language code.
@@ -165,10 +174,23 @@ KucoinMarketData <- R6::R6Class(
         query = query,
         auth = FALSE,
         .parser = function(pages) {
-          dt <- flatten_pages(pages)
-          if (nrow(dt) > 0 && "c_time" %in% names(dt)) {
-            dt[, c_time := ms_to_datetime(c_time)]
+          if (length(pages) == 0) {
+            return(data.table::data.table()[])
           }
+          # Treatment A: `annType` is an array of plain strings (e.g.
+          # `c("latest-announcements", "new-listings")`). Collapse to a
+          # single `;`-separated character column via the shared helper
+          # so we keep one row per announcement (no list-column, no row
+          # multiplication). Matches the cross-package convention used
+          # by `alpaca`/`binance` for `permissions`, `order_types`, etc.
+          pages_clean <- lapply(pages, function(page) {
+            lapply(page, collapse_string_array_fields, "annType")
+          })
+          dt <- flatten_pages(pages_clean)
+          if (nrow(dt) == 0) {
+            return(dt[])
+          }
+          coerce_cols(dt, "c_time", ms_to_datetime)
           return(dt[])
         },
         page_size = page_size,
@@ -900,7 +922,7 @@ KucoinMarketData <- R6::R6Class(
     #' 1. **Validation**: Ensures `size` is 20 or 100.
     #' 2. **Request**: GET with size embedded in endpoint path.
     #' 3. **Parsing**: Calls `parse_orderbook()` to convert nested bid/ask arrays
-    #'    into a long-format `data.table` with `side`, `price`, and `size` columns.
+    #'    into a long-format `data.table` with `side`, `level`, `price`, and `size` columns.
     #'
     #' ### API Endpoint
     #' `GET https://api.kucoin.com/api/v1/market/orderbook/level2_{20|100}`
@@ -940,6 +962,8 @@ KucoinMarketData <- R6::R6Class(
     #'   - `time` (POSIXct): Server timestamp (coerced from epoch milliseconds).
     #'   - `sequence` (character): Order book sequence number.
     #'   - `side` (character): `"bid"` or `"ask"`.
+    #'   - `level` (integer): 1-indexed depth from top-of-book within the side
+    #'     (`level == 1` is best bid / best ask).
     #'   - `price` (numeric): Price level.
     #'   - `size` (numeric): Size at that price.
     #'
@@ -947,9 +971,9 @@ KucoinMarketData <- R6::R6Class(
     #' \dontrun{
     #' market <- KucoinMarketData$new()
     #' ob <- market$get_part_orderbook("BTC-USDT", size = 20)
-    #' bids <- ob[side == "bid"]
-    #' asks <- ob[side == "ask"]
-    #' print(paste("Best bid:", bids$price[1], "Best ask:", asks$price[1]))
+    #' best_bid <- ob[side == "bid" & level == 1L]
+    #' best_ask <- ob[side == "ask" & level == 1L]
+    #' print(paste("Best bid:", best_bid$price, "Best ask:", best_ask$price))
     #' }
     get_part_orderbook = function(symbol, size = 20) {
       if (!size %in% c(20, 100)) {
@@ -1016,6 +1040,8 @@ KucoinMarketData <- R6::R6Class(
     #'   - `time` (POSIXct): Server timestamp (coerced from epoch milliseconds).
     #'   - `sequence` (character): Order book sequence number.
     #'   - `side` (character): `"bid"` or `"ask"`.
+    #'   - `level` (integer): 1-indexed depth from top-of-book within the side
+    #'     (`level == 1` is best bid / best ask).
     #'   - `price` (numeric): Price level.
     #'   - `size` (numeric): Size at that price.
     #'
@@ -1240,8 +1266,9 @@ KucoinMarketData <- R6::R6Class(
     #'   `"1min"`, `"3min"`, `"5min"`, `"15min"`, `"30min"`,
     #'   `"1hour"`, `"2hour"`, `"4hour"`, `"6hour"`, `"8hour"`, `"12hour"`,
     #'   `"1day"`, `"1week"`, `"1month"`. Default `"15min"`.
-    #' @param from POSIXct; start time (default 24 hours ago).
-    #' @param to POSIXct; end time (default now).
+    #' @param from POSIXct or NULL; start time. When both `from` and `to` are
+    #'   `NULL`, the API returns up to 1500 most recent candles.
+    #' @param to POSIXct or NULL; end time.
     #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
     #'   - `datetime` (POSIXct): Candle open datetime.
     #'   - `open` (numeric): Opening price.
@@ -1255,7 +1282,7 @@ KucoinMarketData <- R6::R6Class(
     #' \dontrun{
     #' market <- KucoinMarketData$new()
     #'
-    #' # Last 24 hours of 15-minute candles
+    #' # Most recent candles (up to 1500)
     #' klines <- market$get_klines("BTC-USDT")
     #' print(head(klines))
     #'
@@ -1271,8 +1298,8 @@ KucoinMarketData <- R6::R6Class(
     get_klines = function(
       symbol,
       timeframe = "15min",
-      from = lubridate::now() - lubridate::dhours(24),
-      to = lubridate::now()
+      from = NULL,
+      to = NULL
     ) {
       return(kucoin_fetch_klines(
         symbol = symbol,

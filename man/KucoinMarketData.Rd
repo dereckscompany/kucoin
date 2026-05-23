@@ -190,9 +190,9 @@ print(paste("Buy/Sell ratio:", round(buys / sells, 3)))
 \dontrun{
 market <- KucoinMarketData$new()
 ob <- market$get_part_orderbook("BTC-USDT", size = 20)
-bids <- ob[side == "bid"]
-asks <- ob[side == "ask"]
-print(paste("Best bid:", bids$price[1], "Best ask:", asks$price[1]))
+best_bid <- ob[side == "bid" & level == 1L]
+best_ask <- ob[side == "ask" & level == 1L]
+print(paste("Best bid:", best_bid$price, "Best ask:", best_ask$price))
 }
 
 ## ------------------------------------------------
@@ -237,7 +237,7 @@ defi_symbols <- market$get_all_symbols(market = "DeFi")
 \dontrun{
 market <- KucoinMarketData$new()
 
-# Last 24 hours of 15-minute candles
+# Most recent candles (up to 1500)
 klines <- market$get_klines("BTC-USDT")
 print(head(klines))
 
@@ -415,7 +415,16 @@ Verified: 2026-03-10
 \itemize{
 \item \code{ann_id} (integer): Announcement identifier.
 \item \code{ann_title} (character): Announcement title.
-\item \code{ann_type} (list): Category tags as character vector.
+\item \code{ann_type} (character): \verb{;}-separated category tags for the
+announcement. KuCoin returns \code{annType} as an array; the parser
+collapses it to a single character column via the shared
+\code{collapse_string_array_fields()} helper (Treatment A —
+matches the cross-package convention used by alpaca/binance
+for plain-string arrays). Filter with
+\code{grepl("latest-announcements", ann_type, fixed = TRUE)};
+recover the vector via
+\code{strsplit(ann_type, ";", fixed = TRUE)[[1]]}. \code{NA_character_}
+if KuCoin returned no tags.
 \item \code{ann_desc} (character): Short description text.
 \item \code{c_time} (POSIXct): Creation datetime (coerced from epoch milliseconds).
 \item \code{language} (character): Language code.
@@ -1296,7 +1305,7 @@ depth on each side (bids and asks). Public endpoint, no authentication required.
 \item \strong{Validation}: Ensures \code{size} is 20 or 100.
 \item \strong{Request}: GET with size embedded in endpoint path.
 \item \strong{Parsing}: Calls \code{parse_orderbook()} to convert nested bid/ask arrays
-into a long-format \code{data.table} with \code{side}, \code{price}, and \code{size} columns.
+into a long-format \code{data.table} with \code{side}, \code{level}, \code{price}, and \code{size} columns.
 }
 }
 
@@ -1359,6 +1368,8 @@ Verified: 2026-03-10
 \item \code{time} (POSIXct): Server timestamp (coerced from epoch milliseconds).
 \item \code{sequence} (character): Order book sequence number.
 \item \code{side} (character): \code{"bid"} or \code{"ask"}.
+\item \code{level} (integer): 1-indexed depth from top-of-book within the side
+(\code{level == 1} is best bid / best ask).
 \item \code{price} (numeric): Price level.
 \item \code{size} (numeric): Size at that price.
 }
@@ -1368,9 +1379,9 @@ Verified: 2026-03-10
 \preformatted{\dontrun{
 market <- KucoinMarketData$new()
 ob <- market$get_part_orderbook("BTC-USDT", size = 20)
-bids <- ob[side == "bid"]
-asks <- ob[side == "ask"]
-print(paste("Best bid:", bids$price[1], "Best ask:", asks$price[1]))
+best_bid <- ob[side == "bid" & level == 1L]
+best_ask <- ob[side == "ask" & level == 1L]
+print(paste("Best bid:", best_bid$price, "Best ask:", best_ask$price))
 }
 }
 \if{html}{\out{</div>}}
@@ -1455,6 +1466,8 @@ Verified: 2026-03-10
 \item \code{time} (POSIXct): Server timestamp (coerced from epoch milliseconds).
 \item \code{sequence} (character): Order book sequence number.
 \item \code{side} (character): \code{"bid"} or \code{"ask"}.
+\item \code{level} (integer): 1-indexed depth from top-of-book within the side
+(\code{level == 1} is best bid / best ask).
 \item \code{price} (numeric): Price level.
 \item \code{size} (numeric): Size at that price.
 }
@@ -1723,8 +1736,8 @@ Each candle is an array: \verb{[timestamp, open, close, high, low, volume, turno
 \if{html}{\out{<div class="r">}}\preformatted{KucoinMarketData$get_klines(
   symbol,
   timeframe = "15min",
-  from = lubridate::now() - lubridate::dhours(24),
-  to = lubridate::now()
+  from = NULL,
+  to = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -1738,9 +1751,10 @@ Each candle is an array: \verb{[timestamp, open, close, high, low, volume, turno
 \code{"1hour"}, \code{"2hour"}, \code{"4hour"}, \code{"6hour"}, \code{"8hour"}, \code{"12hour"},
 \code{"1day"}, \code{"1week"}, \code{"1month"}. Default \code{"15min"}.}
 
-\item{\code{from}}{POSIXct; start time (default 24 hours ago).}
+\item{\code{from}}{POSIXct or NULL; start time. When both \code{from} and \code{to} are
+\code{NULL}, the API returns up to 1500 most recent candles.}
 
-\item{\code{to}}{POSIXct; end time (default now).}
+\item{\code{to}}{POSIXct or NULL; end time.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1761,7 +1775,7 @@ Each candle is an array: \verb{[timestamp, open, close, high, low, volume, turno
 \preformatted{\dontrun{
 market <- KucoinMarketData$new()
 
-# Last 24 hours of 15-minute candles
+# Most recent candles (up to 1500)
 klines <- market$get_klines("BTC-USDT")
 print(head(klines))
 

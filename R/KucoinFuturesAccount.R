@@ -109,7 +109,8 @@ KucoinFuturesAccount <- R6::R6Class(
     #'
     #' @param currency Character; settlement currency (e.g., `"USDT"`).
     #'   Default `"USDT"`.
-    #' @return A single-row `data.table` with columns:
+    #' @return A single-row `data.table` (or `promise<data.table>` if
+    #'   constructed with `async = TRUE`) with columns:
     #'   - `account_equity` (numeric): Total account equity.
     #'   - `unrealised_pnl` (numeric): Unrealised profit and loss.
     #'   - `margin_balance` (numeric): Margin balance (equity + unrealised PNL).
@@ -123,7 +124,7 @@ KucoinFuturesAccount <- R6::R6Class(
         endpoint = "/api/v1/account-overview",
         query = list(currency = currency),
         .parser = function(data) {
-          return(as_dt_row(data))
+          return(as_dt_row(data)[])
         }
       ))
     },
@@ -194,21 +195,35 @@ KucoinFuturesAccount <- R6::R6Class(
     #' ```
     #'
     #' @param symbol Character; futures symbol (e.g., `"XBTUSDTM"`).
-    #' @return A `data.table` with columns:
+    #' @return A single-row `data.table` (or `promise<data.table>` if
+    #'   constructed with `async = TRUE`) with columns:
     #'   - `id` (character): Position identifier.
     #'   - `symbol` (character): Contract symbol.
+    #'   - `auto_deposit` (logical): Auto-deposit margin flag.
     #'   - `real_leverage` (numeric): Effective leverage.
     #'   - `cross_mode` (logical): Whether cross margin mode is active.
+    #'   - `delev_percentage` (numeric): Auto-deleveraging percentage.
     #'   - `current_qty` (integer): Current position size in contracts.
     #'   - `current_cost` (character): Cost of the current position.
+    #'   - `current_comm` (character): Current commission paid.
+    #'   - `unrealised_cost` (character): Unrealised cost.
+    #'   - `realised_gross_cost` (character): Realised gross cost.
+    #'   - `realised_cost` (character): Realised cost.
     #'   - `is_open` (logical): Whether the position is open.
     #'   - `mark_price` (numeric): Current mark price.
     #'   - `mark_value` (character): Mark value of the position.
+    #'   - `pos_cost` (character): Position cost.
+    #'   - `pos_init` (character): Initial margin.
+    #'   - `pos_comm` (character): Position commission.
     #'   - `pos_margin` (character): Position margin.
-    #'   - `unrealised_pnl` (numeric): Unrealised profit and loss.
+    #'   - `unrealised_pnl` (character): Unrealised profit and loss.
+    #'   - `unrealised_pnl_pcnt` (numeric): Unrealised PnL as a percentage.
     #'   - `avg_entry_price` (character): Average entry price.
     #'   - `liquidation_price` (character): Estimated liquidation price.
+    #'   - `bankrupt_price` (character): Bankruptcy price.
+    #'   - `settle_currency` (character): Settlement currency.
     #'   - `margin_mode` (character): `"ISOLATED"` or `"CROSS"`.
+    #'   - `position_side` (character): `"BOTH"`, `"LONG"`, or `"SHORT"`.
     #'   - `opening_timestamp` (POSIXct): Position opened time (coerced from milliseconds).
     #'   - `current_timestamp` (POSIXct): Current server time (coerced from milliseconds).
     get_position = function(symbol) {
@@ -217,13 +232,8 @@ KucoinFuturesAccount <- R6::R6Class(
         query = list(symbol = symbol),
         .parser = function(data) {
           dt <- as_dt_row(data)
-          if (nrow(dt) > 0 && "opening_timestamp" %in% names(dt)) {
-            dt[, opening_timestamp := ms_to_datetime(opening_timestamp)]
-          }
-          if (nrow(dt) > 0 && "current_timestamp" %in% names(dt)) {
-            dt[, current_timestamp := ms_to_datetime(current_timestamp)]
-          }
-          return(dt)
+          coerce_cols(dt, c("opening_timestamp", "current_timestamp"), ms_to_datetime)
+          return(dt[])
         }
       ))
     },
@@ -302,20 +312,21 @@ KucoinFuturesAccount <- R6::R6Class(
     #' ```
     #'
     #' @param currency Character or NULL; filter by settlement currency.
-    #' @return A `data.table`; same columns as `get_position()`.
+    #' @return A `data.table` (or `promise<data.table>` if constructed with
+    #'   `async = TRUE`) with one row per open position; same columns as
+    #'   `get_position()`. Returns an empty `data.table` when there are no
+    #'   open positions.
     get_positions = function(currency = NULL) {
       return(private$.request(
         endpoint = "/api/v1/positions",
         query = list(currency = currency),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table()[])
+          }
           dt <- as_dt_list(data)
-          if (nrow(dt) > 0 && "opening_timestamp" %in% names(dt)) {
-            dt[, opening_timestamp := ms_to_datetime(opening_timestamp)]
-          }
-          if (nrow(dt) > 0 && "current_timestamp" %in% names(dt)) {
-            dt[, current_timestamp := ms_to_datetime(current_timestamp)]
-          }
-          return(dt)
+          coerce_cols(dt, c("opening_timestamp", "current_timestamp"), ms_to_datetime)
+          return(dt[])
         }
       ))
     },
@@ -385,13 +396,25 @@ KucoinFuturesAccount <- R6::R6Class(
     #'
     #' @param query Named list; query parameters. Optional: `symbol`,
     #'   `from`, `to`, `limit`, `pageId`.
-    #' @return A `data.table` with columns:
+    #' @return A `data.table` (or `promise<data.table>` if constructed with
+    #'   `async = TRUE`) with one row per closed position record. Returns an
+    #'   empty `data.table` when no history records match. Columns:
+    #'   - `close_id` (character): Close-event identifier.
+    #'   - `position_id` (character): Position identifier.
+    #'   - `uid` (integer): Numeric user ID.
+    #'   - `user_id` (character): String user ID.
     #'   - `symbol` (character): Contract symbol.
     #'   - `settle_currency` (character): Settlement currency.
-    #'   - `realised_gross_pnl` (character): Gross realised PNL.
-    #'   - `realised_pnl` (character): Net realised PNL (after fees).
-    #'   - `leverage` (integer): Leverage used.
+    #'   - `leverage` (character): Leverage used.
     #'   - `type` (character): Close type (e.g., `"Close"`).
+    #'   - `pnl` (character): Realised PnL.
+    #'   - `realised_gross_cost` (character): Gross realised cost.
+    #'   - `withdraw_pnl` (character): Withdrawn PnL.
+    #'   - `trade_fee` (character): Trading fee.
+    #'   - `funding_fee` (character): Funding fee.
+    #'   - `open_price` (character): Average open price.
+    #'   - `close_price` (character): Average close price.
+    #'   - `margin_mode` (character): `"ISOLATED"` or `"CROSS"`.
     #'   - `open_time` (POSIXct): Position opened time (coerced from milliseconds).
     #'   - `close_time` (POSIXct): Position closed time (coerced from milliseconds).
     get_positions_history = function(query = list()) {
@@ -399,15 +422,16 @@ KucoinFuturesAccount <- R6::R6Class(
         endpoint = "/api/v1/history-positions",
         query = query,
         .parser = function(data) {
-          items <- data$items %||% data
+          items <- data
+          if (is.list(data) && !is.null(data$items)) {
+            items <- data$items
+          }
+          if (is.null(items) || length(items) == 0L) {
+            return(data.table::data.table()[])
+          }
           dt <- as_dt_list(items)
-          if (nrow(dt) > 0 && "open_time" %in% names(dt)) {
-            dt[, open_time := ms_to_datetime(open_time)]
-          }
-          if (nrow(dt) > 0 && "close_time" %in% names(dt)) {
-            dt[, close_time := ms_to_datetime(close_time)]
-          }
-          return(dt)
+          coerce_cols(dt, c("open_time", "close_time"), ms_to_datetime)
+          return(dt[])
         }
       ))
     },
@@ -451,7 +475,8 @@ KucoinFuturesAccount <- R6::R6Class(
     #' ```
     #'
     #' @param symbol Character; futures symbol.
-    #' @return A single-row `data.table` with columns:
+    #' @return A single-row `data.table` (or `promise<data.table>` if
+    #'   constructed with `async = TRUE`) with columns:
     #'   - `symbol` (character): Contract symbol.
     #'   - `margin_mode` (character): `"ISOLATED"` or `"CROSS"`.
     get_margin_mode = function(symbol) {
@@ -459,7 +484,7 @@ KucoinFuturesAccount <- R6::R6Class(
         endpoint = "/api/v1/marginMode",
         query = list(symbol = symbol),
         .parser = function(data) {
-          return(as_dt_row(data))
+          return(as_dt_row(data)[])
         }
       ))
     },
@@ -514,7 +539,8 @@ KucoinFuturesAccount <- R6::R6Class(
     #'
     #' @param symbol Character; futures symbol.
     #' @param marginMode Character; `"ISOLATED"` or `"CROSS"`.
-    #' @return A single-row `data.table` with columns:
+    #' @return A single-row `data.table` (or `promise<data.table>` if
+    #'   constructed with `async = TRUE`) with columns:
     #'   - `symbol` (character): Contract symbol.
     #'   - `margin_mode` (character): Updated margin mode.
     set_margin_mode = function(symbol, marginMode) {
@@ -523,7 +549,7 @@ KucoinFuturesAccount <- R6::R6Class(
         method = "POST",
         body = list(symbol = symbol, marginMode = marginMode),
         .parser = function(data) {
-          return(as_dt_row(data))
+          return(as_dt_row(data)[])
         }
       ))
     },
@@ -567,7 +593,8 @@ KucoinFuturesAccount <- R6::R6Class(
     #' ```
     #'
     #' @param symbol Character; futures symbol.
-    #' @return A single-row `data.table` with columns:
+    #' @return A single-row `data.table` (or `promise<data.table>` if
+    #'   constructed with `async = TRUE`) with columns:
     #'   - `symbol` (character): Contract symbol.
     #'   - `leverage` (character): Current leverage multiplier.
     get_cross_margin_leverage = function(symbol) {
@@ -575,7 +602,7 @@ KucoinFuturesAccount <- R6::R6Class(
         endpoint = "/api/v1/crossMarginLeverage",
         query = list(symbol = symbol),
         .parser = function(data) {
-          return(as_dt_row(data))
+          return(as_dt_row(data)[])
         }
       ))
     },
@@ -630,7 +657,8 @@ KucoinFuturesAccount <- R6::R6Class(
     #'
     #' @param symbol Character; futures symbol.
     #' @param leverage Integer; leverage multiplier.
-    #' @return A single-row `data.table` with columns:
+    #' @return A single-row `data.table` (or `promise<data.table>` if
+    #'   constructed with `async = TRUE`) with columns:
     #'   - `symbol` (character): Contract symbol.
     #'   - `leverage` (character): Updated leverage multiplier.
     set_cross_margin_leverage = function(symbol, leverage) {
@@ -639,7 +667,7 @@ KucoinFuturesAccount <- R6::R6Class(
         method = "POST",
         body = list(symbol = symbol, leverage = leverage),
         .parser = function(data) {
-          return(as_dt_row(data))
+          return(as_dt_row(data)[])
         }
       ))
     },
@@ -686,7 +714,8 @@ KucoinFuturesAccount <- R6::R6Class(
     #' @param symbol Character; futures symbol.
     #' @param price Character; order price.
     #' @param leverage Integer; leverage multiplier.
-    #' @return A single-row `data.table` with columns:
+    #' @return A single-row `data.table` (or `promise<data.table>` if
+    #'   constructed with `async = TRUE`) with columns:
     #'   - `symbol` (character): Contract symbol.
     #'   - `max_buy_open_size` (integer): Maximum buy contracts.
     #'   - `max_sell_open_size` (integer): Maximum sell contracts.
@@ -695,7 +724,7 @@ KucoinFuturesAccount <- R6::R6Class(
         endpoint = "/api/v1/maxOpenSize",
         query = list(symbol = symbol, price = price, leverage = leverage),
         .parser = function(data) {
-          return(as_dt_row(data))
+          return(as_dt_row(data)[])
         }
       ))
     },
@@ -736,13 +765,27 @@ KucoinFuturesAccount <- R6::R6Class(
     #' ```
     #'
     #' @param symbol Character; futures symbol.
-    #' @return A single-row `data.table` with the maximum withdrawable margin amount.
+    #' @return A single-row `data.table` (or `promise<data.table>` if
+    #'   constructed with `async = TRUE`) with columns:
+    #'   - `max_withdraw_margin` (character): Maximum amount of isolated
+    #'     margin that can be withdrawn from the position. Returned by
+    #'     KuCoin as a fixed-precision string so the caller controls
+    #'     numeric coercion.
     get_max_withdraw_margin = function(symbol) {
       return(private$.request(
         endpoint = "/api/v1/maxWithdrawMargin",
         query = list(symbol = symbol),
         .parser = function(data) {
-          return(as_dt_row(data))
+          # KuCoin returns a scalar string here (e.g. "21.1234") rather than
+          # a named object. Wrap it explicitly so the caller gets a
+          # one-row, one-column data.table with a meaningful name rather
+          # than the default `v1` `as_dt_row()` would assign.
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table()[])
+          }
+          return(data.table::data.table(
+            max_withdraw_margin = as.character(data)
+          )[])
         }
       ))
     },
@@ -801,7 +844,8 @@ KucoinFuturesAccount <- R6::R6Class(
     #' @param symbol Character; futures symbol.
     #' @param margin Numeric; amount of margin to add.
     #' @param bizNo Character; unique business ID for idempotency.
-    #' @return A single-row `data.table` with columns:
+    #' @return A single-row `data.table` (or `promise<data.table>` if
+    #'   constructed with `async = TRUE`) with columns:
     #'   - `id` (character): Margin operation ID.
     #'   - `symbol` (character): Contract symbol.
     #'   - `margin` (character): Amount deposited.
@@ -812,7 +856,7 @@ KucoinFuturesAccount <- R6::R6Class(
         method = "POST",
         body = list(symbol = symbol, margin = margin, bizNo = bizNo),
         .parser = function(data) {
-          return(as_dt_row(data))
+          return(as_dt_row(data)[])
         }
       ))
     },
@@ -869,7 +913,8 @@ KucoinFuturesAccount <- R6::R6Class(
     #'
     #' @param symbol Character; futures symbol.
     #' @param withdrawAmount Numeric; amount of margin to withdraw.
-    #' @return A single-row `data.table` with columns:
+    #' @return A single-row `data.table` (or `promise<data.table>` if
+    #'   constructed with `async = TRUE`) with columns:
     #'   - `id` (character): Margin operation ID.
     #'   - `symbol` (character): Contract symbol.
     #'   - `margin` (character): Amount withdrawn.
@@ -880,7 +925,7 @@ KucoinFuturesAccount <- R6::R6Class(
         method = "POST",
         body = list(symbol = symbol, withdrawAmount = withdrawAmount),
         .parser = function(data) {
-          return(as_dt_row(data))
+          return(as_dt_row(data)[])
         }
       ))
     },
@@ -949,7 +994,9 @@ KucoinFuturesAccount <- R6::R6Class(
     #' ```
     #'
     #' @param symbol Character; futures symbol.
-    #' @return A `data.table` with columns:
+    #' @return A `data.table` (or `promise<data.table>` if constructed with
+    #'   `async = TRUE`) with one row per risk-limit tier. Returns an empty
+    #'   `data.table` when KuCoin returns no tiers. Columns:
     #'   - `symbol` (character): Contract symbol.
     #'   - `level` (integer): Risk limit tier level.
     #'   - `max_risk_limit` (integer): Maximum position value for this tier.
@@ -961,7 +1008,10 @@ KucoinFuturesAccount <- R6::R6Class(
       return(private$.request(
         endpoint = paste0("/api/v1/contracts/risk-limit/", symbol),
         .parser = function(data) {
-          return(as_dt_list(data))
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table()[])
+          }
+          return(as_dt_list(data)[])
         }
       ))
     },
@@ -1031,7 +1081,9 @@ KucoinFuturesAccount <- R6::R6Class(
     #' @param symbol Character; futures symbol.
     #' @param query Named list; additional query parameters. Optional:
     #'   `startAt`, `endAt`, `reverse`, `offset`, `forward`, `maxCount`.
-    #' @return A `data.table` with columns:
+    #' @return A `data.table` (or `promise<data.table>` if constructed with
+    #'   `async = TRUE`) with one row per funding settlement. Returns an
+    #'   empty `data.table` when no records are returned. Columns:
     #'   - `id` (integer): Record identifier.
     #'   - `symbol` (character): Contract symbol.
     #'   - `time_point` (POSIXct): Funding settlement time (coerced from milliseconds).
@@ -1047,12 +1099,16 @@ KucoinFuturesAccount <- R6::R6Class(
         endpoint = "/api/v1/funding-history",
         query = query,
         .parser = function(data) {
-          items <- data$dataList %||% data
-          dt <- as_dt_list(items)
-          if (nrow(dt) > 0 && "time_point" %in% names(dt)) {
-            dt[, time_point := ms_to_datetime(time_point)]
+          items <- data
+          if (is.list(data) && !is.null(data$dataList)) {
+            items <- data$dataList
           }
-          return(dt)
+          if (is.null(items) || length(items) == 0L) {
+            return(data.table::data.table()[])
+          }
+          dt <- as_dt_list(items)
+          coerce_cols(dt, "time_point", ms_to_datetime)
+          return(dt[])
         }
       ))
     }

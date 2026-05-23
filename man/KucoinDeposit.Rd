@@ -238,7 +238,7 @@ deposit addresses (e.g., Lightning Network).}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
 \itemize{
 \item \code{address} (character): The generated deposit address.
 \item \code{memo} (character): Memo/tag for the address (empty string if not applicable).
@@ -366,7 +366,7 @@ to generate invoice-based addresses (e.g., Lightning Network).}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row per address and columns:
 \itemize{
 \item \code{address} (character): The deposit address string.
 \item \code{memo} (character): Memo/tag for the address (empty string if not applicable).
@@ -527,7 +527,7 @@ Used to filter deposits created on or before this time.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row per deposit and columns:
 \itemize{
 \item \code{currency} (character): Deposited currency code.
 \item \code{chain} (character): Blockchain network used for the deposit.
@@ -538,9 +538,9 @@ Used to filter deposits created on or before this time.}
 \item \code{amount} (character): Deposit amount.
 \item \code{fee} (character): Deposit fee charged.
 \item \code{wallet_tx_id} (character): On-chain transaction hash.
-\item \code{updated_at} (numeric): Last update timestamp in milliseconds.
-\item \code{remark} (character): Optional remark.
 \item \code{created_at} (POSIXct): Creation datetime (coerced from epoch milliseconds).
+\item \code{updated_at} (POSIXct): Last update datetime (coerced from epoch milliseconds).
+\item \code{remark} (character): Optional remark.
 }
 
 Returns an empty \code{data.table} if no deposits match the filters.

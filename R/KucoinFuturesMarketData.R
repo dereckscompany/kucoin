@@ -163,7 +163,9 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' ```
     #'
     #' @param symbol Character; futures symbol (e.g., `"XBTUSDTM"`).
-    #' @return A single-row `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #' @return A single-row `data.table` (or `promise<data.table>` if
+    #'   constructed with `async = TRUE`) with the contract specification
+    #'   flattened to one row per symbol. Key columns:
     #'   - `symbol` (character): Contract symbol.
     #'   - `root_symbol` (character): Root symbol (e.g., `"USDT"`).
     #'   - `type` (character): Contract type (e.g., `"FFWCSX"` for perpetual).
@@ -180,8 +182,17 @@ KucoinFuturesMarketData <- R6::R6Class(
     #'   - `taker_fee_rate` (numeric): Taker fee rate.
     #'   - `status` (character): Contract status (e.g., `"Open"`).
     #'   - `mark_price` (numeric): Current mark price.
+    #'   - `index_price` (numeric): Underlying index price.
     #'   - `last_trade_price` (numeric): Last traded price.
     #'   - `funding_fee_rate` (numeric): Current funding fee rate.
+    #'   - `predicted_funding_fee_rate` (numeric): Predicted next funding fee rate.
+    #'   - `open_interest` (character): Current open interest.
+    #'   - `turnover_of24h` (numeric): 24h turnover in settlement currency.
+    #'   - `volume_of24h` (numeric): 24h trading volume.
+    #'   - `low_price` (numeric): 24h low price.
+    #'   - `high_price` (numeric): 24h high price.
+    #'   - `price_chg_pct` (numeric): 24h price change percentage.
+    #'   - `price_chg` (numeric): 24h price change.
     #'
     #' @examples
     #' \dontrun{
@@ -194,6 +205,9 @@ KucoinFuturesMarketData <- R6::R6Class(
         endpoint = paste0("/api/v1/contracts/", symbol),
         auth = FALSE,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table()[])
+          }
           return(as_dt_row(data)[])
         }
       ))
@@ -275,7 +289,10 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return A `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row per contract; same columns as `get_contract()`.
+    #' @return A `data.table` (or `promise<data.table>` if constructed with
+    #'   `async = TRUE`) with one row per active contract; columns match
+    #'   `get_contract()`. Returns an empty `data.table` if no active
+    #'   contracts are returned.
     #'
     #' @examples
     #' \dontrun{
@@ -288,6 +305,9 @@ KucoinFuturesMarketData <- R6::R6Class(
         endpoint = "/api/v1/contracts/active",
         auth = FALSE,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table()[])
+          }
           return(as_dt_list(data)[])
         }
       ))
@@ -341,11 +361,13 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' ```
     #'
     #' @param symbol Character; futures symbol (e.g., `"XBTUSDTM"`).
-    #' @return A single-row `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #' @return A single-row `data.table` (or `promise<data.table>` if
+    #'   constructed with `async = TRUE`) with columns:
     #'   - `sequence` (integer): Sequence number.
     #'   - `symbol` (character): Contract symbol.
     #'   - `side` (character): Side of the last trade (`"buy"` or `"sell"`).
     #'   - `size` (integer): Size of the last trade.
+    #'   - `trade_id` (character): Identifier of the last trade.
     #'   - `price` (character): Last trade price.
     #'   - `best_bid_size` (integer): Quantity at best bid.
     #'   - `best_bid_price` (character): Best bid price.
@@ -365,10 +387,11 @@ KucoinFuturesMarketData <- R6::R6Class(
         query = list(symbol = symbol),
         auth = FALSE,
         .parser = function(data) {
-          dt <- as_dt_row(data)
-          if (nrow(dt) > 0 && "ts" %in% names(dt)) {
-            dt[, ts := ns_to_datetime(ts)]
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table()[])
           }
+          dt <- as_dt_row(data)
+          coerce_cols(dt, "ts", ns_to_datetime)
           return(dt[])
         }
       ))
@@ -434,7 +457,10 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return A `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row per contract; same columns as `get_ticker()`.
+    #' @return A `data.table` (or `promise<data.table>` if constructed with
+    #'   `async = TRUE`) with one row per contract; columns match
+    #'   `get_ticker()`. Returns an empty `data.table` if no tickers are
+    #'   returned.
     #'
     #' @examples
     #' \dontrun{
@@ -447,10 +473,11 @@ KucoinFuturesMarketData <- R6::R6Class(
         endpoint = "/api/v1/allTickers",
         auth = FALSE,
         .parser = function(data) {
-          dt <- as_dt_list(data)
-          if (nrow(dt) > 0 && "ts" %in% names(dt)) {
-            dt[, ts := ns_to_datetime(ts)]
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table()[])
           }
+          dt <- as_dt_list(data)
+          coerce_cols(dt, "ts", ns_to_datetime)
           return(dt[])
         }
       ))
@@ -514,6 +541,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #'   - `ts` (POSIXct): Snapshot timestamp (coerced from nanoseconds).
     #'   - `sequence` (character): Sequence number for change detection.
     #'   - `side` (character): `"bid"` or `"ask"`.
+    #'   - `level` (integer): 1-indexed depth from top-of-book within the side
+    #'     (`level == 1` is best bid / best ask).
     #'   - `price` (numeric): Price level.
     #'   - `size` (numeric): Size at this price level.
     #'
@@ -521,7 +550,7 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' \dontrun{
     #' futures_market <- KucoinFuturesMarketData$new()
     #' ob <- futures_market$get_part_orderbook("XBTUSDTM", size = 20)
-    #' print(ob[side == "bid"][1:5])
+    #' print(ob[side == "bid"][order(level)][1:5])
     #' }
     get_part_orderbook = function(symbol, size = 20) {
       size <- match.arg(as.character(size), c("20", "100"))
@@ -596,6 +625,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #'   - `ts` (POSIXct): Snapshot timestamp (coerced from nanoseconds).
     #'   - `sequence` (character): Sequence number for change detection.
     #'   - `side` (character): `"bid"` or `"ask"`.
+    #'   - `level` (integer): 1-indexed depth from top-of-book within the side
+    #'     (`level == 1` is best bid / best ask).
     #'   - `price` (numeric): Price level.
     #'   - `size` (numeric): Size at this price level.
     #'
@@ -673,7 +704,9 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' ```
     #'
     #' @param symbol Character; futures symbol (e.g., `"XBTUSDTM"`).
-    #' @return A `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #' @return A `data.table` (or `promise<data.table>` if constructed with
+    #'   `async = TRUE`) with one row per trade. Returns an empty
+    #'   `data.table` when KuCoin reports no recent trades. Columns:
     #'   - `sequence` (integer): Trade sequence number.
     #'   - `trade_id` (character): Unique trade identifier.
     #'   - `taker_order_id` (character): Taker's order ID.
@@ -695,10 +728,11 @@ KucoinFuturesMarketData <- R6::R6Class(
         query = list(symbol = symbol),
         auth = FALSE,
         .parser = function(data) {
-          dt <- as_dt_list(data)
-          if (nrow(dt) > 0 && "ts" %in% names(dt)) {
-            dt[, ts := ns_to_datetime(ts)]
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table()[])
           }
+          dt <- as_dt_list(data)
+          coerce_cols(dt, "ts", ns_to_datetime)
           return(dt[])
         }
       ))
@@ -887,7 +921,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' ```
     #'
     #' @param symbol Character; futures symbol (e.g., `"XBTUSDTM"`).
-    #' @return A single-row `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #' @return A single-row `data.table` (or `promise<data.table>` if
+    #'   constructed with `async = TRUE`) with columns:
     #'   - `symbol` (character): Contract symbol.
     #'   - `granularity` (integer): Price granularity in milliseconds.
     #'   - `time_point` (POSIXct): Timestamp (coerced from milliseconds).
@@ -905,10 +940,11 @@ KucoinFuturesMarketData <- R6::R6Class(
         endpoint = paste0("/api/v1/mark-price/", symbol, "/current"),
         auth = FALSE,
         .parser = function(data) {
-          dt <- as_dt_row(data)
-          if (nrow(dt) > 0 && "time_point" %in% names(dt)) {
-            dt[, time_point := ms_to_datetime(time_point)]
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table()[])
           }
+          dt <- as_dt_row(data)
+          coerce_cols(dt, "time_point", ms_to_datetime)
           return(dt[])
         }
       ))
@@ -958,7 +994,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' ```
     #'
     #' @param symbol Character; futures symbol (e.g., `"XBTUSDTM"`).
-    #' @return A single-row `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #' @return A single-row `data.table` (or `promise<data.table>` if
+    #'   constructed with `async = TRUE`) with columns:
     #'   - `symbol` (character): Contract symbol.
     #'   - `granularity` (integer): Funding interval in milliseconds.
     #'   - `time_point` (POSIXct): Current rate timestamp (coerced from milliseconds).
@@ -977,13 +1014,11 @@ KucoinFuturesMarketData <- R6::R6Class(
         endpoint = paste0("/api/v1/funding-rate/", symbol, "/current"),
         auth = FALSE,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table()[])
+          }
           dt <- as_dt_row(data)
-          if (nrow(dt) > 0 && "time_point" %in% names(dt)) {
-            dt[, time_point := ms_to_datetime(time_point)]
-          }
-          if (nrow(dt) > 0 && "funding_time" %in% names(dt)) {
-            dt[, funding_time := ms_to_datetime(funding_time)]
-          }
+          coerce_cols(dt, c("time_point", "funding_time"), ms_to_datetime)
           return(dt[])
         }
       ))
@@ -1047,7 +1082,9 @@ KucoinFuturesMarketData <- R6::R6Class(
     #'   If numeric, assumed to be milliseconds.
     #' @param to POSIXct or numeric; end time. If POSIXct, converted to milliseconds.
     #'   If numeric, assumed to be milliseconds.
-    #' @return A `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #' @return A `data.table` (or `promise<data.table>` if constructed with
+    #'   `async = TRUE`) with one row per funding settlement. Returns an
+    #'   empty `data.table` when no records cover the time range. Columns:
     #'   - `symbol` (character): Contract symbol.
     #'   - `funding_rate` (numeric): Funding rate for the period.
     #'   - `timepoint` (POSIXct): Settlement timestamp (coerced from milliseconds).
@@ -1075,10 +1112,11 @@ KucoinFuturesMarketData <- R6::R6Class(
         query = list(symbol = symbol, from = from, to = to),
         auth = FALSE,
         .parser = function(data) {
-          dt <- as_dt_list(data)
-          if (nrow(dt) > 0 && "timepoint" %in% names(dt)) {
-            dt[, timepoint := ms_to_datetime(timepoint)]
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table()[])
           }
+          dt <- as_dt_list(data)
+          coerce_cols(dt, "timepoint", ms_to_datetime)
           return(dt[])
         }
       ))
@@ -1120,7 +1158,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return A single-row `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #' @return A single-row `data.table` (or `promise<data.table>` if
+    #'   constructed with `async = TRUE`) with columns:
     #'   - `server_time` (POSIXct): Server timestamp (coerced from milliseconds).
     #'
     #' @examples
@@ -1134,6 +1173,9 @@ KucoinFuturesMarketData <- R6::R6Class(
         endpoint = "/api/v1/timestamp",
         auth = FALSE,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table()[])
+          }
           return(data.table::data.table(server_time = ms_to_datetime(data))[])
         }
       ))
@@ -1178,7 +1220,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return A single-row `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #' @return A single-row `data.table` (or `promise<data.table>` if
+    #'   constructed with `async = TRUE`) with columns:
     #'   - `status` (character): Service status (e.g., `"open"`, `"close"`).
     #'   - `msg` (character): Status message (empty when operational).
     #'
@@ -1193,6 +1236,9 @@ KucoinFuturesMarketData <- R6::R6Class(
         endpoint = "/api/v1/status",
         auth = FALSE,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table()[])
+          }
           return(as_dt_row(data)[])
         }
       ))
@@ -1218,12 +1264,17 @@ parse_futures_orderbook <- function(data) {
     if (is.null(entries) || length(entries) == 0) {
       return(data.table::data.table(
         side = character(),
+        level = integer(),
         price = numeric(),
         size = numeric()
       )[])
     }
+    # KuCoin returns best price first; `level = 1` is the top of the
+    # book for the given side. Matches `parse_orderbook` (spot) and the
+    # cross-package long-format convention.
     return(data.table::data.table(
       side = side_label,
+      level = seq_along(entries),
       price = vapply(entries, function(e) as.numeric(e[[1]]), numeric(1)),
       size = vapply(entries, function(e) as.numeric(e[[2]]), numeric(1))
     )[])
@@ -1238,7 +1289,7 @@ parse_futures_orderbook <- function(data) {
   if (!is.null(data$symbol)) {
     result[, symbol := data$symbol]
   }
-  data.table::setcolorder(result, c("ts", "sequence", "side", "price", "size"))
+  data.table::setcolorder(result, c("ts", "sequence", "side", "level", "price", "size"))
 
   return(result[])
 }

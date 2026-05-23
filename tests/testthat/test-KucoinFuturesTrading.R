@@ -151,6 +151,52 @@ test_that("cancel_all_stop_orders hits stopOrders endpoint", {
   expect_s3_class(dt, "data.table")
 })
 
+# -- cancel parsers: NULL / empty payload regression --
+
+test_that("cancel_order_by_id returns 0-row data.table when data is NULL", {
+  resp <- mock_kucoin_response(data = NULL)
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_trading()$cancel_order_by_id("futures-order-001")
+  expect_s3_class(dt, "data.table")
+  expect_equal(nrow(dt), 0L)
+})
+
+test_that("cancel_order_by_client_oid returns 0-row data.table when data is NULL", {
+  # Futures `cancel_order_by_client_oid` returns a `{clientOid}` object,
+  # not a `cancelledOrderIds` array — pin the NULL-payload branch only.
+  resp <- mock_kucoin_response(data = NULL)
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_trading()$cancel_order_by_client_oid("client-001", "XBTUSDTM")
+  expect_s3_class(dt, "data.table")
+  expect_equal(nrow(dt), 0L)
+})
+
+test_that("cancel_all returns 0-row data.table on empty cancelledOrderIds", {
+  resp <- mock_kucoin_response(data = list(cancelledOrderIds = list()))
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_trading()$cancel_all()
+  expect_s3_class(dt, "data.table")
+  expect_equal(nrow(dt), 0L)
+})
+
+test_that("cancel_all explodes cancelledOrderIds into long-format rows", {
+  resp <- mock_kucoin_response(
+    data = list(cancelledOrderIds = list("id-x", "id-y", "id-z"))
+  )
+  httr2::local_mocked_responses(function(req) resp)
+
+  dt <- new_trading()$cancel_all()
+  expect_s3_class(dt, "data.table")
+  expect_equal(nrow(dt), 3L)
+  expect_true("cancelled_order_id" %in% names(dt))
+  expect_type(dt$cancelled_order_id, "character")
+  expect_equal(dt$cancelled_order_id, c("id-x", "id-y", "id-z"))
+  expect_false("cancelled_order_ids" %in% names(dt))
+})
+
 # -- get_order_by_id --
 
 test_that("get_order_by_id returns data.table with timestamps", {

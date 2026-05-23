@@ -585,21 +585,39 @@ KucoinFuturesTrading <- R6::R6Class(
     #' ```
     #'
     #' @param orderId Character; the system order ID to cancel.
-    #' @return A single-row `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `cancelled_order_ids` (list): Vector of cancelled order IDs.
+    #' @return `data.table` (or `promise<data.table>` if constructed with
+    #'   `async = TRUE`) with one row per cancelled order, and column:
+    #'   - `cancelled_order_id` (character): Cancelled order ID. Empty
+    #'     `data.table` (zero rows) if no orders matched.
     #'
     #' @examples
     #' \dontrun{
     #' ft <- KucoinFuturesTrading$new()
     #' result <- ft$cancel_order_by_id("234125150956625920")
-    #' print(result$cancelled_order_ids)
+    #' print(result$cancelled_order_id)
     #' }
     cancel_order_by_id = function(orderId) {
       return(private$.request(
         endpoint = paste0("/api/v1/orders/", orderId),
         method = "DELETE",
         .parser = function(data) {
-          return(as_dt_row(data))
+          ids <- NULL
+          if (!is.null(data)) {
+            ids <- data$cancelledOrderIds
+            data$cancelledOrderIds <- NULL
+          }
+          if (is.null(ids) || length(ids) == 0) {
+            return(data.table::data.table()[])
+          }
+          dt <- as_dt_row(data)
+          id_vals <- as.character(unlist(ids, use.names = FALSE))
+          if (nrow(dt) == 0L) {
+            dt <- data.table::data.table(cancelled_order_id = id_vals)
+          } else {
+            dt <- dt[rep(1L, length(id_vals))]
+            dt[, cancelled_order_id := id_vals]
+          }
+          return(dt[])
         }
       ))
     },
@@ -718,8 +736,10 @@ KucoinFuturesTrading <- R6::R6Class(
     #'
     #' @param symbol Character or NULL; filter by futures symbol. When NULL,
     #'   cancels all open orders across all symbols.
-    #' @return A single-row `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `cancelled_order_ids` (list): Vector of cancelled order IDs.
+    #' @return `data.table` (or `promise<data.table>` if constructed with
+    #'   `async = TRUE`) with one row per cancelled order, and column:
+    #'   - `cancelled_order_id` (character): Cancelled order ID. Empty
+    #'     `data.table` (zero rows) if no orders matched.
     #'
     #' @examples
     #' \dontrun{
@@ -727,7 +747,7 @@ KucoinFuturesTrading <- R6::R6Class(
     #'
     #' # Cancel all open orders for XBTUSDTM
     #' result <- ft$cancel_all(symbol = "XBTUSDTM")
-    #' print(result$cancelled_order_ids)
+    #' print(result$cancelled_order_id)
     #'
     #' # Cancel all open orders across all symbols
     #' result <- ft$cancel_all()
@@ -738,7 +758,23 @@ KucoinFuturesTrading <- R6::R6Class(
         method = "DELETE",
         query = list(symbol = symbol),
         .parser = function(data) {
-          return(as_dt_row(data))
+          ids <- NULL
+          if (!is.null(data)) {
+            ids <- data$cancelledOrderIds
+            data$cancelledOrderIds <- NULL
+          }
+          if (is.null(ids) || length(ids) == 0) {
+            return(data.table::data.table()[])
+          }
+          dt <- as_dt_row(data)
+          id_vals <- as.character(unlist(ids, use.names = FALSE))
+          if (nrow(dt) == 0L) {
+            dt <- data.table::data.table(cancelled_order_id = id_vals)
+          } else {
+            dt <- dt[rep(1L, length(id_vals))]
+            dt[, cancelled_order_id := id_vals]
+          }
+          return(dt[])
         }
       ))
     },
@@ -791,8 +827,10 @@ KucoinFuturesTrading <- R6::R6Class(
     #'
     #' @param symbol Character or NULL; filter by futures symbol. When NULL,
     #'   cancels all untriggered stop orders across all symbols.
-    #' @return A single-row `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `cancelled_order_ids` (list): Vector of cancelled order IDs.
+    #' @return `data.table` (or `promise<data.table>` if constructed with
+    #'   `async = TRUE`) with one row per cancelled order, and column:
+    #'   - `cancelled_order_id` (character): Cancelled order ID. Empty
+    #'     `data.table` (zero rows) if no orders matched.
     #'
     #' @examples
     #' \dontrun{
@@ -800,7 +838,7 @@ KucoinFuturesTrading <- R6::R6Class(
     #'
     #' # Cancel all stop orders for XBTUSDTM
     #' result <- ft$cancel_all_stop_orders(symbol = "XBTUSDTM")
-    #' print(result$cancelled_order_ids)
+    #' print(result$cancelled_order_id)
     #'
     #' # Cancel all stop orders across all symbols
     #' result <- ft$cancel_all_stop_orders()
@@ -811,7 +849,23 @@ KucoinFuturesTrading <- R6::R6Class(
         method = "DELETE",
         query = list(symbol = symbol),
         .parser = function(data) {
-          return(as_dt_row(data))
+          ids <- NULL
+          if (!is.null(data)) {
+            ids <- data$cancelledOrderIds
+            data$cancelledOrderIds <- NULL
+          }
+          if (is.null(ids) || length(ids) == 0) {
+            return(data.table::data.table()[])
+          }
+          dt <- as_dt_row(data)
+          id_vals <- as.character(unlist(ids, use.names = FALSE))
+          if (nrow(dt) == 0L) {
+            dt <- data.table::data.table(cancelled_order_id = id_vals)
+          } else {
+            dt <- dt[rep(1L, length(id_vals))]
+            dt[, cancelled_order_id := id_vals]
+          }
+          return(dt[])
         }
       ))
     },
