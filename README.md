@@ -510,5 +510,4 @@ citation("kucoin")
 
 MIT © [Dereck Mezquita](https://github.com/dereckmezquita)
 [![ORCID](https://img.shields.io/badge/ORCID-0000--0002--9307--6762-green)](https://orcid.org/0000-0002-9307-6762).
-See [LICENSE.md](LICENSE.md) for the full text, including the citation
-clause.
+See [LICENSE](LICENSE) for the full text.
