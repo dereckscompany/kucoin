@@ -366,8 +366,11 @@ KucoinStopOrders <- R6::R6Class(
     #' ```
     #'
     #' @param orderId Character; the KuCoin-assigned stop order ID to cancel.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with column:
-    #'   - `cancelled_order_ids` (character): Vector of cancelled stop order IDs.
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
+    #'   with one row per cancelled stop order (Treatment B — long format):
+    #'   - `cancelled_order_id` (character): KuCoin order ID of a cancelled stop order.
+    #'   Returns an empty `data.table` if no stop orders matched (per the
+    #'   "empty response -> empty data.table" cross-package convention).
     #'
     #' @examples
     #' \dontrun{
@@ -375,13 +378,32 @@ KucoinStopOrders <- R6::R6Class(
     #'
     #' # Cancel a specific stop order
     #' result <- stop$cancel_order_by_id("vs8hoo8q2ceshiue003b67c0")
-    #' print(result$cancelled_order_ids)
+    #' print(result$cancelled_order_id)
     #' }
     cancel_order_by_id = function(orderId) {
       return(private$.request(
         endpoint = paste0("/api/v1/stop-order/", orderId),
         method = "DELETE",
-        .parser = as_dt_row
+        .parser = function(data) {
+          ids <- NULL
+          if (!is.null(data)) {
+            ids <- data$cancelledOrderIds
+            data$cancelledOrderIds <- NULL
+          }
+          if (is.null(ids) || length(ids) == 0) {
+            return(data.table::data.table()[])
+          }
+          dt <- as_dt_row(data)
+          id_vals <- as.character(unlist(ids, use.names = FALSE))
+          if (nrow(dt) == 0L) {
+            dt <- data.table::data.table(cancelled_order_id = id_vals)
+          } else {
+            dt <- dt[rep(1L, length(id_vals))]
+            dt[, cancelled_order_id := id_vals]
+          }
+          data.table::setcolorder(dt, intersect("cancelled_order_id", names(dt)))
+          return(dt[])
+        }
       ))
     },
 
@@ -432,7 +454,8 @@ KucoinStopOrders <- R6::R6Class(
     #' @param clientOid Character; the client-assigned order ID used when placing the stop order.
     #' @param symbol Character; trading pair symbol (e.g., `"BTC-USDT"`). Required to
     #'   disambiguate client OIDs across different trading pairs.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
+    #'   with a single row:
     #'   - `cancelled_order_id` (character): The KuCoin order ID of the cancelled stop order.
     #'   - `client_oid` (character): The client-assigned order ID that was cancelled.
     #'
@@ -449,7 +472,14 @@ KucoinStopOrders <- R6::R6Class(
         endpoint = "/api/v1/stop-order/cancelOrderByClientOid",
         method = "DELETE",
         query = list(clientOid = clientOid, symbol = symbol),
-        .parser = as_dt_row
+        .parser = function(data) {
+          dt <- as_dt_row(data)
+          data.table::setcolorder(
+            dt,
+            intersect(c("cancelled_order_id", "client_oid"), names(dt))
+          )
+          return(dt[])
+        }
       ))
     },
 
@@ -505,8 +535,11 @@ KucoinStopOrders <- R6::R6Class(
     #'   - `symbol` (character): Trading pair to filter by (e.g., `"BTC-USDT"`).
     #'   - `tradeType` (character): Trade type, typically `"TRADE"` for spot.
     #'   - `orderIds` (character): Comma-separated list of specific stop order IDs to cancel.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with column:
-    #'   - `cancelled_order_ids` (character): Vector of cancelled stop order IDs.
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
+    #'   with one row per cancelled stop order (Treatment B — long format):
+    #'   - `cancelled_order_id` (character): KuCoin order ID of a cancelled stop order.
+    #'   Returns an empty `data.table` if no stop orders matched the filters
+    #'   (per the "empty response -> empty data.table" cross-package convention).
     #'
     #' @examples
     #' \dontrun{
@@ -514,18 +547,37 @@ KucoinStopOrders <- R6::R6Class(
     #'
     #' # Cancel all stop orders for BTC-USDT
     #' result <- stop$cancel_all(query = list(symbol = "BTC-USDT"))
-    #' print(result$cancelled_order_ids)
+    #' print(result$cancelled_order_id)
     #'
     #' # Cancel all stop orders (no filter)
     #' result <- stop$cancel_all()
-    #' print(result$cancelled_order_ids)
+    #' print(result$cancelled_order_id)
     #' }
     cancel_all = function(query = list()) {
       return(private$.request(
         endpoint = "/api/v1/stop-order/cancel",
         method = "DELETE",
         query = query,
-        .parser = as_dt_row
+        .parser = function(data) {
+          ids <- NULL
+          if (!is.null(data)) {
+            ids <- data$cancelledOrderIds
+            data$cancelledOrderIds <- NULL
+          }
+          if (is.null(ids) || length(ids) == 0) {
+            return(data.table::data.table()[])
+          }
+          dt <- as_dt_row(data)
+          id_vals <- as.character(unlist(ids, use.names = FALSE))
+          if (nrow(dt) == 0L) {
+            dt <- data.table::data.table(cancelled_order_id = id_vals)
+          } else {
+            dt <- dt[rep(1L, length(id_vals))]
+            dt[, cancelled_order_id := id_vals]
+          }
+          data.table::setcolorder(dt, intersect("cancelled_order_id", names(dt)))
+          return(dt[])
+        }
       ))
     },
 
@@ -597,7 +649,8 @@ KucoinStopOrders <- R6::R6Class(
     #' ```
     #'
     #' @param orderId Character; the KuCoin-assigned stop order ID to retrieve.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row containing order details. Key columns include:
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
+    #'   with a single row containing order details (no list columns). Key columns include:
     #'   - `id` (character): Stop order identifier.
     #'   - `symbol` (character): Trading pair (e.g., `"BTC-USDT"`).
     #'   - `type` (character): Order type (`"limit"` or `"market"`).
@@ -607,6 +660,9 @@ KucoinStopOrders <- R6::R6Class(
     #'   - `stop_price` (character): Trigger price for the stop order.
     #'   - `stop` (character): Stop direction (`"loss"` or `"entry"`).
     #'   - `created_at` (POSIXct): Creation datetime (coerced from epoch milliseconds).
+    #'   - `order_time` (POSIXct): Order placement datetime (coerced from epoch nanoseconds).
+    #'   - `stop_trigger_time` (POSIXct): Trigger datetime if triggered (coerced from
+    #'     epoch milliseconds), `NA` if not yet triggered.
     #'
     #' @examples
     #' \dontrun{
@@ -622,13 +678,24 @@ KucoinStopOrders <- R6::R6Class(
         endpoint = paste0("/api/v1/stop-order/", orderId),
         .parser = function(data) {
           dt <- as_dt_row(data)
-          if ("created_at" %in% names(dt)) {
-            dt[, created_at := ms_to_datetime(created_at)]
-          }
+          coerce_cols(dt, c("created_at", "stop_trigger_time"), ms_to_datetime)
+          coerce_cols(dt, "order_time", ns_to_datetime)
           data.table::setcolorder(
             dt,
             intersect(
-              c("id", "symbol", "type", "side", "price", "size", "stop_price", "stop", "created_at"),
+              c(
+                "id",
+                "symbol",
+                "type",
+                "side",
+                "price",
+                "size",
+                "stop_price",
+                "stop",
+                "created_at",
+                "order_time",
+                "stop_trigger_time"
+              ),
               names(dt)
             )
           )
@@ -710,7 +777,8 @@ KucoinStopOrders <- R6::R6Class(
     #' @param clientOid Character; the client-assigned order ID to search for.
     #' @param symbol Character; trading pair symbol (e.g., `"BTC-USDT"`). Required to
     #'   scope the search to a specific trading pair.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one or more rows of order details. Key columns include:
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
+    #'   with one row per matching stop order (no list columns). Key columns include:
     #'   - `id` (character): Stop order identifier.
     #'   - `symbol` (character): Trading pair (e.g., `"BTC-USDT"`).
     #'   - `type` (character): Order type (`"limit"` or `"market"`).
@@ -720,6 +788,10 @@ KucoinStopOrders <- R6::R6Class(
     #'   - `stop_price` (character): Trigger price for the stop order.
     #'   - `client_oid` (character): The client-assigned order ID.
     #'   - `created_at` (POSIXct): Creation datetime (coerced from epoch milliseconds).
+    #'   - `order_time` (POSIXct): Order placement datetime (coerced from epoch nanoseconds).
+    #'   - `stop_trigger_time` (POSIXct): Trigger datetime if triggered (coerced from
+    #'     epoch milliseconds), `NA` if not yet triggered.
+    #'   Returns an empty `data.table` if no stop orders match.
     #'
     #' @examples
     #' \dontrun{
@@ -735,18 +807,33 @@ KucoinStopOrders <- R6::R6Class(
         endpoint = "/api/v1/stop-order/queryOrderByClientOid",
         query = list(clientOid = clientOid, symbol = symbol),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0) {
+            return(data.table::data.table()[])
+          }
+          dt <- data.table::data.table()
           if (is.list(data) && !is.null(data[[1]]) && is.list(data[[1]])) {
             dt <- data.table::rbindlist(lapply(data, as_dt_row), fill = TRUE)
           } else {
             dt <- as_dt_row(data)
           }
-          if ("created_at" %in% names(dt)) {
-            dt[, created_at := ms_to_datetime(created_at)]
-          }
+          coerce_cols(dt, c("created_at", "stop_trigger_time"), ms_to_datetime)
+          coerce_cols(dt, "order_time", ns_to_datetime)
           data.table::setcolorder(
             dt,
             intersect(
-              c("id", "symbol", "type", "side", "price", "size", "stop_price", "client_oid", "created_at"),
+              c(
+                "id",
+                "symbol",
+                "type",
+                "side",
+                "price",
+                "size",
+                "stop_price",
+                "client_oid",
+                "created_at",
+                "order_time",
+                "stop_trigger_time"
+              ),
               names(dt)
             )
           )
@@ -841,8 +928,9 @@ KucoinStopOrders <- R6::R6Class(
     #'   - `pageSize` (integer): Number of results per page (default 50, max 100).
     #'   - `tradeType` (character): Trade type, typically `"TRADE"` for spot.
     #'   - `orderIds` (character): Comma-separated list of specific stop order IDs.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with zero or more rows. Returns an empty `data.table` if no
-    #'   stop orders match the query. Key columns include:
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
+    #'   with one row per stop order (no list columns). Returns an empty `data.table`
+    #'   if no stop orders match the query. Key columns include:
     #'   - `id` (character): Stop order identifier.
     #'   - `symbol` (character): Trading pair (e.g., `"BTC-USDT"`).
     #'   - `type` (character): Order type (`"limit"` or `"market"`).
@@ -853,6 +941,9 @@ KucoinStopOrders <- R6::R6Class(
     #'   - `stop` (character): Stop direction (`"loss"` or `"entry"`).
     #'   - `time_in_force` (character): Time-in-force policy.
     #'   - `created_at` (POSIXct): Creation datetime (coerced from epoch milliseconds).
+    #'   - `order_time` (POSIXct): Order placement datetime (coerced from epoch nanoseconds).
+    #'   - `stop_trigger_time` (POSIXct): Trigger datetime if triggered (coerced from
+    #'     epoch milliseconds), `NA` if not yet triggered.
     #'
     #' @examples
     #' \dontrun{
@@ -889,9 +980,8 @@ KucoinStopOrders <- R6::R6Class(
             return(data.table::data.table()[])
           }
           dt <- data.table::rbindlist(lapply(items, as_dt_row), fill = TRUE)
-          if ("created_at" %in% names(dt)) {
-            dt[, created_at := ms_to_datetime(created_at)]
-          }
+          coerce_cols(dt, c("created_at", "stop_trigger_time"), ms_to_datetime)
+          coerce_cols(dt, "order_time", ns_to_datetime)
           data.table::setcolorder(
             dt,
             intersect(
@@ -905,7 +995,9 @@ KucoinStopOrders <- R6::R6Class(
                 "stop_price",
                 "stop",
                 "time_in_force",
-                "created_at"
+                "created_at",
+                "order_time",
+                "stop_trigger_time"
               ),
               names(dt)
             )
