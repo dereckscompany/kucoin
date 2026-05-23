@@ -39,6 +39,8 @@ test_that("add_deposit_address returns data.table with column reorder", {
   expect_equal(dt$currency, "BTC")
   # Check column ordering starts with address
   expect_equal(names(dt)[1], "address")
+  # No list columns
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
 
 # -- get_deposit_addresses --
@@ -72,6 +74,7 @@ test_that("get_deposit_addresses returns array as multi-row data.table", {
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 2L)
   expect_equal(names(dt)[1], "address")
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
 
 test_that("get_deposit_addresses handles single object response", {
@@ -91,6 +94,7 @@ test_that("get_deposit_addresses handles single object response", {
   dt <- new_deposit()$get_deposit_addresses(currency = "BTC")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
 
 test_that("get_deposit_addresses handles empty response", {
@@ -137,10 +141,14 @@ test_that("get_deposit_history returns paginated data with created_at and column
   expect_true("created_at" %in% names(dt))
   expect_false("datetime_created" %in% names(dt))
   expect_s3_class(dt$created_at, "POSIXct")
+  # updated_at now coerced to POSIXct as well
+  expect_s3_class(dt$updated_at, "POSIXct")
   expect_equal(dt$currency, "BTC")
   expect_equal(dt$status, "SUCCESS")
   # Check column ordering
   expect_equal(names(dt)[1], "currency")
+  # No list columns
+  expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
 
 test_that("get_deposit_history handles empty items", {

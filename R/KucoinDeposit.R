@@ -114,7 +114,7 @@ KucoinDeposit <- R6::R6Class(
     #'   include `"main"` (funding account) and `"trade"` (trading account). Required by the KuCoin API.
     #' @param amount Character or NULL; deposit amount. Required for some invoice-based
     #'   deposit addresses (e.g., Lightning Network).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row and columns:
     #'   - `address` (character): The generated deposit address.
     #'   - `memo` (character): Memo/tag for the address (empty string if not applicable).
     #'   - `chain` (character): Blockchain network name.
@@ -246,7 +246,7 @@ KucoinDeposit <- R6::R6Class(
     #'   to generate invoice-based addresses (e.g., Lightning Network).
     #' @param chain Character or NULL; blockchain network identifier (e.g., `"ERC20"`,
     #'   `"TRC20"`, `"btc"`). When NULL, returns addresses for all chains.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row per address and columns:
     #'   - `address` (character): The deposit address string.
     #'   - `memo` (character): Memo/tag for the address (empty string if not applicable).
     #'   - `chain` (character): Blockchain network name.
@@ -391,7 +391,7 @@ KucoinDeposit <- R6::R6Class(
     #'   Used to filter deposits created on or before this time.
     #' @param page_size Integer; number of results per page (default 50, max 100).
     #' @param max_pages Numeric; maximum number of pages to fetch (default `Inf` for all pages).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
+    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row per deposit and columns:
     #'   - `currency` (character): Deposited currency code.
     #'   - `chain` (character): Blockchain network used for the deposit.
     #'   - `status` (character): Deposit status (`"PROCESSING"`, `"SUCCESS"`, `"FAILURE"`).
@@ -401,9 +401,9 @@ KucoinDeposit <- R6::R6Class(
     #'   - `amount` (character): Deposit amount.
     #'   - `fee` (character): Deposit fee charged.
     #'   - `wallet_tx_id` (character): On-chain transaction hash.
-    #'   - `updated_at` (numeric): Last update timestamp in milliseconds.
-    #'   - `remark` (character): Optional remark.
     #'   - `created_at` (POSIXct): Creation datetime (coerced from epoch milliseconds).
+    #'   - `updated_at` (POSIXct): Last update datetime (coerced from epoch milliseconds).
+    #'   - `remark` (character): Optional remark.
     #'
     #'   Returns an empty `data.table` if no deposits match the filters.
     #'
@@ -451,9 +451,7 @@ KucoinDeposit <- R6::R6Class(
           if (nrow(dt) == 0L) {
             return(dt[])
           }
-          if ("created_at" %in% names(dt)) {
-            dt[, created_at := ms_to_datetime(created_at)]
-          }
+          coerce_cols(dt, c("created_at", "updated_at"), ms_to_datetime)
           data.table::setcolorder(
             dt,
             intersect(
