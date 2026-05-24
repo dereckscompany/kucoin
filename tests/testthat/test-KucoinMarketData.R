@@ -4,8 +4,7 @@
 # -- Construction --
 
 test_that("KucoinMarketData inherits from KucoinBase", {
-  keys <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
-  market <- KucoinMarketData$new(keys = keys, base_url = "https://api.kucoin.com")
+  market <- new_market()
 
   expect_s3_class(market, "KucoinMarketData")
   expect_s3_class(market, "KucoinBase")
@@ -13,8 +12,7 @@ test_that("KucoinMarketData inherits from KucoinBase", {
 })
 
 test_that("KucoinMarketData async mode sets is_async = TRUE", {
-  keys <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
-  market <- KucoinMarketData$new(keys = keys, base_url = "https://api.kucoin.com", async = TRUE)
+  market <- KucoinMarketData$new(keys = TEST_KEYS, base_url = BASE_SPOT, async = TRUE)
   expect_true(market$is_async)
 })
 
@@ -24,9 +22,7 @@ test_that("get_ticker returns data.table with correct columns and types", {
   resp <- mock_kucoin_response(data = mock_ticker_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  keys <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
-  market <- KucoinMarketData$new(keys = keys, base_url = "https://api.kucoin.com")
-  dt <- market$get_ticker("BTC-USDT")
+  dt <- new_market()$get_ticker(TEST_SYMBOL_SPOT)
 
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
@@ -50,9 +46,7 @@ test_that("get_all_tickers returns multi-row data.table", {
   resp <- mock_kucoin_response(data = mock_all_tickers_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  keys <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
-  market <- KucoinMarketData$new(keys = keys, base_url = "https://api.kucoin.com")
-  dt <- market$get_all_tickers()
+  dt <- new_market()$get_all_tickers()
 
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 2L)
@@ -70,9 +64,7 @@ test_that("get_trade_history returns correct columns and types", {
   resp <- mock_kucoin_response(data = mock_trade_history_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  keys <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
-  market <- KucoinMarketData$new(keys = keys, base_url = "https://api.kucoin.com")
-  dt <- market$get_trade_history("BTC-USDT")
+  dt <- new_market()$get_trade_history(TEST_SYMBOL_SPOT)
 
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 3L)
@@ -97,9 +89,7 @@ test_that("get_part_orderbook returns orderbook with correct structure", {
   resp <- mock_kucoin_response(data = mock_orderbook_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  keys <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
-  market <- KucoinMarketData$new(keys = keys, base_url = "https://api.kucoin.com")
-  dt <- market$get_part_orderbook("BTC-USDT", size = 20)
+  dt <- new_market()$get_part_orderbook(TEST_SYMBOL_SPOT, size = 20)
 
   expect_s3_class(dt, "data.table")
   expect_equal(names(dt), c("time", "sequence", "side", "level", "price", "size"))
@@ -114,9 +104,7 @@ test_that("get_part_orderbook level column is 1-indexed depth within each side",
   resp <- mock_kucoin_response(data = mock_orderbook_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  keys <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
-  market <- KucoinMarketData$new(keys = keys, base_url = "https://api.kucoin.com")
-  dt <- market$get_part_orderbook("BTC-USDT", size = 20)
+  dt <- new_market()$get_part_orderbook(TEST_SYMBOL_SPOT, size = 20)
 
   # Each side should start at level 1 and increment without gaps.
   expect_equal(dt[side == "bid", level], seq_len(sum(dt$side == "bid")))
@@ -137,11 +125,10 @@ test_that("get_part_orderbook uses correct endpoint for size 20 vs 100", {
     return(resp)
   })
 
-  keys <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
-  market <- KucoinMarketData$new(keys = keys, base_url = "https://api.kucoin.com")
+  market <- new_market()
 
-  market$get_part_orderbook("BTC-USDT", size = 20)
-  market$get_part_orderbook("BTC-USDT", size = 100)
+  market$get_part_orderbook(TEST_SYMBOL_SPOT, size = 20)
+  market$get_part_orderbook(TEST_SYMBOL_SPOT, size = 100)
 
   expect_true(grepl("level2_20", captured_urls[1]))
   expect_true(grepl("level2_100", captured_urls[2]))
@@ -153,9 +140,7 @@ test_that("get_24hr_stats returns correct data.table", {
   resp <- mock_kucoin_response(data = mock_24hr_stats_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  keys <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
-  market <- KucoinMarketData$new(keys = keys, base_url = "https://api.kucoin.com")
-  dt <- market$get_24hr_stats("BTC-USDT")
+  dt <- new_market()$get_24hr_stats("BTC-USDT")
 
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
@@ -179,9 +164,7 @@ test_that("get_market_list returns data.table", {
   resp <- mock_kucoin_response(data = mock_market_list_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  keys <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
-  market <- KucoinMarketData$new(keys = keys, base_url = "https://api.kucoin.com")
-  result <- market$get_market_list()
+  result <- new_market()$get_market_list()
 
   expect_s3_class(result, "data.table")
   expect_true("market" %in% names(result))
@@ -196,9 +179,7 @@ test_that("get_currency returns flattened currency + chain data", {
   resp <- mock_kucoin_response(data = mock_currency_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  keys <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
-  market <- KucoinMarketData$new(keys = keys, base_url = "https://api.kucoin.com")
-  dt <- market$get_currency("BTC")
+  dt <- new_market()$get_currency("BTC")
 
   expect_s3_class(dt, "data.table")
   # BTC has 2 chains in mock data
@@ -220,9 +201,7 @@ test_that("get_symbol returns single-row data.table with snake_case names", {
   resp <- mock_kucoin_response(data = mock_symbol_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  keys <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
-  market <- KucoinMarketData$new(keys = keys, base_url = "https://api.kucoin.com")
-  dt <- market$get_symbol("BTC-USDT")
+  dt <- new_market()$get_symbol("BTC-USDT")
 
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
@@ -247,9 +226,7 @@ test_that("get_all_symbols returns multi-row data.table", {
   resp <- mock_kucoin_response(data = symbols_data)
   httr2::local_mocked_responses(function(req) resp)
 
-  keys <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
-  market <- KucoinMarketData$new(keys = keys, base_url = "https://api.kucoin.com")
-  dt <- market$get_all_symbols()
+  dt <- new_market()$get_all_symbols()
 
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 2L)
@@ -264,10 +241,8 @@ test_that("get_klines returns OHLCV data.table via kucoin_fetch_klines", {
   resp <- mock_kucoin_response(data = klines)
   httr2::local_mocked_responses(function(req) resp)
 
-  keys <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
-  market <- KucoinMarketData$new(keys = keys, base_url = "https://api.kucoin.com")
-  dt <- market$get_klines(
-    symbol = "BTC-USDT",
+  dt <- new_market()$get_klines(
+    symbol = TEST_SYMBOL_SPOT,
     timeframe = "15min",
     from = 1729100000,
     to = 1729110000
@@ -376,9 +351,7 @@ test_that("get_server_time returns server_time and datetime", {
   resp <- mock_kucoin_response(data = 1729100692873)
   httr2::local_mocked_responses(function(req) resp)
 
-  keys <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
-  market <- KucoinMarketData$new(keys = keys, base_url = "https://api.kucoin.com")
-  dt <- market$get_server_time()
+  dt <- new_market()$get_server_time()
 
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
@@ -392,9 +365,7 @@ test_that("get_service_status returns status and msg", {
   resp <- mock_kucoin_response(data = list(status = "open", msg = ""))
   httr2::local_mocked_responses(function(req) resp)
 
-  keys <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
-  market <- KucoinMarketData$new(keys = keys, base_url = "https://api.kucoin.com")
-  dt <- market$get_service_status()
+  dt <- new_market()$get_service_status()
 
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
@@ -405,9 +376,7 @@ test_that("get_service_status detects maintenance", {
   resp <- mock_kucoin_response(data = list(status = "close", msg = "Scheduled maintenance"))
   httr2::local_mocked_responses(function(req) resp)
 
-  keys <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
-  market <- KucoinMarketData$new(keys = keys, base_url = "https://api.kucoin.com")
-  dt <- market$get_service_status()
+  dt <- new_market()$get_service_status()
 
   expect_equal(dt$status, "close")
   expect_equal(dt$msg, "Scheduled maintenance")
@@ -425,9 +394,7 @@ test_that("get_fiat_prices returns currency-price table", {
   )
   httr2::local_mocked_responses(function(req) resp)
 
-  keys <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
-  market <- KucoinMarketData$new(keys = keys, base_url = "https://api.kucoin.com")
-  dt <- market$get_fiat_prices(base = "USD", currencies = "BTC,ETH,USDT")
+  dt <- new_market()$get_fiat_prices(base = "USD", currencies = "BTC,ETH,USDT")
 
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 3L)
@@ -440,9 +407,7 @@ test_that("get_fiat_prices handles empty response", {
   resp <- mock_kucoin_response(data = list())
   httr2::local_mocked_responses(function(req) resp)
 
-  keys <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
-  market <- KucoinMarketData$new(keys = keys, base_url = "https://api.kucoin.com")
-  dt <- market$get_fiat_prices()
+  dt <- new_market()$get_fiat_prices()
 
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 0L)

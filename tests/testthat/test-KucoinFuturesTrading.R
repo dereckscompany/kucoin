@@ -1,17 +1,10 @@
 # tests/testthat/test-KucoinFuturesTrading.R
 # Tests for KucoinFuturesTrading R6 class with mocked HTTP.
 
-KEYS <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
-BASE <- "https://api-futures.kucoin.com"
-
-new_trading <- function() {
-  return(KucoinFuturesTrading$new(keys = KEYS, base_url = BASE))
-}
-
 # -- Construction --
 
 test_that("KucoinFuturesTrading inherits from KucoinBase", {
-  t <- new_trading()
+  t <- new_futures_trading()
   expect_s3_class(t, "KucoinFuturesTrading")
   expect_s3_class(t, "KucoinBase")
 })
@@ -22,7 +15,7 @@ test_that("add_order returns order_id and client_oid", {
   resp <- mock_kucoin_response(data = mock_futures_order_response())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_trading()$add_order(
+  dt <- new_futures_trading()$add_order(
     clientOid = "test-001",
     symbol = "XBTUSDTM",
     side = "buy",
@@ -46,7 +39,7 @@ test_that("add_order strips NULL params from body", {
     return(resp)
   })
 
-  new_trading()$add_order(
+  new_futures_trading()$add_order(
     clientOid = "test-002",
     symbol = "XBTUSDTM",
     side = "buy",
@@ -68,7 +61,7 @@ test_that("add_order_test hits test endpoint", {
     return(resp)
   })
 
-  dt <- new_trading()$add_order_test(
+  dt <- new_futures_trading()$add_order_test(
     clientOid = "test-003",
     symbol = "XBTUSDTM",
     side = "buy",
@@ -90,7 +83,7 @@ test_that("add_order_batch returns data.table", {
   orders <- list(
     list(clientOid = "b1", symbol = "XBTUSDTM", side = "buy", type = "limit", leverage = 5, size = 1, price = "98000")
   )
-  dt <- new_trading()$add_order_batch(orders)
+  dt <- new_futures_trading()$add_order_batch(orders)
   expect_s3_class(dt, "data.table")
   expect_true(nrow(dt) >= 1L)
 })
@@ -105,7 +98,7 @@ test_that("cancel_order_by_id hits correct endpoint", {
     return(resp)
   })
 
-  dt <- new_trading()$cancel_order_by_id("futures-order-001")
+  dt <- new_futures_trading()$cancel_order_by_id("futures-order-001")
   expect_true(grepl("orders/futures-order-001", captured_url))
   expect_s3_class(dt, "data.table")
 })
@@ -120,7 +113,7 @@ test_that("cancel_order_by_client_oid includes symbol in query", {
     return(resp)
   })
 
-  dt <- new_trading()$cancel_order_by_client_oid("client-001", "XBTUSDTM")
+  dt <- new_futures_trading()$cancel_order_by_client_oid("client-001", "XBTUSDTM")
   expect_true(grepl("client-order/client-001", captured_url))
   expect_true(grepl("symbol=XBTUSDTM", captured_url))
   expect_s3_class(dt, "data.table")
@@ -132,7 +125,7 @@ test_that("cancel_all returns data.table", {
   resp <- mock_kucoin_response(data = mock_futures_cancel_order_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_trading()$cancel_all()
+  dt <- new_futures_trading()$cancel_all()
   expect_s3_class(dt, "data.table")
 })
 
@@ -146,7 +139,7 @@ test_that("cancel_all_stop_orders hits stopOrders endpoint", {
     return(resp)
   })
 
-  dt <- new_trading()$cancel_all_stop_orders()
+  dt <- new_futures_trading()$cancel_all_stop_orders()
   expect_true(grepl("stopOrders", captured_url))
   expect_s3_class(dt, "data.table")
 })
@@ -157,7 +150,7 @@ test_that("cancel_order_by_id returns 0-row data.table when data is NULL", {
   resp <- mock_kucoin_response(data = NULL)
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_trading()$cancel_order_by_id("futures-order-001")
+  dt <- new_futures_trading()$cancel_order_by_id("futures-order-001")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 0L)
 })
@@ -168,7 +161,7 @@ test_that("cancel_order_by_client_oid returns 0-row data.table when data is NULL
   resp <- mock_kucoin_response(data = NULL)
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_trading()$cancel_order_by_client_oid("client-001", "XBTUSDTM")
+  dt <- new_futures_trading()$cancel_order_by_client_oid("client-001", "XBTUSDTM")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 0L)
 })
@@ -177,7 +170,7 @@ test_that("cancel_all returns 0-row data.table on empty cancelledOrderIds", {
   resp <- mock_kucoin_response(data = list(cancelledOrderIds = list()))
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_trading()$cancel_all()
+  dt <- new_futures_trading()$cancel_all()
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 0L)
 })
@@ -188,7 +181,7 @@ test_that("cancel_all explodes cancelledOrderIds into long-format rows", {
   )
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_trading()$cancel_all()
+  dt <- new_futures_trading()$cancel_all()
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 3L)
   expect_true("cancelled_order_id" %in% names(dt))
@@ -203,7 +196,7 @@ test_that("get_order_by_id returns data.table with timestamps", {
   resp <- mock_kucoin_response(data = mock_futures_order_detail_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_trading()$get_order_by_id("futures-order-001")
+  dt <- new_futures_trading()$get_order_by_id("futures-order-001")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
   expect_true("created_at" %in% names(dt))
@@ -222,7 +215,7 @@ test_that("get_order_by_client_oid includes clientOid in query", {
     return(resp)
   })
 
-  dt <- new_trading()$get_order_by_client_oid("futures-client-001")
+  dt <- new_futures_trading()$get_order_by_client_oid("futures-client-001")
   expect_true(grepl("clientOid=futures-client-001", captured_url))
   expect_s3_class(dt, "data.table")
   expect_s3_class(dt$created_at, "POSIXct")
@@ -234,7 +227,7 @@ test_that("get_order_list returns paginated data.table with timestamps", {
   resp <- mock_kucoin_response(data = mock_futures_order_list_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_trading()$get_order_list(query = list(status = "active"))
+  dt <- new_futures_trading()$get_order_list(query = list(status = "active"))
   expect_s3_class(dt, "data.table")
   expect_true(nrow(dt) >= 1L)
   expect_true("created_at" %in% names(dt))
@@ -247,7 +240,7 @@ test_that("get_recent_closed_orders returns data.table", {
   resp <- mock_kucoin_response(data = list(mock_futures_order_detail_data()))
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_trading()$get_recent_closed_orders()
+  dt <- new_futures_trading()$get_recent_closed_orders()
   expect_s3_class(dt, "data.table")
   expect_true(nrow(dt) >= 1L)
 })
@@ -258,7 +251,7 @@ test_that("get_recent_fills returns data.table with trade_time as POSIXct", {
   resp <- mock_kucoin_response(data = mock_futures_fills_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_trading()$get_recent_fills()
+  dt <- new_futures_trading()$get_recent_fills()
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
   expect_true("trade_time" %in% names(dt))
@@ -273,7 +266,7 @@ test_that("get_open_order_value returns data.table", {
   resp <- mock_kucoin_response(data = mock_futures_open_order_value_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_trading()$get_open_order_value("XBTUSDTM")
+  dt <- new_futures_trading()$get_open_order_value("XBTUSDTM")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
   expect_true("open_order_buy_qty" %in% names(dt))
@@ -290,7 +283,7 @@ test_that("set_dcp sends POST with timeout", {
     return(resp)
   })
 
-  dt <- new_trading()$set_dcp(timeout = 5)
+  dt <- new_futures_trading()$set_dcp(timeout = 5)
   expect_equal(captured_method, "POST")
   expect_s3_class(dt, "data.table")
   expect_true("timeout" %in% names(dt))
@@ -300,7 +293,7 @@ test_that("get_dcp returns data.table", {
   resp <- mock_kucoin_response(data = mock_futures_dcp_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_trading()$get_dcp()
+  dt <- new_futures_trading()$get_dcp()
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
   expect_true("timeout" %in% names(dt))
