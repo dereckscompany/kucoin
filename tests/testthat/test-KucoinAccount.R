@@ -5,7 +5,7 @@ KEYS <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
 BASE <- "https://api.kucoin.com"
 
 new_account <- function() {
-  KucoinAccount$new(keys = KEYS, base_url = BASE)
+  return(KucoinAccount$new(keys = KEYS, base_url = BASE))
 }
 
 # -- Construction --

@@ -5,7 +5,7 @@ KEYS <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
 BASE <- "https://api.kucoin.com"
 
 new_trading <- function() {
-  KucoinTrading$new(keys = KEYS, base_url = BASE)
+  return(KucoinTrading$new(keys = KEYS, base_url = BASE))
 }
 
 # -- Construction --
@@ -65,7 +65,7 @@ test_that("add_order_test hits test endpoint", {
   resp <- mock_kucoin_response(data = list(orderId = "test123", clientOid = "c1"))
   httr2::local_mocked_responses(function(req) {
     captured_url <<- req$url
-    resp
+    return(resp)
   })
 
   dt <- new_trading()$add_order_test(
@@ -385,7 +385,7 @@ test_that("add_order_sync hits sync endpoint", {
   )
   httr2::local_mocked_responses(function(req) {
     captured_url <<- req$url
-    resp
+    return(resp)
   })
 
   new_trading()$add_order_sync(

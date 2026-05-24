@@ -5,7 +5,7 @@ KEYS <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
 BASE <- "https://api-futures.kucoin.com"
 
 new_market <- function() {
-  KucoinFuturesMarketData$new(keys = KEYS, base_url = BASE)
+  return(KucoinFuturesMarketData$new(keys = KEYS, base_url = BASE))
 }
 
 # -- Construction --
@@ -42,7 +42,7 @@ test_that("get_contract hits correct endpoint", {
   resp <- mock_kucoin_response(data = mock_futures_contract_data())
   httr2::local_mocked_responses(function(req) {
     captured_url <<- req$url
-    resp
+    return(resp)
   })
 
   new_market()$get_contract("XBTUSDTM")
@@ -136,7 +136,7 @@ test_that("get_full_orderbook returns data.table with auth", {
   resp <- mock_kucoin_response(data = mock_futures_orderbook_data())
   httr2::local_mocked_responses(function(req) {
     captured_url <<- req$url
-    resp
+    return(resp)
   })
 
   dt <- new_market()$get_full_orderbook("XBTUSDTM")
@@ -179,7 +179,7 @@ test_that("get_klines converts POSIXct from/to to milliseconds", {
   resp <- mock_kucoin_response(data = mock_futures_klines_data())
   httr2::local_mocked_responses(function(req) {
     captured_url <<- req$url
-    resp
+    return(resp)
   })
 
   from_time <- as.POSIXct("2024-10-17 00:00:00", tz = "UTC")
@@ -279,7 +279,7 @@ test_that("get_service_status returns data.table", {
 # that empty responses produce empty `data.table`s (not stubs or errors).
 
 n_list_cols <- function(dt) {
-  length(names(dt)[vapply(dt, is.list, logical(1))])
+  return(length(names(dt)[vapply(dt, is.list, logical(1))]))
 }
 
 test_that("get_contract has no list columns; empty response yields empty dt", {

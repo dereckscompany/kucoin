@@ -5,12 +5,16 @@ KEYS <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
 BASE <- "https://api.kucoin.com"
 
 new_stop <- function() {
-  KucoinStopOrders$new(keys = KEYS, base_url = BASE)
+  return(KucoinStopOrders$new(keys = KEYS, base_url = BASE))
 }
 
 expect_no_list_cols <- function(dt) {
   list_cols <- names(dt)[vapply(dt, is.list, logical(1))]
-  expect_equal(length(list_cols), 0L, info = paste("unexpected list columns:", paste(list_cols, collapse = ", ")))
+  return(expect_equal(
+    length(list_cols),
+    0L,
+    info = paste("unexpected list columns:", paste(list_cols, collapse = ", "))
+  ))
 }
 
 # -- Construction --

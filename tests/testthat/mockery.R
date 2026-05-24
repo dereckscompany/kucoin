@@ -178,7 +178,7 @@ mock_klines_data <- function(n = 5, start_ts = NULL, offset = 17000) {
     } else {
       ts <- as.integer(start_ts + (i - 1) * 14400) # 4h intervals
     }
-    c(
+    return(c(
       as.character(ts),
       as.character(row$open),
       as.character(row$close),
@@ -186,7 +186,7 @@ mock_klines_data <- function(n = 5, start_ts = NULL, offset = 17000) {
       as.character(row$low),
       as.character(row$volume),
       as.character(row$turnover)
-    )
+    ))
   }))
 }
 

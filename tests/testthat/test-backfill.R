@@ -75,7 +75,7 @@ test_that("backfill skips completed combos on resume", {
   resp <- mock_kucoin_response(data = mock_klines_data(n = 1))
   httr2::local_mocked_responses(function(req) {
     captured_urls <<- c(captured_urls, req$url)
-    resp
+    return(resp)
   })
 
   kucoin_backfill_klines(
@@ -123,7 +123,7 @@ test_that("backfill attaches failures attribute on error", {
 
   # Mock HTTP to return an error
   httr2::local_mocked_responses(function(req) {
-    mock_http_error(status_code = 500L, body_text = "Internal Server Error")
+    return(mock_http_error(status_code = 500L, body_text = "Internal Server Error"))
   })
 
   result <- suppressWarnings(kucoin_backfill_klines(

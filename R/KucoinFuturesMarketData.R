@@ -837,16 +837,16 @@ KucoinFuturesMarketData <- R6::R6Class(
         if (is.null(from) || is.null(to)) {
           rlang::abort("Both `from` and `to` are required when `fetch_all = TRUE`.")
         }
-        # Keep as POSIXct for the fetch function
-        from_posix <- if (inherits(from, "POSIXct")) {
-          from
-        } else {
-          as.POSIXct(as.numeric(from) / 1000, origin = "1970-01-01", tz = "UTC")
+        # Keep as POSIXct for the fetch function. Declare with the
+        # already-POSIXct branch as the default; reassign when the
+        # input is epoch-ms instead.
+        from_posix <- from
+        if (!inherits(from, "POSIXct")) {
+          from_posix <- as.POSIXct(as.numeric(from) / 1000, origin = "1970-01-01", tz = "UTC")
         }
-        to_posix <- if (inherits(to, "POSIXct")) {
-          to
-        } else {
-          as.POSIXct(as.numeric(to) / 1000, origin = "1970-01-01", tz = "UTC")
+        to_posix <- to
+        if (!inherits(to, "POSIXct")) {
+          to_posix <- as.POSIXct(as.numeric(to) / 1000, origin = "1970-01-01", tz = "UTC")
         }
         return(kucoin_fetch_futures_klines(
           symbol = symbol,

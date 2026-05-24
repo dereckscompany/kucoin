@@ -5,7 +5,7 @@ KEYS <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
 BASE <- "https://api.kucoin.com"
 
 new_margin_data <- function() {
-  KucoinMarginData$new(keys = KEYS, base_url = BASE)
+  return(KucoinMarginData$new(keys = KEYS, base_url = BASE))
 }
 
 # -- Construction --

@@ -37,7 +37,7 @@ test_that("kucoin_paginate forwards .get_timestamp_ms to build_request", {
     if (!is.null(ts)) {
       captured_timestamps <<- c(captured_timestamps, ts)
     }
-    resp
+    return(resp)
   })
 
   # Call paginate with a .get_timestamp_ms that returns a fixed server time
@@ -85,7 +85,7 @@ test_that("kucoin_paginate uses provided timeout, not default 10s", {
   captured_req <- NULL
   httr2::local_mocked_responses(function(req) {
     captured_req <<- req
-    resp
+    return(resp)
   })
 
   result <- kucoin:::kucoin_paginate(
@@ -383,7 +383,7 @@ test_that("futures klines timestamp conversion does not overflow", {
   resp <- mock_kucoin_response(data = mock_klines)
   httr2::local_mocked_responses(function(req) {
     captured_url <<- req$url
-    resp
+    return(resp)
   })
 
   # as.integer() on POSIXct returns 32-bit int. Dates after 2038-01-19
