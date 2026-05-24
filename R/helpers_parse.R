@@ -93,7 +93,20 @@ ms_to_datetime <- function(ms) {
   # column with a POSIXct one. Always return a vector matching input
   # length so columns documented as POSIXct actually land as POSIXct,
   # even when every upstream value is missing. Matches binance/alpaca.
-  return(lubridate::as_datetime(as.numeric(ms) / 1000))
+  if (is.numeric(ms)) {
+    return(lubridate::as_datetime(ms / 1000))
+  }
+  # Character path. Only feed real (non-NA) values to `as.numeric()` so
+  # the documented NA-in -> NA-out contract is silent, but a genuinely
+  # malformed string (e.g. `"not-a-number"`) still triggers the usual
+  # "NAs introduced by coercion" warning. `suppressWarnings()` here
+  # would silence real bugs too.
+  result <- rep(NA_real_, length(ms))
+  not_na <- !is.na(ms)
+  if (any(not_na)) {
+    result[not_na] <- as.numeric(ms[not_na])
+  }
+  return(lubridate::as_datetime(result / 1000))
 }
 
 #' Convert a KuCoin Nanosecond Timestamp to POSIXct
@@ -108,8 +121,18 @@ ns_to_datetime <- function(ns) {
   if (is.null(ns)) {
     return(lubridate::NA_POSIXct_)
   }
-  # Same all-NA shape contract as `ms_to_datetime`.
-  return(lubridate::as_datetime(as.numeric(ns) / 1e9))
+  # Same all-NA shape contract as `ms_to_datetime`, and the same
+  # only-feed-real-values-to-`as.numeric` strategy so the NA-in ->
+  # NA-out contract is silent without hiding genuine bad input.
+  if (is.numeric(ns)) {
+    return(lubridate::as_datetime(ns / 1e9))
+  }
+  result <- rep(NA_real_, length(ns))
+  not_na <- !is.na(ns)
+  if (any(not_na)) {
+    result[not_na] <- as.numeric(ns[not_na])
+  }
+  return(lubridate::as_datetime(result / 1e9))
 }
 
 #' Collapse a Plain-String Array Field on a Single Record
@@ -200,7 +223,12 @@ coerce_cols <- function(dt, cols, fn) {
   if (nrow(dt) == 0L) {
     return(invisible(dt))
   }
-  for (col in cols) {
+  # `unique()` prevents double-coercion when a caller passes the same
+  # column name twice (e.g. `coerce_cols(dt, c("time", "time"),
+  # ms_to_datetime)` would otherwise re-feed the already-converted
+  # POSIXct vector back through `as.numeric / 1000 / as_datetime`, which
+  # produces wildly wrong values silently).
+  for (col in unique(cols)) {
     if (col %in% names(dt)) {
       data.table::set(dt, j = col, value = fn(dt[[col]]))
     }

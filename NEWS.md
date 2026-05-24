@@ -1,3 +1,10 @@
+# kucoin 4.0.1
+
+## BUG FIXES
+
+* **`ms_to_datetime()` / `ns_to_datetime()` no longer emit spurious `"NAs introduced by coercion"` warnings** when given an all-`NA_character_` vector. The NA → NA path is the documented contract, not a problem worth a warning. Implemented by type-dispatching on the input and only feeding the non-NA entries to `as.numeric()` — not `suppressWarnings()`, which would hide genuine bad input (e.g. a malformed numeric string from a future API change). Pinned by a counter-regression test that asserts `ms_to_datetime("not-a-number")` still warns loudly.
+* **`coerce_cols(dt, cols, fn)` deduplicates `cols`**. Previously passing the same column name twice — `coerce_cols(dt, c("time", "time"), ms_to_datetime)` — would feed the already-coerced POSIXct value back through `ms_to_datetime`, reinterpreting epoch-seconds as epoch-ms and silently producing wildly wrong values (year 56,000+). Now uses `for (col in unique(cols))`. Same fix applied to the binance and alpaca helpers.
+
 # kucoin 4.0.0
 
 ## NEW FEATURES
