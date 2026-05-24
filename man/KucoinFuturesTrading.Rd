@@ -1450,6 +1450,12 @@ order ID. Useful when the system order ID was not stored at placement time.
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/get-stop-order-by-clientoid}{KuCoin Get Futures Order By ClientOid}
 
+Note: KuCoin's URL slug here contains \code{get-stop-order-by-clientoid},
+but the page actually documents the regular order endpoint
+(\code{GET /api/v1/orders/byClientOid}) — the sidebar title is
+"Get Order By ClientOid" and the documented method and path match
+the source. Slug is misleading; the URL is canonical.
+
 Verified: 2026-05-23
 }
 

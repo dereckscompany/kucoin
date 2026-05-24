@@ -866,7 +866,7 @@ Retrieves the full Level 2 orderbook snapshot. \strong{Requires authentication.}
 
 \subsection{API Endpoint}{
 
-\verb{GET https://api.kucoin.com/api/v1/level2/snapshot?symbol=\{symbol\}}
+\verb{GET https://api-futures.kucoin.com/api/v1/level2/snapshot?symbol=\{symbol\}}
 }
 
 \subsection{Official Documentation}{
@@ -887,7 +887,7 @@ Verified: 2026-05-23
 \subsection{curl}{
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET \\
-  'https://api.kucoin.com/api/v1/level2/snapshot?symbol=XBTUSDTM' \\
+  'https://api-futures.kucoin.com/api/v1/level2/snapshot?symbol=XBTUSDTM' \\
   --header 'KC-API-KEY: your-api-key' \\
   --header 'KC-API-SIGN: your-signature' \\
   --header 'KC-API-TIMESTAMP: 1729176273859' \\

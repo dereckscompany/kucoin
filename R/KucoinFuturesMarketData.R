@@ -573,7 +573,7 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' 2. **Parsing**: Converts bid/ask arrays into a long-format `data.table` via `parse_futures_orderbook()`.
     #'
     #' ### API Endpoint
-    #' `GET https://api.kucoin.com/api/v1/level2/snapshot?symbol={symbol}`
+    #' `GET https://api-futures.kucoin.com/api/v1/level2/snapshot?symbol={symbol}`
     #'
     #' ### Official Documentation
     #' [KuCoin Get Full Orderbook](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-full-orderbook)
@@ -588,7 +588,7 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' ### curl
     #' ```
     #' curl --location --request GET \
-    #'   'https://api.kucoin.com/api/v1/level2/snapshot?symbol=XBTUSDTM' \
+    #'   'https://api-futures.kucoin.com/api/v1/level2/snapshot?symbol=XBTUSDTM' \
     #'   --header 'KC-API-KEY: your-api-key' \
     #'   --header 'KC-API-SIGN: your-signature' \
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \

@@ -2,7 +2,7 @@
 
 ## DOCUMENTATION
 
-* **All 144 `Verified: YYYY-MM-DD` markers in the R6 roxygen blocks bumped to today.** A representative URL from each of the 15 R6 class files was spot-checked against the live KuCoin docs — endpoint paths, HTTP methods, and "page exists" all confirmed. KuCoin's docs site has been updated as recently as 2026-03 on several pages, so the markers are a useful freshness signal again rather than two-month-stale noise.
+* **All 144 `Verified: YYYY-MM-DD` markers in the R6 roxygen blocks bumped to `2026-05-23`.** Every marker was walked individually against the live KuCoin docs — endpoint paths, HTTP methods, and "page exists" all confirmed per endpoint, not sampled. 119 matched the source as-is; the other 25 surfaced the docs URL / endpoint-path drift documented below.
 * **Refreshed 25 stale `### Official Documentation` URLs after KuCoin reorganised the docs-new site.** 17 had returned HTTP 404 because the futures section moved (e.g. `/futures-trading/account/get-account-overview` → `/account-info/account-funding/get-account-futures`; `/futures-trading/orders/cancel-order-by-orderid` → `/futures-trading/orders/cancel-order-by-orderld` — note the typo on KuCoin's side); 7 pointed at pages that now document a different REST endpoint than the source code calls; 1 (`KucoinMarketData$get_symbol`) pointed at the all-symbols list page instead of the single-symbol detail page. All replacement URLs verified by HTTP GET. The futures Dead Connection Protection (DCP) docs were withdrawn from KuCoin entirely, so `KucoinFuturesTrading$set_dcp()` / `$get_dcp()` now reference the equivalent spot-trading DCP page with an inline note (see BUG FIXES below for the related endpoint observation).
 
 ## BUG FIXES

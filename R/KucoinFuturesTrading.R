@@ -1005,6 +1005,12 @@ KucoinFuturesTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Futures Order By ClientOid](https://www.kucoin.com/docs-new/rest/futures-trading/get-stop-order-by-clientoid)
     #'
+    #' Note: KuCoin's URL slug here contains `get-stop-order-by-clientoid`,
+    #' but the page actually documents the regular order endpoint
+    #' (`GET /api/v1/orders/byClientOid`) — the sidebar title is
+    #' "Get Order By ClientOid" and the documented method and path match
+    #' the source. Slug is misleading; the URL is canonical.
+    #'
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
