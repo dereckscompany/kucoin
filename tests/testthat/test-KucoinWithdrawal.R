@@ -1,13 +1,6 @@
 # tests/testthat/test-KucoinWithdrawal.R
 # Tests for KucoinWithdrawal R6 class with mocked HTTP.
 
-KEYS <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
-BASE <- "https://api.kucoin.com"
-
-new_withdrawal <- function() {
-  return(KucoinWithdrawal$new(keys = KEYS, base_url = BASE))
-}
-
 # -- Construction --
 
 test_that("KucoinWithdrawal inherits from KucoinBase", {

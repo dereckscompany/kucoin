@@ -1,13 +1,6 @@
 # tests/testthat/test-KucoinTransfer.R
 # Tests for KucoinTransfer R6 class with mocked HTTP.
 
-KEYS <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
-BASE <- "https://api.kucoin.com"
-
-new_transfer <- function() {
-  return(KucoinTransfer$new(keys = KEYS, base_url = BASE))
-}
-
 # -- Construction --
 
 test_that("KucoinTransfer inherits from KucoinBase", {

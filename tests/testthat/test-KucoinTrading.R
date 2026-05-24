@@ -1,13 +1,6 @@
 # tests/testthat/test-KucoinTrading.R
 # Tests for KucoinTrading R6 class with mocked HTTP.
 
-KEYS <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
-BASE <- "https://api.kucoin.com"
-
-new_trading <- function() {
-  return(KucoinTrading$new(keys = KEYS, base_url = BASE))
-}
-
 # -- Construction --
 
 test_that("KucoinTrading inherits from KucoinBase", {

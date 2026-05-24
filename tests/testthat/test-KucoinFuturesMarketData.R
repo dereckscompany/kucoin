@@ -1,24 +1,17 @@
 # tests/testthat/test-KucoinFuturesMarketData.R
 # Tests for KucoinFuturesMarketData R6 class with mocked HTTP.
 
-KEYS <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
-BASE <- "https://api-futures.kucoin.com"
-
-new_market <- function() {
-  return(KucoinFuturesMarketData$new(keys = KEYS, base_url = BASE))
-}
-
 # -- Construction --
 
 test_that("KucoinFuturesMarketData inherits from KucoinBase", {
-  m <- new_market()
+  m <- new_futures_market()
   expect_s3_class(m, "KucoinFuturesMarketData")
   expect_s3_class(m, "KucoinBase")
   expect_false(m$is_async)
 })
 
 test_that("KucoinFuturesMarketData async mode sets is_async = TRUE", {
-  m <- KucoinFuturesMarketData$new(keys = KEYS, base_url = BASE, async = TRUE)
+  m <- KucoinFuturesMarketData$new(keys = TEST_KEYS, base_url = BASE_FUTURES, async = TRUE)
   expect_true(m$is_async)
 })
 
@@ -28,7 +21,7 @@ test_that("get_contract returns single-row data.table", {
   resp <- mock_kucoin_response(data = mock_futures_contract_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_market()$get_contract("XBTUSDTM")
+  dt <- new_futures_market()$get_contract("XBTUSDTM")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
   expect_true("symbol" %in% names(dt))
@@ -45,7 +38,7 @@ test_that("get_contract hits correct endpoint", {
     return(resp)
   })
 
-  new_market()$get_contract("XBTUSDTM")
+  new_futures_market()$get_contract("XBTUSDTM")
   expect_true(grepl("contracts/XBTUSDTM", captured_url))
 })
 
@@ -55,7 +48,7 @@ test_that("get_all_contracts returns multi-row data.table", {
   resp <- mock_kucoin_response(data = mock_futures_all_contracts_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_market()$get_all_contracts()
+  dt <- new_futures_market()$get_all_contracts()
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 2L)
   expect_true("symbol" %in% names(dt))
@@ -69,7 +62,7 @@ test_that("get_ticker returns single-row data.table with ts as POSIXct", {
   resp <- mock_kucoin_response(data = mock_futures_ticker_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_market()$get_ticker("XBTUSDTM")
+  dt <- new_futures_market()$get_ticker("XBTUSDTM")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
   expect_true("ts" %in% names(dt))
@@ -84,7 +77,7 @@ test_that("get_all_tickers returns multi-row data.table", {
   resp <- mock_kucoin_response(data = mock_futures_all_tickers_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_market()$get_all_tickers()
+  dt <- new_futures_market()$get_all_tickers()
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 2L)
   expect_true("ts" %in% names(dt))
@@ -98,7 +91,7 @@ test_that("get_part_orderbook returns data.table with bids and asks", {
   resp <- mock_kucoin_response(data = mock_futures_orderbook_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_market()$get_part_orderbook("XBTUSDTM", size = 20)
+  dt <- new_futures_market()$get_part_orderbook("XBTUSDTM", size = 20)
   expect_s3_class(dt, "data.table")
   expect_true(nrow(dt) > 0)
   expect_true(all(c("ts", "sequence", "side", "level", "price", "size") %in% names(dt)))
@@ -115,7 +108,7 @@ test_that("get_part_orderbook level column is 1-indexed depth within each side",
   resp <- mock_kucoin_response(data = mock_futures_orderbook_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_market()$get_part_orderbook("XBTUSDTM", size = 20)
+  dt <- new_futures_market()$get_part_orderbook("XBTUSDTM", size = 20)
 
   expect_equal(dt[side == "bid", level], seq_len(sum(dt$side == "bid")))
   expect_equal(dt[side == "ask", level], seq_len(sum(dt$side == "ask")))
@@ -126,7 +119,7 @@ test_that("get_part_orderbook level column is 1-indexed depth within each side",
 })
 
 test_that("get_part_orderbook validates size parameter", {
-  expect_error(new_market()$get_part_orderbook("XBTUSDTM", size = 50))
+  expect_error(new_futures_market()$get_part_orderbook("XBTUSDTM", size = 50))
 })
 
 # -- get_full_orderbook --
@@ -139,7 +132,7 @@ test_that("get_full_orderbook returns data.table with auth", {
     return(resp)
   })
 
-  dt <- new_market()$get_full_orderbook("XBTUSDTM")
+  dt <- new_futures_market()$get_full_orderbook("XBTUSDTM")
   expect_s3_class(dt, "data.table")
   expect_true(grepl("level2/snapshot", captured_url))
 })
@@ -150,7 +143,7 @@ test_that("get_trade_history returns data.table with ts as POSIXct", {
   resp <- mock_kucoin_response(data = mock_futures_trade_history_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_market()$get_trade_history("XBTUSDTM")
+  dt <- new_futures_market()$get_trade_history("XBTUSDTM")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 2L)
   expect_true("ts" %in% names(dt))
@@ -164,7 +157,7 @@ test_that("get_klines returns data.table with OHLCV columns", {
   resp <- mock_kucoin_response(data = mock_futures_klines_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_market()$get_klines("XBTUSDTM", granularity = 60)
+  dt <- new_futures_market()$get_klines("XBTUSDTM", granularity = 60)
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 3L)
   expected_cols <- c("datetime", "open", "high", "low", "close", "volume", "turnover")
@@ -184,7 +177,7 @@ test_that("get_klines converts POSIXct from/to to milliseconds", {
 
   from_time <- as.POSIXct("2024-10-17 00:00:00", tz = "UTC")
   to_time <- as.POSIXct("2024-10-17 01:00:00", tz = "UTC")
-  new_market()$get_klines("XBTUSDTM", granularity = 60, from = from_time, to = to_time)
+  new_futures_market()$get_klines("XBTUSDTM", granularity = 60, from = from_time, to = to_time)
 
   # Should contain millisecond timestamps in query
   expect_true(grepl("from=", captured_url))
@@ -195,7 +188,7 @@ test_that("get_klines handles empty data", {
   resp <- mock_kucoin_response(data = list())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_market()$get_klines("XBTUSDTM", granularity = 60)
+  dt <- new_futures_market()$get_klines("XBTUSDTM", granularity = 60)
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 0L)
 })
@@ -206,7 +199,7 @@ test_that("get_mark_price returns single-row data.table with time_point as POSIX
   resp <- mock_kucoin_response(data = mock_futures_mark_price_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_market()$get_mark_price("XBTUSDTM")
+  dt <- new_futures_market()$get_mark_price("XBTUSDTM")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
   expect_true("time_point" %in% names(dt))
@@ -220,7 +213,7 @@ test_that("get_funding_rate returns single-row data.table with timestamps", {
   resp <- mock_kucoin_response(data = mock_futures_funding_rate_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_market()$get_funding_rate("XBTUSDTM")
+  dt <- new_futures_market()$get_funding_rate("XBTUSDTM")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
   expect_true("time_point" %in% names(dt))
@@ -238,7 +231,7 @@ test_that("get_funding_history returns data.table with timepoint as POSIXct", {
 
   from_time <- as.POSIXct("2024-10-17 00:00:00", tz = "UTC")
   to_time <- as.POSIXct("2024-10-18 00:00:00", tz = "UTC")
-  dt <- new_market()$get_funding_history("XBTUSDTM", from = from_time, to = to_time)
+  dt <- new_futures_market()$get_funding_history("XBTUSDTM", from = from_time, to = to_time)
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 2L)
   expect_true("timepoint" %in% names(dt))
@@ -252,7 +245,7 @@ test_that("get_server_time returns data.table with server_time as POSIXct", {
   resp <- mock_kucoin_response(data = mock_futures_server_time_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_market()$get_server_time()
+  dt <- new_futures_market()$get_server_time()
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
   expect_true("server_time" %in% names(dt))
@@ -265,7 +258,7 @@ test_that("get_service_status returns data.table", {
   resp <- mock_kucoin_response(data = mock_futures_service_status_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_market()$get_service_status()
+  dt <- new_futures_market()$get_service_status()
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
   expect_true("status" %in% names(dt))
@@ -286,12 +279,12 @@ test_that("get_contract has no list columns; empty response yields empty dt", {
   resp <- mock_kucoin_response(data = mock_futures_contract_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_market()$get_contract("XBTUSDTM")
+  dt <- new_futures_market()$get_contract("XBTUSDTM")
   expect_equal(n_list_cols(dt), 0L)
 
   resp_empty <- mock_kucoin_response(data = NULL)
   httr2::local_mocked_responses(function(req) resp_empty)
-  dt_empty <- new_market()$get_contract("XBTUSDTM")
+  dt_empty <- new_futures_market()$get_contract("XBTUSDTM")
   expect_s3_class(dt_empty, "data.table")
   expect_equal(nrow(dt_empty), 0L)
 })
@@ -300,12 +293,12 @@ test_that("get_all_contracts has no list columns; empty response yields empty dt
   resp <- mock_kucoin_response(data = mock_futures_all_contracts_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_market()$get_all_contracts()
+  dt <- new_futures_market()$get_all_contracts()
   expect_equal(n_list_cols(dt), 0L)
 
   resp_empty <- mock_kucoin_response(data = list())
   httr2::local_mocked_responses(function(req) resp_empty)
-  dt_empty <- new_market()$get_all_contracts()
+  dt_empty <- new_futures_market()$get_all_contracts()
   expect_s3_class(dt_empty, "data.table")
   expect_equal(nrow(dt_empty), 0L)
 })
@@ -314,7 +307,7 @@ test_that("get_ticker has no list columns; ts is POSIXct", {
   resp <- mock_kucoin_response(data = mock_futures_ticker_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_market()$get_ticker("XBTUSDTM")
+  dt <- new_futures_market()$get_ticker("XBTUSDTM")
   expect_equal(n_list_cols(dt), 0L)
   expect_s3_class(dt$ts, "POSIXct")
 })
@@ -323,13 +316,13 @@ test_that("get_all_tickers has no list columns; ts is POSIXct; empty array yield
   resp <- mock_kucoin_response(data = mock_futures_all_tickers_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_market()$get_all_tickers()
+  dt <- new_futures_market()$get_all_tickers()
   expect_equal(n_list_cols(dt), 0L)
   expect_s3_class(dt$ts, "POSIXct")
 
   resp_empty <- mock_kucoin_response(data = list())
   httr2::local_mocked_responses(function(req) resp_empty)
-  dt_empty <- new_market()$get_all_tickers()
+  dt_empty <- new_futures_market()$get_all_tickers()
   expect_s3_class(dt_empty, "data.table")
   expect_equal(nrow(dt_empty), 0L)
 })
@@ -338,7 +331,7 @@ test_that("get_part_orderbook has no list columns; long-format bids/asks", {
   resp <- mock_kucoin_response(data = mock_futures_orderbook_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_market()$get_part_orderbook("XBTUSDTM", size = 20)
+  dt <- new_futures_market()$get_part_orderbook("XBTUSDTM", size = 20)
   expect_equal(n_list_cols(dt), 0L)
   expect_true(all(c("ts", "sequence", "side", "level", "price", "size") %in% names(dt)))
   expect_s3_class(dt$ts, "POSIXct")
@@ -348,13 +341,13 @@ test_that("get_trade_history has no list columns; empty array yields empty dt", 
   resp <- mock_kucoin_response(data = mock_futures_trade_history_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_market()$get_trade_history("XBTUSDTM")
+  dt <- new_futures_market()$get_trade_history("XBTUSDTM")
   expect_equal(n_list_cols(dt), 0L)
   expect_s3_class(dt$ts, "POSIXct")
 
   resp_empty <- mock_kucoin_response(data = list())
   httr2::local_mocked_responses(function(req) resp_empty)
-  dt_empty <- new_market()$get_trade_history("XBTUSDTM")
+  dt_empty <- new_futures_market()$get_trade_history("XBTUSDTM")
   expect_s3_class(dt_empty, "data.table")
   expect_equal(nrow(dt_empty), 0L)
 })
@@ -363,7 +356,7 @@ test_that("get_klines has no list columns; empty array yields empty dt", {
   resp <- mock_kucoin_response(data = mock_futures_klines_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_market()$get_klines("XBTUSDTM", granularity = 60)
+  dt <- new_futures_market()$get_klines("XBTUSDTM", granularity = 60)
   expect_equal(n_list_cols(dt), 0L)
 })
 
@@ -371,7 +364,7 @@ test_that("get_mark_price has no list columns; time_point is POSIXct", {
   resp <- mock_kucoin_response(data = mock_futures_mark_price_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_market()$get_mark_price("XBTUSDTM")
+  dt <- new_futures_market()$get_mark_price("XBTUSDTM")
   expect_equal(n_list_cols(dt), 0L)
   expect_s3_class(dt$time_point, "POSIXct")
 })
@@ -380,7 +373,7 @@ test_that("get_funding_rate has no list columns; timestamps are POSIXct", {
   resp <- mock_kucoin_response(data = mock_futures_funding_rate_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_market()$get_funding_rate("XBTUSDTM")
+  dt <- new_futures_market()$get_funding_rate("XBTUSDTM")
   expect_equal(n_list_cols(dt), 0L)
   expect_s3_class(dt$time_point, "POSIXct")
   expect_s3_class(dt$funding_time, "POSIXct")
@@ -392,13 +385,13 @@ test_that("get_funding_history has no list columns; empty array yields empty dt"
 
   from_time <- as.POSIXct("2024-10-17 00:00:00", tz = "UTC")
   to_time <- as.POSIXct("2024-10-18 00:00:00", tz = "UTC")
-  dt <- new_market()$get_funding_history("XBTUSDTM", from = from_time, to = to_time)
+  dt <- new_futures_market()$get_funding_history("XBTUSDTM", from = from_time, to = to_time)
   expect_equal(n_list_cols(dt), 0L)
   expect_s3_class(dt$timepoint, "POSIXct")
 
   resp_empty <- mock_kucoin_response(data = list())
   httr2::local_mocked_responses(function(req) resp_empty)
-  dt_empty <- new_market()$get_funding_history("XBTUSDTM", from = from_time, to = to_time)
+  dt_empty <- new_futures_market()$get_funding_history("XBTUSDTM", from = from_time, to = to_time)
   expect_s3_class(dt_empty, "data.table")
   expect_equal(nrow(dt_empty), 0L)
 })
@@ -407,7 +400,7 @@ test_that("get_server_time has no list columns; server_time is POSIXct", {
   resp <- mock_kucoin_response(data = mock_futures_server_time_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_market()$get_server_time()
+  dt <- new_futures_market()$get_server_time()
   expect_equal(n_list_cols(dt), 0L)
   expect_s3_class(dt$server_time, "POSIXct")
 })
@@ -416,6 +409,6 @@ test_that("get_service_status has no list columns", {
   resp <- mock_kucoin_response(data = mock_futures_service_status_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_market()$get_service_status()
+  dt <- new_futures_market()$get_service_status()
   expect_equal(n_list_cols(dt), 0L)
 })

@@ -1,13 +1,6 @@
 # tests/testthat/test-KucoinMarginTrading.R
 # Tests for KucoinMarginTrading R6 class with mocked HTTP.
 
-KEYS <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
-BASE <- "https://api.kucoin.com"
-
-new_margin <- function() {
-  return(KucoinMarginTrading$new(keys = KEYS, base_url = BASE))
-}
-
 # -- Construction --
 
 test_that("KucoinMarginTrading inherits from KucoinBase", {
@@ -29,7 +22,7 @@ test_that("open_short returns order_id and client_oid", {
   )
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_margin()$open_short(symbol = "BTC-USDT", size = 0.001)
+  dt <- new_margin()$open_short(symbol = TEST_SYMBOL_SPOT, size = 0.001)
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
   expect_equal(names(dt)[1:2], c("order_id", "client_oid"))
@@ -47,7 +40,7 @@ test_that("open_short hits margin order endpoint with sell side and autoBorrow",
     return(resp)
   })
 
-  new_margin()$open_short(symbol = "BTC-USDT", size = 0.001)
+  new_margin()$open_short(symbol = TEST_SYMBOL_SPOT, size = 0.001)
   expect_true(grepl("hf/margin/order", captured_url))
   expect_false(grepl("test", captured_url))
   expect_equal(captured_body$side, "sell")
@@ -59,7 +52,7 @@ test_that("open_short sets client_oid to NA when missing", {
   resp <- mock_kucoin_response(data = list(orderId = "abc"))
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_margin()$open_short(symbol = "BTC-USDT", size = 0.001)
+  dt <- new_margin()$open_short(symbol = TEST_SYMBOL_SPOT, size = 0.001)
   expect_true(is.na(dt$client_oid))
 })
 
@@ -73,7 +66,7 @@ test_that("close_short uses buy side and autoRepay", {
     return(resp)
   })
 
-  new_margin()$close_short(symbol = "BTC-USDT", size = 0.001)
+  new_margin()$close_short(symbol = TEST_SYMBOL_SPOT, size = 0.001)
   expect_equal(captured_body$side, "buy")
   expect_true(captured_body$autoRepay)
   expect_null(captured_body$autoBorrow)
@@ -89,7 +82,7 @@ test_that("open_long uses buy side and autoBorrow", {
     return(resp)
   })
 
-  new_margin()$open_long(symbol = "BTC-USDT", size = 0.001)
+  new_margin()$open_long(symbol = TEST_SYMBOL_SPOT, size = 0.001)
   expect_equal(captured_body$side, "buy")
   expect_true(captured_body$autoBorrow)
   expect_null(captured_body$autoRepay)
@@ -105,7 +98,7 @@ test_that("close_long uses sell side and autoRepay", {
     return(resp)
   })
 
-  new_margin()$close_long(symbol = "BTC-USDT", size = 0.001)
+  new_margin()$close_long(symbol = TEST_SYMBOL_SPOT, size = 0.001)
   expect_equal(captured_body$side, "sell")
   expect_true(captured_body$autoRepay)
   expect_null(captured_body$autoBorrow)
@@ -121,7 +114,7 @@ test_that("dry_run hits test endpoint", {
     return(resp)
   })
 
-  dt <- new_margin()$open_short(symbol = "BTC-USDT", size = 0.001, dry_run = TRUE)
+  dt <- new_margin()$open_short(symbol = TEST_SYMBOL_SPOT, size = 0.001, dry_run = TRUE)
   expect_true(grepl("order/test", captured_url))
   expect_equal(dt$order_id, "test-o1")
 })
@@ -136,7 +129,7 @@ test_that("isIsolated flag is passed when TRUE", {
     return(resp)
   })
 
-  new_margin()$open_short(symbol = "BTC-USDT", size = 0.001, isIsolated = TRUE)
+  new_margin()$open_short(symbol = TEST_SYMBOL_SPOT, size = 0.001, isIsolated = TRUE)
   expect_true(captured_body$isIsolated)
 })
 
@@ -294,7 +287,7 @@ test_that("open_short returns no list columns", {
   )
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_margin()$open_short(symbol = "BTC-USDT", size = 0.001)
+  dt <- new_margin()$open_short(symbol = TEST_SYMBOL_SPOT, size = 0.001)
   expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
   expect_true(is.character(dt$order_id))
   expect_true(is.character(dt$client_oid))
@@ -306,7 +299,7 @@ test_that("close_long returns no list columns", {
   resp <- mock_kucoin_response(data = list(orderId = "o4", clientOid = "c4"))
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_margin()$close_long(symbol = "BTC-USDT", size = 0.001)
+  dt <- new_margin()$close_long(symbol = TEST_SYMBOL_SPOT, size = 0.001)
   expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
   expect_true(is.character(dt$order_id))
   expect_true(is.character(dt$client_oid))
