@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Getting Started with kucoin • kucoin</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Getting Started with kucoin">
 </head>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,6 +35,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/getting-started.html">Getting Started with kucoin</a></li>
     <li><a class="dropdown-item" href="../articles/async-usage.html">Asynchronous Usage with kucoin</a></li>
+    <li><a class="dropdown-item" href="../articles/data-shapes.html">Package Tour and Data-Shape Conventions</a></li>
     <li><a class="dropdown-item" href="../articles/margin-trading.html">Margin Trading with kucoin</a></li>
     <li><a class="dropdown-item" href="../articles/futures-trading.html">Futures Trading with kucoin</a></li>
   </ul>
@@ -63,7 +64,7 @@
 Mezquita</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.0.0/vignettes/getting-started.Rmd" class="external-link"><code>vignettes/getting-started.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.0.1/vignettes/getting-started.Rmd" class="external-link"><code>vignettes/getting-started.Rmd</code></a></small>
       <div class="d-none name"><code>getting-started.Rmd</code></div>
     </div>
 
@@ -75,7 +76,7 @@ Mezquita</h4>
 <h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">box</span><span class="fu">::</span><span class="fu"><a href="http://klmr.me/box/reference/use.html" class="external-link">use</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu">box</span><span class="fu">::</span><span class="fu"><a href="https://klmr.me/box/reference/use.html" class="external-link">use</a></span><span class="op">(</span></span>
 <span>  <span class="va">kucoin</span><span class="op">[</span></span>
 <span>    <span class="va">KucoinMarketData</span>, <span class="va">KucoinTrading</span>, <span class="va">KucoinAccount</span>,</span>
 <span>    <span class="va">KucoinStopOrders</span>, <span class="va">KucoinOcoOrders</span>, <span class="va">KucoinDeposit</span>,</span>
@@ -167,14 +168,14 @@ market endpoints.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">book</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_part_orderbook</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"BTC-USDT"</span>, size <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
 <span><span class="va">book</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;                   time      sequence   side   price      size</span></span>
-<span><span class="co">#&gt;                 &lt;POSc&gt;        &lt;char&gt; &lt;char&gt;   &lt;num&gt;     &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1: 2024-10-17 10:04:19 1550467636704    bid 67232.8 0.4186184</span></span>
-<span><span class="co">#&gt; 2: 2024-10-17 10:04:19 1550467636704    bid 67232.5 1.5000000</span></span>
-<span><span class="co">#&gt; 3: 2024-10-17 10:04:19 1550467636704    bid 67230.0 0.8000000</span></span>
-<span><span class="co">#&gt; 4: 2024-10-17 10:04:19 1550467636704    ask 67232.9 1.2480899</span></span>
-<span><span class="co">#&gt; 5: 2024-10-17 10:04:19 1550467636704    ask 67233.5 0.5000000</span></span>
-<span><span class="co">#&gt; 6: 2024-10-17 10:04:19 1550467636704    ask 67235.0 2.1000000</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;                   time      sequence   side level   price      size</span></span>
+<span><span class="co">#&gt;                 &lt;POSc&gt;        &lt;char&gt; &lt;char&gt; &lt;int&gt;   &lt;num&gt;     &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1: 2024-10-17 10:04:19 1550467636704    bid     1 67232.8 0.4186184</span></span>
+<span><span class="co">#&gt; 2: 2024-10-17 10:04:19 1550467636704    bid     2 67232.5 1.5000000</span></span>
+<span><span class="co">#&gt; 3: 2024-10-17 10:04:19 1550467636704    bid     3 67230.0 0.8000000</span></span>
+<span><span class="co">#&gt; 4: 2024-10-17 10:04:19 1550467636704    ask     1 67232.9 1.2480899</span></span>
+<span><span class="co">#&gt; 5: 2024-10-17 10:04:19 1550467636704    ask     2 67233.5 0.5000000</span></span>
+<span><span class="co">#&gt; 6: 2024-10-17 10:04:19 1550467636704    ask     3 67235.0 2.1000000</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="klines-candlestick-data">Klines (Candlestick Data)<a class="anchor" aria-label="anchor" href="#klines-candlestick-data"></a>
@@ -508,7 +509,7 @@ heartbeating:</p>
 orders require funds in the <strong>trade</strong> account. Use
 <code>KucoinTransfer</code> to move funds between account types.</p>
 <div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">box</span><span class="fu">::</span><span class="fu"><a href="http://klmr.me/box/reference/use.html" class="external-link">use</a></span><span class="op">(</span><span class="va">kucoin</span><span class="op">[</span><span class="va">KucoinTransfer</span><span class="op">]</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">box</span><span class="fu">::</span><span class="fu"><a href="https://klmr.me/box/reference/use.html" class="external-link">use</a></span><span class="op">(</span><span class="va">kucoin</span><span class="op">[</span><span class="va">KucoinTransfer</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">transfer</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/KucoinTransfer.html">KucoinTransfer</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -534,7 +535,7 @@ orders require funds in the <strong>trade</strong> account. Use
 <p>Use <code>KucoinWithdrawal</code> to check withdrawal limits,
 initiate withdrawals, and monitor withdrawal status.</p>
 <div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">box</span><span class="fu">::</span><span class="fu"><a href="http://klmr.me/box/reference/use.html" class="external-link">use</a></span><span class="op">(</span><span class="va">kucoin</span><span class="op">[</span><span class="va">KucoinWithdrawal</span><span class="op">]</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">box</span><span class="fu">::</span><span class="fu"><a href="https://klmr.me/box/reference/use.html" class="external-link">use</a></span><span class="op">(</span><span class="va">kucoin</span><span class="op">[</span><span class="va">KucoinWithdrawal</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">withdrawal</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/KucoinWithdrawal.html">KucoinWithdrawal</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>

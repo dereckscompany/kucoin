@@ -181,7 +181,7 @@ Verified: 2026-02-01
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+`async = TRUE`) with one row and columns:
 
 - `level` (integer): VIP tier.
 
@@ -286,7 +286,7 @@ Verified: 2026-02-01
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+`async = TRUE`) with one row and columns:
 
 - `remark` (character): Key label.
 
@@ -295,11 +295,14 @@ Verified: 2026-02-01
 - `api_version` (integer): Key version.
 
 - `permission` (character): Comma-separated permissions e.g.
-  `"General,Spot"`.
+  `"General,Spot"` (already a single string from KuCoin, not a JSON
+  array; recover the vector with
+  `strsplit(dt$permission[1], ",", fixed = TRUE)[[1]]`).
 
-- `ip_whitelist` (character): Allowed IPs.
+- `ip_whitelist` (character): Allowed IPs (comma-separated string).
 
-- `created_at` (numeric): Epoch ms.
+- `created_at` (POSIXct): Key creation datetime (coerced from epoch
+  milliseconds).
 
 - `uid` (numeric): User ID.
 
@@ -718,9 +721,13 @@ Verified: 2026-02-01
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+`async = TRUE`) with one row per currency (Treatment B). The
+account-level summary fields (`total_asset_of_quote_currency`,
+`total_liability_of_quote_currency`, `debt_ratio`, `status`) are
+replicated on every row so the caller never needs a sibling method.
+Columns (subset; the exact set depends on the KuCoin payload):
 
-- `currency` (character): Currency code.
+- `currency` (character): Currency code (e.g. `"USDT"`, `"BTC"`).
 
 - `total` (character): Total balance.
 
@@ -740,7 +747,17 @@ Verified: 2026-02-01
 
 - `transfer_in_enabled` (logical): Whether transfer-in is enabled.
 
-  Returns an empty `data.table` if no margin accounts exist.
+- `total_asset_of_quote_currency` (character): Account-level total asset
+  (repeated).
+
+- `total_liability_of_quote_currency` (character): Account-level total
+  liability (repeated).
+
+- `debt_ratio` (character): Account-level debt ratio (repeated).
+
+- `status` (character): Account-level status (repeated).
+
+Returns an empty `data.table` if no margin accounts exist.
 
 #### Examples
 
@@ -865,12 +882,77 @@ Verified: 2026-02-01
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns: Columns are flattened from the nested
-response and may include: `symbol` (character), `status` (character),
-`debt_ratio` (character), and nested `base_asset.*` and `quote_asset.*`
-fields (currency, total, available, hold, liability,
-liability_principal, liability_interest, max_borrow_size). Returns an
-empty `data.table` if no isolated margin accounts exist.
+`async = TRUE`) with one row per isolated-margin pair (Treatment B) and
+the nested `baseAsset` / `quoteAsset` objects flattened wide-prefix
+(Treatment C). The account-level fields `total_asset_of_quote_currency`,
+`total_liability_of_quote_currency`, and `timestamp` are replicated on
+every row. Columns:
+
+- `symbol` (character): Isolated pair symbol (e.g. `"BTC-USDT"`).
+
+- `status` (character): Account status (e.g. `"EFFECTIVE"`).
+
+- `debt_ratio` (character): Liability-to-asset ratio.
+
+- `base_asset_currency` (character): Base asset code.
+
+- `base_asset_borrow_enabled` (logical): Whether borrowing the base
+  asset is allowed.
+
+- `base_asset_transfer_in_enabled` (logical): Whether transferring the
+  base asset in is allowed.
+
+- `base_asset_liability` (character): Total base-asset liability.
+
+- `base_asset_liability_principal` (character): Base-asset liability
+  principal.
+
+- `base_asset_liability_interest` (character): Base-asset liability
+  interest.
+
+- `base_asset_total` (character): Base-asset total balance.
+
+- `base_asset_available` (character): Base-asset available balance.
+
+- `base_asset_hold` (character): Base-asset amount on hold.
+
+- `base_asset_max_borrow_size` (character): Base-asset maximum
+  borrowable.
+
+- `quote_asset_currency` (character): Quote asset code.
+
+- `quote_asset_borrow_enabled` (logical): Whether borrowing the quote
+  asset is allowed.
+
+- `quote_asset_transfer_in_enabled` (logical): Whether transferring the
+  quote asset in is allowed.
+
+- `quote_asset_liability` (character): Total quote-asset liability.
+
+- `quote_asset_liability_principal` (character): Quote-asset liability
+  principal.
+
+- `quote_asset_liability_interest` (character): Quote-asset liability
+  interest.
+
+- `quote_asset_total` (character): Quote-asset total balance.
+
+- `quote_asset_available` (character): Quote-asset available balance.
+
+- `quote_asset_hold` (character): Quote-asset amount on hold.
+
+- `quote_asset_max_borrow_size` (character): Quote-asset maximum
+  borrowable.
+
+- `total_asset_of_quote_currency` (character): Account-level total asset
+  (repeated).
+
+- `total_liability_of_quote_currency` (character): Account-level total
+  liability (repeated).
+
+- `timestamp` (POSIXct): Snapshot timestamp (repeated).
+
+Returns an empty `data.table` if no isolated-margin pairs exist.
 
 #### Examples
 

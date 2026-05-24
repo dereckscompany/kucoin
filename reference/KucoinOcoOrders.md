@@ -48,17 +48,17 @@ Orders](https://www.kucoin.com/docs-new/rest/spot-trading/orders/add-oco-order)
 
 ### Endpoints Covered
 
-|                            |                                             |        |
-|----------------------------|---------------------------------------------|--------|
-| Method                     | Endpoint                                    | HTTP   |
-| add_order                  | POST /api/v3/oco/order                      | POST   |
-| cancel_order_by_id         | DELETE /api/v3/oco/order/{orderId}          | DELETE |
+|  |  |  |
+|----|----|----|
+| Method | Endpoint | HTTP |
+| add_order | POST /api/v3/oco/order | POST |
+| cancel_order_by_id | DELETE /api/v3/oco/order/{orderId} | DELETE |
 | cancel_order_by_client_oid | DELETE /api/v3/oco/client-order/{clientOid} | DELETE |
-| cancel_all                 | DELETE /api/v3/oco/orders                   | DELETE |
-| get_order_by_id            | GET /api/v3/oco/order/{orderId}             | GET    |
-| get_order_by_client_oid    | GET /api/v3/oco/client-order/{clientOid}    | GET    |
-| get_order_detail_by_id     | GET /api/v3/oco/order/details/{orderId}     | GET    |
-| get_order_list             | GET /api/v3/oco/orders                      | GET    |
+| cancel_all | DELETE /api/v3/oco/orders | DELETE |
+| get_order_by_id | GET /api/v3/oco/order/{orderId} | GET |
+| get_order_by_client_oid | GET /api/v3/oco/client-order/{clientOid} | GET |
+| get_order_detail_by_id | GET /api/v3/oco/order/details/{orderId} | GET |
+| get_order_list | GET /api/v3/oco/orders | GET |
 
 ## Super class
 
@@ -322,10 +322,11 @@ Verified: 2026-02-01
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+`async = TRUE`) with one row per cancelled order, and column:
 
-- `cancelled_order_ids` (list): List of cancelled order IDs including
-  the parent OCO and its sub-orders.
+- `cancelled_order_id` (character): Cancelled order ID (the parent OCO
+  and each of its sub-orders appear as separate rows). Empty
+  `data.table` if nothing matched.
 
 #### Examples
 
@@ -334,7 +335,7 @@ Verified: 2026-02-01
 
     # Cancel a specific OCO order
     result <- oco$cancel_order_by_id("674c40d38b4b2f00073deef3")
-    print(result$cancelled_order_ids)
+    print(result$cancelled_order_id)
     }
 
 ------------------------------------------------------------------------
@@ -416,10 +417,11 @@ Verified: 2026-02-01
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+`async = TRUE`) with one row per cancelled order, and column:
 
-- `cancelled_order_ids` (list): List of cancelled order IDs including
-  the parent OCO and its sub-orders.
+- `cancelled_order_id` (character): Cancelled order ID (the parent OCO
+  and each of its sub-orders appear as separate rows). Empty
+  `data.table` if nothing matched.
 
 #### Examples
 
@@ -428,7 +430,7 @@ Verified: 2026-02-01
 
     # Cancel by client-assigned ID
     result <- oco$cancel_order_by_client_oid("my-bot-oco-001")
-    print(result$cancelled_order_ids)
+    print(result$cancelled_order_id)
     }
 
 ------------------------------------------------------------------------
@@ -517,9 +519,10 @@ Verified: 2026-02-01
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+`async = TRUE`) with one row per cancelled order, and column:
 
-- `cancelled_order_ids` (list): List of all cancelled order IDs.
+- `cancelled_order_id` (character): Cancelled order ID. Empty
+  `data.table` if no active OCO orders matched the filter.
 
 #### Examples
 
@@ -528,7 +531,7 @@ Verified: 2026-02-01
 
     # Cancel all OCO orders for BTC-USDT
     result <- oco$cancel_all(query = list(symbol = "BTC-USDT"))
-    print(result$cancelled_order_ids)
+    print(result$cancelled_order_id)
 
     # Cancel all OCO orders (no filter)
     result <- oco$cancel_all()
@@ -848,19 +851,35 @@ Verified: 2026-02-01
 
 - `status` (character): Overall OCO order status.
 
-- `orders` (list): List of sub-order details, each containing `id`,
-  `symbol`, `side`, `price`, `size`, `status`, and optionally
-  `stop_price`.
+The nested `orders` array (one entry per sub-order — typically the limit
+leg + the stop-limit leg) is exploded to long format: the parent OCO row
+is replicated once per sub-order, and each sub-order's fields are added
+with a `sub_order_` prefix. Typical sub-order columns:
+
+- `sub_order_id` (character)
+
+- `sub_order_symbol` (character)
+
+- `sub_order_side` (character)
+
+- `sub_order_price` (character)
+
+- `sub_order_size` (character)
+
+- `sub_order_status` (character)
+
+- `sub_order_stop_price` (character; only present on the stop leg)
 
 #### Examples
 
     \dontrun{
     oco <- KucoinOcoOrders$new()
 
-    # Get full OCO order details with sub-orders
+    # Get full OCO order details with sub-orders. The `orders` array
+    # is exploded to long format, so each sub-order is its own row
+    # with `sub_order_*` columns alongside the parent OCO fields.
     details <- oco$get_order_detail_by_id("674c40d38b4b2f00073deef3")
-    print(details$status)
-    print(details$orders)
+    details[, .(order_id, status, sub_order_id, sub_order_side, sub_order_price)]
     }
 
 ------------------------------------------------------------------------
@@ -1079,7 +1098,7 @@ oco <- KucoinOcoOrders$new()
 
 # Cancel a specific OCO order
 result <- oco$cancel_order_by_id("674c40d38b4b2f00073deef3")
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 } # }
 
 ## ------------------------------------------------
@@ -1091,7 +1110,7 @@ oco <- KucoinOcoOrders$new()
 
 # Cancel by client-assigned ID
 result <- oco$cancel_order_by_client_oid("my-bot-oco-001")
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 } # }
 
 ## ------------------------------------------------
@@ -1103,7 +1122,7 @@ oco <- KucoinOcoOrders$new()
 
 # Cancel all OCO orders for BTC-USDT
 result <- oco$cancel_all(query = list(symbol = "BTC-USDT"))
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 
 # Cancel all OCO orders (no filter)
 result <- oco$cancel_all()
@@ -1142,10 +1161,11 @@ print(order$status)
 if (FALSE) { # \dontrun{
 oco <- KucoinOcoOrders$new()
 
-# Get full OCO order details with sub-orders
+# Get full OCO order details with sub-orders. The `orders` array
+# is exploded to long format, so each sub-order is its own row
+# with `sub_order_*` columns alongside the parent OCO fields.
 details <- oco$get_order_detail_by_id("674c40d38b4b2f00073deef3")
-print(details$status)
-print(details$orders)
+details[, .(order_id, status, sub_order_id, sub_order_side, sub_order_price)]
 } # }
 
 ## ------------------------------------------------

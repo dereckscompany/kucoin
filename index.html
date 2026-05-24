@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>API Wrapper to KuCoin Cryptocurrency Exchange • kucoin</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="API Wrapper to KuCoin Cryptocurrency Exchange">
 <meta name="description" content="R API wrapper to the KuCoin cryptocurrency exchange supporting both synchronous and asynchronous (promise based) operations. Provides R6 classes for market data, spot trading, OCO orders, stop orders, margin trading (short selling, leveraged longs, borrowing, repayment), margin lending, futures trading (order management, positions, funding rates, mark prices), account management, deposits, withdrawals, transfers, and sub-accounts.">
@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,6 +37,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="articles/getting-started.html">Getting Started with kucoin</a></li>
     <li><a class="dropdown-item" href="articles/async-usage.html">Asynchronous Usage with kucoin</a></li>
+    <li><a class="dropdown-item" href="articles/data-shapes.html">Package Tour and Data-Shape Conventions</a></li>
     <li><a class="dropdown-item" href="articles/margin-trading.html">Margin Trading with kucoin</a></li>
     <li><a class="dropdown-item" href="articles/futures-trading.html">Futures Trading with kucoin</a></li>
   </ul>
@@ -67,6 +68,69 @@
 <p>We invite you to read the source code and make contributions if you find a bug or wish to make an improvement.</p>
 </div>
 <div class="section level2">
+<h2 id="design-philosophy">Design Philosophy<a class="anchor" aria-label="anchor" href="#design-philosophy"></a>
+</h2>
+<p>All API responses are returned as <code>data.table</code> objects with three transformations applied:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>snake_case column names</strong> — camelCase keys from the JSON response (e.g. <code>clientOid</code>, <code>orderType</code>, <code>createdAt</code>) become snake_case (<code>client_oid</code>, <code>order_type</code>, <code>created_at</code>). A handful of endpoints additionally reshape nested objects to wide <code>parent_child</code> columns (e.g. <code>baseAsset.currency</code> → <code>base_asset_currency</code>) or collapse array fields under a plural form. See each method’s <code>@return</code> for the exact column list.</p></li>
+<li><p><strong>Type coercion</strong> for well-known columns — KuCoin’s millisecond timestamps (most endpoints) and nanosecond timestamps (futures orderbooks / klines) are both parsed to <code>POSIXct</code> in UTC. Numeric quantities, prices, and ratios stay as <code>character</code> strings because KuCoin emits them as strings and the precision matters; cast with <code><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric()</a></code> at the point of use if you need arithmetic.</p></li>
+<li><p><strong>One entity = one row, no list columns</strong> — every method follows the rule <em>“identify the entity for the endpoint, return one row per entity”</em>. The same convention is shared with the sister <code>alpaca</code> and <code>binance</code> packages so switching between exchanges doesn’t mean switching mental models.</p></li>
+</ol>
+<p>The five shape treatments the parsers apply, depending on the nested structure:</p>
+<table class="table">
+<colgroup>
+<col width="33%">
+<col width="33%">
+<col width="33%">
+</colgroup>
+<thead><tr>
+<th>Nested shape</th>
+<th>Treatment</th>
+<th>Example</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Array of plain strings (<code>annType</code>, <code>permissions</code>)</td>
+<td>Collapsed into one <code>;</code>-separated character column. Recover with <code>strsplit(x, ";", fixed = TRUE)[[1]]</code>.</td>
+<td>
+<code>dt$ann_type</code> → <code>"latest-announcements;new-listings"</code>
+</td>
+</tr>
+<tr>
+<td>Array of objects (orderbook levels, OCO <code>orders</code>, sub-account <code>balances</code>)</td>
+<td>Exploded to long format with parent fields replicated. A 1-indexed <code>level</code> / <code>sub_order_*</code> / similar position column is added when order matters.</td>
+<td>
+<code>get_part_orderbook()</code> → one row per <code>(side, level)</code>.</td>
+</tr>
+<tr>
+<td>Fixed-schema nested object (<code>baseAsset</code> / <code>quoteAsset</code> on isolated-margin pairs)</td>
+<td>Flattened to wide <code>parent_child</code> columns.</td>
+<td>
+<code>get_isolated_margin_account()</code> → <code>base_asset_currency</code>, <code>base_asset_borrow_enabled</code>, …</td>
+</tr>
+<tr>
+<td>Sibling collection that doesn’t fit the row entity</td>
+<td>Exposed via a sibling method on the same class so every method still returns one <code>data.table</code>.</td>
+<td>
+<code>KucoinAccount$get_isolated_margin_account()</code> returns per-pair rows; ad-hoc summaries are sibling methods.</td>
+</tr>
+<tr>
+<td>Dynamic-key or array-of-array objects</td>
+<td>Serialised as a JSON string column; recover with <code>jsonlite::fromJSON(x)</code>.</td>
+<td>Lending product <code>tierAnnualPercentageRate</code> blocks.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Two cross-cutting rules</strong> apply to every shape treatment:</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong>Empty / null array → <code>NA_character_</code></strong> (no list cells). An OCO order with no children returns <code>sub_order_id = NA</code>, not <code>sub_order_id = list()</code>.</li>
+<li>
+<strong>Empty response → empty <code>data.table</code></strong> (no synthetic stub rows). <code>KucoinTrading$cancel_all()</code> with no open orders returns a zero-row table, not a fabricated <code>(symbol, status = "cancelled")</code> placeholder. The absence of an error is the success signal.</li>
+</ol>
+<p>For the full per-treatment catalogue with worked examples, see <code><a href="articles/data-shapes.html">vignette("data-shapes", package = "kucoin")</a></code>.</p>
+</div>
+<div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -78,7 +142,7 @@
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># special mock for local build</span></span>
-<span><span class="fu">box</span><span class="fu">::</span><span class="fu"><a href="http://klmr.me/box/reference/use.html" class="external-link">use</a></span><span class="op">(</span></span>
+<span><span class="fu">box</span><span class="fu">::</span><span class="fu"><a href="https://klmr.me/box/reference/use.html" class="external-link">use</a></span><span class="op">(</span></span>
 <span>  <span class="va">kucoin</span><span class="op">[</span></span>
 <span>    <span class="va">get_api_keys</span>,</span>
 <span>    <span class="va">get_futures_base_url</span></span>
@@ -98,7 +162,7 @@
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>httr2_mock <span class="op">=</span> <span class="va">mock_router</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># normal imports</span></span>
-<span><span class="fu">box</span><span class="fu">::</span><span class="fu"><a href="http://klmr.me/box/reference/use.html" class="external-link">use</a></span><span class="op">(</span></span>
+<span><span class="fu">box</span><span class="fu">::</span><span class="fu"><a href="https://klmr.me/box/reference/use.html" class="external-link">use</a></span><span class="op">(</span></span>
 <span>  <span class="va">kucoin</span><span class="op">[</span></span>
 <span>    <span class="va">KucoinMarketData</span>,</span>
 <span>    <span class="va">KucoinTrading</span>,</span>
@@ -220,68 +284,68 @@
 <col width="50%">
 <col width="50%">
 </colgroup>
-<thead><tr class="header">
+<thead><tr>
 <th>Class</th>
 <th>Purpose</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>KucoinMarketData</code></td>
 <td>Tickers, klines, orderbooks, currencies, symbols, trade history, server time, service status, fiat prices</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>KucoinTrading</code></td>
 <td>Place, cancel, modify, and query HF spot orders; sync variants; DCP dead-man’s switch</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>KucoinStopOrders</code></td>
 <td>Stop order management with trigger prices</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>KucoinOcoOrders</code></td>
 <td>One-Cancels-Other order pairs</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>KucoinAccount</code></td>
 <td>Account balances, ledger, HF ledger, fee rates, API key info</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>KucoinDeposit</code></td>
 <td>Deposit addresses and history</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>KucoinTransfer</code></td>
 <td>Internal transfers between account types (main, trade, margin)</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>KucoinWithdrawal</code></td>
 <td>Withdrawal creation, cancellation, quotas, and history</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>KucoinSubAccount</code></td>
 <td>Sub-account creation and balance queries</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>KucoinMarginTrading</code></td>
 <td>Margin trading: open/close short and long positions, borrow, repay, leverage</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>KucoinMarginData</code></td>
 <td>Margin pair info, config, collateral ratios, risk limits</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>KucoinLending</code></td>
 <td>Lend assets to earn interest, manage lending orders</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>KucoinFuturesMarketData</code></td>
 <td>Futures contract specs, tickers, orderbooks, klines, funding rates</td>
 </tr>
-<tr class="even">
+<tr>
 <td><code>KucoinFuturesTrading</code></td>
 <td>Place, cancel, and query futures orders; batch orders; DCP</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>KucoinFuturesAccount</code></td>
 <td>Futures account overview, positions, margin, leverage, risk limits</td>
 </tr>
@@ -479,6 +543,27 @@
 </h4>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">futures_account</span><span class="op">$</span><span class="fu">get_positions</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" tabindex="-1"></a><span class="co">#&gt;         id   symbol auto_deposit real_leverage cross_mode delev_percentage</span></span>
+<span id="cb38-2"><a href="#cb38-2" tabindex="-1"></a><span class="co">#&gt;     &lt;char&gt;   &lt;char&gt;       &lt;lgcl&gt;         &lt;int&gt;     &lt;lgcl&gt;            &lt;num&gt;</span></span>
+<span id="cb38-3"><a href="#cb38-3" tabindex="-1"></a><span class="co">#&gt; 1: pos-001 XBTUSDTM        FALSE             5      FALSE              0.5</span></span>
+<span id="cb38-4"><a href="#cb38-4" tabindex="-1"></a><span class="co">#&gt;      opening_timestamp   current_timestamp current_qty current_cost</span></span>
+<span id="cb38-5"><a href="#cb38-5" tabindex="-1"></a><span class="co">#&gt;                 &lt;POSc&gt;              &lt;POSc&gt;       &lt;int&gt;       &lt;char&gt;</span></span>
+<span id="cb38-6"><a href="#cb38-6" tabindex="-1"></a><span class="co">#&gt; 1: 2024-10-17 10:04:19 2024-10-17 10:46:40           1        98.25</span></span>
+<span id="cb38-7"><a href="#cb38-7" tabindex="-1"></a><span class="co">#&gt;    current_comm unrealised_cost realised_gross_cost realised_cost is_open</span></span>
+<span id="cb38-8"><a href="#cb38-8" tabindex="-1"></a><span class="co">#&gt;          &lt;char&gt;          &lt;char&gt;              &lt;char&gt;        &lt;char&gt;  &lt;lgcl&gt;</span></span>
+<span id="cb38-9"><a href="#cb38-9" tabindex="-1"></a><span class="co">#&gt; 1:      0.05895           98.25                   0       0.05895    TRUE</span></span>
+<span id="cb38-10"><a href="#cb38-10" tabindex="-1"></a><span class="co">#&gt;    mark_price mark_value pos_cost pos_cross pos_init pos_comm pos_loss</span></span>
+<span id="cb38-11"><a href="#cb38-11" tabindex="-1"></a><span class="co">#&gt;         &lt;int&gt;     &lt;char&gt;   &lt;char&gt;    &lt;char&gt;   &lt;char&gt;   &lt;char&gt;   &lt;char&gt;</span></span>
+<span id="cb38-12"><a href="#cb38-12" tabindex="-1"></a><span class="co">#&gt; 1:      98350      98.35    98.25         0    19.65  0.07861        0</span></span>
+<span id="cb38-13"><a href="#cb38-13" tabindex="-1"></a><span class="co">#&gt;    pos_margin pos_maint maint_margin realised_gross_pnl realised_pnl</span></span>
+<span id="cb38-14"><a href="#cb38-14" tabindex="-1"></a><span class="co">#&gt;        &lt;char&gt;    &lt;char&gt;       &lt;char&gt;             &lt;char&gt;       &lt;char&gt;</span></span>
+<span id="cb38-15"><a href="#cb38-15" tabindex="-1"></a><span class="co">#&gt; 1:   19.72861    0.4423     19.82861                  0     -0.05895</span></span>
+<span id="cb38-16"><a href="#cb38-16" tabindex="-1"></a><span class="co">#&gt;    unrealised_pnl unrealised_pnl_pcnt avg_entry_price liquidation_price</span></span>
+<span id="cb38-17"><a href="#cb38-17" tabindex="-1"></a><span class="co">#&gt;            &lt;char&gt;               &lt;num&gt;          &lt;char&gt;            &lt;char&gt;</span></span>
+<span id="cb38-18"><a href="#cb38-18" tabindex="-1"></a><span class="co">#&gt; 1:            0.1               0.001         98250.0           79000.0</span></span>
+<span id="cb38-19"><a href="#cb38-19" tabindex="-1"></a><span class="co">#&gt;    bankrupt_price settle_currency margin_mode position_side</span></span>
+<span id="cb38-20"><a href="#cb38-20" tabindex="-1"></a><span class="co">#&gt;            &lt;char&gt;          &lt;char&gt;      &lt;char&gt;        &lt;char&gt;</span></span>
+<span id="cb38-21"><a href="#cb38-21" tabindex="-1"></a><span class="co">#&gt; 1:        78500.0            USDT    ISOLATED          BOTH</span></span></code></pre></div>
 <p>For full futures documentation see <code><a href="articles/futures-trading.html">vignette("futures-trading")</a></code>.</p>
 </div>
 </div>
@@ -489,8 +574,8 @@
 <p>This package is meant to be used in an asynchronous non-blocking event loop (i.e. à la JavaScript) and is written around promises. Please use <code>later</code> to run your event loop. I recommend the pattern shown below.</p>
 <p>We offer a synchronous and asynchronous instance of the classes. All classes accept <code>async = TRUE</code>, this makes methods return promises instead of objects. You can resolve promises in whichever way you like, either <code>$then()</code> chaining or <code>async</code>/<code>await</code> patterns.</p>
 <p>I recommend use <code><a href="https://coro.r-lib.org/reference/async.html" class="external-link">coro::async()</a></code> to write sequential looking async code:</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">box</span><span class="fu">::</span><span class="fu"><a href="http://klmr.me/box/reference/use.html" class="external-link">use</a></span><span class="op">(</span><span class="va">coro</span>, <span class="va">later</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">box</span><span class="fu">::</span><span class="fu"><a href="https://klmr.me/box/reference/use.html" class="external-link">use</a></span><span class="op">(</span><span class="va">coro</span>, <span class="va">later</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">market_async</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/KucoinMarketData.html">KucoinMarketData</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>keys <span class="op">=</span> <span class="va">KEYS</span>, base_url <span class="op">=</span> <span class="va">BASE</span>, async <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
@@ -507,47 +592,47 @@
 <span><span class="kw">while</span> <span class="op">(</span><span class="op">!</span><span class="va">later</span><span class="op">$</span><span class="fu">loop_empty</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">later</span><span class="op">$</span><span class="fu">run_now</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<div class="sourceCode" id="cb39"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a><span class="co">#&gt;                   time      sequence   price       size best_bid best_bid_size</span></span>
-<span id="cb39-2"><a href="#cb39-2" tabindex="-1"></a><span class="co">#&gt;                 &lt;POSc&gt;        &lt;char&gt;  &lt;char&gt;     &lt;char&gt;   &lt;char&gt;        &lt;char&gt;</span></span>
-<span id="cb39-3"><a href="#cb39-3" tabindex="-1"></a><span class="co">#&gt; 1: 2024-10-17 10:04:19 1550467636704 67232.9 0.00007682  67232.8    0.41861839</span></span>
-<span id="cb39-4"><a href="#cb39-4" tabindex="-1"></a><span class="co">#&gt;    best_ask best_ask_size</span></span>
-<span id="cb39-5"><a href="#cb39-5" tabindex="-1"></a><span class="co">#&gt;      &lt;char&gt;        &lt;char&gt;</span></span>
-<span id="cb39-6"><a href="#cb39-6" tabindex="-1"></a><span class="co">#&gt; 1:  67232.9    1.24808993</span></span>
-<span id="cb39-7"><a href="#cb39-7" tabindex="-1"></a><span class="co">#&gt;               datetime     open     high      low    close   volume turnover</span></span>
-<span id="cb39-8"><a href="#cb39-8" tabindex="-1"></a><span class="co">#&gt;                 &lt;POSc&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;</span></span>
-<span id="cb39-9"><a href="#cb39-9" tabindex="-1"></a><span class="co">#&gt; 1: 2025-07-26 12:00:00 117775.9 118221.2 117766.4 118128.9 264.6461 31241540</span></span>
-<span id="cb39-10"><a href="#cb39-10" tabindex="-1"></a><span class="co">#&gt; 2: 2025-07-26 16:00:00 118129.0 118291.8 117940.3 118227.4 197.8112 23355797</span></span>
-<span id="cb39-11"><a href="#cb39-11" tabindex="-1"></a><span class="co">#&gt; 3: 2025-07-26 20:00:00 118227.3 118299.3 117880.4 117915.0 252.9352 29854685</span></span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a><span class="co">#&gt;                   time      sequence   price       size best_bid best_bid_size</span></span>
+<span id="cb40-2"><a href="#cb40-2" tabindex="-1"></a><span class="co">#&gt;                 &lt;POSc&gt;        &lt;char&gt;  &lt;char&gt;     &lt;char&gt;   &lt;char&gt;        &lt;char&gt;</span></span>
+<span id="cb40-3"><a href="#cb40-3" tabindex="-1"></a><span class="co">#&gt; 1: 2024-10-17 10:04:19 1550467636704 67232.9 0.00007682  67232.8    0.41861839</span></span>
+<span id="cb40-4"><a href="#cb40-4" tabindex="-1"></a><span class="co">#&gt;    best_ask best_ask_size</span></span>
+<span id="cb40-5"><a href="#cb40-5" tabindex="-1"></a><span class="co">#&gt;      &lt;char&gt;        &lt;char&gt;</span></span>
+<span id="cb40-6"><a href="#cb40-6" tabindex="-1"></a><span class="co">#&gt; 1:  67232.9    1.24808993</span></span>
+<span id="cb40-7"><a href="#cb40-7" tabindex="-1"></a><span class="co">#&gt;               datetime     open     high      low    close   volume turnover</span></span>
+<span id="cb40-8"><a href="#cb40-8" tabindex="-1"></a><span class="co">#&gt;                 &lt;POSc&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;</span></span>
+<span id="cb40-9"><a href="#cb40-9" tabindex="-1"></a><span class="co">#&gt; 1: 2025-07-26 12:00:00 117775.9 118221.2 117766.4 118128.9 264.6461 31241540</span></span>
+<span id="cb40-10"><a href="#cb40-10" tabindex="-1"></a><span class="co">#&gt; 2: 2025-07-26 16:00:00 118129.0 118291.8 117940.3 118227.4 197.8112 23355797</span></span>
+<span id="cb40-11"><a href="#cb40-11" tabindex="-1"></a><span class="co">#&gt; 3: 2025-07-26 20:00:00 118227.3 118299.3 117880.4 117915.0 252.9352 29854685</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="sample-data">Sample Data<a class="anchor" aria-label="anchor" href="#sample-data"></a>
 </h2>
 <p>The package includes bundled historical OHLCV data for BTC-USDT at 4-hour intervals (October 2017 through March 2026):</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">kucoin_btc_usdt_4h_ohlcv</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">kucoin_btc_usdt_4h_ohlcv</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb41"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a><span class="co">#&gt;      symbol            datetime     open     high      low    close     volume</span></span>
-<span id="cb41-2"><a href="#cb41-2" tabindex="-1"></a><span class="co">#&gt;      &lt;char&gt;              &lt;POSc&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;      &lt;num&gt;</span></span>
-<span id="cb41-3"><a href="#cb41-3" tabindex="-1"></a><span class="co">#&gt; 1: BTC-USDT 2017-10-18 16:00:00 3996.866 4318.733 3806.382 3811.101 0.12096412</span></span>
-<span id="cb41-4"><a href="#cb41-4" tabindex="-1"></a><span class="co">#&gt; 2: BTC-USDT 2017-10-18 20:00:00 3811.101 4088.281 3811.101 3812.004 0.06215084</span></span>
-<span id="cb41-5"><a href="#cb41-5" tabindex="-1"></a><span class="co">#&gt; 3: BTC-USDT 2017-10-19 00:00:00 3812.004 5548.231 3812.000 4060.403 0.13683638</span></span>
-<span id="cb41-6"><a href="#cb41-6" tabindex="-1"></a><span class="co">#&gt; 4: BTC-USDT 2017-10-19 04:00:00 4060.021 5693.211 3806.382 5123.414 0.37534149</span></span>
-<span id="cb41-7"><a href="#cb41-7" tabindex="-1"></a><span class="co">#&gt; 5: BTC-USDT 2017-10-19 08:00:00 5093.211 5693.211 5093.211 5093.211 0.93088201</span></span>
-<span id="cb41-8"><a href="#cb41-8" tabindex="-1"></a><span class="co">#&gt; 6: BTC-USDT 2017-10-19 12:00:00 5094.149 5693.000 5093.211 5408.350 0.47226735</span></span>
-<span id="cb41-9"><a href="#cb41-9" tabindex="-1"></a><span class="co">#&gt;     turnover   freq</span></span>
-<span id="cb41-10"><a href="#cb41-10" tabindex="-1"></a><span class="co">#&gt;        &lt;num&gt; &lt;char&gt;</span></span>
-<span id="cb41-11"><a href="#cb41-11" tabindex="-1"></a><span class="co">#&gt; 1:  467.0677     4h</span></span>
-<span id="cb41-12"><a href="#cb41-12" tabindex="-1"></a><span class="co">#&gt; 2:  241.1115     4h</span></span>
-<span id="cb41-13"><a href="#cb41-13" tabindex="-1"></a><span class="co">#&gt; 3:  545.1717     4h</span></span>
-<span id="cb41-14"><a href="#cb41-14" tabindex="-1"></a><span class="co">#&gt; 4: 1647.8900     4h</span></span>
-<span id="cb41-15"><a href="#cb41-15" tabindex="-1"></a><span class="co">#&gt; 5: 5071.2131     4h</span></span>
-<span id="cb41-16"><a href="#cb41-16" tabindex="-1"></a><span class="co">#&gt; 6: 2535.2478     4h</span></span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" tabindex="-1"></a><span class="co">#&gt;      symbol            datetime     open     high      low    close     volume</span></span>
+<span id="cb42-2"><a href="#cb42-2" tabindex="-1"></a><span class="co">#&gt;      &lt;char&gt;              &lt;POSc&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;      &lt;num&gt;</span></span>
+<span id="cb42-3"><a href="#cb42-3" tabindex="-1"></a><span class="co">#&gt; 1: BTC-USDT 2017-10-18 16:00:00 3996.866 4318.733 3806.382 3811.101 0.12096412</span></span>
+<span id="cb42-4"><a href="#cb42-4" tabindex="-1"></a><span class="co">#&gt; 2: BTC-USDT 2017-10-18 20:00:00 3811.101 4088.281 3811.101 3812.004 0.06215084</span></span>
+<span id="cb42-5"><a href="#cb42-5" tabindex="-1"></a><span class="co">#&gt; 3: BTC-USDT 2017-10-19 00:00:00 3812.004 5548.231 3812.000 4060.403 0.13683638</span></span>
+<span id="cb42-6"><a href="#cb42-6" tabindex="-1"></a><span class="co">#&gt; 4: BTC-USDT 2017-10-19 04:00:00 4060.021 5693.211 3806.382 5123.414 0.37534149</span></span>
+<span id="cb42-7"><a href="#cb42-7" tabindex="-1"></a><span class="co">#&gt; 5: BTC-USDT 2017-10-19 08:00:00 5093.211 5693.211 5093.211 5093.211 0.93088201</span></span>
+<span id="cb42-8"><a href="#cb42-8" tabindex="-1"></a><span class="co">#&gt; 6: BTC-USDT 2017-10-19 12:00:00 5094.149 5693.000 5093.211 5408.350 0.47226735</span></span>
+<span id="cb42-9"><a href="#cb42-9" tabindex="-1"></a><span class="co">#&gt;     turnover   freq</span></span>
+<span id="cb42-10"><a href="#cb42-10" tabindex="-1"></a><span class="co">#&gt;        &lt;num&gt; &lt;char&gt;</span></span>
+<span id="cb42-11"><a href="#cb42-11" tabindex="-1"></a><span class="co">#&gt; 1:  467.0677     4h</span></span>
+<span id="cb42-12"><a href="#cb42-12" tabindex="-1"></a><span class="co">#&gt; 2:  241.1115     4h</span></span>
+<span id="cb42-13"><a href="#cb42-13" tabindex="-1"></a><span class="co">#&gt; 3:  545.1717     4h</span></span>
+<span id="cb42-14"><a href="#cb42-14" tabindex="-1"></a><span class="co">#&gt; 4: 1647.8900     4h</span></span>
+<span id="cb42-15"><a href="#cb42-15" tabindex="-1"></a><span class="co">#&gt; 5: 5071.2131     4h</span></span>
+<span id="cb42-16"><a href="#cb42-16" tabindex="-1"></a><span class="co">#&gt; 6: 2535.2478     4h</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
 <p>If you use this package in your work, please cite it:</p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"kucoin"</span><span class="op">)</span></span></code></pre></div>
 <blockquote>
 <p>Mezquita, D. (2026). kucoin: R API Wrapper to KuCoin Cryptocurrency Exchange. R package version 4.0.0.</p>
@@ -556,7 +641,7 @@
 <div class="section level2">
 <h2 id="licence">Licence<a class="anchor" aria-label="anchor" href="#licence"></a>
 </h2>
-<p>MIT © <a href="https://github.com/dereckmezquita" class="external-link">Dereck Mezquita</a> <a href="https://orcid.org/0000-0002-9307-6762" class="external-link"><img src="https://img.shields.io/badge/ORCID-0000--0002--9307--6762-green" alt="ORCID"></a>. See <a href="LICENSE.html">LICENSE.md</a> for the full text, including the citation clause.</p>
+<p>MIT © <a href="https://github.com/dereckmezquita" class="external-link">Dereck Mezquita</a> <a href="https://orcid.org/0000-0002-9307-6762" class="external-link"><img src="https://img.shields.io/badge/ORCID-0000--0002--9307--6762-green" alt="ORCID"></a>. See <a href="LICENSE">LICENSE</a> for the full text.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -570,8 +655,7 @@
 <div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="LICENSE.html">Full license</a></li>
-<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
+<li><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a></li>
 </ul>
 </div>
 

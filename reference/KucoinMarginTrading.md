@@ -59,17 +59,17 @@ Trading](https://www.kucoin.com/docs-new/rest/margin-trading/orders/add-order)
 
 ### Endpoints Covered
 
-|                                                   |                                            |      |
-|---------------------------------------------------|--------------------------------------------|------|
-| Method                                            | Endpoint                                   | HTTP |
-| open_long / close_long / open_short / close_short | POST /api/v3/hf/margin/order               | POST |
-| borrow                                            | POST /api/v3/margin/borrow                 | POST |
-| repay                                             | POST /api/v3/margin/repay                  | POST |
-| get_borrow_history                                | GET /api/v3/margin/borrow                  | GET  |
-| get_repay_history                                 | GET /api/v3/margin/repay                   | GET  |
-| get_interest_history                              | GET /api/v3/margin/interest                | GET  |
-| get_borrow_rate                                   | GET /api/v3/margin/borrowRate              | GET  |
-| modify_leverage                                   | POST /api/v3/position/update-user-leverage | POST |
+|  |  |  |
+|----|----|----|
+| Method | Endpoint | HTTP |
+| open_long / close_long / open_short / close_short | POST /api/v3/hf/margin/order | POST |
+| borrow | POST /api/v3/margin/borrow | POST |
+| repay | POST /api/v3/margin/repay | POST |
+| get_borrow_history | GET /api/v3/margin/borrow | GET |
+| get_repay_history | GET /api/v3/margin/repay | GET |
+| get_interest_history | GET /api/v3/margin/interest | GET |
+| get_borrow_rate | GET /api/v3/margin/borrowRate | GET |
+| modify_leverage | POST /api/v3/position/update-user-leverage | POST |
 
 ## Super class
 
@@ -1015,7 +1015,9 @@ Verified: 2026-03-10
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+`async = TRUE`) with a single row and columns:
+
+- `timestamp` (POSIXct): Server-side acceptance time of the repay.
 
 - `order_no` (character): Repayment order number.
 
@@ -1110,7 +1112,24 @@ Verified: 2026-03-10
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with borrow records.
+`async = TRUE`) with **one row per borrow record** and columns:
+
+- `order_no` (character): Borrow order number.
+
+- `symbol` (character): Trading pair (NA on cross-margin records).
+
+- `currency` (character): Borrowed currency.
+
+- `size` (character): Requested borrow amount.
+
+- `actual_size` (character): Amount actually borrowed.
+
+- `status` (character): Lifecycle status (e.g. `"DONE"`).
+
+- `created_time` (POSIXct): Borrow timestamp (millisecond epoch
+  coerced).
+
+Empty response yields an empty `data.table`.
 
 #### Examples
 
@@ -1186,7 +1205,23 @@ Verified: 2026-03-10
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with repay records.
+`async = TRUE`) with **one row per repay record** and columns:
+
+- `order_no` (character): Repay order number.
+
+- `symbol` (character): Trading pair (NA on cross-margin records).
+
+- `currency` (character): Repaid currency.
+
+- `size` (character): Requested repay amount.
+
+- `actual_size` (character): Amount actually repaid.
+
+- `status` (character): Lifecycle status.
+
+- `created_time` (POSIXct): Repay timestamp (millisecond epoch coerced).
+
+Empty response yields an empty `data.table`.
 
 #### Examples
 
@@ -1272,7 +1307,18 @@ Verified: 2026-03-10
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with interest records.
+`async = TRUE`) with **one row per interest record** and columns:
+
+- `currency` (character): Currency on which interest accrued.
+
+- `day_ratio` (character): Daily rate applied.
+
+- `interest_amount` (character): Interest charged in the period.
+
+- `created_time` (POSIXct): Accrual timestamp (millisecond epoch
+  coerced).
+
+Empty response yields an empty `data.table`.
 
 #### Examples
 

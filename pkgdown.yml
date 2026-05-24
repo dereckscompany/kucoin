@@ -1,12 +1,13 @@
-pandoc: 3.1.11
+pandoc: 3.8.3
 pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   async-usage: async-usage.html
+  data-shapes: data-shapes.html
   futures-trading: futures-trading.html
   getting-started: getting-started.html
   margin-trading: margin-trading.html
-last_built: 2026-03-11T21:57Z
+last_built: 2026-05-24T04:10Z
 urls:
   reference: https://dereckscompany.github.io/kucoin/reference
   article: https://dereckscompany.github.io/kucoin/articles

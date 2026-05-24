@@ -226,7 +226,7 @@ Verified: 2026-02-02
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+`async = TRUE`) with one row and columns:
 
 - `order_id` (character): The transfer order identifier.
 
@@ -343,7 +343,7 @@ Verified: 2026-02-02
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+`async = TRUE`) with one row and columns:
 
 - `currency` (character): Currency code.
 

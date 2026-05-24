@@ -7,15 +7,16 @@ using the `kucoin` package. All examples assume synchronous usage.
 
 The package provides three classes for margin operations:
 
-| Class                 | Purpose                                                              |
-|-----------------------|----------------------------------------------------------------------|
-| `KucoinMarginTrading` | Open/close short and long positions, borrow, repay, manage leverage  |
-| `KucoinMarginData`    | Query margin-enabled symbols, config, risk limits, collateral ratios |
-| `KucoinLending`       | Lend assets to earn interest, manage lending orders                  |
+| Class | Purpose |
+|----|----|
+| `KucoinMarginTrading` | Open/close short and long positions, borrow, repay, manage leverage |
+| `KucoinMarginData` | Query margin-enabled symbols, config, risk limits, collateral ratios |
+| `KucoinLending` | Lend assets to earn interest, manage lending orders |
 
 ## Setup
 
 ``` r
+
 box::use(
   kucoin[
     KucoinMarginTrading, KucoinMarginData, KucoinLending, get_api_keys
@@ -43,6 +44,7 @@ Short selling lets you profit from a price decline. The package uses
 intent-based methods that handle borrowing and repayment automatically:
 
 ``` r
+
 # Open a short: borrows BTC and sells it
 order <- margin$open_short(
   symbol = "BTC-USDT",
@@ -70,6 +72,7 @@ close
 A leveraged long lets you buy more of an asset than your balance allows:
 
 ``` r
+
 # Open a leveraged long: borrows USDT and buys BTC
 order <- margin$open_long(
   symbol = "BTC-USDT",
@@ -98,6 +101,7 @@ All four methods default to market orders. Use `type = "limit"` for
 limit orders:
 
 ``` r
+
 order <- margin$open_short(
   symbol = "BTC-USDT",
   type = "limit",
@@ -119,6 +123,7 @@ For **isolated margin** (risk limited to one pair), set
 `isIsolated = TRUE`:
 
 ``` r
+
 order <- margin$open_short(
   symbol = "BTC-USDT",
   size = 0.001,
@@ -136,6 +141,7 @@ order
 Validate parameters without placing a real order:
 
 ``` r
+
 test <- margin$open_short(
   symbol = "BTC-USDT",
   size = 0.001,
@@ -153,6 +159,7 @@ test
 Track orders with your own identifiers:
 
 ``` r
+
 order <- margin$open_short(
   symbol = "BTC-USDT",
   size = 0.001,
@@ -172,6 +179,7 @@ borrowing and repayment automatically. For advanced workflows where you
 want explicit control:
 
 ``` r
+
 # Manually borrow USDT
 loan <- margin$borrow(currency = "USDT", size = 1000)
 loan
@@ -186,13 +194,14 @@ result
     #>            order_no actual_size
     #>              <char>      <char>
     #> 1: borrow-order-001        1000
-    #>           order_no actual_size    timestamp
-    #>             <char>      <char>        <num>
-    #> 1: repay-order-001        1000 1.729656e+12
+    #>           order_no actual_size           timestamp
+    #>             <char>      <char>              <POSc>
+    #> 1: repay-order-001        1000 2024-10-23 03:53:26
 
 ### Borrow History and Interest
 
 ``` r
+
 # Check borrow history
 borrows <- margin$get_borrow_history(query = list(currency = "USDT"))
 borrows
@@ -229,6 +238,7 @@ rates
 ### Leverage
 
 ``` r
+
 # Set leverage multiplier
 margin$modify_leverage(leverage = 5)
 ```
@@ -244,6 +254,7 @@ margin$modify_leverage(leverage = 5)
 Query margin-specific market information:
 
 ``` r
+
 # Available cross margin trading pairs
 symbols <- margin_data$get_cross_margin_symbols()
 symbols[, .(symbol, enable_trading)]
@@ -280,6 +291,7 @@ ratios
     #> 4:      ETH          50         500             0.85
 
 ``` r
+
 # Risk limits (requires auth)
 limits <- margin_data$get_risk_limit(isIsolated = FALSE)
 limits[, .(currency, borrow_max_amount, borrow_enabled)]
@@ -297,6 +309,7 @@ limits[, .(currency, borrow_max_amount, borrow_enabled)]
 Earn passive income by lending your assets to the margin lending pool:
 
 ``` r
+
 # Check available lending currencies
 market <- lending$get_loan_market()
 market

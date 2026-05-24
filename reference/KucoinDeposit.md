@@ -170,7 +170,7 @@ Verified: 2026-02-01
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+`async = TRUE`) with one row and columns:
 
 - `address` (character): The generated deposit address.
 
@@ -309,7 +309,7 @@ Verified: 2026-02-01
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+`async = TRUE`) with one row per address and columns:
 
 - `address` (character): The deposit address string.
 
@@ -487,7 +487,7 @@ Verified: 2026-02-01
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+`async = TRUE`) with one row per deposit and columns:
 
 - `currency` (character): Deposited currency code.
 
@@ -508,12 +508,13 @@ Verified: 2026-02-01
 
 - `wallet_tx_id` (character): On-chain transaction hash.
 
-- `updated_at` (numeric): Last update timestamp in milliseconds.
-
-- `remark` (character): Optional remark.
-
 - `created_at` (POSIXct): Creation datetime (coerced from epoch
   milliseconds).
+
+- `updated_at` (POSIXct): Last update datetime (coerced from epoch
+  milliseconds).
+
+- `remark` (character): Optional remark.
 
 Returns an empty `data.table` if no deposits match the filters.
 

@@ -52,16 +52,16 @@ Orders](https://www.kucoin.com/docs-new/rest/spot-trading/orders/add-stop-order)
 
 ### Endpoints Covered
 
-|                            |                                                  |        |
-|----------------------------|--------------------------------------------------|--------|
-| Method                     | Endpoint                                         | HTTP   |
-| add_order                  | POST /api/v1/stop-order                          | POST   |
-| cancel_order_by_id         | DELETE /api/v1/stop-order/{orderId}              | DELETE |
+|  |  |  |
+|----|----|----|
+| Method | Endpoint | HTTP |
+| add_order | POST /api/v1/stop-order | POST |
+| cancel_order_by_id | DELETE /api/v1/stop-order/{orderId} | DELETE |
 | cancel_order_by_client_oid | DELETE /api/v1/stop-order/cancelOrderByClientOid | DELETE |
-| cancel_all                 | DELETE /api/v1/stop-order/cancel                 | DELETE |
-| get_order_by_id            | GET /api/v1/stop-order/{orderId}                 | GET    |
-| get_order_by_client_oid    | GET /api/v1/stop-order/queryOrderByClientOid     | GET    |
-| get_order_list             | GET /api/v1/stop-order                           | GET    |
+| cancel_all | DELETE /api/v1/stop-order/cancel | DELETE |
+| get_order_by_id | GET /api/v1/stop-order/{orderId} | GET |
+| get_order_by_client_oid | GET /api/v1/stop-order/queryOrderByClientOid | GET |
+| get_order_list | GET /api/v1/stop-order | GET |
 
 ## Stop Order Types
 
@@ -424,9 +424,12 @@ Verified: 2026-02-01
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with column:
+`async = TRUE`) with one row per cancelled stop order (Treatment B —
+long format):
 
-- `cancelled_order_ids` (character): Vector of cancelled stop order IDs.
+- `cancelled_order_id` (character): KuCoin order ID of a cancelled stop
+  order. Returns an empty `data.table` if no stop orders matched (per
+  the "empty response -\> empty data.table" cross-package convention).
 
 #### Examples
 
@@ -435,7 +438,7 @@ Verified: 2026-02-01
 
     # Cancel a specific stop order
     result <- stop$cancel_order_by_id("vs8hoo8q2ceshiue003b67c0")
-    print(result$cancelled_order_ids)
+    print(result$cancelled_order_id)
     }
 
 ------------------------------------------------------------------------
@@ -514,7 +517,7 @@ Verified: 2026-02-01
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+`async = TRUE`) with a single row:
 
 - `cancelled_order_id` (character): The KuCoin order ID of the cancelled
   stop order.
@@ -614,9 +617,13 @@ Verified: 2026-02-01
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with column:
+`async = TRUE`) with one row per cancelled stop order (Treatment B —
+long format):
 
-- `cancelled_order_ids` (character): Vector of cancelled stop order IDs.
+- `cancelled_order_id` (character): KuCoin order ID of a cancelled stop
+  order. Returns an empty `data.table` if no stop orders matched the
+  filters (per the "empty response -\> empty data.table" cross-package
+  convention).
 
 #### Examples
 
@@ -625,11 +632,11 @@ Verified: 2026-02-01
 
     # Cancel all stop orders for BTC-USDT
     result <- stop$cancel_all(query = list(symbol = "BTC-USDT"))
-    print(result$cancelled_order_ids)
+    print(result$cancelled_order_id)
 
     # Cancel all stop orders (no filter)
     result <- stop$cancel_all()
-    print(result$cancelled_order_ids)
+    print(result$cancelled_order_id)
     }
 
 ------------------------------------------------------------------------
@@ -726,8 +733,8 @@ Verified: 2026-02-01
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row containing order details. Key columns
-include:
+`async = TRUE`) with a single row containing order details (no list
+columns). Key columns include:
 
 - `id` (character): Stop order identifier.
 
@@ -747,6 +754,12 @@ include:
 
 - `created_at` (POSIXct): Creation datetime (coerced from epoch
   milliseconds).
+
+- `order_time` (POSIXct): Order placement datetime (coerced from epoch
+  nanoseconds).
+
+- `stop_trigger_time` (POSIXct): Trigger datetime if triggered (coerced
+  from epoch milliseconds), `NA` if not yet triggered.
 
 #### Examples
 
@@ -861,8 +874,8 @@ Verified: 2026-02-01
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one or more rows of order details. Key columns
-include:
+`async = TRUE`) with one row per matching stop order (no list columns).
+Key columns include:
 
 - `id` (character): Stop order identifier.
 
@@ -882,6 +895,13 @@ include:
 
 - `created_at` (POSIXct): Creation datetime (coerced from epoch
   milliseconds).
+
+- `order_time` (POSIXct): Order placement datetime (coerced from epoch
+  nanoseconds).
+
+- `stop_trigger_time` (POSIXct): Trigger datetime if triggered (coerced
+  from epoch milliseconds), `NA` if not yet triggered. Returns an empty
+  `data.table` if no stop orders match.
 
 #### Examples
 
@@ -1019,8 +1039,9 @@ Verified: 2026-02-01
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with zero or more rows. Returns an empty `data.table` if
-no stop orders match the query. Key columns include:
+`async = TRUE`) with one row per stop order (no list columns). Returns
+an empty `data.table` if no stop orders match the query. Key columns
+include:
 
 - `id` (character): Stop order identifier.
 
@@ -1042,6 +1063,12 @@ no stop orders match the query. Key columns include:
 
 - `created_at` (POSIXct): Creation datetime (coerced from epoch
   milliseconds).
+
+- `order_time` (POSIXct): Order placement datetime (coerced from epoch
+  nanoseconds).
+
+- `stop_trigger_time` (POSIXct): Trigger datetime if triggered (coerced
+  from epoch milliseconds), `NA` if not yet triggered.
 
 #### Examples
 
@@ -1139,7 +1166,7 @@ stop <- KucoinStopOrders$new()
 
 # Cancel a specific stop order
 result <- stop$cancel_order_by_id("vs8hoo8q2ceshiue003b67c0")
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 } # }
 
 ## ------------------------------------------------
@@ -1163,11 +1190,11 @@ stop <- KucoinStopOrders$new()
 
 # Cancel all stop orders for BTC-USDT
 result <- stop$cancel_all(query = list(symbol = "BTC-USDT"))
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 
 # Cancel all stop orders (no filter)
 result <- stop$cancel_all()
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 } # }
 
 ## ------------------------------------------------

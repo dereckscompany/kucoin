@@ -43,26 +43,26 @@ Orders](https://www.kucoin.com/docs-new/rest/futures-trading/orders/add-order)
 
 ### Endpoints Covered
 
-|                            |                                                |        |
-|----------------------------|------------------------------------------------|--------|
-| Method                     | Endpoint                                       | HTTP   |
-| add_order                  | POST /api/v1/orders                            | POST   |
-| add_order_test             | POST /api/v1/orders/test                       | POST   |
-| add_order_batch            | POST /api/v1/orders/multi                      | POST   |
-| cancel_order_by_id         | DELETE /api/v1/orders/{orderId}                | DELETE |
+|  |  |  |
+|----|----|----|
+| Method | Endpoint | HTTP |
+| add_order | POST /api/v1/orders | POST |
+| add_order_test | POST /api/v1/orders/test | POST |
+| add_order_batch | POST /api/v1/orders/multi | POST |
+| cancel_order_by_id | DELETE /api/v1/orders/{orderId} | DELETE |
 | cancel_order_by_client_oid | DELETE /api/v1/orders/client-order/{clientOid} | DELETE |
-| cancel_all                 | DELETE /api/v1/orders                          | DELETE |
-| cancel_all_stop_orders     | DELETE /api/v1/stopOrders                      | DELETE |
-| get_order_by_id            | GET /api/v1/orders/{orderId}                   | GET    |
-| get_order_by_client_oid    | GET /api/v1/orders/byClientOid                 | GET    |
-| get_order_list             | GET /api/v1/orders                             | GET    |
-| get_recent_closed_orders   | GET /api/v1/recentDoneOrders                   | GET    |
-| get_stop_orders            | GET /api/v1/stopOrders                         | GET    |
-| get_fills                  | GET /api/v1/fills                              | GET    |
-| get_recent_fills           | GET /api/v1/recentFills                        | GET    |
-| get_open_order_value       | GET /api/v1/openOrderStatistics                | GET    |
-| set_dcp                    | POST /api/v1/orders/dead-cancel-all            | POST   |
-| get_dcp                    | GET /api/v1/orders/dead-cancel-all/query       | GET    |
+| cancel_all | DELETE /api/v1/orders | DELETE |
+| cancel_all_stop_orders | DELETE /api/v1/stopOrders | DELETE |
+| get_order_by_id | GET /api/v1/orders/{orderId} | GET |
+| get_order_by_client_oid | GET /api/v1/orders/byClientOid | GET |
+| get_order_list | GET /api/v1/orders | GET |
+| get_recent_closed_orders | GET /api/v1/recentDoneOrders | GET |
+| get_stop_orders | GET /api/v1/stopOrders | GET |
+| get_fills | GET /api/v1/fills | GET |
+| get_recent_fills | GET /api/v1/recentFills | GET |
+| get_open_order_value | GET /api/v1/openOrderStatistics | GET |
+| set_dcp | POST /api/v1/orders/dead-cancel-all | POST |
+| get_dcp | GET /api/v1/orders/dead-cancel-all/query | GET |
 
 ## Super class
 
@@ -767,17 +767,18 @@ Verified: 2026-03-10
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+`data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with one row per cancelled order, and column:
 
-- `cancelled_order_ids` (list): Vector of cancelled order IDs.
+- `cancelled_order_id` (character): Cancelled order ID. Empty
+  `data.table` (zero rows) if no orders matched.
 
 #### Examples
 
     \dontrun{
     ft <- KucoinFuturesTrading$new()
     result <- ft$cancel_order_by_id("234125150956625920")
-    print(result$cancelled_order_ids)
+    print(result$cancelled_order_id)
     }
 
 ------------------------------------------------------------------------
@@ -941,10 +942,11 @@ Verified: 2026-03-10
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+`data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with one row per cancelled order, and column:
 
-- `cancelled_order_ids` (list): Vector of cancelled order IDs.
+- `cancelled_order_id` (character): Cancelled order ID. Empty
+  `data.table` (zero rows) if no orders matched.
 
 #### Examples
 
@@ -953,7 +955,7 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
     # Cancel all open orders for XBTUSDTM
     result <- ft$cancel_all(symbol = "XBTUSDTM")
-    print(result$cancelled_order_ids)
+    print(result$cancelled_order_id)
 
     # Cancel all open orders across all symbols
     result <- ft$cancel_all()
@@ -1032,10 +1034,11 @@ Verified: 2026-03-10
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+`data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with one row per cancelled order, and column:
 
-- `cancelled_order_ids` (list): Vector of cancelled order IDs.
+- `cancelled_order_id` (character): Cancelled order ID. Empty
+  `data.table` (zero rows) if no orders matched.
 
 #### Examples
 
@@ -1044,7 +1047,7 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
     # Cancel all stop orders for XBTUSDTM
     result <- ft$cancel_all_stop_orders(symbol = "XBTUSDTM")
-    print(result$cancelled_order_ids)
+    print(result$cancelled_order_id)
 
     # Cancel all stop orders across all symbols
     result <- ft$cancel_all_stop_orders()
@@ -2422,7 +2425,7 @@ print(results[, .(order_id, client_oid, code)])
 if (FALSE) { # \dontrun{
 ft <- KucoinFuturesTrading$new()
 result <- ft$cancel_order_by_id("234125150956625920")
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 } # }
 
 ## ------------------------------------------------
@@ -2444,7 +2447,7 @@ ft <- KucoinFuturesTrading$new()
 
 # Cancel all open orders for XBTUSDTM
 result <- ft$cancel_all(symbol = "XBTUSDTM")
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 
 # Cancel all open orders across all symbols
 result <- ft$cancel_all()
@@ -2459,7 +2462,7 @@ ft <- KucoinFuturesTrading$new()
 
 # Cancel all stop orders for XBTUSDTM
 result <- ft$cancel_all_stop_orders(symbol = "XBTUSDTM")
-print(result$cancelled_order_ids)
+print(result$cancelled_order_id)
 
 # Cancel all stop orders across all symbols
 result <- ft$cancel_all_stop_orders()

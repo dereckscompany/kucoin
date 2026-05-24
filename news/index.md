@@ -1,5 +1,27 @@
 # Changelog
 
+## kucoin 4.0.1
+
+### BUG FIXES
+
+- **`ms_to_datetime()` / `ns_to_datetime()` no longer emit spurious
+  `"NAs introduced by coercion"` warnings** when given an
+  all-`NA_character_` vector. The NA → NA path is the documented
+  contract, not a problem worth a warning. Implemented by
+  type-dispatching on the input and only feeding the non-NA entries to
+  [`as.numeric()`](https://rdrr.io/r/base/numeric.html) — not
+  [`suppressWarnings()`](https://rdrr.io/r/base/warning.html), which
+  would hide genuine bad input (e.g. a malformed numeric string from a
+  future API change). Pinned by a counter-regression test that asserts
+  `ms_to_datetime("not-a-number")` still warns loudly.
+- **`coerce_cols(dt, cols, fn)` deduplicates `cols`**. Previously
+  passing the same column name twice —
+  `coerce_cols(dt, c("time", "time"), ms_to_datetime)` — would feed the
+  already-coerced POSIXct value back through `ms_to_datetime`,
+  reinterpreting epoch-seconds as epoch-ms and silently producing wildly
+  wrong values (year 56,000+). Now uses `for (col in unique(cols))`.
+  Same fix applied to the binance and alpaca helpers.
+
 ## kucoin 4.0.0
 
 ### NEW FEATURES
@@ -55,6 +77,11 @@
 - **Kline parameter renamed**: `freq` → `timeframe` in
   [`kucoin_backfill_klines()`](https://dereckscompany.github.io/kucoin/reference/kucoin_backfill_klines.md)
   and related functions.
+- **`KucoinMarketData$get_klines()` default window changed**: with
+  `from = NULL`/`to = NULL` the method now returns the most recent
+  candles for the requested timeframe rather than the previous “last 24
+  hours” window. Pass explicit `from`/`to` to restore deterministic
+  ranges.
 - **`KucoinDeposit$get_deposit_addresses()`**: `currency` is now a
   required argument (removed `NULL` default) to match KuCoin API
   requirement.
@@ -72,9 +99,55 @@
 - Fixed [`URLencode()`](https://rdrr.io/r/utils/URLencode.html) in
   request signing to coerce query values to character before encoding,
   preventing errors on numeric parameters.
+- `KucoinMarginTrading$repay()` now coerces the response `timestamp` to
+  `POSIXct` instead of leaving it as a raw millisecond `numeric`,
+  matching the rest of the package’s timestamp behaviour.
+- `KucoinMarginData$get_margin_config()` now returns a schema-stable
+  zero-row `data.table` when `currencyList` is empty or `data` is
+  `NULL`, rather than indexing into an empty row.
+- **Orderbook parsers gain a `level` depth column**. `parse_orderbook()`
+  (spot) and `parse_futures_orderbook()` (futures) now emit a 1-indexed
+  position column per side so the on-wire “best price first” ordering
+  survives any later sort or filter (`level == 1` is best bid / best
+  ask). Affects `KucoinMarketData$get_part_orderbook()`,
+  `KucoinMarketData$get_full_orderbook()`,
+  `KucoinFuturesMarketData$get_part_orderbook()`, and
+  `KucoinFuturesMarketData$get_full_orderbook()`.
+- **Cancel-parser NULL / empty-`cancelledOrderIds` guards** on every
+  cancel method that returns `cancelled_order_id` long-format rows.
+  Previously a NULL response or an empty `cancelledOrderIds` array could
+  trigger row-replication errors; the parsers now short-circuit to a
+  zero-row `data.table` with the documented schema. Affects
+  `KucoinOcoOrders` (3 methods), `KucoinFuturesTrading` (3 methods).
+- **`KucoinSubAccount` `account_type` semantic labels**.
+  `get_detail_balance()` and `get_all_spot_balances()` previously
+  emitted the raw response field names (`main_accounts`,
+  `trade_accounts`, `margin_accounts`); these are now the stable
+  semantic labels `"main"`, `"trade"`, `"margin"` so the documented
+  filter idiom `balances[account_type == "trade"]` keeps working.
+- `ms_to_datetime()` / `ns_to_datetime()` (and the alpaca equivalent
+  `rfc3339_to_datetime`) no longer short-circuit on `all(is.na(x))`
+  input. The short-circuit returned a length-1 `NA_POSIXct_` which
+  [`data.table::set()`](https://rdrr.io/pkg/data.table/man/assign.html)
+  would recycle into the existing column’s storage type rather than
+  replacing the column with POSIXct — so all-NA timestamp columns were
+  silently typed as `character`/`numeric` instead of `POSIXct`. The
+  helpers now always produce a length-matching POSIXct vector, even when
+  every input value is missing.
 
 ### IMPROVEMENTS
 
+- **One-entity-per-row, no-list-column convention across every R6
+  class.** Sweeping pass on all 16 classes to eliminate `data.table`
+  list columns and standardise on one of five shape treatments
+  (`;`-collapse for arrays of plain strings; long-format explode for
+  arrays of objects, with a 1-indexed position column where order
+  matters; wide-prefix flatten for fixed-schema nested objects;
+  sibling-method re-route for collections that don’t fit the row entity;
+  JSON-string encode for dynamic-key or array-of-array objects). Matches
+  the convention in the sibling `alpaca` and `binance` packages — see
+  the new
+  [`vignette("data-shapes")`](https://dereckscompany.github.io/kucoin/articles/data-shapes.md).
 - **Consistent `data.table` returns**: All parsers now return
   `data.table` objects. Fixed four methods that previously returned
   other types:
@@ -88,6 +161,22 @@
   - `KucoinMarginData$get_collateral_ratio()`: was raw `list`, now
     flattened `data.table` with `currency`, `lower_limit`,
     `upper_limit`, `collateral_ratio` columns.
+- **`KucoinMarketData$get_announcements()`**: `ann_type` is now a
+  `;`-collapsed character column (Treatment A) instead of either a list
+  column or a long-format row explosion. Recover with
+  `strsplit(x, ";", fixed = TRUE)[[1]]`. The shared
+  `collapse_string_array_fields()` helper emits a once-per-session
+  warning if a value ever contains a literal `;` so silent corruption is
+  unmissable.
+- **Shared internal helpers** (`@noRd`, ported from the binance package
+  to keep the three packages’ parser surface aligned):
+  - `collapse_string_array_fields(x, fields)` — NA-safe Treatment A
+    `;`-collapse.
+  - `coerce_cols(dt, cols, fn)` — applies a coercion function to a set
+    of columns by reference, silently skipping columns that aren’t on
+    the table. Replaces the repeated
+    `if (nrow(dt) > 0 && "X" %in% names(dt)) { dt[, X := fn(X)] }`
+    boilerplate across every parser.
 - Increased default request timeout from 10s to 30s.
 - `@import data.table` added centrally via `R/imports.R` to simplify
   namespace management.
@@ -106,9 +195,20 @@
   - `KucoinLending$get_loan_market()`: now documented as authenticated.
 - Corrected `wrap_list_fields` / `as_dt_row` documentation to accurately
   describe `length >= 1` wrapping behavior.
+- Expanded `@return` blocks across `KucoinMarginData`,
+  `KucoinMarginTrading`, and `KucoinLending`: every public method now
+  spells out its columns and their R types, the per-method row entity,
+  and how the empty case is shaped — matching the binance/alpaca
+  data-shape vignette.
 - Updated `kucoin_btc_usdt_4h_ohlcv` dataset documentation to reflect
   18,351 rows through March 2026.
-- Two new vignettes: “Margin Trading” and “Futures Trading”.
+- Three new vignettes: “Margin Trading”, “Futures Trading”, and “Data
+  shapes and the one-row-per-entity convention”.
+- README gains a **Design Philosophy** section explaining the snake_case
+  / timestamp / shape-normalisation contract and pointing at
+  [`vignette("data-shapes")`](https://dereckscompany.github.io/kucoin/articles/data-shapes.md)
+  for the full catalogue. Mirrors the section the sibling `alpaca` /
+  `binance` READMEs already carry.
 - Updated ROADMAP to v4.0.0 with Futures classes added to completed
   items.
 
@@ -127,11 +227,72 @@
 - All live tests use `Sys.sleep(0.5)` rate limiting between calls.
 - Write tests use only the `/orders/test` dry-run endpoint — no real
   orders placed.
+- Added data-shape regression tests on `KucoinMarginData`,
+  `KucoinMarginTrading`, and `KucoinLending`: each public method asserts
+  there are no list columns, the column types match the documented
+  `@return` block, and the empty-response path yields a zero-row
+  `data.table` rather than a stub row.
 
 ### DATA
 
 - Refreshed bundled `kucoin_btc_usdt_4h_ohlcv` dataset (18,351 rows, Oct
   2017 – Mar 2026).
+
+### TOOLING
+
+- **`scripts/LINT.sh`** — new script that runs `air format .` first (so
+  reformatted code is what gets linted, and a passing run leaves the
+  working tree clean) then `lintr::lint_package()` with the package
+  loaded via `devtools::load_all()` so `object_usage_linter` honours
+  [`utils::globalVariables()`](https://rdrr.io/r/utils/globalVariables.html)
+  declarations for `data.table` NSE columns. Matches the binance
+  package’s lint script with the air format step folded in.
+- **`.lintr` config repaired**. The previous file started with a leading
+  `# .lintr` comment that made the DCF parser reject it
+  (`Malformed config file`) — `lintr::lint_package()` had been failing
+  silently. Now adopts the binance ruleset: line length 120, indentation
+  2, explicit [`return()`](https://rdrr.io/r/base/function.html) style,
+  and `object_name_linter` allowing `snake_case` / `SNAKE_CASE` /
+  `CamelCase` / `camelCase` so R6 class names and KuCoin’s camelCase API
+  params (`clientOid`, `orderId`) are accepted.
+
+### REFACTOR
+
+- **Explicit [`return()`](https://rdrr.io/r/base/function.html)
+  everywhere.** Every closure now has an explicit `return(...)` instead
+  of relying on R’s implicit-last-expression. Touches 78 sites across
+  the package (9 in `R/`, 69 across `tests/` and `vignettes/`).
+  Side-effect-only closures get `return(invisible(NULL))`.
+- **No `var <- if (...)` style.** Three sites refactored to declare the
+  variable with its default value and conditionally reassign instead
+  (POSIXct-vs-epoch-ms coercion in
+  `KucoinFuturesMarketData$get_klines()`; ticker mock alternation in
+  `vignettes/async-usage.Rmd`). Function-call named args
+  (`f(x = if (...) a else b)`) are out of scope for the rule and were
+  left alone.
+- **`tests/testthat/helper-constants.R`** — shared test-setup file
+  (auto-sourced by `testthat` before tests). Defines `BASE_SPOT` /
+  `BASE_FUTURES`, `TEST_KEYS`, `TEST_SYMBOL_SPOT` /
+  `TEST_SYMBOL_FUTURES`, and one `new_xxx()` constructor helper per R6
+  class. Strips ~130 lines of duplicated setup boilerplate from the 14
+  test files; collapses 22 inline `KucoinMarketData$new(...)` calls in
+  `test-KucoinMarketData.R` to `new_market()`. Resolves three name
+  collisions that the per-file scoping had been hiding (`new_account`,
+  `new_market`, `new_trading` now have explicit `new_futures_*`
+  siblings).
+
+### LICENCE
+
+- **`LICENSE` consolidated to a single full MIT file**. The package
+  previously shipped both a 2-line DCF stub (`LICENSE`) and the full MIT
+  text (`LICENSE.md`), to satisfy the CRAN `License: MIT + file LICENSE`
+  template alongside GitHub’s licensee detector. Those two requirements
+  conflict in practice. `DESCRIPTION` now declares `License: MIT`
+  (non-CRAN form), so R CMD check skips the DCF parse of the LICENSE
+  file while GitHub still detects MIT. The previously bundled **Citation
+  Clause has been dropped** — the package is now plain MIT, matching the
+  sibling `alpaca` and `binance` packages. `LICENSE.md` was removed;
+  `LICENSE` carries the full text.
 
 ## kucoin 3.0.0
 

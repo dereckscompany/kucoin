@@ -18,6 +18,7 @@ place orders in parallel.
 ## Setup
 
 ``` r
+
 box::use(
   kucoin[KucoinMarketData, KucoinTrading, KucoinAccount, get_api_keys],
   coro[async, await],
@@ -50,6 +51,7 @@ you write code that *looks* synchronous but runs asynchronously under
 the hood — just like TypeScript’s `async`/`await`.
 
 ``` r
+
 market <- KucoinMarketData$new(async = TRUE)
 ```
 
@@ -58,6 +60,7 @@ market <- KucoinMarketData$new(async = TRUE)
     #> explicitly.
 
 ``` r
+
 get_stats <- async(function() {
   stats <- await(market$get_24hr_stats(symbol = "BTC-USDT"))
   return(stats)
@@ -81,12 +84,14 @@ Chain several awaited calls in sequence — each one resolves before the
 next begins, just like `await` in TypeScript:
 
 ``` r
+
 results <- NULL
 
 fetch_tickers <- async(function() {
   btc <- await(market$get_ticker(symbol = "BTC-USDT"))
   eth <- await(market$get_ticker(symbol = "ETH-USDT"))
   results <<- list(btc = btc, eth = eth)
+  return(invisible(NULL))
 })
 
 fetch_tickers()
@@ -118,6 +123,7 @@ When requests are independent, fire them simultaneously and collect all
 results at once — the async equivalent of `Promise.all()` in TypeScript:
 
 ``` r
+
 results <- NULL
 
 fetch_parallel <- async(function() {
@@ -127,6 +133,7 @@ fetch_parallel <- async(function() {
   # Await them together — like Promise.all([btc, eth])
   res <- await(promise_all(btc = btc_promise, eth = eth_promise))
   results <<- res
+  return(invisible(NULL))
 })
 
 fetch_parallel()
@@ -158,6 +165,7 @@ If you prefer the promise-pipeline style (common in JavaScript), use
 `then` and `catch`:
 
 ``` r
+
 account <- KucoinAccount$new(async = TRUE)
 ```
 
@@ -166,14 +174,17 @@ account <- KucoinAccount$new(async = TRUE)
     #> explicitly.
 
 ``` r
+
 chain_result <- NULL
 
 account$get_summary() |>
   then(function(summary) {
     chain_result <<- summary
+    return(invisible(NULL))
   }) |>
   catch(function(err) {
     message("Error: ", conditionMessage(err))
+    return(invisible(NULL))
   })
 
 while (!loop_empty()) {
@@ -203,6 +214,7 @@ Place a test order and immediately query open orders — sequential
 `await` keeps the flow readable:
 
 ``` r
+
 trading <- KucoinTrading$new(async = TRUE)
 ```
 
@@ -211,6 +223,7 @@ trading <- KucoinTrading$new(async = TRUE)
     #> explicitly.
 
 ``` r
+
 results <- NULL
 
 place_and_check <- async(function() {
@@ -227,6 +240,7 @@ place_and_check <- async(function() {
   open <- await(trading$get_open_orders(symbol = "BTC-USDT"))
 
   results <<- list(order = order, open = open)
+  return(invisible(NULL))
 })
 
 place_and_check()
@@ -264,6 +278,7 @@ Inside `async` functions, you can use `tryCatch` around `await` calls
 for structured error handling — just like `try`/`catch` in TypeScript:
 
 ``` r
+
 safe_fetch <- async(function() {
   result <- tryCatch(
     await(market$get_ticker(symbol = "INVALID-PAIR")),
@@ -291,6 +306,7 @@ app, the event loop runs automatically. In scripts or vignettes, you
 must drive it manually.
 
 ``` r
+
 # Idiomatic event loop drain
 while (!later::loop_empty()) {
   later::run_now()
@@ -300,6 +316,7 @@ while (!later::loop_empty()) {
 Or with a timeout guard:
 
 ``` r
+
 deadline <- lubridate::now() + 30 # 30-second timeout
 while (!later::loop_empty() && lubridate::now() < deadline) {
   later::run_now(timeoutSecs = 0.1)
@@ -317,14 +334,14 @@ automatically.
 
 ## `coro::await` Cheat Sheet
 
-| Pattern                                | Works? | Notes                         |
-|----------------------------------------|--------|-------------------------------|
-| `x <- await(promise)`                  | Yes    | Standard pattern              |
-| `x <- await(obj$method(arg))`          | Yes    | Await wrapping a call is fine |
-| `await(promise)` (bare, no assignment) | Yes    | Side-effect only              |
-| `await` inside loops/if/tryCatch       | Yes    | Full control flow support     |
-| `x <<- await(promise)`                 | **No** | `<<-` not supported by coro   |
-| `f(await(promise))`                    | **No** | Nested inside function args   |
+| Pattern | Works? | Notes |
+|----|----|----|
+| `x <- await(promise)` | Yes | Standard pattern |
+| `x <- await(obj$method(arg))` | Yes | Await wrapping a call is fine |
+| `await(promise)` (bare, no assignment) | Yes | Side-effect only |
+| `await` inside loops/if/tryCatch | Yes | Full control flow support |
+| `x <<- await(promise)` | **No** | `<<-` not supported by coro |
+| `f(await(promise))` | **No** | Nested inside function args |
 
 > **Rule of thumb**: `await()` must appear as the RHS of a `<-` or as a
 > bare statement — never inside another expression. Return values from
@@ -335,13 +352,13 @@ automatically.
 
 ## Choosing Sync vs Async
 
-| Scenario                      | Recommendation                                                                                                                                    |
-|-------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| Interactive exploration       | **Sync** — simpler, results print immediately                                                                                                     |
-| Scripts fetching one endpoint | **Sync** — no event loop needed                                                                                                                   |
-| Bots polling multiple symbols | **Async** — concurrent requests reduce latency                                                                                                    |
-| Shiny dashboards              | **Async** — keeps the UI responsive                                                                                                               |
-| Bulk data downloads           | Use [`kucoin_backfill_klines()`](https://dereckscompany.github.io/kucoin/reference/kucoin_backfill_klines.md) (sync, handles batching internally) |
+| Scenario | Recommendation |
+|----|----|
+| Interactive exploration | **Sync** — simpler, results print immediately |
+| Scripts fetching one endpoint | **Sync** — no event loop needed |
+| Bots polling multiple symbols | **Async** — concurrent requests reduce latency |
+| Shiny dashboards | **Async** — keeps the UI responsive |
+| Bulk data downloads | Use [`kucoin_backfill_klines()`](https://dereckscompany.github.io/kucoin/reference/kucoin_backfill_klines.md) (sync, handles batching internally) |
 
 ------------------------------------------------------------------------
 

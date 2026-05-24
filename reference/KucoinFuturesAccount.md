@@ -181,7 +181,8 @@ Verified: 2026-03-10
 
 #### Returns
 
-A single-row `data.table` with columns:
+A single-row `data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with columns:
 
 - `account_equity` (numeric): Total account equity.
 
@@ -286,19 +287,32 @@ Verified: 2026-03-10
 
 #### Returns
 
-A `data.table` with columns:
+A single-row `data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with columns:
 
 - `id` (character): Position identifier.
 
 - `symbol` (character): Contract symbol.
 
+- `auto_deposit` (logical): Auto-deposit margin flag.
+
 - `real_leverage` (numeric): Effective leverage.
 
 - `cross_mode` (logical): Whether cross margin mode is active.
 
+- `delev_percentage` (numeric): Auto-deleveraging percentage.
+
 - `current_qty` (integer): Current position size in contracts.
 
 - `current_cost` (character): Cost of the current position.
+
+- `current_comm` (character): Current commission paid.
+
+- `unrealised_cost` (character): Unrealised cost.
+
+- `realised_gross_cost` (character): Realised gross cost.
+
+- `realised_cost` (character): Realised cost.
 
 - `is_open` (logical): Whether the position is open.
 
@@ -306,15 +320,29 @@ A `data.table` with columns:
 
 - `mark_value` (character): Mark value of the position.
 
+- `pos_cost` (character): Position cost.
+
+- `pos_init` (character): Initial margin.
+
+- `pos_comm` (character): Position commission.
+
 - `pos_margin` (character): Position margin.
 
-- `unrealised_pnl` (numeric): Unrealised profit and loss.
+- `unrealised_pnl` (character): Unrealised profit and loss.
+
+- `unrealised_pnl_pcnt` (numeric): Unrealised PnL as a percentage.
 
 - `avg_entry_price` (character): Average entry price.
 
 - `liquidation_price` (character): Estimated liquidation price.
 
+- `bankrupt_price` (character): Bankruptcy price.
+
+- `settle_currency` (character): Settlement currency.
+
 - `margin_mode` (character): `"ISOLATED"` or `"CROSS"`.
+
+- `position_side` (character): `"BOTH"`, `"LONG"`, or `"SHORT"`.
 
 - `opening_timestamp` (POSIXct): Position opened time (coerced from
   milliseconds).
@@ -418,7 +446,10 @@ Verified: 2026-03-10
 
 #### Returns
 
-A `data.table`; same columns as `get_position()`.
+A `data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with one row per open position; same columns as
+`get_position()`. Returns an empty `data.table` when there are no open
+positions.
 
 ------------------------------------------------------------------------
 
@@ -507,19 +538,41 @@ Verified: 2026-03-10
 
 #### Returns
 
-A `data.table` with columns:
+A `data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with one row per closed position record. Returns an
+empty `data.table` when no history records match. Columns:
+
+- `close_id` (character): Close-event identifier.
+
+- `position_id` (character): Position identifier.
+
+- `uid` (integer): Numeric user ID.
+
+- `user_id` (character): String user ID.
 
 - `symbol` (character): Contract symbol.
 
 - `settle_currency` (character): Settlement currency.
 
-- `realised_gross_pnl` (character): Gross realised PNL.
-
-- `realised_pnl` (character): Net realised PNL (after fees).
-
-- `leverage` (integer): Leverage used.
+- `leverage` (character): Leverage used.
 
 - `type` (character): Close type (e.g., `"Close"`).
+
+- `pnl` (character): Realised PnL.
+
+- `realised_gross_cost` (character): Gross realised cost.
+
+- `withdraw_pnl` (character): Withdrawn PnL.
+
+- `trade_fee` (character): Trading fee.
+
+- `funding_fee` (character): Funding fee.
+
+- `open_price` (character): Average open price.
+
+- `close_price` (character): Average close price.
+
+- `margin_mode` (character): `"ISOLATED"` or `"CROSS"`.
 
 - `open_time` (POSIXct): Position opened time (coerced from
   milliseconds).
@@ -585,7 +638,8 @@ Verified: 2026-03-10
 
 #### Returns
 
-A single-row `data.table` with columns:
+A single-row `data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with columns:
 
 - `symbol` (character): Contract symbol.
 
@@ -663,7 +717,8 @@ Verified: 2026-03-10
 
 #### Returns
 
-A single-row `data.table` with columns:
+A single-row `data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with columns:
 
 - `symbol` (character): Contract symbol.
 
@@ -727,7 +782,8 @@ Verified: 2026-03-10
 
 #### Returns
 
-A single-row `data.table` with columns:
+A single-row `data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with columns:
 
 - `symbol` (character): Contract symbol.
 
@@ -806,7 +862,8 @@ Verified: 2026-03-10
 
 #### Returns
 
-A single-row `data.table` with columns:
+A single-row `data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with columns:
 
 - `symbol` (character): Contract symbol.
 
@@ -880,7 +937,8 @@ Verified: 2026-03-10
 
 #### Returns
 
-A single-row `data.table` with columns:
+A single-row `data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with columns:
 
 - `symbol` (character): Contract symbol.
 
@@ -944,7 +1002,12 @@ Verified: 2026-03-10
 
 #### Returns
 
-A single-row `data.table` with the maximum withdrawable margin amount.
+A single-row `data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with columns:
+
+- `max_withdraw_margin` (character): Maximum amount of isolated margin
+  that can be withdrawn from the position. Returned by KuCoin as a
+  fixed-precision string so the caller controls numeric coercion.
 
 ------------------------------------------------------------------------
 
@@ -1026,7 +1089,8 @@ Verified: 2026-03-10
 
 #### Returns
 
-A single-row `data.table` with columns:
+A single-row `data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with columns:
 
 - `id` (character): Margin operation ID.
 
@@ -1111,7 +1175,8 @@ Verified: 2026-03-10
 
 #### Returns
 
-A single-row `data.table` with columns:
+A single-row `data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with columns:
 
 - `id` (character): Margin operation ID.
 
@@ -1205,7 +1270,9 @@ Verified: 2026-03-10
 
 #### Returns
 
-A `data.table` with columns:
+A `data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with one row per risk-limit tier. Returns an empty
+`data.table` when KuCoin returns no tiers. Columns:
 
 - `symbol` (character): Contract symbol.
 
@@ -1310,7 +1377,9 @@ Verified: 2026-03-10
 
 #### Returns
 
-A `data.table` with columns:
+A `data.table` (or `promise<data.table>` if constructed with
+`async = TRUE`) with one row per funding settlement. Returns an empty
+`data.table` when no records are returned. Columns:
 
 - `id` (integer): Record identifier.
 

@@ -212,7 +212,7 @@ Verified: 2026-02-02
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+`async = TRUE`) with one row and columns:
 
 - `withdrawal_id` (character): The unique withdrawal identifier.
 
@@ -310,9 +310,10 @@ Verified: 2026-02-02
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+`async = TRUE`) with one row and columns:
 
-- `withdrawal_id` (character): The cancelled withdrawal ID.
+- `withdrawal_id` (character): The cancelled withdrawal ID (echoed from
+  the input since KuCoin returns `null` data on a successful cancel).
 
 #### Examples
 
@@ -419,7 +420,7 @@ Verified: 2026-02-02
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+`async = TRUE`) with one row and columns:
 
 - `currency` (character): Currency code.
 
@@ -599,7 +600,7 @@ Verified: 2026-02-02
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+`async = TRUE`) with one row per withdrawal and columns:
 
 - `currency` (character): Withdrawn currency code.
 
@@ -619,14 +620,15 @@ Verified: 2026-02-02
 
 - `wallet_tx_id` (character): On-chain transaction hash.
 
-- `updated_at` (numeric): Last update timestamp in milliseconds.
+- `created_at` (POSIXct): Creation datetime (coerced from epoch
+  milliseconds).
+
+- `updated_at` (POSIXct): Last update datetime (coerced from epoch
+  milliseconds).
 
 - `remark` (character): Optional remark.
 
 - `arrears` (logical): Whether the withdrawal is in arrears.
-
-- `created_at` (POSIXct): Creation datetime (coerced from epoch
-  milliseconds).
 
 Returns an empty `data.table` if no withdrawals match the filters.
 
@@ -736,7 +738,7 @@ Verified: 2026-02-02
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+`async = TRUE`) with one row and columns:
 
 - `id` (character): Withdrawal ID.
 

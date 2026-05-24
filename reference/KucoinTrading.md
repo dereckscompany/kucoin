@@ -39,30 +39,30 @@ Orders](https://www.kucoin.com/docs-new/rest/spot-trading/orders/add-order)
 
 ### Endpoints Covered
 
-|                                 |                                                        |        |
-|---------------------------------|--------------------------------------------------------|--------|
-| Method                          | Endpoint                                               | HTTP   |
-| add_order                       | POST /api/v1/hf/orders                                 | POST   |
-| add_order_test                  | POST /api/v1/hf/orders/test                            | POST   |
-| add_order_batch                 | POST /api/v1/hf/orders/multi                           | POST   |
-| cancel_order_by_id              | DELETE /api/v1/hf/orders/{orderId}                     | DELETE |
-| cancel_order_by_client_oid      | DELETE /api/v1/hf/orders/client-order/{clientOid}      | DELETE |
-| cancel_partial_order            | DELETE /api/v1/hf/orders/cancel/{orderId}              | DELETE |
-| cancel_all_by_symbol            | DELETE /api/v1/hf/orders                               | DELETE |
-| cancel_all                      | DELETE /api/v1/hf/orders/cancelAll                     | DELETE |
-| get_order_by_id                 | GET /api/v1/hf/orders/{orderId}                        | GET    |
-| get_order_by_client_oid         | GET /api/v1/hf/orders/client-order/{clientOid}         | GET    |
-| get_fills                       | GET /api/v1/hf/fills                                   | GET    |
-| get_symbols_with_open_orders    | GET /api/v1/hf/orders/active/symbols                   | GET    |
-| get_open_orders                 | GET /api/v1/hf/orders/active                           | GET    |
-| get_closed_orders               | GET /api/v1/hf/orders/done                             | GET    |
-| add_order_sync                  | POST /api/v1/hf/orders/sync                            | POST   |
-| add_order_batch_sync            | POST /api/v1/hf/orders/multi/sync                      | POST   |
-| cancel_order_by_id_sync         | DELETE /api/v1/hf/orders/sync/{orderId}                | DELETE |
+|  |  |  |
+|----|----|----|
+| Method | Endpoint | HTTP |
+| add_order | POST /api/v1/hf/orders | POST |
+| add_order_test | POST /api/v1/hf/orders/test | POST |
+| add_order_batch | POST /api/v1/hf/orders/multi | POST |
+| cancel_order_by_id | DELETE /api/v1/hf/orders/{orderId} | DELETE |
+| cancel_order_by_client_oid | DELETE /api/v1/hf/orders/client-order/{clientOid} | DELETE |
+| cancel_partial_order | DELETE /api/v1/hf/orders/cancel/{orderId} | DELETE |
+| cancel_all_by_symbol | DELETE /api/v1/hf/orders | DELETE |
+| cancel_all | DELETE /api/v1/hf/orders/cancelAll | DELETE |
+| get_order_by_id | GET /api/v1/hf/orders/{orderId} | GET |
+| get_order_by_client_oid | GET /api/v1/hf/orders/client-order/{clientOid} | GET |
+| get_fills | GET /api/v1/hf/fills | GET |
+| get_symbols_with_open_orders | GET /api/v1/hf/orders/active/symbols | GET |
+| get_open_orders | GET /api/v1/hf/orders/active | GET |
+| get_closed_orders | GET /api/v1/hf/orders/done | GET |
+| add_order_sync | POST /api/v1/hf/orders/sync | POST |
+| add_order_batch_sync | POST /api/v1/hf/orders/multi/sync | POST |
+| cancel_order_by_id_sync | DELETE /api/v1/hf/orders/sync/{orderId} | DELETE |
 | cancel_order_by_client_oid_sync | DELETE /api/v1/hf/orders/sync/client-order/{clientOid} | DELETE |
-| modify_order                    | POST /api/v1/hf/orders/alter                           | POST   |
-| set_dcp                         | POST /api/v1/hf/orders/dead-cancel-all                 | POST   |
-| get_dcp                         | GET /api/v1/hf/orders/dead-cancel-all/query            | GET    |
+| modify_order | POST /api/v1/hf/orders/alter | POST |
+| set_dcp | POST /api/v1/hf/orders/dead-cancel-all | POST |
+| get_dcp | GET /api/v1/hf/orders/dead-cancel-all/query | GET |
 
 ## Order Types and Parameters
 
@@ -1075,7 +1075,7 @@ Verified: 2026-02-01
 
 #### Usage
 
-    KucoinTrading$get_order_by_id(orderId, symbol)
+    KucoinTrading$get_order_by_id(orderId, symbol = NULL)
 
 #### Arguments
 
@@ -1085,7 +1085,8 @@ Verified: 2026-02-01
 
 - `symbol`:
 
-  Character; trading pair (e.g., `"BTC-USDT"`).
+  Character (optional); trading pair (e.g., `"BTC-USDT"`). Defaults to
+  `NULL`.
 
 #### Returns
 

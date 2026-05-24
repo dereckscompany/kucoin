@@ -9,11 +9,11 @@ and losses — on perpetual contracts like XBTUSDTM (BTC) and ETHUSDTM
 
 The package provides three classes for futures operations:
 
-| Class                     | Purpose                                                    |
-|---------------------------|------------------------------------------------------------|
+| Class | Purpose |
+|----|----|
 | `KucoinFuturesMarketData` | Contract specs, tickers, orderbooks, klines, funding rates |
-| `KucoinFuturesTrading`    | Place, cancel, and query futures orders                    |
-| `KucoinFuturesAccount`    | Positions, margin, leverage, risk limits                   |
+| `KucoinFuturesTrading` | Place, cancel, and query futures orders |
+| `KucoinFuturesAccount` | Positions, margin, leverage, risk limits |
 
 All futures classes use a separate base URL
 (`https://api-futures.kucoin.com`) but share the same API key
@@ -22,6 +22,7 @@ credentials as spot trading.
 ## Setup
 
 ``` r
+
 box::use(
   kucoin[
     KucoinFuturesMarketData, KucoinFuturesTrading, KucoinFuturesAccount,
@@ -50,6 +51,7 @@ Query the specification of a futures contract — lot sizes, tick sizes,
 leverage limits, and fee rates:
 
 ``` r
+
 contract <- market$get_contract(symbol = "XBTUSDTM")
 contract[, .(symbol, max_leverage, tick_size, maker_fee_rate, taker_fee_rate)]
 ```
@@ -61,6 +63,7 @@ contract[, .(symbol, max_leverage, tick_size, maker_fee_rate, taker_fee_rate)]
 ### All Active Contracts
 
 ``` r
+
 contracts <- market$get_all_contracts()
 contracts[, .(symbol, status)]
 ```
@@ -75,6 +78,7 @@ contracts[, .(symbol, status)]
 Real-time price and best bid/ask for a single contract:
 
 ``` r
+
 ticker <- market$get_ticker(symbol = "XBTUSDTM")
 ticker[, .(symbol, price, best_bid_price, best_ask_price, ts)]
 ```
@@ -86,6 +90,7 @@ ticker[, .(symbol, price, best_bid_price, best_ask_price, ts)]
 ### All Tickers
 
 ``` r
+
 tickers <- market$get_all_tickers()
 tickers[, .(symbol, price, ts)]
 ```
@@ -100,20 +105,22 @@ tickers[, .(symbol, price, ts)]
 The partial orderbook returns the top 20 or 100 price levels:
 
 ``` r
+
 ob <- market$get_part_orderbook(symbol = "XBTUSDTM", size = 20)
 ob
 ```
 
-    #>                     ts sequence   side   price  size   symbol
-    #>                 <POSc>   <char> <char>   <num> <num>   <char>
-    #> 1: 2024-10-17 10:04:19      100    bid 98249.9    50 XBTUSDTM
-    #> 2: 2024-10-17 10:04:19      100    bid 98249.0   100 XBTUSDTM
-    #> 3: 2024-10-17 10:04:19      100    ask 98250.1    30 XBTUSDTM
-    #> 4: 2024-10-17 10:04:19      100    ask 98251.0    75 XBTUSDTM
+    #>                     ts sequence   side level   price  size   symbol
+    #>                 <POSc>   <char> <char> <int>   <num> <num>   <char>
+    #> 1: 2024-10-17 10:04:19      100    bid     1 98249.9    50 XBTUSDTM
+    #> 2: 2024-10-17 10:04:19      100    bid     2 98249.0   100 XBTUSDTM
+    #> 3: 2024-10-17 10:04:19      100    ask     1 98250.1    30 XBTUSDTM
+    #> 4: 2024-10-17 10:04:19      100    ask     2 98251.0    75 XBTUSDTM
 
 ### Trade History
 
 ``` r
+
 trades <- market$get_trade_history(symbol = "XBTUSDTM")
 trades[, .(side, price, size, ts)]
 ```
@@ -128,6 +135,7 @@ trades[, .(side, price, size, ts)]
 Retrieve historical OHLCV data. Granularity is in minutes:
 
 ``` r
+
 klines <- market$get_klines(symbol = "XBTUSDTM", granularity = 60)
 klines
 ```
@@ -143,6 +151,7 @@ klines
 The mark price is used for liquidation calculations and PNL:
 
 ``` r
+
 mark <- market$get_mark_price(symbol = "XBTUSDTM")
 mark
 ```
@@ -157,6 +166,7 @@ Perpetual futures settle funding every 8 hours. Positive rates mean
 longs pay shorts; negative means shorts pay longs:
 
 ``` r
+
 rate <- market$get_funding_rate(symbol = "XBTUSDTM")
 rate
 ```
@@ -171,6 +181,7 @@ rate
 ### Server Time and Status
 
 ``` r
+
 market$get_server_time()
 market$get_service_status()
 ```
@@ -195,6 +206,7 @@ Use `add_order_test()` to validate parameters without placing a real
 order:
 
 ``` r
+
 result <- trading$add_order_test(
   clientOid = "my-test-001",
   symbol = "XBTUSDTM",
@@ -214,6 +226,7 @@ result
 ### Place a Real Order
 
 ``` r
+
 # Market order — no price needed
 order <- trading$add_order(
   clientOid = "my-market-001",
@@ -240,6 +253,7 @@ order <- trading$add_order(
 ### Cancel Orders
 
 ``` r
+
 # Cancel by system order ID
 trading$cancel_order_by_id(orderId = "order-id-here")
 
@@ -256,6 +270,7 @@ trading$cancel_all_stop_orders(symbol = "XBTUSDTM")
 ### Query Orders
 
 ``` r
+
 # Get a specific order
 order <- trading$get_order_by_id(orderId = "order-id")
 
@@ -269,6 +284,7 @@ closed <- trading$get_recent_closed_orders(symbol = "XBTUSDTM")
 ### Fills (Trade History)
 
 ``` r
+
 # All fills
 fills <- trading$get_fills(query = list(symbol = "XBTUSDTM"))
 
@@ -282,6 +298,7 @@ A dead-man’s switch that auto-cancels orders if your bot stops sending
 heartbeats:
 
 ``` r
+
 # Set DCP with 5-second timeout
 trading$set_dcp(timeout = 5)
 
@@ -303,6 +320,7 @@ trading$get_dcp()
 ### Account Overview
 
 ``` r
+
 overview <- account$get_account_overview(currency = "USDT")
 overview[, .(account_equity, available_balance, unrealised_pnl, currency)]
 ```
@@ -314,6 +332,7 @@ overview[, .(account_equity, available_balance, unrealised_pnl, currency)]
 ### Positions
 
 ``` r
+
 # All open positions
 positions <- account$get_positions()
 positions[, .(symbol, current_qty, avg_entry_price, unrealised_pnl, margin_mode)]
@@ -326,15 +345,24 @@ positions[, .(symbol, current_qty, avg_entry_price, unrealised_pnl, margin_mode)
 ### Position History
 
 ``` r
+
 history <- account$get_positions_history()
 history
 ```
+
+    #>      symbol settle_currency realised_gross_pnl realised_pnl           open_time
+    #>      <char>          <char>             <char>       <char>              <POSc>
+    #> 1: XBTUSDTM            USDT              10.50        10.25 2024-10-16 17:33:20
+    #>             close_time leverage   type
+    #>                 <POSc>    <int> <char>
+    #> 1: 2024-10-17 10:04:19        5  Close
 
 ### Margin Mode
 
 Switch between isolated and cross margin:
 
 ``` r
+
 # Check current mode
 account$get_margin_mode(symbol = "XBTUSDTM")
 ```
@@ -344,6 +372,7 @@ account$get_margin_mode(symbol = "XBTUSDTM")
     #> 1: XBTUSDTM    ISOLATED
 
 ``` r
+
 # Switch to cross margin
 account$set_margin_mode(symbol = "XBTUSDTM", marginMode = "CROSS")
 ```
@@ -351,6 +380,7 @@ account$set_margin_mode(symbol = "XBTUSDTM", marginMode = "CROSS")
 ### Leverage
 
 ``` r
+
 account$get_cross_margin_leverage(symbol = "XBTUSDTM")
 ```
 
@@ -359,6 +389,7 @@ account$get_cross_margin_leverage(symbol = "XBTUSDTM")
     #> 1: XBTUSDTM        5
 
 ``` r
+
 account$set_cross_margin_leverage(symbol = "XBTUSDTM", leverage = 10)
 ```
 
@@ -368,6 +399,7 @@ Each contract has tiered risk limits that reduce maximum leverage as
 position size increases:
 
 ``` r
+
 limits <- account$get_risk_limit(symbol = "XBTUSDTM")
 limits[, .(level, max_leverage, max_risk_limit, initial_margin)]
 ```
@@ -382,9 +414,17 @@ limits[, .(level, max_leverage, max_risk_limit, initial_margin)]
 Track funding fees you’ve paid or received:
 
 ``` r
+
 funding <- account$get_funding_history(symbol = "XBTUSDTM")
 funding
 ```
+
+    #>       id   symbol          time_point funding_rate mark_price position_qty
+    #>    <int>   <char>              <POSc>        <num>      <int>        <int>
+    #> 1:     1 XBTUSDTM 2024-10-17 08:00:00        1e-04      98250            1
+    #>    position_cost   funding settle_currency
+    #>           <char>    <char>          <char>
+    #> 1:         98.25 -0.009825            USDT
 
 ------------------------------------------------------------------------
 

@@ -248,7 +248,8 @@ Verified: 2026-03-10
 #### Returns
 
 A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+`async = TRUE`) with the contract specification flattened to one row per
+symbol. Key columns:
 
 - `symbol` (character): Contract symbol.
 
@@ -282,9 +283,28 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
 - `mark_price` (numeric): Current mark price.
 
+- `index_price` (numeric): Underlying index price.
+
 - `last_trade_price` (numeric): Last traded price.
 
 - `funding_fee_rate` (numeric): Current funding fee rate.
+
+- `predicted_funding_fee_rate` (numeric): Predicted next funding fee
+  rate.
+
+- `open_interest` (character): Current open interest.
+
+- `turnover_of24h` (numeric): 24h turnover in settlement currency.
+
+- `volume_of24h` (numeric): 24h trading volume.
+
+- `low_price` (numeric): 24h low price.
+
+- `high_price` (numeric): 24h high price.
+
+- `price_chg_pct` (numeric): 24h price change percentage.
+
+- `price_chg` (numeric): 24h price change.
 
 #### Examples
 
@@ -391,8 +411,9 @@ Verified: 2026-03-10
 #### Returns
 
 A `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per contract; same columns as
-`get_contract()`.
+`async = TRUE`) with one row per active contract; columns match
+`get_contract()`. Returns an empty `data.table` if no active contracts
+are returned.
 
 #### Examples
 
@@ -485,6 +506,8 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 - `side` (character): Side of the last trade (`"buy"` or `"sell"`).
 
 - `size` (integer): Size of the last trade.
+
+- `trade_id` (character): Identifier of the last trade.
 
 - `price` (character): Last trade price.
 
@@ -587,8 +610,8 @@ Verified: 2026-03-10
 #### Returns
 
 A `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per contract; same columns as
-`get_ticker()`.
+`async = TRUE`) with one row per contract; columns match `get_ticker()`.
+Returns an empty `data.table` if no tickers are returned.
 
 #### Examples
 
@@ -691,6 +714,9 @@ A `data.table` (or `promise<data.table>` if constructed with
 
 - `side` (character): `"bid"` or `"ask"`.
 
+- `level` (integer): 1-indexed depth from top-of-book within the side
+  (`level == 1` is best bid / best ask).
+
 - `price` (numeric): Price level.
 
 - `size` (numeric): Size at this price level.
@@ -700,7 +726,7 @@ A `data.table` (or `promise<data.table>` if constructed with
     \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
     ob <- futures_market$get_part_orderbook("XBTUSDTM", size = 20)
-    print(ob[side == "bid"][1:5])
+    print(ob[side == "bid"][order(level)][1:5])
     }
 
 ------------------------------------------------------------------------
@@ -794,6 +820,9 @@ A `data.table` (or `promise<data.table>` if constructed with
 - `sequence` (character): Sequence number for change detection.
 
 - `side` (character): `"bid"` or `"ask"`.
+
+- `level` (integer): 1-indexed depth from top-of-book within the side
+  (`level == 1` is best bid / best ask).
 
 - `price` (numeric): Price level.
 
@@ -890,7 +919,8 @@ Verified: 2026-03-10
 #### Returns
 
 A `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+`async = TRUE`) with one row per trade. Returns an empty `data.table`
+when KuCoin reports no recent trades. Columns:
 
 - `sequence` (integer): Trade sequence number.
 
@@ -1346,7 +1376,8 @@ Verified: 2026-03-10
 #### Returns
 
 A `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+`async = TRUE`) with one row per funding settlement. Returns an empty
+`data.table` when no records cover the time range. Columns:
 
 - `symbol` (character): Contract symbol.
 
@@ -1593,7 +1624,7 @@ print(all_tickers[, .(symbol, price, best_bid_price, best_ask_price)])
 if (FALSE) { # \dontrun{
 futures_market <- KucoinFuturesMarketData$new()
 ob <- futures_market$get_part_orderbook("XBTUSDTM", size = 20)
-print(ob[side == "bid"][1:5])
+print(ob[side == "bid"][order(level)][1:5])
 } # }
 
 ## ------------------------------------------------

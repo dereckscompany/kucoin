@@ -5,6 +5,7 @@ This vignette demonstrates how to use `kucoin` in **synchronous** mode.
 ## Setup
 
 ``` r
+
 box::use(
   kucoin[
     KucoinMarketData, KucoinTrading, KucoinAccount,
@@ -29,6 +30,7 @@ The `KucoinMarketData` class covers all public (no auth) market
 endpoints.
 
 ``` r
+
 market <- KucoinMarketData$new()
 ```
 
@@ -39,6 +41,7 @@ market <- KucoinMarketData$new()
 ### Ticker
 
 ``` r
+
 ticker <- market$get_ticker(symbol = "BTC-USDT")
 ticker
 ```
@@ -53,6 +56,7 @@ ticker
 ### 24hr Statistics
 
 ``` r
+
 stats <- market$get_24hr_stats(symbol = "BTC-USDT")
 stats
 ```
@@ -70,6 +74,7 @@ stats
 ### All Tickers
 
 ``` r
+
 tickers <- market$get_all_tickers()
 tickers
 ```
@@ -90,6 +95,7 @@ tickers
 ### Trade History
 
 ``` r
+
 trades <- market$get_trade_history(symbol = "BTC-USDT")
 trades
 ```
@@ -103,22 +109,24 @@ trades
 ### Partial Orderbook
 
 ``` r
+
 book <- market$get_part_orderbook(symbol = "BTC-USDT", size = 20)
 book
 ```
 
-    #>                   time      sequence   side   price      size
-    #>                 <POSc>        <char> <char>   <num>     <num>
-    #> 1: 2024-10-17 10:04:19 1550467636704    bid 67232.8 0.4186184
-    #> 2: 2024-10-17 10:04:19 1550467636704    bid 67232.5 1.5000000
-    #> 3: 2024-10-17 10:04:19 1550467636704    bid 67230.0 0.8000000
-    #> 4: 2024-10-17 10:04:19 1550467636704    ask 67232.9 1.2480899
-    #> 5: 2024-10-17 10:04:19 1550467636704    ask 67233.5 0.5000000
-    #> 6: 2024-10-17 10:04:19 1550467636704    ask 67235.0 2.1000000
+    #>                   time      sequence   side level   price      size
+    #>                 <POSc>        <char> <char> <int>   <num>     <num>
+    #> 1: 2024-10-17 10:04:19 1550467636704    bid     1 67232.8 0.4186184
+    #> 2: 2024-10-17 10:04:19 1550467636704    bid     2 67232.5 1.5000000
+    #> 3: 2024-10-17 10:04:19 1550467636704    bid     3 67230.0 0.8000000
+    #> 4: 2024-10-17 10:04:19 1550467636704    ask     1 67232.9 1.2480899
+    #> 5: 2024-10-17 10:04:19 1550467636704    ask     2 67233.5 0.5000000
+    #> 6: 2024-10-17 10:04:19 1550467636704    ask     3 67235.0 2.1000000
 
 ### Klines (Candlestick Data)
 
 ``` r
+
 klines <- market$get_klines(
   symbol = "BTC-USDT",
   timeframe = "15min",
@@ -137,6 +145,7 @@ klines
 ### Currency Info
 
 ``` r
+
 btc <- market$get_currency(currency = "BTC")
 btc
 ```
@@ -165,6 +174,7 @@ btc
 ### Symbol Info
 
 ``` r
+
 sym <- market$get_symbol(symbol = "BTC-USDT")
 sym
 ```
@@ -197,6 +207,7 @@ require authentication.
 Test orders validate parameters without executing:
 
 ``` r
+
 trading <- KucoinTrading$new()
 ```
 
@@ -205,6 +216,7 @@ trading <- KucoinTrading$new()
     #> explicitly.
 
 ``` r
+
 result <- trading$add_order_test(
   type = "limit",
   symbol = "BTC-USDT",
@@ -222,6 +234,7 @@ result
 ### Cancel an Order
 
 ``` r
+
 cancelled <- trading$cancel_order_by_id(orderId = "670fd33bf9406e0007ab3945", symbol = "BTC-USDT")
 cancelled
 ```
@@ -233,6 +246,7 @@ cancelled
 ### Query Open Orders
 
 ``` r
+
 open_orders <- trading$get_open_orders(symbol = "BTC-USDT")
 open_orders
 ```
@@ -258,6 +272,7 @@ open_orders
 ## Stop Orders
 
 ``` r
+
 stop <- KucoinStopOrders$new()
 ```
 
@@ -266,6 +281,7 @@ stop <- KucoinStopOrders$new()
     #> explicitly.
 
 ``` r
+
 result <- stop$add_order(
   type = "limit",
   symbol = "BTC-USDT",
@@ -289,6 +305,7 @@ An OCO (One-Cancels-Other) order pairs a limit order with a stop-limit
 order; when one side fills, the other is cancelled automatically.
 
 ``` r
+
 oco <- KucoinOcoOrders$new()
 ```
 
@@ -297,6 +314,7 @@ oco <- KucoinOcoOrders$new()
     #> explicitly.
 
 ``` r
+
 result <- oco$add_order(
   symbol = "BTC-USDT",
   side = "sell",
@@ -319,6 +337,7 @@ result
 ### Account Summary
 
 ``` r
+
 account <- KucoinAccount$new()
 ```
 
@@ -327,6 +346,7 @@ account <- KucoinAccount$new()
     #> explicitly.
 
 ``` r
+
 summary <- account$get_summary()
 summary
 ```
@@ -347,6 +367,7 @@ summary
 ### Spot Account Balances
 
 ``` r
+
 balances <- account$get_spot_accounts()
 balances
 ```
@@ -363,6 +384,7 @@ balances
 ### Get Deposit Addresses
 
 ``` r
+
 deposit <- KucoinDeposit$new()
 ```
 
@@ -371,6 +393,7 @@ deposit <- KucoinDeposit$new()
     #> explicitly.
 
 ``` r
+
 addrs <- deposit$get_deposit_addresses(currency = "USDT")
 addrs
 ```
@@ -393,6 +416,7 @@ addrs
 Sync variants return fill results in a single round trip:
 
 ``` r
+
 # Place order and get immediate fill result
 order <- trading$add_order_sync(
   type = "limit", symbol = "BTC-USDT", side = "buy",
@@ -415,6 +439,7 @@ A dead-man’s switch that auto-cancels orders if your bot stops
 heartbeating:
 
 ``` r
+
 # Enable: cancel all BTC-USDT orders if no request in 30 seconds
 trading$set_dcp(timeout = 30, symbols = "BTC-USDT")
 
@@ -431,6 +456,7 @@ trading$set_dcp(timeout = -1)
 ## Fee Rates
 
 ``` r
+
 # Base fee rate (account tier default)
 base_fees <- account$get_base_fee_rate()
 cat("Base taker:", base_fees$taker_fee_rate, "\n")
@@ -446,6 +472,7 @@ The HF ledger contains fills, fees, and settlements from HF orders
 (7-day window):
 
 ``` r
+
 hf_ledger <- account$get_hf_ledger(currency = "USDT", bizType = "TRADE_EXCHANGE")
 hf_ledger
 ```
@@ -453,6 +480,7 @@ hf_ledger
 ## Server Time and Service Status
 
 ``` r
+
 # Check clock drift
 st <- market$get_server_time()
 drift_ms <- as.numeric(lubridate::now()) * 1000 - st$server_time
@@ -466,6 +494,7 @@ if (status$status != "open") stop("Exchange not operational: ", status$msg)
 ## Fiat Prices
 
 ``` r
+
 prices <- market$get_fiat_prices(base = "USD", currencies = "BTC,ETH,USDT")
 prices
 ```
@@ -479,6 +508,7 @@ in the **trade** account. Use `KucoinTransfer` to move funds between
 account types.
 
 ``` r
+
 box::use(kucoin[KucoinTransfer])
 
 transfer <- KucoinTransfer$new()
@@ -507,6 +537,7 @@ Use `KucoinWithdrawal` to check withdrawal limits, initiate withdrawals,
 and monitor withdrawal status.
 
 ``` r
+
 box::use(kucoin[KucoinWithdrawal])
 
 withdrawal <- KucoinWithdrawal$new()
@@ -537,6 +568,7 @@ history
 ### List Sub-Accounts
 
 ``` r
+
 sub <- KucoinSubAccount$new()
 ```
 
@@ -545,6 +577,7 @@ sub <- KucoinSubAccount$new()
     #> explicitly.
 
 ``` r
+
 subs <- sub$get_sub_account_list()
 subs
 ```
@@ -568,6 +601,7 @@ requests may fail. You can configure any class to fetch the server time
 before each authenticated request:
 
 ``` r
+
 # Use server time for signing (adds one round trip per request)
 trading <- KucoinTrading$new(time_source = "server")
 

@@ -235,7 +235,15 @@ Verified: 2026-03-10
 
 - `ann_title` (character): Announcement title.
 
-- `ann_type` (list): Category tags as character vector.
+- `ann_type` (character): `;`-separated category tags for the
+  announcement. KuCoin returns `annType` as an array; the parser
+  collapses it to a single character column via the shared
+  `collapse_string_array_fields()` helper (Treatment A — matches the
+  cross-package convention used by alpaca/binance for plain-string
+  arrays). Filter with
+  `grepl("latest-announcements", ann_type, fixed = TRUE)`; recover the
+  vector via `strsplit(ann_type, ";", fixed = TRUE)[[1]]`.
+  `NA_character_` if KuCoin returned no tags.
 
 - `ann_desc` (character): Short description text.
 
@@ -1122,8 +1130,8 @@ required.
 2.  **Request**: GET with size embedded in endpoint path.
 
 3.  **Parsing**: Calls `parse_orderbook()` to convert nested bid/ask
-    arrays into a long-format `data.table` with `side`, `price`, and
-    `size` columns.
+    arrays into a long-format `data.table` with `side`, `level`,
+    `price`, and `size` columns.
 
 #### API Endpoint
 
@@ -1189,6 +1197,9 @@ Verified: 2026-03-10
 
 - `side` (character): `"bid"` or `"ask"`.
 
+- `level` (integer): 1-indexed depth from top-of-book within the side
+  (`level == 1` is best bid / best ask).
+
 - `price` (numeric): Price level.
 
 - `size` (numeric): Size at that price.
@@ -1198,9 +1209,9 @@ Verified: 2026-03-10
     \dontrun{
     market <- KucoinMarketData$new()
     ob <- market$get_part_orderbook("BTC-USDT", size = 20)
-    bids <- ob[side == "bid"]
-    asks <- ob[side == "ask"]
-    print(paste("Best bid:", bids$price[1], "Best ask:", asks$price[1]))
+    best_bid <- ob[side == "bid" & level == 1L]
+    best_ask <- ob[side == "ask" & level == 1L]
+    print(paste("Best bid:", best_bid$price, "Best ask:", best_ask$price))
     }
 
 ------------------------------------------------------------------------
@@ -1282,6 +1293,9 @@ Verified: 2026-03-10
 - `sequence` (character): Order book sequence number.
 
 - `side` (character): `"bid"` or `"ask"`.
+
+- `level` (integer): 1-indexed depth from top-of-book within the side
+  (`level == 1` is best bid / best ask).
 
 - `price` (numeric): Price level.
 
@@ -1558,8 +1572,8 @@ Each candle is an array:
     KucoinMarketData$get_klines(
       symbol,
       timeframe = "15min",
-      from = lubridate::now() - lubridate::dhours(24),
-      to = lubridate::now()
+      from = NULL,
+      to = NULL
     )
 
 #### Arguments
@@ -1577,11 +1591,12 @@ Each candle is an array:
 
 - `from`:
 
-  POSIXct; start time (default 24 hours ago).
+  POSIXct or NULL; start time. When both `from` and `to` are `NULL`, the
+  API returns up to 1500 most recent candles.
 
 - `to`:
 
-  POSIXct; end time (default now).
+  POSIXct or NULL; end time.
 
 #### Returns
 
@@ -1607,7 +1622,7 @@ Each candle is an array:
     \dontrun{
     market <- KucoinMarketData$new()
 
-    # Last 24 hours of 15-minute candles
+    # Most recent candles (up to 1500)
     klines <- market$get_klines("BTC-USDT")
     print(head(klines))
 
@@ -1977,9 +1992,9 @@ print(paste("Buy/Sell ratio:", round(buys / sells, 3)))
 if (FALSE) { # \dontrun{
 market <- KucoinMarketData$new()
 ob <- market$get_part_orderbook("BTC-USDT", size = 20)
-bids <- ob[side == "bid"]
-asks <- ob[side == "ask"]
-print(paste("Best bid:", bids$price[1], "Best ask:", asks$price[1]))
+best_bid <- ob[side == "bid" & level == 1L]
+best_ask <- ob[side == "ask" & level == 1L]
+print(paste("Best bid:", best_bid$price, "Best ask:", best_ask$price))
 } # }
 
 ## ------------------------------------------------
@@ -2024,7 +2039,7 @@ defi_symbols <- market$get_all_symbols(market = "DeFi")
 if (FALSE) { # \dontrun{
 market <- KucoinMarketData$new()
 
-# Last 24 hours of 15-minute candles
+# Most recent candles (up to 1500)
 klines <- market$get_klines("BTC-USDT")
 print(head(klines))
 

@@ -142,7 +142,31 @@ Verified: 2026-03-10
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with lending currency info.
+`async = TRUE`) with **one row per lending currency** and columns:
+
+- `currency` (character): Currency code (e.g. `"USDT"`).
+
+- `purchase_enable` (logical): Whether new purchases are accepted.
+
+- `redeem_enable` (logical): Whether redemptions are accepted.
+
+- `increment` (character): Smallest purchase-size step.
+
+- `min_purchase_size` (character): Minimum purchase amount.
+
+- `max_purchase_size` (character): Maximum purchase amount.
+
+- `interest_increment` (character): Smallest interest-rate step.
+
+- `min_interest_rate` (character): Minimum permitted interest rate.
+
+- `market_interest_rate` (character): Current market rate.
+
+- `max_interest_rate` (character): Maximum permitted interest rate.
+
+- `auto_purchase_enable` (logical): Whether auto-purchase is available.
+
+Empty response yields an empty `data.table`.
 
 #### Examples
 
@@ -207,11 +231,13 @@ Verified: 2026-03-10
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+`async = TRUE`) with **one row per observation** and columns:
 
 - `time` (character): Timestamp string (YYYYMMDDHHmm format).
 
 - `market_interest_rate` (character): Market interest rate at that time.
+
+Empty response yields an empty `data.table`.
 
 #### Examples
 
@@ -467,7 +493,26 @@ Verified: 2026-03-10
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with purchase order records.
+`async = TRUE`) with **one row per purchase order** and columns:
+
+- `currency` (character): Lent currency.
+
+- `purchase_order_no` (character): Purchase order number.
+
+- `purchase_size` (character): Amount lent.
+
+- `match_size` (character): Amount that has been matched.
+
+- `interest_rate` (character): Rate of the lending order.
+
+- `income_size` (character): Accrued income so far.
+
+- `apply_time` (POSIXct): Order creation time (millisecond epoch
+  coerced).
+
+- `status` (character): Order status (e.g. `"DONE"`).
+
+Empty response yields an empty `data.table`.
 
 #### Examples
 
@@ -636,7 +681,24 @@ Verified: 2026-03-10
 #### Returns
 
 `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with redeem order records.
+`async = TRUE`) with **one row per redemption order** and columns:
+
+- `currency` (character): Redeemed currency.
+
+- `purchase_order_no` (character): Source purchase order.
+
+- `redeem_order_no` (character): Redemption order number.
+
+- `redeem_size` (character): Requested redeem amount.
+
+- `receipt_size` (character): Amount actually received.
+
+- `apply_time` (POSIXct): Order creation time (millisecond epoch
+  coerced).
+
+- `status` (character): Order status (e.g. `"DONE"`).
+
+Empty response yields an empty `data.table`.
 
 #### Examples
 
