@@ -526,3 +526,29 @@ test_that("[LIVE] futures get_recent_fills returns data.table (path-refreshed in
   expect_s3_class(dt, "data.table")
   throttle()
 })
+
+# Futures DCP migrated to the unified `/api/ua/v1/dcp/*` endpoint in
+# v4.0.3 — the legacy `/api/v1/orders/dead-cancel-all*` paths returned
+# 404/403 after KuCoin's 2026-05 reorganisation. These tests pin the
+# new endpoint so the next time KuCoin moves DCP, CI catches it.
+
+test_that("[LIVE] futures get_dcp returns data.table via unified endpoint", {
+  dt <- tryCatch(
+    futures_trading$get_dcp(),
+    error = .skip_if_no_futures
+  )
+  expect_s3_class(dt, "data.table")
+  throttle()
+})
+
+test_that("[LIVE] futures set_dcp -1 disables and returns data.table via unified endpoint", {
+  # Use `timeout = -1` (disable) so this test has no real side effects:
+  # it cannot accidentally leave a live dead-man's switch armed on the
+  # account if a later test fails to clear it.
+  dt <- tryCatch(
+    futures_trading$set_dcp(timeout = -1),
+    error = .skip_if_no_futures
+  )
+  expect_s3_class(dt, "data.table")
+  throttle()
+})
