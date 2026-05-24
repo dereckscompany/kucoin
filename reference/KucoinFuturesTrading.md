@@ -61,8 +61,8 @@ Orders](https://www.kucoin.com/docs-new/rest/futures-trading/orders/add-order)
 | get_fills | GET /api/v1/fills | GET |
 | get_recent_fills | GET /api/v1/recentFills | GET |
 | get_open_order_value | GET /api/v1/openOrderStatistics | GET |
-| set_dcp | POST /api/v1/orders/dead-cancel-all | POST |
-| get_dcp | GET /api/v1/orders/dead-cancel-all/query | GET |
+| set_dcp | POST /api/ua/v1/dcp/set (spot host, tradeType=FUTURES) | POST |
+| get_dcp | GET /api/ua/v1/dcp/query (spot host, tradeType=FUTURES) | GET |
 
 ## Super class
 
@@ -2123,13 +2123,19 @@ indefinitely.
 
 #### API Endpoint
 
-`POST https://api-futures.kucoin.com/api/v1/orders/dead-cancel-all`
+`POST https://api.kucoin.com/api/ua/v1/dcp/set`
+
+The legacy futures-specific endpoint
+(`POST /api/v1/orders/dead-cancel-all` on `api-futures.kucoin.com`) was
+retired by KuCoin around 2026-05 and replaced with a unified
+Universal-Trading-Account endpoint on the spot host that accepts a
+`tradeType` parameter. We hardcode `tradeType = "FUTURES"` and override
+the base URL to the spot host so the public method API stays unchanged.
 
 #### Official Documentation
 
-[KuCoin Set DCP (spot equivalent; futures DCP page withdrawn from KuCoin
-docs as of 2026-05; POST endpoint still accepted by the Futures REST
-API)](https://www.kucoin.com/docs-new/rest/spot-trading/orders/set-dcp)
+[KuCoin Set DCP
+(Classic)](https://www.kucoin.com/docs-new/rest/ua/set-dcp-classic)
 
 Verified: 2026-05-23
 
@@ -2148,20 +2154,21 @@ Verified: 2026-05-23
 
 #### curl
 
-    curl --location --request POST 'https://api-futures.kucoin.com/api/v1/orders/dead-cancel-all' \
+    curl --location --request POST 'https://api.kucoin.com/api/ua/v1/dcp/set' \
       --header 'Content-Type: application/json' \
       --header 'KC-API-KEY: your-api-key' \
       --header 'KC-API-SIGN: your-signature' \
       --header 'KC-API-TIMESTAMP: 1729176273859' \
       --header 'KC-API-PASSPHRASE: your-passphrase' \
       --header 'KC-API-KEY-VERSION: 2' \
-      --data-raw '{"timeout": 60, "symbol": "XBTUSDTM"}'
+      --data-raw '{"timeout": 60, "symbol": "XBTUSDTM", "tradeType": "FUTURES"}'
 
 #### JSON Request
 
     {
       "timeout": 60,
-      "symbol": "XBTUSDTM"
+      "symbol": "XBTUSDTM",
+      "tradeType": "FUTURES"
     }
 
 #### JSON Response
@@ -2236,14 +2243,20 @@ verify that DCP is correctly configured.
 
 #### API Endpoint
 
-`GET https://api-futures.kucoin.com/api/v1/orders/dead-cancel-all/query`
+`GET https://api.kucoin.com/api/ua/v1/dcp/query`
+
+The legacy futures-specific endpoint
+(`GET /api/v1/orders/dead-cancel-all/query` on `api-futures.kucoin.com`)
+was retired by KuCoin around 2026-05 (the page was withdrawn and the
+endpoint now returns HTTP 404) and replaced with the unified
+Universal-Trading-Account endpoint that takes a `tradeType` query
+parameter. We hardcode `tradeType = "FUTURES"` and override the base URL
+to the spot host so the public method API stays unchanged.
 
 #### Official Documentation
 
-[KuCoin Get DCP (spot equivalent; futures DCP page withdrawn from KuCoin
-docs as of 2026-05; the Futures REST query endpoint now returns HTTP 404
-— see NEWS for
-context)](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-dcp)
+[KuCoin Get DCP
+(Classic)](https://www.kucoin.com/docs-new/rest/ua/get-dcp-classic)
 
 Verified: 2026-05-23
 
@@ -2258,7 +2271,7 @@ Verified: 2026-05-23
 #### curl
 
     curl --location --request GET \
-      'https://api-futures.kucoin.com/api/v1/orders/dead-cancel-all/query?symbol=XBTUSDTM' \
+      'https://api.kucoin.com/api/ua/v1/dcp/query?tradeType=FUTURES&symbol=XBTUSDTM' \
       --header 'KC-API-KEY: your-api-key' \
       --header 'KC-API-SIGN: your-signature' \
       --header 'KC-API-TIMESTAMP: 1729176273859' \

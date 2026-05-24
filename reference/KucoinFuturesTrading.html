@@ -9,7 +9,7 @@ KucoinFuturesTrading: Futures Order Management"></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,7 @@ KucoinFuturesTrading: Futures Order Management"></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>KucoinFuturesTrading: Futures Order Management</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.0.2/R/KucoinFuturesTrading.R" class="external-link"><code>R/KucoinFuturesTrading.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.0.3/R/KucoinFuturesTrading.R" class="external-link"><code>R/KucoinFuturesTrading.R</code></a></small>
       <div class="d-none name"><code>KucoinFuturesTrading.Rd</code></div>
     </div>
 
@@ -81,7 +81,7 @@ unintended open positions during bot failures.</p>
 
 <div class="section">
 <h3 id="endpoints-covered">Endpoints Covered<a class="anchor" aria-label="anchor" href="#endpoints-covered"></a></h3>
-<table class="table table"><tr><td>Method</td><td>Endpoint</td><td>HTTP</td></tr><tr><td>add_order</td><td>POST /api/v1/orders</td><td>POST</td></tr><tr><td>add_order_test</td><td>POST /api/v1/orders/test</td><td>POST</td></tr><tr><td>add_order_batch</td><td>POST /api/v1/orders/multi</td><td>POST</td></tr><tr><td>cancel_order_by_id</td><td>DELETE /api/v1/orders/{orderId}</td><td>DELETE</td></tr><tr><td>cancel_order_by_client_oid</td><td>DELETE /api/v1/orders/client-order/{clientOid}</td><td>DELETE</td></tr><tr><td>cancel_all</td><td>DELETE /api/v1/orders</td><td>DELETE</td></tr><tr><td>cancel_all_stop_orders</td><td>DELETE /api/v1/stopOrders</td><td>DELETE</td></tr><tr><td>get_order_by_id</td><td>GET /api/v1/orders/{orderId}</td><td>GET</td></tr><tr><td>get_order_by_client_oid</td><td>GET /api/v1/orders/byClientOid</td><td>GET</td></tr><tr><td>get_order_list</td><td>GET /api/v1/orders</td><td>GET</td></tr><tr><td>get_recent_closed_orders</td><td>GET /api/v1/recentDoneOrders</td><td>GET</td></tr><tr><td>get_stop_orders</td><td>GET /api/v1/stopOrders</td><td>GET</td></tr><tr><td>get_fills</td><td>GET /api/v1/fills</td><td>GET</td></tr><tr><td>get_recent_fills</td><td>GET /api/v1/recentFills</td><td>GET</td></tr><tr><td>get_open_order_value</td><td>GET /api/v1/openOrderStatistics</td><td>GET</td></tr><tr><td>set_dcp</td><td>POST /api/v1/orders/dead-cancel-all</td><td>POST</td></tr><tr><td>get_dcp</td><td>GET /api/v1/orders/dead-cancel-all/query</td><td>GET</td></tr></table></div>
+<table class="table table"><tr><td>Method</td><td>Endpoint</td><td>HTTP</td></tr><tr><td>add_order</td><td>POST /api/v1/orders</td><td>POST</td></tr><tr><td>add_order_test</td><td>POST /api/v1/orders/test</td><td>POST</td></tr><tr><td>add_order_batch</td><td>POST /api/v1/orders/multi</td><td>POST</td></tr><tr><td>cancel_order_by_id</td><td>DELETE /api/v1/orders/{orderId}</td><td>DELETE</td></tr><tr><td>cancel_order_by_client_oid</td><td>DELETE /api/v1/orders/client-order/{clientOid}</td><td>DELETE</td></tr><tr><td>cancel_all</td><td>DELETE /api/v1/orders</td><td>DELETE</td></tr><tr><td>cancel_all_stop_orders</td><td>DELETE /api/v1/stopOrders</td><td>DELETE</td></tr><tr><td>get_order_by_id</td><td>GET /api/v1/orders/{orderId}</td><td>GET</td></tr><tr><td>get_order_by_client_oid</td><td>GET /api/v1/orders/byClientOid</td><td>GET</td></tr><tr><td>get_order_list</td><td>GET /api/v1/orders</td><td>GET</td></tr><tr><td>get_recent_closed_orders</td><td>GET /api/v1/recentDoneOrders</td><td>GET</td></tr><tr><td>get_stop_orders</td><td>GET /api/v1/stopOrders</td><td>GET</td></tr><tr><td>get_fills</td><td>GET /api/v1/fills</td><td>GET</td></tr><tr><td>get_recent_fills</td><td>GET /api/v1/recentFills</td><td>GET</td></tr><tr><td>get_open_order_value</td><td>GET /api/v1/openOrderStatistics</td><td>GET</td></tr><tr><td>set_dcp</td><td>POST /api/ua/v1/dcp/set (spot host, tradeType=FUTURES)</td><td>POST</td></tr><tr><td>get_dcp</td><td>GET /api/ua/v1/dcp/query (spot host, tradeType=FUTURES)</td><td>GET</td></tr></table></div>
 
     </div>
     <div class="section level2">
@@ -2133,14 +2133,21 @@ connectivity, preventing orders from remaining open indefinitely.</p><div class=
 <h4 id="api-endpoint-15">API Endpoint<a class="anchor" aria-label="anchor" href="#api-endpoint-15"></a></h4>
 
 
-<p><code>POST https://api-futures.kucoin.com/api/v1/orders/dead-cancel-all</code></p>
+<p><code>POST https://api.kucoin.com/api/ua/v1/dcp/set</code></p>
+<p>The legacy futures-specific endpoint
+(<code>POST /api/v1/orders/dead-cancel-all</code> on <code>api-futures.kucoin.com</code>)
+was retired by KuCoin around 2026-05 and replaced with a unified
+Universal-Trading-Account endpoint on the spot host that accepts a
+<code>tradeType</code> parameter. We hardcode <code>tradeType = "FUTURES"</code> and
+override the base URL to the spot host so the public method API
+stays unchanged.</p>
 </div>
 
 <div class="section">
 <h4 id="official-documentation-16">Official Documentation<a class="anchor" aria-label="anchor" href="#official-documentation-16"></a></h4>
 
 
-<p><a href="https://www.kucoin.com/docs-new/rest/spot-trading/orders/set-dcp" class="external-link">KuCoin Set DCP (spot equivalent; futures DCP page withdrawn from KuCoin docs as of 2026-05; POST endpoint still accepted by the Futures REST API)</a></p>
+<p><a href="https://www.kucoin.com/docs-new/rest/ua/set-dcp-classic" class="external-link">KuCoin Set DCP (Classic)</a></p>
 <p>Verified: 2026-05-23</p>
 </div>
 
@@ -2157,14 +2164,14 @@ connectivity, preventing orders from remaining open indefinitely.</p><div class=
 <h4 id="curl-15">curl<a class="anchor" aria-label="anchor" href="#curl-15"></a></h4>
 
 
-<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>curl <span class="sc">--</span>location <span class="sc">--</span>request POST <span class="st">'https://api-futures.kucoin.com/api/v1/orders/dead-cancel-all'</span> \</span>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>curl <span class="sc">--</span>location <span class="sc">--</span>request POST <span class="st">'https://api.kucoin.com/api/ua/v1/dcp/set'</span> \</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'Content-Type: application/json'</span> \</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-KEY: your-api-key'</span> \</span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-SIGN: your-signature'</span> \</span>
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-TIMESTAMP: 1729176273859'</span> \</span>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-PASSPHRASE: your-passphrase'</span> \</span>
 <span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-KEY-VERSION: 2'</span> \</span>
-<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  <span class="sc">--</span>data<span class="sc">-</span>raw <span class="st">'{"timeout": 60, "symbol": "XBTUSDTM"}'</span></span></code></pre><p></p></div>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  <span class="sc">--</span>data<span class="sc">-</span>raw <span class="st">'{"timeout": 60, "symbol": "XBTUSDTM", "tradeType": "FUTURES"}'</span></span></code></pre><p></p></div>
 </div>
 
 <div class="section">
@@ -2173,8 +2180,9 @@ connectivity, preventing orders from remaining open indefinitely.</p><div class=
 
 <p></p><div class="sourceCode json"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="dt">"timeout"</span><span class="fu">:</span> <span class="dv">60</span><span class="fu">,</span></span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="dt">"symbol"</span><span class="fu">:</span> <span class="st">"XBTUSDTM"</span></span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">}</span></span></code></pre><p></p></div>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="dt">"symbol"</span><span class="fu">:</span> <span class="st">"XBTUSDTM"</span><span class="fu">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="dt">"tradeType"</span><span class="fu">:</span> <span class="st">"FUTURES"</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">}</span></span></code></pre><p></p></div>
 </div>
 
 <div class="section">
@@ -2248,14 +2256,22 @@ to verify that DCP is correctly configured.</p><div class="section">
 <h4 id="api-endpoint-16">API Endpoint<a class="anchor" aria-label="anchor" href="#api-endpoint-16"></a></h4>
 
 
-<p><code>GET https://api-futures.kucoin.com/api/v1/orders/dead-cancel-all/query</code></p>
+<p><code>GET https://api.kucoin.com/api/ua/v1/dcp/query</code></p>
+<p>The legacy futures-specific endpoint
+(<code>GET /api/v1/orders/dead-cancel-all/query</code> on
+<code>api-futures.kucoin.com</code>) was retired by KuCoin around 2026-05
+(the page was withdrawn and the endpoint now returns HTTP 404) and
+replaced with the unified Universal-Trading-Account endpoint that
+takes a <code>tradeType</code> query parameter. We hardcode
+<code>tradeType = "FUTURES"</code> and override the base URL to the spot host
+so the public method API stays unchanged.</p>
 </div>
 
 <div class="section">
 <h4 id="official-documentation-17">Official Documentation<a class="anchor" aria-label="anchor" href="#official-documentation-17"></a></h4>
 
 
-<p><a href="https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-dcp" class="external-link">KuCoin Get DCP (spot equivalent; futures DCP page withdrawn from KuCoin docs as of 2026-05; the Futures REST query endpoint now returns HTTP 404 — see NEWS for context)</a></p>
+<p><a href="https://www.kucoin.com/docs-new/rest/ua/get-dcp-classic" class="external-link">KuCoin Get DCP (Classic)</a></p>
 <p>Verified: 2026-05-23</p>
 </div>
 
@@ -2271,7 +2287,7 @@ to verify that DCP is correctly configured.</p><div class="section">
 
 
 <p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>curl <span class="sc">--</span>location <span class="sc">--</span>request GET \</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="st">'https://api-futures.kucoin.com/api/v1/orders/dead-cancel-all/query?symbol=XBTUSDTM'</span> \</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="st">'https://api.kucoin.com/api/ua/v1/dcp/query?tradeType=FUTURES&amp;symbol=XBTUSDTM'</span> \</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-KEY: your-api-key'</span> \</span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-SIGN: your-signature'</span> \</span>
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-TIMESTAMP: 1729176273859'</span> \</span>

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,9 +36,29 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.0.2/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.0.3/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="4.0.3" id="kucoin-403">kucoin 4.0.3<a class="anchor" aria-label="anchor" href="#kucoin-403"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-4-0-3">BUG FIXES<a class="anchor" aria-label="anchor" href="#bug-fixes-4-0-3"></a></h3>
+<ul><li>
+<strong><code>KucoinFuturesTrading$set_dcp()</code> / <code>$get_dcp()</code> migrated to KuCoin’s new unified DCP endpoint.</strong> The legacy futures-specific paths (<code>POST /api/v1/orders/dead-cancel-all</code> and <code>GET /api/v1/orders/dead-cancel-all/query</code> on <code>api-futures.kucoin.com</code>) were retired by KuCoin around 2026-05 — the docs page was withdrawn, the GET path returned HTTP 404 and the POST returned 403 even on accounts with the relevant permission. KuCoin replaced both with a unified Universal-Trading-Account endpoint on the spot host: <code>POST /api/ua/v1/dcp/set</code> and <code>GET /api/ua/v1/dcp/query</code>, both taking a <code>tradeType</code> parameter that accepts <code>SPOT</code>, <code>MARGIN</code>, or <code>FUTURES</code>. We now hardcode <code>tradeType = "FUTURES"</code> and override the base URL to the spot host inside both methods, so the public method API stays unchanged — existing <code>futures_trading$set_dcp(timeout, symbol)</code> and <code>$get_dcp(symbol)</code> calls keep working. Spot DCP (<code>KucoinTrading$set_dcp()</code> / <code>$get_dcp()</code>) is untouched — it still works against the <code>/api/v1/hf/orders/dead-cancel-all*</code> paths on the spot host.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="refactor-4-0-3">REFACTOR<a class="anchor" aria-label="anchor" href="#refactor-4-0-3"></a></h3>
+<ul><li>
+<strong><code>KucoinBase$.request()</code> (private) gains an optional <code>base_url</code> parameter</strong> that overrides the instance’s configured host for a single call. Used so the migrated futures DCP methods can target the spot host while every other <code>KucoinFuturesTrading</code> method keeps using the futures host. No behaviour change for any existing call site — <code>base_url = NULL</code> (the default) preserves the previous behaviour exactly.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="tests-4-0-3">TESTS<a class="anchor" aria-label="anchor" href="#tests-4-0-3"></a></h3>
+<ul><li>
+<strong>Live integration coverage for the Futures REST surface.</strong> New <code>[LIVE]</code> test blocks in <code>tests/testthat/test-live-integration-public.R</code> (7 tests against <code>KucoinFuturesMarketData</code> public endpoints) and <code>test-live-integration-private.R</code> (13 tests covering authenticated <code>KucoinFuturesAccount</code>, <code>KucoinFuturesMarketData$get_full_orderbook</code>, read-only <code>KucoinFuturesTrading</code> queries, and the migrated DCP methods). Pins the 5 path-corrected GET endpoints from v4.0.2 (<code>get_margin_mode</code>, <code>get_cross_margin_leverage</code>, <code>get_max_open_size</code>, <code>get_max_withdraw_margin</code>, <code>get_full_orderbook</code>) plus the migrated DCP endpoints so the next time KuCoin moves a futures endpoint, CI surfaces the 404 instead of waiting for a user report. The DCP <code>set_dcp</code> test deliberately uses <code>timeout = -1</code> (disable) so it has no real side effects.</li>
+<li>Write methods (<code>set_margin_mode</code>, <code>set_cross_margin_leverage</code>, <code>add_isolated_margin</code>, <code>remove_isolated_margin</code>) are intentionally not exercised — they require real positions / funds.</li>
+<li>Authenticated futures tests wrap each call in <code><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch()</a></code> and skip with a clear reason if KuCoin returns a no-futures-account / no-permission error, so the suite stays usable for contributors without a funded futures sub-account. Endpoints that genuinely 404 still fail loudly (which is the regression we want to catch).</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="4.0.2" id="kucoin-402">kucoin 4.0.2<a class="anchor" aria-label="anchor" href="#kucoin-402"></a></h2>
 <div class="section level3">
