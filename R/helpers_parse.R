@@ -93,7 +93,10 @@ ms_to_datetime <- function(ms) {
   # column with a POSIXct one. Always return a vector matching input
   # length so columns documented as POSIXct actually land as POSIXct,
   # even when every upstream value is missing. Matches binance/alpaca.
-  return(lubridate::as_datetime(as.numeric(ms) / 1000))
+  # `suppressWarnings()` silences the "NAs introduced by coercion"
+  # message that `as.numeric()` emits when the input is character `NA`
+  # — that NA → NA path is the documented contract, not a problem.
+  return(lubridate::as_datetime(suppressWarnings(as.numeric(ms)) / 1000))
 }
 
 #' Convert a KuCoin Nanosecond Timestamp to POSIXct
@@ -108,8 +111,9 @@ ns_to_datetime <- function(ns) {
   if (is.null(ns)) {
     return(lubridate::NA_POSIXct_)
   }
-  # Same all-NA shape contract as `ms_to_datetime`.
-  return(lubridate::as_datetime(as.numeric(ns) / 1e9))
+  # Same all-NA shape contract as `ms_to_datetime`, and the same
+  # `suppressWarnings()` rationale for character `NA` input.
+  return(lubridate::as_datetime(suppressWarnings(as.numeric(ns)) / 1e9))
 }
 
 #' Collapse a Plain-String Array Field on a Single Record
@@ -200,7 +204,12 @@ coerce_cols <- function(dt, cols, fn) {
   if (nrow(dt) == 0L) {
     return(invisible(dt))
   }
-  for (col in cols) {
+  # `unique()` prevents double-coercion when a caller passes the same
+  # column name twice (e.g. `coerce_cols(dt, c("time", "time"),
+  # ms_to_datetime)` would otherwise re-feed the already-converted
+  # POSIXct vector back through `as.numeric / 1000 / as_datetime`, which
+  # produces wildly wrong values silently).
+  for (col in unique(cols)) {
     if (col %in% names(dt)) {
       data.table::set(dt, j = col, value = fn(dt[[col]]))
     }

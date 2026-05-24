@@ -78,6 +78,36 @@ test_that("ns_to_datetime returns NA for NULL/NA input", {
   expect_true(is.na(ns_to_datetime(NA)))
 })
 
+test_that("ms_to_datetime does not warn on all-NA character input", {
+  # Regression: `as.numeric(NA_character_)` emits "NAs introduced by
+  # coercion" — but that NA → NA path is the documented contract.
+  expect_warning(ms_to_datetime(c(NA_character_, NA_character_)), NA)
+  out <- ms_to_datetime(c(NA_character_, NA_character_))
+  expect_s3_class(out, "POSIXct")
+  expect_length(out, 2L)
+  expect_true(all(is.na(out)))
+})
+
+test_that("ns_to_datetime does not warn on all-NA character input", {
+  expect_warning(ns_to_datetime(c(NA_character_, NA_character_)), NA)
+  out <- ns_to_datetime(c(NA_character_, NA_character_))
+  expect_s3_class(out, "POSIXct")
+  expect_length(out, 2L)
+  expect_true(all(is.na(out)))
+})
+
+test_that("coerce_cols deduplicates `cols` so each column is coerced once", {
+  # Regression: passing the same column name twice used to feed the
+  # already-converted value back through `fn`, producing garbage. e.g.
+  # `ms_to_datetime` on an already-POSIXct value reinterprets the
+  # epoch-seconds-as-numeric as epoch-milliseconds and returns a year
+  # in the 56,000s. With `unique(cols)` the second pass is skipped.
+  dt <- data.table::data.table(time = 1729159459033)
+  coerce_cols(dt, c("time", "time"), ms_to_datetime)
+  expect_s3_class(dt$time, "POSIXct")
+  expect_equal(as.numeric(dt$time), 1729159459.033, tolerance = 0.001)
+})
+
 test_that("parse_orderbook creates correct data.table from bid/ask arrays", {
   data <- mock_orderbook_data()
   dt <- parse_orderbook(data)
