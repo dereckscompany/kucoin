@@ -129,7 +129,7 @@ KucoinStopOrders <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Add Stop Order](https://www.kucoin.com/docs-new/rest/spot-trading/orders/add-stop-order)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Stop-Loss**: Place a sell stop order below your entry price to automatically exit a losing position.
@@ -338,7 +338,7 @@ KucoinStopOrders <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Cancel Stop Order By OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-stop-order-by-orderld)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Dynamic Stop Adjustment**: Cancel and replace stop orders as price moves in your favour.
@@ -423,7 +423,7 @@ KucoinStopOrders <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Cancel Stop Order By ClientOid](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-stop-order-by-clientoid)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Client-Side Tracking**: Cancel orders using your own identifiers without storing KuCoin order IDs.
@@ -500,7 +500,7 @@ KucoinStopOrders <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Batch Cancel Stop Orders](https://www.kucoin.com/docs-new/rest/spot-trading/orders/batch-cancel-stop-orders)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Emergency Kill Switch**: Call with no filters to cancel all stop orders during extreme volatility.
@@ -597,7 +597,7 @@ KucoinStopOrders <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Stop Order By OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-stop-order-by-orderld)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Order Verification**: Confirm a stop order was placed with the correct parameters after submission.
@@ -721,7 +721,7 @@ KucoinStopOrders <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Stop Order By ClientOid](https://www.kucoin.com/docs-new/rest/spot-trading/get-stop-order-by-clientoid)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Client-Side Lookup**: Query stop orders using your own identifiers without persisting KuCoin IDs.
@@ -859,7 +859,7 @@ KucoinStopOrders <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Stop Order List](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-stop-orders-list)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Portfolio Monitoring**: Periodically poll active stop orders to maintain an accurate view of pending triggers.

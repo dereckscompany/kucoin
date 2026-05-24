@@ -179,7 +179,7 @@ minimum/maximum purchase sizes and current market interest rates.
 
 \href{https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-loan-market}{KuCoin Get Currency Information}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
@@ -279,7 +279,7 @@ past 7 days.
 
 \href{https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-loan-market-interest-rate}{KuCoin Get Market Interest Rate}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
@@ -358,7 +358,7 @@ given interest rate to earn passive income.
 
 \href{https://www.kucoin.com/docs-new/rest/margin-trading/credit/purchase}{KuCoin Purchase}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
@@ -445,7 +445,7 @@ take effect at the start of the next hour.
 
 \href{https://www.kucoin.com/docs-new/rest/margin-trading/credit/modify-purchase}{KuCoin Modify Purchase}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
@@ -535,7 +535,7 @@ Retrieves lending purchase order history with optional filters.
 
 \href{https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-purchase-orders}{KuCoin Get Purchase Orders}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
@@ -639,7 +639,7 @@ is processed against a specific purchase order.
 
 \href{https://www.kucoin.com/docs-new/rest/margin-trading/credit/redeem}{KuCoin Redeem}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
@@ -727,7 +727,7 @@ Retrieves redemption order history with optional filters.
 
 \href{https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-redeem-orders}{KuCoin Get Redeem Orders}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{

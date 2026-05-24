@@ -111,7 +111,7 @@ KucoinFuturesTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Add Futures Order](https://www.kucoin.com/docs-new/rest/futures-trading/orders/add-order)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Leverage Control**: Set `leverage` to manage risk exposure per order.
@@ -272,7 +272,7 @@ KucoinFuturesTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Add Futures Order Test](https://www.kucoin.com/docs-new/rest/futures-trading/orders/add-order-test)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Pre-Flight Validation**: Validate order parameters at bot startup to confirm API keys have trading permissions and symbols are correct.
@@ -421,7 +421,7 @@ KucoinFuturesTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Batch Add Futures Orders](https://www.kucoin.com/docs-new/rest/futures-trading/orders/batch-add-orders)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Grid Trading**: Place multiple limit orders at different price levels in a single request.
@@ -553,9 +553,9 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `DELETE https://api-futures.kucoin.com/api/v1/orders/{orderId}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Cancel Futures Order By OrderId](https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-orderid)
+    #' [KuCoin Cancel Futures Order By OrderId](https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-orderld)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Stale Order Cleanup**: Cancel orders that have not filled within a timeout window.
@@ -637,7 +637,7 @@ KucoinFuturesTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Cancel Futures Order By ClientOid](https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-clientoid)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Idempotent Cancellation**: Use client OIDs to cancel orders without needing to store system order IDs.
@@ -700,9 +700,9 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `DELETE https://api-futures.kucoin.com/api/v1/orders`
     #'
     #' ### Official Documentation
-    #' [KuCoin Cancel All Futures Orders](https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-multiple-futures-limit-orders)
+    #' [KuCoin Cancel All Futures Orders](https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-all-orders)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Emergency Stop**: Cancel all open orders as part of a kill-switch or panic button.
@@ -793,9 +793,9 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `DELETE https://api-futures.kucoin.com/api/v1/stopOrders`
     #'
     #' ### Official Documentation
-    #' [KuCoin Cancel All Futures Stop Orders](https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-multiple-futures-stop-orders)
+    #' [KuCoin Cancel All Futures Stop Orders](https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-all-stop-orders)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Strategy Teardown**: Remove all pending stop-loss and take-profit orders when a strategy is deactivated.
@@ -885,9 +885,9 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `GET https://api-futures.kucoin.com/api/v1/orders/{orderId}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Futures Order By OrderId](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-by-orderid)
+    #' [KuCoin Get Futures Order By OrderId](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-by-orderld)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Order Tracking**: Poll order status to determine when a limit order has been filled.
@@ -1003,9 +1003,15 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `GET https://api-futures.kucoin.com/api/v1/orders/byClientOid`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Futures Order By ClientOid](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-by-clientoid)
+    #' [KuCoin Get Futures Order By ClientOid](https://www.kucoin.com/docs-new/rest/futures-trading/get-stop-order-by-clientoid)
     #'
-    #' Verified: 2026-03-10
+    #' Note: KuCoin's URL slug here contains `get-stop-order-by-clientoid`,
+    #' but the page actually documents the regular order endpoint
+    #' (`GET /api/v1/orders/byClientOid`) — the sidebar title is
+    #' "Get Order By ClientOid" and the documented method and path match
+    #' the source. Slug is misleading; the URL is canonical.
+    #'
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Stateless Lookups**: Retrieve order status using only the client OID without needing to track system IDs.
@@ -1112,7 +1118,7 @@ KucoinFuturesTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Futures Order List](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-list)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Open Order Monitoring**: Query `status = "active"` to track all pending orders and detect stale ones.
@@ -1242,7 +1248,7 @@ KucoinFuturesTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Recent Closed Futures Orders](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-closed-orders)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Quick Fill Check**: Rapidly check which orders completed recently without paginating through the full order list.
@@ -1357,9 +1363,9 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `GET https://api-futures.kucoin.com/api/v1/stopOrders`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Futures Untriggered Stop Order List](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-untriggered-stop-order-list)
+    #' [KuCoin Get Futures Untriggered Stop Order List](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-stop-order-list)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Stop-Loss Audit**: Verify that stop-loss orders are correctly placed and have not been accidentally cancelled.
@@ -1458,9 +1464,9 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `GET https://api-futures.kucoin.com/api/v1/fills`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Futures Filled List](https://www.kucoin.com/docs-new/rest/futures-trading/fills/get-filled-list)
+    #' [KuCoin Get Futures Filled List](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-trade-history)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **PnL Calculation**: Aggregate fill prices and sizes to compute realized profit/loss per position.
@@ -1603,9 +1609,9 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `GET https://api-futures.kucoin.com/api/v1/recentFills`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Recent Futures Filled List](https://www.kucoin.com/docs-new/rest/futures-trading/fills/get-recent-filled-list)
+    #' [KuCoin Get Recent Futures Filled List](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-trade-history)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Real-Time Monitoring**: Poll recent fills to quickly detect new executions without paginating.
@@ -1705,7 +1711,7 @@ KucoinFuturesTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Open Order Value](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-open-order-value)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Margin Check**: Verify available margin before placing new orders by checking existing order costs.
@@ -1777,9 +1783,11 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `POST https://api-futures.kucoin.com/api/v1/orders/dead-cancel-all`
     #'
     #' ### Official Documentation
-    #' [KuCoin Set DCP](https://www.kucoin.com/docs-new/rest/futures-trading/orders/dead-cancel-all)
+    #' [KuCoin Set DCP (spot equivalent; futures DCP page withdrawn from
+    #' KuCoin docs as of 2026-05; POST endpoint still accepted by the
+    #' Futures REST API)](https://www.kucoin.com/docs-new/rest/spot-trading/orders/set-dcp)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Safety Net**: Set DCP at bot startup so orders are cancelled if the bot crashes.
@@ -1867,9 +1875,11 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `GET https://api-futures.kucoin.com/api/v1/orders/dead-cancel-all/query`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get DCP](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-dead-cancel-all)
+    #' [KuCoin Get DCP (spot equivalent; futures DCP page withdrawn from
+    #' KuCoin docs as of 2026-05; the Futures REST query endpoint now
+    #' returns HTTP 404 — see NEWS for context)](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-dcp)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Health Check**: Periodically query DCP settings to confirm the safety net is active.

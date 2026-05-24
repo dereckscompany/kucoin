@@ -171,7 +171,7 @@ an error; use \code{get_deposit_addresses()} first to check.
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/deposit/add-deposit-address-v3}{KuCoin Add Deposit Address V3}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -298,7 +298,7 @@ given chain. Useful for looking up addresses before creating new ones.
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/deposit/get-deposit-address-v3/en}{KuCoin Get Deposit Addresses V3}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -427,7 +427,7 @@ to POSIXct for convenient analysis.
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/deposit/get-deposit-history}{KuCoin Get Deposit History}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{

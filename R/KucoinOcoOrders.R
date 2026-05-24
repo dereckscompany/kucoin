@@ -89,7 +89,7 @@ KucoinOcoOrders <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Add OCO Order](https://www.kucoin.com/docs-new/rest/spot-trading/orders/add-oco-order)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Take-Profit + Stop-Loss**: Place a sell OCO with `price` as take-profit and `stopPrice`/`limitPrice` as stop-loss to protect positions automatically.
@@ -221,7 +221,7 @@ KucoinOcoOrders <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Cancel OCO Order By OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-oco-order-by-orderld)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Position Exit**: Cancel an OCO order when manually closing a position or switching strategies.
@@ -312,7 +312,7 @@ KucoinOcoOrders <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Cancel OCO Order By ClientOid](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-oco-order-by-clientoid)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Strategy-Based Cancellation**: Cancel OCO orders by your own strategy IDs without needing to store KuCoin order IDs.
@@ -404,7 +404,7 @@ KucoinOcoOrders <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Batch Cancel OCO Orders](https://www.kucoin.com/docs-new/rest/spot-trading/orders/batch-cancel-oco-order)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Emergency Kill Switch**: Call with no filters to cancel all OCO orders during market anomalies or system errors.
@@ -501,7 +501,7 @@ KucoinOcoOrders <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get OCO Order By OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-by-orderld)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Status Polling**: Periodically check OCO order status to determine if either leg has triggered.
@@ -583,7 +583,7 @@ KucoinOcoOrders <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get OCO Order By ClientOid](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-by-clientoid)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Strategy Reconciliation**: Look up OCO orders using your strategy-generated IDs for post-trade analysis.
@@ -665,7 +665,7 @@ KucoinOcoOrders <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get OCO Order Detail By OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-detail-by-orderld)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Fill Analysis**: Inspect sub-order details to determine which leg filled and at what price.
@@ -791,7 +791,7 @@ KucoinOcoOrders <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get OCO Order List](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-list)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Portfolio Overview**: List all active OCO orders to display current take-profit/stop-loss levels across positions.

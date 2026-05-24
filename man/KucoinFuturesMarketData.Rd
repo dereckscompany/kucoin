@@ -42,7 +42,7 @@ without credentials.
    get_ticker \tab GET /api/v1/ticker \tab GET \cr
    get_all_tickers \tab GET /api/v1/allTickers \tab GET \cr
    get_part_orderbook \tab GET /api/v1/level2/depth20 or depth100 \tab GET \cr
-   get_full_orderbook \tab GET /api/v2/level2/snapshot \tab GET \cr
+   get_full_orderbook \tab GET /api/v1/level2/snapshot \tab GET \cr
    get_trade_history \tab GET /api/v1/trade/history \tab GET \cr
    get_klines \tab GET /api/v1/kline/query \tab GET \cr
    get_mark_price \tab GET /api/v1/mark-price/\{symbol\}/current \tab GET \cr
@@ -299,9 +299,9 @@ Retrieves detailed contract specification for a single symbol.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-symbol-detail}{KuCoin Get Symbol Detail}
+\href{https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-symbol}{KuCoin Get Symbol}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -457,7 +457,7 @@ Retrieves details of all actively traded futures contracts.
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-all-symbols}{KuCoin Get All Symbols}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -570,7 +570,7 @@ Retrieves real-time ticker data for a futures contract.
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-ticker}{KuCoin Get Ticker}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -672,7 +672,7 @@ Retrieves real-time ticker data for all futures contracts.
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-all-tickers}{KuCoin Get All Tickers}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -772,7 +772,7 @@ authentication.
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-part-orderbook}{KuCoin Get Part Orderbook}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -866,14 +866,14 @@ Retrieves the full Level 2 orderbook snapshot. \strong{Requires authentication.}
 
 \subsection{API Endpoint}{
 
-\verb{GET https://api.kucoin.com/api/v2/level2/snapshot?symbol=\{symbol\}}
+\verb{GET https://api-futures.kucoin.com/api/v1/level2/snapshot?symbol=\{symbol\}}
 }
 
 \subsection{Official Documentation}{
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-full-orderbook}{KuCoin Get Full Orderbook}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -887,7 +887,7 @@ Verified: 2026-03-10
 \subsection{curl}{
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET \\
-  'https://api.kucoin.com/api/v2/level2/snapshot?symbol=XBTUSDTM' \\
+  'https://api-futures.kucoin.com/api/v1/level2/snapshot?symbol=XBTUSDTM' \\
   --header 'KC-API-KEY: your-api-key' \\
   --header 'KC-API-SIGN: your-signature' \\
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
@@ -979,7 +979,7 @@ Retrieves the most recent trades for a futures contract.
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-trade-history}{KuCoin Get Trade History}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1093,7 +1093,7 @@ returns the combined result sorted by \code{datetime}.
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-klines}{KuCoin Get Klines}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1228,7 +1228,7 @@ is used for margin calculations and liquidation triggers.
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-mark-price}{KuCoin Get Mark Price}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1317,9 +1317,9 @@ Funding rates are charged/received every 8 hours for perpetual contracts.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-current-funding-rate}{KuCoin Get Current Funding Rate}
+\href{https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-current-funding-rate}{KuCoin Get Current Funding Rate}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1411,9 +1411,9 @@ specified time range.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-public-funding-history}{KuCoin Get Public Funding Rate History}
+\href{https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-public-funding-history}{KuCoin Get Public Funding Rate History}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1523,7 +1523,7 @@ local clocks and debugging timestamp-related authentication issues.
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-server-time}{KuCoin Get Server Time}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1597,7 +1597,7 @@ Check this before placing orders to confirm the exchange is operational.
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-service-status}{KuCoin Get Service Status}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{

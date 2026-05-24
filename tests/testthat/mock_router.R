@@ -124,12 +124,19 @@ box::use(./mockery[
   list(pattern = "api/v2/position", fixture = function() mock_futures_position_data()),
   list(pattern = "history-positions", fixture = function() mock_futures_positions_history_data()),
   list(pattern = "api/v1/positions", fixture = function() mock_futures_position_data()),
-  list(pattern = "marginMode", fixture = function() mock_futures_margin_mode_data()),
-  list(pattern = "crossMarginLeverage", fixture = function() mock_futures_cross_leverage_data()),
-  list(pattern = "maxOpenSize", fixture = function() mock_futures_max_open_size_data()),
+  # Patterns track KuCoin's 2026-05 docs reorganisation: old paths
+  # (`marginMode`, `crossMarginLeverage`, `maxOpenSize`, `marginDepositIn`,
+  # `marginWithdrawOut`) were renamed to `getMarginMode` /
+  # `changeMarginMode`, `getCrossUserLeverage` / `changeCrossUserLeverage`,
+  # `getMaxOpenSize`, `deposit-margin`, and `withdrawMargin`. Routes
+  # below use the shortest stable substring that survives both the GET
+  # and POST variants where they exist.
+  list(pattern = "MarginMode", fixture = function() mock_futures_margin_mode_data()),
+  list(pattern = "CrossUserLeverage", fixture = function() mock_futures_cross_leverage_data()),
+  list(pattern = "MaxOpenSize", fixture = function() mock_futures_max_open_size_data()),
   list(pattern = "maxWithdrawMargin", fixture = function() mock_futures_max_withdraw_margin_data()),
-  list(pattern = "marginDepositIn", fixture = function() mock_futures_margin_response()),
-  list(pattern = "marginWithdrawOut", fixture = function() mock_futures_margin_response()),
+  list(pattern = "deposit-margin", fixture = function() mock_futures_margin_response()),
+  list(pattern = "withdrawMargin", fixture = function() mock_futures_margin_response()),
   list(pattern = "funding-history", fixture = function() mock_futures_private_funding_data()),
   # Generic market data (after margin-specific patterns)
   list(pattern = "currencies", fixture = function() mock_currency_data()),

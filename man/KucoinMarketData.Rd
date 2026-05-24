@@ -342,7 +342,7 @@ new listings, delistings, maintenance notices, and other platform updates.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-announcements}{KuCoin Get Announcements}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -478,7 +478,7 @@ withdrawal details (fees, minimums, confirmations, contract addresses).
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-currency}{KuCoin Get Currency}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -610,7 +610,7 @@ deposit/withdrawal details. Useful for building currency reference tables.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-currencies}{KuCoin Get All Currencies}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -707,9 +707,9 @@ increments, size limits, fee rates, and trading status.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-symbols}{KuCoin Get Symbol}
+\href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-symbol}{KuCoin Get Symbol}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -829,7 +829,7 @@ segment. Returns the same fields as \code{get_symbol()} for every pair.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-symbols}{KuCoin Get All Symbols}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1007,7 +1007,7 @@ prices, sizes, and the most recent trade price and size.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-ticker}{KuCoin Get Ticker}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1105,7 +1105,7 @@ Snapshots are captured every 2 seconds on the server side.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-tickers}{KuCoin Get All Tickers}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1221,7 +1221,7 @@ the price, size, side (buy/sell), and nanosecond-precision timestamp.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-trade-history}{KuCoin Get Trade History}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1318,7 +1318,7 @@ into a long-format \code{data.table} with \code{side}, \code{level}, \code{price
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-part-orderbook}{KuCoin Get Part Orderbook}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1413,7 +1413,7 @@ Retrieves the complete order book for a symbol with all price levels.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-full-orderbook}{KuCoin Get Full Orderbook}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1512,7 +1512,7 @@ OHLCV data, change rate, average price, and fee rates.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-24hr-stats}{KuCoin Get 24hr Stats}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1623,7 +1623,7 @@ Market segments group trading pairs by theme (e.g., DeFi, Meme, Layer 1).
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-market-list}{KuCoin Get Market List}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1701,7 +1701,7 @@ time range.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-klines}{KuCoin Get Klines}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1811,7 +1811,7 @@ Useful for detecting clock drift and ensuring HMAC signatures are valid.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-server-time}{KuCoin Get Server Time}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
@@ -1879,7 +1879,7 @@ during maintenance windows.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-service-status}{KuCoin Get Service Status}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
@@ -1950,7 +1950,7 @@ Useful for portfolio valuation and P&L reporting in fiat terms.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-fiat-price}{KuCoin Get Fiat Price}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{

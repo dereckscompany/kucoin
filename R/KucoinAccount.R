@@ -92,7 +92,7 @@ KucoinAccount <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Account Summary](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-summary-info)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **VIP Tier Monitoring**: Check `level` to confirm fee tier before placing large orders.
@@ -174,7 +174,7 @@ KucoinAccount <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get API Key Info](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-apikey-info)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Permission Verification**: Confirm the key has `Trade` permission before placing orders in a bot startup routine.
@@ -255,7 +255,7 @@ KucoinAccount <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Spot Account Type](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-type-spot)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Pre-Trade Validation**: Confirm HF trading accounts are opened before submitting HF orders.
@@ -320,7 +320,7 @@ KucoinAccount <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Spot Account List](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-list-spot)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Balance Checks**: Query available funds before placing orders to avoid insufficient balance errors.
@@ -412,7 +412,7 @@ KucoinAccount <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Spot Account Detail](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-detail-spot)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Precise Balance Check**: Query a specific account by ID when you already know the account to avoid parsing lists.
@@ -487,7 +487,7 @@ KucoinAccount <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Cross Margin Account](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-cross-margin)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Margin Risk Monitoring**: Check `liability` and `totalAsset` to compute margin ratio and trigger de-risk actions.
@@ -631,7 +631,7 @@ KucoinAccount <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Isolated Margin Account](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-isolated-margin)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Per-Pair Risk Management**: Monitor isolated margin ratios per symbol to trigger stop-loss or de-leverage actions independently.
@@ -842,7 +842,7 @@ KucoinAccount <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Account Ledger Spot/Margin](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-ledgers-spot-margin)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Trade Reconciliation**: Compare ledger entries against expected fills to verify order execution integrity.
@@ -995,7 +995,7 @@ KucoinAccount <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Account Ledgers Trade_hf](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-ledgers-tradehf)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -1149,7 +1149,7 @@ KucoinAccount <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Basic Fee](https://www.kucoin.com/docs-new/rest/account-info/trade-fee/get-basic-fee-spot-margin)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -1208,7 +1208,7 @@ KucoinAccount <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Actual Fee](https://www.kucoin.com/docs-new/rest/account-info/trade-fee/get-actual-fee-spot-margin)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```

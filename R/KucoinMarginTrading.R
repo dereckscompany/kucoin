@@ -110,7 +110,7 @@ KucoinMarginTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Margin Add Order](https://www.kucoin.com/docs-new/rest/margin-trading/orders/add-order)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -252,7 +252,7 @@ KucoinMarginTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Margin Add Order](https://www.kucoin.com/docs-new/rest/margin-trading/orders/add-order)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -380,7 +380,7 @@ KucoinMarginTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Margin Add Order](https://www.kucoin.com/docs-new/rest/margin-trading/orders/add-order)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -515,7 +515,7 @@ KucoinMarginTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Margin Add Order](https://www.kucoin.com/docs-new/rest/margin-trading/orders/add-order)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -643,7 +643,7 @@ KucoinMarginTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Margin Borrow](https://www.kucoin.com/docs-new/rest/margin-trading/debit/borrow)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -754,7 +754,7 @@ KucoinMarginTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Margin Repay](https://www.kucoin.com/docs-new/rest/margin-trading/debit/repay)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -840,7 +840,7 @@ KucoinMarginTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Borrow History](https://www.kucoin.com/docs-new/rest/margin-trading/debit/get-borrow-history)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -936,7 +936,7 @@ KucoinMarginTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Repay History](https://www.kucoin.com/docs-new/rest/margin-trading/debit/get-repay-history)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -1024,7 +1024,7 @@ KucoinMarginTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Interest History](https://www.kucoin.com/docs-new/rest/margin-trading/debit/get-interest-history)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -1113,7 +1113,7 @@ KucoinMarginTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Borrow Interest Rate](https://www.kucoin.com/docs-new/rest/margin-trading/debit/get-borrow-interest-rate)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -1191,7 +1191,7 @@ KucoinMarginTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Modify Leverage](https://www.kucoin.com/docs-new/rest/margin-trading/debit/modify-leverage)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```

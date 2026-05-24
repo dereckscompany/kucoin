@@ -217,7 +217,7 @@ Only withdrawals in \code{PROCESSING} status can later be cancelled via
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/withdrawals/withdraw-v3}{KuCoin Withdraw V3}
 
-Verified: 2026-02-02
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -352,7 +352,7 @@ or later, it cannot be reversed.
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/withdrawals/cancel-withdrawal}{KuCoin Cancel Withdrawal}
 
-Verified: 2026-02-02
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -440,7 +440,7 @@ to ensure sufficient balance and valid amount parameters.
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-quotas}{KuCoin Get Withdrawal Quotas}
 
-Verified: 2026-02-02
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -569,7 +569,7 @@ to POSIXct for convenient analysis.
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-history}{KuCoin Get Withdrawal History}
 
-Verified: 2026-02-02
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -725,7 +725,7 @@ Provides more information than the history endpoint.
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-by-id}{KuCoin Get Withdrawal Detail}
 
-Verified: 2026-02-02
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{

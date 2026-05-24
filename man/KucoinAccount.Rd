@@ -279,7 +279,7 @@ count, and general account metadata for the authenticated user.
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-summary-info}{KuCoin Get Account Summary}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -381,7 +381,7 @@ including its permissions, IP whitelist, creation date, and associated UID.
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-apikey-info}{KuCoin Get API Key Info}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -478,7 +478,7 @@ Returns an empty \code{data.table} if no accounts are opened.
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-type-spot}{KuCoin Get Spot Account Type}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -559,7 +559,7 @@ Returns an empty \code{data.table} if no accounts match the filter.
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-list-spot}{KuCoin Get Spot Account List}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -677,7 +677,7 @@ its account ID. Returns currency, type, balance, available, and holds.
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-detail-spot}{KuCoin Get Spot Account Detail}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -777,7 +777,7 @@ row-binds into a \code{data.table}. Returns empty \code{data.table} if no accoun
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-cross-margin}{KuCoin Get Cross Margin Account}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -919,7 +919,7 @@ row-binds into a \code{data.table}. Returns empty \code{data.table} if no assets
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-isolated-margin}{KuCoin Get Isolated Margin Account}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1081,7 +1081,7 @@ pages until all results are retrieved or \code{max_pages} is reached.
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-ledgers-spot-margin}{KuCoin Get Account Ledger Spot/Margin}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1228,7 +1228,7 @@ Data is limited to a rolling 7-day window.
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-ledgers-tradehf}{KuCoin Get Account Ledgers Trade_hf}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
@@ -1365,7 +1365,7 @@ any per-symbol discounts.
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/trade-fee/get-basic-fee-spot-margin}{KuCoin Get Basic Fee}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
@@ -1446,7 +1446,7 @@ VIP/KCS discounts. Supports up to 10 trading pairs per request.
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/trade-fee/get-actual-fee-spot-margin}{KuCoin Get Actual Fee}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{

@@ -113,7 +113,7 @@ KucoinTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Add Order](https://www.kucoin.com/docs-new/rest/spot-trading/orders/add-order)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Limit Orders**: Set `price` and `size` for precise entry/exit points.
@@ -264,7 +264,7 @@ KucoinTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Add Order Test](https://www.kucoin.com/docs-new/rest/spot-trading/orders/add-order-test)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Parameter Validation**: Verify order parameters are correct before live submission.
@@ -403,7 +403,7 @@ KucoinTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Batch Add Orders](https://www.kucoin.com/docs-new/rest/spot-trading/orders/batch-add-orders)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Portfolio Rebalancing**: Submit multiple orders across pairs simultaneously.
@@ -526,7 +526,7 @@ KucoinTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Cancel Order By OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -591,7 +591,7 @@ KucoinTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Cancel Order By ClientOid](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -656,7 +656,7 @@ KucoinTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Cancel Partial Order](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-partial-order)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Position Scaling**: Reduce open order size without losing queue priority.
@@ -723,7 +723,7 @@ KucoinTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Cancel All Orders By Symbol](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-all-orders-by-symbol)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Emergency Stop**: Cancel all orders for a pair when risk limits are breached.
@@ -782,7 +782,7 @@ KucoinTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Cancel All HF Orders](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-all-orders)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Emergency Kill Switch**: Cancel everything when a critical error is detected.
@@ -867,7 +867,7 @@ KucoinTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Order By OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-order-by-orderld)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -969,7 +969,7 @@ KucoinTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Order By ClientOid](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-order-by-clientoid)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -1077,7 +1077,7 @@ KucoinTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Trade History](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-trade-history)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **P&L Tracking**: Use `price`, `size`, `fee`, and `fee_currency` for profit calculations.
@@ -1243,7 +1243,7 @@ KucoinTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Symbols With Open Order](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-symbols-with-open-order)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Order Monitoring**: Quickly check which symbols have active orders.
@@ -1306,7 +1306,7 @@ KucoinTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Open Orders](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-open-orders)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Order Book Reconciliation**: Compare your open orders against expected state.
@@ -1416,7 +1416,7 @@ KucoinTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Closed Orders](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-closed-orders)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Order History**: Build trade logs from completed orders.
@@ -1561,7 +1561,7 @@ KucoinTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Add Order Sync](https://www.kucoin.com/docs-new/rest/spot-trading/orders/add-order-sync)
     #'
-    #' Verified: 2026-02-03
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Low-Latency Fills**: Get fill result in a single round trip instead of polling.
@@ -1729,7 +1729,7 @@ KucoinTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Batch Add Orders Sync](https://www.kucoin.com/docs-new/rest/spot-trading/orders/batch-add-orders-sync)
     #'
-    #' Verified: 2026-02-03
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Grid Trading**: Place a grid of limit orders and get immediate fill status for all.
@@ -1870,7 +1870,7 @@ KucoinTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Cancel Order By OrderId Sync](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld-sync)
     #'
-    #' Verified: 2026-02-03
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Atomic Cancel**: Confirm cancellation and get final fill state in one call.
@@ -1945,7 +1945,7 @@ KucoinTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Cancel Order By ClientOid Sync](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid-sync)
     #'
-    #' Verified: 2026-02-03
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -2022,7 +2022,7 @@ KucoinTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Modify Order](https://www.kucoin.com/docs-new/rest/spot-trading/orders/modify-order)
     #'
-    #' Verified: 2026-02-03
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Price Adjustment**: Move a resting limit order to a new price level without cancel+replace gap.
@@ -2128,7 +2128,7 @@ KucoinTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Set DCP](https://www.kucoin.com/docs-new/rest/spot-trading/orders/set-dcp)
     #'
-    #' Verified: 2026-02-03
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Crash Safety**: Heartbeat every N seconds; if bot crashes, KuCoin cancels all orders.
@@ -2216,7 +2216,7 @@ KucoinTrading <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get DCP](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-dcp)
     #'
-    #' Verified: 2026-02-03
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```

@@ -71,7 +71,7 @@ KucoinDeposit <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Add Deposit Address V3](https://www.kucoin.com/docs-new/rest/account-info/deposit/add-deposit-address-v3)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Multi-Chain Support**: Specify `chain` (e.g., `"ERC20"`, `"TRC20"`) to create addresses on the correct network for your deposit workflow.
@@ -196,7 +196,7 @@ KucoinDeposit <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Deposit Addresses V3](https://www.kucoin.com/docs-new/rest/account-info/deposit/get-deposit-address-v3/en)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Address Verification**: Query addresses before initiating external transfers to confirm the correct chain and memo.
@@ -319,7 +319,7 @@ KucoinDeposit <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Deposit History](https://www.kucoin.com/docs-new/rest/account-info/deposit/get-deposit-history)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Deposit Monitoring**: Poll for `"SUCCESS"` status deposits to trigger trading logic when funds arrive.
