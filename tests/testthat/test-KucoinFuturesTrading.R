@@ -5,7 +5,7 @@ KEYS <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
 BASE <- "https://api-futures.kucoin.com"
 
 new_trading <- function() {
-  KucoinFuturesTrading$new(keys = KEYS, base_url = BASE)
+  return(KucoinFuturesTrading$new(keys = KEYS, base_url = BASE))
 }
 
 # -- Construction --
@@ -43,7 +43,7 @@ test_that("add_order strips NULL params from body", {
   resp <- mock_kucoin_response(data = mock_futures_order_response())
   httr2::local_mocked_responses(function(req) {
     captured_req <<- req
-    resp
+    return(resp)
   })
 
   new_trading()$add_order(
@@ -65,7 +65,7 @@ test_that("add_order_test hits test endpoint", {
   resp <- mock_kucoin_response(data = mock_futures_order_response())
   httr2::local_mocked_responses(function(req) {
     captured_url <<- req$url
-    resp
+    return(resp)
   })
 
   dt <- new_trading()$add_order_test(
@@ -102,7 +102,7 @@ test_that("cancel_order_by_id hits correct endpoint", {
   resp <- mock_kucoin_response(data = mock_futures_cancel_order_data())
   httr2::local_mocked_responses(function(req) {
     captured_url <<- req$url
-    resp
+    return(resp)
   })
 
   dt <- new_trading()$cancel_order_by_id("futures-order-001")
@@ -117,7 +117,7 @@ test_that("cancel_order_by_client_oid includes symbol in query", {
   resp <- mock_kucoin_response(data = mock_futures_cancel_order_data())
   httr2::local_mocked_responses(function(req) {
     captured_url <<- req$url
-    resp
+    return(resp)
   })
 
   dt <- new_trading()$cancel_order_by_client_oid("client-001", "XBTUSDTM")
@@ -143,7 +143,7 @@ test_that("cancel_all_stop_orders hits stopOrders endpoint", {
   resp <- mock_kucoin_response(data = mock_futures_cancel_order_data())
   httr2::local_mocked_responses(function(req) {
     captured_url <<- req$url
-    resp
+    return(resp)
   })
 
   dt <- new_trading()$cancel_all_stop_orders()
@@ -219,7 +219,7 @@ test_that("get_order_by_client_oid includes clientOid in query", {
   resp <- mock_kucoin_response(data = mock_futures_order_detail_data())
   httr2::local_mocked_responses(function(req) {
     captured_url <<- req$url
-    resp
+    return(resp)
   })
 
   dt <- new_trading()$get_order_by_client_oid("futures-client-001")
@@ -287,7 +287,7 @@ test_that("set_dcp sends POST with timeout", {
   resp <- mock_kucoin_response(data = mock_futures_dcp_data())
   httr2::local_mocked_responses(function(req) {
     captured_method <<- req$method
-    resp
+    return(resp)
   })
 
   dt <- new_trading()$set_dcp(timeout = 5)

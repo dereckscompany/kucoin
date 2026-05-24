@@ -307,7 +307,7 @@ flatten_pages <- function(pages) {
 
   dt <- data.table::rbindlist(
     lapply(pages, function(page) {
-      data.table::rbindlist(
+      return(data.table::rbindlist(
         lapply(page, function(item) {
           cleaned <- lapply(item, function(v) {
             if (is.null(v)) {
@@ -321,10 +321,10 @@ flatten_pages <- function(pages) {
             }
             return(v)
           })
-          data.table::as.data.table(cleaned)
+          return(data.table::as.data.table(cleaned))
         }),
         fill = TRUE
-      )
+      ))
     }),
     fill = TRUE
   )

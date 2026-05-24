@@ -146,11 +146,11 @@ kucoin_fetch_klines <- function(
     seed <- promises::promise_resolve(list())
     chain <- Reduce(
       function(acc_promise, seg) {
-        acc_promise$then(function(acc) {
-          fetch_segment(seg)$then(function(result) {
-            c(acc, list(result))
-          })
-        })
+        return(acc_promise$then(function(acc) {
+          return(fetch_segment(seg)$then(function(result) {
+            return(c(acc, list(result)))
+          }))
+        }))
       },
       segments,
       accumulate = FALSE,
@@ -266,11 +266,11 @@ kucoin_fetch_futures_klines <- function(
     seed <- promises::promise_resolve(list())
     chain <- Reduce(
       function(acc_promise, seg) {
-        acc_promise$then(function(acc) {
-          fetch_segment(seg)$then(function(result) {
+        return(acc_promise$then(function(acc) {
+          return(fetch_segment(seg)$then(function(result) {
             return(c(acc, list(result)))
-          })
-        })
+          }))
+        }))
       },
       segments,
       accumulate = FALSE,

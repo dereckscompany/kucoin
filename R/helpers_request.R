@@ -181,7 +181,7 @@ kucoin_build_request <- function(
       encoded_vals <- vapply(
         parsed_url$query,
         function(v) {
-          utils::URLencode(as.character(v), reserved = TRUE)
+          return(utils::URLencode(as.character(v), reserved = TRUE))
         },
         character(1)
       )

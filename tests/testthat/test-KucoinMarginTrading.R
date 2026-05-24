@@ -5,7 +5,7 @@ KEYS <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
 BASE <- "https://api.kucoin.com"
 
 new_margin <- function() {
-  KucoinMarginTrading$new(keys = KEYS, base_url = BASE)
+  return(KucoinMarginTrading$new(keys = KEYS, base_url = BASE))
 }
 
 # -- Construction --
@@ -44,7 +44,7 @@ test_that("open_short hits margin order endpoint with sell side and autoBorrow",
   httr2::local_mocked_responses(function(req) {
     captured_url <<- req$url
     captured_body <<- jsonlite::fromJSON(req$body$data)
-    resp
+    return(resp)
   })
 
   new_margin()$open_short(symbol = "BTC-USDT", size = 0.001)
@@ -70,7 +70,7 @@ test_that("close_short uses buy side and autoRepay", {
   resp <- mock_kucoin_response(data = list(orderId = "o2"))
   httr2::local_mocked_responses(function(req) {
     captured_body <<- jsonlite::fromJSON(req$body$data)
-    resp
+    return(resp)
   })
 
   new_margin()$close_short(symbol = "BTC-USDT", size = 0.001)
@@ -86,7 +86,7 @@ test_that("open_long uses buy side and autoBorrow", {
   resp <- mock_kucoin_response(data = list(orderId = "o3"))
   httr2::local_mocked_responses(function(req) {
     captured_body <<- jsonlite::fromJSON(req$body$data)
-    resp
+    return(resp)
   })
 
   new_margin()$open_long(symbol = "BTC-USDT", size = 0.001)
@@ -102,7 +102,7 @@ test_that("close_long uses sell side and autoRepay", {
   resp <- mock_kucoin_response(data = list(orderId = "o4"))
   httr2::local_mocked_responses(function(req) {
     captured_body <<- jsonlite::fromJSON(req$body$data)
-    resp
+    return(resp)
   })
 
   new_margin()$close_long(symbol = "BTC-USDT", size = 0.001)
@@ -118,7 +118,7 @@ test_that("dry_run hits test endpoint", {
   resp <- mock_kucoin_response(data = list(orderId = "test-o1"))
   httr2::local_mocked_responses(function(req) {
     captured_url <<- req$url
-    resp
+    return(resp)
   })
 
   dt <- new_margin()$open_short(symbol = "BTC-USDT", size = 0.001, dry_run = TRUE)
@@ -133,7 +133,7 @@ test_that("isIsolated flag is passed when TRUE", {
   resp <- mock_kucoin_response(data = list(orderId = "iso-1"))
   httr2::local_mocked_responses(function(req) {
     captured_body <<- jsonlite::fromJSON(req$body$data)
-    resp
+    return(resp)
   })
 
   new_margin()$open_short(symbol = "BTC-USDT", size = 0.001, isIsolated = TRUE)
@@ -263,7 +263,7 @@ test_that("modify_leverage sends correct leverage value", {
   resp <- mock_kucoin_response(data = NULL)
   httr2::local_mocked_responses(function(req) {
     captured_body <<- jsonlite::fromJSON(req$body$data)
-    resp
+    return(resp)
   })
 
   dt <- new_margin()$modify_leverage(leverage = 5)

@@ -41,10 +41,10 @@ BASE <- "https://api.kucoin.com"
 options(httr2_mock = function(req) {
   if (grepl("market/orderbook/level1", req$url)) {
     .mock_state$ticker_calls <- .mock_state$ticker_calls + 1L
-    data <- if (.mock_state$ticker_calls %% 2L == 1L) {
-      mock_ticker_data()
-    } else {
-      mock_eth_ticker_data()
+    # Default to BTC on odd calls; flip to ETH on even calls.
+    data <- mock_ticker_data()
+    if (.mock_state$ticker_calls %% 2L == 0L) {
+      data <- mock_eth_ticker_data()
     }
     return(mock_response(data))
   }
@@ -137,6 +137,7 @@ fetch_tickers <- async(function() {
   btc <- await(market$get_ticker(symbol = "BTC-USDT"))
   eth <- await(market$get_ticker(symbol = "ETH-USDT"))
   results <<- list(btc = btc, eth = eth)
+  return(invisible(NULL))
 })
 
 fetch_tickers()
@@ -164,6 +165,7 @@ fetch_parallel <- async(function() {
   # Await them together — like Promise.all([btc, eth])
   res <- await(promise_all(btc = btc_promise, eth = eth_promise))
   results <<- res
+  return(invisible(NULL))
 })
 
 fetch_parallel()
@@ -195,9 +197,11 @@ chain_result <- NULL
 account$get_summary() |>
   then(function(summary) {
     chain_result <<- summary
+    return(invisible(NULL))
   }) |>
   catch(function(err) {
     message("Error: ", conditionMessage(err))
+    return(invisible(NULL))
   })
 
 while (!loop_empty()) {
@@ -238,6 +242,7 @@ place_and_check <- async(function() {
   open <- await(trading$get_open_orders(symbol = "BTC-USDT"))
 
   results <<- list(order = order, open = open)
+  return(invisible(NULL))
 })
 
 place_and_check()

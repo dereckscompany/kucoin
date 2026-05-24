@@ -9,10 +9,10 @@
 # KuCoin futures klines are arrays: [time_ms, open, high, low, close, volume, turnover]
 # ---------------------------------------------------------------------------
 make_mock_futures_klines <- function(n, start_ms = 1704067200000, interval_ms = 3600000) {
-  lapply(seq_len(n), function(i) {
+  return(lapply(seq_len(n), function(i) {
     ts <- start_ms + (i - 1) * interval_ms
-    list(ts, 42000, 42100, 41900, 42050, 100, 4200000)
-  })
+    return(list(ts, 42000, 42100, 41900, 42050, 100, 4200000))
+  }))
 }
 
 # ---------------------------------------------------------------------------
@@ -38,7 +38,7 @@ test_that("KucoinFuturesMarketData$get_klines with fetch_all segments large rang
     interval_ms <- 60 * 60 * 1000 # 60 min in ms
     n <- min(200L, floor((to_ms - from_ms) / interval_ms))
     n <- max(n, 1L)
-    mock_kucoin_response(data = make_mock_futures_klines(n, start_ms = from_ms, interval_ms = interval_ms))
+    return(mock_kucoin_response(data = make_mock_futures_klines(n, start_ms = from_ms, interval_ms = interval_ms)))
   })
 
   dt <- fm$get_klines(
@@ -70,7 +70,7 @@ test_that("KucoinFuturesMarketData$get_klines with fetch_all deduplicates and so
     call_count <<- call_count + 1L
     parsed <- httr2::url_parse(req$url)
     from_ms <- as.numeric(parsed$query$from)
-    mock_kucoin_response(data = make_mock_futures_klines(200, start_ms = from_ms, interval_ms = 3600000))
+    return(mock_kucoin_response(data = make_mock_futures_klines(200, start_ms = from_ms, interval_ms = 3600000)))
   })
 
   dt <- fm$get_klines(
@@ -104,7 +104,7 @@ test_that("KucoinFuturesMarketData$get_klines without fetch_all makes single API
   resp <- mock_kucoin_response(data = make_mock_futures_klines(200))
   httr2::local_mocked_responses(function(req) {
     call_count <<- call_count + 1L
-    resp
+    return(resp)
   })
 
   # Large range but fetch_all = FALSE (default): should still make 1 call
@@ -160,9 +160,11 @@ test_that("kucoin_fetch_futures_klines works in async mode", {
     result_promise,
     onFulfilled = function(val) {
       resolved <<- val
+      return(invisible(NULL))
     },
     onRejected = function(err) {
       error_msg <<- conditionMessage(err)
+      return(invisible(NULL))
     }
   )
   for (i in 1:20) {

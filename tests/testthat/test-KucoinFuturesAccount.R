@@ -5,7 +5,7 @@ KEYS <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
 BASE <- "https://api-futures.kucoin.com"
 
 new_account <- function() {
-  KucoinFuturesAccount$new(keys = KEYS, base_url = BASE)
+  return(KucoinFuturesAccount$new(keys = KEYS, base_url = BASE))
 }
 
 # -- Construction --
@@ -36,7 +36,7 @@ test_that("get_account_overview passes currency query param", {
   resp <- mock_kucoin_response(data = mock_futures_account_overview_data())
   httr2::local_mocked_responses(function(req) {
     captured_url <<- req$url
-    resp
+    return(resp)
   })
 
   new_account()$get_account_overview(currency = "XBT")
@@ -76,7 +76,7 @@ test_that("get_positions passes currency filter", {
   resp <- mock_kucoin_response(data = mock_futures_position_data())
   httr2::local_mocked_responses(function(req) {
     captured_url <<- req$url
-    resp
+    return(resp)
   })
 
   new_account()$get_positions(currency = "USDT")
@@ -118,7 +118,7 @@ test_that("set_margin_mode sends POST", {
   resp <- mock_kucoin_response(data = mock_futures_margin_mode_data())
   httr2::local_mocked_responses(function(req) {
     captured_method <<- req$method
-    resp
+    return(resp)
   })
 
   dt <- new_account()$set_margin_mode("XBTUSDTM", "CROSS")
@@ -145,7 +145,7 @@ test_that("set_cross_margin_leverage sends POST", {
   resp <- mock_kucoin_response(data = mock_futures_cross_leverage_data())
   httr2::local_mocked_responses(function(req) {
     captured_method <<- req$method
-    resp
+    return(resp)
   })
 
   dt <- new_account()$set_cross_margin_leverage("XBTUSDTM", 10)
@@ -182,7 +182,7 @@ test_that("add_isolated_margin sends POST", {
   resp <- mock_kucoin_response(data = mock_futures_margin_response())
   httr2::local_mocked_responses(function(req) {
     captured_method <<- req$method
-    resp
+    return(resp)
   })
 
   dt <- new_account()$add_isolated_margin("XBTUSDTM", margin = 10, bizNo = "biz-001")
@@ -197,7 +197,7 @@ test_that("remove_isolated_margin sends POST", {
   resp <- mock_kucoin_response(data = mock_futures_margin_response())
   httr2::local_mocked_responses(function(req) {
     captured_method <<- req$method
-    resp
+    return(resp)
   })
 
   dt <- new_account()$remove_isolated_margin("XBTUSDTM", withdrawAmount = 5)
@@ -223,7 +223,7 @@ test_that("get_risk_limit hits correct endpoint", {
   resp <- mock_kucoin_response(data = mock_futures_risk_limit_data())
   httr2::local_mocked_responses(function(req) {
     captured_url <<- req$url
-    resp
+    return(resp)
   })
 
   new_account()$get_risk_limit("XBTUSDTM")
@@ -249,7 +249,7 @@ test_that("get_funding_history passes symbol in query", {
   resp <- mock_kucoin_response(data = mock_futures_private_funding_data())
   httr2::local_mocked_responses(function(req) {
     captured_url <<- req$url
-    resp
+    return(resp)
   })
 
   new_account()$get_funding_history("XBTUSDTM")
@@ -266,7 +266,7 @@ test_that("get_funding_history passes symbol in query", {
 
 # Helper: count list columns on a data.table.
 n_list_cols <- function(dt) {
-  length(names(dt)[vapply(dt, is.list, logical(1))])
+  return(length(names(dt)[vapply(dt, is.list, logical(1))]))
 }
 
 test_that("get_account_overview has no list columns", {

@@ -184,7 +184,7 @@ KucoinMarketData <- R6::R6Class(
           # multiplication). Matches the cross-package convention used
           # by `alpaca`/`binance` for `permissions`, `order_types`, etc.
           pages_clean <- lapply(pages, function(page) {
-            lapply(page, collapse_string_array_fields, "annType")
+            return(lapply(page, collapse_string_array_fields, "annType"))
           })
           dt <- flatten_pages(pages_clean)
           if (nrow(dt) == 0) {
