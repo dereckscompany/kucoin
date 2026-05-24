@@ -31,7 +31,7 @@
 #' | get_ticker | GET /api/v1/ticker | GET |
 #' | get_all_tickers | GET /api/v1/allTickers | GET |
 #' | get_part_orderbook | GET /api/v1/level2/depth20 or depth100 | GET |
-#' | get_full_orderbook | GET /api/v2/level2/snapshot | GET |
+#' | get_full_orderbook | GET /api/v1/level2/snapshot | GET |
 #' | get_trade_history | GET /api/v1/trade/history | GET |
 #' | get_klines | GET /api/v1/kline/query | GET |
 #' | get_mark_price | GET /api/v1/mark-price/\{symbol\}/current | GET |
@@ -90,9 +90,9 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v1/contracts/{symbol}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Symbol Detail](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-symbol-detail)
+    #' [KuCoin Get Symbol](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-symbol)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Contract Discovery**: Query contract specs to determine lot size, tick size, and leverage limits before placing orders.
@@ -227,7 +227,7 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get All Symbols](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-all-symbols)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Market Scanning**: Iterate over all contracts to find high-volume or high-leverage opportunities.
@@ -327,7 +327,7 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Ticker](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-ticker)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Price Monitoring**: Poll the ticker to track best bid/ask spreads and last trade prices for signal generation.
@@ -411,7 +411,7 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get All Tickers](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-all-tickers)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Market Screening**: Scan all tickers for contracts with the tightest spreads or highest volume.
@@ -500,7 +500,7 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Part Orderbook](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-part-orderbook)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Spread Monitoring**: Use the top-of-book levels to track bid-ask spreads in real time.
@@ -573,12 +573,12 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' 2. **Parsing**: Converts bid/ask arrays into a long-format `data.table` via `parse_futures_orderbook()`.
     #'
     #' ### API Endpoint
-    #' `GET https://api.kucoin.com/api/v2/level2/snapshot?symbol={symbol}`
+    #' `GET https://api.kucoin.com/api/v1/level2/snapshot?symbol={symbol}`
     #'
     #' ### Official Documentation
     #' [KuCoin Get Full Orderbook](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-full-orderbook)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Full Depth Analysis**: Access every price level to build accurate volume profiles and detect iceberg orders.
@@ -588,7 +588,7 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' ### curl
     #' ```
     #' curl --location --request GET \
-    #'   'https://api.kucoin.com/api/v2/level2/snapshot?symbol=XBTUSDTM' \
+    #'   'https://api.kucoin.com/api/v1/level2/snapshot?symbol=XBTUSDTM' \
     #'   --header 'KC-API-KEY: your-api-key' \
     #'   --header 'KC-API-SIGN: your-signature' \
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
@@ -638,7 +638,7 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' }
     get_full_orderbook = function(symbol) {
       return(private$.request(
-        endpoint = "/api/v2/level2/snapshot",
+        endpoint = "/api/v1/level2/snapshot",
         query = list(symbol = symbol),
         auth = TRUE,
         .parser = function(data) {
@@ -661,7 +661,7 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Trade History](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-trade-history)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Tape Reading**: Analyze recent trades to detect large block trades or aggressive buying/selling.
@@ -757,7 +757,7 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Klines](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-klines)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Technical Analysis**: Feed OHLCV data into indicator calculations (RSI, MACD, Bollinger Bands, etc.).
@@ -893,7 +893,7 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Mark Price](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-mark-price)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Liquidation Monitoring**: Compare mark price against your position entry to track proximity to liquidation.
@@ -963,9 +963,9 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v1/funding-rate/{symbol}/current`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Current Funding Rate](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-current-funding-rate)
+    #' [KuCoin Get Current Funding Rate](https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-current-funding-rate)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Funding Arbitrage**: Compare funding rates across exchanges to identify cash-and-carry arbitrage opportunities.
@@ -1038,9 +1038,9 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v1/contract/funding-rates?symbol={symbol}&from={from}&to={to}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Public Funding Rate History](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-public-funding-history)
+    #' [KuCoin Get Public Funding Rate History](https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-public-funding-history)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Funding Rate Analysis**: Analyse historical funding rates to understand market sentiment (positive = longs pay shorts).
@@ -1137,7 +1137,7 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Server Time](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-server-time)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Clock Synchronisation**: Compare server time with local time to detect and compensate for clock drift.
@@ -1196,7 +1196,7 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Service Status](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-service-status)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Health Check**: Poll service status at bot startup and periodically during operation to detect maintenance windows.

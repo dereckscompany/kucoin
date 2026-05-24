@@ -69,7 +69,7 @@ KucoinLending <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Currency Information](https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-loan-market)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -153,7 +153,7 @@ KucoinLending <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Market Interest Rate](https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-loan-market-interest-rate)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -225,7 +225,7 @@ KucoinLending <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Purchase](https://www.kucoin.com/docs-new/rest/margin-trading/credit/purchase)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -307,7 +307,7 @@ KucoinLending <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Modify Purchase](https://www.kucoin.com/docs-new/rest/margin-trading/credit/modify-purchase)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -399,7 +399,7 @@ KucoinLending <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Purchase Orders](https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-purchase-orders)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -511,7 +511,7 @@ KucoinLending <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Redeem](https://www.kucoin.com/docs-new/rest/margin-trading/credit/redeem)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -594,7 +594,7 @@ KucoinLending <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Redeem Orders](https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-redeem-orders)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```

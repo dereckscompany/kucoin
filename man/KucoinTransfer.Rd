@@ -182,7 +182,7 @@ the \strong{trade} account.
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/transfer/flex-transfer}{KuCoin Flex Transfer}
 
-Verified: 2026-02-02
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -322,7 +322,7 @@ sufficient funds are available.
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/transfer/get-transfer-quotas}{KuCoin Get Transfer Quotas}
 
-Verified: 2026-02-02
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{

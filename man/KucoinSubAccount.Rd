@@ -208,7 +208,7 @@ permissions. Only master accounts can call this endpoint.
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/sub-account/add-subaccount}{KuCoin Add Sub-Account}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -325,7 +325,7 @@ The \code{created_at} column is coerced from epoch milliseconds to POSIXct.
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-list-summary-info}{KuCoin Get Sub-Account List Summary Info}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -457,7 +457,7 @@ holds amounts.
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-detail-balance}{KuCoin Get Sub-Account Detail Balance}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -617,7 +617,7 @@ by account type (main, trade, margin) and combined into a single
 
 \href{https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-list-spot-balance-v2}{KuCoin Get Sub-Account List Spot Balance V2}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{

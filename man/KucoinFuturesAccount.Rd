@@ -23,14 +23,14 @@ Inherits from \link{KucoinBase}.
    get_position \tab GET /api/v2/position \tab GET \cr
    get_positions \tab GET /api/v1/positions \tab GET \cr
    get_positions_history \tab GET /api/v1/history-positions \tab GET \cr
-   get_margin_mode \tab GET /api/v1/marginMode \tab GET \cr
-   set_margin_mode \tab POST /api/v1/marginMode \tab POST \cr
-   get_cross_margin_leverage \tab GET /api/v1/crossMarginLeverage \tab GET \cr
-   set_cross_margin_leverage \tab POST /api/v1/crossMarginLeverage \tab POST \cr
-   get_max_open_size \tab GET /api/v1/maxOpenSize \tab GET \cr
-   get_max_withdraw_margin \tab GET /api/v1/maxWithdrawMargin \tab GET \cr
-   add_isolated_margin \tab POST /api/v1/marginDepositIn \tab POST \cr
-   remove_isolated_margin \tab POST /api/v1/marginWithdrawOut \tab POST \cr
+   get_margin_mode \tab GET /api/v2/position/getMarginMode \tab GET \cr
+   set_margin_mode \tab POST /api/v2/position/changeMarginMode \tab POST \cr
+   get_cross_margin_leverage \tab GET /api/v2/getCrossUserLeverage \tab GET \cr
+   set_cross_margin_leverage \tab POST /api/v2/changeCrossUserLeverage \tab POST \cr
+   get_max_open_size \tab GET /api/v2/getMaxOpenSize \tab GET \cr
+   get_max_withdraw_margin \tab GET /api/v1/margin/maxWithdrawMargin \tab GET \cr
+   add_isolated_margin \tab POST /api/v1/position/margin/deposit-margin \tab POST \cr
+   remove_isolated_margin \tab POST /api/v1/margin/withdrawMargin \tab POST \cr
    get_risk_limit \tab GET /api/v1/contracts/risk-limit/\{symbol\} \tab GET \cr
    get_funding_history \tab GET /api/v1/funding-history \tab GET \cr
 }
@@ -129,9 +129,9 @@ margin, and P&L.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/account/get-account-overview}{KuCoin Get Futures Account Overview}
+\href{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-futures}{KuCoin Get Account - Futures}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
@@ -214,7 +214,7 @@ Retrieves position details for a specific symbol.
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-position-details}{KuCoin Get Position Details}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
@@ -337,7 +337,7 @@ Retrieves all open positions.
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-position-list}{KuCoin Get Position List}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
@@ -439,7 +439,7 @@ Retrieves historical position records.
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-positions-history}{KuCoin Get Position History}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
@@ -543,20 +543,20 @@ Retrieves the current margin mode for a symbol.
 
 \subsection{API Endpoint}{
 
-\verb{GET https://api-futures.kucoin.com/api/v1/marginMode}
+\verb{GET https://api-futures.kucoin.com/api/v2/position/getMarginMode}
 }
 
 \subsection{Official Documentation}{
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-margin-mode}{KuCoin Get Margin Mode}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET \\
-  'https://api-futures.kucoin.com/api/v1/marginMode?symbol=XBTUSDTM' \\
+  'https://api-futures.kucoin.com/api/v2/position/getMarginMode?symbol=XBTUSDTM' \\
   --header 'KC-API-KEY: your-api-key' \\
   --header 'KC-API-SIGN: your-signature' \\
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
@@ -613,19 +613,19 @@ Switches the margin mode for a symbol between ISOLATED and CROSS.
 
 \subsection{API Endpoint}{
 
-\verb{POST https://api-futures.kucoin.com/api/v1/marginMode}
+\verb{POST https://api-futures.kucoin.com/api/v2/position/changeMarginMode}
 }
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/positions/modify-margin-mode}{KuCoin Modify Margin Mode}
+\href{https://www.kucoin.com/docs-new/rest/futures-trading/positions/switch-margin-mode}{KuCoin Switch Margin Mode}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request POST 'https://api-futures.kucoin.com/api/v1/marginMode' \\
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request POST 'https://api-futures.kucoin.com/api/v2/position/changeMarginMode' \\
   --header 'Content-Type: application/json' \\
   --header 'KC-API-KEY: your-api-key' \\
   --header 'KC-API-SIGN: your-signature' \\
@@ -694,20 +694,20 @@ Retrieves the current cross margin leverage for a symbol.
 
 \subsection{API Endpoint}{
 
-\verb{GET https://api-futures.kucoin.com/api/v1/crossMarginLeverage}
+\verb{GET https://api-futures.kucoin.com/api/v2/getCrossUserLeverage}
 }
 
 \subsection{Official Documentation}{
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-cross-margin-leverage}{KuCoin Get Cross Margin Leverage}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET \\
-  'https://api-futures.kucoin.com/api/v1/crossMarginLeverage?symbol=XBTUSDTM' \\
+  'https://api-futures.kucoin.com/api/v2/getCrossUserLeverage?symbol=XBTUSDTM' \\
   --header 'KC-API-KEY: your-api-key' \\
   --header 'KC-API-SIGN: your-signature' \\
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
@@ -764,19 +764,19 @@ Modifies the cross margin leverage for a symbol.
 
 \subsection{API Endpoint}{
 
-\verb{POST https://api-futures.kucoin.com/api/v1/crossMarginLeverage}
+\verb{POST https://api-futures.kucoin.com/api/v2/changeCrossUserLeverage}
 }
 
 \subsection{Official Documentation}{
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/positions/modify-cross-margin-leverage}{KuCoin Modify Cross Margin Leverage}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request POST 'https://api-futures.kucoin.com/api/v1/crossMarginLeverage' \\
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request POST 'https://api-futures.kucoin.com/api/v2/changeCrossUserLeverage' \\
   --header 'Content-Type: application/json' \\
   --header 'KC-API-KEY: your-api-key' \\
   --header 'KC-API-SIGN: your-signature' \\
@@ -845,20 +845,20 @@ Retrieves the maximum number of contracts that can be opened.
 
 \subsection{API Endpoint}{
 
-\verb{GET https://api-futures.kucoin.com/api/v1/maxOpenSize}
+\verb{GET https://api-futures.kucoin.com/api/v2/getMaxOpenSize}
 }
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-maximum-open-position-size}{KuCoin Get Max Open Size}
+\href{https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-max-open-size}{KuCoin Get Max Open Size}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET \\
-  'https://api-futures.kucoin.com/api/v1/maxOpenSize?symbol=XBTUSDTM&price=40000&leverage=10' \\
+  'https://api-futures.kucoin.com/api/v2/getMaxOpenSize?symbol=XBTUSDTM&price=40000&leverage=10' \\
   --header 'KC-API-KEY: your-api-key' \\
   --header 'KC-API-SIGN: your-signature' \\
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
@@ -920,20 +920,20 @@ Retrieves the maximum margin that can be withdrawn from an isolated position.
 
 \subsection{API Endpoint}{
 
-\verb{GET https://api-futures.kucoin.com/api/v1/maxWithdrawMargin}
+\verb{GET https://api-futures.kucoin.com/api/v1/margin/maxWithdrawMargin}
 }
 
 \subsection{Official Documentation}{
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-max-withdraw-margin}{KuCoin Get Max Withdraw Margin}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET \\
-  'https://api-futures.kucoin.com/api/v1/maxWithdrawMargin?symbol=XBTUSDTM' \\
+  'https://api-futures.kucoin.com/api/v1/margin/maxWithdrawMargin?symbol=XBTUSDTM' \\
   --header 'KC-API-KEY: your-api-key' \\
   --header 'KC-API-SIGN: your-signature' \\
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
@@ -989,19 +989,19 @@ Deposits additional margin into an isolated margin position.
 
 \subsection{API Endpoint}{
 
-\verb{POST https://api-futures.kucoin.com/api/v1/marginDepositIn}
+\verb{POST https://api-futures.kucoin.com/api/v1/position/margin/deposit-margin}
 }
 
 \subsection{Official Documentation}{
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/positions/add-isolated-margin}{KuCoin Add Isolated Margin}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request POST 'https://api-futures.kucoin.com/api/v1/marginDepositIn' \\
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request POST 'https://api-futures.kucoin.com/api/v1/position/margin/deposit-margin' \\
   --header 'Content-Type: application/json' \\
   --header 'KC-API-KEY: your-api-key' \\
   --header 'KC-API-SIGN: your-signature' \\
@@ -1078,19 +1078,19 @@ Withdraws excess margin from an isolated margin position.
 
 \subsection{API Endpoint}{
 
-\verb{POST https://api-futures.kucoin.com/api/v1/marginWithdrawOut}
+\verb{POST https://api-futures.kucoin.com/api/v1/margin/withdrawMargin}
 }
 
 \subsection{Official Documentation}{
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/positions/remove-isolated-margin}{KuCoin Remove Isolated Margin}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request POST 'https://api-futures.kucoin.com/api/v1/marginWithdrawOut' \\
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request POST 'https://api-futures.kucoin.com/api/v1/margin/withdrawMargin' \\
   --header 'Content-Type: application/json' \\
   --header 'KC-API-KEY: your-api-key' \\
   --header 'KC-API-SIGN: your-signature' \\
@@ -1168,9 +1168,9 @@ Retrieves risk limit tiers for a futures contract.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/risk-limit/get-futures-risk-limit-level}{KuCoin Get Risk Limit Level}
+\href{https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-isolated-margin-risk-limit}{KuCoin Get Isolated Margin Risk Limit}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
@@ -1271,7 +1271,7 @@ Retrieves your personal funding fee settlement records.
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-private-funding-history}{KuCoin Get Private Funding History}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{curl}{

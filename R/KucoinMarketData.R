@@ -90,7 +90,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Announcements](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-announcements)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **New Listing Detection**: Monitor for new token listings to automate early trading strategies.
@@ -215,7 +215,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Currency](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-currency)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Deposit Monitoring**: Check `is_deposit_enabled` and `deposit_min_size` before initiating deposits.
@@ -343,7 +343,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get All Currencies](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-currencies)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Universe Construction**: Build a reference table of all supported assets.
@@ -441,9 +441,9 @@ KucoinMarketData <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v2/symbols/{symbol}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Symbol](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-symbols)
+    #' [KuCoin Get Symbol](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-symbol)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Order Validation**: Read `price_increment`, `base_increment`, `base_min_size`, and
@@ -538,7 +538,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get All Symbols](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-symbols)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Universe Filtering**: Filter by `market`, `enable_trading`, `is_margin_enabled` to
@@ -653,7 +653,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Ticker](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-ticker)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Spread Monitoring**: Calculate `best_ask - best_bid` for spread-based strategies.
@@ -734,7 +734,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get All Tickers](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-tickers)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Market Screening**: Scan all pairs for volume, change rate, or spread anomalies.
@@ -844,7 +844,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Trade History](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-trade-history)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Volume Analysis**: Aggregate recent trade sizes to estimate real-time volume flow.
@@ -930,7 +930,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Part Orderbook](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-part-orderbook)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Depth Analysis**: Assess liquidity at various price levels for slippage estimation.
@@ -1004,7 +1004,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Full Orderbook](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-full-orderbook)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Full Depth Analysis**: Build complete order book profiles for advanced strategies.
@@ -1079,7 +1079,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get 24hr Stats](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-24hr-stats)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Volatility Assessment**: Use `high - low` range or `change_rate` for volatility signals.
@@ -1173,7 +1173,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Market List](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-market-list)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Market Discovery**: Enumerate available segments for the `market` filter in `get_all_symbols()`.
@@ -1236,7 +1236,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Klines](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-klines)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Backtesting**: Fetch large historical ranges for strategy backtesting.
@@ -1325,7 +1325,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Server Time](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-server-time)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -1383,7 +1383,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Service Status](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-service-status)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -1438,7 +1438,7 @@ KucoinMarketData <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Fiat Price](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-fiat-price)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```

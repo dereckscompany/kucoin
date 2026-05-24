@@ -17,14 +17,14 @@
 #' | get_position | GET /api/v2/position | GET |
 #' | get_positions | GET /api/v1/positions | GET |
 #' | get_positions_history | GET /api/v1/history-positions | GET |
-#' | get_margin_mode | GET /api/v1/marginMode | GET |
-#' | set_margin_mode | POST /api/v1/marginMode | POST |
-#' | get_cross_margin_leverage | GET /api/v1/crossMarginLeverage | GET |
-#' | set_cross_margin_leverage | POST /api/v1/crossMarginLeverage | POST |
-#' | get_max_open_size | GET /api/v1/maxOpenSize | GET |
-#' | get_max_withdraw_margin | GET /api/v1/maxWithdrawMargin | GET |
-#' | add_isolated_margin | POST /api/v1/marginDepositIn | POST |
-#' | remove_isolated_margin | POST /api/v1/marginWithdrawOut | POST |
+#' | get_margin_mode | GET /api/v2/position/getMarginMode | GET |
+#' | set_margin_mode | POST /api/v2/position/changeMarginMode | POST |
+#' | get_cross_margin_leverage | GET /api/v2/getCrossUserLeverage | GET |
+#' | set_cross_margin_leverage | POST /api/v2/changeCrossUserLeverage | POST |
+#' | get_max_open_size | GET /api/v2/getMaxOpenSize | GET |
+#' | get_max_withdraw_margin | GET /api/v1/margin/maxWithdrawMargin | GET |
+#' | add_isolated_margin | POST /api/v1/position/margin/deposit-margin | POST |
+#' | remove_isolated_margin | POST /api/v1/margin/withdrawMargin | POST |
 #' | get_risk_limit | GET /api/v1/contracts/risk-limit/\{symbol\} | GET |
 #' | get_funding_history | GET /api/v1/funding-history | GET |
 #'
@@ -75,9 +75,9 @@ KucoinFuturesAccount <- R6::R6Class(
     #' `GET https://api-futures.kucoin.com/api/v1/account-overview`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Futures Account Overview](https://www.kucoin.com/docs-new/rest/futures-trading/account/get-account-overview)
+    #' [KuCoin Get Account - Futures](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-futures)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -144,7 +144,7 @@ KucoinFuturesAccount <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Position Details](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-position-details)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -253,7 +253,7 @@ KucoinFuturesAccount <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Position List](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-position-list)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -346,7 +346,7 @@ KucoinFuturesAccount <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Position History](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-positions-history)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -445,17 +445,17 @@ KucoinFuturesAccount <- R6::R6Class(
     #' 2. **Parsing**: Returns a single-row `data.table` with the current margin mode.
     #'
     #' ### API Endpoint
-    #' `GET https://api-futures.kucoin.com/api/v1/marginMode`
+    #' `GET https://api-futures.kucoin.com/api/v2/position/getMarginMode`
     #'
     #' ### Official Documentation
     #' [KuCoin Get Margin Mode](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-margin-mode)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
     #' curl --location --request GET \
-    #'   'https://api-futures.kucoin.com/api/v1/marginMode?symbol=XBTUSDTM' \
+    #'   'https://api-futures.kucoin.com/api/v2/position/getMarginMode?symbol=XBTUSDTM' \
     #'   --header 'KC-API-KEY: your-api-key' \
     #'   --header 'KC-API-SIGN: your-signature' \
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
@@ -481,7 +481,7 @@ KucoinFuturesAccount <- R6::R6Class(
     #'   - `margin_mode` (character): `"ISOLATED"` or `"CROSS"`.
     get_margin_mode = function(symbol) {
       return(private$.request(
-        endpoint = "/api/v1/marginMode",
+        endpoint = "/api/v2/position/getMarginMode",
         query = list(symbol = symbol),
         .parser = function(data) {
           return(as_dt_row(data)[])
@@ -499,16 +499,16 @@ KucoinFuturesAccount <- R6::R6Class(
     #' 3. **Parsing**: Returns a single-row `data.table` confirming the updated mode.
     #'
     #' ### API Endpoint
-    #' `POST https://api-futures.kucoin.com/api/v1/marginMode`
+    #' `POST https://api-futures.kucoin.com/api/v2/position/changeMarginMode`
     #'
     #' ### Official Documentation
-    #' [KuCoin Modify Margin Mode](https://www.kucoin.com/docs-new/rest/futures-trading/positions/modify-margin-mode)
+    #' [KuCoin Switch Margin Mode](https://www.kucoin.com/docs-new/rest/futures-trading/positions/switch-margin-mode)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
-    #' curl --location --request POST 'https://api-futures.kucoin.com/api/v1/marginMode' \
+    #' curl --location --request POST 'https://api-futures.kucoin.com/api/v2/position/changeMarginMode' \
     #'   --header 'Content-Type: application/json' \
     #'   --header 'KC-API-KEY: your-api-key' \
     #'   --header 'KC-API-SIGN: your-signature' \
@@ -545,7 +545,7 @@ KucoinFuturesAccount <- R6::R6Class(
     #'   - `margin_mode` (character): Updated margin mode.
     set_margin_mode = function(symbol, marginMode) {
       return(private$.request(
-        endpoint = "/api/v1/marginMode",
+        endpoint = "/api/v2/position/changeMarginMode",
         method = "POST",
         body = list(symbol = symbol, marginMode = marginMode),
         .parser = function(data) {
@@ -563,17 +563,17 @@ KucoinFuturesAccount <- R6::R6Class(
     #' 2. **Parsing**: Returns a single-row `data.table` with the current leverage setting.
     #'
     #' ### API Endpoint
-    #' `GET https://api-futures.kucoin.com/api/v1/crossMarginLeverage`
+    #' `GET https://api-futures.kucoin.com/api/v2/getCrossUserLeverage`
     #'
     #' ### Official Documentation
     #' [KuCoin Get Cross Margin Leverage](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-cross-margin-leverage)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
     #' curl --location --request GET \
-    #'   'https://api-futures.kucoin.com/api/v1/crossMarginLeverage?symbol=XBTUSDTM' \
+    #'   'https://api-futures.kucoin.com/api/v2/getCrossUserLeverage?symbol=XBTUSDTM' \
     #'   --header 'KC-API-KEY: your-api-key' \
     #'   --header 'KC-API-SIGN: your-signature' \
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
@@ -599,7 +599,7 @@ KucoinFuturesAccount <- R6::R6Class(
     #'   - `leverage` (character): Current leverage multiplier.
     get_cross_margin_leverage = function(symbol) {
       return(private$.request(
-        endpoint = "/api/v1/crossMarginLeverage",
+        endpoint = "/api/v2/getCrossUserLeverage",
         query = list(symbol = symbol),
         .parser = function(data) {
           return(as_dt_row(data)[])
@@ -617,16 +617,16 @@ KucoinFuturesAccount <- R6::R6Class(
     #' 3. **Parsing**: Returns a single-row `data.table` confirming the updated leverage.
     #'
     #' ### API Endpoint
-    #' `POST https://api-futures.kucoin.com/api/v1/crossMarginLeverage`
+    #' `POST https://api-futures.kucoin.com/api/v2/changeCrossUserLeverage`
     #'
     #' ### Official Documentation
     #' [KuCoin Modify Cross Margin Leverage](https://www.kucoin.com/docs-new/rest/futures-trading/positions/modify-cross-margin-leverage)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
-    #' curl --location --request POST 'https://api-futures.kucoin.com/api/v1/crossMarginLeverage' \
+    #' curl --location --request POST 'https://api-futures.kucoin.com/api/v2/changeCrossUserLeverage' \
     #'   --header 'Content-Type: application/json' \
     #'   --header 'KC-API-KEY: your-api-key' \
     #'   --header 'KC-API-SIGN: your-signature' \
@@ -663,7 +663,7 @@ KucoinFuturesAccount <- R6::R6Class(
     #'   - `leverage` (character): Updated leverage multiplier.
     set_cross_margin_leverage = function(symbol, leverage) {
       return(private$.request(
-        endpoint = "/api/v1/crossMarginLeverage",
+        endpoint = "/api/v2/changeCrossUserLeverage",
         method = "POST",
         body = list(symbol = symbol, leverage = leverage),
         .parser = function(data) {
@@ -681,17 +681,17 @@ KucoinFuturesAccount <- R6::R6Class(
     #' 2. **Parsing**: Returns a single-row `data.table` with maximum buy and sell open sizes.
     #'
     #' ### API Endpoint
-    #' `GET https://api-futures.kucoin.com/api/v1/maxOpenSize`
+    #' `GET https://api-futures.kucoin.com/api/v2/getMaxOpenSize`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Max Open Size](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-maximum-open-position-size)
+    #' [KuCoin Get Max Open Size](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-max-open-size)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
     #' curl --location --request GET \
-    #'   'https://api-futures.kucoin.com/api/v1/maxOpenSize?symbol=XBTUSDTM&price=40000&leverage=10' \
+    #'   'https://api-futures.kucoin.com/api/v2/getMaxOpenSize?symbol=XBTUSDTM&price=40000&leverage=10' \
     #'   --header 'KC-API-KEY: your-api-key' \
     #'   --header 'KC-API-SIGN: your-signature' \
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
@@ -721,7 +721,7 @@ KucoinFuturesAccount <- R6::R6Class(
     #'   - `max_sell_open_size` (integer): Maximum sell contracts.
     get_max_open_size = function(symbol, price, leverage) {
       return(private$.request(
-        endpoint = "/api/v1/maxOpenSize",
+        endpoint = "/api/v2/getMaxOpenSize",
         query = list(symbol = symbol, price = price, leverage = leverage),
         .parser = function(data) {
           return(as_dt_row(data)[])
@@ -738,17 +738,17 @@ KucoinFuturesAccount <- R6::R6Class(
     #' 2. **Parsing**: Returns a single-row `data.table` with the maximum withdrawable margin.
     #'
     #' ### API Endpoint
-    #' `GET https://api-futures.kucoin.com/api/v1/maxWithdrawMargin`
+    #' `GET https://api-futures.kucoin.com/api/v1/margin/maxWithdrawMargin`
     #'
     #' ### Official Documentation
     #' [KuCoin Get Max Withdraw Margin](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-max-withdraw-margin)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
     #' curl --location --request GET \
-    #'   'https://api-futures.kucoin.com/api/v1/maxWithdrawMargin?symbol=XBTUSDTM' \
+    #'   'https://api-futures.kucoin.com/api/v1/margin/maxWithdrawMargin?symbol=XBTUSDTM' \
     #'   --header 'KC-API-KEY: your-api-key' \
     #'   --header 'KC-API-SIGN: your-signature' \
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
@@ -773,7 +773,7 @@ KucoinFuturesAccount <- R6::R6Class(
     #'     numeric coercion.
     get_max_withdraw_margin = function(symbol) {
       return(private$.request(
-        endpoint = "/api/v1/maxWithdrawMargin",
+        endpoint = "/api/v1/margin/maxWithdrawMargin",
         query = list(symbol = symbol),
         .parser = function(data) {
           # KuCoin returns a scalar string here (e.g. "21.1234") rather than
@@ -800,16 +800,16 @@ KucoinFuturesAccount <- R6::R6Class(
     #' 3. **Parsing**: Returns a single-row `data.table` confirming the deposit.
     #'
     #' ### API Endpoint
-    #' `POST https://api-futures.kucoin.com/api/v1/marginDepositIn`
+    #' `POST https://api-futures.kucoin.com/api/v1/position/margin/deposit-margin`
     #'
     #' ### Official Documentation
     #' [KuCoin Add Isolated Margin](https://www.kucoin.com/docs-new/rest/futures-trading/positions/add-isolated-margin)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
-    #' curl --location --request POST 'https://api-futures.kucoin.com/api/v1/marginDepositIn' \
+    #' curl --location --request POST 'https://api-futures.kucoin.com/api/v1/position/margin/deposit-margin' \
     #'   --header 'Content-Type: application/json' \
     #'   --header 'KC-API-KEY: your-api-key' \
     #'   --header 'KC-API-SIGN: your-signature' \
@@ -852,7 +852,7 @@ KucoinFuturesAccount <- R6::R6Class(
     #'   - `margin_type` (character): Operation type (e.g., `"ADD"`).
     add_isolated_margin = function(symbol, margin, bizNo) {
       return(private$.request(
-        endpoint = "/api/v1/marginDepositIn",
+        endpoint = "/api/v1/position/margin/deposit-margin",
         method = "POST",
         body = list(symbol = symbol, margin = margin, bizNo = bizNo),
         .parser = function(data) {
@@ -871,16 +871,16 @@ KucoinFuturesAccount <- R6::R6Class(
     #' 3. **Parsing**: Returns a single-row `data.table` confirming the withdrawal.
     #'
     #' ### API Endpoint
-    #' `POST https://api-futures.kucoin.com/api/v1/marginWithdrawOut`
+    #' `POST https://api-futures.kucoin.com/api/v1/margin/withdrawMargin`
     #'
     #' ### Official Documentation
     #' [KuCoin Remove Isolated Margin](https://www.kucoin.com/docs-new/rest/futures-trading/positions/remove-isolated-margin)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
-    #' curl --location --request POST 'https://api-futures.kucoin.com/api/v1/marginWithdrawOut' \
+    #' curl --location --request POST 'https://api-futures.kucoin.com/api/v1/margin/withdrawMargin' \
     #'   --header 'Content-Type: application/json' \
     #'   --header 'KC-API-KEY: your-api-key' \
     #'   --header 'KC-API-SIGN: your-signature' \
@@ -921,7 +921,7 @@ KucoinFuturesAccount <- R6::R6Class(
     #'   - `margin_type` (character): Operation type.
     remove_isolated_margin = function(symbol, withdrawAmount) {
       return(private$.request(
-        endpoint = "/api/v1/marginWithdrawOut",
+        endpoint = "/api/v1/margin/withdrawMargin",
         method = "POST",
         body = list(symbol = symbol, withdrawAmount = withdrawAmount),
         .parser = function(data) {
@@ -942,9 +942,9 @@ KucoinFuturesAccount <- R6::R6Class(
     #' `GET https://api-futures.kucoin.com/api/v1/contracts/risk-limit/{symbol}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Risk Limit Level](https://www.kucoin.com/docs-new/rest/futures-trading/risk-limit/get-futures-risk-limit-level)
+    #' [KuCoin Get Isolated Margin Risk Limit](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-isolated-margin-risk-limit)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```
@@ -1031,7 +1031,7 @@ KucoinFuturesAccount <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Private Funding History](https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-private-funding-history)
     #'
-    #' Verified: 2026-03-10
+    #' Verified: 2026-05-23
     #'
     #' ### curl
     #' ```

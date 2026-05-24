@@ -83,7 +83,7 @@ KucoinSubAccount <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Add Sub-Account](https://www.kucoin.com/docs-new/rest/account-info/sub-account/add-subaccount)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Isolation**: Create dedicated sub-accounts per strategy to isolate funds and risk.
@@ -184,7 +184,7 @@ KucoinSubAccount <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Sub-Account List Summary Info](https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-list-summary-info)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Inventory Check**: Periodically poll sub-account lists to verify all strategy sub-accounts are active.
@@ -300,7 +300,7 @@ KucoinSubAccount <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Sub-Account Detail Balance](https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-detail-balance)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Pre-Trade Check**: Query a sub-account's available balance before placing orders to avoid insufficient-funds errors.
@@ -474,7 +474,7 @@ KucoinSubAccount <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Sub-Account List Spot Balance V2](https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-list-spot-balance-v2)
     #'
-    #' Verified: 2026-02-01
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Portfolio Dashboard**: Aggregate balances across all sub-accounts for a unified portfolio view.

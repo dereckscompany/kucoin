@@ -299,7 +299,7 @@ optional parameters, converting numerics to character strings as needed.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/add-stop-order}{KuCoin Add Stop Order}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -470,7 +470,7 @@ Only stop orders that have not yet been triggered can be cancelled.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-stop-order-by-orderld}{KuCoin Cancel Stop Order By OrderId}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -561,7 +561,7 @@ Both \code{clientOid} and \code{symbol} are required as query parameters.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-stop-order-by-clientoid}{KuCoin Cancel Stop Order By ClientOid}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -656,7 +656,7 @@ all pending stop orders are cancelled.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/batch-cancel-stop-orders}{KuCoin Batch Cancel Stop Orders}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -760,7 +760,7 @@ order ID. Returns order parameters, status, trigger price, and timestamps.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-stop-order-by-orderld}{KuCoin Get Stop Order By OrderId}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -886,7 +886,7 @@ otherwise returns a single-row \code{data.table}.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/get-stop-order-by-clientoid}{KuCoin Get Stop Order By ClientOid}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1018,7 +1018,7 @@ binds rows into a \code{data.table}. Returns an empty \code{data.table} if no or
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-stop-orders-list}{KuCoin Get Stop Order List}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{

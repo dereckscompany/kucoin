@@ -94,7 +94,7 @@ KucoinTransfer <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Flex Transfer](https://www.kucoin.com/docs-new/rest/account-info/transfer/flex-transfer)
     #'
-    #' Verified: 2026-02-02
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Bot Startup**: Transfer deposited funds from MAIN to TRADE before placing orders.
@@ -255,7 +255,7 @@ KucoinTransfer <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Transfer Quotas](https://www.kucoin.com/docs-new/rest/account-info/transfer/get-transfer-quotas)
     #'
-    #' Verified: 2026-02-02
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Pre-Flight Check**: Verify `transferable` amount before initiating a transfer.

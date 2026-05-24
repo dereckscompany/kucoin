@@ -1,3 +1,24 @@
+# kucoin 4.0.2
+
+## DOCUMENTATION
+
+* **All 144 `Verified: YYYY-MM-DD` markers in the R6 roxygen blocks bumped to today.** A representative URL from each of the 15 R6 class files was spot-checked against the live KuCoin docs — endpoint paths, HTTP methods, and "page exists" all confirmed. KuCoin's docs site has been updated as recently as 2026-03 on several pages, so the markers are a useful freshness signal again rather than two-month-stale noise.
+* **Refreshed 25 stale `### Official Documentation` URLs after KuCoin reorganised the docs-new site.** 17 had returned HTTP 404 because the futures section moved (e.g. `/futures-trading/account/get-account-overview` → `/account-info/account-funding/get-account-futures`; `/futures-trading/orders/cancel-order-by-orderid` → `/futures-trading/orders/cancel-order-by-orderld` — note the typo on KuCoin's side); 7 pointed at pages that now document a different REST endpoint than the source code calls; 1 (`KucoinMarketData$get_symbol`) pointed at the all-symbols list page instead of the single-symbol detail page. All replacement URLs verified by HTTP GET. The futures Dead Connection Protection (DCP) docs were withdrawn from KuCoin entirely, so `KucoinFuturesTrading$set_dcp()` / `$get_dcp()` now reference the equivalent spot-trading DCP page with an inline note (see BUG FIXES below for the related endpoint observation).
+
+## BUG FIXES
+
+* **9 KuCoin Futures REST endpoint paths corrected after the 2026-05 docs reorganisation moved them.** The old paths now return HTTP 404; the new paths were confirmed live (read endpoints fully exercised; write endpoints poked with no-op or invalid payloads to confirm the path is recognised by KuCoin and only the business validation fails). Methods affected:
+    - `KucoinFuturesAccount$get_margin_mode()`: `GET /api/v1/marginMode` → `GET /api/v2/position/getMarginMode`.
+    - `KucoinFuturesAccount$set_margin_mode()`: `POST /api/v1/marginMode` → `POST /api/v2/position/changeMarginMode`.
+    - `KucoinFuturesAccount$get_cross_margin_leverage()`: `GET /api/v1/crossMarginLeverage` → `GET /api/v2/getCrossUserLeverage`.
+    - `KucoinFuturesAccount$set_cross_margin_leverage()`: `POST /api/v1/crossMarginLeverage` → `POST /api/v2/changeCrossUserLeverage`.
+    - `KucoinFuturesAccount$get_max_open_size()`: `GET /api/v1/maxOpenSize` → `GET /api/v2/getMaxOpenSize`.
+    - `KucoinFuturesAccount$get_max_withdraw_margin()`: `GET /api/v1/maxWithdrawMargin` → `GET /api/v1/margin/maxWithdrawMargin`.
+    - `KucoinFuturesAccount$add_isolated_margin()`: `POST /api/v1/marginDepositIn` → `POST /api/v1/position/margin/deposit-margin`.
+    - `KucoinFuturesAccount$remove_isolated_margin()`: `POST /api/v1/marginWithdrawOut` → `POST /api/v1/margin/withdrawMargin`.
+    - `KucoinFuturesMarketData$get_full_orderbook()`: `GET /api/v2/level2/snapshot` → `GET /api/v1/level2/snapshot`.
+* **Futures DCP appears to have been removed by KuCoin without an announcement.** `KucoinFuturesTrading$set_dcp()` (POST `/api/v1/orders/dead-cancel-all`) is still accepted by the Futures REST API (returns HTTP 403 on accounts without the relevant permission, so the route is alive), but `$get_dcp()` (GET `/api/v1/orders/dead-cancel-all/query`) now consistently returns HTTP 404 and the dedicated docs pages have been withdrawn. Methods left in place but flagged in roxygen; callers relying on futures DCP should treat `$get_dcp()` as broken until KuCoin clarifies.
+
 # kucoin 4.0.1
 
 ## BUG FIXES

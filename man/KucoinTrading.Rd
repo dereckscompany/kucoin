@@ -424,7 +424,7 @@ Parameters are validated by \code{validate_order_params()} before submission.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/add-order}{KuCoin Add Order}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -588,7 +588,7 @@ Same as \code{add_order()} but hits the test endpoint.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/add-order-test}{KuCoin Add Order Test}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -739,7 +739,7 @@ independently. Failed orders return \code{success = FALSE} with a \code{fail_msg
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/batch-add-orders}{KuCoin Batch Add Orders}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -862,7 +862,7 @@ Cancels a specific spot HF order by its KuCoin-assigned order ID.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld}{KuCoin Cancel Order By OrderId}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
@@ -935,7 +935,7 @@ Cancels a spot HF order by its client-assigned order ID.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid}{KuCoin Cancel Order By ClientOid}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
@@ -1008,7 +1008,7 @@ Decreases the quantity of an existing open order without fully cancelling it.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-partial-order}{KuCoin Cancel Partial Order}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1089,7 +1089,7 @@ Cancels all open HF orders for a specific trading pair.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-all-orders-by-symbol}{KuCoin Cancel All Orders By Symbol}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1161,7 +1161,7 @@ Cancels all open spot HF orders across all trading pairs.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-all-orders}{KuCoin Cancel All HF Orders}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1236,7 +1236,7 @@ Retrieves full details for a specific order by its KuCoin-assigned ID.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-order-by-orderld}{KuCoin Get Order By OrderId}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
@@ -1340,7 +1340,7 @@ Retrieves full details for a specific order by its client-assigned ID.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-order-by-clientoid}{KuCoin Get Order By ClientOid}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
@@ -1453,7 +1453,7 @@ Returns detailed fill information including fees, liquidity type, and trade IDs.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-trade-history}{KuCoin Get Trade History}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1596,7 +1596,7 @@ Useful for determining which pairs need attention.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-symbols-with-open-order}{KuCoin Get Symbols With Open Order}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1667,7 +1667,7 @@ Retrieves all currently open HF orders for a specific symbol.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-open-orders}{KuCoin Get Open Orders}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1778,7 +1778,7 @@ Supports filtering by side, type, and time range.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-closed-orders}{KuCoin Get Closed Orders}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1916,7 +1916,7 @@ eliminating the need to poll \code{get_order_by_id()}.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/add-order-sync}{KuCoin Add Order Sync}
 
-Verified: 2026-02-03
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -2074,7 +2074,7 @@ engine to process them before returning. Returns per-order fill results.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/batch-add-orders-sync}{KuCoin Batch Add Orders Sync}
 
-Verified: 2026-02-03
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -2211,7 +2211,7 @@ Returns the final order state including fill and cancellation sizes.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld-sync}{KuCoin Cancel Order By OrderId Sync}
 
-Verified: 2026-02-03
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -2301,7 +2301,7 @@ Cancels an order by client OID and waits for completion before returning.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid-sync}{KuCoin Cancel Order By ClientOid Sync}
 
-Verified: 2026-02-03
+Verified: 2026-05-23
 }
 
 \subsection{curl}{
@@ -2388,7 +2388,7 @@ simply cancelled with no replacement.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/modify-order}{KuCoin Modify Order}
 
-Verified: 2026-02-03
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -2500,7 +2500,7 @@ for the specified symbols (or all symbols if none specified).
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/set-dcp}{KuCoin Set DCP}
 
-Verified: 2026-02-03
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -2599,7 +2599,7 @@ configuration. Returns an empty \code{data.table} if DCP is not configured.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-dcp}{KuCoin Get DCP}
 
-Verified: 2026-02-03
+Verified: 2026-05-23
 }
 
 \subsection{curl}{

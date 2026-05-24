@@ -258,7 +258,7 @@ fills, the other side is automatically cancelled.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/add-oco-order}{KuCoin Add OCO Order}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -394,7 +394,7 @@ limit and stop-limit legs of the OCO order are cancelled.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-oco-order-by-orderld}{KuCoin Cancel OCO Order By OrderId}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -492,7 +492,7 @@ Both the limit and stop-limit legs of the OCO order are cancelled.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-oco-order-by-clientoid}{KuCoin Cancel OCO Order By ClientOid}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -591,7 +591,7 @@ all active OCO orders are cancelled.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/batch-cancel-oco-order}{KuCoin Batch Cancel OCO Orders}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -696,7 +696,7 @@ detailed sub-order information (use \code{get_order_detail_by_id()} for that).
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-by-orderld}{KuCoin Get OCO Order By OrderId}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -796,7 +796,7 @@ by your own identifiers rather than KuCoin-assigned IDs.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-by-clientoid}{KuCoin Get OCO Order By ClientOid}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -896,7 +896,7 @@ statuses. This provides more information than \code{get_order_by_id()}.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-detail-by-orderld}{KuCoin Get OCO Order Detail By OrderId}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1031,7 +1031,7 @@ specified criteria.
 
 \href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-list}{KuCoin Get OCO Order List}
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{

@@ -430,7 +430,7 @@ reduce-only constraints.
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/add-order}{KuCoin Add Futures Order}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -610,7 +610,7 @@ simulated order ID. Useful for pre-flight checks in automated systems.
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/add-order-test}{KuCoin Add Futures Order Test}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -778,7 +778,7 @@ while others fail).
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/batch-add-orders}{KuCoin Batch Add Futures Orders}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -934,9 +934,9 @@ order has already been filled or cancelled, the API returns an error.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-orderid}{KuCoin Cancel Futures Order By OrderId}
+\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-orderld}{KuCoin Cancel Futures Order By OrderId}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1026,7 +1026,7 @@ the symbol to disambiguate in case client OIDs are reused across symbols.
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-clientoid}{KuCoin Cancel Futures Order By ClientOid}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1113,9 +1113,9 @@ use \code{cancel_all_stop_orders()} for those).
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-multiple-futures-limit-orders}{KuCoin Cancel All Futures Orders}
+\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-all-orders}{KuCoin Cancel All Futures Orders}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1213,9 +1213,9 @@ stop orders become regular orders and must be cancelled via \code{cancel_all()}.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-multiple-futures-stop-orders}{KuCoin Cancel All Futures Stop Orders}
+\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-all-stop-orders}{KuCoin Cancel All Futures Stop Orders}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1312,9 +1312,9 @@ configuration parameters.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-by-orderid}{KuCoin Get Futures Order By OrderId}
+\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-by-orderld}{KuCoin Get Futures Order By OrderId}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1448,9 +1448,9 @@ order ID. Useful when the system order ID was not stored at placement time.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-by-clientoid}{KuCoin Get Futures Order By ClientOid}
+\href{https://www.kucoin.com/docs-new/rest/futures-trading/get-stop-order-by-clientoid}{KuCoin Get Futures Order By ClientOid}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1572,7 +1572,7 @@ open orders or \code{status = "done"} for closed/cancelled orders.
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-list}{KuCoin Get Futures Order List}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1717,7 +1717,7 @@ require pagination -- it returns up to 1000 records in a single response.
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-closed-orders}{KuCoin Get Recent Closed Futures Orders}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1847,9 +1847,9 @@ Once triggered, they appear in the regular order list.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-untriggered-stop-order-list}{KuCoin Get Futures Untriggered Stop Order List}
+\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-stop-order-list}{KuCoin Get Futures Untriggered Stop Order List}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -1966,9 +1966,9 @@ liquidity type (maker/taker), and precise trade timestamps.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/fills/get-filled-list}{KuCoin Get Futures Filled List}
+\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-trade-history}{KuCoin Get Futures Filled List}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -2128,9 +2128,9 @@ trade executions.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/fills/get-recent-filled-list}{KuCoin Get Recent Futures Filled List}
+\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-trade-history}{KuCoin Get Recent Futures Filled List}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -2245,7 +2245,7 @@ margin usage and exposure from pending orders.
 
 \href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-open-order-value}{KuCoin Get Open Order Value}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -2341,9 +2341,9 @@ connectivity, preventing orders from remaining open indefinitely.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/dead-cancel-all}{KuCoin Set DCP}
+\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/set-dcp}{KuCoin Set DCP (spot equivalent; futures DCP page withdrawn from KuCoin docs as of 2026-05; POST endpoint still accepted by the Futures REST API)}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
@@ -2454,9 +2454,9 @@ to verify that DCP is correctly configured.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-dead-cancel-all}{KuCoin Get DCP}
+\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-dcp}{KuCoin Get DCP (spot equivalent; futures DCP page withdrawn from KuCoin docs as of 2026-05; the Futures REST query endpoint now returns HTTP 404 — see NEWS for context)}
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{

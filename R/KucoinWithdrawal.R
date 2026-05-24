@@ -85,7 +85,7 @@ KucoinWithdrawal <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Withdraw V3](https://www.kucoin.com/docs-new/rest/account-info/withdrawals/withdraw-v3)
     #'
-    #' Verified: 2026-02-02
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Profit Extraction**: Withdraw profits to a cold wallet at regular intervals.
@@ -232,7 +232,7 @@ KucoinWithdrawal <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Cancel Withdrawal](https://www.kucoin.com/docs-new/rest/account-info/withdrawals/cancel-withdrawal)
     #'
-    #' Verified: 2026-02-02
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Error Recovery**: Cancel a withdrawal if the destination address was incorrect.
@@ -301,7 +301,7 @@ KucoinWithdrawal <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Withdrawal Quotas](https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-quotas)
     #'
-    #' Verified: 2026-02-02
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Pre-Flight Check**: Verify `is_withdraw_enabled` and `available_amount` before attempting a withdrawal.
@@ -429,7 +429,7 @@ KucoinWithdrawal <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Withdrawal History](https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-history)
     #'
-    #' Verified: 2026-02-02
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Withdrawal Monitoring**: Poll for `"SUCCESS"` status to confirm funds have left the exchange.
@@ -594,7 +594,7 @@ KucoinWithdrawal <- R6::R6Class(
     #' ### Official Documentation
     #' [KuCoin Get Withdrawal Detail](https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-by-id)
     #'
-    #' Verified: 2026-02-02
+    #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Status Tracking**: Monitor withdrawal progress through `REVIEW` → `PROCESSING` → `WALLET_PROCESSING` → `SUCCESS`.
