@@ -30,6 +30,56 @@ damage arising from the use of this software.
 We invite you to read the source code and make contributions if you find
 a bug or wish to make an improvement.
 
+## Design Philosophy
+
+All API responses are returned as `data.table` objects with three
+transformations applied:
+
+1.  **snake_case column names** — camelCase keys from the JSON response
+    (e.g. `clientOid`, `orderType`, `createdAt`) become snake_case
+    (`client_oid`, `order_type`, `created_at`). A handful of endpoints
+    additionally reshape nested objects to wide `parent_child` columns
+    (e.g. `baseAsset.currency` → `base_asset_currency`) or collapse
+    array fields under a plural form. See each method’s `@return` for
+    the exact column list.
+
+2.  **Type coercion** for well-known columns — KuCoin’s millisecond
+    timestamps (most endpoints) and nanosecond timestamps (futures
+    orderbooks / klines) are both parsed to `POSIXct` in UTC. Numeric
+    quantities, prices, and ratios stay as `character` strings because
+    KuCoin emits them as strings and the precision matters; cast with
+    `as.numeric()` at the point of use if you need arithmetic.
+
+3.  **One entity = one row, no list columns** — every method follows the
+    rule *“identify the entity for the endpoint, return one row per
+    entity”*. The same convention is shared with the sister `alpaca` and
+    `binance` packages so switching between exchanges doesn’t mean
+    switching mental models.
+
+The five shape treatments the parsers apply, depending on the nested
+structure:
+
+| Nested shape | Treatment | Example |
+|----|----|----|
+| Array of plain strings (`annType`, `permissions`) | Collapsed into one `;`-separated character column. Recover with `strsplit(x, ";", fixed = TRUE)[[1]]`. | `dt$ann_type` → `"latest-announcements;new-listings"` |
+| Array of objects (orderbook levels, OCO `orders`, sub-account `balances`) | Exploded to long format with parent fields replicated. A 1-indexed `level` / `sub_order_*` / similar position column is added when order matters. | `get_part_orderbook()` → one row per `(side, level)`. |
+| Fixed-schema nested object (`baseAsset` / `quoteAsset` on isolated-margin pairs) | Flattened to wide `parent_child` columns. | `get_isolated_margin_account()` → `base_asset_currency`, `base_asset_borrow_enabled`, … |
+| Sibling collection that doesn’t fit the row entity | Exposed via a sibling method on the same class so every method still returns one `data.table`. | `KucoinAccount$get_isolated_margin_account()` returns per-pair rows; ad-hoc summaries are sibling methods. |
+| Dynamic-key or array-of-array objects | Serialised as a JSON string column; recover with `jsonlite::fromJSON(x)`. | Lending product `tierAnnualPercentageRate` blocks. |
+
+**Two cross-cutting rules** apply to every shape treatment:
+
+1.  **Empty / null array → `NA_character_`** (no list cells). An OCO
+    order with no children returns `sub_order_id = NA`, not
+    `sub_order_id = list()`.
+2.  **Empty response → empty `data.table`** (no synthetic stub rows).
+    `KucoinTrading$cancel_all()` with no open orders returns a zero-row
+    table, not a fabricated `(symbol, status = "cancelled")`
+    placeholder. The absence of an error is the success signal.
+
+For the full per-treatment catalogue with worked examples, see
+`vignette("data-shapes", package = "kucoin")`.
+
 ## Installation
 
 ``` r
@@ -420,6 +470,28 @@ futures_trading$add_order_test(
 ``` r
 futures_account$get_positions()
 ```
+
+    #>         id   symbol auto_deposit real_leverage cross_mode delev_percentage
+    #>     <char>   <char>       <lgcl>         <int>     <lgcl>            <num>
+    #> 1: pos-001 XBTUSDTM        FALSE             5      FALSE              0.5
+    #>      opening_timestamp   current_timestamp current_qty current_cost
+    #>                 <POSc>              <POSc>       <int>       <char>
+    #> 1: 2024-10-17 10:04:19 2024-10-17 10:46:40           1        98.25
+    #>    current_comm unrealised_cost realised_gross_cost realised_cost is_open
+    #>          <char>          <char>              <char>        <char>  <lgcl>
+    #> 1:      0.05895           98.25                   0       0.05895    TRUE
+    #>    mark_price mark_value pos_cost pos_cross pos_init pos_comm pos_loss
+    #>         <int>     <char>   <char>    <char>   <char>   <char>   <char>
+    #> 1:      98350      98.35    98.25         0    19.65  0.07861        0
+    #>    pos_margin pos_maint maint_margin realised_gross_pnl realised_pnl
+    #>        <char>    <char>       <char>             <char>       <char>
+    #> 1:   19.72861    0.4423     19.82861                  0     -0.05895
+    #>    unrealised_pnl unrealised_pnl_pcnt avg_entry_price liquidation_price
+    #>            <char>               <num>          <char>            <char>
+    #> 1:            0.1               0.001         98250.0           79000.0
+    #>    bankrupt_price settle_currency margin_mode position_side
+    #>            <char>          <char>      <char>        <char>
+    #> 1:        78500.0            USDT    ISOLATED          BOTH
 
 For full futures documentation see `vignette("futures-trading")`.
 

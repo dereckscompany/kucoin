@@ -74,6 +74,7 @@ articles:
     contents:
       - getting-started
       - async-usage
+      - data-shapes
       - margin-trading
       - futures-trading
 
