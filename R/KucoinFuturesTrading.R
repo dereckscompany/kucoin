@@ -41,8 +41,8 @@
 #' | get_fills | GET /api/v1/fills | GET |
 #' | get_recent_fills | GET /api/v1/recentFills | GET |
 #' | get_open_order_value | GET /api/v1/openOrderStatistics | GET |
-#' | set_dcp | POST /api/v1/orders/dead-cancel-all | POST |
-#' | get_dcp | GET /api/v1/orders/dead-cancel-all/query | GET |
+#' | set_dcp | POST /api/ua/v1/dcp/set (spot host, tradeType=FUTURES) | POST |
+#' | get_dcp | GET /api/ua/v1/dcp/query (spot host, tradeType=FUTURES) | GET |
 #'
 #' @examples
 #' \dontrun{
@@ -1780,12 +1780,18 @@ KucoinFuturesTrading <- R6::R6Class(
     #' 3. **Parsing**: Returns `data.table` with the configured timeout and applicable symbols.
     #'
     #' ### API Endpoint
-    #' `POST https://api-futures.kucoin.com/api/v1/orders/dead-cancel-all`
+    #' `POST https://api.kucoin.com/api/ua/v1/dcp/set`
+    #'
+    #' The legacy futures-specific endpoint
+    #' (`POST /api/v1/orders/dead-cancel-all` on `api-futures.kucoin.com`)
+    #' was retired by KuCoin around 2026-05 and replaced with a unified
+    #' Universal-Trading-Account endpoint on the spot host that accepts a
+    #' `tradeType` parameter. We hardcode `tradeType = "FUTURES"` and
+    #' override the base URL to the spot host so the public method API
+    #' stays unchanged.
     #'
     #' ### Official Documentation
-    #' [KuCoin Set DCP (spot equivalent; futures DCP page withdrawn from
-    #' KuCoin docs as of 2026-05; POST endpoint still accepted by the
-    #' Futures REST API)](https://www.kucoin.com/docs-new/rest/spot-trading/orders/set-dcp)
+    #' [KuCoin Set DCP (Classic)](https://www.kucoin.com/docs-new/rest/ua/set-dcp-classic)
     #'
     #' Verified: 2026-05-23
     #'
@@ -1797,21 +1803,22 @@ KucoinFuturesTrading <- R6::R6Class(
     #'
     #' ### curl
     #' ```
-    #' curl --location --request POST 'https://api-futures.kucoin.com/api/v1/orders/dead-cancel-all' \
+    #' curl --location --request POST 'https://api.kucoin.com/api/ua/v1/dcp/set' \
     #'   --header 'Content-Type: application/json' \
     #'   --header 'KC-API-KEY: your-api-key' \
     #'   --header 'KC-API-SIGN: your-signature' \
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
     #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
     #'   --header 'KC-API-KEY-VERSION: 2' \
-    #'   --data-raw '{"timeout": 60, "symbol": "XBTUSDTM"}'
+    #'   --data-raw '{"timeout": 60, "symbol": "XBTUSDTM", "tradeType": "FUTURES"}'
     #' ```
     #'
     #' ### JSON Request
     #' ```json
     #' {
     #'   "timeout": 60,
-    #'   "symbol": "XBTUSDTM"
+    #'   "symbol": "XBTUSDTM",
+    #'   "tradeType": "FUTURES"
     #' }
     #' ```
     #'
@@ -1849,12 +1856,13 @@ KucoinFuturesTrading <- R6::R6Class(
     #' ft$set_dcp(timeout = -1)
     #' }
     set_dcp = function(timeout, symbol = NULL) {
-      body <- list(timeout = timeout, symbol = symbol)
+      body <- list(timeout = timeout, symbol = symbol, tradeType = "FUTURES")
       body <- body[!vapply(body, is.null, logical(1))]
       return(private$.request(
-        endpoint = "/api/v1/orders/dead-cancel-all",
+        endpoint = "/api/ua/v1/dcp/set",
         method = "POST",
         body = body,
+        base_url = get_base_url(),
         .parser = function(data) {
           return(as_dt_row(data))
         }
@@ -1872,12 +1880,19 @@ KucoinFuturesTrading <- R6::R6Class(
     #' 2. **Parsing**: Returns a single-row `data.table` with the current DCP settings.
     #'
     #' ### API Endpoint
-    #' `GET https://api-futures.kucoin.com/api/v1/orders/dead-cancel-all/query`
+    #' `GET https://api.kucoin.com/api/ua/v1/dcp/query`
+    #'
+    #' The legacy futures-specific endpoint
+    #' (`GET /api/v1/orders/dead-cancel-all/query` on
+    #' `api-futures.kucoin.com`) was retired by KuCoin around 2026-05
+    #' (the page was withdrawn and the endpoint now returns HTTP 404) and
+    #' replaced with the unified Universal-Trading-Account endpoint that
+    #' takes a `tradeType` query parameter. We hardcode
+    #' `tradeType = "FUTURES"` and override the base URL to the spot host
+    #' so the public method API stays unchanged.
     #'
     #' ### Official Documentation
-    #' [KuCoin Get DCP (spot equivalent; futures DCP page withdrawn from
-    #' KuCoin docs as of 2026-05; the Futures REST query endpoint now
-    #' returns HTTP 404 — see NEWS for context)](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-dcp)
+    #' [KuCoin Get DCP (Classic)](https://www.kucoin.com/docs-new/rest/ua/get-dcp-classic)
     #'
     #' Verified: 2026-05-23
     #'
@@ -1888,7 +1903,7 @@ KucoinFuturesTrading <- R6::R6Class(
     #' ### curl
     #' ```
     #' curl --location --request GET \
-    #'   'https://api-futures.kucoin.com/api/v1/orders/dead-cancel-all/query?symbol=XBTUSDTM' \
+    #'   'https://api.kucoin.com/api/ua/v1/dcp/query?tradeType=FUTURES&symbol=XBTUSDTM' \
     #'   --header 'KC-API-KEY: your-api-key' \
     #'   --header 'KC-API-SIGN: your-signature' \
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
@@ -1927,9 +1942,12 @@ KucoinFuturesTrading <- R6::R6Class(
     #' dcp_global <- ft$get_dcp()
     #' }
     get_dcp = function(symbol = NULL) {
+      query <- list(tradeType = "FUTURES", symbol = symbol)
+      query <- query[!vapply(query, is.null, logical(1))]
       return(private$.request(
-        endpoint = "/api/v1/orders/dead-cancel-all/query",
-        query = list(symbol = symbol),
+        endpoint = "/api/ua/v1/dcp/query",
+        query = query,
+        base_url = get_base_url(),
         .parser = function(data) {
           return(as_dt_row(data))
         }
