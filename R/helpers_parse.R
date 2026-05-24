@@ -93,10 +93,20 @@ ms_to_datetime <- function(ms) {
   # column with a POSIXct one. Always return a vector matching input
   # length so columns documented as POSIXct actually land as POSIXct,
   # even when every upstream value is missing. Matches binance/alpaca.
-  # `suppressWarnings()` silences the "NAs introduced by coercion"
-  # message that `as.numeric()` emits when the input is character `NA`
-  # — that NA → NA path is the documented contract, not a problem.
-  return(lubridate::as_datetime(suppressWarnings(as.numeric(ms)) / 1000))
+  if (is.numeric(ms)) {
+    return(lubridate::as_datetime(ms / 1000))
+  }
+  # Character path. Only feed real (non-NA) values to `as.numeric()` so
+  # the documented NA-in -> NA-out contract is silent, but a genuinely
+  # malformed string (e.g. `"not-a-number"`) still triggers the usual
+  # "NAs introduced by coercion" warning. `suppressWarnings()` here
+  # would silence real bugs too.
+  result <- rep(NA_real_, length(ms))
+  not_na <- !is.na(ms)
+  if (any(not_na)) {
+    result[not_na] <- as.numeric(ms[not_na])
+  }
+  return(lubridate::as_datetime(result / 1000))
 }
 
 #' Convert a KuCoin Nanosecond Timestamp to POSIXct
@@ -112,8 +122,17 @@ ns_to_datetime <- function(ns) {
     return(lubridate::NA_POSIXct_)
   }
   # Same all-NA shape contract as `ms_to_datetime`, and the same
-  # `suppressWarnings()` rationale for character `NA` input.
-  return(lubridate::as_datetime(suppressWarnings(as.numeric(ns)) / 1e9))
+  # only-feed-real-values-to-`as.numeric` strategy so the NA-in ->
+  # NA-out contract is silent without hiding genuine bad input.
+  if (is.numeric(ns)) {
+    return(lubridate::as_datetime(ns / 1e9))
+  }
+  result <- rep(NA_real_, length(ns))
+  not_na <- !is.na(ns)
+  if (any(not_na)) {
+    result[not_na] <- as.numeric(ns[not_na])
+  }
+  return(lubridate::as_datetime(result / 1e9))
 }
 
 #' Collapse a Plain-String Array Field on a Single Record

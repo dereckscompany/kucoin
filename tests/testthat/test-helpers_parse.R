@@ -88,12 +88,29 @@ test_that("ms_to_datetime does not warn on all-NA character input", {
   expect_true(all(is.na(out)))
 })
 
+test_that("ms_to_datetime still warns on genuinely malformed character input", {
+  # Counter-regression: we must NOT silence the warning blanket-wide
+  # via `suppressWarnings()`. A genuinely malformed string is a real
+  # bug and callers should hear about it.
+  expect_warning(
+    ms_to_datetime(c("not-a-number", NA_character_)),
+    "NAs introduced by coercion"
+  )
+})
+
 test_that("ns_to_datetime does not warn on all-NA character input", {
   expect_warning(ns_to_datetime(c(NA_character_, NA_character_)), NA)
   out <- ns_to_datetime(c(NA_character_, NA_character_))
   expect_s3_class(out, "POSIXct")
   expect_length(out, 2L)
   expect_true(all(is.na(out)))
+})
+
+test_that("ns_to_datetime still warns on genuinely malformed character input", {
+  expect_warning(
+    ns_to_datetime(c("not-a-number", NA_character_)),
+    "NAs introduced by coercion"
+  )
 })
 
 test_that("coerce_cols deduplicates `cols` so each column is coerced once", {
