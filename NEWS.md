@@ -1,3 +1,11 @@
+# kucoin 4.0.3
+
+## TESTS
+
+* **Live integration coverage for the Futures REST surface.** New `[LIVE]` test blocks in `tests/testthat/test-live-integration-public.R` (7 tests against `KucoinFuturesMarketData` public endpoints) and `test-live-integration-private.R` (11 tests covering authenticated `KucoinFuturesAccount`, `KucoinFuturesMarketData$get_full_orderbook`, and read-only `KucoinFuturesTrading` queries). Pins the 5 path-corrected GET endpoints from v4.0.2 (`get_margin_mode`, `get_cross_margin_leverage`, `get_max_open_size`, `get_max_withdraw_margin`, `get_full_orderbook`) so the next time KuCoin moves a futures endpoint, CI surfaces the 404 instead of waiting for a user report.
+* Write methods (`set_margin_mode`, `set_cross_margin_leverage`, `add_isolated_margin`, `remove_isolated_margin`) are intentionally not exercised — they require real positions / funds.
+* Authenticated futures tests wrap each call in `tryCatch()` and skip with a clear reason if KuCoin returns a no-futures-account / no-permission error, so the suite stays usable for contributors without a funded futures sub-account. Endpoints that genuinely 404 still fail loudly (which is the regression we want to catch).
+
 # kucoin 4.0.2
 
 ## DOCUMENTATION

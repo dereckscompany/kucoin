@@ -368,3 +368,161 @@ test_that("[LIVE] get_redeem_orders returns data.table", {
   expect_s3_class(dt, "data.table")
   throttle()
 })
+
+# =============================================================================
+# KucoinFuturesAccount — Authenticated read-only
+# =============================================================================
+#
+# These cover the path-corrected GET methods in v4.0.2 (`get_margin_mode`,
+# `get_cross_margin_leverage`, `get_max_open_size`, `get_max_withdraw_margin`).
+# If KuCoin moves a futures endpoint again, these surface the 404 in CI
+# rather than waiting for a user report.
+#
+# Each call wraps in `tryCatch()`: if the response indicates the account has
+# no futures wallet (KuCoin error codes 200004 = position-not-found,
+# 100001 = invalid-symbol-for-account-type, or HTTP 401 on no-futures-perm),
+# the test SKIPs rather than fails. That way the suite stays usable for
+# users without a funded futures sub-account.
+#
+# Write methods (`set_margin_mode`, `set_cross_margin_leverage`,
+# `add_isolated_margin`, `remove_isolated_margin`) are deliberately NOT
+# exercised — they require real positions / funds and the operational risk
+# isn't worth catching the next docs reorganisation.
+
+futures_account <- KucoinFuturesAccount$new(keys = .keys)
+
+# Helper: if the API returns a futures-account-not-found / no-perm error,
+# skip the test instead of failing. Distinguishes between "endpoint dead"
+# (the regression we want to catch — should fail) and "account has no
+# futures wallet" (user environment, should skip).
+.skip_if_no_futures <- function(err) {
+  msg <- conditionMessage(err)
+  no_account_signals <- c(
+    "200004", # position not found
+    "400003", # KC-API-KEY not exists / wrong key type
+    "411100", # user is frozen
+    "100001", # invalid symbol
+    "HTTP 401"
+  )
+  if (any(vapply(no_account_signals, function(s) grepl(s, msg, fixed = TRUE), logical(1)))) {
+    testthat::skip(paste("No accessible futures account:", msg))
+  }
+  stop(err)
+}
+
+test_that("[LIVE] futures get_account_overview returns data.table for USDT", {
+  dt <- tryCatch(
+    futures_account$get_account_overview("USDT"),
+    error = .skip_if_no_futures
+  )
+  expect_s3_class(dt, "data.table")
+  expect_equal(nrow(dt), 1L)
+  throttle()
+})
+
+test_that("[LIVE] futures get_positions returns data.table", {
+  dt <- tryCatch(
+    futures_account$get_positions(),
+    error = .skip_if_no_futures
+  )
+  expect_s3_class(dt, "data.table")
+  throttle()
+})
+
+test_that("[LIVE] futures get_margin_mode returns data.table (path-corrected in 4.0.2)", {
+  dt <- tryCatch(
+    futures_account$get_margin_mode("XBTUSDTM"),
+    error = .skip_if_no_futures
+  )
+  expect_s3_class(dt, "data.table")
+  expect_equal(nrow(dt), 1L)
+  throttle()
+})
+
+test_that("[LIVE] futures get_cross_margin_leverage returns data.table (path-corrected in 4.0.2)", {
+  dt <- tryCatch(
+    futures_account$get_cross_margin_leverage("XBTUSDTM"),
+    error = .skip_if_no_futures
+  )
+  expect_s3_class(dt, "data.table")
+  expect_equal(nrow(dt), 1L)
+  throttle()
+})
+
+test_that("[LIVE] futures get_max_open_size returns data.table (path-corrected in 4.0.2)", {
+  dt <- tryCatch(
+    futures_account$get_max_open_size("XBTUSDTM", price = 40000, leverage = 10),
+    error = .skip_if_no_futures
+  )
+  expect_s3_class(dt, "data.table")
+  throttle()
+})
+
+test_that("[LIVE] futures get_max_withdraw_margin returns data.table (path-corrected in 4.0.2)", {
+  dt <- tryCatch(
+    futures_account$get_max_withdraw_margin("XBTUSDTM"),
+    error = .skip_if_no_futures
+  )
+  expect_s3_class(dt, "data.table")
+  throttle()
+})
+
+test_that("[LIVE] futures get_risk_limit returns data.table for XBTUSDTM", {
+  dt <- tryCatch(
+    futures_account$get_risk_limit("XBTUSDTM"),
+    error = .skip_if_no_futures
+  )
+  expect_s3_class(dt, "data.table")
+  expect_true(nrow(dt) > 0)
+  throttle()
+})
+
+# =============================================================================
+# KucoinFuturesMarketData — Authenticated read-only
+# =============================================================================
+
+futures_market_auth <- KucoinFuturesMarketData$new(keys = .keys)
+
+test_that("[LIVE] futures get_full_orderbook returns data.table (path-corrected in 4.0.2)", {
+  dt <- tryCatch(
+    futures_market_auth$get_full_orderbook("XBTUSDTM"),
+    error = .skip_if_no_futures
+  )
+  expect_s3_class(dt, "data.table")
+  expect_true(all(c("ts", "sequence", "side", "level", "price", "size") %in% names(dt)))
+  expect_true(nrow(dt) > 0)
+  throttle()
+})
+
+# =============================================================================
+# KucoinFuturesTrading — Authenticated read-only
+# =============================================================================
+
+futures_trading <- KucoinFuturesTrading$new(keys = .keys)
+
+test_that("[LIVE] futures get_order_list returns data.table", {
+  dt <- tryCatch(
+    futures_trading$get_order_list(),
+    error = .skip_if_no_futures
+  )
+  expect_s3_class(dt, "data.table")
+  throttle()
+})
+
+test_that("[LIVE] futures get_stop_orders returns data.table (path-refreshed in 4.0.2)", {
+  dt <- tryCatch(
+    futures_trading$get_stop_orders(),
+    error = .skip_if_no_futures
+  )
+  expect_s3_class(dt, "data.table")
+  throttle()
+})
+
+test_that("[LIVE] futures get_recent_fills returns data.table (path-refreshed in 4.0.2)", {
+  dt <- tryCatch(
+    futures_trading$get_recent_fills(),
+    error = .skip_if_no_futures
+  )
+  expect_s3_class(dt, "data.table")
+  throttle()
+})

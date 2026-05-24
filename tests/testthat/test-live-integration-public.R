@@ -229,3 +229,75 @@ test_that("[LIVE] get_loan_market_rate returns data.table for USDT", {
   expect_true(nrow(dt) > 0)
   throttle()
 })
+
+# =============================================================================
+# KucoinFuturesMarketData — Public Endpoints
+# =============================================================================
+#
+# These cover the public-data half of the Futures REST surface — no auth, no
+# state assumptions. Their job is to catch the next time KuCoin reorganises
+# the futures docs / endpoints (which happened around 2026-05 and forced 9
+# source-code path corrections in v4.0.2). If any of these start returning
+# 404, the new path needs hunting down again.
+
+futures_market <- KucoinFuturesMarketData$new()
+
+test_that("[LIVE] futures get_server_time returns POSIXct server_time", {
+  dt <- futures_market$get_server_time()
+  expect_s3_class(dt, "data.table")
+  expect_s3_class(dt$server_time, "POSIXct")
+  throttle()
+})
+
+test_that("[LIVE] futures get_all_contracts returns data.table with XBTUSDTM", {
+  dt <- futures_market$get_all_contracts()
+  expect_s3_class(dt, "data.table")
+  expect_true(nrow(dt) > 50, info = "Expected 50+ active futures contracts")
+  expect_true("XBTUSDTM" %in% dt$symbol)
+  throttle()
+})
+
+test_that("[LIVE] futures get_ticker returns data.table for XBTUSDTM", {
+  dt <- futures_market$get_ticker("XBTUSDTM")
+  expect_s3_class(dt, "data.table")
+  expect_equal(nrow(dt), 1L)
+  expect_equal(dt$symbol, "XBTUSDTM")
+  throttle()
+})
+
+test_that("[LIVE] futures get_part_orderbook returns data.table with level column", {
+  dt <- futures_market$get_part_orderbook("XBTUSDTM", size = 20)
+  expect_s3_class(dt, "data.table")
+  expect_true(all(c("ts", "sequence", "side", "level", "price", "size") %in% names(dt)))
+  expect_true("bid" %in% dt$side && "ask" %in% dt$side)
+  # `level` invariant: 1-indexed per side, starts at 1.
+  expect_equal(min(dt[side == "bid", level]), 1L)
+  expect_equal(min(dt[side == "ask", level]), 1L)
+  throttle()
+})
+
+test_that("[LIVE] futures get_klines returns OHLCV data.table", {
+  # Granularity 60 = 1m candles. Just confirm shape and that we get some rows.
+  dt <- futures_market$get_klines("XBTUSDTM", granularity = 60)
+  expect_s3_class(dt, "data.table")
+  expect_true(nrow(dt) > 0)
+  expect_true(all(c("datetime", "open", "high", "low", "close", "volume") %in% names(dt)))
+  expect_s3_class(dt$datetime, "POSIXct")
+  throttle()
+})
+
+test_that("[LIVE] futures get_mark_price returns data.table for XBTUSDTM", {
+  dt <- futures_market$get_mark_price("XBTUSDTM")
+  expect_s3_class(dt, "data.table")
+  expect_equal(nrow(dt), 1L)
+  expect_true("value" %in% names(dt) || "mark_price" %in% names(dt))
+  throttle()
+})
+
+test_that("[LIVE] futures get_funding_rate returns data.table for XBTUSDTM", {
+  # Path-corrected in v4.0.2: now `/funding-fees/get-current-funding-rate`.
+  dt <- futures_market$get_funding_rate("XBTUSDTM")
+  expect_s3_class(dt, "data.table")
+  expect_equal(nrow(dt), 1L)
+  throttle()
+})
