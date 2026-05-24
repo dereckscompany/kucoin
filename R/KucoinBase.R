@@ -132,10 +132,20 @@ KucoinBase <- R6::R6Class(
       body = NULL,
       auth = TRUE,
       .parser = identity,
-      timeout = 30
+      timeout = 30,
+      base_url = NULL
     ) {
+      # `base_url = NULL` (the default) uses the instance's configured host
+      # (spot for most classes, futures for the `KucoinFutures*` classes).
+      # An explicit `base_url` overrides for the rare cross-host endpoint —
+      # e.g. KuCoin's unified `/api/ua/v1/dcp/*` lives on the spot host but
+      # is exposed to futures callers through `KucoinFuturesTrading`.
+      effective_base <- private$.base_url
+      if (!is.null(base_url)) {
+        effective_base <- base_url
+      }
       return(kucoin_build_request(
-        base_url = private$.base_url,
+        base_url = effective_base,
         endpoint = endpoint,
         method = method,
         query = query,

@@ -52,8 +52,8 @@ unintended open positions during bot failures.
    get_fills \tab GET /api/v1/fills \tab GET \cr
    get_recent_fills \tab GET /api/v1/recentFills \tab GET \cr
    get_open_order_value \tab GET /api/v1/openOrderStatistics \tab GET \cr
-   set_dcp \tab POST /api/v1/orders/dead-cancel-all \tab POST \cr
-   get_dcp \tab GET /api/v1/orders/dead-cancel-all/query \tab GET \cr
+   set_dcp \tab POST /api/ua/v1/dcp/set (spot host, tradeType=FUTURES) \tab POST \cr
+   get_dcp \tab GET /api/ua/v1/dcp/query (spot host, tradeType=FUTURES) \tab GET \cr
 }
 
 }
@@ -2342,12 +2342,20 @@ connectivity, preventing orders from remaining open indefinitely.
 
 \subsection{API Endpoint}{
 
-\verb{POST https://api-futures.kucoin.com/api/v1/orders/dead-cancel-all}
+\verb{POST https://api.kucoin.com/api/ua/v1/dcp/set}
+
+The legacy futures-specific endpoint
+(\code{POST /api/v1/orders/dead-cancel-all} on \code{api-futures.kucoin.com})
+was retired by KuCoin around 2026-05 and replaced with a unified
+Universal-Trading-Account endpoint on the spot host that accepts a
+\code{tradeType} parameter. We hardcode \code{tradeType = "FUTURES"} and
+override the base URL to the spot host so the public method API
+stays unchanged.
 }
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/set-dcp}{KuCoin Set DCP (spot equivalent; futures DCP page withdrawn from KuCoin docs as of 2026-05; POST endpoint still accepted by the Futures REST API)}
+\href{https://www.kucoin.com/docs-new/rest/ua/set-dcp-classic}{KuCoin Set DCP (Classic)}
 
 Verified: 2026-05-23
 }
@@ -2363,14 +2371,14 @@ Verified: 2026-05-23
 
 \subsection{curl}{
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request POST 'https://api-futures.kucoin.com/api/v1/orders/dead-cancel-all' \\
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request POST 'https://api.kucoin.com/api/ua/v1/dcp/set' \\
   --header 'Content-Type: application/json' \\
   --header 'KC-API-KEY: your-api-key' \\
   --header 'KC-API-SIGN: your-signature' \\
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
   --header 'KC-API-PASSPHRASE: your-passphrase' \\
   --header 'KC-API-KEY-VERSION: 2' \\
-  --data-raw '\{"timeout": 60, "symbol": "XBTUSDTM"\}'
+  --data-raw '\{"timeout": 60, "symbol": "XBTUSDTM", "tradeType": "FUTURES"\}'
 }\if{html}{\out{</div>}}
 }
 
@@ -2378,7 +2386,8 @@ Verified: 2026-05-23
 
 \if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
   "timeout": 60,
-  "symbol": "XBTUSDTM"
+  "symbol": "XBTUSDTM",
+  "tradeType": "FUTURES"
 \}
 }\if{html}{\out{</div>}}
 }
@@ -2455,12 +2464,21 @@ to verify that DCP is correctly configured.
 
 \subsection{API Endpoint}{
 
-\verb{GET https://api-futures.kucoin.com/api/v1/orders/dead-cancel-all/query}
+\verb{GET https://api.kucoin.com/api/ua/v1/dcp/query}
+
+The legacy futures-specific endpoint
+(\code{GET /api/v1/orders/dead-cancel-all/query} on
+\code{api-futures.kucoin.com}) was retired by KuCoin around 2026-05
+(the page was withdrawn and the endpoint now returns HTTP 404) and
+replaced with the unified Universal-Trading-Account endpoint that
+takes a \code{tradeType} query parameter. We hardcode
+\code{tradeType = "FUTURES"} and override the base URL to the spot host
+so the public method API stays unchanged.
 }
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-dcp}{KuCoin Get DCP (spot equivalent; futures DCP page withdrawn from KuCoin docs as of 2026-05; the Futures REST query endpoint now returns HTTP 404 — see NEWS for context)}
+\href{https://www.kucoin.com/docs-new/rest/ua/get-dcp-classic}{KuCoin Get DCP (Classic)}
 
 Verified: 2026-05-23
 }
@@ -2475,7 +2493,7 @@ Verified: 2026-05-23
 \subsection{curl}{
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET \\
-  'https://api-futures.kucoin.com/api/v1/orders/dead-cancel-all/query?symbol=XBTUSDTM' \\
+  'https://api.kucoin.com/api/ua/v1/dcp/query?tradeType=FUTURES&symbol=XBTUSDTM' \\
   --header 'KC-API-KEY: your-api-key' \\
   --header 'KC-API-SIGN: your-signature' \\
   --header 'KC-API-TIMESTAMP: 1729176273859' \\

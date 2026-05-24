@@ -1,3 +1,19 @@
+# kucoin 4.0.3
+
+## BUG FIXES
+
+* **`KucoinFuturesTrading$set_dcp()` / `$get_dcp()` migrated to KuCoin's new unified DCP endpoint.** The legacy futures-specific paths (`POST /api/v1/orders/dead-cancel-all` and `GET /api/v1/orders/dead-cancel-all/query` on `api-futures.kucoin.com`) were retired by KuCoin around 2026-05 — the docs page was withdrawn, the GET path returned HTTP 404 and the POST returned 403 even on accounts with the relevant permission. KuCoin replaced both with a unified Universal-Trading-Account endpoint on the spot host: `POST /api/ua/v1/dcp/set` and `GET /api/ua/v1/dcp/query`, both taking a `tradeType` parameter that accepts `SPOT`, `MARGIN`, or `FUTURES`. We now hardcode `tradeType = "FUTURES"` and override the base URL to the spot host inside both methods, so the public method API stays unchanged — existing `futures_trading$set_dcp(timeout, symbol)` and `$get_dcp(symbol)` calls keep working. Spot DCP (`KucoinTrading$set_dcp()` / `$get_dcp()`) is untouched — it still works against the `/api/v1/hf/orders/dead-cancel-all*` paths on the spot host.
+
+## REFACTOR
+
+* **`KucoinBase$.request()` (private) gains an optional `base_url` parameter** that overrides the instance's configured host for a single call. Used so the migrated futures DCP methods can target the spot host while every other `KucoinFuturesTrading` method keeps using the futures host. No behaviour change for any existing call site — `base_url = NULL` (the default) preserves the previous behaviour exactly.
+
+## TESTS
+
+* **Live integration coverage for the Futures REST surface.** New `[LIVE]` test blocks in `tests/testthat/test-live-integration-public.R` (7 tests against `KucoinFuturesMarketData` public endpoints) and `test-live-integration-private.R` (13 tests covering authenticated `KucoinFuturesAccount`, `KucoinFuturesMarketData$get_full_orderbook`, read-only `KucoinFuturesTrading` queries, and the migrated DCP methods). Pins the 5 path-corrected GET endpoints from v4.0.2 (`get_margin_mode`, `get_cross_margin_leverage`, `get_max_open_size`, `get_max_withdraw_margin`, `get_full_orderbook`) plus the migrated DCP endpoints so the next time KuCoin moves a futures endpoint, CI surfaces the 404 instead of waiting for a user report. The DCP `set_dcp` test deliberately uses `timeout = -1` (disable) so it has no real side effects.
+* Write methods (`set_margin_mode`, `set_cross_margin_leverage`, `add_isolated_margin`, `remove_isolated_margin`) are intentionally not exercised — they require real positions / funds.
+* Authenticated futures tests wrap each call in `tryCatch()` and skip with a clear reason if KuCoin returns a no-futures-account / no-permission error, so the suite stays usable for contributors without a funded futures sub-account. Endpoints that genuinely 404 still fail loudly (which is the regression we want to catch).
+
 # kucoin 4.0.2
 
 ## DOCUMENTATION

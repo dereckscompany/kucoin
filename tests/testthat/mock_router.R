@@ -109,6 +109,14 @@ box::use(./mockery[
   list(pattern = "api/v1/timestamp", fixture = function() mock_futures_server_time_data()),
   list(pattern = "api/v1/status", fixture = function() mock_futures_service_status_data()),
   # Futures Trading
+  # Futures DCP migrated to the unified `/api/ua/v1/dcp/*` endpoint in
+  # v4.0.3 (the legacy `/api/v1/orders/dead-cancel-all*` paths return
+  # 404/403 since KuCoin's 2026-05 reorganisation). The legacy patterns
+  # are kept second as a fallback for any caller that hasn't migrated
+  # yet — `grepl(..., fixed = TRUE)` short-circuits on the first match
+  # so the new pattern takes precedence.
+  list(pattern = "ua/v1/dcp/query", fixture = function() mock_futures_dcp_data()),
+  list(pattern = "ua/v1/dcp/set", fixture = function() mock_futures_dcp_data(), method = "POST"),
   list(pattern = "orders/dead-cancel-all/query", fixture = function() mock_futures_dcp_data()),
   list(pattern = "orders/dead-cancel-all", fixture = function() mock_futures_dcp_data(), method = "POST"),
   list(pattern = "orders/test", fixture = function() mock_futures_order_response(), method = "POST"),
