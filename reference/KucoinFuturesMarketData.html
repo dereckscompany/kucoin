@@ -9,7 +9,7 @@ KucoinFuturesMarketData: Futures Market Data Retrieval"></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,7 @@ KucoinFuturesMarketData: Futures Market Data Retrieval"></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>KucoinFuturesMarketData: Futures Market Data Retrieval</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.0.1/R/KucoinFuturesMarketData.R" class="external-link"><code>R/KucoinFuturesMarketData.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.0.2/R/KucoinFuturesMarketData.R" class="external-link"><code>R/KucoinFuturesMarketData.R</code></a></small>
       <div class="d-none name"><code>KucoinFuturesMarketData.Rd</code></div>
     </div>
 
@@ -81,7 +81,7 @@ without credentials.</p>
 
 <div class="section">
 <h3 id="endpoints-covered">Endpoints Covered<a class="anchor" aria-label="anchor" href="#endpoints-covered"></a></h3>
-<table class="table table"><tr><td>Method</td><td>Endpoint</td><td>HTTP</td></tr><tr><td>get_contract</td><td>GET /api/v1/contracts/{symbol}</td><td>GET</td></tr><tr><td>get_all_contracts</td><td>GET /api/v1/contracts/active</td><td>GET</td></tr><tr><td>get_ticker</td><td>GET /api/v1/ticker</td><td>GET</td></tr><tr><td>get_all_tickers</td><td>GET /api/v1/allTickers</td><td>GET</td></tr><tr><td>get_part_orderbook</td><td>GET /api/v1/level2/depth20 or depth100</td><td>GET</td></tr><tr><td>get_full_orderbook</td><td>GET /api/v2/level2/snapshot</td><td>GET</td></tr><tr><td>get_trade_history</td><td>GET /api/v1/trade/history</td><td>GET</td></tr><tr><td>get_klines</td><td>GET /api/v1/kline/query</td><td>GET</td></tr><tr><td>get_mark_price</td><td>GET /api/v1/mark-price/{symbol}/current</td><td>GET</td></tr><tr><td>get_funding_rate</td><td>GET /api/v1/funding-rate/{symbol}/current</td><td>GET</td></tr><tr><td>get_funding_history</td><td>GET /api/v1/contract/funding-rates</td><td>GET</td></tr><tr><td>get_server_time</td><td>GET /api/v1/timestamp</td><td>GET</td></tr><tr><td>get_service_status</td><td>GET /api/v1/status</td><td>GET</td></tr></table></div>
+<table class="table table"><tr><td>Method</td><td>Endpoint</td><td>HTTP</td></tr><tr><td>get_contract</td><td>GET /api/v1/contracts/{symbol}</td><td>GET</td></tr><tr><td>get_all_contracts</td><td>GET /api/v1/contracts/active</td><td>GET</td></tr><tr><td>get_ticker</td><td>GET /api/v1/ticker</td><td>GET</td></tr><tr><td>get_all_tickers</td><td>GET /api/v1/allTickers</td><td>GET</td></tr><tr><td>get_part_orderbook</td><td>GET /api/v1/level2/depth20 or depth100</td><td>GET</td></tr><tr><td>get_full_orderbook</td><td>GET /api/v1/level2/snapshot</td><td>GET</td></tr><tr><td>get_trade_history</td><td>GET /api/v1/trade/history</td><td>GET</td></tr><tr><td>get_klines</td><td>GET /api/v1/kline/query</td><td>GET</td></tr><tr><td>get_mark_price</td><td>GET /api/v1/mark-price/{symbol}/current</td><td>GET</td></tr><tr><td>get_funding_rate</td><td>GET /api/v1/funding-rate/{symbol}/current</td><td>GET</td></tr><tr><td>get_funding_history</td><td>GET /api/v1/contract/funding-rates</td><td>GET</td></tr><tr><td>get_server_time</td><td>GET /api/v1/timestamp</td><td>GET</td></tr><tr><td>get_service_status</td><td>GET /api/v1/status</td><td>GET</td></tr></table></div>
 
     </div>
     <div class="section level2">
@@ -167,8 +167,8 @@ without credentials.</p>
 <h4 id="official-documentation-1">Official Documentation<a class="anchor" aria-label="anchor" href="#official-documentation-1"></a></h4>
 
 
-<p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-symbol-detail" class="external-link">KuCoin Get Symbol Detail</a></p>
-<p>Verified: 2026-03-10</p>
+<p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-symbol" class="external-link">KuCoin Get Symbol</a></p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -323,7 +323,7 @@ print(contract[, .(symbol, lot_size, tick_size, max_leverage)])
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-all-symbols" class="external-link">KuCoin Get All Symbols</a></p>
-<p>Verified: 2026-03-10</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -437,7 +437,7 @@ print(contracts[, .(symbol, status, max_leverage, mark_price)])
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-ticker" class="external-link">KuCoin Get Ticker</a></p>
-<p>Verified: 2026-03-10</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -538,7 +538,7 @@ print(ticker[, .(symbol, price, best_bid_price, best_ask_price, ts)])
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-all-tickers" class="external-link">KuCoin Get All Tickers</a></p>
-<p>Verified: 2026-03-10</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -639,7 +639,7 @@ authentication.</p><div class="section">
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-part-orderbook" class="external-link">KuCoin Get Part Orderbook</a></p>
-<p>Verified: 2026-03-10</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -733,7 +733,7 @@ print(ob[side == "bid"][order(level)][1:5])
 <h4 id="api-endpoint-5">API Endpoint<a class="anchor" aria-label="anchor" href="#api-endpoint-5"></a></h4>
 
 
-<p><code>GET https://api.kucoin.com/api/v2/level2/snapshot?symbol={symbol}</code></p>
+<p><code>GET https://api-futures.kucoin.com/api/v1/level2/snapshot?symbol={symbol}</code></p>
 </div>
 
 <div class="section">
@@ -741,7 +741,7 @@ print(ob[side == "bid"][order(level)][1:5])
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-full-orderbook" class="external-link">KuCoin Get Full Orderbook</a></p>
-<p>Verified: 2026-03-10</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -757,7 +757,7 @@ print(ob[side == "bid"][order(level)][1:5])
 
 
 <p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>curl <span class="sc">--</span>location <span class="sc">--</span>request GET \</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="st">'https://api.kucoin.com/api/v2/level2/snapshot?symbol=XBTUSDTM'</span> \</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="st">'https://api-futures.kucoin.com/api/v1/level2/snapshot?symbol=XBTUSDTM'</span> \</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-KEY: your-api-key'</span> \</span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-SIGN: your-signature'</span> \</span>
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-TIMESTAMP: 1729176273859'</span> \</span>
@@ -846,7 +846,7 @@ print(full_ob[, .N, by = side])
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-trade-history" class="external-link">KuCoin Get Trade History</a></p>
-<p>Verified: 2026-03-10</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -959,7 +959,7 @@ returns the combined result sorted by <code>datetime</code>.</p></li>
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-klines" class="external-link">KuCoin Get Klines</a></p>
-<p>Verified: 2026-03-10</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -1103,7 +1103,7 @@ is used for margin calculations and liquidation triggers.</p><div class="section
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-mark-price" class="external-link">KuCoin Get Mark Price</a></p>
-<p>Verified: 2026-03-10</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -1192,8 +1192,8 @@ Funding rates are charged/received every 8 hours for perpetual contracts.</p><di
 <h4 id="official-documentation-10">Official Documentation<a class="anchor" aria-label="anchor" href="#official-documentation-10"></a></h4>
 
 
-<p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-current-funding-rate" class="external-link">KuCoin Get Current Funding Rate</a></p>
-<p>Verified: 2026-03-10</p>
+<p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-current-funding-rate" class="external-link">KuCoin Get Current Funding Rate</a></p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -1285,8 +1285,8 @@ specified time range.</p><div class="section">
 <h4 id="official-documentation-11">Official Documentation<a class="anchor" aria-label="anchor" href="#official-documentation-11"></a></h4>
 
 
-<p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-public-funding-history" class="external-link">KuCoin Get Public Funding Rate History</a></p>
-<p>Verified: 2026-03-10</p>
+<p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-public-funding-history" class="external-link">KuCoin Get Public Funding Rate History</a></p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -1399,7 +1399,7 @@ local clocks and debugging timestamp-related authentication issues.</p><div clas
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-server-time" class="external-link">KuCoin Get Server Time</a></p>
-<p>Verified: 2026-03-10</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -1471,7 +1471,7 @@ Check this before placing orders to confirm the exchange is operational.</p><div
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-service-status" class="external-link">KuCoin Get Service Status</a></p>
-<p>Verified: 2026-03-10</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">

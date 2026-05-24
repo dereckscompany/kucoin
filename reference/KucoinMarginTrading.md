@@ -138,7 +138,7 @@ separately).
 [KuCoin Margin Add
 Order](https://www.kucoin.com/docs-new/rest/margin-trading/orders/add-order)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
@@ -329,7 +329,7 @@ a short position opened with `open_short()`.
 [KuCoin Margin Add
 Order](https://www.kucoin.com/docs-new/rest/margin-trading/orders/add-order)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
@@ -501,7 +501,7 @@ will go **up**. The exchange automatically borrows the funds needed.
 [KuCoin Margin Add
 Order](https://www.kucoin.com/docs-new/rest/margin-trading/orders/add-order)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
@@ -681,7 +681,7 @@ currency. This closes a long position opened with `open_long()`.
 [KuCoin Margin Add
 Order](https://www.kucoin.com/docs-new/rest/margin-trading/orders/add-order)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
@@ -850,7 +850,7 @@ want explicit control over the borrow/trade/repay lifecycle.
 [KuCoin Margin
 Borrow](https://www.kucoin.com/docs-new/rest/margin-trading/debit/borrow)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
@@ -967,7 +967,7 @@ independently.
 [KuCoin Margin
 Repay](https://www.kucoin.com/docs-new/rest/margin-trading/debit/repay)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
@@ -1048,7 +1048,7 @@ Retrieves paginated borrow history records.
 [KuCoin Get Borrow
 History](https://www.kucoin.com/docs-new/rest/margin-trading/debit/get-borrow-history)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
@@ -1156,7 +1156,7 @@ Retrieves paginated repayment history records.
 [KuCoin Get Repay
 History](https://www.kucoin.com/docs-new/rest/margin-trading/debit/get-repay-history)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
@@ -1248,7 +1248,7 @@ Retrieves paginated interest accrual history for margin borrowing.
 [KuCoin Get Interest
 History](https://www.kucoin.com/docs-new/rest/margin-trading/debit/get-interest-history)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
@@ -1345,7 +1345,7 @@ Retrieves current borrow interest rates for one or more currencies.
 [KuCoin Get Borrow Interest
 Rate](https://www.kucoin.com/docs-new/rest/margin-trading/debit/get-borrow-interest-rate)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
@@ -1428,7 +1428,7 @@ increases liquidation risk.
 [KuCoin Modify
 Leverage](https://www.kucoin.com/docs-new/rest/margin-trading/debit/modify-leverage)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 

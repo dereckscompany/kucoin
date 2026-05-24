@@ -180,7 +180,7 @@ optional reduce-only constraints.
 [KuCoin Add Futures
 Order](https://www.kucoin.com/docs-new/rest/futures-trading/orders/add-order)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -382,7 +382,7 @@ systems.
 [KuCoin Add Futures Order
 Test](https://www.kucoin.com/docs-new/rest/futures-trading/orders/add-order-test)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -569,7 +569,7 @@ orders may succeed while others fail).
 [KuCoin Batch Add Futures
 Orders](https://www.kucoin.com/docs-new/rest/futures-trading/orders/batch-add-orders)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -722,9 +722,9 @@ order has already been filled or cancelled, the API returns an error.
 #### Official Documentation
 
 [KuCoin Cancel Futures Order By
-OrderId](https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-orderid)
+OrderId](https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-orderld)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -808,7 +808,7 @@ across symbols.
 [KuCoin Cancel Futures Order By
 ClientOid](https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-clientoid)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -891,9 +891,9 @@ orders; use `cancel_all_stop_orders()` for those).
 #### Official Documentation
 
 [KuCoin Cancel All Futures
-Orders](https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-multiple-futures-limit-orders)
+Orders](https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-all-orders)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -987,9 +987,9 @@ cancelled via `cancel_all()`.
 #### Official Documentation
 
 [KuCoin Cancel All Futures Stop
-Orders](https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-multiple-futures-stop-orders)
+Orders](https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-all-stop-orders)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1080,9 +1080,9 @@ configuration parameters.
 #### Official Documentation
 
 [KuCoin Get Futures Order By
-OrderId](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-by-orderid)
+OrderId](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-by-orderld)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1226,9 +1226,15 @@ time.
 #### Official Documentation
 
 [KuCoin Get Futures Order By
-ClientOid](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-by-clientoid)
+ClientOid](https://www.kucoin.com/docs-new/rest/futures-trading/get-stop-order-by-clientoid)
 
-Verified: 2026-03-10
+Note: KuCoin's URL slug here contains `get-stop-order-by-clientoid`, but
+the page actually documents the regular order endpoint
+(`GET /api/v1/orders/byClientOid`) — the sidebar title is "Get Order By
+ClientOid" and the documented method and path match the source. Slug is
+misleading; the URL is canonical.
+
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1347,7 +1353,7 @@ open orders or `status = "done"` for closed/cancelled orders.
 [KuCoin Get Futures Order
 List](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-list)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1491,7 +1497,7 @@ require pagination – it returns up to 1000 records in a single response.
 [KuCoin Get Recent Closed Futures
 Orders](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-closed-orders)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1620,9 +1626,9 @@ Once triggered, they appear in the regular order list.
 #### Official Documentation
 
 [KuCoin Get Futures Untriggered Stop Order
-List](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-untriggered-stop-order-list)
+List](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-stop-order-list)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1739,9 +1745,9 @@ liquidity type (maker/taker), and precise trade timestamps.
 #### Official Documentation
 
 [KuCoin Get Futures Filled
-List](https://www.kucoin.com/docs-new/rest/futures-trading/fills/get-filled-list)
+List](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-trade-history)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1910,9 +1916,9 @@ recent trade executions.
 #### Official Documentation
 
 [KuCoin Get Recent Futures Filled
-List](https://www.kucoin.com/docs-new/rest/futures-trading/fills/get-recent-filled-list)
+List](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-trade-history)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -2024,7 +2030,7 @@ margin usage and exposure from pending orders.
 [KuCoin Get Open Order
 Value](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-open-order-value)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -2121,10 +2127,11 @@ indefinitely.
 
 #### Official Documentation
 
-[KuCoin Set
-DCP](https://www.kucoin.com/docs-new/rest/futures-trading/orders/dead-cancel-all)
+[KuCoin Set DCP (spot equivalent; futures DCP page withdrawn from KuCoin
+docs as of 2026-05; POST endpoint still accepted by the Futures REST
+API)](https://www.kucoin.com/docs-new/rest/spot-trading/orders/set-dcp)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -2233,10 +2240,12 @@ verify that DCP is correctly configured.
 
 #### Official Documentation
 
-[KuCoin Get
-DCP](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-dead-cancel-all)
+[KuCoin Get DCP (spot equivalent; futures DCP page withdrawn from KuCoin
+docs as of 2026-05; the Futures REST query endpoint now returns HTTP 404
+— see NEWS for
+context)](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-dcp)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 

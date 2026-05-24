@@ -49,7 +49,7 @@ Data](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-all-s
 | get_ticker          | GET /api/v1/ticker                        | GET  |
 | get_all_tickers     | GET /api/v1/allTickers                    | GET  |
 | get_part_orderbook  | GET /api/v1/level2/depth20 or depth100    | GET  |
-| get_full_orderbook  | GET /api/v2/level2/snapshot               | GET  |
+| get_full_orderbook  | GET /api/v1/level2/snapshot               | GET  |
 | get_trade_history   | GET /api/v1/trade/history                 | GET  |
 | get_klines          | GET /api/v1/kline/query                   | GET  |
 | get_mark_price      | GET /api/v1/mark-price/{symbol}/current   | GET  |
@@ -158,10 +158,10 @@ Retrieves detailed contract specification for a single symbol.
 
 #### Official Documentation
 
-[KuCoin Get Symbol
-Detail](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-symbol-detail)
+[KuCoin Get
+Symbol](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-symbol)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -338,7 +338,7 @@ Retrieves details of all actively traded futures contracts.
 [KuCoin Get All
 Symbols](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-all-symbols)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -447,7 +447,7 @@ Retrieves real-time ticker data for a futures contract.
 [KuCoin Get
 Ticker](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-ticker)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -553,7 +553,7 @@ Retrieves real-time ticker data for all futures contracts.
 [KuCoin Get All
 Tickers](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-all-tickers)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -650,7 +650,7 @@ authentication.
 [KuCoin Get Part
 Orderbook](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-part-orderbook)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -747,14 +747,14 @@ authentication.**
 
 #### API Endpoint
 
-`GET https://api.kucoin.com/api/v2/level2/snapshot?symbol={symbol}`
+`GET https://api-futures.kucoin.com/api/v1/level2/snapshot?symbol={symbol}`
 
 #### Official Documentation
 
 [KuCoin Get Full
 Orderbook](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-full-orderbook)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -770,7 +770,7 @@ Verified: 2026-03-10
 #### curl
 
     curl --location --request GET \
-      'https://api.kucoin.com/api/v2/level2/snapshot?symbol=XBTUSDTM' \
+      'https://api-futures.kucoin.com/api/v1/level2/snapshot?symbol=XBTUSDTM' \
       --header 'KC-API-KEY: your-api-key' \
       --header 'KC-API-SIGN: your-signature' \
       --header 'KC-API-TIMESTAMP: 1729176273859' \
@@ -860,7 +860,7 @@ Retrieves the most recent trades for a futures contract.
 [KuCoin Get Trade
 History](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-trade-history)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -978,7 +978,7 @@ large time ranges.
 [KuCoin Get
 Klines](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-klines)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1124,7 +1124,7 @@ is used for margin calculations and liquidation triggers.
 [KuCoin Get Mark
 Price](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-mark-price)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1212,9 +1212,9 @@ contracts.
 #### Official Documentation
 
 [KuCoin Get Current Funding
-Rate](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-current-funding-rate)
+Rate](https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-current-funding-rate)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1310,9 +1310,9 @@ specified time range.
 #### Official Documentation
 
 [KuCoin Get Public Funding Rate
-History](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-public-funding-history)
+History](https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-public-funding-history)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1423,7 +1423,7 @@ local clocks and debugging timestamp-related authentication issues.
 [KuCoin Get Server
 Time](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-server-time)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1492,7 +1492,7 @@ Check this before placing orders to confirm the exchange is operational.
 [KuCoin Get Service
 Status](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-service-status)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 

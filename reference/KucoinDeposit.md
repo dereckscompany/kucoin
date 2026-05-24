@@ -96,7 +96,7 @@ error; use `get_deposit_addresses()` first to check.
 [KuCoin Add Deposit Address
 V3](https://www.kucoin.com/docs-new/rest/account-info/deposit/add-deposit-address-v3)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -236,7 +236,7 @@ chain. Useful for looking up addresses before creating new ones.
 [KuCoin Get Deposit Addresses
 V3](https://www.kucoin.com/docs-new/rest/account-info/deposit/get-deposit-address-v3/en)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -376,7 +376,7 @@ POSIXct for convenient analysis.
 [KuCoin Get Deposit
 History](https://www.kucoin.com/docs-new/rest/account-info/deposit/get-deposit-history)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 

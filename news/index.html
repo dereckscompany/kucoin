@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,9 +36,45 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.0.1/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.0.2/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="4.0.2" id="kucoin-402">kucoin 4.0.2<a class="anchor" aria-label="anchor" href="#kucoin-402"></a></h2>
+<div class="section level3">
+<h3 id="documentation-4-0-2">DOCUMENTATION<a class="anchor" aria-label="anchor" href="#documentation-4-0-2"></a></h3>
+<ul><li>
+<strong>All 144 <code>Verified: YYYY-MM-DD</code> markers in the R6 roxygen blocks bumped to <code>2026-05-23</code>.</strong> Every marker was walked individually against the live KuCoin docs — endpoint paths, HTTP methods, and “page exists” all confirmed per endpoint, not sampled. 119 matched the source as-is; the other 25 surfaced the docs URL / endpoint-path drift documented below.</li>
+<li>
+<strong>Refreshed 25 stale <code>### Official Documentation</code> URLs after KuCoin reorganised the docs-new site.</strong> 17 had returned HTTP 404 because the futures section moved (e.g. <code>/futures-trading/account/get-account-overview</code> → <code>/account-info/account-funding/get-account-futures</code>; <code>/futures-trading/orders/cancel-order-by-orderid</code> → <code>/futures-trading/orders/cancel-order-by-orderld</code> — note the typo on KuCoin’s side); 7 pointed at pages that now document a different REST endpoint than the source code calls; 1 (<code>KucoinMarketData$get_symbol</code>) pointed at the all-symbols list page instead of the single-symbol detail page. All replacement URLs verified by HTTP GET. The futures Dead Connection Protection (DCP) docs were withdrawn from KuCoin entirely, so <code>KucoinFuturesTrading$set_dcp()</code> / <code>$get_dcp()</code> now reference the equivalent spot-trading DCP page with an inline note (see BUG FIXES below for the related endpoint observation).</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-4-0-2">BUG FIXES<a class="anchor" aria-label="anchor" href="#bug-fixes-4-0-2"></a></h3>
+<ul><li>
+<strong>9 KuCoin Futures REST endpoint paths corrected after the 2026-05 docs reorganisation moved them.</strong> The old paths now return HTTP 404; the new paths were confirmed live (read endpoints fully exercised; write endpoints poked with no-op or invalid payloads to confirm the path is recognised by KuCoin and only the business validation fails). Methods affected:
+<ul><li>
+<code>KucoinFuturesAccount$get_margin_mode()</code>: <code>GET /api/v1/marginMode</code> → <code>GET /api/v2/position/getMarginMode</code>.</li>
+<li>
+<code>KucoinFuturesAccount$set_margin_mode()</code>: <code>POST /api/v1/marginMode</code> → <code>POST /api/v2/position/changeMarginMode</code>.</li>
+<li>
+<code>KucoinFuturesAccount$get_cross_margin_leverage()</code>: <code>GET /api/v1/crossMarginLeverage</code> → <code>GET /api/v2/getCrossUserLeverage</code>.</li>
+<li>
+<code>KucoinFuturesAccount$set_cross_margin_leverage()</code>: <code>POST /api/v1/crossMarginLeverage</code> → <code>POST /api/v2/changeCrossUserLeverage</code>.</li>
+<li>
+<code>KucoinFuturesAccount$get_max_open_size()</code>: <code>GET /api/v1/maxOpenSize</code> → <code>GET /api/v2/getMaxOpenSize</code>.</li>
+<li>
+<code>KucoinFuturesAccount$get_max_withdraw_margin()</code>: <code>GET /api/v1/maxWithdrawMargin</code> → <code>GET /api/v1/margin/maxWithdrawMargin</code>.</li>
+<li>
+<code>KucoinFuturesAccount$add_isolated_margin()</code>: <code>POST /api/v1/marginDepositIn</code> → <code>POST /api/v1/position/margin/deposit-margin</code>.</li>
+<li>
+<code>KucoinFuturesAccount$remove_isolated_margin()</code>: <code>POST /api/v1/marginWithdrawOut</code> → <code>POST /api/v1/margin/withdrawMargin</code>.</li>
+<li>
+<code>KucoinFuturesMarketData$get_full_orderbook()</code>: <code>GET /api/v2/level2/snapshot</code> → <code>GET /api/v1/level2/snapshot</code>.</li>
+</ul></li>
+<li>
+<strong>Futures DCP appears to have been removed by KuCoin without an announcement.</strong> <code>KucoinFuturesTrading$set_dcp()</code> (POST <code>/api/v1/orders/dead-cancel-all</code>) is still accepted by the Futures REST API (returns HTTP 403 on accounts without the relevant permission, so the route is alive), but <code>$get_dcp()</code> (GET <code>/api/v1/orders/dead-cancel-all/query</code>) now consistently returns HTTP 404 and the dedicated docs pages have been withdrawn. Methods left in place but flagged in roxygen; callers relying on futures DCP should treat <code>$get_dcp()</code> as broken until KuCoin clarifies.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="4.0.1" id="kucoin-401">kucoin 4.0.1<a class="anchor" aria-label="anchor" href="#kucoin-401"></a></h2>
 <div class="section level3">

@@ -9,7 +9,7 @@ KucoinTrading: Spot Order Management"></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,7 @@ KucoinTrading: Spot Order Management"></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>KucoinTrading: Spot Order Management</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.0.1/R/KucoinTrading.R" class="external-link"><code>R/KucoinTrading.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.0.2/R/KucoinTrading.R" class="external-link"><code>R/KucoinTrading.R</code></a></small>
       <div class="d-none name"><code>KucoinTrading.Rd</code></div>
     </div>
 
@@ -166,7 +166,7 @@ Parameters are validated by <code>validate_order_params()</code> before submissi
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/spot-trading/orders/add-order" class="external-link">KuCoin Add Order</a></p>
-<p>Verified: 2026-02-01</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -362,7 +362,7 @@ and authentication exactly as <code>add_order()</code>, but no order is actually
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/spot-trading/orders/add-order-test" class="external-link">KuCoin Add Order Test</a></p>
-<p>Verified: 2026-02-01</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -546,7 +546,7 @@ independently. Failed orders return <code>success = FALSE</code> with a <code>fa
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/spot-trading/orders/batch-add-orders" class="external-link">KuCoin Batch Add Orders</a></p>
-<p>Verified: 2026-02-01</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -669,7 +669,7 @@ print(orders[success == FALSE, .(fail_msg)])
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld" class="external-link">KuCoin Cancel Order By OrderId</a></p>
-<p>Verified: 2026-02-01</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -743,7 +743,7 @@ print(result$order_id)
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid" class="external-link">KuCoin Cancel Order By ClientOid</a></p>
-<p>Verified: 2026-02-01</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -817,7 +817,7 @@ print(result$client_oid)
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-partial-order" class="external-link">KuCoin Cancel Partial Order</a></p>
-<p>Verified: 2026-02-01</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -904,7 +904,7 @@ result &lt;- trading$cancel_partial_order(
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-all-orders-by-symbol" class="external-link">KuCoin Cancel All Orders By Symbol</a></p>
-<p>Verified: 2026-02-01</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -978,7 +978,7 @@ trading$cancel_all_by_symbol("BTC-USDT")
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-all-orders" class="external-link">KuCoin Cancel All HF Orders</a></p>
-<p>Verified: 2026-02-01</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -1050,7 +1050,7 @@ print(result[status == "failed"])
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-order-by-orderld" class="external-link">KuCoin Get Order By OrderId</a></p>
-<p>Verified: 2026-02-01</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -1158,7 +1158,7 @@ print(order)
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-order-by-clientoid" class="external-link">KuCoin Get Order By ClientOid</a></p>
-<p>Verified: 2026-02-01</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -1275,7 +1275,7 @@ Returns detailed fill information including fees, liquidity type, and trade IDs.
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-trade-history" class="external-link">KuCoin Get Trade History</a></p>
-<p>Verified: 2026-02-01</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -1431,7 +1431,7 @@ Useful for determining which pairs need attention.</p><div class="section">
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-symbols-with-open-order" class="external-link">KuCoin Get Symbols With Open Order</a></p>
-<p>Verified: 2026-02-01</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -1500,7 +1500,7 @@ print(active$symbols)
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-open-orders" class="external-link">KuCoin Get Open Orders</a></p>
-<p>Verified: 2026-02-01</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -1613,7 +1613,7 @@ Supports filtering by side, type, and time range.</p><div class="section">
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-closed-orders" class="external-link">KuCoin Get Closed Orders</a></p>
-<p>Verified: 2026-02-01</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -1765,7 +1765,7 @@ eliminating the need to poll <code>get_order_by_id()</code>.</p><div class="sect
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/spot-trading/orders/add-order-sync" class="external-link">KuCoin Add Order Sync</a></p>
-<p>Verified: 2026-02-03</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -1953,7 +1953,7 @@ engine to process them before returning. Returns per-order fill results.</p><div
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/spot-trading/orders/batch-add-orders-sync" class="external-link">KuCoin Batch Add Orders Sync</a></p>
-<p>Verified: 2026-02-03</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -2090,7 +2090,7 @@ Returns the final order state including fill and cancellation sizes.</p><div cla
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld-sync" class="external-link">KuCoin Cancel Order By OrderId Sync</a></p>
-<p>Verified: 2026-02-03</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -2181,7 +2181,7 @@ cat("Status:", result$status, "Cancelled:", result$canceled_size, "\n")
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid-sync" class="external-link">KuCoin Cancel Order By ClientOid Sync</a></p>
-<p>Verified: 2026-02-03</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -2269,7 +2269,7 @@ simply cancelled with no replacement.</p><div class="section">
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/spot-trading/orders/modify-order" class="external-link">KuCoin Modify Order</a></p>
-<p>Verified: 2026-02-03</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -2389,7 +2389,7 @@ for the specified symbols (or all symbols if none specified).</p><div class="sec
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/spot-trading/orders/set-dcp" class="external-link">KuCoin Set DCP</a></p>
-<p>Verified: 2026-02-03</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -2490,7 +2490,7 @@ configuration. Returns an empty <code>data.table</code> if DCP is not configured
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-dcp" class="external-link">KuCoin Get DCP</a></p>
-<p>Verified: 2026-02-03</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">

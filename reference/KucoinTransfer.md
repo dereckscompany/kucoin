@@ -122,7 +122,7 @@ require funds in the **trade** account.
 [KuCoin Flex
 Transfer](https://www.kucoin.com/docs-new/rest/account-info/transfer/flex-transfer)
 
-Verified: 2026-02-02
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -284,7 +284,7 @@ verify sufficient funds are available.
 [KuCoin Get Transfer
 Quotas](https://www.kucoin.com/docs-new/rest/account-info/transfer/get-transfer-quotas)
 
-Verified: 2026-02-02
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 

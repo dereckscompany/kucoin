@@ -90,7 +90,7 @@ including increment sizes, min/max order sizes, and fee information.
 [KuCoin Get Cross Margin
 Symbols](https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-symbols-cross-margin)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
@@ -210,7 +210,7 @@ leverage limits, debt ratios, and borrowing parameters per pair.
 [KuCoin Get Isolated Margin
 Symbols](https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-symbols-isolated-margin)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
@@ -305,7 +305,7 @@ currencies.
 [KuCoin Get Margin
 Config](https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-margin-config)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
@@ -377,7 +377,7 @@ has multiple tiers based on collateral amount ranges.
 [KuCoin Get Collateral
 Ratio](https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-margin-collateral-ratio)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
@@ -465,7 +465,7 @@ cross and isolated margin. This endpoint requires authentication.
 [KuCoin Get Risk
 Limit](https://www.kucoin.com/docs-new/rest/margin-trading/risk-limit/get-margin-risk-limit)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 

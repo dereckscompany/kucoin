@@ -175,7 +175,7 @@ not both), and `price` must not be set.
 [KuCoin Add Stop
 Order](https://www.kucoin.com/docs-new/rest/spot-trading/orders/add-stop-order)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -380,7 +380,7 @@ Only stop orders that have not yet been triggered can be cancelled.
 [KuCoin Cancel Stop Order By
 OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-stop-order-by-orderld)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -466,7 +466,7 @@ symbol. Both `clientOid` and `symbol` are required as query parameters.
 [KuCoin Cancel Stop Order By
 ClientOid](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-stop-order-by-clientoid)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -561,7 +561,7 @@ are provided, all pending stop orders are cancelled.
 [KuCoin Batch Cancel Stop
 Orders](https://www.kucoin.com/docs-new/rest/spot-trading/orders/batch-cancel-stop-orders)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -665,7 +665,7 @@ timestamps.
 [KuCoin Get Stop Order By
 OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-stop-order-by-orderld)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -799,7 +799,7 @@ across different orders.
 [KuCoin Get Stop Order By
 ClientOid](https://www.kucoin.com/docs-new/rest/spot-trading/get-stop-order-by-clientoid)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -942,7 +942,7 @@ a `data.table`.
 [KuCoin Get Stop Order
 List](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-stop-orders-list)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 

@@ -367,9 +367,9 @@ Switch between isolated and cross margin:
 account$get_margin_mode(symbol = "XBTUSDTM")
 ```
 
-    #>      symbol margin_mode
-    #>      <char>      <char>
-    #> 1: XBTUSDTM    ISOLATED
+    #>            v1
+    #>        <list>
+    #> 1: <list[35]>
 
 ``` r
 

@@ -18,23 +18,23 @@ Positions](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-po
 
 ### Endpoints Covered
 
-|                           |                                           |      |
-|---------------------------|-------------------------------------------|------|
-| Method                    | Endpoint                                  | HTTP |
-| get_account_overview      | GET /api/v1/account-overview              | GET  |
-| get_position              | GET /api/v2/position                      | GET  |
-| get_positions             | GET /api/v1/positions                     | GET  |
-| get_positions_history     | GET /api/v1/history-positions             | GET  |
-| get_margin_mode           | GET /api/v1/marginMode                    | GET  |
-| set_margin_mode           | POST /api/v1/marginMode                   | POST |
-| get_cross_margin_leverage | GET /api/v1/crossMarginLeverage           | GET  |
-| set_cross_margin_leverage | POST /api/v1/crossMarginLeverage          | POST |
-| get_max_open_size         | GET /api/v1/maxOpenSize                   | GET  |
-| get_max_withdraw_margin   | GET /api/v1/maxWithdrawMargin             | GET  |
-| add_isolated_margin       | POST /api/v1/marginDepositIn              | POST |
-| remove_isolated_margin    | POST /api/v1/marginWithdrawOut            | POST |
-| get_risk_limit            | GET /api/v1/contracts/risk-limit/{symbol} | GET  |
-| get_funding_history       | GET /api/v1/funding-history               | GET  |
+|                           |                                             |      |
+|---------------------------|---------------------------------------------|------|
+| Method                    | Endpoint                                    | HTTP |
+| get_account_overview      | GET /api/v1/account-overview                | GET  |
+| get_position              | GET /api/v2/position                        | GET  |
+| get_positions             | GET /api/v1/positions                       | GET  |
+| get_positions_history     | GET /api/v1/history-positions               | GET  |
+| get_margin_mode           | GET /api/v2/position/getMarginMode          | GET  |
+| set_margin_mode           | POST /api/v2/position/changeMarginMode      | POST |
+| get_cross_margin_leverage | GET /api/v2/getCrossUserLeverage            | GET  |
+| set_cross_margin_leverage | POST /api/v2/changeCrossUserLeverage        | POST |
+| get_max_open_size         | GET /api/v2/getMaxOpenSize                  | GET  |
+| get_max_withdraw_margin   | GET /api/v1/margin/maxWithdrawMargin        | GET  |
+| add_isolated_margin       | POST /api/v1/position/margin/deposit-margin | POST |
+| remove_isolated_margin    | POST /api/v1/margin/withdrawMargin          | POST |
+| get_risk_limit            | GET /api/v1/contracts/risk-limit/{symbol}   | GET  |
+| get_funding_history       | GET /api/v1/funding-history                 | GET  |
 
 ## Super class
 
@@ -138,10 +138,10 @@ margin, and P&L.
 
 #### Official Documentation
 
-[KuCoin Get Futures Account
-Overview](https://www.kucoin.com/docs-new/rest/futures-trading/account/get-account-overview)
+[KuCoin Get Account -
+Futures](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-futures)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
@@ -227,7 +227,7 @@ Retrieves position details for a specific symbol.
 [KuCoin Get Position
 Details](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-position-details)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
@@ -378,7 +378,7 @@ Retrieves all open positions.
 [KuCoin Get Position
 List](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-position-list)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
@@ -479,7 +479,7 @@ Retrieves historical position records.
 [KuCoin Get Position
 History](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-positions-history)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
@@ -597,19 +597,19 @@ Retrieves the current margin mode for a symbol.
 
 #### API Endpoint
 
-`GET https://api-futures.kucoin.com/api/v1/marginMode`
+`GET https://api-futures.kucoin.com/api/v2/position/getMarginMode`
 
 #### Official Documentation
 
 [KuCoin Get Margin
 Mode](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-margin-mode)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
     curl --location --request GET \
-      'https://api-futures.kucoin.com/api/v1/marginMode?symbol=XBTUSDTM' \
+      'https://api-futures.kucoin.com/api/v2/position/getMarginMode?symbol=XBTUSDTM' \
       --header 'KC-API-KEY: your-api-key' \
       --header 'KC-API-SIGN: your-signature' \
       --header 'KC-API-TIMESTAMP: 1729176273859' \
@@ -664,18 +664,18 @@ Switches the margin mode for a symbol between ISOLATED and CROSS.
 
 #### API Endpoint
 
-`POST https://api-futures.kucoin.com/api/v1/marginMode`
+`POST https://api-futures.kucoin.com/api/v2/position/changeMarginMode`
 
 #### Official Documentation
 
-[KuCoin Modify Margin
-Mode](https://www.kucoin.com/docs-new/rest/futures-trading/positions/modify-margin-mode)
+[KuCoin Switch Margin
+Mode](https://www.kucoin.com/docs-new/rest/futures-trading/positions/switch-margin-mode)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
-    curl --location --request POST 'https://api-futures.kucoin.com/api/v1/marginMode' \
+    curl --location --request POST 'https://api-futures.kucoin.com/api/v2/position/changeMarginMode' \
       --header 'Content-Type: application/json' \
       --header 'KC-API-KEY: your-api-key' \
       --header 'KC-API-SIGN: your-signature' \
@@ -741,19 +741,19 @@ Retrieves the current cross margin leverage for a symbol.
 
 #### API Endpoint
 
-`GET https://api-futures.kucoin.com/api/v1/crossMarginLeverage`
+`GET https://api-futures.kucoin.com/api/v2/getCrossUserLeverage`
 
 #### Official Documentation
 
 [KuCoin Get Cross Margin
 Leverage](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-cross-margin-leverage)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
     curl --location --request GET \
-      'https://api-futures.kucoin.com/api/v1/crossMarginLeverage?symbol=XBTUSDTM' \
+      'https://api-futures.kucoin.com/api/v2/getCrossUserLeverage?symbol=XBTUSDTM' \
       --header 'KC-API-KEY: your-api-key' \
       --header 'KC-API-SIGN: your-signature' \
       --header 'KC-API-TIMESTAMP: 1729176273859' \
@@ -809,18 +809,18 @@ Modifies the cross margin leverage for a symbol.
 
 #### API Endpoint
 
-`POST https://api-futures.kucoin.com/api/v1/crossMarginLeverage`
+`POST https://api-futures.kucoin.com/api/v2/changeCrossUserLeverage`
 
 #### Official Documentation
 
 [KuCoin Modify Cross Margin
 Leverage](https://www.kucoin.com/docs-new/rest/futures-trading/positions/modify-cross-margin-leverage)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
-    curl --location --request POST 'https://api-futures.kucoin.com/api/v1/crossMarginLeverage' \
+    curl --location --request POST 'https://api-futures.kucoin.com/api/v2/changeCrossUserLeverage' \
       --header 'Content-Type: application/json' \
       --header 'KC-API-KEY: your-api-key' \
       --header 'KC-API-SIGN: your-signature' \
@@ -887,19 +887,19 @@ Retrieves the maximum number of contracts that can be opened.
 
 #### API Endpoint
 
-`GET https://api-futures.kucoin.com/api/v1/maxOpenSize`
+`GET https://api-futures.kucoin.com/api/v2/getMaxOpenSize`
 
 #### Official Documentation
 
 [KuCoin Get Max Open
-Size](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-maximum-open-position-size)
+Size](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-max-open-size)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
     curl --location --request GET \
-      'https://api-futures.kucoin.com/api/v1/maxOpenSize?symbol=XBTUSDTM&price=40000&leverage=10' \
+      'https://api-futures.kucoin.com/api/v2/getMaxOpenSize?symbol=XBTUSDTM&price=40000&leverage=10' \
       --header 'KC-API-KEY: your-api-key' \
       --header 'KC-API-SIGN: your-signature' \
       --header 'KC-API-TIMESTAMP: 1729176273859' \
@@ -964,19 +964,19 @@ position.
 
 #### API Endpoint
 
-`GET https://api-futures.kucoin.com/api/v1/maxWithdrawMargin`
+`GET https://api-futures.kucoin.com/api/v1/margin/maxWithdrawMargin`
 
 #### Official Documentation
 
 [KuCoin Get Max Withdraw
 Margin](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-max-withdraw-margin)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
     curl --location --request GET \
-      'https://api-futures.kucoin.com/api/v1/maxWithdrawMargin?symbol=XBTUSDTM' \
+      'https://api-futures.kucoin.com/api/v1/margin/maxWithdrawMargin?symbol=XBTUSDTM' \
       --header 'KC-API-KEY: your-api-key' \
       --header 'KC-API-SIGN: your-signature' \
       --header 'KC-API-TIMESTAMP: 1729176273859' \
@@ -1029,18 +1029,18 @@ Deposits additional margin into an isolated margin position.
 
 #### API Endpoint
 
-`POST https://api-futures.kucoin.com/api/v1/marginDepositIn`
+`POST https://api-futures.kucoin.com/api/v1/position/margin/deposit-margin`
 
 #### Official Documentation
 
 [KuCoin Add Isolated
 Margin](https://www.kucoin.com/docs-new/rest/futures-trading/positions/add-isolated-margin)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
-    curl --location --request POST 'https://api-futures.kucoin.com/api/v1/marginDepositIn' \
+    curl --location --request POST 'https://api-futures.kucoin.com/api/v1/position/margin/deposit-margin' \
       --header 'Content-Type: application/json' \
       --header 'KC-API-KEY: your-api-key' \
       --header 'KC-API-SIGN: your-signature' \
@@ -1120,18 +1120,18 @@ Withdraws excess margin from an isolated margin position.
 
 #### API Endpoint
 
-`POST https://api-futures.kucoin.com/api/v1/marginWithdrawOut`
+`POST https://api-futures.kucoin.com/api/v1/margin/withdrawMargin`
 
 #### Official Documentation
 
 [KuCoin Remove Isolated
 Margin](https://www.kucoin.com/docs-new/rest/futures-trading/positions/remove-isolated-margin)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
-    curl --location --request POST 'https://api-futures.kucoin.com/api/v1/marginWithdrawOut' \
+    curl --location --request POST 'https://api-futures.kucoin.com/api/v1/margin/withdrawMargin' \
       --header 'Content-Type: application/json' \
       --header 'KC-API-KEY: your-api-key' \
       --header 'KC-API-SIGN: your-signature' \
@@ -1208,10 +1208,10 @@ Retrieves risk limit tiers for a futures contract.
 
 #### Official Documentation
 
-[KuCoin Get Risk Limit
-Level](https://www.kucoin.com/docs-new/rest/futures-trading/risk-limit/get-futures-risk-limit-level)
+[KuCoin Get Isolated Margin Risk
+Limit](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-isolated-margin-risk-limit)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
@@ -1315,7 +1315,7 @@ Retrieves your personal funding fee settlement records.
 [KuCoin Get Private Funding
 History](https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-private-funding-history)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 

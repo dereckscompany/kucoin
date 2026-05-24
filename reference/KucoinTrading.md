@@ -180,7 +180,7 @@ Parameters are validated by `validate_order_params()` before submission.
 [KuCoin Add
 Order](https://www.kucoin.com/docs-new/rest/spot-trading/orders/add-order)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -374,7 +374,7 @@ Same as `add_order()` but hits the test endpoint.
 [KuCoin Add Order
 Test](https://www.kucoin.com/docs-new/rest/spot-trading/orders/add-order-test)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -551,7 +551,7 @@ independently. Failed orders return `success = FALSE` with a `fail_msg`.
 [KuCoin Batch Add
 Orders](https://www.kucoin.com/docs-new/rest/spot-trading/orders/batch-add-orders)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -670,7 +670,7 @@ Cancels a specific spot HF order by its KuCoin-assigned order ID.
 [KuCoin Cancel Order By
 OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### curl
 
@@ -737,7 +737,7 @@ Cancels a spot HF order by its client-assigned order ID.
 [KuCoin Cancel Order By
 ClientOid](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### curl
 
@@ -805,7 +805,7 @@ cancelling it.
 [KuCoin Cancel Partial
 Order](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-partial-order)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -883,7 +883,7 @@ Cancels all open HF orders for a specific trading pair.
 [KuCoin Cancel All Orders By
 Symbol](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-all-orders-by-symbol)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -950,7 +950,7 @@ Cancels all open spot HF orders across all trading pairs.
 [KuCoin Cancel All HF
 Orders](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-all-orders)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1019,7 +1019,7 @@ Retrieves full details for a specific order by its KuCoin-assigned ID.
 [KuCoin Get Order By
 OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-order-by-orderld)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### curl
 
@@ -1119,7 +1119,7 @@ Retrieves full details for a specific order by its client-assigned ID.
 [KuCoin Get Order By
 ClientOid](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-order-by-clientoid)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### curl
 
@@ -1230,7 +1230,7 @@ trade IDs.
 [KuCoin Get Trade
 History](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-trade-history)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1397,7 +1397,7 @@ for determining which pairs need attention.
 [KuCoin Get Symbols With Open
 Order](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-symbols-with-open-order)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1461,7 +1461,7 @@ Retrieves all currently open HF orders for a specific symbol.
 [KuCoin Get Open
 Orders](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-open-orders)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1568,7 +1568,7 @@ Supports filtering by side, type, and time range.
 [KuCoin Get Closed
 Orders](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-closed-orders)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1714,7 +1714,7 @@ eliminating the need to poll `get_order_by_id()`.
 [KuCoin Add Order
 Sync](https://www.kucoin.com/docs-new/rest/spot-trading/orders/add-order-sync)
 
-Verified: 2026-02-03
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1904,7 +1904,7 @@ engine to process them before returning. Returns per-order fill results.
 [KuCoin Batch Add Orders
 Sync](https://www.kucoin.com/docs-new/rest/spot-trading/orders/batch-add-orders-sync)
 
-Verified: 2026-02-03
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -2041,7 +2041,7 @@ sizes.
 [KuCoin Cancel Order By OrderId
 Sync](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld-sync)
 
-Verified: 2026-02-03
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -2132,7 +2132,7 @@ returning.
 [KuCoin Cancel Order By ClientOid
 Sync](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid-sync)
 
-Verified: 2026-02-03
+Verified: 2026-05-23
 
 #### curl
 
@@ -2218,7 +2218,7 @@ simply cancelled with no replacement.
 [KuCoin Modify
 Order](https://www.kucoin.com/docs-new/rest/spot-trading/orders/modify-order)
 
-Verified: 2026-02-03
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -2334,7 +2334,7 @@ orders for the specified symbols (or all symbols if none specified).
 [KuCoin Set
 DCP](https://www.kucoin.com/docs-new/rest/spot-trading/orders/set-dcp)
 
-Verified: 2026-02-03
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -2430,7 +2430,7 @@ configuration. Returns an empty `data.table` if DCP is not configured.
 [KuCoin Get
 DCP](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-dcp)
 
-Verified: 2026-02-03
+Verified: 2026-05-23
 
 #### curl
 

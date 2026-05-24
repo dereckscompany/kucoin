@@ -115,7 +115,7 @@ Only withdrawals in `PROCESSING` status can later be cancelled via
 [KuCoin Withdraw
 V3](https://www.kucoin.com/docs-new/rest/account-info/withdrawals/withdraw-v3)
 
-Verified: 2026-02-02
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -270,7 +270,7 @@ status can be cancelled. Once a withdrawal has moved to
 [KuCoin Cancel
 Withdrawal](https://www.kucoin.com/docs-new/rest/account-info/withdrawals/cancel-withdrawal)
 
-Verified: 2026-02-02
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -352,7 +352,7 @@ to ensure sufficient balance and valid amount parameters.
 [KuCoin Get Withdrawal
 Quotas](https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-quotas)
 
-Verified: 2026-02-02
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -504,7 +504,7 @@ timestamps to POSIXct for convenient analysis.
 [KuCoin Get Withdrawal
 History](https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-history)
 
-Verified: 2026-02-02
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -680,7 +680,7 @@ Provides more information than the history endpoint.
 [KuCoin Get Withdrawal
 Detail](https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-by-id)
 
-Verified: 2026-02-02
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 

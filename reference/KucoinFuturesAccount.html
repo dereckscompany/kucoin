@@ -9,7 +9,7 @@ KucoinFuturesAccount: Futures Account and Position Management"></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,7 @@ KucoinFuturesAccount: Futures Account and Position Management"></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>KucoinFuturesAccount: Futures Account and Position Management</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.0.1/R/KucoinFuturesAccount.R" class="external-link"><code>R/KucoinFuturesAccount.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.0.2/R/KucoinFuturesAccount.R" class="external-link"><code>R/KucoinFuturesAccount.R</code></a></small>
       <div class="d-none name"><code>KucoinFuturesAccount.Rd</code></div>
     </div>
 
@@ -61,7 +61,7 @@ Inherits from <a href="KucoinBase.html">KucoinBase</a>.</p><div class="section">
 
 <div class="section">
 <h3 id="endpoints-covered">Endpoints Covered<a class="anchor" aria-label="anchor" href="#endpoints-covered"></a></h3>
-<table class="table table"><tr><td>Method</td><td>Endpoint</td><td>HTTP</td></tr><tr><td>get_account_overview</td><td>GET /api/v1/account-overview</td><td>GET</td></tr><tr><td>get_position</td><td>GET /api/v2/position</td><td>GET</td></tr><tr><td>get_positions</td><td>GET /api/v1/positions</td><td>GET</td></tr><tr><td>get_positions_history</td><td>GET /api/v1/history-positions</td><td>GET</td></tr><tr><td>get_margin_mode</td><td>GET /api/v1/marginMode</td><td>GET</td></tr><tr><td>set_margin_mode</td><td>POST /api/v1/marginMode</td><td>POST</td></tr><tr><td>get_cross_margin_leverage</td><td>GET /api/v1/crossMarginLeverage</td><td>GET</td></tr><tr><td>set_cross_margin_leverage</td><td>POST /api/v1/crossMarginLeverage</td><td>POST</td></tr><tr><td>get_max_open_size</td><td>GET /api/v1/maxOpenSize</td><td>GET</td></tr><tr><td>get_max_withdraw_margin</td><td>GET /api/v1/maxWithdrawMargin</td><td>GET</td></tr><tr><td>add_isolated_margin</td><td>POST /api/v1/marginDepositIn</td><td>POST</td></tr><tr><td>remove_isolated_margin</td><td>POST /api/v1/marginWithdrawOut</td><td>POST</td></tr><tr><td>get_risk_limit</td><td>GET /api/v1/contracts/risk-limit/{symbol}</td><td>GET</td></tr><tr><td>get_funding_history</td><td>GET /api/v1/funding-history</td><td>GET</td></tr></table></div>
+<table class="table table"><tr><td>Method</td><td>Endpoint</td><td>HTTP</td></tr><tr><td>get_account_overview</td><td>GET /api/v1/account-overview</td><td>GET</td></tr><tr><td>get_position</td><td>GET /api/v2/position</td><td>GET</td></tr><tr><td>get_positions</td><td>GET /api/v1/positions</td><td>GET</td></tr><tr><td>get_positions_history</td><td>GET /api/v1/history-positions</td><td>GET</td></tr><tr><td>get_margin_mode</td><td>GET /api/v2/position/getMarginMode</td><td>GET</td></tr><tr><td>set_margin_mode</td><td>POST /api/v2/position/changeMarginMode</td><td>POST</td></tr><tr><td>get_cross_margin_leverage</td><td>GET /api/v2/getCrossUserLeverage</td><td>GET</td></tr><tr><td>set_cross_margin_leverage</td><td>POST /api/v2/changeCrossUserLeverage</td><td>POST</td></tr><tr><td>get_max_open_size</td><td>GET /api/v2/getMaxOpenSize</td><td>GET</td></tr><tr><td>get_max_withdraw_margin</td><td>GET /api/v1/margin/maxWithdrawMargin</td><td>GET</td></tr><tr><td>add_isolated_margin</td><td>POST /api/v1/position/margin/deposit-margin</td><td>POST</td></tr><tr><td>remove_isolated_margin</td><td>POST /api/v1/margin/withdrawMargin</td><td>POST</td></tr><tr><td>get_risk_limit</td><td>GET /api/v1/contracts/risk-limit/{symbol}</td><td>GET</td></tr><tr><td>get_funding_history</td><td>GET /api/v1/funding-history</td><td>GET</td></tr></table></div>
 
     </div>
     <div class="section level2">
@@ -149,8 +149,8 @@ margin, and P&amp;L.</p><div class="section">
 <h4 id="official-documentation-1">Official Documentation<a class="anchor" aria-label="anchor" href="#official-documentation-1"></a></h4>
 
 
-<p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/account/get-account-overview" class="external-link">KuCoin Get Futures Account Overview</a></p>
-<p>Verified: 2026-03-10</p>
+<p><a href="https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-futures" class="external-link">KuCoin Get Account - Futures</a></p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -234,7 +234,7 @@ constructed with <code>async = TRUE</code>) with columns:</p><ul><li><p><code>ac
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-position-details" class="external-link">KuCoin Get Position Details</a></p>
-<p>Verified: 2026-03-10</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -358,7 +358,7 @@ constructed with <code>async = TRUE</code>) with columns:</p><ul><li><p><code>id
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-position-list" class="external-link">KuCoin Get Position List</a></p>
-<p>Verified: 2026-03-10</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -464,7 +464,7 @@ open positions.</p>
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-positions-history" class="external-link">KuCoin Get Position History</a></p>
-<p>Verified: 2026-03-10</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -568,7 +568,7 @@ empty <code>data.table</code> when no history records match. Columns:</p><ul><li
 <h4 id="api-endpoint-4">API Endpoint<a class="anchor" aria-label="anchor" href="#api-endpoint-4"></a></h4>
 
 
-<p><code>GET https://api-futures.kucoin.com/api/v1/marginMode</code></p>
+<p><code>GET https://api-futures.kucoin.com/api/v2/position/getMarginMode</code></p>
 </div>
 
 <div class="section">
@@ -576,7 +576,7 @@ empty <code>data.table</code> when no history records match. Columns:</p><ul><li
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-margin-mode" class="external-link">KuCoin Get Margin Mode</a></p>
-<p>Verified: 2026-03-10</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -584,7 +584,7 @@ empty <code>data.table</code> when no history records match. Columns:</p><ul><li
 
 
 <p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>curl <span class="sc">--</span>location <span class="sc">--</span>request GET \</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="st">'https://api-futures.kucoin.com/api/v1/marginMode?symbol=XBTUSDTM'</span> \</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="st">'https://api-futures.kucoin.com/api/v2/position/getMarginMode?symbol=XBTUSDTM'</span> \</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-KEY: your-api-key'</span> \</span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-SIGN: your-signature'</span> \</span>
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-TIMESTAMP: 1729176273859'</span> \</span>
@@ -639,22 +639,22 @@ constructed with <code>async = TRUE</code>) with columns:</p><ul><li><p><code>sy
 <h4 id="api-endpoint-5">API Endpoint<a class="anchor" aria-label="anchor" href="#api-endpoint-5"></a></h4>
 
 
-<p><code>POST https://api-futures.kucoin.com/api/v1/marginMode</code></p>
+<p><code>POST https://api-futures.kucoin.com/api/v2/position/changeMarginMode</code></p>
 </div>
 
 <div class="section">
 <h4 id="official-documentation-6">Official Documentation<a class="anchor" aria-label="anchor" href="#official-documentation-6"></a></h4>
 
 
-<p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/positions/modify-margin-mode" class="external-link">KuCoin Modify Margin Mode</a></p>
-<p>Verified: 2026-03-10</p>
+<p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/positions/switch-margin-mode" class="external-link">KuCoin Switch Margin Mode</a></p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
 <h4 id="curl-5">curl<a class="anchor" aria-label="anchor" href="#curl-5"></a></h4>
 
 
-<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>curl <span class="sc">--</span>location <span class="sc">--</span>request POST <span class="st">'https://api-futures.kucoin.com/api/v1/marginMode'</span> \</span>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>curl <span class="sc">--</span>location <span class="sc">--</span>request POST <span class="st">'https://api-futures.kucoin.com/api/v2/position/changeMarginMode'</span> \</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'Content-Type: application/json'</span> \</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-KEY: your-api-key'</span> \</span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-SIGN: your-signature'</span> \</span>
@@ -724,7 +724,7 @@ constructed with <code>async = TRUE</code>) with columns:</p><ul><li><p><code>sy
 <h4 id="api-endpoint-6">API Endpoint<a class="anchor" aria-label="anchor" href="#api-endpoint-6"></a></h4>
 
 
-<p><code>GET https://api-futures.kucoin.com/api/v1/crossMarginLeverage</code></p>
+<p><code>GET https://api-futures.kucoin.com/api/v2/getCrossUserLeverage</code></p>
 </div>
 
 <div class="section">
@@ -732,7 +732,7 @@ constructed with <code>async = TRUE</code>) with columns:</p><ul><li><p><code>sy
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-cross-margin-leverage" class="external-link">KuCoin Get Cross Margin Leverage</a></p>
-<p>Verified: 2026-03-10</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -740,7 +740,7 @@ constructed with <code>async = TRUE</code>) with columns:</p><ul><li><p><code>sy
 
 
 <p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>curl <span class="sc">--</span>location <span class="sc">--</span>request GET \</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="st">'https://api-futures.kucoin.com/api/v1/crossMarginLeverage?symbol=XBTUSDTM'</span> \</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="st">'https://api-futures.kucoin.com/api/v2/getCrossUserLeverage?symbol=XBTUSDTM'</span> \</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-KEY: your-api-key'</span> \</span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-SIGN: your-signature'</span> \</span>
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-TIMESTAMP: 1729176273859'</span> \</span>
@@ -795,7 +795,7 @@ constructed with <code>async = TRUE</code>) with columns:</p><ul><li><p><code>sy
 <h4 id="api-endpoint-7">API Endpoint<a class="anchor" aria-label="anchor" href="#api-endpoint-7"></a></h4>
 
 
-<p><code>POST https://api-futures.kucoin.com/api/v1/crossMarginLeverage</code></p>
+<p><code>POST https://api-futures.kucoin.com/api/v2/changeCrossUserLeverage</code></p>
 </div>
 
 <div class="section">
@@ -803,14 +803,14 @@ constructed with <code>async = TRUE</code>) with columns:</p><ul><li><p><code>sy
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/positions/modify-cross-margin-leverage" class="external-link">KuCoin Modify Cross Margin Leverage</a></p>
-<p>Verified: 2026-03-10</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
 <h4 id="curl-7">curl<a class="anchor" aria-label="anchor" href="#curl-7"></a></h4>
 
 
-<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>curl <span class="sc">--</span>location <span class="sc">--</span>request POST <span class="st">'https://api-futures.kucoin.com/api/v1/crossMarginLeverage'</span> \</span>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>curl <span class="sc">--</span>location <span class="sc">--</span>request POST <span class="st">'https://api-futures.kucoin.com/api/v2/changeCrossUserLeverage'</span> \</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'Content-Type: application/json'</span> \</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-KEY: your-api-key'</span> \</span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-SIGN: your-signature'</span> \</span>
@@ -880,15 +880,15 @@ constructed with <code>async = TRUE</code>) with columns:</p><ul><li><p><code>sy
 <h4 id="api-endpoint-8">API Endpoint<a class="anchor" aria-label="anchor" href="#api-endpoint-8"></a></h4>
 
 
-<p><code>GET https://api-futures.kucoin.com/api/v1/maxOpenSize</code></p>
+<p><code>GET https://api-futures.kucoin.com/api/v2/getMaxOpenSize</code></p>
 </div>
 
 <div class="section">
 <h4 id="official-documentation-9">Official Documentation<a class="anchor" aria-label="anchor" href="#official-documentation-9"></a></h4>
 
 
-<p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-maximum-open-position-size" class="external-link">KuCoin Get Max Open Size</a></p>
-<p>Verified: 2026-03-10</p>
+<p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-max-open-size" class="external-link">KuCoin Get Max Open Size</a></p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -896,7 +896,7 @@ constructed with <code>async = TRUE</code>) with columns:</p><ul><li><p><code>sy
 
 
 <p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>curl <span class="sc">--</span>location <span class="sc">--</span>request GET \</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="st">'https://api-futures.kucoin.com/api/v1/maxOpenSize?symbol=XBTUSDTM&amp;price=40000&amp;leverage=10'</span> \</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="st">'https://api-futures.kucoin.com/api/v2/getMaxOpenSize?symbol=XBTUSDTM&amp;price=40000&amp;leverage=10'</span> \</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-KEY: your-api-key'</span> \</span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-SIGN: your-signature'</span> \</span>
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-TIMESTAMP: 1729176273859'</span> \</span>
@@ -960,7 +960,7 @@ constructed with <code>async = TRUE</code>) with columns:</p><ul><li><p><code>sy
 <h4 id="api-endpoint-9">API Endpoint<a class="anchor" aria-label="anchor" href="#api-endpoint-9"></a></h4>
 
 
-<p><code>GET https://api-futures.kucoin.com/api/v1/maxWithdrawMargin</code></p>
+<p><code>GET https://api-futures.kucoin.com/api/v1/margin/maxWithdrawMargin</code></p>
 </div>
 
 <div class="section">
@@ -968,7 +968,7 @@ constructed with <code>async = TRUE</code>) with columns:</p><ul><li><p><code>sy
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-max-withdraw-margin" class="external-link">KuCoin Get Max Withdraw Margin</a></p>
-<p>Verified: 2026-03-10</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -976,7 +976,7 @@ constructed with <code>async = TRUE</code>) with columns:</p><ul><li><p><code>sy
 
 
 <p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>curl <span class="sc">--</span>location <span class="sc">--</span>request GET \</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="st">'https://api-futures.kucoin.com/api/v1/maxWithdrawMargin?symbol=XBTUSDTM'</span> \</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="st">'https://api-futures.kucoin.com/api/v1/margin/maxWithdrawMargin?symbol=XBTUSDTM'</span> \</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-KEY: your-api-key'</span> \</span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-SIGN: your-signature'</span> \</span>
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-TIMESTAMP: 1729176273859'</span> \</span>
@@ -1030,7 +1030,7 @@ numeric coercion.</p></li>
 <h4 id="api-endpoint-10">API Endpoint<a class="anchor" aria-label="anchor" href="#api-endpoint-10"></a></h4>
 
 
-<p><code>POST https://api-futures.kucoin.com/api/v1/marginDepositIn</code></p>
+<p><code>POST https://api-futures.kucoin.com/api/v1/position/margin/deposit-margin</code></p>
 </div>
 
 <div class="section">
@@ -1038,14 +1038,14 @@ numeric coercion.</p></li>
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/positions/add-isolated-margin" class="external-link">KuCoin Add Isolated Margin</a></p>
-<p>Verified: 2026-03-10</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
 <h4 id="curl-10">curl<a class="anchor" aria-label="anchor" href="#curl-10"></a></h4>
 
 
-<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>curl <span class="sc">--</span>location <span class="sc">--</span>request POST <span class="st">'https://api-futures.kucoin.com/api/v1/marginDepositIn'</span> \</span>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>curl <span class="sc">--</span>location <span class="sc">--</span>request POST <span class="st">'https://api-futures.kucoin.com/api/v1/position/margin/deposit-margin'</span> \</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'Content-Type: application/json'</span> \</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-KEY: your-api-key'</span> \</span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-SIGN: your-signature'</span> \</span>
@@ -1125,7 +1125,7 @@ constructed with <code>async = TRUE</code>) with columns:</p><ul><li><p><code>id
 <h4 id="api-endpoint-11">API Endpoint<a class="anchor" aria-label="anchor" href="#api-endpoint-11"></a></h4>
 
 
-<p><code>POST https://api-futures.kucoin.com/api/v1/marginWithdrawOut</code></p>
+<p><code>POST https://api-futures.kucoin.com/api/v1/margin/withdrawMargin</code></p>
 </div>
 
 <div class="section">
@@ -1133,14 +1133,14 @@ constructed with <code>async = TRUE</code>) with columns:</p><ul><li><p><code>id
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/positions/remove-isolated-margin" class="external-link">KuCoin Remove Isolated Margin</a></p>
-<p>Verified: 2026-03-10</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
 <h4 id="curl-11">curl<a class="anchor" aria-label="anchor" href="#curl-11"></a></h4>
 
 
-<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>curl <span class="sc">--</span>location <span class="sc">--</span>request POST <span class="st">'https://api-futures.kucoin.com/api/v1/marginWithdrawOut'</span> \</span>
+<p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>curl <span class="sc">--</span>location <span class="sc">--</span>request POST <span class="st">'https://api-futures.kucoin.com/api/v1/margin/withdrawMargin'</span> \</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'Content-Type: application/json'</span> \</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-KEY: your-api-key'</span> \</span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-SIGN: your-signature'</span> \</span>
@@ -1221,8 +1221,8 @@ constructed with <code>async = TRUE</code>) with columns:</p><ul><li><p><code>id
 <h4 id="official-documentation-13">Official Documentation<a class="anchor" aria-label="anchor" href="#official-documentation-13"></a></h4>
 
 
-<p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/risk-limit/get-futures-risk-limit-level" class="external-link">KuCoin Get Risk Limit Level</a></p>
-<p>Verified: 2026-03-10</p>
+<p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-isolated-margin-risk-limit" class="external-link">KuCoin Get Isolated Margin Risk Limit</a></p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">
@@ -1324,7 +1324,7 @@ constructed with <code>async = TRUE</code>) with columns:</p><ul><li><p><code>id
 
 
 <p><a href="https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-private-funding-history" class="external-link">KuCoin Get Private Funding History</a></p>
-<p>Verified: 2026-03-10</p>
+<p>Verified: 2026-05-23</p>
 </div>
 
 <div class="section">

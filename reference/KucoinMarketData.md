@@ -153,7 +153,7 @@ platform updates.
 [KuCoin Get
 Announcements](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-announcements)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -301,7 +301,7 @@ addresses).
 [KuCoin Get
 Currency](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-currency)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -450,7 +450,7 @@ tables.
 [KuCoin Get All
 Currencies](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-currencies)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -543,9 +543,9 @@ precision increments, size limits, fee rates, and trading status.
 #### Official Documentation
 
 [KuCoin Get
-Symbol](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-symbols)
+Symbol](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-symbol)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -674,7 +674,7 @@ segment. Returns the same fields as `get_symbol()` for every pair.
 [KuCoin Get All
 Symbols](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-symbols)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -816,7 +816,7 @@ prices, sizes, and the most recent trade price and size.
 [KuCoin Get
 Ticker](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-ticker)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -915,7 +915,7 @@ Snapshots are captured every 2 seconds on the server side.
 [KuCoin Get All
 Tickers](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-all-tickers)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1044,7 +1044,7 @@ the price, size, side (buy/sell), and nanosecond-precision timestamp.
 [KuCoin Get Trade
 History](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-trade-history)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1142,7 +1142,7 @@ required.
 [KuCoin Get Part
 Orderbook](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-part-orderbook)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1238,7 +1238,7 @@ Retrieves the complete order book for a symbol with all price levels.
 [KuCoin Get Full
 Orderbook](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-full-orderbook)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1337,7 +1337,7 @@ OHLCV data, change rate, average price, and fee rates.
 [KuCoin Get 24hr
 Stats](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-24hr-stats)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1456,7 +1456,7 @@ segments group trading pairs by theme (e.g., DeFi, Meme, Layer 1).
 [KuCoin Get Market
 List](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-market-list)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1536,7 +1536,7 @@ time range.
 [KuCoin Get
 Klines](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-klines)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1654,7 +1654,7 @@ Useful for detecting clock drift and ensuring HMAC signatures are valid.
 [KuCoin Get Server
 Time](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-server-time)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
@@ -1719,7 +1719,7 @@ maintenance windows.
 [KuCoin Get Service
 Status](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-service-status)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
@@ -1786,7 +1786,7 @@ for portfolio valuation and P&L reporting in fiat terms.
 [KuCoin Get Fiat
 Price](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-fiat-price)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 

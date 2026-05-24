@@ -132,7 +132,7 @@ count, and general account metadata for the authenticated user.
 [KuCoin Get Account
 Summary](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-summary-info)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -241,7 +241,7 @@ associated UID.
 [KuCoin Get API Key
 Info](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-apikey-info)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -346,7 +346,7 @@ are active.
 [KuCoin Get Spot Account
 Type](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-type-spot)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -423,7 +423,7 @@ account with its current balance, available funds, and holds.
 [KuCoin Get Spot Account
 List](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-list-spot)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -544,7 +544,7 @@ holds.
 [KuCoin Get Spot Account
 Detail](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-detail-spot)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -643,7 +643,7 @@ margin account.
 [KuCoin Get Cross Margin
 Account](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-cross-margin)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -796,7 +796,7 @@ independent balances, liabilities, and risk parameters.
 [KuCoin Get Isolated Margin
 Account](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-isolated-margin)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -996,7 +996,7 @@ coerces the `created_at` millisecond timestamp to POSIXct.
 [KuCoin Get Account Ledger
 Spot/Margin](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-ledgers-spot-margin)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -1154,7 +1154,7 @@ a rolling 7-day window.
 [KuCoin Get Account Ledgers
 Trade_hf](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-ledgers-tradehf)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
@@ -1309,7 +1309,7 @@ per-symbol discounts.
 [KuCoin Get Basic
 Fee](https://www.kucoin.com/docs-new/rest/account-info/trade-fee/get-basic-fee-spot-margin)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 
@@ -1382,7 +1382,7 @@ VIP/KCS discounts. Supports up to 10 trading pairs per request.
 [KuCoin Get Actual
 Fee](https://www.kucoin.com/docs-new/rest/account-info/trade-fee/get-actual-fee-spot-margin)
 
-Verified: 2026-03-10
+Verified: 2026-05-23
 
 #### curl
 

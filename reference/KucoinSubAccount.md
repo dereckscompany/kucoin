@@ -112,7 +112,7 @@ trading permissions. Only master accounts can call this endpoint.
 [KuCoin Add
 Sub-Account](https://www.kucoin.com/docs-new/rest/account-info/sub-account/add-subaccount)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -243,7 +243,7 @@ milliseconds to POSIXct.
 [KuCoin Get Sub-Account List Summary
 Info](https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-list-summary-info)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -385,7 +385,7 @@ and holds amounts.
 [KuCoin Get Sub-Account Detail
 Balance](https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-detail-balance)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
@@ -559,7 +559,7 @@ a single `data.table` with `sub_user_id` and `sub_name` identifiers.
 [KuCoin Get Sub-Account List Spot Balance
 V2](https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-list-spot-balance-v2)
 
-Verified: 2026-02-01
+Verified: 2026-05-23
 
 #### Automated Trading Usage
 
