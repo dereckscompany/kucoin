@@ -356,54 +356,65 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; trading pair to short (e.g., \code{"BTC-USDT"}).
-You will borrow and sell the base currency (BTC in this example).}
+\item{\code{symbol}}{(scalar<character>) trading pair to short (e.g.,
+\code{"BTC-USDT"}). You will borrow and sell the base currency (BTC in this
+example).}
 
-\item{\code{size}}{Numeric or NULL; quantity of the base asset to short.
-For market orders, specify either \code{size} (base qty) or \code{funds} (quote qty), not both.}
+\item{\code{size}}{(scalar<numeric> | NULL) quantity of the base asset to short.
+For market orders, specify either \code{size} (base qty) or \code{funds} (quote
+qty), not both.}
 
-\item{\code{funds}}{Numeric or NULL; amount in quote currency to receive from the short sale.
-Only for market orders; mutually exclusive with \code{size}.}
+\item{\code{funds}}{(scalar<numeric> | NULL) amount in quote currency to receive
+from the short sale. Only for market orders; mutually exclusive with
+\code{size}.}
 
-\item{\code{type}}{Character; \code{"limit"} or \code{"market"} (default \code{"market"}).}
+\item{\code{type}}{(scalar<character>) \code{"limit"} or \code{"market"} (default
+\code{"market"}).}
 
-\item{\code{price}}{Numeric or NULL; required for limit orders. The price at which to sell.}
+\item{\code{price}}{(scalar<numeric> | NULL) required for limit orders. The price
+at which to sell.}
 
-\item{\code{isIsolated}}{Logical; \code{TRUE} for isolated margin (risk limited to this pair),
-\code{FALSE} (default) for cross margin (shared collateral pool).}
+\item{\code{isIsolated}}{(scalar<logical>) \code{TRUE} for isolated margin (risk
+limited to this pair), \code{FALSE} (default) for cross margin (shared
+collateral pool).}
 
-\item{\code{clientOid}}{Character or NULL; your own unique order ID (max 40 chars).
-Auto-generated if not provided (required by KuCoin for margin orders).}
+\item{\code{clientOid}}{(scalar<character> | NULL) your own unique order ID (max
+40 chars). Auto-generated if not provided (required by KuCoin for margin
+orders).}
 
-\item{\code{stp}}{Character or NULL; self-trade prevention: \code{"CN"}, \code{"CO"}, \code{"CB"}, \code{"DC"}.}
+\item{\code{stp}}{(scalar<character> | NULL) self-trade prevention: \code{"CN"},
+\code{"CO"}, \code{"CB"}, \code{"DC"}.}
 
-\item{\code{remark}}{Character or NULL; order remark (max 20 ASCII chars).}
+\item{\code{remark}}{(scalar<character> | NULL) order remark (max 20 ASCII chars).}
 
-\item{\code{timeInForce}}{Character or NULL; \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
+\item{\code{timeInForce}}{(scalar<character> | NULL) \code{"GTC"}, \code{"GTT"}, \code{"IOC"},
+\code{"FOK"}.}
 
-\item{\code{cancelAfter}}{Numeric or NULL; auto-cancel seconds (requires \code{timeInForce = "GTT"}).}
+\item{\code{cancelAfter}}{(scalar<numeric> | NULL) auto-cancel seconds (requires
+\code{timeInForce = "GTT"}).}
 
-\item{\code{postOnly}}{Logical or NULL; if TRUE, order rejected if it would match immediately.}
+\item{\code{postOnly}}{(scalar<logical> | NULL) if TRUE, order rejected if it
+would match immediately.}
 
-\item{\code{hidden}}{Logical or NULL; if TRUE, order hidden from order book.}
+\item{\code{hidden}}{(scalar<logical> | NULL) if TRUE, order hidden from order
+book.}
 
-\item{\code{iceberg}}{Logical or NULL; if TRUE, only \code{visibleSize} is shown.}
+\item{\code{iceberg}}{(scalar<logical> | NULL) if TRUE, only \code{visibleSize} is
+shown.}
 
-\item{\code{visibleSize}}{Numeric or NULL; visible quantity for iceberg orders.}
+\item{\code{visibleSize}}{(scalar<numeric> | NULL) visible quantity for iceberg
+orders.}
 
-\item{\code{dry_run}}{Logical; if \code{TRUE}, validates the order without actually placing it.
-Useful for testing your parameters. Default \code{FALSE}.}
+\item{\code{dry_run}}{(scalar<logical>) if \code{TRUE}, validates the order without
+actually placing it. Useful for testing your parameters. Default
+\code{FALSE}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{order_id} (character): KuCoin-assigned order identifier.
-\item \code{client_oid} (character): Client-provided order identifier.
-\item \code{borrow_size} (character): Amount borrowed.
-\item \code{loan_apply_id} (character): Loan application ID.
-}
+(data.table | promise<data.table>) one row giving the
+KuCoin-assigned order identifier, the client-provided order identifier,
+the amount borrowed, and the loan application ID.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -517,49 +528,52 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; trading pair to close (must match the pair you shorted).}
+\item{\code{symbol}}{(scalar<character>) trading pair to close (must match the
+pair you shorted).}
 
-\item{\code{size}}{Numeric or NULL; quantity of the base asset to buy back.
-Should match the size you shorted. For market orders, specify either
-\code{size} or \code{funds}, not both.}
+\item{\code{size}}{(scalar<numeric> | NULL) quantity of the base asset to buy
+back. Should match the size you shorted. For market orders, specify
+either \code{size} or \code{funds}, not both.}
 
-\item{\code{funds}}{Numeric or NULL; amount in quote currency to spend buying back.
-Only for market orders; mutually exclusive with \code{size}.}
+\item{\code{funds}}{(scalar<numeric> | NULL) amount in quote currency to spend
+buying back. Only for market orders; mutually exclusive with \code{size}.}
 
-\item{\code{type}}{Character; \code{"limit"} or \code{"market"} (default \code{"market"}).}
+\item{\code{type}}{(scalar<character>) \code{"limit"} or \code{"market"} (default
+\code{"market"}).}
 
-\item{\code{price}}{Numeric or NULL; required for limit orders.}
+\item{\code{price}}{(scalar<numeric> | NULL) required for limit orders.}
 
-\item{\code{isIsolated}}{Logical; must match the margin mode used in \code{open_short()}.}
+\item{\code{isIsolated}}{(scalar<logical>) must match the margin mode used in
+\code{open_short()}.}
 
-\item{\code{clientOid}}{Character or NULL; your own unique order ID.}
+\item{\code{clientOid}}{(scalar<character> | NULL) your own unique order ID.}
 
-\item{\code{stp}}{Character or NULL; self-trade prevention.}
+\item{\code{stp}}{(scalar<character> | NULL) self-trade prevention.}
 
-\item{\code{remark}}{Character or NULL; order remark.}
+\item{\code{remark}}{(scalar<character> | NULL) order remark.}
 
-\item{\code{timeInForce}}{Character or NULL; \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
+\item{\code{timeInForce}}{(scalar<character> | NULL) \code{"GTC"}, \code{"GTT"}, \code{"IOC"},
+\code{"FOK"}.}
 
-\item{\code{cancelAfter}}{Numeric or NULL; auto-cancel seconds.}
+\item{\code{cancelAfter}}{(scalar<numeric> | NULL) auto-cancel seconds.}
 
-\item{\code{postOnly}}{Logical or NULL; passive order flag.}
+\item{\code{postOnly}}{(scalar<logical> | NULL) passive order flag.}
 
-\item{\code{hidden}}{Logical or NULL; hidden order flag.}
+\item{\code{hidden}}{(scalar<logical> | NULL) hidden order flag.}
 
-\item{\code{iceberg}}{Logical or NULL; iceberg order flag.}
+\item{\code{iceberg}}{(scalar<logical> | NULL) iceberg order flag.}
 
-\item{\code{visibleSize}}{Numeric or NULL; visible quantity for iceberg.}
+\item{\code{visibleSize}}{(scalar<numeric> | NULL) visible quantity for iceberg.}
 
-\item{\code{dry_run}}{Logical; if \code{TRUE}, validates without placing. Default \code{FALSE}.}
+\item{\code{dry_run}}{(scalar<logical>) if \code{TRUE}, validates without placing.
+Default \code{FALSE}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{order_id} (character): KuCoin-assigned order identifier.
-\item \code{client_oid} (character): Client-provided order identifier (NA if not supplied).
-}
+(data.table | promise<data.table>) one row giving the
+KuCoin-assigned order identifier and the client-provided order
+identifier (NA if not supplied).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -668,50 +682,51 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; trading pair to go long on (e.g., \code{"BTC-USDT"}).
-You will borrow quote currency (USDT) and buy the base (BTC).}
+\item{\code{symbol}}{(scalar<character>) trading pair to go long on (e.g.,
+\code{"BTC-USDT"}). You will borrow quote currency (USDT) and buy the base
+(BTC).}
 
-\item{\code{size}}{Numeric or NULL; quantity of the base asset to buy.}
+\item{\code{size}}{(scalar<numeric> | NULL) quantity of the base asset to buy.}
 
-\item{\code{funds}}{Numeric or NULL; amount in quote currency to spend.
+\item{\code{funds}}{(scalar<numeric> | NULL) amount in quote currency to spend.
 Only for market orders; mutually exclusive with \code{size}.}
 
-\item{\code{type}}{Character; \code{"limit"} or \code{"market"} (default \code{"market"}).}
+\item{\code{type}}{(scalar<character>) \code{"limit"} or \code{"market"} (default
+\code{"market"}).}
 
-\item{\code{price}}{Numeric or NULL; required for limit orders.}
+\item{\code{price}}{(scalar<numeric> | NULL) required for limit orders.}
 
-\item{\code{isIsolated}}{Logical; \code{TRUE} for isolated margin, \code{FALSE} (default) for cross.}
+\item{\code{isIsolated}}{(scalar<logical>) \code{TRUE} for isolated margin, \code{FALSE}
+(default) for cross.}
 
-\item{\code{clientOid}}{Character or NULL; your own unique order ID.}
+\item{\code{clientOid}}{(scalar<character> | NULL) your own unique order ID.}
 
-\item{\code{stp}}{Character or NULL; self-trade prevention.}
+\item{\code{stp}}{(scalar<character> | NULL) self-trade prevention.}
 
-\item{\code{remark}}{Character or NULL; order remark.}
+\item{\code{remark}}{(scalar<character> | NULL) order remark.}
 
-\item{\code{timeInForce}}{Character or NULL; \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
+\item{\code{timeInForce}}{(scalar<character> | NULL) \code{"GTC"}, \code{"GTT"}, \code{"IOC"},
+\code{"FOK"}.}
 
-\item{\code{cancelAfter}}{Numeric or NULL; auto-cancel seconds.}
+\item{\code{cancelAfter}}{(scalar<numeric> | NULL) auto-cancel seconds.}
 
-\item{\code{postOnly}}{Logical or NULL; passive order flag.}
+\item{\code{postOnly}}{(scalar<logical> | NULL) passive order flag.}
 
-\item{\code{hidden}}{Logical or NULL; hidden order flag.}
+\item{\code{hidden}}{(scalar<logical> | NULL) hidden order flag.}
 
-\item{\code{iceberg}}{Logical or NULL; iceberg order flag.}
+\item{\code{iceberg}}{(scalar<logical> | NULL) iceberg order flag.}
 
-\item{\code{visibleSize}}{Numeric or NULL; visible quantity for iceberg.}
+\item{\code{visibleSize}}{(scalar<numeric> | NULL) visible quantity for iceberg.}
 
-\item{\code{dry_run}}{Logical; if \code{TRUE}, validates without placing. Default \code{FALSE}.}
+\item{\code{dry_run}}{(scalar<logical>) if \code{TRUE}, validates without placing.
+Default \code{FALSE}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{order_id} (character): KuCoin-assigned order identifier.
-\item \code{client_oid} (character): Client-provided order identifier.
-\item \code{borrow_size} (character): Amount borrowed.
-\item \code{loan_apply_id} (character): Loan application ID.
-}
+(data.table | promise<data.table>) one row giving the
+KuCoin-assigned order identifier, the client-provided order identifier,
+the amount borrowed, and the loan application ID.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -822,47 +837,50 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; trading pair to close (must match the pair you longed).}
+\item{\code{symbol}}{(scalar<character>) trading pair to close (must match the
+pair you longed).}
 
-\item{\code{size}}{Numeric or NULL; quantity of the base asset to sell.}
+\item{\code{size}}{(scalar<numeric> | NULL) quantity of the base asset to sell.}
 
-\item{\code{funds}}{Numeric or NULL; amount in quote currency.
-Only for market orders; mutually exclusive with \code{size}.}
+\item{\code{funds}}{(scalar<numeric> | NULL) amount in quote currency. Only for
+market orders; mutually exclusive with \code{size}.}
 
-\item{\code{type}}{Character; \code{"limit"} or \code{"market"} (default \code{"market"}).}
+\item{\code{type}}{(scalar<character>) \code{"limit"} or \code{"market"} (default
+\code{"market"}).}
 
-\item{\code{price}}{Numeric or NULL; required for limit orders.}
+\item{\code{price}}{(scalar<numeric> | NULL) required for limit orders.}
 
-\item{\code{isIsolated}}{Logical; must match the margin mode used in \code{open_long()}.}
+\item{\code{isIsolated}}{(scalar<logical>) must match the margin mode used in
+\code{open_long()}.}
 
-\item{\code{clientOid}}{Character or NULL; your own unique order ID.}
+\item{\code{clientOid}}{(scalar<character> | NULL) your own unique order ID.}
 
-\item{\code{stp}}{Character or NULL; self-trade prevention.}
+\item{\code{stp}}{(scalar<character> | NULL) self-trade prevention.}
 
-\item{\code{remark}}{Character or NULL; order remark.}
+\item{\code{remark}}{(scalar<character> | NULL) order remark.}
 
-\item{\code{timeInForce}}{Character or NULL; \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
+\item{\code{timeInForce}}{(scalar<character> | NULL) \code{"GTC"}, \code{"GTT"}, \code{"IOC"},
+\code{"FOK"}.}
 
-\item{\code{cancelAfter}}{Numeric or NULL; auto-cancel seconds.}
+\item{\code{cancelAfter}}{(scalar<numeric> | NULL) auto-cancel seconds.}
 
-\item{\code{postOnly}}{Logical or NULL; passive order flag.}
+\item{\code{postOnly}}{(scalar<logical> | NULL) passive order flag.}
 
-\item{\code{hidden}}{Logical or NULL; hidden order flag.}
+\item{\code{hidden}}{(scalar<logical> | NULL) hidden order flag.}
 
-\item{\code{iceberg}}{Logical or NULL; iceberg order flag.}
+\item{\code{iceberg}}{(scalar<logical> | NULL) iceberg order flag.}
 
-\item{\code{visibleSize}}{Numeric or NULL; visible quantity for iceberg.}
+\item{\code{visibleSize}}{(scalar<numeric> | NULL) visible quantity for iceberg.}
 
-\item{\code{dry_run}}{Logical; if \code{TRUE}, validates without placing. Default \code{FALSE}.}
+\item{\code{dry_run}}{(scalar<logical>) if \code{TRUE}, validates without placing.
+Default \code{FALSE}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{order_id} (character): KuCoin-assigned order identifier.
-\item \code{client_oid} (character): Client-provided order identifier (NA if not supplied).
-}
+(data.table | promise<data.table>) one row giving the
+KuCoin-assigned order identifier and the client-provided order
+identifier (NA if not supplied).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -958,27 +976,29 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{currency}}{Character; the currency to borrow (e.g., \code{"USDT"}, \code{"BTC"}).}
+\item{\code{currency}}{(scalar<character>) the currency to borrow (e.g.,
+\code{"USDT"}, \code{"BTC"}).}
 
-\item{\code{size}}{Numeric; the amount to borrow.}
+\item{\code{size}}{(scalar<numeric>) the amount to borrow.}
 
-\item{\code{timeInForce}}{Character; order time-in-force policy (default \code{"IOC"}).
-Valid values: \code{"IOC"} (immediate-or-cancel), \code{"FOK"} (fill-or-kill).}
+\item{\code{timeInForce}}{(scalar<character>) order time-in-force policy (default
+\code{"IOC"}). Valid values: \code{"IOC"} (immediate-or-cancel), \code{"FOK"}
+(fill-or-kill).}
 
-\item{\code{isIsolated}}{Logical; \code{TRUE} for isolated margin, \code{FALSE} (default) for cross.}
+\item{\code{isIsolated}}{(scalar<logical>) \code{TRUE} for isolated margin, \code{FALSE}
+(default) for cross.}
 
-\item{\code{symbol}}{Character or NULL; required when \code{isIsolated = TRUE}. Trading pair (e.g., \code{"BTC-USDT"}).}
+\item{\code{symbol}}{(scalar<character> | NULL) required when \code{isIsolated = TRUE}.
+Trading pair (e.g., \code{"BTC-USDT"}).}
 
-\item{\code{isHf}}{Logical; \code{TRUE} for high-frequency trading mode, \code{FALSE} (default).}
+\item{\code{isHf}}{(scalar<logical>) \code{TRUE} for high-frequency trading mode,
+\code{FALSE} (default).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{order_no} (character): Borrow order number.
-\item \code{actual_size} (character): Amount actually borrowed.
-}
+(data.table | promise<data.table>) one row giving the borrow order
+number and the amount actually borrowed.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1064,20 +1084,17 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{currency}}{Character; the currency to repay (e.g., \code{"USDT"}, \code{"BTC"}).}
+\item{\code{currency}}{(scalar<character>) the currency to repay (e.g.,
+\code{"USDT"}, \code{"BTC"}).}
 
-\item{\code{size}}{Numeric; the amount to repay.}
+\item{\code{size}}{(scalar<numeric>) the amount to repay.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
-with a single row and columns:
-\itemize{
-\item \code{timestamp} (POSIXct): Server-side acceptance time of the repay.
-\item \code{order_no} (character): Repayment order number.
-\item \code{actual_size} (character): Amount actually repaid.
-}
+(data.table | promise<data.table>) one row giving the server-side
+acceptance time of the repay (POSIXct), the repayment order number, and
+the amount actually repaid.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1154,34 +1171,21 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{query}}{Named list; optional filter parameters. Supported keys:
-\itemize{
-\item \code{currency} (character): Filter by currency.
-\item \code{isIsolated} (logical): Filter by margin type.
-\item \code{symbol} (character): Filter by trading pair.
-\item \code{orderNo} (character): Filter by order number.
-\item \code{startTime} (integer): Start timestamp in milliseconds.
-\item \code{endTime} (integer): End timestamp in milliseconds.
-\item \code{currentPage} (integer): Page number.
-\item \code{pageSize} (integer): Items per page.
-}}
+\item{\code{query}}{(list) optional filter parameters. Supported keys: \code{currency}
+(filter by currency), \code{isIsolated} (filter by margin type), \code{symbol}
+(filter by trading pair), \code{orderNo} (filter by order number), \code{startTime}
+(start timestamp in milliseconds), \code{endTime} (end timestamp in
+milliseconds), \code{currentPage} (page number), and \code{pageSize} (items per
+page).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
-with \strong{one row per borrow record} and columns:
-\itemize{
-\item \code{order_no} (character): Borrow order number.
-\item \code{symbol} (character): Trading pair (NA on cross-margin records).
-\item \code{currency} (character): Borrowed currency.
-\item \code{size} (character): Requested borrow amount.
-\item \code{actual_size} (character): Amount actually borrowed.
-\item \code{status} (character): Lifecycle status (e.g. \code{"DONE"}).
-\item \code{created_time} (POSIXct): Borrow timestamp (millisecond epoch coerced).
-}
-
-Empty response yields an empty \code{data.table}.
+(data.table | promise<data.table>) one row per borrow record,
+giving the borrow order number, trading pair (NA on cross-margin
+records), borrowed currency, requested borrow amount, amount actually
+borrowed, lifecycle status, and borrow timestamp (POSIXct, coerced from
+epoch milliseconds); an empty data.table if no records match.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1258,24 +1262,17 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{query}}{Named list; optional filter parameters. Same keys as \code{get_borrow_history()}.}
+\item{\code{query}}{(list) optional filter parameters. Same keys as
+\code{get_borrow_history()}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
-with \strong{one row per repay record} and columns:
-\itemize{
-\item \code{order_no} (character): Repay order number.
-\item \code{symbol} (character): Trading pair (NA on cross-margin records).
-\item \code{currency} (character): Repaid currency.
-\item \code{size} (character): Requested repay amount.
-\item \code{actual_size} (character): Amount actually repaid.
-\item \code{status} (character): Lifecycle status.
-\item \code{created_time} (POSIXct): Repay timestamp (millisecond epoch coerced).
-}
-
-Empty response yields an empty \code{data.table}.
+(data.table | promise<data.table>) one row per repay record,
+giving the repay order number, trading pair (NA on cross-margin
+records), repaid currency, requested repay amount, amount actually
+repaid, lifecycle status, and repay timestamp (POSIXct, coerced from
+epoch milliseconds); an empty data.table if no records match.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1349,30 +1346,20 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{query}}{Named list; optional filter parameters. Supported keys:
-\itemize{
-\item \code{currency} (character): Filter by currency.
-\item \code{isIsolated} (logical): Cross vs isolated.
-\item \code{symbol} (character): Trading pair.
-\item \code{startTime} (integer): Start timestamp in milliseconds.
-\item \code{endTime} (integer): End timestamp in milliseconds.
-\item \code{currentPage} (integer): Page number.
-\item \code{pageSize} (integer): Items per page.
-}}
+\item{\code{query}}{(list) optional filter parameters. Supported keys: \code{currency}
+(filter by currency), \code{isIsolated} (cross vs isolated), \code{symbol} (trading
+pair), \code{startTime} (start timestamp in milliseconds), \code{endTime} (end
+timestamp in milliseconds), \code{currentPage} (page number), and \code{pageSize}
+(items per page).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
-with \strong{one row per interest record} and columns:
-\itemize{
-\item \code{currency} (character): Currency on which interest accrued.
-\item \code{day_ratio} (character): Daily rate applied.
-\item \code{interest_amount} (character): Interest charged in the period.
-\item \code{created_time} (POSIXct): Accrual timestamp (millisecond epoch coerced).
-}
-
-Empty response yields an empty \code{data.table}.
+(data.table | promise<data.table>) one row per interest record,
+giving the currency on which interest accrued, the daily rate applied,
+the interest charged in the period, and the accrual timestamp (POSIXct,
+coerced from epoch milliseconds); an empty data.table if no records
+match.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1444,21 +1431,16 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{query}}{Named list; optional filter parameters. Supported keys:
-\itemize{
-\item \code{currency} (character): Comma-separated currency list (e.g., \code{"BTC,USDT"}).
-\item \code{vipLevel} (integer): VIP tier level.
-}}
+\item{\code{query}}{(list) optional filter parameters. Supported keys: \code{currency}
+(comma-separated currency list e.g. \code{"BTC,USDT"}) and \code{vipLevel} (VIP
+tier level).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{currency} (character): Currency code.
-\item \code{hourly_borrow_rate} (character): Hourly interest rate.
-\item \code{annualized_borrow_rate} (character): Annualized interest rate.
-}
+(data.table | promise<data.table>) one row per currency, giving the
+currency code, the hourly interest rate, and the annualised interest
+rate.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1530,16 +1512,14 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{leverage}}{Numeric; the desired leverage multiplier (e.g., \code{3}, \code{5}, \code{10}).}
+\item{\code{leverage}}{(scalar<numeric>) the desired leverage multiplier (e.g.,
+\code{3}, \code{5}, \code{10}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if \code{async = TRUE}), single row with columns:
-\itemize{
-\item \code{leverage} (numeric): The new leverage multiplier.
-\item \code{status} (character): \code{"success"}.
-}
+(data.table | promise<data.table>) one row giving the new leverage
+multiplier and a \code{"success"} status.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

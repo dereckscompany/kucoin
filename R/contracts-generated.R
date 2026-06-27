@@ -642,6 +642,275 @@ assert_return_KucoinMarginData__get_risk_limit <- function(value) {
   return(value)
 }
 
+assert_args_KucoinMarginTrading__open_short <- function(symbol, size, funds, type, price, isIsolated, clientOid, stp, remark, timeInForce, cancelAfter, postOnly, hidden, iceberg, visibleSize, dry_run) {
+  assert_scalar_character(symbol)
+  if (!is.null(size)) {
+    assert_scalar_double(size)
+  }
+  if (!is.null(funds)) {
+    assert_scalar_double(funds)
+  }
+  assert_scalar_character(type)
+  if (!is.null(price)) {
+    assert_scalar_double(price)
+  }
+  assert_scalar_logical(isIsolated)
+  if (!is.null(clientOid)) {
+    assert_scalar_character(clientOid)
+  }
+  if (!is.null(stp)) {
+    assert_scalar_character(stp)
+  }
+  if (!is.null(remark)) {
+    assert_scalar_character(remark)
+  }
+  if (!is.null(timeInForce)) {
+    assert_scalar_character(timeInForce)
+  }
+  if (!is.null(cancelAfter)) {
+    assert_scalar_double(cancelAfter)
+  }
+  if (!is.null(postOnly)) {
+    assert_scalar_logical(postOnly)
+  }
+  if (!is.null(hidden)) {
+    assert_scalar_logical(hidden)
+  }
+  if (!is.null(iceberg)) {
+    assert_scalar_logical(iceberg)
+  }
+  if (!is.null(visibleSize)) {
+    assert_scalar_double(visibleSize)
+  }
+  assert_scalar_logical(dry_run)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinMarginTrading__open_short <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinMarginTrading__close_short <- function(symbol, size, funds, type, price, isIsolated, clientOid, stp, remark, timeInForce, cancelAfter, postOnly, hidden, iceberg, visibleSize, dry_run) {
+  assert_scalar_character(symbol)
+  if (!is.null(size)) {
+    assert_scalar_double(size)
+  }
+  if (!is.null(funds)) {
+    assert_scalar_double(funds)
+  }
+  assert_scalar_character(type)
+  if (!is.null(price)) {
+    assert_scalar_double(price)
+  }
+  assert_scalar_logical(isIsolated)
+  if (!is.null(clientOid)) {
+    assert_scalar_character(clientOid)
+  }
+  if (!is.null(stp)) {
+    assert_scalar_character(stp)
+  }
+  if (!is.null(remark)) {
+    assert_scalar_character(remark)
+  }
+  if (!is.null(timeInForce)) {
+    assert_scalar_character(timeInForce)
+  }
+  if (!is.null(cancelAfter)) {
+    assert_scalar_double(cancelAfter)
+  }
+  if (!is.null(postOnly)) {
+    assert_scalar_logical(postOnly)
+  }
+  if (!is.null(hidden)) {
+    assert_scalar_logical(hidden)
+  }
+  if (!is.null(iceberg)) {
+    assert_scalar_logical(iceberg)
+  }
+  if (!is.null(visibleSize)) {
+    assert_scalar_double(visibleSize)
+  }
+  assert_scalar_logical(dry_run)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinMarginTrading__close_short <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinMarginTrading__open_long <- function(symbol, size, funds, type, price, isIsolated, clientOid, stp, remark, timeInForce, cancelAfter, postOnly, hidden, iceberg, visibleSize, dry_run) {
+  assert_scalar_character(symbol)
+  if (!is.null(size)) {
+    assert_scalar_double(size)
+  }
+  if (!is.null(funds)) {
+    assert_scalar_double(funds)
+  }
+  assert_scalar_character(type)
+  if (!is.null(price)) {
+    assert_scalar_double(price)
+  }
+  assert_scalar_logical(isIsolated)
+  if (!is.null(clientOid)) {
+    assert_scalar_character(clientOid)
+  }
+  if (!is.null(stp)) {
+    assert_scalar_character(stp)
+  }
+  if (!is.null(remark)) {
+    assert_scalar_character(remark)
+  }
+  if (!is.null(timeInForce)) {
+    assert_scalar_character(timeInForce)
+  }
+  if (!is.null(cancelAfter)) {
+    assert_scalar_double(cancelAfter)
+  }
+  if (!is.null(postOnly)) {
+    assert_scalar_logical(postOnly)
+  }
+  if (!is.null(hidden)) {
+    assert_scalar_logical(hidden)
+  }
+  if (!is.null(iceberg)) {
+    assert_scalar_logical(iceberg)
+  }
+  if (!is.null(visibleSize)) {
+    assert_scalar_double(visibleSize)
+  }
+  assert_scalar_logical(dry_run)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinMarginTrading__open_long <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinMarginTrading__close_long <- function(symbol, size, funds, type, price, isIsolated, clientOid, stp, remark, timeInForce, cancelAfter, postOnly, hidden, iceberg, visibleSize, dry_run) {
+  assert_scalar_character(symbol)
+  if (!is.null(size)) {
+    assert_scalar_double(size)
+  }
+  if (!is.null(funds)) {
+    assert_scalar_double(funds)
+  }
+  assert_scalar_character(type)
+  if (!is.null(price)) {
+    assert_scalar_double(price)
+  }
+  assert_scalar_logical(isIsolated)
+  if (!is.null(clientOid)) {
+    assert_scalar_character(clientOid)
+  }
+  if (!is.null(stp)) {
+    assert_scalar_character(stp)
+  }
+  if (!is.null(remark)) {
+    assert_scalar_character(remark)
+  }
+  if (!is.null(timeInForce)) {
+    assert_scalar_character(timeInForce)
+  }
+  if (!is.null(cancelAfter)) {
+    assert_scalar_double(cancelAfter)
+  }
+  if (!is.null(postOnly)) {
+    assert_scalar_logical(postOnly)
+  }
+  if (!is.null(hidden)) {
+    assert_scalar_logical(hidden)
+  }
+  if (!is.null(iceberg)) {
+    assert_scalar_logical(iceberg)
+  }
+  if (!is.null(visibleSize)) {
+    assert_scalar_double(visibleSize)
+  }
+  assert_scalar_logical(dry_run)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinMarginTrading__close_long <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinMarginTrading__borrow <- function(currency, size, timeInForce, isIsolated, symbol, isHf) {
+  assert_scalar_character(currency)
+  assert_scalar_double(size)
+  assert_scalar_character(timeInForce)
+  assert_scalar_logical(isIsolated)
+  if (!is.null(symbol)) {
+    assert_scalar_character(symbol)
+  }
+  assert_scalar_logical(isHf)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinMarginTrading__borrow <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinMarginTrading__repay <- function(currency, size) {
+  assert_scalar_character(currency)
+  assert_scalar_double(size)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinMarginTrading__repay <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinMarginTrading__get_borrow_history <- function(query) {
+  assert_list(query)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinMarginTrading__get_borrow_history <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinMarginTrading__get_repay_history <- function(query) {
+  assert_list(query)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinMarginTrading__get_repay_history <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinMarginTrading__get_interest_history <- function(query) {
+  assert_list(query)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinMarginTrading__get_interest_history <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinMarginTrading__get_borrow_rate <- function(query) {
+  assert_list(query)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinMarginTrading__get_borrow_rate <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_return_KucoinMarginTrading__modify_leverage <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
 assert_args_KucoinMarketData__get_announcements <- function(query, page_size, max_pages) {
   assert_list(query)
   assert_scalar_count(page_size)
