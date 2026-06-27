@@ -1,3 +1,17 @@
+# kucoin 4.2.1
+
+## Type contract corrections (coinbase gold-standard remediation)
+
+* **Epoch-millisecond and page-size parameters retyped off `integer`.** `assert_scalar_integer()` rejects a plain R double (an unsuffixed numeric literal such as `1729176273859` or `100` is a double, not an integer), so every `startAt` / `endAt` / `limit` / `currencyType` argument typed `scalar<integer>` was rejecting legitimate caller input at the contract boundary. Millisecond timestamp windows (`startAt` / `endAt`) — which exceed `2^31` — are now `scalar<numeric>`; the small bounded page-size / currency-type flags (`limit`, `currencyType`) are now `scalar<count>`, which validates by value and accepts a whole double. Affects `KucoinAccount`, `KucoinDeposit`, `KucoinTrading`, `KucoinWithdrawal`.
+
+* **`max_pages` accepts its own `Inf` default again.** The pagination cap was typed half-open `scalar<numeric in [1, Inf[>`, whose generated `assert_between(..., upper_inclusive = FALSE)` rejected `max_pages = Inf` — the parameter's documented default. Retyped to the closed `scalar<numeric in [1, Inf]>` (matching the sibling connectors), so the unbounded default validates.
+
+* **Typed per-column `@return` shapes for the fixed-schema one-row / single-column methods.** `KucoinTrading$cancel_all_by_symbol()` / `$cancel_all()` / `$get_symbols_with_open_orders()`, `KucoinMarketData$get_market_list()` / `$get_server_time()`, `KucoinLending$modify_purchase()`, `KucoinMarginTrading$modify_leverage()`, and `KucoinWithdrawal$cancel_withdrawal()` documented their result as a bare `(data.table)`; each now carries `- name (type)` column bullets, so the contract roclet emits a real `assert_has_columns()` plus per-column type check at the boundary. Payload-dependent returns (the generic flatteners, the dry-run-variable margin order acknowledgements, the optional-`symbol` futures order book) deliberately stay generic per the cross-package convention.
+
+* **`DESCRIPTION` version constraints moved into `Imports` / `Suggests`.** `connectcore (>= 0.1.0)` and `roxyassert (>= 0.9.1)` now carry their minimum-version constraints in the dependency fields; the `Remotes` field is source-only (the `@v…` refs were stripped) as the other tracked packages do.
+
+* **Documentation hygiene.** `NEWS.md` bullets are now one continuous line each (the renderer wraps); the over-long roxygen prose, `### Official Documentation` links (split into a title line plus a bare-URL autolink), and `curl` examples were wrapped so the package lints clean at 120 columns with no `.lintr` exclusion.
+
 # kucoin 4.2.0
 
 ## Type contracts (roxyassert)
