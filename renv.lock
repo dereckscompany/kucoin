@@ -35,6 +35,46 @@
       "Maintainer": "Winston Chang <winston@posit.co>",
       "Repository": "CRAN"
     },
+    "assert": {
+      "Package": "assert",
+      "Version": "0.0.9",
+      "Source": "GitHub",
+      "Title": "Readable Assertions for Validating Function Inputs and Outputs",
+      "URL": "https://dereckscompany.github.io/assert, https://github.com/dereckscompany/assert",
+      "BugReports": "https://github.com/dereckscompany/assert/issues",
+      "Authors@R": "person(given = \"Dereck\", family = \"Mezquita\", role = c(\"aut\", \"cre\"), email = \"dereck@mezquita.io\", comment = c(ORCID = \"0000-0002-9307-6762\"))",
+      "Description": "A lightweight toolkit of assertion helpers for checking the inputs and outputs of your functions. Each assertion checks a single condition, returns its input invisibly so checks can be stacked, and raises a clear error pointing at the calling function when the condition is not met. Covers scalars, vectors, lists, data frames and data tables, value constraints, comparisons, and relationships between arguments.",
+      "License": "MIT",
+      "Encoding": "UTF-8",
+      "Roxygen": "list(markdown = TRUE)",
+      "RoxygenNote": "7.3.3",
+      "Suggests": [
+        "box",
+        "covr",
+        "data.table",
+        "DT",
+        "knitr",
+        "lintr",
+        "pkgdown",
+        "rcmdcheck",
+        "rmarkdown",
+        "testthat (>= 3.0.0)"
+      ],
+      "VignetteBuilder": "knitr",
+      "Config/testthat/edition": "3",
+      "Imports": [
+        "cli",
+        "rlang"
+      ],
+      "Author": "Dereck Mezquita [aut, cre] (ORCID: <https://orcid.org/0000-0002-9307-6762>)",
+      "Maintainer": "Dereck Mezquita <dereck@mezquita.io>",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "dereckscompany",
+      "RemoteRepo": "assert",
+      "RemoteRef": "master",
+      "RemoteSha": "aa24fb79daa5112648f9d21db4983fc12e19c1a7"
+    },
     "askpass": {
       "Package": "askpass",
       "Version": "1.2.1",
