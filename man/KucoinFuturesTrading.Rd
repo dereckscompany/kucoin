@@ -545,7 +545,8 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row giving the system-assigned order ID and the client-provided order ID.
+(data.table | promise<data.table>) one row giving the system-assigned order ID and the client-provided
+order ID.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -719,7 +720,8 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row giving the simulated order ID and the client-provided order ID.
+(data.table | promise<data.table>) one row giving the simulated order ID and the client-provided order
+ID.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -876,7 +878,8 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row per order result giving the system-assigned order ID, the client-provided order ID, the futures symbol, the per-order status code, and the per-order status message.
+(data.table | promise<data.table>) one row per order result giving the system-assigned order ID, the
+client-provided order ID, the futures symbol, the per-order status code, and the per-order status message.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -968,7 +971,8 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row per cancelled order giving the cancelled order ID; an empty data.table if no orders matched.
+(data.table | promise<data.table>) one row per cancelled order giving the cancelled order ID; an empty
+data.table if no orders matched.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1143,7 +1147,8 @@ cancels all open orders across all symbols.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row per cancelled order giving the cancelled order ID; an empty data.table if no orders matched.
+(data.table | promise<data.table>) one row per cancelled order giving the cancelled order ID; an empty
+data.table if no orders matched.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1236,7 +1241,8 @@ cancels all untriggered stop orders across all symbols.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row per cancelled order giving the cancelled order ID; an empty data.table if no orders matched.
+(data.table | promise<data.table>) one row per cancelled order giving the cancelled order ID; an empty
+data.table if no orders matched.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1364,7 +1370,8 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row of full order details, including the creation and last-updated datetimes (POSIXct, coerced from epoch milliseconds).
+(data.table | promise<data.table>) one row of full order details, including the creation and last-updated
+datetimes (POSIXct, coerced from epoch milliseconds).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1624,7 +1631,8 @@ open orders, \code{status = "done"} for closed orders. Optional: \code{symbol},
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row per order record (same columns as \code{get_order_by_id()}); an empty data.table if no orders match the filters.
+(data.table | promise<data.table>) one row per order record (same columns as \code{get_order_by_id()}); an
+empty data.table if no orders match the filters.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1759,7 +1767,8 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row per order record (same columns as \code{get_order_by_id()}); an empty data.table if no recently closed orders exist.
+(data.table | promise<data.table>) one row per order record (same columns as \code{get_order_by_id()}); an
+empty data.table if no recently closed orders exist.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1876,7 +1885,8 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row per stop order record (same columns as \code{get_order_by_id()}); an empty data.table if no untriggered stop orders exist.
+(data.table | promise<data.table>) one row per stop order record (same columns as \code{get_order_by_id()});
+an empty data.table if no untriggered stop orders exist.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2021,7 +2031,10 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row per fill giving the contract symbol, trade identifier, associated order ID, side, liquidity, price, size in contracts, value in settlement currency, fee, fee currency, fee rate, the trade datetime (POSIXct, coerced from nanoseconds), and the record creation datetime (POSIXct, coerced from epoch milliseconds); an empty data.table if no fills match the filters.
+(data.table | promise<data.table>) one row per fill giving the contract symbol, trade identifier,
+associated order ID, side, liquidity, price, size in contracts, value in settlement currency, fee, fee
+currency, fee rate, the trade datetime (POSIXct, coerced from nanoseconds), and the record creation datetime
+(POSIXct, coerced from epoch milliseconds); an empty data.table if no fills match the filters.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2135,7 +2148,8 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row per fill (same columns as \code{get_fills()}); an empty data.table if no recent fills exist.
+(data.table | promise<data.table>) one row per fill (same columns as \code{get_fills()}); an empty data.table
+if no recent fills exist.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2229,7 +2243,8 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row giving the total buy order quantity, total sell order quantity, total buy order cost, total sell order cost, and the settlement currency.
+(data.table | promise<data.table>) one row giving the total buy order quantity, total sell order
+quantity, total buy order cost, total sell order cost, and the settlement currency.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2343,7 +2358,8 @@ When NULL, DCP applies to all symbols.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row giving the configured timeout in seconds, the applicable symbols (empty for all), and the server time when DCP was set.
+(data.table | promise<data.table>) one row giving the configured timeout in seconds, the applicable
+symbols (empty for all), and the server time when DCP was set.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2444,7 +2460,8 @@ When NULL, returns the global DCP configuration.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row giving the configured timeout in seconds, the applicable symbols, and the server time of the query.
+(data.table | promise<data.table>) one row giving the configured timeout in seconds, the applicable
+symbols, and the server time of the query.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

@@ -161,9 +161,11 @@ KucoinTrading <- R6::R6Class(
     #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
     #' @param side (scalar<character>) `"buy"` or `"sell"`.
     #' @param clientOid (scalar<character> | NULL) unique client order ID (max 40 chars).
-    #' @param price (scalar<numeric> | scalar<character> | NULL) price for limit orders. Must align with `priceIncrement`.
+    #' @param price (scalar<numeric> | scalar<character> | NULL) price for limit orders. Must align with
+    #'   `priceIncrement`.
     #'   Required for limit orders; must NOT be set for market orders.
-    #' @param size (scalar<numeric> | scalar<character> | NULL) quantity in base currency. Must align with `baseIncrement`.
+    #' @param size (scalar<numeric> | scalar<character> | NULL) quantity in base currency. Must align with
+    #'   `baseIncrement`.
     #'   Required for limit orders; optional for market orders (mutually exclusive with `funds`).
     #' @param funds (scalar<numeric> | scalar<character> | NULL) amount in quote currency for market orders.
     #'   Mutually exclusive with `size`. Not applicable for limit orders.
@@ -176,7 +178,8 @@ KucoinTrading <- R6::R6Class(
     #' @param hidden (scalar<logical> | NULL) if TRUE, order hidden from order book.
     #' @param iceberg (scalar<logical> | NULL) if TRUE, only `visibleSize` is shown.
     #' @param visibleSize (scalar<numeric> | scalar<character> | NULL) visible quantity for iceberg orders.
-    #' @return (data.table | promise<data.table>) one row giving the KuCoin-assigned order identifier and the client-provided order identifier.
+    #' @return (data.table | promise<data.table>) one row giving the KuCoin-assigned order identifier and the
+    #'   client-provided order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -344,7 +347,8 @@ KucoinTrading <- R6::R6Class(
     #' @param hidden (scalar<logical> | NULL) if TRUE, order hidden from order book.
     #' @param iceberg (scalar<logical> | NULL) if TRUE, only `visibleSize` is shown.
     #' @param visibleSize (scalar<numeric> | scalar<character> | NULL) visible quantity for iceberg orders.
-    #' @return (data.table | promise<data.table>) one row giving the simulated order identifier and the client-provided order identifier.
+    #' @return (data.table | promise<data.table>) one row giving the simulated order identifier and the client-provided
+    #'   order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -510,7 +514,8 @@ KucoinTrading <- R6::R6Class(
     #'
     #' @param order_list (list) list of named lists; each containing order parameters
     #'   (`type`, `symbol`, `side`, plus optional fields). Maximum 20 orders.
-    #' @return (data.table | promise<data.table>) one row per order giving the KuCoin order ID, client order ID, the success flag, and any failure message.
+    #' @return (data.table | promise<data.table>) one row per order giving the KuCoin order ID, client order ID, the
+    #'   success flag, and any failure message.
     #'
     #' @examples
     #' \dontrun{
@@ -878,7 +883,8 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return (data.table | promise<data.table>) one row per cancelled symbol giving the trading pair and its `"succeed"` or `"failed"` status; an empty data.table if no orders were open.
+    #' @return (data.table | promise<data.table>) one row per cancelled symbol giving the trading pair and its
+    #'   `"succeed"` or `"failed"` status; an empty data.table if no orders were open.
     #'
     #' @examples
     #' \dontrun{
@@ -994,7 +1000,8 @@ KucoinTrading <- R6::R6Class(
     #'
     #' @param orderId (scalar<character>) the KuCoin order ID.
     #' @param symbol (scalar<character> | NULL) trading pair (e.g., `"BTC-USDT"`). Defaults to `NULL`.
-    #' @return (data.table | promise<data.table>) one row of full order details, including the creation and last-updated datetimes (POSIXct) when timestamps are present.
+    #' @return (data.table | promise<data.table>) one row of full order details, including the creation and last-updated
+    #'   datetimes (POSIXct) when timestamps are present.
     #'
     #' @examples
     #' \dontrun{
@@ -1101,7 +1108,8 @@ KucoinTrading <- R6::R6Class(
     #'
     #' @param clientOid (scalar<character>) client order ID.
     #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
-    #' @return (data.table | promise<data.table>) one row of full order details, including the creation and last-updated datetimes (POSIXct).
+    #' @return (data.table | promise<data.table>) one row of full order details, including the creation and last-updated
+    #'   datetimes (POSIXct).
     #'
     #' @examples
     #' \dontrun{
@@ -1217,7 +1225,9 @@ KucoinTrading <- R6::R6Class(
     #' @param limit (scalar<integer> | NULL) results per page (default 100, max 200).
     #' @param startAt (scalar<integer> | NULL) start timestamp in milliseconds.
     #' @param endAt (scalar<integer> | NULL) end timestamp in milliseconds.
-    #' @return (data.table | promise<data.table>) one row per fill giving the fill and trade identifiers, the parent and counterparty order IDs, the trading pair, side, liquidity, type, price, size, funds, fee, fee rate, fee currency, and the creation datetime (POSIXct, coerced from epoch milliseconds).
+    #' @return (data.table | promise<data.table>) one row per fill giving the fill and trade identifiers, the parent and
+    #'   counterparty order IDs, the trading pair, side, liquidity, type, price, size, funds, fee, fee rate, fee
+    #'   currency, and the creation datetime (POSIXct, coerced from epoch milliseconds).
     #'
     #' @examples
     #' \dontrun{
@@ -1728,7 +1738,8 @@ KucoinTrading <- R6::R6Class(
     #' @param hidden (scalar<logical> | NULL) if TRUE, order hidden from order book.
     #' @param iceberg (scalar<logical> | NULL) if TRUE, only `visibleSize` is shown.
     #' @param visibleSize (scalar<numeric> | scalar<character> | NULL) visible quantity for iceberg orders.
-    #' @return (data.table | promise<data.table>) one row giving the order and client identifiers, the order placement datetime, the original, filled, remaining, and cancelled sizes, and the fill status.
+    #' @return (data.table | promise<data.table>) one row giving the order and client identifiers, the order placement
+    #'   datetime, the original, filled, remaining, and cancelled sizes, and the fill status.
     #'
     #' @examples
     #' \dontrun{
@@ -1921,7 +1932,8 @@ KucoinTrading <- R6::R6Class(
     #' ```
     #'
     #' @param order_list (list) list of named lists; each containing order parameters. Maximum 20 orders.
-    #' @return (data.table | promise<data.table>) one row per order giving the order and client identifiers, the success flag, the fill status, and the filled, remaining, and cancelled quantities.
+    #' @return (data.table | promise<data.table>) one row per order giving the order and client identifiers, the success
+    #'   flag, the fill status, and the filled, remaining, and cancelled quantities.
     #'
     #' @examples
     #' \dontrun{
@@ -2021,7 +2033,8 @@ KucoinTrading <- R6::R6Class(
     #'
     #' @param orderId (scalar<character>) the KuCoin order ID to cancel.
     #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
-    #' @return (data.table | promise<data.table>) one row giving the order ID, the original, filled, remaining, and cancelled sizes, and the fill status.
+    #' @return (data.table | promise<data.table>) one row giving the order ID, the original, filled, remaining, and
+    #'   cancelled sizes, and the fill status.
     #'
     #' @examples
     #' \dontrun{
@@ -2093,7 +2106,8 @@ KucoinTrading <- R6::R6Class(
     #'
     #' @param clientOid (scalar<character>) client order ID.
     #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
-    #' @return (data.table | promise<data.table>) one row giving the client order ID, the original, filled, remaining, and cancelled sizes, and the fill status.
+    #' @return (data.table | promise<data.table>) one row giving the client order ID, the original, filled, remaining,
+    #'   and cancelled sizes, and the fill status.
     #'
     #' @examples
     #' \dontrun{
@@ -2181,9 +2195,12 @@ KucoinTrading <- R6::R6Class(
     #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`). Required.
     #' @param orderId (scalar<character> | NULL) KuCoin order ID. At least one of `orderId` or `clientOid` required.
     #' @param clientOid (scalar<character> | NULL) client order ID. At least one of `orderId` or `clientOid` required.
-    #' @param newPrice (scalar<numeric> | scalar<character> | NULL) new order price. At least one of `newPrice` or `newSize` required.
-    #' @param newSize (scalar<numeric> | scalar<character> | NULL) new order size. At least one of `newPrice` or `newSize` required.
-    #' @return (data.table | promise<data.table>) one row giving the replacement order's ID and the original client order ID.
+    #' @param newPrice (scalar<numeric> | scalar<character> | NULL) new order price. At least one of `newPrice` or
+    #'   `newSize` required.
+    #' @param newSize (scalar<numeric> | scalar<character> | NULL) new order size. At least one of `newPrice` or
+    #'   `newSize` required.
+    #' @return (data.table | promise<data.table>) one row giving the replacement order's ID and the original client
+    #'   order ID.
     #'
     #' @examples
     #' \dontrun{
@@ -2291,7 +2308,8 @@ KucoinTrading <- R6::R6Class(
     #' @param timeout (scalar<numeric>) trigger duration in seconds. Use `-1` to disable, or `5` to `86400`.
     #' @param symbols (scalar<character> | NULL) comma-separated trading pairs (max 50).
     #'   Empty or NULL applies to all pairs.
-    #' @return (data.table | promise<data.table>) one row giving the current server time and the time at which cancellation will trigger, both in seconds.
+    #' @return (data.table | promise<data.table>) one row giving the current server time and the time at which
+    #'   cancellation will trigger, both in seconds.
     #'
     #' @examples
     #' \dontrun{
@@ -2368,7 +2386,9 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return (data.table | promise<data.table>) one row giving the auto-cancel trigger time, the protected symbols, the current server time, and the time at which cancellation will trigger; an empty data.table if DCP is not configured.
+    #' @return (data.table | promise<data.table>) one row giving the auto-cancel trigger time, the protected symbols,
+    #'   the current server time, and the time at which cancellation will trigger; an empty data.table if DCP is not
+    #'   configured.
     #'
     #' @examples
     #' \dontrun{

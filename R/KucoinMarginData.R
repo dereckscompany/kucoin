@@ -105,7 +105,9 @@ KucoinMarginData <- R6::R6Class(
     #' ```
     #'
     #' @param query (list)
-    #' @return (data.table | promise<data.table>) one row per cross-margin symbol with trading-pair identifiers, base and quote currencies, increment and min/max order sizes, fee currency, price-limit rate, and minimum funds; an empty response yields an empty data.table.
+    #' @return (data.table | promise<data.table>) one row per cross-margin symbol with trading-pair identifiers, base
+    #'   and quote currencies, increment and min/max order sizes, fee currency, price-limit rate, and minimum funds; an
+    #'   empty response yields an empty data.table.
     #'
     #' @examples
     #' \dontrun{
@@ -185,7 +187,9 @@ KucoinMarginData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return (data.table | promise<data.table>) one row per isolated-margin pair with the trading-pair identifier, display name, base and quote currencies, maximum leverage, forced-liquidation debt ratio, and the trade, borrow and transfer-in enablement flags; an empty response yields an empty data.table.
+    #' @return (data.table | promise<data.table>) one row per isolated-margin pair with the trading-pair identifier,
+    #'   display name, base and quote currencies, maximum leverage, forced-liquidation debt ratio, and the trade, borrow
+    #'   and transfer-in enablement flags; an empty response yields an empty data.table.
     #'
     #' @examples
     #' \dontrun{
@@ -250,7 +254,9 @@ KucoinMarginData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return (data.table | promise<data.table>) one row per supported currency, with the `currencyList` array exploded so each currency carries the replicated config-level fields for maximum leverage, warning debt ratio and liquidation debt ratio; an empty `currencyList` yields a zero-row data.table with this schema.
+    #' @return (data.table | promise<data.table>) one row per supported currency, with the `currencyList` array exploded
+    #'   so each currency carries the replicated config-level fields for maximum leverage, warning debt ratio and
+    #'   liquidation debt ratio; an empty `currencyList` yields a zero-row data.table with this schema.
     #'
     #' @examples
     #' \dontrun{
@@ -342,7 +348,10 @@ KucoinMarginData <- R6::R6Class(
     #' ```
     #'
     #' @param query (list)
-    #' @return (data.table | promise<data.table>) one row per (currency, tier) pair, with the nested `currencyList` and `items` arrays cross-joined into a flat long table carrying the currency code, lower and upper bounds of the collateral range, and the collateral ratio applied in that range; an empty response yields a zero-row data.table with this schema.
+    #' @return (data.table | promise<data.table>) one row per (currency, tier) pair, with the nested `currencyList` and
+    #'   `items` arrays cross-joined into a flat long table carrying the currency code, lower and upper bounds of the
+    #'   collateral range, and the collateral ratio applied in that range; an empty response yields a zero-row
+    #'   data.table with this schema.
     #'
     #' @examples
     #' \dontrun{
@@ -439,7 +448,10 @@ KucoinMarginData <- R6::R6Class(
     #'
     #' @param isIsolated (scalar<logical>)
     #' @param query (list)
-    #' @return (data.table | promise<data.table>) one row per currency (cross) or per (symbol, currency) pair (isolated), carrying the currency code, maximum borrow, buy and hold amounts, borrow and margin coefficients, decimal precision, minimum borrow amount and unit, and the borrow-enabled flag, with an extra `symbol` column for isolated margin; an empty response yields an empty data.table.
+    #' @return (data.table | promise<data.table>) one row per currency (cross) or per (symbol, currency) pair
+    #'   (isolated), carrying the currency code, maximum borrow, buy and hold amounts, borrow and margin coefficients,
+    #'   decimal precision, minimum borrow amount and unit, and the borrow-enabled flag, with an extra `symbol` column
+    #'   for isolated margin; an empty response yields an empty data.table.
     #'
     #' @examples
     #' \dontrun{

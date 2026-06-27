@@ -122,6 +122,18 @@ assert_return_KucoinAccount__get_fee_rate <- function(value) {
   return(value)
 }
 
+assert_args_KucoinBase__initialize <- function(keys, base_url, async) {
+  assert_list(keys)
+  assert_scalar_character(base_url)
+  assert_scalar_logical(async)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinBase__initialize <- function(value) {
+  assert_class(value, "KucoinBase")
+  return(value)
+}
+
 assert_args_KucoinDeposit__add_deposit_address <- function(currency, chain, to, amount) {
   assert_scalar_character(currency)
   if (!is.null(chain)) {

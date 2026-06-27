@@ -214,7 +214,9 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row per cross-margin symbol with trading-pair identifiers, base and quote currencies, increment and min/max order sizes, fee currency, price-limit rate, and minimum funds; an empty response yields an empty data.table.
+(data.table | promise<data.table>) one row per cross-margin symbol with trading-pair identifiers, base
+and quote currencies, increment and min/max order sizes, fee currency, price-limit rate, and minimum funds; an
+empty response yields an empty data.table.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -288,7 +290,9 @@ Verified: 2026-05-23
 }
 
 \subsection{Returns}{
-(data.table | promise<data.table>) one row per isolated-margin pair with the trading-pair identifier, display name, base and quote currencies, maximum leverage, forced-liquidation debt ratio, and the trade, borrow and transfer-in enablement flags; an empty response yields an empty data.table.
+(data.table | promise<data.table>) one row per isolated-margin pair with the trading-pair identifier,
+display name, base and quote currencies, maximum leverage, forced-liquidation debt ratio, and the trade, borrow
+and transfer-in enablement flags; an empty response yields an empty data.table.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -354,7 +358,9 @@ Verified: 2026-05-23
 }
 
 \subsection{Returns}{
-(data.table | promise<data.table>) one row per supported currency, with the \code{currencyList} array exploded so each currency carries the replicated config-level fields for maximum leverage, warning debt ratio and liquidation debt ratio; an empty \code{currencyList} yields a zero-row data.table with this schema.
+(data.table | promise<data.table>) one row per supported currency, with the \code{currencyList} array exploded
+so each currency carries the replicated config-level fields for maximum leverage, warning debt ratio and
+liquidation debt ratio; an empty \code{currencyList} yields a zero-row data.table with this schema.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -433,7 +439,10 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row per (currency, tier) pair, with the nested \code{currencyList} and \code{items} arrays cross-joined into a flat long table carrying the currency code, lower and upper bounds of the collateral range, and the collateral ratio applied in that range; an empty response yields a zero-row data.table with this schema.
+(data.table | promise<data.table>) one row per (currency, tier) pair, with the nested \code{currencyList} and
+\code{items} arrays cross-joined into a flat long table carrying the currency code, lower and upper bounds of the
+collateral range, and the collateral ratio applied in that range; an empty response yields a zero-row
+data.table with this schema.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -517,7 +526,10 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row per currency (cross) or per (symbol, currency) pair (isolated), carrying the currency code, maximum borrow, buy and hold amounts, borrow and margin coefficients, decimal precision, minimum borrow amount and unit, and the borrow-enabled flag, with an extra \code{symbol} column for isolated margin; an empty response yields an empty data.table.
+(data.table | promise<data.table>) one row per currency (cross) or per (symbol, currency) pair
+(isolated), carrying the currency code, maximum borrow, buy and hold amounts, borrow and margin coefficients,
+decimal precision, minimum borrow amount and unit, and the borrow-enabled flag, with an extra \code{symbol} column
+for isolated margin; an empty response yields an empty data.table.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

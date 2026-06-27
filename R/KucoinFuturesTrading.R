@@ -186,7 +186,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' @param reduceOnly (scalar<logical> | NULL) if TRUE, order only reduces position.
     #' @param remark (scalar<character> | NULL) order notes.
     #' @param ... Additional order parameters.
-    #' @return (data.table | promise<data.table>) one row giving the system-assigned order ID and the client-provided order ID.
+    #' @return (data.table | promise<data.table>) one row giving the system-assigned order ID and the client-provided
+    #'   order ID.
     #'
     #' @examples
     #' \dontrun{
@@ -364,7 +365,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' @param reduceOnly (scalar<logical> | NULL) if TRUE, order only reduces position.
     #' @param remark (scalar<character> | NULL) order notes.
     #' @param ... Additional order parameters.
-    #' @return (data.table | promise<data.table>) one row giving the simulated order ID and the client-provided order ID.
+    #' @return (data.table | promise<data.table>) one row giving the simulated order ID and the client-provided order
+    #'   ID.
     #'
     #' @examples
     #' \dontrun{
@@ -551,7 +553,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' @param orders (list) list of order lists, each with the same fields as `add_order()`
     #'   (i.e., `clientOid`, `symbol`, `side`, `type`, `leverage`, `size`, and optional
     #'   `price`, `marginMode`, `positionSide`, etc.).
-    #' @return (data.table | promise<data.table>) one row per order result giving the system-assigned order ID, the client-provided order ID, the futures symbol, the per-order status code, and the per-order status message.
+    #' @return (data.table | promise<data.table>) one row per order result giving the system-assigned order ID, the
+    #'   client-provided order ID, the futures symbol, the per-order status code, and the per-order status message.
     #'
     #' @examples
     #' \dontrun{
@@ -628,7 +631,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' ```
     #'
     #' @param orderId (scalar<character>) the system order ID to cancel.
-    #' @return (data.table | promise<data.table>) one row per cancelled order giving the cancelled order ID; an empty data.table if no orders matched.
+    #' @return (data.table | promise<data.table>) one row per cancelled order giving the cancelled order ID; an empty
+    #'   data.table if no orders matched.
     #'
     #' @examples
     #' \dontrun{
@@ -790,7 +794,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #'
     #' @param symbol (scalar<character> | NULL) filter by futures symbol. When NULL,
     #'   cancels all open orders across all symbols.
-    #' @return (data.table | promise<data.table>) one row per cancelled order giving the cancelled order ID; an empty data.table if no orders matched.
+    #' @return (data.table | promise<data.table>) one row per cancelled order giving the cancelled order ID; an empty
+    #'   data.table if no orders matched.
     #'
     #' @examples
     #' \dontrun{
@@ -884,7 +889,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #'
     #' @param symbol (scalar<character> | NULL) filter by futures symbol. When NULL,
     #'   cancels all untriggered stop orders across all symbols.
-    #' @return (data.table | promise<data.table>) one row per cancelled order giving the cancelled order ID; an empty data.table if no orders matched.
+    #' @return (data.table | promise<data.table>) one row per cancelled order giving the cancelled order ID; an empty
+    #'   data.table if no orders matched.
     #'
     #' @examples
     #' \dontrun{
@@ -1013,7 +1019,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' ```
     #'
     #' @param orderId (scalar<character>) the system order ID.
-    #' @return (data.table | promise<data.table>) one row of full order details, including the creation and last-updated datetimes (POSIXct, coerced from epoch milliseconds).
+    #' @return (data.table | promise<data.table>) one row of full order details, including the creation and last-updated
+    #'   datetimes (POSIXct, coerced from epoch milliseconds).
     #'
     #' @examples
     #' \dontrun{
@@ -1256,7 +1263,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' @param query (list) query parameters. Use `status = "active"` for
     #'   open orders, `status = "done"` for closed orders. Optional: `symbol`,
     #'   `side`, `type`, `startAt`, `endAt`.
-    #' @return (data.table | promise<data.table>) one row per order record (same columns as `get_order_by_id()`); an empty data.table if no orders match the filters.
+    #' @return (data.table | promise<data.table>) one row per order record (same columns as `get_order_by_id()`); an
+    #'   empty data.table if no orders match the filters.
     #'
     #' @examples
     #' \dontrun{
@@ -1382,7 +1390,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' ```
     #'
     #' @param symbol (scalar<character> | NULL) filter by futures symbol.
-    #' @return (data.table | promise<data.table>) one row per order record (same columns as `get_order_by_id()`); an empty data.table if no recently closed orders exist.
+    #' @return (data.table | promise<data.table>) one row per order record (same columns as `get_order_by_id()`); an
+    #'   empty data.table if no recently closed orders exist.
     #'
     #' @examples
     #' \dontrun{
@@ -1490,7 +1499,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #'
     #' @param query (list) query parameters. Optional: `symbol`, `side`,
     #'   `type`, `startAt`, `endAt`.
-    #' @return (data.table | promise<data.table>) one row per stop order record (same columns as `get_order_by_id()`); an empty data.table if no untriggered stop orders exist.
+    #' @return (data.table | promise<data.table>) one row per stop order record (same columns as `get_order_by_id()`);
+    #'   an empty data.table if no untriggered stop orders exist.
     #'
     #' @examples
     #' \dontrun{
@@ -1623,7 +1633,10 @@ KucoinFuturesTrading <- R6::R6Class(
     #'
     #' @param query (list) query parameters. Optional: `orderId`, `symbol`,
     #'   `side`, `type`, `startAt`, `endAt`.
-    #' @return (data.table | promise<data.table>) one row per fill giving the contract symbol, trade identifier, associated order ID, side, liquidity, price, size in contracts, value in settlement currency, fee, fee currency, fee rate, the trade datetime (POSIXct, coerced from nanoseconds), and the record creation datetime (POSIXct, coerced from epoch milliseconds); an empty data.table if no fills match the filters.
+    #' @return (data.table | promise<data.table>) one row per fill giving the contract symbol, trade identifier,
+    #'   associated order ID, side, liquidity, price, size in contracts, value in settlement currency, fee, fee
+    #'   currency, fee rate, the trade datetime (POSIXct, coerced from nanoseconds), and the record creation datetime
+    #'   (POSIXct, coerced from epoch milliseconds); an empty data.table if no fills match the filters.
     #'
     #' @examples
     #' \dontrun{
@@ -1728,7 +1741,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' ```
     #'
     #' @param symbol (scalar<character> | NULL) filter by futures symbol.
-    #' @return (data.table | promise<data.table>) one row per fill (same columns as `get_fills()`); an empty data.table if no recent fills exist.
+    #' @return (data.table | promise<data.table>) one row per fill (same columns as `get_fills()`); an empty data.table
+    #'   if no recent fills exist.
     #'
     #' @examples
     #' \dontrun{
@@ -1813,7 +1827,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' ```
     #'
     #' @param symbol (scalar<character>) futures symbol (e.g., `"XBTUSDTM"`).
-    #' @return (data.table | promise<data.table>) one row giving the total buy order quantity, total sell order quantity, total buy order cost, total sell order cost, and the settlement currency.
+    #' @return (data.table | promise<data.table>) one row giving the total buy order quantity, total sell order
+    #'   quantity, total buy order cost, total sell order cost, and the settlement currency.
     #'
     #' @examples
     #' \dontrun{
@@ -1911,7 +1926,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #'   Use `-1` to disable DCP.
     #' @param symbol (scalar<character> | NULL) restrict DCP to a specific futures symbol.
     #'   When NULL, DCP applies to all symbols.
-    #' @return (data.table | promise<data.table>) one row giving the configured timeout in seconds, the applicable symbols (empty for all), and the server time when DCP was set.
+    #' @return (data.table | promise<data.table>) one row giving the configured timeout in seconds, the applicable
+    #'   symbols (empty for all), and the server time when DCP was set.
     #'
     #' @examples
     #' \dontrun{
@@ -2000,7 +2016,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #'
     #' @param symbol (scalar<character> | NULL) query DCP settings for a specific futures symbol.
     #'   When NULL, returns the global DCP configuration.
-    #' @return (data.table | promise<data.table>) one row giving the configured timeout in seconds, the applicable symbols, and the server time of the query.
+    #' @return (data.table | promise<data.table>) one row giving the configured timeout in seconds, the applicable
+    #'   symbols, and the server time of the query.
     #'
     #' @examples
     #' \dontrun{

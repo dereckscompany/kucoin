@@ -506,10 +506,12 @@ Verified: 2026-05-23
 
 \item{\code{clientOid}}{(scalar<character> | NULL) unique client order ID (max 40 chars).}
 
-\item{\code{price}}{(scalar<numeric> | scalar<character> | NULL) price for limit orders. Must align with \code{priceIncrement}.
+\item{\code{price}}{(scalar<numeric> | scalar<character> | NULL) price for limit orders. Must align with
+\code{priceIncrement}.
 Required for limit orders; must NOT be set for market orders.}
 
-\item{\code{size}}{(scalar<numeric> | scalar<character> | NULL) quantity in base currency. Must align with \code{baseIncrement}.
+\item{\code{size}}{(scalar<numeric> | scalar<character> | NULL) quantity in base currency. Must align with
+\code{baseIncrement}.
 Required for limit orders; optional for market orders (mutually exclusive with \code{funds}).}
 
 \item{\code{funds}}{(scalar<numeric> | scalar<character> | NULL) amount in quote currency for market orders.
@@ -536,7 +538,8 @@ Mutually exclusive with \code{size}. Not applicable for limit orders.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row giving the KuCoin-assigned order identifier and the client-provided order identifier.
+(data.table | promise<data.table>) one row giving the KuCoin-assigned order identifier and the
+client-provided order identifier.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -692,7 +695,8 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row giving the simulated order identifier and the client-provided order identifier.
+(data.table | promise<data.table>) one row giving the simulated order identifier and the client-provided
+order identifier.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -815,7 +819,8 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row per order giving the KuCoin order ID, client order ID, the success flag, and any failure message.
+(data.table | promise<data.table>) one row per order giving the KuCoin order ID, client order ID, the
+success flag, and any failure message.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1183,7 +1188,8 @@ Verified: 2026-05-23
 }
 
 \subsection{Returns}{
-(data.table | promise<data.table>) one row per cancelled symbol giving the trading pair and its \code{"succeed"} or \code{"failed"} status; an empty data.table if no orders were open.
+(data.table | promise<data.table>) one row per cancelled symbol giving the trading pair and its
+\code{"succeed"} or \code{"failed"} status; an empty data.table if no orders were open.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1286,7 +1292,8 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row of full order details, including the creation and last-updated datetimes (POSIXct) when timestamps are present.
+(data.table | promise<data.table>) one row of full order details, including the creation and last-updated
+datetimes (POSIXct) when timestamps are present.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1389,7 +1396,8 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row of full order details, including the creation and last-updated datetimes (POSIXct).
+(data.table | promise<data.table>) one row of full order details, including the creation and last-updated
+datetimes (POSIXct).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1522,7 +1530,9 @@ If NULL, returns fills across all symbols.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row per fill giving the fill and trade identifiers, the parent and counterparty order IDs, the trading pair, side, liquidity, type, price, size, funds, fee, fee rate, fee currency, and the creation datetime (POSIXct, coerced from epoch milliseconds).
+(data.table | promise<data.table>) one row per fill giving the fill and trade identifiers, the parent and
+counterparty order IDs, the trading pair, side, liquidity, type, price, size, funds, fee, fee rate, fee
+currency, and the creation datetime (POSIXct, coerced from epoch milliseconds).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1985,7 +1995,8 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row giving the order and client identifiers, the order placement datetime, the original, filled, remaining, and cancelled sizes, and the fill status.
+(data.table | promise<data.table>) one row giving the order and client identifiers, the order placement
+datetime, the original, filled, remaining, and cancelled sizes, and the fill status.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2111,7 +2122,8 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row per order giving the order and client identifiers, the success flag, the fill status, and the filled, remaining, and cancelled quantities.
+(data.table | promise<data.table>) one row per order giving the order and client identifiers, the success
+flag, the fill status, and the filled, remaining, and cancelled quantities.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2199,7 +2211,8 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row giving the order ID, the original, filled, remaining, and cancelled sizes, and the fill status.
+(data.table | promise<data.table>) one row giving the order ID, the original, filled, remaining, and
+cancelled sizes, and the fill status.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2275,7 +2288,8 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row giving the client order ID, the original, filled, remaining, and cancelled sizes, and the fill status.
+(data.table | promise<data.table>) one row giving the client order ID, the original, filled, remaining,
+and cancelled sizes, and the fill status.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2373,14 +2387,17 @@ Verified: 2026-05-23
 
 \item{\code{clientOid}}{(scalar<character> | NULL) client order ID. At least one of \code{orderId} or \code{clientOid} required.}
 
-\item{\code{newPrice}}{(scalar<numeric> | scalar<character> | NULL) new order price. At least one of \code{newPrice} or \code{newSize} required.}
+\item{\code{newPrice}}{(scalar<numeric> | scalar<character> | NULL) new order price. At least one of \code{newPrice} or
+\code{newSize} required.}
 
-\item{\code{newSize}}{(scalar<numeric> | scalar<character> | NULL) new order size. At least one of \code{newPrice} or \code{newSize} required.}
+\item{\code{newSize}}{(scalar<numeric> | scalar<character> | NULL) new order size. At least one of \code{newPrice} or
+\code{newSize} required.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row giving the replacement order's ID and the original client order ID.
+(data.table | promise<data.table>) one row giving the replacement order's ID and the original client
+order ID.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2476,7 +2493,8 @@ Empty or NULL applies to all pairs.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row giving the current server time and the time at which cancellation will trigger, both in seconds.
+(data.table | promise<data.table>) one row giving the current server time and the time at which
+cancellation will trigger, both in seconds.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2545,7 +2563,9 @@ Verified: 2026-05-23
 }
 
 \subsection{Returns}{
-(data.table | promise<data.table>) one row giving the auto-cancel trigger time, the protected symbols, the current server time, and the time at which cancellation will trigger; an empty data.table if DCP is not configured.
+(data.table | promise<data.table>) one row giving the auto-cancel trigger time, the protected symbols,
+the current server time, and the time at which cancellation will trigger; an empty data.table if DCP is not
+configured.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
