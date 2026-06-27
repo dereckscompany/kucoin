@@ -1428,6 +1428,513 @@ assert_return_KucoinSubAccount__get_all_spot_balances <- function(value) {
   return(value)
 }
 
+assert_args_KucoinTrading__add_order <- function(type, symbol, side, clientOid, price, size, funds, stp, tags, remark, timeInForce, cancelAfter, postOnly, hidden, iceberg, visibleSize) {
+  assert_scalar_character(type)
+  assert_scalar_character(symbol)
+  assert_scalar_character(side)
+  if (!is.null(clientOid)) {
+    assert_scalar_character(clientOid)
+  }
+  if (!is.null(price)) {
+    assert_any_of(
+      price,
+      function(.x) {
+        assert_scalar_double(.x)
+      },
+      function(.x) {
+        assert_scalar_character(.x)
+      }
+    )
+  }
+  if (!is.null(size)) {
+    assert_any_of(
+      size,
+      function(.x) {
+        assert_scalar_double(.x)
+      },
+      function(.x) {
+        assert_scalar_character(.x)
+      }
+    )
+  }
+  if (!is.null(funds)) {
+    assert_any_of(
+      funds,
+      function(.x) {
+        assert_scalar_double(.x)
+      },
+      function(.x) {
+        assert_scalar_character(.x)
+      }
+    )
+  }
+  if (!is.null(stp)) {
+    assert_scalar_character(stp)
+  }
+  if (!is.null(tags)) {
+    assert_scalar_character(tags)
+  }
+  if (!is.null(remark)) {
+    assert_scalar_character(remark)
+  }
+  if (!is.null(timeInForce)) {
+    assert_scalar_character(timeInForce)
+  }
+  if (!is.null(cancelAfter)) {
+    assert_scalar_double(cancelAfter)
+  }
+  if (!is.null(postOnly)) {
+    assert_scalar_logical(postOnly)
+  }
+  if (!is.null(hidden)) {
+    assert_scalar_logical(hidden)
+  }
+  if (!is.null(iceberg)) {
+    assert_scalar_logical(iceberg)
+  }
+  if (!is.null(visibleSize)) {
+    assert_any_of(
+      visibleSize,
+      function(.x) {
+        assert_scalar_double(.x)
+      },
+      function(.x) {
+        assert_scalar_character(.x)
+      }
+    )
+  }
+  return(invisible(NULL))
+}
+
+assert_return_KucoinTrading__add_order <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinTrading__add_order_test <- function(type, symbol, side, clientOid, price, size, funds, stp, tags, remark, timeInForce, cancelAfter, postOnly, hidden, iceberg, visibleSize) {
+  assert_scalar_character(type)
+  assert_scalar_character(symbol)
+  assert_scalar_character(side)
+  if (!is.null(clientOid)) {
+    assert_scalar_character(clientOid)
+  }
+  if (!is.null(price)) {
+    assert_any_of(
+      price,
+      function(.x) {
+        assert_scalar_double(.x)
+      },
+      function(.x) {
+        assert_scalar_character(.x)
+      }
+    )
+  }
+  if (!is.null(size)) {
+    assert_any_of(
+      size,
+      function(.x) {
+        assert_scalar_double(.x)
+      },
+      function(.x) {
+        assert_scalar_character(.x)
+      }
+    )
+  }
+  if (!is.null(funds)) {
+    assert_any_of(
+      funds,
+      function(.x) {
+        assert_scalar_double(.x)
+      },
+      function(.x) {
+        assert_scalar_character(.x)
+      }
+    )
+  }
+  if (!is.null(stp)) {
+    assert_scalar_character(stp)
+  }
+  if (!is.null(tags)) {
+    assert_scalar_character(tags)
+  }
+  if (!is.null(remark)) {
+    assert_scalar_character(remark)
+  }
+  if (!is.null(timeInForce)) {
+    assert_scalar_character(timeInForce)
+  }
+  if (!is.null(cancelAfter)) {
+    assert_scalar_double(cancelAfter)
+  }
+  if (!is.null(postOnly)) {
+    assert_scalar_logical(postOnly)
+  }
+  if (!is.null(hidden)) {
+    assert_scalar_logical(hidden)
+  }
+  if (!is.null(iceberg)) {
+    assert_scalar_logical(iceberg)
+  }
+  if (!is.null(visibleSize)) {
+    assert_any_of(
+      visibleSize,
+      function(.x) {
+        assert_scalar_double(.x)
+      },
+      function(.x) {
+        assert_scalar_character(.x)
+      }
+    )
+  }
+  return(invisible(NULL))
+}
+
+assert_return_KucoinTrading__add_order_test <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinTrading__add_order_batch <- function(order_list) {
+  assert_list(order_list)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinTrading__add_order_batch <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinTrading__cancel_order_by_id <- function(orderId, symbol) {
+  assert_scalar_character(orderId)
+  assert_scalar_character(symbol)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinTrading__cancel_order_by_id <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinTrading__cancel_order_by_client_oid <- function(clientOid, symbol) {
+  assert_scalar_character(clientOid)
+  assert_scalar_character(symbol)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinTrading__cancel_order_by_client_oid <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinTrading__cancel_partial_order <- function(orderId, symbol, cancelSize) {
+  assert_scalar_character(orderId)
+  assert_scalar_character(symbol)
+  assert_any_of(
+    cancelSize,
+    function(.x) {
+      assert_scalar_double(.x)
+    },
+    function(.x) {
+      assert_scalar_character(.x)
+    }
+  )
+  return(invisible(NULL))
+}
+
+assert_return_KucoinTrading__cancel_partial_order <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinTrading__cancel_all_by_symbol <- function(symbol) {
+  assert_scalar_character(symbol)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinTrading__cancel_all_by_symbol <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_return_KucoinTrading__cancel_all <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinTrading__get_order_by_id <- function(orderId, symbol) {
+  assert_scalar_character(orderId)
+  if (!is.null(symbol)) {
+    assert_scalar_character(symbol)
+  }
+  return(invisible(NULL))
+}
+
+assert_return_KucoinTrading__get_order_by_id <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinTrading__get_order_by_client_oid <- function(clientOid, symbol) {
+  assert_scalar_character(clientOid)
+  assert_scalar_character(symbol)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinTrading__get_order_by_client_oid <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinTrading__get_fills <- function(symbol, orderId, side, type, lastId, limit, startAt, endAt) {
+  if (!is.null(symbol)) {
+    assert_scalar_character(symbol)
+  }
+  if (!is.null(orderId)) {
+    assert_scalar_character(orderId)
+  }
+  if (!is.null(side)) {
+    assert_scalar_character(side)
+  }
+  if (!is.null(type)) {
+    assert_scalar_character(type)
+  }
+  if (!is.null(lastId)) {
+    assert_scalar_character(lastId)
+  }
+  if (!is.null(limit)) {
+    assert_scalar_integer(limit)
+  }
+  if (!is.null(startAt)) {
+    assert_scalar_integer(startAt)
+  }
+  if (!is.null(endAt)) {
+    assert_scalar_integer(endAt)
+  }
+  return(invisible(NULL))
+}
+
+assert_return_KucoinTrading__get_fills <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_return_KucoinTrading__get_symbols_with_open_orders <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinTrading__get_open_orders <- function(symbol) {
+  if (!is.null(symbol)) {
+    assert_scalar_character(symbol)
+  }
+  return(invisible(NULL))
+}
+
+assert_return_KucoinTrading__get_open_orders <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinTrading__get_closed_orders <- function(symbol, side, type, startAt, endAt, limit, lastId) {
+  if (!is.null(symbol)) {
+    assert_scalar_character(symbol)
+  }
+  if (!is.null(side)) {
+    assert_scalar_character(side)
+  }
+  if (!is.null(type)) {
+    assert_scalar_character(type)
+  }
+  if (!is.null(startAt)) {
+    assert_scalar_integer(startAt)
+  }
+  if (!is.null(endAt)) {
+    assert_scalar_integer(endAt)
+  }
+  if (!is.null(limit)) {
+    assert_scalar_integer(limit)
+  }
+  if (!is.null(lastId)) {
+    assert_scalar_character(lastId)
+  }
+  return(invisible(NULL))
+}
+
+assert_return_KucoinTrading__get_closed_orders <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinTrading__add_order_sync <- function(type, symbol, side, clientOid, price, size, funds, stp, tags, remark, timeInForce, cancelAfter, postOnly, hidden, iceberg, visibleSize) {
+  assert_scalar_character(type)
+  assert_scalar_character(symbol)
+  assert_scalar_character(side)
+  if (!is.null(clientOid)) {
+    assert_scalar_character(clientOid)
+  }
+  if (!is.null(price)) {
+    assert_any_of(
+      price,
+      function(.x) {
+        assert_scalar_double(.x)
+      },
+      function(.x) {
+        assert_scalar_character(.x)
+      }
+    )
+  }
+  if (!is.null(size)) {
+    assert_any_of(
+      size,
+      function(.x) {
+        assert_scalar_double(.x)
+      },
+      function(.x) {
+        assert_scalar_character(.x)
+      }
+    )
+  }
+  if (!is.null(funds)) {
+    assert_any_of(
+      funds,
+      function(.x) {
+        assert_scalar_double(.x)
+      },
+      function(.x) {
+        assert_scalar_character(.x)
+      }
+    )
+  }
+  if (!is.null(stp)) {
+    assert_scalar_character(stp)
+  }
+  if (!is.null(tags)) {
+    assert_scalar_character(tags)
+  }
+  if (!is.null(remark)) {
+    assert_scalar_character(remark)
+  }
+  if (!is.null(timeInForce)) {
+    assert_scalar_character(timeInForce)
+  }
+  if (!is.null(cancelAfter)) {
+    assert_scalar_double(cancelAfter)
+  }
+  if (!is.null(postOnly)) {
+    assert_scalar_logical(postOnly)
+  }
+  if (!is.null(hidden)) {
+    assert_scalar_logical(hidden)
+  }
+  if (!is.null(iceberg)) {
+    assert_scalar_logical(iceberg)
+  }
+  if (!is.null(visibleSize)) {
+    assert_any_of(
+      visibleSize,
+      function(.x) {
+        assert_scalar_double(.x)
+      },
+      function(.x) {
+        assert_scalar_character(.x)
+      }
+    )
+  }
+  return(invisible(NULL))
+}
+
+assert_return_KucoinTrading__add_order_sync <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinTrading__add_order_batch_sync <- function(order_list) {
+  assert_list(order_list)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinTrading__add_order_batch_sync <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinTrading__cancel_order_by_id_sync <- function(orderId, symbol) {
+  assert_scalar_character(orderId)
+  assert_scalar_character(symbol)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinTrading__cancel_order_by_id_sync <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinTrading__cancel_order_by_client_oid_sync <- function(clientOid, symbol) {
+  assert_scalar_character(clientOid)
+  assert_scalar_character(symbol)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinTrading__cancel_order_by_client_oid_sync <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinTrading__modify_order <- function(symbol, orderId, clientOid, newPrice, newSize) {
+  assert_scalar_character(symbol)
+  if (!is.null(orderId)) {
+    assert_scalar_character(orderId)
+  }
+  if (!is.null(clientOid)) {
+    assert_scalar_character(clientOid)
+  }
+  if (!is.null(newPrice)) {
+    assert_any_of(
+      newPrice,
+      function(.x) {
+        assert_scalar_double(.x)
+      },
+      function(.x) {
+        assert_scalar_character(.x)
+      }
+    )
+  }
+  if (!is.null(newSize)) {
+    assert_any_of(
+      newSize,
+      function(.x) {
+        assert_scalar_double(.x)
+      },
+      function(.x) {
+        assert_scalar_character(.x)
+      }
+    )
+  }
+  return(invisible(NULL))
+}
+
+assert_return_KucoinTrading__modify_order <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinTrading__set_dcp <- function(symbols) {
+  if (!is.null(symbols)) {
+    assert_scalar_character(symbols)
+  }
+  return(invisible(NULL))
+}
+
+assert_return_KucoinTrading__set_dcp <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_return_KucoinTrading__get_dcp <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
 assert_args_KucoinTransfer__add_transfer <- function(clientOid, currency, amount, type, fromAccountType, toAccountType, fromUserId, fromAccountTag, toUserId, toAccountTag) {
   assert_scalar_character(clientOid)
   assert_scalar_character(currency)
