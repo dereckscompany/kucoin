@@ -1,3 +1,15 @@
+# kucoin 4.1.0
+
+## REFACTOR
+
+* **Migrated the transport layer onto `connectcore`, the shared connector base.** `KucoinBase` now inherits [`connectcore::RestClient`](https://github.com/dereckscompany/connectcore) instead of carrying its own copy of the credential-storage / sync-async / server-time / active-binding plumbing. KuCoin plugs into the base through the two documented seams — `.sign()` (the header-based HMAC scheme: `KC-API-KEY` / `KC-API-SIGN` / `KC-API-TIMESTAMP` / `KC-API-PASSPHRASE` / `KC-API-KEY-VERSION`, signing the timestamp + method + URL-encoded path + raw body) and `.parse_envelope()` (KuCoin's `code` / `data` envelope). The public API is unchanged: every `Kucoin*` class, method, and the exported `kucoin_build_request()` / `kucoin_paginate()` helpers keep their exact signatures and behaviour.
+* **The generic transport helpers now come from `connectcore` instead of being duplicated here.** The package-private `then_or_now()` and `fetch_server_time_ms()`, plus the generic JSON→data.table toolkit (`to_snake_case()`, `as_dt_row()`, `as_dt_list()`), are imported from `connectcore` (their KuCoin copies were byte-for-byte equivalents). KuCoin-specific parsers (`parse_orderbook()`, `parse_klines()`, `flatten_pages()`, the futures kline parser) and the helpers whose precise behaviour the test-suite pins (`ms_to_datetime()` / `ns_to_datetime()` shape contracts, `coerce_cols()` dedup, the `;`-collapse warning id) stay in the package.
+* **Why KuCoin keeps its own request funnel.** Unlike most venues, KuCoin signs the *exact compact JSON request body* and must transmit that same byte sequence on the wire, so `kucoin_build_request()` continues to send the body via `req_body_raw()` (the signed string verbatim) rather than `connectcore`'s default funnel, which pretty-prints the body and would invalidate the signature. `kucoin_build_request()` / `kucoin_paginate()` gained optional `sign` / `parse_envelope` parameters (defaulting to KuCoin's own) so the seams drive the funnel; existing callers are unaffected.
+
+## DEPENDENCIES
+
+* Added `connectcore` to `Imports` (pinned to `dereckscompany/connectcore@v0.0.1` via `Remotes` and `renv.lock`).
+
 # kucoin 4.0.3
 
 ## BUG FIXES

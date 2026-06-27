@@ -1,79 +1,12 @@
 # File: R/helpers_parse.R
 # Response parsing and data.table construction helpers.
-
-#' Convert camelCase Names to snake_case
-#'
-#' Converts column names from KuCoin's camelCase convention to R's
-#' snake_case convention. Handles consecutive uppercase letters (e.g.,
-#' `"clientOid"` -> `"client_oid"`, `"isMarginEnabled"` -> `"is_margin_enabled"`).
-#'
-#' @param names Character vector; names to convert.
-#' @return Character vector; converted snake_case names.
-#'
-#' @keywords internal
-#' @noRd
-to_snake_case <- function(names) {
-  # Insert underscore before uppercase letters that follow lowercase/digit
-
-  out <- gsub("([a-z0-9])([A-Z])", "\\1_\\2", names)
-  # Insert underscore between consecutive uppercase and following lowercase
-  out <- gsub("([A-Z])([A-Z][a-z])", "\\1_\\2", out)
-  out <- tolower(out)
-  return(out)
-}
-
-#' Convert a List or Named List to a data.table Row
-#'
-#' Converts a flat named list (typically from a KuCoin API JSON response)
-#' into a single-row [data.table::data.table]. NULL values become NA.
-#' Column names are converted to snake_case.
-#'
-#' @param x A named list.
-#' @return A single-row [data.table::data.table] with snake_case column names.
-#'
-#' @keywords internal
-#' @noRd
-as_dt_row <- function(x) {
-  if (is.null(x) || length(x) == 0) {
-    return(data.table::data.table()[])
-  }
-  x <- lapply(x, function(val) {
-    if (is.null(val)) {
-      return(NA)
-    }
-    if (is.list(val) && length(val) == 0) {
-      return(NA)
-    }
-    # NOTE: lists with length >= 1 (e.g. annType = list("a", "b")) must be wrapped
-    # in list() so data.table stores them as a single list-column entry instead
-    # of recycling rows.
-    if (is.list(val) && length(val) >= 1) {
-      return(list(val))
-    }
-    return(val)
-  })
-  dt <- data.table::as.data.table(x)
-  data.table::setnames(dt, to_snake_case(names(dt)))
-  return(dt[])
-}
-
-#' Convert a List of Lists to a data.table
-#'
-#' Takes a list where each element is a named list (e.g., from a JSON array)
-#' and row-binds them into a [data.table::data.table] with snake_case columns.
-#'
-#' @param items A list of named lists, or NULL.
-#' @return A [data.table::data.table]. Returns an empty data.table if `items` is NULL or empty.
-#'
-#' @keywords internal
-#' @noRd
-as_dt_list <- function(items) {
-  if (is.null(items) || length(items) == 0) {
-    return(data.table::data.table()[])
-  }
-  dt <- data.table::rbindlist(lapply(items, as_dt_row), fill = TRUE)
-  return(dt[])
-}
+#
+# The generic JSON -> data.table toolkit (to_snake_case, as_dt_row, as_dt_list)
+# is shared across connectors and lives in connectcore; it is imported in
+# imports.R rather than duplicated here. KuCoin-specific parsers (orderbook,
+# klines, paginated flatten) and the timestamp/coercion helpers whose behaviour
+# the test-suite pins (ms/ns conversion shape contracts, coerce_cols dedup, the
+# `;`-collapse warning id) stay here.
 
 #' Convert a KuCoin Millisecond Timestamp to POSIXct
 #'

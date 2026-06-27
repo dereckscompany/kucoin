@@ -4,11 +4,6 @@
 \alias{KucoinDeposit}
 \title{KucoinDeposit: Deposit Management}
 \description{
-KucoinDeposit: Deposit Management
-
-KucoinDeposit: Deposit Management
-}
-\details{
 Provides methods for managing deposit addresses and retrieving deposit
 history on KuCoin. Inherits from \link{KucoinBase}.
 \subsection{Purpose and Scope}{
@@ -62,7 +57,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinDeposit$add_deposit_address`
+## Method `KucoinDeposit$add_deposit_address()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -82,7 +77,7 @@ print(usdt_addr[, .(address, chain, to)])
 }
 
 ## ------------------------------------------------
-## Method `KucoinDeposit$get_deposit_addresses`
+## Method `KucoinDeposit$get_deposit_addresses()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -101,7 +96,7 @@ print(usdt_erc20$address)
 }
 
 ## ------------------------------------------------
-## Method `KucoinDeposit$get_deposit_history`
+## Method `KucoinDeposit$get_deposit_history()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -125,30 +120,28 @@ recent <- deposit$get_deposit_history(
 print(recent[, .(currency, amount, wallet_tx_id, created_at)])
 }
 }
-\section{Super class}{
-\code{\link[kucoin:KucoinBase]{kucoin::KucoinBase}} -> \code{KucoinDeposit}
+\section{Super classes}{
+\code{\link[connectcore:RestClient]{connectcore::RestClient}} -> \code{\link[kucoin:KucoinBase]{KucoinBase}} -> \code{KucoinDeposit}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-KucoinDeposit-add_deposit_address}{\code{KucoinDeposit$add_deposit_address()}}
-\item \href{#method-KucoinDeposit-get_deposit_addresses}{\code{KucoinDeposit$get_deposit_addresses()}}
-\item \href{#method-KucoinDeposit-get_deposit_history}{\code{KucoinDeposit$get_deposit_history()}}
-\item \href{#method-KucoinDeposit-clone}{\code{KucoinDeposit$clone()}}
+  \itemize{
+    \item \href{#method-KucoinDeposit-add_deposit_address}{\code{KucoinDeposit$add_deposit_address()}}
+    \item \href{#method-KucoinDeposit-get_deposit_addresses}{\code{KucoinDeposit$get_deposit_addresses()}}
+    \item \href{#method-KucoinDeposit-get_deposit_history}{\code{KucoinDeposit$get_deposit_history()}}
+    \item \href{#method-KucoinDeposit-clone}{\code{KucoinDeposit$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>kucoin::KucoinBase$initialize()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>KucoinBase$initialize()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinDeposit-add_deposit_address"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinDeposit-add_deposit_address}{}}}
-\subsection{Method \code{add_deposit_address()}}{
-Add Deposit Address
+\subsection{\code{KucoinDeposit$add_deposit_address()}}{
+  Add Deposit Address
 
 Creates a new deposit address for a currency. Each currency/chain
 combination can have a limited number of addresses. If an address
@@ -211,34 +204,32 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinDeposit$add_deposit_address(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinDeposit$add_deposit_address(
   currency,
   chain = NULL,
   to = NULL,
   amount = NULL
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"ETH"}, \code{"USDT"}).
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"ETH"}, \code{"USDT"}).
 Must be a valid KuCoin-supported currency symbol.}
-
-\item{\code{chain}}{Character; blockchain network identifier (e.g., \code{"ERC20"},
+      \item{\code{chain}}{Character; blockchain network identifier (e.g., \code{"ERC20"},
 \code{"TRC20"}, \code{"btc"}). Required by the KuCoin API.}
-
-\item{\code{to}}{Character; target account type for the deposit. Accepted values
+      \item{\code{to}}{Character; target account type for the deposit. Accepted values
 include \code{"main"} (funding account) and \code{"trade"} (trading account). Required by the KuCoin API.}
-
-\item{\code{amount}}{Character or NULL; deposit amount. Required for some invoice-based
+      \item{\code{amount}}{Character or NULL; deposit amount. Required for some invoice-based
 deposit addresses (e.g., Lightning Network).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
 \itemize{
 \item \code{address} (character): The generated deposit address.
 \item \code{memo} (character): Memo/tag for the address (empty string if not applicable).
@@ -248,11 +239,10 @@ deposit addresses (e.g., Lightning Network).}
 \item \code{currency} (character): Currency code.
 \item \code{contract_address} (character): Token contract address (empty for native coins).
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-deposit <- KucoinDeposit$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{deposit <- KucoinDeposit$new()
 
 # Create a BTC deposit address on the default chain
 btc_addr <- deposit$add_deposit_address(currency = "BTC")
@@ -266,17 +256,15 @@ usdt_addr <- deposit$add_deposit_address(
 )
 print(usdt_addr[, .(address, chain, to)])
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinDeposit-get_deposit_addresses"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinDeposit-get_deposit_addresses}{}}}
-\subsection{Method \code{get_deposit_addresses()}}{
-Get Deposit Addresses
+\subsection{\code{KucoinDeposit$get_deposit_addresses()}}{
+  Get Deposit Addresses
 
 Retrieves existing deposit addresses for a currency. Returns all
 addresses if no chain is specified, or a single address for the
@@ -348,25 +336,24 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinDeposit$get_deposit_addresses(currency, amount = NULL, chain = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"ETH"}, \code{"USDT"}). \strong{Required} by the API.}
-
-\item{\code{amount}}{Character or NULL; deposit amount. Some chains require an amount
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinDeposit$get_deposit_addresses(currency, amount = NULL, chain = NULL)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"ETH"}, \code{"USDT"}). \strong{Required} by the API.}
+      \item{\code{amount}}{Character or NULL; deposit amount. Some chains require an amount
 to generate invoice-based addresses (e.g., Lightning Network).}
-
-\item{\code{chain}}{Character or NULL; blockchain network identifier (e.g., \code{"ERC20"},
+      \item{\code{chain}}{Character or NULL; blockchain network identifier (e.g., \code{"ERC20"},
 \code{"TRC20"}, \code{"btc"}). When NULL, returns addresses for all chains.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row per address and columns:
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row per address and columns:
 \itemize{
 \item \code{address} (character): The deposit address string.
 \item \code{memo} (character): Memo/tag for the address (empty string if not applicable).
@@ -378,11 +365,10 @@ to generate invoice-based addresses (e.g., Lightning Network).}
 }
 
 Returns an empty \code{data.table} if no addresses exist for the currency.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-deposit <- KucoinDeposit$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{deposit <- KucoinDeposit$new()
 
 # Get all BTC deposit addresses across all chains
 btc_addrs <- deposit$get_deposit_addresses(currency = "BTC")
@@ -395,17 +381,15 @@ usdt_erc20 <- deposit$get_deposit_addresses(
 )
 print(usdt_erc20$address)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinDeposit-get_deposit_history"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinDeposit-get_deposit_history}{}}}
-\subsection{Method \code{get_deposit_history()}}{
-Get Deposit History
+\subsection{\code{KucoinDeposit$get_deposit_history()}}{
+  Get Deposit History
 
 Retrieves paginated deposit history with optional filtering by currency,
 status, and time range. Automatically coerces \code{created_at} timestamps
@@ -493,41 +477,37 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinDeposit$get_deposit_history(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinDeposit$get_deposit_history(
   currency = NULL,
   status = NULL,
   startAt = NULL,
   endAt = NULL,
   page_size = 50,
   max_pages = Inf
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{currency}}{Character or NULL; filter by currency code (e.g., \code{"BTC"}, \code{"USDT"}).
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{currency}}{Character or NULL; filter by currency code (e.g., \code{"BTC"}, \code{"USDT"}).
 When NULL, returns deposits for all currencies.}
-
-\item{\code{status}}{Character or NULL; filter by deposit status. Accepted values:
+      \item{\code{status}}{Character or NULL; filter by deposit status. Accepted values:
 \code{"PROCESSING"}, \code{"WALLET_PROCESSING"}, \code{"SUCCESS"}, \code{"FAILURE"}.
 When NULL, returns deposits of all statuses.}
-
-\item{\code{startAt}}{Integer or NULL; start timestamp in milliseconds (inclusive).
+      \item{\code{startAt}}{Integer or NULL; start timestamp in milliseconds (inclusive).
 Used to filter deposits created on or after this time.}
-
-\item{\code{endAt}}{Integer or NULL; end timestamp in milliseconds (inclusive).
+      \item{\code{endAt}}{Integer or NULL; end timestamp in milliseconds (inclusive).
 Used to filter deposits created on or before this time.}
-
-\item{\code{page_size}}{Integer; number of results per page (default 50, max 100).}
-
-\item{\code{max_pages}}{Numeric; maximum number of pages to fetch (default \code{Inf} for all pages).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row per deposit and columns:
+      \item{\code{page_size}}{Integer; number of results per page (default 50, max 100).}
+      \item{\code{max_pages}}{Numeric; maximum number of pages to fetch (default \code{Inf} for all pages).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row per deposit and columns:
 \itemize{
 \item \code{currency} (character): Deposited currency code.
 \item \code{chain} (character): Blockchain network used for the deposit.
@@ -544,11 +524,10 @@ Used to filter deposits created on or before this time.}
 }
 
 Returns an empty \code{data.table} if no deposits match the filters.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-deposit <- KucoinDeposit$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{deposit <- KucoinDeposit$new()
 
 # Get all successful BTC deposits
 btc_deposits <- deposit$get_deposit_history(
@@ -567,27 +546,27 @@ recent <- deposit$get_deposit_history(
 )
 print(recent[, .(currency, amount, wallet_tx_id, created_at)])
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinDeposit-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinDeposit-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinDeposit$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{KucoinDeposit$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinDeposit$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

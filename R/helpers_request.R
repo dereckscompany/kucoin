@@ -1,58 +1,22 @@
 # File: R/helpers_request.R
 # Core HTTP request infrastructure for the kucoin package.
-# Provides sign_request(), kucoin_build_request(), and kucoin_paginate().
-
-#' Apply Continuation to a Value or Promise
-#'
-#' Routes a value through `fn` either synchronously or asynchronously depending on
-#' whether the caller is in async mode. This is the single sync/async branching
-#' point in the package -- called only from `.request()` and `.paginate()`.
-#'
-#' @param x A value or a [promises::promise].
-#' @param fn A function to apply to the resolved value of `x`.
-#' @param is_async Logical; whether the caller is in async mode.
-#' @return If `is_async`, returns `promises::then(x, fn)`. Otherwise returns `fn(x)`.
-#' @keywords internal
-#' @noRd
-then_or_now <- function(x, fn, is_async = FALSE) {
-  if (is_async) {
-    return(promises::then(x, fn))
-  }
-  return(fn(x))
-}
-
-#' Fetch KuCoin Server Time (Milliseconds)
-#'
-#' Makes a lightweight synchronous `GET /api/v1/timestamp` request and returns
-#' the server's epoch time in milliseconds. Used internally when
-#' `time_source = "server"` to avoid clock-drift issues with HMAC signing.
-#'
-#' @param base_url Character; the API base URL.
-#' @return Numeric; server time in epoch milliseconds.
-#' @keywords internal
-#' @noRd
-fetch_server_time_ms <- function(base_url) {
-  req <- httr2::request(base_url)
-  req <- httr2::req_url_path_append(req, "/api/v1/timestamp")
-  req <- httr2::req_method(req, "GET")
-  req <- httr2::req_timeout(req, 5)
-  resp <- httr2::req_perform(req)
-  parsed <- httr2::resp_body_json(resp, simplifyVector = FALSE)
-  if (as.character(parsed$code) != "200000") {
-    rlang::abort(paste0(
-      "Failed to fetch server time: KuCoin API error ",
-      parsed$code,
-      ": ",
-      if (is.null(parsed$msg)) "No message." else parsed$msg
-    ))
-  }
-  return(as.numeric(parsed$data))
-}
+# Provides sign_request(), kucoin_build_request(), parse_kucoin_response(), and
+# kucoin_paginate().
+#
+# The generic sync/async branch point (then_or_now) and the server-time fetcher
+# come from connectcore, the shared transport base. KuCoin keeps its own request
+# funnel because it signs the *exact compact JSON body* and must send that same
+# byte sequence on the wire (via req_body_raw) — connectcore's default funnel
+# pretty-prints the body with req_body_json, which would break the signature.
 
 #' Sign an httr2 Request for KuCoin Authentication
 #'
 #' Adds KuCoin authentication headers (KC-API-KEY, KC-API-SIGN, KC-API-TIMESTAMP,
-#' KC-API-PASSPHRASE, KC-API-KEY-VERSION) to an [httr2::request] object.
+#' KC-API-PASSPHRASE, KC-API-KEY-VERSION) to an [httr2::request] object. This is
+#' the header-based HMAC scheme KuCoin uses (it signs the timestamp, HTTP method,
+#' request path including the URL-encoded query string, and the raw body), so it
+#' cannot use [connectcore::hmac_query_sign()], which signs only the query string.
+#' It is the `.sign()` seam [KucoinBase] plugs into [connectcore::RestClient].
 #'
 #' @param req An [httr2::request] object to sign.
 #' @param keys List of API credentials containing `api_key`, `api_secret`,
@@ -61,7 +25,7 @@ fetch_server_time_ms <- function(base_url) {
 #' @param path Character; the API path including query string.
 #' @param body Character; the JSON request body, or `""` for GET/DELETE requests.
 #' @param .get_timestamp_ms Function or NULL; zero-argument function returning
-#'   epoch milliseconds. When `NULL` (default), falls back to `lubridate::now()`.
+#'   epoch milliseconds. When `NULL` (default), falls back to the local UTC clock.
 #' @return The signed [httr2::request] object with authentication headers added.
 #'
 #' @importFrom digest hmac
@@ -74,7 +38,7 @@ sign_request <- function(req, keys, method, path, body = "", .get_timestamp_ms =
   # must use floor() + format() to get a clean integer string without
   # overflow, decimals, or scientific notation.
   if (is.null(.get_timestamp_ms)) {
-    .get_timestamp_ms <- function() floor(as.numeric(lubridate::now()) * 1000)
+    .get_timestamp_ms <- function() floor(as.numeric(lubridate::now("UTC")) * 1000)
   }
   timestamp <- format(.get_timestamp_ms(), scientific = FALSE)
   prehash <- paste0(timestamp, toupper(method), path, body)
@@ -116,6 +80,11 @@ sign_request <- function(req, keys, method, path, body = "", .get_timestamp_ms =
 #' `.perform` function, and parses the KuCoin JSON response. This is the single
 #' point through which all KuCoin API calls flow.
 #'
+#' It is KuCoin's specialisation of the connectcore request funnel: signing and
+#' error-envelope detection are injected as the `sign` and `parse_envelope`
+#' functions (the seams [KucoinBase] overrides), and the body is sent as the exact
+#' raw JSON string that was signed, so the HMAC signature matches byte-for-byte.
+#'
 #' ### Sync vs Async
 #' The `.perform` argument controls execution mode:
 #' - `httr2::req_perform` (default): synchronous, returns an [httr2::response].
@@ -127,19 +96,23 @@ sign_request <- function(req, keys, method, path, body = "", .get_timestamp_ms =
 #' @param query Named list; query parameters. Default `list()`.
 #' @param body Named list or NULL; request body. Default `NULL`.
 #' @param keys List or NULL; API credentials. Default `NULL`.
+#' @param sign Function or NULL; `function(req, keys, ctx)` returning a signed
+#'   request, where `ctx` carries `method`, `path`, `body`, and `get_timestamp_ms`.
+#'   Default `sign_request()` (adapted to that signature).
+#' @param parse_envelope Function; `function(resp)` turning a response into data
+#'   and raising on a KuCoin API error. Default `parse_kucoin_response()`.
 #' @param .perform Function; the httr2 perform function. Default `httr2::req_perform`.
 #' @param .parser Function; post-processing function applied to parsed `$data`.
 #'   Default `identity`.
 #' @param is_async Logical; whether `.perform` returns promises. Default `FALSE`.
 #' @param timeout Numeric; request timeout in seconds. Default `10`.
 #' @param .get_timestamp_ms Function or NULL; zero-argument function returning
-#'   epoch milliseconds for HMAC signing. When `NULL` (default), uses
-#'   `lubridate::now()`. Pass a custom function (e.g. one that fetches KuCoin server
-#'   time) to avoid clock-drift issues.
+#'   epoch milliseconds for HMAC signing. When `NULL` (default), uses the local
+#'   UTC clock. Pass a custom function (e.g. one that fetches KuCoin server time)
+#'   to avoid clock-drift issues.
 #' @return Parsed and post-processed API response data, or a promise thereof.
 #'
-#' @importFrom httr2 request req_method req_url_path_append req_url_query req_body_raw
-#'   req_timeout req_perform url_parse
+#' @importFrom httr2 request req_method req_url_path_append req_url_query req_body_raw req_timeout req_perform url_parse
 #' @importFrom jsonlite toJSON
 #' @export
 kucoin_build_request <- function(
@@ -149,6 +122,8 @@ kucoin_build_request <- function(
   query = list(),
   body = NULL,
   keys = NULL,
+  sign = NULL,
+  parse_envelope = parse_kucoin_response,
   .perform = httr2::req_perform,
   .parser = identity,
   is_async = FALSE,
@@ -166,15 +141,23 @@ kucoin_build_request <- function(
     req <- httr2::req_url_query(req, !!!query)
   }
 
-  # Build JSON body
+  # Build JSON body. KuCoin signs and sends the *exact same* compact JSON string,
+  # so it is serialised once here and sent verbatim via req_body_raw.
   body_json <- ""
   if (!is.null(body)) {
     body_json <- jsonlite::toJSON(body, auto_unbox = TRUE)
     req <- httr2::req_body_raw(req, body_json, type = "application/json")
   }
 
-  # Sign if authenticated
+  # Sign if authenticated. The signing function is the .sign() seam; KuCoin's
+  # default (sign_request) needs the method, the path with its URL-encoded query
+  # string, and the raw body, supplied via ctx.
   if (!is.null(keys)) {
+    if (is.null(sign)) {
+      sign <- function(req, keys, ctx) {
+        return(sign_request(req, keys, ctx$method, ctx$path, ctx$body, .get_timestamp_ms = ctx$get_timestamp_ms))
+      }
+    }
     parsed_url <- httr2::url_parse(req$url)
     sign_path <- parsed_url$path
     if (length(parsed_url$query) > 0) {
@@ -189,16 +172,22 @@ kucoin_build_request <- function(
       sign_path <- paste0(sign_path, "?", qs)
     }
 
-    req <- sign_request(req, keys, method, sign_path, body_json, .get_timestamp_ms = .get_timestamp_ms)
+    ctx <- list(
+      method = method,
+      path = sign_path,
+      body = as.character(body_json),
+      get_timestamp_ms = .get_timestamp_ms
+    )
+    req <- sign(req, keys, ctx)
   }
 
   result <- .perform(req)
 
   # Single branching point: parse response then apply .parser
-  return(then_or_now(
+  return(connectcore::then_or_now(
     result,
     function(resp) {
-      data <- parse_kucoin_response(resp)
+      data <- parse_envelope(resp)
       return(.parser(data))
     },
     is_async = is_async
@@ -208,7 +197,8 @@ kucoin_build_request <- function(
 #' Parse and Validate a KuCoin API Response
 #'
 #' Extracts JSON from an [httr2::response], validates the HTTP status and KuCoin
-#' API status code (`"200000"`), and returns the `$data` element.
+#' API status code (`"200000"`), and returns the `$data` element. This is the
+#' `.parse_envelope()` seam [KucoinBase] plugs into [connectcore::RestClient].
 #'
 #' @param resp An [httr2::response] object.
 #' @return The `$data` element from the parsed JSON response.
@@ -259,6 +249,10 @@ parse_kucoin_response <- function(resp) {
 #' @param query Named list; initial query parameters. Default `list()`.
 #' @param body Named list or NULL; request body. Default `NULL`.
 #' @param keys List or NULL; API credentials. Default `NULL`.
+#' @param sign Function or NULL; the `.sign()` seam forwarded to
+#'   [kucoin_build_request()]. Default `NULL` (use KuCoin's own signer).
+#' @param parse_envelope Function; the `.parse_envelope()` seam forwarded to
+#'   [kucoin_build_request()]. Default `parse_kucoin_response()`.
 #' @param .perform Function; the httr2 perform function.
 #' @param .parser Function; post-processing for the final accumulated result.
 #'   Default `identity`.
@@ -279,6 +273,8 @@ kucoin_paginate <- function(
   query = list(),
   body = NULL,
   keys = NULL,
+  sign = NULL,
+  parse_envelope = parse_kucoin_response,
   .perform = httr2::req_perform,
   .parser = identity,
   is_async = FALSE,
@@ -302,13 +298,15 @@ kucoin_paginate <- function(
       query = q,
       body = body,
       keys = keys,
+      sign = sign,
+      parse_envelope = parse_envelope,
       .perform = .perform,
       is_async = is_async,
       timeout = timeout,
       .get_timestamp_ms = .get_timestamp_ms
     )
 
-    return(then_or_now(
+    return(connectcore::then_or_now(
       result,
       function(data) {
         page_items <- data[[items_field]]

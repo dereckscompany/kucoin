@@ -4,11 +4,6 @@
 \alias{KucoinMarketData}
 \title{KucoinMarketData: Spot Market Data Retrieval}
 \description{
-KucoinMarketData: Spot Market Data Retrieval
-
-KucoinMarketData: Spot Market Data Retrieval
-}
-\details{
 Provides methods for retrieving market data from KuCoin's Spot trading API,
 including announcements, klines, currencies, symbols, tickers, orderbooks,
 trade history, and 24-hour statistics.
@@ -81,7 +76,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_announcements`
+## Method `KucoinMarketData$get_announcements()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -100,7 +95,7 @@ listings <- market$get_announcements(
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_currency`
+## Method `KucoinMarketData$get_currency()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -113,7 +108,7 @@ usdt_erc20 <- market$get_currency("USDT", chain = "ERC20")
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_all_currencies`
+## Method `KucoinMarketData$get_all_currencies()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -125,7 +120,7 @@ print(erc20[, .(currency, withdrawal_min_fee, is_deposit_enabled)])
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_symbol`
+## Method `KucoinMarketData$get_symbol()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -135,7 +130,7 @@ print(btc[, .(price_increment, base_increment, base_min_size, enable_trading)])
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_all_symbols`
+## Method `KucoinMarketData$get_all_symbols()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -147,7 +142,7 @@ print(usdt_pairs[, .(symbol, base_min_size, price_increment)])
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_ticker`
+## Method `KucoinMarketData$get_ticker()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -158,7 +153,7 @@ print(paste("Spread:", spread))
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_all_tickers`
+## Method `KucoinMarketData$get_all_tickers()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -171,7 +166,7 @@ print(top10[, .(symbol, vol_value, change_rate)])
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_trade_history`
+## Method `KucoinMarketData$get_trade_history()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -184,7 +179,7 @@ print(paste("Buy/Sell ratio:", round(buys / sells, 3)))
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_part_orderbook`
+## Method `KucoinMarketData$get_part_orderbook()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -196,7 +191,7 @@ print(paste("Best bid:", best_bid$price, "Best ask:", best_ask$price))
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_full_orderbook`
+## Method `KucoinMarketData$get_full_orderbook()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -208,7 +203,7 @@ print(paste("Total bid depth:", total_bid_volume, "BTC"))
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_24hr_stats`
+## Method `KucoinMarketData$get_24hr_stats()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -219,7 +214,7 @@ print(paste("24h range:", range, "USDT"))
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_market_list`
+## Method `KucoinMarketData$get_market_list()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -231,7 +226,7 @@ defi_symbols <- market$get_all_symbols(market = "DeFi")
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_klines`
+## Method `KucoinMarketData$get_klines()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -252,7 +247,7 @@ print(paste("Fetched", nrow(klines_7d), "candles"))
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_server_time`
+## Method `KucoinMarketData$get_server_time()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -263,7 +258,7 @@ cat("Clock drift:", round(drift), "ms\n")
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_service_status`
+## Method `KucoinMarketData$get_service_status()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -275,7 +270,7 @@ if (status$status != "open") {
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_fiat_prices`
+## Method `KucoinMarketData$get_fiat_prices()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -284,43 +279,41 @@ prices <- market$get_fiat_prices(base = "USD", currencies = "BTC,ETH,USDT")
 print(prices)
 }
 }
-\section{Super class}{
-\code{\link[kucoin:KucoinBase]{kucoin::KucoinBase}} -> \code{KucoinMarketData}
+\section{Super classes}{
+\code{\link[connectcore:RestClient]{connectcore::RestClient}} -> \code{\link[kucoin:KucoinBase]{KucoinBase}} -> \code{KucoinMarketData}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-KucoinMarketData-get_announcements}{\code{KucoinMarketData$get_announcements()}}
-\item \href{#method-KucoinMarketData-get_currency}{\code{KucoinMarketData$get_currency()}}
-\item \href{#method-KucoinMarketData-get_all_currencies}{\code{KucoinMarketData$get_all_currencies()}}
-\item \href{#method-KucoinMarketData-get_symbol}{\code{KucoinMarketData$get_symbol()}}
-\item \href{#method-KucoinMarketData-get_all_symbols}{\code{KucoinMarketData$get_all_symbols()}}
-\item \href{#method-KucoinMarketData-get_ticker}{\code{KucoinMarketData$get_ticker()}}
-\item \href{#method-KucoinMarketData-get_all_tickers}{\code{KucoinMarketData$get_all_tickers()}}
-\item \href{#method-KucoinMarketData-get_trade_history}{\code{KucoinMarketData$get_trade_history()}}
-\item \href{#method-KucoinMarketData-get_part_orderbook}{\code{KucoinMarketData$get_part_orderbook()}}
-\item \href{#method-KucoinMarketData-get_full_orderbook}{\code{KucoinMarketData$get_full_orderbook()}}
-\item \href{#method-KucoinMarketData-get_24hr_stats}{\code{KucoinMarketData$get_24hr_stats()}}
-\item \href{#method-KucoinMarketData-get_market_list}{\code{KucoinMarketData$get_market_list()}}
-\item \href{#method-KucoinMarketData-get_klines}{\code{KucoinMarketData$get_klines()}}
-\item \href{#method-KucoinMarketData-get_server_time}{\code{KucoinMarketData$get_server_time()}}
-\item \href{#method-KucoinMarketData-get_service_status}{\code{KucoinMarketData$get_service_status()}}
-\item \href{#method-KucoinMarketData-get_fiat_prices}{\code{KucoinMarketData$get_fiat_prices()}}
-\item \href{#method-KucoinMarketData-clone}{\code{KucoinMarketData$clone()}}
+  \itemize{
+    \item \href{#method-KucoinMarketData-get_announcements}{\code{KucoinMarketData$get_announcements()}}
+    \item \href{#method-KucoinMarketData-get_currency}{\code{KucoinMarketData$get_currency()}}
+    \item \href{#method-KucoinMarketData-get_all_currencies}{\code{KucoinMarketData$get_all_currencies()}}
+    \item \href{#method-KucoinMarketData-get_symbol}{\code{KucoinMarketData$get_symbol()}}
+    \item \href{#method-KucoinMarketData-get_all_symbols}{\code{KucoinMarketData$get_all_symbols()}}
+    \item \href{#method-KucoinMarketData-get_ticker}{\code{KucoinMarketData$get_ticker()}}
+    \item \href{#method-KucoinMarketData-get_all_tickers}{\code{KucoinMarketData$get_all_tickers()}}
+    \item \href{#method-KucoinMarketData-get_trade_history}{\code{KucoinMarketData$get_trade_history()}}
+    \item \href{#method-KucoinMarketData-get_part_orderbook}{\code{KucoinMarketData$get_part_orderbook()}}
+    \item \href{#method-KucoinMarketData-get_full_orderbook}{\code{KucoinMarketData$get_full_orderbook()}}
+    \item \href{#method-KucoinMarketData-get_24hr_stats}{\code{KucoinMarketData$get_24hr_stats()}}
+    \item \href{#method-KucoinMarketData-get_market_list}{\code{KucoinMarketData$get_market_list()}}
+    \item \href{#method-KucoinMarketData-get_klines}{\code{KucoinMarketData$get_klines()}}
+    \item \href{#method-KucoinMarketData-get_server_time}{\code{KucoinMarketData$get_server_time()}}
+    \item \href{#method-KucoinMarketData-get_service_status}{\code{KucoinMarketData$get_service_status()}}
+    \item \href{#method-KucoinMarketData-get_fiat_prices}{\code{KucoinMarketData$get_fiat_prices()}}
+    \item \href{#method-KucoinMarketData-clone}{\code{KucoinMarketData$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>kucoin::KucoinBase$initialize()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>KucoinBase$initialize()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarketData-get_announcements"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarketData-get_announcements}{}}}
-\subsection{Method \code{get_announcements()}}{
-Get Announcements
+\subsection{\code{KucoinMarketData$get_announcements()}}{
+  Get Announcements
 
 Retrieves paginated market announcements from KuCoin. Announcements include
 new listings, delistings, maintenance notices, and other platform updates.
@@ -384,18 +377,19 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarketData$get_announcements(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarketData$get_announcements(
   query = list(),
   page_size = 50,
   max_pages = Inf
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{query}}{Named list; filter parameters:
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{query}}{Named list; filter parameters:
 \itemize{
 \item \code{annType} (character): Announcement type filter (e.g., \code{"latest-announcements"},
 \code{"activities"}, \code{"new-listings"}, \code{"product-updates"}).
@@ -403,15 +397,13 @@ Verified: 2026-05-23
 \item \code{startTime} (integer): Start timestamp in milliseconds.
 \item \code{endTime} (integer): End timestamp in milliseconds.
 }}
-
-\item{\code{page_size}}{Integer; results per page (default 50, max 100).}
-
-\item{\code{max_pages}}{Numeric; max pages to fetch (default \code{Inf} for all).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+      \item{\code{page_size}}{Integer; results per page (default 50, max 100).}
+      \item{\code{max_pages}}{Numeric; max pages to fetch (default \code{Inf} for all).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{ann_id} (integer): Announcement identifier.
 \item \code{ann_title} (character): Announcement title.
@@ -430,11 +422,10 @@ if KuCoin returned no tags.
 \item \code{language} (character): Language code.
 \item \code{ann_url} (character): Full URL to the announcement page.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-market <- KucoinMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{market <- KucoinMarketData$new()
 
 # Get latest announcements
 anns <- market$get_announcements()
@@ -447,17 +438,15 @@ listings <- market$get_announcements(
   max_pages = 3
 )
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarketData-get_currency"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarketData-get_currency}{}}}
-\subsection{Method \code{get_currency()}}{
-Get Currency Details
+\subsection{\code{KucoinMarketData$get_currency()}}{
+  Get Currency Details
 
 Retrieves metadata for a specific currency, including per-chain deposit and
 withdrawal details (fees, minimums, confirmations, contract addresses).
@@ -533,21 +522,21 @@ and \code{withdraw_precision} before submitting withdrawals.
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarketData$get_currency(currency, chain = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"ETH"}, \code{"USDT"}).}
-
-\item{\code{chain}}{Character or NULL; specific chain to filter (e.g., \code{"ERC20"}, \code{"TRC20"}).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with currency metadata and chain details:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarketData$get_currency(currency, chain = NULL)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"ETH"}, \code{"USDT"}).}
+      \item{\code{chain}}{Character or NULL; specific chain to filter (e.g., \code{"ERC20"}, \code{"TRC20"}).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with currency metadata and chain details:
 \itemize{
 \item \code{currency} (character): Currency code.
 \item \code{name} (character): Short name.
@@ -568,28 +557,25 @@ and \code{withdraw_precision} before submitting withdrawals.
 \item \code{need_tag} (logical): Whether a memo/tag is required.
 \item \code{chain_id} (character): Chain identifier.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-market <- KucoinMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{market <- KucoinMarketData$new()
 btc <- market$get_currency("BTC")
 print(btc[, .(chain_name, withdrawal_min_fee, is_deposit_enabled, confirms)])
 
 # Specific chain
 usdt_erc20 <- market$get_currency("USDT", chain = "ERC20")
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarketData-get_all_currencies"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarketData-get_all_currencies}{}}}
-\subsection{Method \code{get_all_currencies()}}{
-Get All Currencies
+\subsection{\code{KucoinMarketData$get_all_currencies()}}{
+  Get All Currencies
 
 Retrieves metadata for all listed currencies, including chain-specific
 deposit/withdrawal details. Useful for building currency reference tables.
@@ -662,34 +648,32 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarketData$get_all_currencies()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with currency metadata
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarketData$get_all_currencies()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with currency metadata
 and chain details. Same columns as \code{get_currency()}, one row per currency-chain combination.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-market <- KucoinMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{market <- KucoinMarketData$new()
 all_currencies <- market$get_all_currencies()
 # Find all ERC20 tokens
 erc20 <- all_currencies[chain_name == "ERC20"]
 print(erc20[, .(currency, withdrawal_min_fee, is_deposit_enabled)])
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarketData-get_symbol"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarketData-get_symbol}{}}}
-\subsection{Method \code{get_symbol()}}{
-Get Symbol Details
+\subsection{\code{KucoinMarketData$get_symbol()}}{
+  Get Symbol Details
 
 Retrieves trading pair metadata for a specific symbol, including precision
 increments, size limits, fee rates, and trading status.
@@ -759,19 +743,20 @@ accurate P&L estimation.
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarketData$get_symbol(symbol)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; trading symbol (e.g., \code{"BTC-USDT"}).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with symbol metadata:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarketData$get_symbol(symbol)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; trading symbol (e.g., \code{"BTC-USDT"}).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with symbol metadata:
 \itemize{
 \item \code{symbol} (character): Trading pair identifier.
 \item \code{base_currency} (character): Base asset code.
@@ -791,25 +776,22 @@ accurate P&L estimation.
 \item \code{maker_fee_coefficient} (character): Maker fee multiplier.
 \item \code{taker_fee_coefficient} (character): Taker fee multiplier.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-market <- KucoinMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{market <- KucoinMarketData$new()
 btc <- market$get_symbol("BTC-USDT")
 print(btc[, .(price_increment, base_increment, base_min_size, enable_trading)])
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarketData-get_all_symbols"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarketData-get_all_symbols}{}}}
-\subsection{Method \code{get_all_symbols()}}{
-Get All Symbols
+\subsection{\code{KucoinMarketData$get_all_symbols()}}{
+  Get All Symbols
 
 Retrieves metadata for all trading pairs, optionally filtered by market
 segment. Returns the same fields as \code{get_symbol()} for every pair.
@@ -952,41 +934,39 @@ before placing orders.
 }
 ]: R:\%0A\%20\%20\%20\%20\%7B\%0A\%20\%20\%20\%20\%20\%20\%22symbol\%22:\%20\%22BTC-USDT\%22,\%0A\%20\%20\%20\%20\%20\%20\%22name\%22:\%20\%22BTC-USDT\%22,\%0A\%20\%20\%20\%20\%20\%20\%22baseCurrency\%22:\%20\%22BTC\%22,\%0A\%20\%20\%20\%20\%20\%20\%22quoteCurrency\%22:\%20\%22USDT\%22,\%0A\%20\%20\%20\%20\%20\%20\%22feeCurrency\%22:\%20\%22USDT\%22,\%0A\%20\%20\%20\%20\%20\%20\%22market\%22:\%20\%22USDS\%22,\%0A\%20\%20\%20\%20\%20\%20\%22baseMinSize\%22:\%20\%220.00001\%22,\%0A\%20\%20\%20\%20\%20\%20\%22quoteMinSize\%22:\%20\%220.1\%22,\%0A\%20\%20\%20\%20\%20\%20\%22baseMaxSize\%22:\%20\%2210000000000\%22,\%0A\%20\%20\%20\%20\%20\%20\%22quoteMaxSize\%22:\%20\%2299999999\%22,\%0A\%20\%20\%20\%20\%20\%20\%22baseIncrement\%22:\%20\%220.00000001\%22,\%0A\%20\%20\%20\%20\%20\%20\%22quoteIncrement\%22:\%20\%220.000001\%22,\%0A\%20\%20\%20\%20\%20\%20\%22priceIncrement\%22:\%20\%220.1\%22,\%0A\%20\%20\%20\%20\%20\%20\%22priceLimitRate\%22:\%20\%220.1\%22,\%0A\%20\%20\%20\%20\%20\%20\%22minFunds\%22:\%20\%220.1\%22,\%0A\%20\%20\%20\%20\%20\%20\%22isMarginEnabled\%22:\%20true,\%0A\%20\%20\%20\%20\%20\%20\%22enableTrading\%22:\%20true,\%0A\%20\%20\%20\%20\%20\%20\%22feeCategory\%22:\%201,\%0A\%20\%20\%20\%20\%20\%20\%22makerFeeCoefficient\%22:\%20\%221.00\%22,\%0A\%20\%20\%20\%20\%20\%20\%22takerFeeCoefficient\%22:\%20\%221.00\%22,\%0A\%20\%20\%20\%20\%20\%20\%22st\%22:\%20false\%0A\%20\%20\%20\%20\%7D,\%0A\%20\%20\%20\%20\%7B\%0A\%20\%20\%20\%20\%20\%20\%22symbol\%22:\%20\%22ETH-USDT\%22,\%0A\%20\%20\%20\%20\%20\%20\%22name\%22:\%20\%22ETH-USDT\%22,\%0A\%20\%20\%20\%20\%20\%20\%22baseCurrency\%22:\%20\%22ETH\%22,\%0A\%20\%20\%20\%20\%20\%20\%22quoteCurrency\%22:\%20\%22USDT\%22,\%0A\%20\%20\%20\%20\%20\%20\%22feeCurrency\%22:\%20\%22USDT\%22,\%0A\%20\%20\%20\%20\%20\%20\%22market\%22:\%20\%22USDS\%22,\%0A\%20\%20\%20\%20\%20\%20\%22baseMinSize\%22:\%20\%220.0001\%22,\%0A\%20\%20\%20\%20\%20\%20\%22quoteMinSize\%22:\%20\%220.1\%22,\%0A\%20\%20\%20\%20\%20\%20\%22baseMaxSize\%22:\%20\%2210000000000\%22,\%0A\%20\%20\%20\%20\%20\%20\%22quoteMaxSize\%22:\%20\%2299999999\%22,\%0A\%20\%20\%20\%20\%20\%20\%22baseIncrement\%22:\%20\%220.0000001\%22,\%0A\%20\%20\%20\%20\%20\%20\%22quoteIncrement\%22:\%20\%220.000001\%22,\%0A\%20\%20\%20\%20\%20\%20\%22priceIncrement\%22:\%20\%220.01\%22,\%0A\%20\%20\%20\%20\%20\%20\%22priceLimitRate\%22:\%20\%220.1\%22,\%0A\%20\%20\%20\%20\%20\%20\%22minFunds\%22:\%20\%220.1\%22,\%0A\%20\%20\%20\%20\%20\%20\%22isMarginEnabled\%22:\%20true,\%0A\%20\%20\%20\%20\%20\%20\%22enableTrading\%22:\%20true,\%0A\%20\%20\%20\%20\%20\%20\%22feeCategory\%22:\%201,\%0A\%20\%20\%20\%20\%20\%20\%22makerFeeCoefficient\%22:\%20\%221.00\%22,\%0A\%20\%20\%20\%20\%20\%20\%22takerFeeCoefficient\%22:\%20\%221.00\%22,\%0A\%20\%20\%20\%20\%20\%20\%22st\%22:\%20false\%0A\%20\%20\%20\%20\%7D\%0A\%20\%20
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarketData$get_all_symbols(market = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{market}}{Character or NULL; market segment filter (e.g., \code{"USDS"}, \code{"BTC"},
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarketData$get_all_symbols(market = NULL)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{market}}{Character or NULL; market segment filter (e.g., \code{"USDS"}, \code{"BTC"},
 \code{"KCS"}, \code{"DeFi"}). Use \code{get_market_list()} for available values.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with symbol metadata for all pairs. Same columns as \code{get_symbol()}.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-market <- KucoinMarketData$new()
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with symbol metadata for all pairs. Same columns as \code{get_symbol()}.
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{market <- KucoinMarketData$new()
 all_symbols <- market$get_all_symbols()
 # Filter to active USDT pairs
 usdt_pairs <- all_symbols[quote_currency == "USDT" & enable_trading == TRUE]
 print(usdt_pairs[, .(symbol, base_min_size, price_increment)])
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarketData-get_ticker"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarketData-get_ticker}{}}}
-\subsection{Method \code{get_ticker()}}{
-Get Ticker (Level 1 Market Data)
+\subsection{\code{KucoinMarketData$get_ticker()}}{
+  Get Ticker (Level 1 Market Data)
 
 Retrieves real-time Level 1 ticker data for a symbol: the best bid/ask
 prices, sizes, and the most recent trade price and size.
@@ -1042,19 +1022,20 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarketData$get_ticker(symbol)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; trading symbol (e.g., \code{"BTC-USDT"}).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarketData$get_ticker(symbol)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; trading symbol (e.g., \code{"BTC-USDT"}).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{time} (POSIXct): Server datetime (coerced from epoch milliseconds).
 \item \code{sequence} (character): Order book sequence number.
@@ -1065,26 +1046,23 @@ Verified: 2026-05-23
 \item \code{best_ask} (character): Best ask price.
 \item \code{best_ask_size} (character): Size at best ask.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-market <- KucoinMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{market <- KucoinMarketData$new()
 ticker <- market$get_ticker("BTC-USDT")
 spread <- as.numeric(ticker$best_ask) - as.numeric(ticker$best_bid)
 print(paste("Spread:", spread))
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarketData-get_all_tickers"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarketData-get_all_tickers}{}}}
-\subsection{Method \code{get_all_tickers()}}{
-Get All Tickers
+\subsection{\code{KucoinMarketData$get_all_tickers()}}{
+  Get All Tickers
 
 Retrieves ticker data for all trading pairs in a single request.
 Snapshots are captured every 2 seconds on the server side.
@@ -1154,12 +1132,13 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarketData$get_all_tickers()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarketData$get_all_tickers()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{symbol} (character): Trading pair.
 \item \code{symbol_name} (character): Display name.
@@ -1179,28 +1158,25 @@ Verified: 2026-05-23
 \item \code{maker_fee_rate} (character): Maker fee rate.
 \item \code{time} (POSIXct): Snapshot datetime (coerced from epoch milliseconds).
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-market <- KucoinMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{market <- KucoinMarketData$new()
 all_tickers <- market$get_all_tickers()
 # Top 10 by 24h volume
 all_tickers[, vol_value := as.numeric(vol_value)]
 top10 <- all_tickers[order(-vol_value)][1:10]
 print(top10[, .(symbol, vol_value, change_rate)])
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarketData-get_trade_history"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarketData-get_trade_history}{}}}
-\subsection{Method \code{get_trade_history()}}{
-Get Trade History
+\subsection{\code{KucoinMarketData$get_trade_history()}}{
+  Get Trade History
 
 Retrieves the most recent 100 trades for a symbol. Each trade includes
 the price, size, side (buy/sell), and nanosecond-precision timestamp.
@@ -1255,19 +1231,20 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarketData$get_trade_history(symbol)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; trading symbol (e.g., \code{"BTC-USDT"}).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarketData$get_trade_history(symbol)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; trading symbol (e.g., \code{"BTC-USDT"}).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{sequence} (character): Trade sequence number.
 \item \code{price} (character): Trade price.
@@ -1275,28 +1252,25 @@ Verified: 2026-05-23
 \item \code{side} (character): Trade direction (\code{"buy"} or \code{"sell"}).
 \item \code{time} (POSIXct): Trade datetime (coerced from nanosecond timestamp).
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-market <- KucoinMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{market <- KucoinMarketData$new()
 trades <- market$get_trade_history("BTC-USDT")
 # Buy/sell ratio
 buys <- trades[side == "buy", sum(as.numeric(size))]
 sells <- trades[side == "sell", sum(as.numeric(size))]
 print(paste("Buy/Sell ratio:", round(buys / sells, 3)))
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarketData-get_part_orderbook"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarketData-get_part_orderbook}{}}}
-\subsection{Method \code{get_part_orderbook()}}{
-Get Partial Orderbook
+\subsection{\code{KucoinMarketData$get_part_orderbook()}}{
+  Get Partial Orderbook
 
 Retrieves a partial order book snapshot with either 20 or 100 levels of
 depth on each side (bids and asks). Public endpoint, no authentication required.
@@ -1349,21 +1323,21 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarketData$get_part_orderbook(symbol, size = 20)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; trading symbol (e.g., \code{"BTC-USDT"}).}
-
-\item{\code{size}}{Integer; depth levels: \code{20} or \code{100} (default \code{20}).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) in long format with columns:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarketData$get_part_orderbook(symbol, size = 20)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; trading symbol (e.g., \code{"BTC-USDT"}).}
+      \item{\code{size}}{Integer; depth levels: \code{20} or \code{100} (default \code{20}).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) in long format with columns:
 \itemize{
 \item \code{time} (POSIXct): Server timestamp (coerced from epoch milliseconds).
 \item \code{sequence} (character): Order book sequence number.
@@ -1373,27 +1347,24 @@ Verified: 2026-05-23
 \item \code{price} (numeric): Price level.
 \item \code{size} (numeric): Size at that price.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-market <- KucoinMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{market <- KucoinMarketData$new()
 ob <- market$get_part_orderbook("BTC-USDT", size = 20)
 best_bid <- ob[side == "bid" & level == 1L]
 best_ask <- ob[side == "ask" & level == 1L]
 print(paste("Best bid:", best_bid$price, "Best ask:", best_ask$price))
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarketData-get_full_orderbook"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarketData-get_full_orderbook}{}}}
-\subsection{Method \code{get_full_orderbook()}}{
-Get Full Orderbook
+\subsection{\code{KucoinMarketData$get_full_orderbook()}}{
+  Get Full Orderbook
 
 Retrieves the complete order book for a symbol with all price levels.
 \strong{Requires authentication} (API key with Spot trading permissions).
@@ -1449,19 +1420,20 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarketData$get_full_orderbook(symbol)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; trading symbol (e.g., \code{"BTC-USDT"}).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) in long format with columns:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarketData$get_full_orderbook(symbol)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; trading symbol (e.g., \code{"BTC-USDT"}).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) in long format with columns:
 \itemize{
 \item \code{time} (POSIXct): Server timestamp (coerced from epoch milliseconds).
 \item \code{sequence} (character): Order book sequence number.
@@ -1471,27 +1443,24 @@ Verified: 2026-05-23
 \item \code{price} (numeric): Price level.
 \item \code{size} (numeric): Size at that price.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-market <- KucoinMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{market <- KucoinMarketData$new()
 full_ob <- market$get_full_orderbook("BTC-USDT")
 # Total bid depth
 total_bid_volume <- full_ob[side == "bid", sum(size)]
 print(paste("Total bid depth:", total_bid_volume, "BTC"))
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarketData-get_24hr_stats"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarketData-get_24hr_stats}{}}}
-\subsection{Method \code{get_24hr_stats()}}{
-Get 24-Hour Statistics
+\subsection{\code{KucoinMarketData$get_24hr_stats()}}{
+  Get 24-Hour Statistics
 
 Retrieves rolling 24-hour market statistics for a symbol, including
 OHLCV data, change rate, average price, and fee rates.
@@ -1555,19 +1524,20 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarketData$get_24hr_stats(symbol)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; trading symbol (e.g., \code{"BTC-USDT"}).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarketData$get_24hr_stats(symbol)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; trading symbol (e.g., \code{"BTC-USDT"}).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{time} (POSIXct): Server datetime (coerced from epoch milliseconds).
 \item \code{symbol} (character): Trading pair.
@@ -1584,26 +1554,23 @@ Verified: 2026-05-23
 \item \code{taker_fee_rate} (character): Taker fee rate.
 \item \code{maker_fee_rate} (character): Maker fee rate.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-market <- KucoinMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{market <- KucoinMarketData$new()
 stats <- market$get_24hr_stats("BTC-USDT")
 range <- as.numeric(stats$high) - as.numeric(stats$low)
 print(paste("24h range:", range, "USDT"))
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarketData-get_market_list"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarketData-get_market_list}{}}}
-\subsection{Method \code{get_market_list()}}{
-Get Market List
+\subsection{\code{KucoinMarketData$get_market_list()}}{
+  Get Market List
 
 Retrieves the list of all available market segments on KuCoin.
 Market segments group trading pairs by theme (e.g., DeFi, Meme, Layer 1).
@@ -1649,33 +1616,31 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarketData$get_market_list()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with column \code{market} containing segment identifiers.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-market <- KucoinMarketData$new()
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarketData$get_market_list()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with column \code{market} containing segment identifiers.
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{market <- KucoinMarketData$new()
 markets <- market$get_market_list()
 print(markets)
 # Use to filter symbols by market
 defi_symbols <- market$get_all_symbols(market = "DeFi")
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarketData-get_klines"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarketData-get_klines}{}}}
-\subsection{Method \code{get_klines()}}{
-Get Klines (Candlestick Data)
+\subsection{\code{KucoinMarketData$get_klines()}}{
+  Get Klines (Candlestick Data)
 
 Retrieves historical OHLCV candlestick data for a symbol. Automatically
 segments requests to handle KuCoin's 1500-candle-per-request limit,
@@ -1732,34 +1697,32 @@ Each candle is an array: \verb{[timestamp, open, close, high, low, volume, turno
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarketData$get_klines(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarketData$get_klines(
   symbol,
   timeframe = "15min",
   from = NULL,
   to = NULL
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
-
-\item{\code{timeframe}}{Character; candle interval. One of:
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
+      \item{\code{timeframe}}{Character; candle interval. One of:
 \code{"1min"}, \code{"3min"}, \code{"5min"}, \code{"15min"}, \code{"30min"},
 \code{"1hour"}, \code{"2hour"}, \code{"4hour"}, \code{"6hour"}, \code{"8hour"}, \code{"12hour"},
 \code{"1day"}, \code{"1week"}, \code{"1month"}. Default \code{"15min"}.}
-
-\item{\code{from}}{POSIXct or NULL; start time. When both \code{from} and \code{to} are
+      \item{\code{from}}{POSIXct or NULL; start time. When both \code{from} and \code{to} are
 \code{NULL}, the API returns up to 1500 most recent candles.}
-
-\item{\code{to}}{POSIXct or NULL; end time.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+      \item{\code{to}}{POSIXct or NULL; end time.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{datetime} (POSIXct): Candle open datetime.
 \item \code{open} (numeric): Opening price.
@@ -1769,11 +1732,10 @@ Each candle is an array: \verb{[timestamp, open, close, high, low, volume, turno
 \item \code{volume} (numeric): Volume in base currency.
 \item \code{turnover} (numeric): Turnover in quote currency.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-market <- KucoinMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{market <- KucoinMarketData$new()
 
 # Most recent candles (up to 1500)
 klines <- market$get_klines("BTC-USDT")
@@ -1788,17 +1750,15 @@ klines_7d <- market$get_klines(
 )
 print(paste("Fetched", nrow(klines_7d), "candles"))
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarketData-get_server_time"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarketData-get_server_time}{}}}
-\subsection{Method \code{get_server_time()}}{
-Get Server Time
+\subsection{\code{KucoinMarketData$get_server_time()}}{
+  Get Server Time
 
 Retrieves the current server timestamp from KuCoin in milliseconds.
 Useful for detecting clock drift and ensuring HMAC signatures are valid.
@@ -1836,36 +1796,34 @@ Verified: 2026-05-23
 \item \strong{Heartbeat}: Lightweight endpoint suitable for connectivity health checks.
 }
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarketData$get_server_time()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarketData$get_server_time()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{server_time} (numeric): Server timestamp in milliseconds.
 \item \code{datetime} (POSIXct): Converted server datetime.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-market <- KucoinMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{market <- KucoinMarketData$new()
 st <- market$get_server_time()
 drift <- as.numeric(lubridate::now()) * 1000 - st$server_time
 cat("Clock drift:", round(drift), "ms\n")
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarketData-get_service_status"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarketData-get_service_status}{}}}
-\subsection{Method \code{get_service_status()}}{
-Get Service Status
+\subsection{\code{KucoinMarketData$get_service_status()}}{
+  Get Service Status
 
 Retrieves the current operational status of the KuCoin platform.
 Bots should check this before placing orders to avoid silent failures
@@ -1907,37 +1865,35 @@ Verified: 2026-05-23
 \item \strong{Cancel-Only Mode}: Detect \code{"cancelonly"} to only run cancellation logic.
 }
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarketData$get_service_status()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarketData$get_service_status()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{status} (character): \code{"open"}, \code{"close"}, or \code{"cancelonly"}.
 \item \code{msg} (character): Optional remark/message.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-market <- KucoinMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{market <- KucoinMarketData$new()
 status <- market$get_service_status()
 if (status$status != "open") {
   cat("Exchange not operational:", status$msg, "\n")
 }
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarketData-get_fiat_prices"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarketData-get_fiat_prices}{}}}
-\subsection{Method \code{get_fiat_prices()}}{
-Get Fiat Prices
+\subsection{\code{KucoinMarketData$get_fiat_prices()}}{
+  Get Fiat Prices
 
 Retrieves current fiat-equivalent prices for cryptocurrencies.
 Useful for portfolio valuation and P&L reporting in fiat terms.
@@ -1980,55 +1936,54 @@ Verified: 2026-05-23
 \item \strong{PnL Reporting}: Calculate profit/loss in fiat for accounting.
 }
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarketData$get_fiat_prices(base = NULL, currencies = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{base}}{Character or NULL; fiat currency ticker (e.g., \code{"USD"}, \code{"EUR"}). Default \code{"USD"}.}
-
-\item{\code{currencies}}{Character or NULL; comma-separated crypto tickers to convert
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarketData$get_fiat_prices(base = NULL, currencies = NULL)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{base}}{Character or NULL; fiat currency ticker (e.g., \code{"USD"}, \code{"EUR"}). Default \code{"USD"}.}
+      \item{\code{currencies}}{Character or NULL; comma-separated crypto tickers to convert
 (e.g., \code{"BTC,ETH,USDT"}). If NULL, returns all available.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{currency} (character): Cryptocurrency ticker.
 \item \code{price} (character): Fiat price as string.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-market <- KucoinMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{market <- KucoinMarketData$new()
 prices <- market$get_fiat_prices(base = "USD", currencies = "BTC,ETH,USDT")
 print(prices)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarketData-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarketData-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarketData$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{KucoinMarketData$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarketData$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

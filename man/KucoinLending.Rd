@@ -4,11 +4,6 @@
 \alias{KucoinLending}
 \title{KucoinLending: Margin Lending Operations}
 \description{
-KucoinLending: Margin Lending Operations
-
-KucoinLending: Margin Lending Operations
-}
-\details{
 Provides methods for lending assets on the KuCoin margin lending market,
 managing purchase (lend) orders, and redeeming lent assets. Inherits from
 \link{KucoinBase}.
@@ -65,7 +60,7 @@ result <- lending$redeem(currency = "USDT", size = 1000,
 
 
 ## ------------------------------------------------
-## Method `KucoinLending$get_loan_market`
+## Method `KucoinLending$get_loan_market()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -75,7 +70,7 @@ print(market)
 }
 
 ## ------------------------------------------------
-## Method `KucoinLending$get_loan_market_rate`
+## Method `KucoinLending$get_loan_market_rate()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -85,7 +80,7 @@ print(rates)
 }
 
 ## ------------------------------------------------
-## Method `KucoinLending$purchase`
+## Method `KucoinLending$purchase()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -95,7 +90,7 @@ print(order$order_no)
 }
 
 ## ------------------------------------------------
-## Method `KucoinLending$modify_purchase`
+## Method `KucoinLending$modify_purchase()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -108,7 +103,7 @@ lending$modify_purchase(
 }
 
 ## ------------------------------------------------
-## Method `KucoinLending$get_purchase_orders`
+## Method `KucoinLending$get_purchase_orders()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -118,7 +113,7 @@ print(orders)
 }
 
 ## ------------------------------------------------
-## Method `KucoinLending$redeem`
+## Method `KucoinLending$redeem()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -130,7 +125,7 @@ print(result$order_no)
 }
 
 ## ------------------------------------------------
-## Method `KucoinLending$get_redeem_orders`
+## Method `KucoinLending$get_redeem_orders()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -139,34 +134,32 @@ orders <- lending$get_redeem_orders(query = list(currency = "USDT", status = "DO
 print(orders)
 }
 }
-\section{Super class}{
-\code{\link[kucoin:KucoinBase]{kucoin::KucoinBase}} -> \code{KucoinLending}
+\section{Super classes}{
+\code{\link[connectcore:RestClient]{connectcore::RestClient}} -> \code{\link[kucoin:KucoinBase]{KucoinBase}} -> \code{KucoinLending}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-KucoinLending-get_loan_market}{\code{KucoinLending$get_loan_market()}}
-\item \href{#method-KucoinLending-get_loan_market_rate}{\code{KucoinLending$get_loan_market_rate()}}
-\item \href{#method-KucoinLending-purchase}{\code{KucoinLending$purchase()}}
-\item \href{#method-KucoinLending-modify_purchase}{\code{KucoinLending$modify_purchase()}}
-\item \href{#method-KucoinLending-get_purchase_orders}{\code{KucoinLending$get_purchase_orders()}}
-\item \href{#method-KucoinLending-redeem}{\code{KucoinLending$redeem()}}
-\item \href{#method-KucoinLending-get_redeem_orders}{\code{KucoinLending$get_redeem_orders()}}
-\item \href{#method-KucoinLending-clone}{\code{KucoinLending$clone()}}
+  \itemize{
+    \item \href{#method-KucoinLending-get_loan_market}{\code{KucoinLending$get_loan_market()}}
+    \item \href{#method-KucoinLending-get_loan_market_rate}{\code{KucoinLending$get_loan_market_rate()}}
+    \item \href{#method-KucoinLending-purchase}{\code{KucoinLending$purchase()}}
+    \item \href{#method-KucoinLending-modify_purchase}{\code{KucoinLending$modify_purchase()}}
+    \item \href{#method-KucoinLending-get_purchase_orders}{\code{KucoinLending$get_purchase_orders()}}
+    \item \href{#method-KucoinLending-redeem}{\code{KucoinLending$redeem()}}
+    \item \href{#method-KucoinLending-get_redeem_orders}{\code{KucoinLending$get_redeem_orders()}}
+    \item \href{#method-KucoinLending-clone}{\code{KucoinLending$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>kucoin::KucoinBase$initialize()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>KucoinBase$initialize()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinLending-get_loan_market"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinLending-get_loan_market}{}}}
-\subsection{Method \code{get_loan_market()}}{
-Get Loan Market Information
+\subsection{\code{KucoinLending$get_loan_market()}}{
+  Get Loan Market Information
 
 Retrieves information about available lending currencies, including
 minimum/maximum purchase sizes and current market interest rates.
@@ -216,22 +209,23 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinLending$get_loan_market(query = list())}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{query}}{Named list; optional filter. Supported keys:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinLending$get_loan_market(query = list())}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{query}}{Named list; optional filter. Supported keys:
 \itemize{
 \item \code{currency} (character): Filter by currency (e.g., \code{"USDT"}).
 }}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
 with \strong{one row per lending currency} and columns:
 \itemize{
 \item \code{currency} (character): Currency code (e.g. \code{"USDT"}).
@@ -248,25 +242,22 @@ with \strong{one row per lending currency} and columns:
 }
 
 Empty response yields an empty \code{data.table}.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-lending <- KucoinLending$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{lending <- KucoinLending$new()
 market <- lending$get_loan_market(query = list(currency = "USDT"))
 print(market)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinLending-get_loan_market_rate"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinLending-get_loan_market_rate}{}}}
-\subsection{Method \code{get_loan_market_rate()}}{
-Get Loan Market Interest Rate History
+\subsection{\code{KucoinLending$get_loan_market_rate()}}{
+  Get Loan Market Interest Rate History
 
 Retrieves the market interest rate history for a currency over the
 past 7 days.
@@ -307,19 +298,20 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinLending$get_loan_market_rate(currency)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{currency}}{Character; the currency to query (e.g., \code{"USDT"}).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinLending$get_loan_market_rate(currency)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{currency}}{Character; the currency to query (e.g., \code{"USDT"}).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
 with \strong{one row per observation} and columns:
 \itemize{
 \item \code{time} (character): Timestamp string (YYYYMMDDHHmm format).
@@ -327,25 +319,22 @@ with \strong{one row per observation} and columns:
 }
 
 Empty response yields an empty \code{data.table}.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-lending <- KucoinLending$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{lending <- KucoinLending$new()
 rates <- lending$get_loan_market_rate(currency = "USDT")
 print(rates)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinLending-purchase"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinLending-purchase}{}}}
-\subsection{Method \code{purchase()}}{
-Purchase (Lend) Assets
+\subsection{\code{KucoinLending$purchase()}}{
+  Purchase (Lend) Assets
 
 Lends a specified amount of currency to the margin lending pool at a
 given interest rate to earn passive income.
@@ -394,45 +383,41 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinLending$purchase(currency, size, interestRate)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{currency}}{Character; the currency to lend (e.g., \code{"USDT"}).}
-
-\item{\code{size}}{Numeric; the amount to lend.}
-
-\item{\code{interestRate}}{Numeric; the interest rate (e.g., \code{0.05} for 5\%).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with column:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinLending$purchase(currency, size, interestRate)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{currency}}{Character; the currency to lend (e.g., \code{"USDT"}).}
+      \item{\code{size}}{Numeric; the amount to lend.}
+      \item{\code{interestRate}}{Numeric; the interest rate (e.g., \code{0.05} for 5\%).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with column:
 \itemize{
 \item \code{order_no} (character): Lending order number.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-lending <- KucoinLending$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{lending <- KucoinLending$new()
 order <- lending$purchase(currency = "USDT", size = 1000, interestRate = 0.05)
 print(order$order_no)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinLending-modify_purchase"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinLending-modify_purchase}{}}}
-\subsection{Method \code{modify_purchase()}}{
-Modify Purchase Interest Rate
+\subsection{\code{KucoinLending$modify_purchase()}}{
+  Modify Purchase Interest Rate
 
 Updates the interest rate on an existing lending order. Rate changes
 take effect at the start of the next hour.
@@ -479,51 +464,47 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinLending$modify_purchase(currency, purchaseOrderNo, interestRate)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{currency}}{Character; the currency of the lending order.}
-
-\item{\code{purchaseOrderNo}}{Character; the order number to modify.}
-
-\item{\code{interestRate}}{Numeric; the new interest rate.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if \code{async = TRUE}), single row with columns:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinLending$modify_purchase(currency, purchaseOrderNo, interestRate)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{currency}}{Character; the currency of the lending order.}
+      \item{\code{purchaseOrderNo}}{Character; the order number to modify.}
+      \item{\code{interestRate}}{Numeric; the new interest rate.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if \code{async = TRUE}), single row with columns:
 \itemize{
 \item \code{currency} (character): The lending currency.
 \item \code{purchase_order_no} (character): The modified order number.
 \item \code{interest_rate} (numeric): The new interest rate.
 \item \code{status} (character): \code{"success"}.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-lending <- KucoinLending$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{lending <- KucoinLending$new()
 lending$modify_purchase(
   currency = "USDT",
   purchaseOrderNo = "abc123",
   interestRate = 0.06
 )
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinLending-get_purchase_orders"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinLending-get_purchase_orders}{}}}
-\subsection{Method \code{get_purchase_orders()}}{
-Get Purchase Orders
+\subsection{\code{KucoinLending$get_purchase_orders()}}{
+  Get Purchase Orders
 
 Retrieves lending purchase order history with optional filters.
 \subsection{API Endpoint}{
@@ -575,14 +556,15 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinLending$get_purchase_orders(query = list())}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{query}}{Named list; filters. Supported keys:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinLending$get_purchase_orders(query = list())}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{query}}{Named list; filters. Supported keys:
 \itemize{
 \item \code{status} (character): \strong{Required.} Order status (e.g., \code{"DONE"}, \code{"PENDING"}).
 \item \code{currency} (character): Currency filter (e.g., \code{"USDT"}).
@@ -590,11 +572,11 @@ Verified: 2026-05-23
 \item \code{currentPage} (integer): Page number.
 \item \code{pageSize} (integer): Items per page.
 }}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
 with \strong{one row per purchase order} and columns:
 \itemize{
 \item \code{currency} (character): Lent currency.
@@ -608,25 +590,22 @@ with \strong{one row per purchase order} and columns:
 }
 
 Empty response yields an empty \code{data.table}.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-lending <- KucoinLending$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{lending <- KucoinLending$new()
 orders <- lending$get_purchase_orders(query = list(currency = "USDT", status = "DONE"))
 print(orders)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinLending-redeem"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinLending-redeem}{}}}
-\subsection{Method \code{redeem()}}{
-Redeem Lent Assets
+\subsection{\code{KucoinLending$redeem()}}{
+  Redeem Lent Assets
 
 Redeems (withdraws) lent assets from the lending pool. The redemption
 is processed against a specific purchase order.
@@ -675,47 +654,43 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinLending$redeem(currency, size, purchaseOrderNo)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{currency}}{Character; the currency to redeem (e.g., \code{"USDT"}).}
-
-\item{\code{size}}{Numeric; the amount to redeem.}
-
-\item{\code{purchaseOrderNo}}{Character; the purchase order to redeem from.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with column:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinLending$redeem(currency, size, purchaseOrderNo)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{currency}}{Character; the currency to redeem (e.g., \code{"USDT"}).}
+      \item{\code{size}}{Numeric; the amount to redeem.}
+      \item{\code{purchaseOrderNo}}{Character; the purchase order to redeem from.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with column:
 \itemize{
 \item \code{order_no} (character): Redemption order number.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-lending <- KucoinLending$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{lending <- KucoinLending$new()
 result <- lending$redeem(
   currency = "USDT", size = 500, purchaseOrderNo = "abc123"
 )
 print(result$order_no)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinLending-get_redeem_orders"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinLending-get_redeem_orders}{}}}
-\subsection{Method \code{get_redeem_orders()}}{
-Get Redeem Orders
+\subsection{\code{KucoinLending$get_redeem_orders()}}{
+  Get Redeem Orders
 
 Retrieves redemption order history with optional filters.
 \subsection{API Endpoint}{
@@ -766,14 +741,15 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinLending$get_redeem_orders(query = list())}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{query}}{Named list; filters. Supported keys:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinLending$get_redeem_orders(query = list())}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{query}}{Named list; filters. Supported keys:
 \itemize{
 \item \code{status} (character): \strong{Required.} Order status (e.g., \code{"DONE"}, \code{"PENDING"}).
 \item \code{currency} (character): Currency filter (e.g., \code{"USDT"}).
@@ -781,11 +757,11 @@ Verified: 2026-05-23
 \item \code{currentPage} (integer): Page number.
 \item \code{pageSize} (integer): Items per page.
 }}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
 with \strong{one row per redemption order} and columns:
 \itemize{
 \item \code{currency} (character): Redeemed currency.
@@ -798,35 +774,34 @@ with \strong{one row per redemption order} and columns:
 }
 
 Empty response yields an empty \code{data.table}.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-lending <- KucoinLending$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{lending <- KucoinLending$new()
 orders <- lending$get_redeem_orders(query = list(currency = "USDT", status = "DONE"))
 print(orders)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinLending-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinLending-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinLending$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{KucoinLending$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinLending$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

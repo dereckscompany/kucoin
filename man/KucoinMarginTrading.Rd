@@ -4,11 +4,6 @@
 \alias{KucoinMarginTrading}
 \title{KucoinMarginTrading: Margin Order and Debit Management}
 \description{
-KucoinMarginTrading: Margin Order and Debit Management
-
-KucoinMarginTrading: Margin Order and Debit Management
-}
-\details{
 Provides intent-based methods for margin trading on KuCoin. Instead of
 raw \code{side = "buy"} / \code{side = "sell"} parameters (which are ambiguous in a
 margin context), this class exposes four clear actions:
@@ -102,7 +97,7 @@ print(rates)
 
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$open_short`
+## Method `KucoinMarginTrading$open_short()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -122,7 +117,7 @@ margin$open_short(symbol = "BTC-USDT", size = 0.001, dry_run = TRUE)
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$close_short`
+## Method `KucoinMarginTrading$close_short()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -132,7 +127,7 @@ print(order)
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$open_long`
+## Method `KucoinMarginTrading$open_long()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -149,7 +144,7 @@ order <- margin$open_long(
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$close_long`
+## Method `KucoinMarginTrading$close_long()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -159,7 +154,7 @@ print(order)
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$borrow`
+## Method `KucoinMarginTrading$borrow()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -177,7 +172,7 @@ loan <- margin$borrow(
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$repay`
+## Method `KucoinMarginTrading$repay()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -187,7 +182,7 @@ print(result)
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$get_borrow_history`
+## Method `KucoinMarginTrading$get_borrow_history()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -197,7 +192,7 @@ print(history)
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$get_repay_history`
+## Method `KucoinMarginTrading$get_repay_history()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -207,7 +202,7 @@ print(history)
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$get_interest_history`
+## Method `KucoinMarginTrading$get_interest_history()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -217,7 +212,7 @@ print(interest)
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$get_borrow_rate`
+## Method `KucoinMarginTrading$get_borrow_rate()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -227,7 +222,7 @@ print(rates)
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$modify_leverage`
+## Method `KucoinMarginTrading$modify_leverage()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -235,38 +230,36 @@ margin <- KucoinMarginTrading$new()
 margin$modify_leverage(leverage = 5)
 }
 }
-\section{Super class}{
-\code{\link[kucoin:KucoinBase]{kucoin::KucoinBase}} -> \code{KucoinMarginTrading}
+\section{Super classes}{
+\code{\link[connectcore:RestClient]{connectcore::RestClient}} -> \code{\link[kucoin:KucoinBase]{KucoinBase}} -> \code{KucoinMarginTrading}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-KucoinMarginTrading-open_short}{\code{KucoinMarginTrading$open_short()}}
-\item \href{#method-KucoinMarginTrading-close_short}{\code{KucoinMarginTrading$close_short()}}
-\item \href{#method-KucoinMarginTrading-open_long}{\code{KucoinMarginTrading$open_long()}}
-\item \href{#method-KucoinMarginTrading-close_long}{\code{KucoinMarginTrading$close_long()}}
-\item \href{#method-KucoinMarginTrading-borrow}{\code{KucoinMarginTrading$borrow()}}
-\item \href{#method-KucoinMarginTrading-repay}{\code{KucoinMarginTrading$repay()}}
-\item \href{#method-KucoinMarginTrading-get_borrow_history}{\code{KucoinMarginTrading$get_borrow_history()}}
-\item \href{#method-KucoinMarginTrading-get_repay_history}{\code{KucoinMarginTrading$get_repay_history()}}
-\item \href{#method-KucoinMarginTrading-get_interest_history}{\code{KucoinMarginTrading$get_interest_history()}}
-\item \href{#method-KucoinMarginTrading-get_borrow_rate}{\code{KucoinMarginTrading$get_borrow_rate()}}
-\item \href{#method-KucoinMarginTrading-modify_leverage}{\code{KucoinMarginTrading$modify_leverage()}}
-\item \href{#method-KucoinMarginTrading-clone}{\code{KucoinMarginTrading$clone()}}
+  \itemize{
+    \item \href{#method-KucoinMarginTrading-open_short}{\code{KucoinMarginTrading$open_short()}}
+    \item \href{#method-KucoinMarginTrading-close_short}{\code{KucoinMarginTrading$close_short()}}
+    \item \href{#method-KucoinMarginTrading-open_long}{\code{KucoinMarginTrading$open_long()}}
+    \item \href{#method-KucoinMarginTrading-close_long}{\code{KucoinMarginTrading$close_long()}}
+    \item \href{#method-KucoinMarginTrading-borrow}{\code{KucoinMarginTrading$borrow()}}
+    \item \href{#method-KucoinMarginTrading-repay}{\code{KucoinMarginTrading$repay()}}
+    \item \href{#method-KucoinMarginTrading-get_borrow_history}{\code{KucoinMarginTrading$get_borrow_history()}}
+    \item \href{#method-KucoinMarginTrading-get_repay_history}{\code{KucoinMarginTrading$get_repay_history()}}
+    \item \href{#method-KucoinMarginTrading-get_interest_history}{\code{KucoinMarginTrading$get_interest_history()}}
+    \item \href{#method-KucoinMarginTrading-get_borrow_rate}{\code{KucoinMarginTrading$get_borrow_rate()}}
+    \item \href{#method-KucoinMarginTrading-modify_leverage}{\code{KucoinMarginTrading$modify_leverage()}}
+    \item \href{#method-KucoinMarginTrading-clone}{\code{KucoinMarginTrading$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>kucoin::KucoinBase$initialize()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>KucoinBase$initialize()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarginTrading-open_short"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarginTrading-open_short}{}}}
-\subsection{Method \code{open_short()}}{
-Open a Short Position (Borrow and Sell)
+\subsection{\code{KucoinMarginTrading$open_short()}}{
+  Open a Short Position (Borrow and Sell)
 
 Borrows the base asset and sells it immediately. This is how you bet
 that an asset's price will go \strong{down}. The exchange automatically
@@ -332,8 +325,9 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarginTrading$open_short(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarginTrading$open_short(
   symbol,
   size = NULL,
   funds = NULL,
@@ -350,65 +344,49 @@ Verified: 2026-05-23
   iceberg = NULL,
   visibleSize = NULL,
   dry_run = FALSE
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; trading pair to short (e.g., \code{"BTC-USDT"}).
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; trading pair to short (e.g., \code{"BTC-USDT"}).
 You will borrow and sell the base currency (BTC in this example).}
-
-\item{\code{size}}{Numeric or NULL; quantity of the base asset to short.
+      \item{\code{size}}{Numeric or NULL; quantity of the base asset to short.
 For market orders, specify either \code{size} (base qty) or \code{funds} (quote qty), not both.}
-
-\item{\code{funds}}{Numeric or NULL; amount in quote currency to receive from the short sale.
+      \item{\code{funds}}{Numeric or NULL; amount in quote currency to receive from the short sale.
 Only for market orders; mutually exclusive with \code{size}.}
-
-\item{\code{type}}{Character; \code{"limit"} or \code{"market"} (default \code{"market"}).}
-
-\item{\code{price}}{Numeric or NULL; required for limit orders. The price at which to sell.}
-
-\item{\code{isIsolated}}{Logical; \code{TRUE} for isolated margin (risk limited to this pair),
+      \item{\code{type}}{Character; \code{"limit"} or \code{"market"} (default \code{"market"}).}
+      \item{\code{price}}{Numeric or NULL; required for limit orders. The price at which to sell.}
+      \item{\code{isIsolated}}{Logical; \code{TRUE} for isolated margin (risk limited to this pair),
 \code{FALSE} (default) for cross margin (shared collateral pool).}
-
-\item{\code{clientOid}}{Character or NULL; your own unique order ID (max 40 chars).
+      \item{\code{clientOid}}{Character or NULL; your own unique order ID (max 40 chars).
 Auto-generated if not provided (required by KuCoin for margin orders).}
-
-\item{\code{stp}}{Character or NULL; self-trade prevention: \code{"CN"}, \code{"CO"}, \code{"CB"}, \code{"DC"}.}
-
-\item{\code{remark}}{Character or NULL; order remark (max 20 ASCII chars).}
-
-\item{\code{timeInForce}}{Character or NULL; \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
-
-\item{\code{cancelAfter}}{Numeric or NULL; auto-cancel seconds (requires \code{timeInForce = "GTT"}).}
-
-\item{\code{postOnly}}{Logical or NULL; if TRUE, order rejected if it would match immediately.}
-
-\item{\code{hidden}}{Logical or NULL; if TRUE, order hidden from order book.}
-
-\item{\code{iceberg}}{Logical or NULL; if TRUE, only \code{visibleSize} is shown.}
-
-\item{\code{visibleSize}}{Numeric or NULL; visible quantity for iceberg orders.}
-
-\item{\code{dry_run}}{Logical; if \code{TRUE}, validates the order without actually placing it.
+      \item{\code{stp}}{Character or NULL; self-trade prevention: \code{"CN"}, \code{"CO"}, \code{"CB"}, \code{"DC"}.}
+      \item{\code{remark}}{Character or NULL; order remark (max 20 ASCII chars).}
+      \item{\code{timeInForce}}{Character or NULL; \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
+      \item{\code{cancelAfter}}{Numeric or NULL; auto-cancel seconds (requires \code{timeInForce = "GTT"}).}
+      \item{\code{postOnly}}{Logical or NULL; if TRUE, order rejected if it would match immediately.}
+      \item{\code{hidden}}{Logical or NULL; if TRUE, order hidden from order book.}
+      \item{\code{iceberg}}{Logical or NULL; if TRUE, only \code{visibleSize} is shown.}
+      \item{\code{visibleSize}}{Numeric or NULL; visible quantity for iceberg orders.}
+      \item{\code{dry_run}}{Logical; if \code{TRUE}, validates the order without actually placing it.
 Useful for testing your parameters. Default \code{FALSE}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{order_id} (character): KuCoin-assigned order identifier.
 \item \code{client_oid} (character): Client-provided order identifier.
 \item \code{borrow_size} (character): Amount borrowed.
 \item \code{loan_apply_id} (character): Loan application ID.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-margin <- KucoinMarginTrading$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{margin <- KucoinMarginTrading$new()
 
 # Market short: sell 0.001 BTC you don't own
 order <- margin$open_short(symbol = "BTC-USDT", size = 0.001)
@@ -422,17 +400,15 @@ order <- margin$open_short(
 # Dry run (test without placing)
 margin$open_short(symbol = "BTC-USDT", size = 0.001, dry_run = TRUE)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarginTrading-close_short"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarginTrading-close_short}{}}}
-\subsection{Method \code{close_short()}}{
-Close a Short Position (Buy Back and Repay)
+\subsection{\code{KucoinMarginTrading$close_short()}}{
+  Close a Short Position (Buy Back and Repay)
 
 Buys back the base asset and automatically repays the loan. This
 closes a short position opened with \code{open_short()}.
@@ -493,8 +469,9 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarginTrading$close_short(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarginTrading$close_short(
   symbol,
   size = NULL,
   funds = NULL,
@@ -511,74 +488,56 @@ Verified: 2026-05-23
   iceberg = NULL,
   visibleSize = NULL,
   dry_run = FALSE
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; trading pair to close (must match the pair you shorted).}
-
-\item{\code{size}}{Numeric or NULL; quantity of the base asset to buy back.
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; trading pair to close (must match the pair you shorted).}
+      \item{\code{size}}{Numeric or NULL; quantity of the base asset to buy back.
 Should match the size you shorted. For market orders, specify either
 \code{size} or \code{funds}, not both.}
-
-\item{\code{funds}}{Numeric or NULL; amount in quote currency to spend buying back.
+      \item{\code{funds}}{Numeric or NULL; amount in quote currency to spend buying back.
 Only for market orders; mutually exclusive with \code{size}.}
-
-\item{\code{type}}{Character; \code{"limit"} or \code{"market"} (default \code{"market"}).}
-
-\item{\code{price}}{Numeric or NULL; required for limit orders.}
-
-\item{\code{isIsolated}}{Logical; must match the margin mode used in \code{open_short()}.}
-
-\item{\code{clientOid}}{Character or NULL; your own unique order ID.}
-
-\item{\code{stp}}{Character or NULL; self-trade prevention.}
-
-\item{\code{remark}}{Character or NULL; order remark.}
-
-\item{\code{timeInForce}}{Character or NULL; \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
-
-\item{\code{cancelAfter}}{Numeric or NULL; auto-cancel seconds.}
-
-\item{\code{postOnly}}{Logical or NULL; passive order flag.}
-
-\item{\code{hidden}}{Logical or NULL; hidden order flag.}
-
-\item{\code{iceberg}}{Logical or NULL; iceberg order flag.}
-
-\item{\code{visibleSize}}{Numeric or NULL; visible quantity for iceberg.}
-
-\item{\code{dry_run}}{Logical; if \code{TRUE}, validates without placing. Default \code{FALSE}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+      \item{\code{type}}{Character; \code{"limit"} or \code{"market"} (default \code{"market"}).}
+      \item{\code{price}}{Numeric or NULL; required for limit orders.}
+      \item{\code{isIsolated}}{Logical; must match the margin mode used in \code{open_short()}.}
+      \item{\code{clientOid}}{Character or NULL; your own unique order ID.}
+      \item{\code{stp}}{Character or NULL; self-trade prevention.}
+      \item{\code{remark}}{Character or NULL; order remark.}
+      \item{\code{timeInForce}}{Character or NULL; \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
+      \item{\code{cancelAfter}}{Numeric or NULL; auto-cancel seconds.}
+      \item{\code{postOnly}}{Logical or NULL; passive order flag.}
+      \item{\code{hidden}}{Logical or NULL; hidden order flag.}
+      \item{\code{iceberg}}{Logical or NULL; iceberg order flag.}
+      \item{\code{visibleSize}}{Numeric or NULL; visible quantity for iceberg.}
+      \item{\code{dry_run}}{Logical; if \code{TRUE}, validates without placing. Default \code{FALSE}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{order_id} (character): KuCoin-assigned order identifier.
 \item \code{client_oid} (character): Client-provided order identifier (NA if not supplied).
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-margin <- KucoinMarginTrading$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{margin <- KucoinMarginTrading$new()
 order <- margin$close_short(symbol = "BTC-USDT", size = 0.001)
 print(order)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarginTrading-open_long"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarginTrading-open_long}{}}}
-\subsection{Method \code{open_long()}}{
-Open a Leveraged Long Position (Borrow and Buy)
+\subsection{\code{KucoinMarginTrading$open_long()}}{
+  Open a Leveraged Long Position (Borrow and Buy)
 
 Borrows quote currency (e.g. USDT) and uses it to buy the base asset
 (e.g. BTC). This is how you take a leveraged bet that an asset's
@@ -644,8 +603,9 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarginTrading$open_long(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarginTrading$open_long(
   symbol,
   size = NULL,
   funds = NULL,
@@ -662,61 +622,45 @@ Verified: 2026-05-23
   iceberg = NULL,
   visibleSize = NULL,
   dry_run = FALSE
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; trading pair to go long on (e.g., \code{"BTC-USDT"}).
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; trading pair to go long on (e.g., \code{"BTC-USDT"}).
 You will borrow quote currency (USDT) and buy the base (BTC).}
-
-\item{\code{size}}{Numeric or NULL; quantity of the base asset to buy.}
-
-\item{\code{funds}}{Numeric or NULL; amount in quote currency to spend.
+      \item{\code{size}}{Numeric or NULL; quantity of the base asset to buy.}
+      \item{\code{funds}}{Numeric or NULL; amount in quote currency to spend.
 Only for market orders; mutually exclusive with \code{size}.}
-
-\item{\code{type}}{Character; \code{"limit"} or \code{"market"} (default \code{"market"}).}
-
-\item{\code{price}}{Numeric or NULL; required for limit orders.}
-
-\item{\code{isIsolated}}{Logical; \code{TRUE} for isolated margin, \code{FALSE} (default) for cross.}
-
-\item{\code{clientOid}}{Character or NULL; your own unique order ID.}
-
-\item{\code{stp}}{Character or NULL; self-trade prevention.}
-
-\item{\code{remark}}{Character or NULL; order remark.}
-
-\item{\code{timeInForce}}{Character or NULL; \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
-
-\item{\code{cancelAfter}}{Numeric or NULL; auto-cancel seconds.}
-
-\item{\code{postOnly}}{Logical or NULL; passive order flag.}
-
-\item{\code{hidden}}{Logical or NULL; hidden order flag.}
-
-\item{\code{iceberg}}{Logical or NULL; iceberg order flag.}
-
-\item{\code{visibleSize}}{Numeric or NULL; visible quantity for iceberg.}
-
-\item{\code{dry_run}}{Logical; if \code{TRUE}, validates without placing. Default \code{FALSE}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+      \item{\code{type}}{Character; \code{"limit"} or \code{"market"} (default \code{"market"}).}
+      \item{\code{price}}{Numeric or NULL; required for limit orders.}
+      \item{\code{isIsolated}}{Logical; \code{TRUE} for isolated margin, \code{FALSE} (default) for cross.}
+      \item{\code{clientOid}}{Character or NULL; your own unique order ID.}
+      \item{\code{stp}}{Character or NULL; self-trade prevention.}
+      \item{\code{remark}}{Character or NULL; order remark.}
+      \item{\code{timeInForce}}{Character or NULL; \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
+      \item{\code{cancelAfter}}{Numeric or NULL; auto-cancel seconds.}
+      \item{\code{postOnly}}{Logical or NULL; passive order flag.}
+      \item{\code{hidden}}{Logical or NULL; hidden order flag.}
+      \item{\code{iceberg}}{Logical or NULL; iceberg order flag.}
+      \item{\code{visibleSize}}{Numeric or NULL; visible quantity for iceberg.}
+      \item{\code{dry_run}}{Logical; if \code{TRUE}, validates without placing. Default \code{FALSE}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{order_id} (character): KuCoin-assigned order identifier.
 \item \code{client_oid} (character): Client-provided order identifier.
 \item \code{borrow_size} (character): Amount borrowed.
 \item \code{loan_apply_id} (character): Loan application ID.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-margin <- KucoinMarginTrading$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{margin <- KucoinMarginTrading$new()
 
 # Market long: buy 0.001 BTC with borrowed USDT
 order <- margin$open_long(symbol = "BTC-USDT", size = 0.001)
@@ -727,17 +671,15 @@ order <- margin$open_long(
   price = 50000, size = 0.001
 )
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarginTrading-close_long"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarginTrading-close_long}{}}}
-\subsection{Method \code{close_long()}}{
-Close a Leveraged Long Position (Sell and Repay)
+\subsection{\code{KucoinMarginTrading$close_long()}}{
+  Close a Leveraged Long Position (Sell and Repay)
 
 Sells the base asset and automatically repays the borrowed quote
 currency. This closes a long position opened with \code{open_long()}.
@@ -798,8 +740,9 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarginTrading$close_long(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarginTrading$close_long(
   symbol,
   size = NULL,
   funds = NULL,
@@ -816,72 +759,54 @@ Verified: 2026-05-23
   iceberg = NULL,
   visibleSize = NULL,
   dry_run = FALSE
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; trading pair to close (must match the pair you longed).}
-
-\item{\code{size}}{Numeric or NULL; quantity of the base asset to sell.}
-
-\item{\code{funds}}{Numeric or NULL; amount in quote currency.
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; trading pair to close (must match the pair you longed).}
+      \item{\code{size}}{Numeric or NULL; quantity of the base asset to sell.}
+      \item{\code{funds}}{Numeric or NULL; amount in quote currency.
 Only for market orders; mutually exclusive with \code{size}.}
-
-\item{\code{type}}{Character; \code{"limit"} or \code{"market"} (default \code{"market"}).}
-
-\item{\code{price}}{Numeric or NULL; required for limit orders.}
-
-\item{\code{isIsolated}}{Logical; must match the margin mode used in \code{open_long()}.}
-
-\item{\code{clientOid}}{Character or NULL; your own unique order ID.}
-
-\item{\code{stp}}{Character or NULL; self-trade prevention.}
-
-\item{\code{remark}}{Character or NULL; order remark.}
-
-\item{\code{timeInForce}}{Character or NULL; \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
-
-\item{\code{cancelAfter}}{Numeric or NULL; auto-cancel seconds.}
-
-\item{\code{postOnly}}{Logical or NULL; passive order flag.}
-
-\item{\code{hidden}}{Logical or NULL; hidden order flag.}
-
-\item{\code{iceberg}}{Logical or NULL; iceberg order flag.}
-
-\item{\code{visibleSize}}{Numeric or NULL; visible quantity for iceberg.}
-
-\item{\code{dry_run}}{Logical; if \code{TRUE}, validates without placing. Default \code{FALSE}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+      \item{\code{type}}{Character; \code{"limit"} or \code{"market"} (default \code{"market"}).}
+      \item{\code{price}}{Numeric or NULL; required for limit orders.}
+      \item{\code{isIsolated}}{Logical; must match the margin mode used in \code{open_long()}.}
+      \item{\code{clientOid}}{Character or NULL; your own unique order ID.}
+      \item{\code{stp}}{Character or NULL; self-trade prevention.}
+      \item{\code{remark}}{Character or NULL; order remark.}
+      \item{\code{timeInForce}}{Character or NULL; \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
+      \item{\code{cancelAfter}}{Numeric or NULL; auto-cancel seconds.}
+      \item{\code{postOnly}}{Logical or NULL; passive order flag.}
+      \item{\code{hidden}}{Logical or NULL; hidden order flag.}
+      \item{\code{iceberg}}{Logical or NULL; iceberg order flag.}
+      \item{\code{visibleSize}}{Numeric or NULL; visible quantity for iceberg.}
+      \item{\code{dry_run}}{Logical; if \code{TRUE}, validates without placing. Default \code{FALSE}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{order_id} (character): KuCoin-assigned order identifier.
 \item \code{client_oid} (character): Client-provided order identifier (NA if not supplied).
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-margin <- KucoinMarginTrading$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{margin <- KucoinMarginTrading$new()
 order <- margin$close_long(symbol = "BTC-USDT", size = 0.001)
 print(order)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarginTrading-borrow"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarginTrading-borrow}{}}}
-\subsection{Method \code{borrow()}}{
-Borrow Assets for Margin Trading
+\subsection{\code{KucoinMarginTrading$borrow()}}{
+  Borrow Assets for Margin Trading
 
 Manually borrows a specified amount of a currency for margin trading.
 You typically don't need this if you use \code{open_short()} or
@@ -944,46 +869,41 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarginTrading$borrow(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarginTrading$borrow(
   currency,
   size,
   timeInForce = "IOC",
   isIsolated = FALSE,
   symbol = NULL,
   isHf = FALSE
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{currency}}{Character; the currency to borrow (e.g., \code{"USDT"}, \code{"BTC"}).}
-
-\item{\code{size}}{Numeric; the amount to borrow.}
-
-\item{\code{timeInForce}}{Character; order time-in-force policy (default \code{"IOC"}).
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{currency}}{Character; the currency to borrow (e.g., \code{"USDT"}, \code{"BTC"}).}
+      \item{\code{size}}{Numeric; the amount to borrow.}
+      \item{\code{timeInForce}}{Character; order time-in-force policy (default \code{"IOC"}).
 Valid values: \code{"IOC"} (immediate-or-cancel), \code{"FOK"} (fill-or-kill).}
-
-\item{\code{isIsolated}}{Logical; \code{TRUE} for isolated margin, \code{FALSE} (default) for cross.}
-
-\item{\code{symbol}}{Character or NULL; required when \code{isIsolated = TRUE}. Trading pair (e.g., \code{"BTC-USDT"}).}
-
-\item{\code{isHf}}{Logical; \code{TRUE} for high-frequency trading mode, \code{FALSE} (default).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+      \item{\code{isIsolated}}{Logical; \code{TRUE} for isolated margin, \code{FALSE} (default) for cross.}
+      \item{\code{symbol}}{Character or NULL; required when \code{isIsolated = TRUE}. Trading pair (e.g., \code{"BTC-USDT"}).}
+      \item{\code{isHf}}{Logical; \code{TRUE} for high-frequency trading mode, \code{FALSE} (default).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{order_no} (character): Borrow order number.
 \item \code{actual_size} (character): Amount actually borrowed.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-margin <- KucoinMarginTrading$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{margin <- KucoinMarginTrading$new()
 
 # Cross margin borrow
 loan <- margin$borrow(currency = "USDT", size = 100)
@@ -995,17 +915,15 @@ loan <- margin$borrow(
   isIsolated = TRUE, symbol = "BTC-USDT"
 )
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarginTrading-repay"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarginTrading-repay}{}}}
-\subsection{Method \code{repay()}}{
-Repay Borrowed Assets
+\subsection{\code{KucoinMarginTrading$repay()}}{
+  Repay Borrowed Assets
 
 Manually repays a specified amount of a borrowed currency. You
 typically don't need this if you use \code{close_short()} or
@@ -1057,46 +975,43 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarginTrading$repay(currency, size)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{currency}}{Character; the currency to repay (e.g., \code{"USDT"}, \code{"BTC"}).}
-
-\item{\code{size}}{Numeric; the amount to repay.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarginTrading$repay(currency, size)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{currency}}{Character; the currency to repay (e.g., \code{"USDT"}, \code{"BTC"}).}
+      \item{\code{size}}{Numeric; the amount to repay.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
 with a single row and columns:
 \itemize{
 \item \code{timestamp} (POSIXct): Server-side acceptance time of the repay.
 \item \code{order_no} (character): Repayment order number.
 \item \code{actual_size} (character): Amount actually repaid.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-margin <- KucoinMarginTrading$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{margin <- KucoinMarginTrading$new()
 result <- margin$repay(currency = "USDT", size = 100)
 print(result)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarginTrading-get_borrow_history"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarginTrading-get_borrow_history}{}}}
-\subsection{Method \code{get_borrow_history()}}{
-Get Borrow History
+\subsection{\code{KucoinMarginTrading$get_borrow_history()}}{
+  Get Borrow History
 
 Retrieves paginated borrow history records.
 \subsection{API Endpoint}{
@@ -1147,14 +1062,15 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarginTrading$get_borrow_history(query = list())}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{query}}{Named list; optional filter parameters. Supported keys:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarginTrading$get_borrow_history(query = list())}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{query}}{Named list; optional filter parameters. Supported keys:
 \itemize{
 \item \code{currency} (character): Filter by currency.
 \item \code{isIsolated} (logical): Filter by margin type.
@@ -1165,11 +1081,11 @@ Verified: 2026-05-23
 \item \code{currentPage} (integer): Page number.
 \item \code{pageSize} (integer): Items per page.
 }}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
 with \strong{one row per borrow record} and columns:
 \itemize{
 \item \code{order_no} (character): Borrow order number.
@@ -1182,25 +1098,22 @@ with \strong{one row per borrow record} and columns:
 }
 
 Empty response yields an empty \code{data.table}.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-margin <- KucoinMarginTrading$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{margin <- KucoinMarginTrading$new()
 history <- margin$get_borrow_history(query = list(currency = "USDT"))
 print(history)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarginTrading-get_repay_history"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarginTrading-get_repay_history}{}}}
-\subsection{Method \code{get_repay_history()}}{
-Get Repay History
+\subsection{\code{KucoinMarginTrading$get_repay_history()}}{
+  Get Repay History
 
 Retrieves paginated repayment history records.
 \subsection{API Endpoint}{
@@ -1251,19 +1164,20 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarginTrading$get_repay_history(query = list())}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{query}}{Named list; optional filter parameters. Same keys as \code{get_borrow_history()}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarginTrading$get_repay_history(query = list())}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{query}}{Named list; optional filter parameters. Same keys as \code{get_borrow_history()}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
 with \strong{one row per repay record} and columns:
 \itemize{
 \item \code{order_no} (character): Repay order number.
@@ -1276,25 +1190,22 @@ with \strong{one row per repay record} and columns:
 }
 
 Empty response yields an empty \code{data.table}.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-margin <- KucoinMarginTrading$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{margin <- KucoinMarginTrading$new()
 history <- margin$get_repay_history(query = list(currency = "USDT"))
 print(history)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarginTrading-get_interest_history"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarginTrading-get_interest_history}{}}}
-\subsection{Method \code{get_interest_history()}}{
-Get Interest History
+\subsection{\code{KucoinMarginTrading$get_interest_history()}}{
+  Get Interest History
 
 Retrieves paginated interest accrual history for margin borrowing.
 \subsection{API Endpoint}{
@@ -1342,14 +1253,15 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarginTrading$get_interest_history(query = list())}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{query}}{Named list; optional filter parameters. Supported keys:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarginTrading$get_interest_history(query = list())}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{query}}{Named list; optional filter parameters. Supported keys:
 \itemize{
 \item \code{currency} (character): Filter by currency.
 \item \code{isIsolated} (logical): Cross vs isolated.
@@ -1359,11 +1271,11 @@ Verified: 2026-05-23
 \item \code{currentPage} (integer): Page number.
 \item \code{pageSize} (integer): Items per page.
 }}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
 with \strong{one row per interest record} and columns:
 \itemize{
 \item \code{currency} (character): Currency on which interest accrued.
@@ -1373,25 +1285,22 @@ with \strong{one row per interest record} and columns:
 }
 
 Empty response yields an empty \code{data.table}.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-margin <- KucoinMarginTrading$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{margin <- KucoinMarginTrading$new()
 interest <- margin$get_interest_history(query = list(currency = "USDT"))
 print(interest)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarginTrading-get_borrow_rate"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarginTrading-get_borrow_rate}{}}}
-\subsection{Method \code{get_borrow_rate()}}{
-Get Borrow Interest Rate
+\subsection{\code{KucoinMarginTrading$get_borrow_rate()}}{
+  Get Borrow Interest Rate
 
 Retrieves current borrow interest rates for one or more currencies.
 \subsection{API Endpoint}{
@@ -1437,47 +1346,45 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarginTrading$get_borrow_rate(query = list())}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{query}}{Named list; optional filter parameters. Supported keys:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarginTrading$get_borrow_rate(query = list())}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{query}}{Named list; optional filter parameters. Supported keys:
 \itemize{
 \item \code{currency} (character): Comma-separated currency list (e.g., \code{"BTC,USDT"}).
 \item \code{vipLevel} (integer): VIP tier level.
 }}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{currency} (character): Currency code.
 \item \code{hourly_borrow_rate} (character): Hourly interest rate.
 \item \code{annualized_borrow_rate} (character): Annualized interest rate.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-margin <- KucoinMarginTrading$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{margin <- KucoinMarginTrading$new()
 rates <- margin$get_borrow_rate(query = list(currency = "BTC,USDT,ETH"))
 print(rates)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarginTrading-modify_leverage"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarginTrading-modify_leverage}{}}}
-\subsection{Method \code{modify_leverage()}}{
-Modify Leverage
+\subsection{\code{KucoinMarginTrading$modify_leverage()}}{
+  Modify Leverage
 
 Updates the leverage multiplier for the margin account. Higher
 leverage means you can borrow more relative to your collateral,
@@ -1523,51 +1430,51 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarginTrading$modify_leverage(leverage)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{leverage}}{Numeric; the desired leverage multiplier (e.g., \code{3}, \code{5}, \code{10}).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if \code{async = TRUE}), single row with columns:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarginTrading$modify_leverage(leverage)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{leverage}}{Numeric; the desired leverage multiplier (e.g., \code{3}, \code{5}, \code{10}).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if \code{async = TRUE}), single row with columns:
 \itemize{
 \item \code{leverage} (numeric): The new leverage multiplier.
 \item \code{status} (character): \code{"success"}.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-margin <- KucoinMarginTrading$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{margin <- KucoinMarginTrading$new()
 margin$modify_leverage(leverage = 5)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarginTrading-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarginTrading-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinMarginTrading$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{KucoinMarginTrading$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinMarginTrading$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }
