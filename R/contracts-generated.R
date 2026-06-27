@@ -299,6 +299,195 @@ assert_return_KucoinMarginData__get_risk_limit <- function(value) {
   return(value)
 }
 
+assert_args_KucoinMarketData__get_announcements <- function(query, page_size, max_pages) {
+  assert_list(query)
+  assert_scalar_count(page_size)
+  assert_between(page_size, lower = 1)
+  assert_scalar_double(max_pages)
+  assert_between(max_pages, lower = 1)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinMarketData__get_announcements <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinMarketData__get_currency <- function(currency, chain) {
+  assert_scalar_character(currency)
+  if (!is.null(chain)) {
+    assert_scalar_character(chain)
+  }
+  return(invisible(NULL))
+}
+
+assert_return_KucoinMarketData__get_currency <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_return_KucoinMarketData__get_all_currencies <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinMarketData__get_symbol <- function(symbol) {
+  assert_scalar_character(symbol)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinMarketData__get_symbol <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinMarketData__get_all_symbols <- function(market) {
+  if (!is.null(market)) {
+    assert_scalar_character(market)
+  }
+  return(invisible(NULL))
+}
+
+assert_return_KucoinMarketData__get_all_symbols <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinMarketData__get_ticker <- function(symbol) {
+  assert_scalar_character(symbol)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinMarketData__get_ticker <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_return_KucoinMarketData__get_all_tickers <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinMarketData__get_trade_history <- function(symbol) {
+  assert_scalar_character(symbol)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinMarketData__get_trade_history <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinMarketData__get_part_orderbook <- function(symbol) {
+  assert_scalar_character(symbol)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinMarketData__get_part_orderbook <- function(value) {
+  assert_data_table(value)
+  assert_has_columns(value, c("time", "sequence", "side", "level", "price", "size"))
+  assert_datetime(value[["time"]])
+  assert_no_missing_values(value[["time"]])
+  assert_character(value[["sequence"]])
+  assert_no_missing_values(value[["sequence"]])
+  assert_character(value[["side"]])
+  assert_no_missing_values(value[["side"]])
+  assert_count(value[["level"]])
+  assert_double(value[["price"]])
+  assert_no_missing_values(value[["price"]])
+  assert_double(value[["size"]])
+  assert_no_missing_values(value[["size"]])
+  return(value)
+}
+
+assert_args_KucoinMarketData__get_full_orderbook <- function(symbol) {
+  assert_scalar_character(symbol)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinMarketData__get_full_orderbook <- function(value) {
+  assert_data_table(value)
+  assert_has_columns(value, c("time", "sequence", "side", "level", "price", "size"))
+  assert_datetime(value[["time"]])
+  assert_no_missing_values(value[["time"]])
+  assert_character(value[["sequence"]])
+  assert_no_missing_values(value[["sequence"]])
+  assert_character(value[["side"]])
+  assert_no_missing_values(value[["side"]])
+  assert_count(value[["level"]])
+  assert_double(value[["price"]])
+  assert_no_missing_values(value[["price"]])
+  assert_double(value[["size"]])
+  assert_no_missing_values(value[["size"]])
+  return(value)
+}
+
+assert_args_KucoinMarketData__get_24hr_stats <- function(symbol) {
+  assert_scalar_character(symbol)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinMarketData__get_24hr_stats <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_return_KucoinMarketData__get_market_list <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinMarketData__get_klines <- function(symbol, timeframe) {
+  assert_scalar_character(symbol)
+  assert_scalar_character(timeframe)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinMarketData__get_klines <- function(value) {
+  assert_data_table(value)
+  assert_has_columns(value, c("datetime", "open", "high", "low", "close", "volume", "turnover"))
+  assert_datetime(value[["datetime"]])
+  assert_no_missing_values(value[["datetime"]])
+  assert_double(value[["open"]])
+  assert_no_missing_values(value[["open"]])
+  assert_double(value[["high"]])
+  assert_no_missing_values(value[["high"]])
+  assert_double(value[["low"]])
+  assert_no_missing_values(value[["low"]])
+  assert_double(value[["close"]])
+  assert_no_missing_values(value[["close"]])
+  assert_double(value[["volume"]])
+  assert_no_missing_values(value[["volume"]])
+  assert_double(value[["turnover"]])
+  assert_no_missing_values(value[["turnover"]])
+  return(value)
+}
+
+assert_return_KucoinMarketData__get_server_time <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_return_KucoinMarketData__get_service_status <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinMarketData__get_fiat_prices <- function(base, currencies) {
+  if (!is.null(base)) {
+    assert_scalar_character(base)
+  }
+  if (!is.null(currencies)) {
+    assert_scalar_character(currencies)
+  }
+  return(invisible(NULL))
+}
+
+assert_return_KucoinMarketData__get_fiat_prices <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
 assert_args_KucoinSubAccount__add_sub_account <- function(password, subName, access, remarks) {
   assert_scalar_character(password)
   assert_scalar_character(subName)
