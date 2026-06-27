@@ -4,11 +4,6 @@
 \alias{KucoinStopOrders}
 \title{KucoinStopOrders: Stop Order Management}
 \description{
-KucoinStopOrders: Stop Order Management
-
-KucoinStopOrders: Stop Order Management
-}
-\details{
 Provides methods for managing stop orders on KuCoin Spot.
 Inherits from \link{KucoinBase}.
 \subsection{Purpose and Scope}{
@@ -127,7 +122,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinStopOrders$add_order`
+## Method `KucoinStopOrders$add_order()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -154,7 +149,7 @@ order <- stop$add_order(
 }
 
 ## ------------------------------------------------
-## Method `KucoinStopOrders$cancel_order_by_id`
+## Method `KucoinStopOrders$cancel_order_by_id()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -166,7 +161,7 @@ print(result$cancelled_order_id)
 }
 
 ## ------------------------------------------------
-## Method `KucoinStopOrders$cancel_order_by_client_oid`
+## Method `KucoinStopOrders$cancel_order_by_client_oid()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -178,7 +173,7 @@ print(result$cancelled_order_id)
 }
 
 ## ------------------------------------------------
-## Method `KucoinStopOrders$cancel_all`
+## Method `KucoinStopOrders$cancel_all()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -194,7 +189,7 @@ print(result$cancelled_order_id)
 }
 
 ## ------------------------------------------------
-## Method `KucoinStopOrders$get_order_by_id`
+## Method `KucoinStopOrders$get_order_by_id()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -207,7 +202,7 @@ print(order$side)
 }
 
 ## ------------------------------------------------
-## Method `KucoinStopOrders$get_order_by_client_oid`
+## Method `KucoinStopOrders$get_order_by_client_oid()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -220,7 +215,7 @@ print(order$stop_price)
 }
 
 ## ------------------------------------------------
-## Method `KucoinStopOrders$get_order_list`
+## Method `KucoinStopOrders$get_order_list()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -245,34 +240,32 @@ orders <- stop$get_order_list(query = list(
 ))
 }
 }
-\section{Super class}{
-\code{\link[kucoin:KucoinBase]{kucoin::KucoinBase}} -> \code{KucoinStopOrders}
+\section{Super classes}{
+\code{\link[connectcore:RestClient]{connectcore::RestClient}} -> \code{\link[kucoin:KucoinBase]{KucoinBase}} -> \code{KucoinStopOrders}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-KucoinStopOrders-add_order}{\code{KucoinStopOrders$add_order()}}
-\item \href{#method-KucoinStopOrders-cancel_order_by_id}{\code{KucoinStopOrders$cancel_order_by_id()}}
-\item \href{#method-KucoinStopOrders-cancel_order_by_client_oid}{\code{KucoinStopOrders$cancel_order_by_client_oid()}}
-\item \href{#method-KucoinStopOrders-cancel_all}{\code{KucoinStopOrders$cancel_all()}}
-\item \href{#method-KucoinStopOrders-get_order_by_id}{\code{KucoinStopOrders$get_order_by_id()}}
-\item \href{#method-KucoinStopOrders-get_order_by_client_oid}{\code{KucoinStopOrders$get_order_by_client_oid()}}
-\item \href{#method-KucoinStopOrders-get_order_list}{\code{KucoinStopOrders$get_order_list()}}
-\item \href{#method-KucoinStopOrders-clone}{\code{KucoinStopOrders$clone()}}
+  \itemize{
+    \item \href{#method-KucoinStopOrders-add_order}{\code{KucoinStopOrders$add_order()}}
+    \item \href{#method-KucoinStopOrders-cancel_order_by_id}{\code{KucoinStopOrders$cancel_order_by_id()}}
+    \item \href{#method-KucoinStopOrders-cancel_order_by_client_oid}{\code{KucoinStopOrders$cancel_order_by_client_oid()}}
+    \item \href{#method-KucoinStopOrders-cancel_all}{\code{KucoinStopOrders$cancel_all()}}
+    \item \href{#method-KucoinStopOrders-get_order_by_id}{\code{KucoinStopOrders$get_order_by_id()}}
+    \item \href{#method-KucoinStopOrders-get_order_by_client_oid}{\code{KucoinStopOrders$get_order_by_client_oid()}}
+    \item \href{#method-KucoinStopOrders-get_order_list}{\code{KucoinStopOrders$get_order_list()}}
+    \item \href{#method-KucoinStopOrders-clone}{\code{KucoinStopOrders$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>kucoin::KucoinBase$initialize()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>KucoinBase$initialize()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinStopOrders-add_order"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinStopOrders-add_order}{}}}
-\subsection{Method \code{add_order()}}{
-Place a Stop Order
+\subsection{\code{KucoinStopOrders$add_order()}}{
+  Place a Stop Order
 
 Places a stop order (limit or market) that triggers when the stop
 price is reached. For limit stop orders, both \code{price} and \code{size} are
@@ -334,8 +327,9 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinStopOrders$add_order(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinStopOrders$add_order(
   type,
   symbol,
   side,
@@ -353,73 +347,56 @@ Verified: 2026-05-23
   iceberg = NULL,
   visibleSize = NULL,
   tradeType = "TRADE"
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{type}}{Character; order type, one of \code{"limit"} or \code{"market"}.
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{type}}{Character; order type, one of \code{"limit"} or \code{"market"}.
 Determines which additional parameters are required.}
-
-\item{\code{symbol}}{Character; trading pair symbol (e.g., \code{"BTC-USDT"}).
+      \item{\code{symbol}}{Character; trading pair symbol (e.g., \code{"BTC-USDT"}).
 Must match the \code{BASE-QUOTE} format validated by \code{verify_symbol()}.}
-
-\item{\code{side}}{Character; order side, one of \code{"buy"} or \code{"sell"}.}
-
-\item{\code{stopPrice}}{Character; the trigger price at which the stop order activates.
+      \item{\code{side}}{Character; order side, one of \code{"buy"} or \code{"sell"}.}
+      \item{\code{stopPrice}}{Character; the trigger price at which the stop order activates.
 When the last traded price reaches this value, the order is placed.}
-
-\item{\code{clientOid}}{Character or NULL; optional client-assigned unique identifier
+      \item{\code{clientOid}}{Character or NULL; optional client-assigned unique identifier
 for the order (max 40 characters). Useful for tracking orders in automated systems.}
-
-\item{\code{price}}{Character or NULL; limit order price. Required for limit stop orders;
+      \item{\code{price}}{Character or NULL; limit order price. Required for limit stop orders;
 must NOT be set for market stop orders. Should align with the symbol's \code{priceIncrement}.}
-
-\item{\code{size}}{Character or NULL; order quantity in base currency.
+      \item{\code{size}}{Character or NULL; order quantity in base currency.
 Required for limit stop orders. For market stop orders, mutually exclusive with \code{funds}.}
-
-\item{\code{funds}}{Character or NULL; order amount in quote currency for market stop orders.
+      \item{\code{funds}}{Character or NULL; order amount in quote currency for market stop orders.
 Mutually exclusive with \code{size}. Not applicable for limit stop orders.}
-
-\item{\code{stp}}{Character or NULL; self-trade prevention strategy.
+      \item{\code{stp}}{Character or NULL; self-trade prevention strategy.
 One of \code{"DC"} (Decrement and Cancel), \code{"CO"} (Cancel Oldest),
 \code{"CN"} (Cancel Newest), \code{"CB"} (Cancel Both).}
-
-\item{\code{remark}}{Character or NULL; order remarks or notes (max 20 ASCII characters).}
-
-\item{\code{timeInForce}}{Character or NULL; time-in-force policy for the triggered order.
+      \item{\code{remark}}{Character or NULL; order remarks or notes (max 20 ASCII characters).}
+      \item{\code{timeInForce}}{Character or NULL; time-in-force policy for the triggered order.
 One of \code{"GTC"} (Good Till Cancelled), \code{"GTT"} (Good Till Time),
 \code{"IOC"} (Immediate Or Cancel), \code{"FOK"} (Fill Or Kill).}
-
-\item{\code{cancelAfter}}{Numeric or NULL; number of seconds after which to auto-cancel.
+      \item{\code{cancelAfter}}{Numeric or NULL; number of seconds after which to auto-cancel.
 Only valid when \code{timeInForce = "GTT"}.}
-
-\item{\code{postOnly}}{Logical or NULL; if \code{TRUE}, the triggered order is rejected if it
+      \item{\code{postOnly}}{Logical or NULL; if \code{TRUE}, the triggered order is rejected if it
 would immediately match (guarantees maker fee).}
-
-\item{\code{hidden}}{Logical or NULL; if \code{TRUE}, the triggered order is hidden from the order book.}
-
-\item{\code{iceberg}}{Logical or NULL; if \code{TRUE}, only \code{visibleSize} of the order is displayed.}
-
-\item{\code{visibleSize}}{Character or NULL; the visible portion of an iceberg order.
+      \item{\code{hidden}}{Logical or NULL; if \code{TRUE}, the triggered order is hidden from the order book.}
+      \item{\code{iceberg}}{Logical or NULL; if \code{TRUE}, only \code{visibleSize} of the order is displayed.}
+      \item{\code{visibleSize}}{Character or NULL; the visible portion of an iceberg order.
 Only applicable when \code{iceberg = TRUE}.}
-
-\item{\code{tradeType}}{Character; trade type, defaults to \code{"TRADE"} for spot trading.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+      \item{\code{tradeType}}{Character; trade type, defaults to \code{"TRADE"} for spot trading.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{order_id} (character): KuCoin-assigned stop order identifier.
 \item \code{client_oid} (character or NA): Client-provided order identifier, if supplied.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-stop <- KucoinStopOrders$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{stop <- KucoinStopOrders$new()
 
 # Limit stop-loss sell order
 order <- stop$add_order(
@@ -440,17 +417,15 @@ order <- stop$add_order(
   stopPrice = "105000", funds = "100"
 )
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinStopOrders-cancel_order_by_id"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinStopOrders-cancel_order_by_id}{}}}
-\subsection{Method \code{cancel_order_by_id()}}{
-Cancel Stop Order by Order ID
+\subsection{\code{KucoinStopOrders$cancel_order_by_id()}}{
+  Cancel Stop Order by Order ID
 
 Cancels a single pending stop order using its KuCoin-assigned order ID.
 Only stop orders that have not yet been triggered can be cancelled.
@@ -502,46 +477,44 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinStopOrders$cancel_order_by_id(orderId)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{orderId}}{Character; the KuCoin-assigned stop order ID to cancel.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinStopOrders$cancel_order_by_id(orderId)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{orderId}}{Character; the KuCoin-assigned stop order ID to cancel.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
 with one row per cancelled stop order (Treatment B — long format):
 \itemize{
 \item \code{cancelled_order_id} (character): KuCoin order ID of a cancelled stop order.
 Returns an empty \code{data.table} if no stop orders matched (per the
 "empty response -> empty data.table" cross-package convention).
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-stop <- KucoinStopOrders$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{stop <- KucoinStopOrders$new()
 
 # Cancel a specific stop order
 result <- stop$cancel_order_by_id("vs8hoo8q2ceshiue003b67c0")
 print(result$cancelled_order_id)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinStopOrders-cancel_order_by_client_oid"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinStopOrders-cancel_order_by_client_oid}{}}}
-\subsection{Method \code{cancel_order_by_client_oid()}}{
-Cancel Stop Order by Client OID
+\subsection{\code{KucoinStopOrders$cancel_order_by_client_oid()}}{
+  Cancel Stop Order by Client OID
 
 Cancels a pending stop order using the client-assigned order ID and symbol.
 Both \code{clientOid} and \code{symbol} are required as query parameters.
@@ -594,48 +567,45 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinStopOrders$cancel_order_by_client_oid(clientOid, symbol)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{clientOid}}{Character; the client-assigned order ID used when placing the stop order.}
-
-\item{\code{symbol}}{Character; trading pair symbol (e.g., \code{"BTC-USDT"}). Required to
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinStopOrders$cancel_order_by_client_oid(clientOid, symbol)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{clientOid}}{Character; the client-assigned order ID used when placing the stop order.}
+      \item{\code{symbol}}{Character; trading pair symbol (e.g., \code{"BTC-USDT"}). Required to
 disambiguate client OIDs across different trading pairs.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
 with a single row:
 \itemize{
 \item \code{cancelled_order_id} (character): The KuCoin order ID of the cancelled stop order.
 \item \code{client_oid} (character): The client-assigned order ID that was cancelled.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-stop <- KucoinStopOrders$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{stop <- KucoinStopOrders$new()
 
 # Cancel by client OID
 result <- stop$cancel_order_by_client_oid("my-stop-001", symbol = "BTC-USDT")
 print(result$cancelled_order_id)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinStopOrders-cancel_all"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinStopOrders-cancel_all}{}}}
-\subsection{Method \code{cancel_all()}}{
-Cancel All Stop Orders
+\subsection{\code{KucoinStopOrders$cancel_all()}}{
+  Cancel All Stop Orders
 
 Cancels all pending stop orders matching the given filters. Supports filtering
 by symbol, trade type, and specific order IDs. If no filters are provided,
@@ -692,35 +662,35 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinStopOrders$cancel_all(query = list())}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{query}}{Named list; optional filter parameters:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinStopOrders$cancel_all(query = list())}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{query}}{Named list; optional filter parameters:
 \itemize{
 \item \code{symbol} (character): Trading pair to filter by (e.g., \code{"BTC-USDT"}).
 \item \code{tradeType} (character): Trade type, typically \code{"TRADE"} for spot.
 \item \code{orderIds} (character): Comma-separated list of specific stop order IDs to cancel.
 }}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
 with one row per cancelled stop order (Treatment B — long format):
 \itemize{
 \item \code{cancelled_order_id} (character): KuCoin order ID of a cancelled stop order.
 Returns an empty \code{data.table} if no stop orders matched the filters
 (per the "empty response -> empty data.table" cross-package convention).
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-stop <- KucoinStopOrders$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{stop <- KucoinStopOrders$new()
 
 # Cancel all stop orders for BTC-USDT
 result <- stop$cancel_all(query = list(symbol = "BTC-USDT"))
@@ -730,17 +700,15 @@ print(result$cancelled_order_id)
 result <- stop$cancel_all()
 print(result$cancelled_order_id)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinStopOrders-get_order_by_id"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinStopOrders-get_order_by_id}{}}}
-\subsection{Method \code{get_order_by_id()}}{
-Get Stop Order by Order ID
+\subsection{\code{KucoinStopOrders$get_order_by_id()}}{
+  Get Stop Order by Order ID
 
 Retrieves full details for a single stop order using its KuCoin-assigned
 order ID. Returns order parameters, status, trigger price, and timestamps.
@@ -816,19 +784,20 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinStopOrders$get_order_by_id(orderId)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{orderId}}{Character; the KuCoin-assigned stop order ID to retrieve.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinStopOrders$get_order_by_id(orderId)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{orderId}}{Character; the KuCoin-assigned stop order ID to retrieve.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
 with a single row containing order details (no list columns). Key columns include:
 \itemize{
 \item \code{id} (character): Stop order identifier.
@@ -844,28 +813,25 @@ with a single row containing order details (no list columns). Key columns includ
 \item \code{stop_trigger_time} (POSIXct): Trigger datetime if triggered (coerced from
 epoch milliseconds), \code{NA} if not yet triggered.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-stop <- KucoinStopOrders$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{stop <- KucoinStopOrders$new()
 
 # Get stop order details
 order <- stop$get_order_by_id("vs8hoo8q2ceshiue003b67c0")
 print(order$stop_price)
 print(order$side)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinStopOrders-get_order_by_client_oid"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinStopOrders-get_order_by_client_oid}{}}}
-\subsection{Method \code{get_order_by_client_oid()}}{
-Get Stop Order by Client OID
+\subsection{\code{KucoinStopOrders$get_order_by_client_oid()}}{
+  Get Stop Order by Client OID
 
 Retrieves stop order details using the client-assigned order ID and symbol.
 May return multiple results if the same \code{clientOid} was used across different orders.
@@ -944,22 +910,22 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinStopOrders$get_order_by_client_oid(clientOid, symbol)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{clientOid}}{Character; the client-assigned order ID to search for.}
-
-\item{\code{symbol}}{Character; trading pair symbol (e.g., \code{"BTC-USDT"}). Required to
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinStopOrders$get_order_by_client_oid(clientOid, symbol)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{clientOid}}{Character; the client-assigned order ID to search for.}
+      \item{\code{symbol}}{Character; trading pair symbol (e.g., \code{"BTC-USDT"}). Required to
 scope the search to a specific trading pair.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
 with one row per matching stop order (no list columns). Key columns include:
 \itemize{
 \item \code{id} (character): Stop order identifier.
@@ -976,28 +942,25 @@ with one row per matching stop order (no list columns). Key columns include:
 epoch milliseconds), \code{NA} if not yet triggered.
 Returns an empty \code{data.table} if no stop orders match.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-stop <- KucoinStopOrders$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{stop <- KucoinStopOrders$new()
 
 # Look up stop order by client OID
 order <- stop$get_order_by_client_oid("my-stop-001", symbol = "BTC-USDT")
 print(order$id)
 print(order$stop_price)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinStopOrders-get_order_list"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinStopOrders-get_order_list}{}}}
-\subsection{Method \code{get_order_list()}}{
-Get Stop Order List
+\subsection{\code{KucoinStopOrders$get_order_list()}}{
+  Get Stop Order List
 
 Retrieves a paginated list of stop orders with optional filtering by symbol,
 side, type, and time range. Returns all matching stop orders as a \code{data.table}.
@@ -1082,14 +1045,15 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinStopOrders$get_order_list(query = list())}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{query}}{Named list; optional filter and pagination parameters:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinStopOrders$get_order_list(query = list())}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{query}}{Named list; optional filter and pagination parameters:
 \itemize{
 \item \code{symbol} (character): Trading pair to filter by (e.g., \code{"BTC-USDT"}).
 \item \code{side} (character): Order side filter, \code{"buy"} or \code{"sell"}.
@@ -1101,11 +1065,11 @@ Verified: 2026-05-23
 \item \code{tradeType} (character): Trade type, typically \code{"TRADE"} for spot.
 \item \code{orderIds} (character): Comma-separated list of specific stop order IDs.
 }}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
 with one row per stop order (no list columns). Returns an empty \code{data.table}
 if no stop orders match the query. Key columns include:
 \itemize{
@@ -1123,11 +1087,10 @@ if no stop orders match the query. Key columns include:
 \item \code{stop_trigger_time} (POSIXct): Trigger datetime if triggered (coerced from
 epoch milliseconds), \code{NA} if not yet triggered.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-stop <- KucoinStopOrders$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{stop <- KucoinStopOrders$new()
 
 # Get all BTC-USDT stop orders
 orders <- stop$get_order_list(query = list(symbol = "BTC-USDT"))
@@ -1147,27 +1110,27 @@ orders <- stop$get_order_list(query = list(
   endAt = as.numeric(lubridate::now()) * 1000
 ))
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinStopOrders-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinStopOrders-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinStopOrders$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{KucoinStopOrders$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinStopOrders$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

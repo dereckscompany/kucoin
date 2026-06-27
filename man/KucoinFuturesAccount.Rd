@@ -4,11 +4,6 @@
 \alias{KucoinFuturesAccount}
 \title{KucoinFuturesAccount: Futures Account and Position Management}
 \description{
-KucoinFuturesAccount: Futures Account and Position Management
-
-KucoinFuturesAccount: Futures Account and Position Management
-}
-\details{
 Provides methods for querying futures account details, managing positions,
 configuring margin mode and leverage, and tracking funding fee history.
 Inherits from \link{KucoinBase}.
@@ -52,66 +47,65 @@ pos <- futures_account$get_position("XBTUSDTM")
 }
 
 }
-\section{Super class}{
-\code{\link[kucoin:KucoinBase]{kucoin::KucoinBase}} -> \code{KucoinFuturesAccount}
+\section{Super classes}{
+\code{\link[connectcore:RestClient]{connectcore::RestClient}} -> \code{\link[kucoin:KucoinBase]{KucoinBase}} -> \code{KucoinFuturesAccount}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-KucoinFuturesAccount-new}{\code{KucoinFuturesAccount$new()}}
-\item \href{#method-KucoinFuturesAccount-get_account_overview}{\code{KucoinFuturesAccount$get_account_overview()}}
-\item \href{#method-KucoinFuturesAccount-get_position}{\code{KucoinFuturesAccount$get_position()}}
-\item \href{#method-KucoinFuturesAccount-get_positions}{\code{KucoinFuturesAccount$get_positions()}}
-\item \href{#method-KucoinFuturesAccount-get_positions_history}{\code{KucoinFuturesAccount$get_positions_history()}}
-\item \href{#method-KucoinFuturesAccount-get_margin_mode}{\code{KucoinFuturesAccount$get_margin_mode()}}
-\item \href{#method-KucoinFuturesAccount-set_margin_mode}{\code{KucoinFuturesAccount$set_margin_mode()}}
-\item \href{#method-KucoinFuturesAccount-get_cross_margin_leverage}{\code{KucoinFuturesAccount$get_cross_margin_leverage()}}
-\item \href{#method-KucoinFuturesAccount-set_cross_margin_leverage}{\code{KucoinFuturesAccount$set_cross_margin_leverage()}}
-\item \href{#method-KucoinFuturesAccount-get_max_open_size}{\code{KucoinFuturesAccount$get_max_open_size()}}
-\item \href{#method-KucoinFuturesAccount-get_max_withdraw_margin}{\code{KucoinFuturesAccount$get_max_withdraw_margin()}}
-\item \href{#method-KucoinFuturesAccount-add_isolated_margin}{\code{KucoinFuturesAccount$add_isolated_margin()}}
-\item \href{#method-KucoinFuturesAccount-remove_isolated_margin}{\code{KucoinFuturesAccount$remove_isolated_margin()}}
-\item \href{#method-KucoinFuturesAccount-get_risk_limit}{\code{KucoinFuturesAccount$get_risk_limit()}}
-\item \href{#method-KucoinFuturesAccount-get_funding_history}{\code{KucoinFuturesAccount$get_funding_history()}}
-\item \href{#method-KucoinFuturesAccount-clone}{\code{KucoinFuturesAccount$clone()}}
-}
+  \itemize{
+    \item \href{#method-KucoinFuturesAccount-initialize}{\code{KucoinFuturesAccount$new()}}
+    \item \href{#method-KucoinFuturesAccount-get_account_overview}{\code{KucoinFuturesAccount$get_account_overview()}}
+    \item \href{#method-KucoinFuturesAccount-get_position}{\code{KucoinFuturesAccount$get_position()}}
+    \item \href{#method-KucoinFuturesAccount-get_positions}{\code{KucoinFuturesAccount$get_positions()}}
+    \item \href{#method-KucoinFuturesAccount-get_positions_history}{\code{KucoinFuturesAccount$get_positions_history()}}
+    \item \href{#method-KucoinFuturesAccount-get_margin_mode}{\code{KucoinFuturesAccount$get_margin_mode()}}
+    \item \href{#method-KucoinFuturesAccount-set_margin_mode}{\code{KucoinFuturesAccount$set_margin_mode()}}
+    \item \href{#method-KucoinFuturesAccount-get_cross_margin_leverage}{\code{KucoinFuturesAccount$get_cross_margin_leverage()}}
+    \item \href{#method-KucoinFuturesAccount-set_cross_margin_leverage}{\code{KucoinFuturesAccount$set_cross_margin_leverage()}}
+    \item \href{#method-KucoinFuturesAccount-get_max_open_size}{\code{KucoinFuturesAccount$get_max_open_size()}}
+    \item \href{#method-KucoinFuturesAccount-get_max_withdraw_margin}{\code{KucoinFuturesAccount$get_max_withdraw_margin()}}
+    \item \href{#method-KucoinFuturesAccount-add_isolated_margin}{\code{KucoinFuturesAccount$add_isolated_margin()}}
+    \item \href{#method-KucoinFuturesAccount-remove_isolated_margin}{\code{KucoinFuturesAccount$remove_isolated_margin()}}
+    \item \href{#method-KucoinFuturesAccount-get_risk_limit}{\code{KucoinFuturesAccount$get_risk_limit()}}
+    \item \href{#method-KucoinFuturesAccount-get_funding_history}{\code{KucoinFuturesAccount$get_funding_history()}}
+    \item \href{#method-KucoinFuturesAccount-clone}{\code{KucoinFuturesAccount$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-KucoinFuturesAccount-new"></a>}}
-\if{latex}{\out{\hypertarget{method-KucoinFuturesAccount-new}{}}}
-\subsection{Method \code{new()}}{
-Create a new KucoinFuturesAccount instance.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesAccount$new(
+\if{html}{\out{<a id="method-KucoinFuturesAccount-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-KucoinFuturesAccount-initialize}{}}}
+\subsection{\code{KucoinFuturesAccount$new()}}{
+  Create a new KucoinFuturesAccount instance.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesAccount$new(
   keys = get_api_keys(),
   base_url = get_futures_base_url(),
   async = FALSE,
   time_source = c("local", "server")
-)}\if{html}{\out{</div>}}
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{keys}}{List; API credentials from \code{\link[=get_api_keys]{get_api_keys()}}.}
+      \item{\code{base_url}}{Character; Futures API base URL. Defaults to \code{\link[=get_futures_base_url]{get_futures_base_url()}}.}
+      \item{\code{async}}{Logical; if TRUE, methods return promises.}
+      \item{\code{time_source}}{Character; \code{"local"} or \code{"server"}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Invisible self.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{keys}}{List; API credentials from \code{\link[=get_api_keys]{get_api_keys()}}.}
-
-\item{\code{base_url}}{Character; Futures API base URL. Defaults to \code{\link[=get_futures_base_url]{get_futures_base_url()}}.}
-
-\item{\code{async}}{Logical; if TRUE, methods return promises.}
-
-\item{\code{time_source}}{Character; \code{"local"} or \code{"server"}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Invisible self.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesAccount-get_account_overview"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesAccount-get_account_overview}{}}}
-\subsection{Method \code{get_account_overview()}}{
-Get Account Overview
+\subsection{\code{KucoinFuturesAccount$get_account_overview()}}{
+  Get Account Overview
 
 Retrieves the futures account overview, including balance, equity,
 margin, and P&L.
@@ -163,20 +157,21 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesAccount$get_account_overview(currency = "USDT")}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{currency}}{Character; settlement currency (e.g., \code{"USDT"}).
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesAccount$get_account_overview(currency = "USDT")}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{currency}}{Character; settlement currency (e.g., \code{"USDT"}).
 Default \code{"USDT"}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A single-row \code{data.table} (or \verb{promise<data.table>} if
 constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{account_equity} (numeric): Total account equity.
@@ -188,13 +183,14 @@ constructed with \code{async = TRUE}) with columns:
 \item \code{available_balance} (numeric): Available balance for trading.
 \item \code{currency} (character): Settlement currency code.
 }
+  }
 }
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesAccount-get_position"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesAccount-get_position}{}}}
-\subsection{Method \code{get_position()}}{
-Get Position Details
+\subsection{\code{KucoinFuturesAccount$get_position()}}{
+  Get Position Details
 
 Retrieves position details for a specific symbol.
 \subsection{Workflow}{
@@ -266,19 +262,20 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesAccount$get_position(symbol)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesAccount$get_position(symbol)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A single-row \code{data.table} (or \verb{promise<data.table>} if
 constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{id} (character): Position identifier.
@@ -311,13 +308,14 @@ constructed with \code{async = TRUE}) with columns:
 \item \code{opening_timestamp} (POSIXct): Position opened time (coerced from milliseconds).
 \item \code{current_timestamp} (POSIXct): Current server time (coerced from milliseconds).
 }
+  }
 }
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesAccount-get_positions"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesAccount-get_positions}{}}}
-\subsection{Method \code{get_positions()}}{
-Get All Positions
+\subsection{\code{KucoinFuturesAccount$get_positions()}}{
+  Get All Positions
 
 Retrieves all open positions.
 \subsection{Workflow}{
@@ -397,29 +395,31 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesAccount$get_positions(currency = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{currency}}{Character or NULL; filter by settlement currency.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesAccount$get_positions(currency = NULL)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{currency}}{Character or NULL; filter by settlement currency.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \code{data.table} (or \verb{promise<data.table>} if constructed with
 \code{async = TRUE}) with one row per open position; same columns as
 \code{get_position()}. Returns an empty \code{data.table} when there are no
 open positions.
+  }
 }
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesAccount-get_positions_history"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesAccount-get_positions_history}{}}}
-\subsection{Method \code{get_positions_history()}}{
-Get Position History
+\subsection{\code{KucoinFuturesAccount$get_positions_history()}}{
+  Get Position History
 
 Retrieves historical position records.
 \subsection{Workflow}{
@@ -489,20 +489,21 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesAccount$get_positions_history(query = list())}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{query}}{Named list; query parameters. Optional: \code{symbol},
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesAccount$get_positions_history(query = list())}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{query}}{Named list; query parameters. Optional: \code{symbol},
 \code{from}, \code{to}, \code{limit}, \code{pageId}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \code{data.table} (or \verb{promise<data.table>} if constructed with
 \code{async = TRUE}) with one row per closed position record. Returns an
 empty \code{data.table} when no history records match. Columns:
 \itemize{
@@ -525,13 +526,14 @@ empty \code{data.table} when no history records match. Columns:
 \item \code{open_time} (POSIXct): Position opened time (coerced from milliseconds).
 \item \code{close_time} (POSIXct): Position closed time (coerced from milliseconds).
 }
+  }
 }
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesAccount-get_margin_mode"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesAccount-get_margin_mode}{}}}
-\subsection{Method \code{get_margin_mode()}}{
-Get Margin Mode
+\subsection{\code{KucoinFuturesAccount$get_margin_mode()}}{
+  Get Margin Mode
 
 Retrieves the current margin mode for a symbol.
 \subsection{Workflow}{
@@ -576,31 +578,33 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesAccount$get_margin_mode(symbol)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; futures symbol.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesAccount$get_margin_mode(symbol)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; futures symbol.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A single-row \code{data.table} (or \verb{promise<data.table>} if
 constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{symbol} (character): Contract symbol.
 \item \code{margin_mode} (character): \code{"ISOLATED"} or \code{"CROSS"}.
 }
+  }
 }
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesAccount-set_margin_mode"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesAccount-set_margin_mode}{}}}
-\subsection{Method \code{set_margin_mode()}}{
-Set Margin Mode
+\subsection{\code{KucoinFuturesAccount$set_margin_mode()}}{
+  Set Margin Mode
 
 Switches the margin mode for a symbol between ISOLATED and CROSS.
 \subsection{Workflow}{
@@ -656,33 +660,34 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesAccount$set_margin_mode(symbol, marginMode)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; futures symbol.}
-
-\item{\code{marginMode}}{Character; \code{"ISOLATED"} or \code{"CROSS"}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesAccount$set_margin_mode(symbol, marginMode)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; futures symbol.}
+      \item{\code{marginMode}}{Character; \code{"ISOLATED"} or \code{"CROSS"}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A single-row \code{data.table} (or \verb{promise<data.table>} if
 constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{symbol} (character): Contract symbol.
 \item \code{margin_mode} (character): Updated margin mode.
 }
+  }
 }
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesAccount-get_cross_margin_leverage"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesAccount-get_cross_margin_leverage}{}}}
-\subsection{Method \code{get_cross_margin_leverage()}}{
-Get Cross Margin Leverage
+\subsection{\code{KucoinFuturesAccount$get_cross_margin_leverage()}}{
+  Get Cross Margin Leverage
 
 Retrieves the current cross margin leverage for a symbol.
 \subsection{Workflow}{
@@ -727,31 +732,33 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesAccount$get_cross_margin_leverage(symbol)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; futures symbol.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesAccount$get_cross_margin_leverage(symbol)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; futures symbol.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A single-row \code{data.table} (or \verb{promise<data.table>} if
 constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{symbol} (character): Contract symbol.
 \item \code{leverage} (character): Current leverage multiplier.
 }
+  }
 }
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesAccount-set_cross_margin_leverage"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesAccount-set_cross_margin_leverage}{}}}
-\subsection{Method \code{set_cross_margin_leverage()}}{
-Set Cross Margin Leverage
+\subsection{\code{KucoinFuturesAccount$set_cross_margin_leverage()}}{
+  Set Cross Margin Leverage
 
 Modifies the cross margin leverage for a symbol.
 \subsection{Workflow}{
@@ -807,33 +814,34 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesAccount$set_cross_margin_leverage(symbol, leverage)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; futures symbol.}
-
-\item{\code{leverage}}{Integer; leverage multiplier.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesAccount$set_cross_margin_leverage(symbol, leverage)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; futures symbol.}
+      \item{\code{leverage}}{Integer; leverage multiplier.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A single-row \code{data.table} (or \verb{promise<data.table>} if
 constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{symbol} (character): Contract symbol.
 \item \code{leverage} (character): Updated leverage multiplier.
 }
+  }
 }
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesAccount-get_max_open_size"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesAccount-get_max_open_size}{}}}
-\subsection{Method \code{get_max_open_size()}}{
-Get Maximum Open Size
+\subsection{\code{KucoinFuturesAccount$get_max_open_size()}}{
+  Get Maximum Open Size
 
 Retrieves the maximum number of contracts that can be opened.
 \subsection{Workflow}{
@@ -879,36 +887,36 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesAccount$get_max_open_size(symbol, price, leverage)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; futures symbol.}
-
-\item{\code{price}}{Character; order price.}
-
-\item{\code{leverage}}{Integer; leverage multiplier.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesAccount$get_max_open_size(symbol, price, leverage)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; futures symbol.}
+      \item{\code{price}}{Character; order price.}
+      \item{\code{leverage}}{Integer; leverage multiplier.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A single-row \code{data.table} (or \verb{promise<data.table>} if
 constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{symbol} (character): Contract symbol.
 \item \code{max_buy_open_size} (integer): Maximum buy contracts.
 \item \code{max_sell_open_size} (integer): Maximum sell contracts.
 }
+  }
 }
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesAccount-get_max_withdraw_margin"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesAccount-get_max_withdraw_margin}{}}}
-\subsection{Method \code{get_max_withdraw_margin()}}{
-Get Maximum Withdrawable Margin
+\subsection{\code{KucoinFuturesAccount$get_max_withdraw_margin()}}{
+  Get Maximum Withdrawable Margin
 
 Retrieves the maximum margin that can be withdrawn from an isolated position.
 \subsection{Workflow}{
@@ -950,19 +958,20 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesAccount$get_max_withdraw_margin(symbol)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; futures symbol.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesAccount$get_max_withdraw_margin(symbol)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; futures symbol.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A single-row \code{data.table} (or \verb{promise<data.table>} if
 constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{max_withdraw_margin} (character): Maximum amount of isolated
@@ -970,13 +979,14 @@ margin that can be withdrawn from the position. Returned by
 KuCoin as a fixed-precision string so the caller controls
 numeric coercion.
 }
+  }
 }
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesAccount-add_isolated_margin"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesAccount-add_isolated_margin}{}}}
-\subsection{Method \code{add_isolated_margin()}}{
-Add Isolated Margin
+\subsection{\code{KucoinFuturesAccount$add_isolated_margin()}}{
+  Add Isolated Margin
 
 Deposits additional margin into an isolated margin position.
 \subsection{Workflow}{
@@ -1035,23 +1045,22 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesAccount$add_isolated_margin(symbol, margin, bizNo)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; futures symbol.}
-
-\item{\code{margin}}{Numeric; amount of margin to add.}
-
-\item{\code{bizNo}}{Character; unique business ID for idempotency.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesAccount$add_isolated_margin(symbol, margin, bizNo)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; futures symbol.}
+      \item{\code{margin}}{Numeric; amount of margin to add.}
+      \item{\code{bizNo}}{Character; unique business ID for idempotency.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A single-row \code{data.table} (or \verb{promise<data.table>} if
 constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{id} (character): Margin operation ID.
@@ -1059,13 +1068,14 @@ constructed with \code{async = TRUE}) with columns:
 \item \code{margin} (character): Amount deposited.
 \item \code{margin_type} (character): Operation type (e.g., \code{"ADD"}).
 }
+  }
 }
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesAccount-remove_isolated_margin"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesAccount-remove_isolated_margin}{}}}
-\subsection{Method \code{remove_isolated_margin()}}{
-Remove Isolated Margin
+\subsection{\code{KucoinFuturesAccount$remove_isolated_margin()}}{
+  Remove Isolated Margin
 
 Withdraws excess margin from an isolated margin position.
 \subsection{Workflow}{
@@ -1123,21 +1133,21 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesAccount$remove_isolated_margin(symbol, withdrawAmount)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; futures symbol.}
-
-\item{\code{withdrawAmount}}{Numeric; amount of margin to withdraw.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesAccount$remove_isolated_margin(symbol, withdrawAmount)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; futures symbol.}
+      \item{\code{withdrawAmount}}{Numeric; amount of margin to withdraw.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A single-row \code{data.table} (or \verb{promise<data.table>} if
 constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{id} (character): Margin operation ID.
@@ -1145,13 +1155,14 @@ constructed with \code{async = TRUE}) with columns:
 \item \code{margin} (character): Amount withdrawn.
 \item \code{margin_type} (character): Operation type.
 }
+  }
 }
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesAccount-get_risk_limit"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesAccount-get_risk_limit}{}}}
-\subsection{Method \code{get_risk_limit()}}{
-Get Risk Limit Level
+\subsection{\code{KucoinFuturesAccount$get_risk_limit()}}{
+  Get Risk Limit Level
 
 Retrieves risk limit tiers for a futures contract.
 \subsection{Workflow}{
@@ -1221,19 +1232,20 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesAccount$get_risk_limit(symbol)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; futures symbol.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesAccount$get_risk_limit(symbol)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; futures symbol.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \code{data.table} (or \verb{promise<data.table>} if constructed with
 \code{async = TRUE}) with one row per risk-limit tier. Returns an empty
 \code{data.table} when KuCoin returns no tiers. Columns:
 \itemize{
@@ -1245,13 +1257,14 @@ A \code{data.table} (or \verb{promise<data.table>} if constructed with
 \item \code{initial_margin} (numeric): Initial margin rate.
 \item \code{maintain_margin} (numeric): Maintenance margin rate.
 }
+  }
 }
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesAccount-get_funding_history"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesAccount-get_funding_history}{}}}
-\subsection{Method \code{get_funding_history()}}{
-Get Private Funding Fee History
+\subsection{\code{KucoinFuturesAccount$get_funding_history()}}{
+  Get Private Funding Fee History
 
 Retrieves your personal funding fee settlement records.
 \subsection{Workflow}{
@@ -1320,22 +1333,22 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesAccount$get_funding_history(symbol, query = list())}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; futures symbol.}
-
-\item{\code{query}}{Named list; additional query parameters. Optional:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesAccount$get_funding_history(symbol, query = list())}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; futures symbol.}
+      \item{\code{query}}{Named list; additional query parameters. Optional:
 \code{startAt}, \code{endAt}, \code{reverse}, \code{offset}, \code{forward}, \code{maxCount}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \code{data.table} (or \verb{promise<data.table>} if constructed with
 \code{async = TRUE}) with one row per funding settlement. Returns an
 empty \code{data.table} when no records are returned. Columns:
 \itemize{
@@ -1349,23 +1362,26 @@ empty \code{data.table} when no records are returned. Columns:
 \item \code{funding} (character): Funding fee amount (negative = paid, positive = received).
 \item \code{settle_currency} (character): Settlement currency.
 }
+  }
 }
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesAccount-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesAccount-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesAccount$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{KucoinFuturesAccount$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesAccount$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

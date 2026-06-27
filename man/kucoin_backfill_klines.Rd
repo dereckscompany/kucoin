@@ -39,7 +39,7 @@ incrementally so progress is saved even if the process is interrupted.}
 \item{sleep}{Numeric; seconds to sleep between each symbol-timeframe
 combination to respect rate limits.}
 
-\item{verbose}{Logical; if \code{TRUE}, prints progress messages via \code{\link[rlang:abort]{rlang::inform()}}.}
+\item{verbose}{Logical; if \code{TRUE}, prints progress messages via \code{\link[rlang:inform]{rlang::inform()}}.}
 }
 \value{
 The file path (invisibly). If any symbol-timeframe combinations

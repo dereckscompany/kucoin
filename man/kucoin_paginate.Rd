@@ -11,6 +11,8 @@ kucoin_paginate(
   query = list(),
   body = NULL,
   keys = NULL,
+  sign = NULL,
+  parse_envelope = parse_kucoin_response,
   .perform = httr2::req_perform,
   .parser = identity,
   is_async = FALSE,
@@ -33,6 +35,12 @@ kucoin_paginate(
 \item{body}{Named list or NULL; request body. Default \code{NULL}.}
 
 \item{keys}{List or NULL; API credentials. Default \code{NULL}.}
+
+\item{sign}{Function or NULL; the \code{.sign()} seam forwarded to
+\code{\link[=kucoin_build_request]{kucoin_build_request()}}. Default \code{NULL} (use KuCoin's own signer).}
+
+\item{parse_envelope}{Function; the \code{.parse_envelope()} seam forwarded to
+\code{\link[=kucoin_build_request]{kucoin_build_request()}}. Default \code{parse_kucoin_response()}.}
 
 \item{.perform}{Function; the httr2 perform function.}
 

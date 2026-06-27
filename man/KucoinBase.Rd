@@ -4,15 +4,28 @@
 \alias{KucoinBase}
 \title{KucoinBase: Abstract Base Class for KuCoin API Clients}
 \description{
-KucoinBase: Abstract Base Class for KuCoin API Clients
-
-KucoinBase: Abstract Base Class for KuCoin API Clients
-}
-\details{
 Provides shared infrastructure for all KuCoin R6 classes, including API
 credential management, sync/async execution mode, timestamp source
 configuration, and a standardised method for calling implementation
 functions.
+\subsection{Transport}{
+
+This class is a thin KuCoin specialisation of \link[connectcore:RestClient]{connectcore::RestClient}, the
+shared transport base. Credential storage, the sync/async mode flag, the
+server-time clock source, and the \code{is_async} / \code{time_source} active bindings
+all live in \code{connectcore}; \code{KucoinBase} supplies the two venue-specific seams
+— how KuCoin authenticates a request (\code{.sign()}, which adds the header-based
+HMAC signature, encrypted passphrase, and \verb{KC-API-*} headers) and how it
+reports an error (\code{.parse_envelope()}, which honours KuCoin's \code{code}/\code{data}
+envelope).
+
+Unlike most connectors, KuCoin signs the \emph{exact compact JSON request body} and
+must send that same byte sequence on the wire, so the request funnel is
+KuCoin's own \code{\link[=kucoin_build_request]{kucoin_build_request()}} (which signs and sends an identical
+\code{req_body_raw} payload) rather than the connectcore default funnel; the two
+overridable seams are driven through it.
+}
+
 \subsection{Sync vs Async}{
 
 The \code{async} parameter controls execution mode for all API methods:
@@ -30,7 +43,7 @@ The \code{promises} package must be installed for async mode (\code{Suggests} de
 The \code{time_source} parameter controls which clock is used for HMAC request
 signing:
 \itemize{
-\item \code{"local"} (default): uses \code{lubridate::now()} from the local machine.
+\item \code{"local"} (default): uses the local UTC clock.
 \item \code{"server"}: fetches the KuCoin server time via \code{GET /api/v1/timestamp}
 before each authenticated request. This is slower (one extra HTTP round
 trip) but ensures signing works even when the local clock is out of sync.
@@ -44,19 +57,6 @@ This class is not meant to be instantiated directly. Subclasses (e.g.,
 own public methods that delegate to \code{private$.request()} and \code{private$.paginate()}.
 }
 }
-\section{Fields}{
-
-All fields are private:
-\itemize{
-\item \code{.keys}: List; API credentials from \code{\link[=get_api_keys]{get_api_keys()}}.
-\item \code{.base_url}: Character; API base URL from \code{\link[=get_base_url]{get_base_url()}}.
-\item \code{.perform}: Function; either \link[httr2:req_perform]{httr2::req_perform} or \link[httr2:req_perform_promise]{httr2::req_perform_promise}.
-\item \code{.is_async}: Logical; whether the instance is in async mode.
-\item \code{.time_source}: Character; \code{"local"} or \code{"server"}.
-\item \code{.get_timestamp_ms}: Function; returns epoch milliseconds for HMAC signing.
-}
-}
-
 \examples{
 \dontrun{
 # Not instantiated directly; use subclasses:
@@ -68,74 +68,67 @@ trading <- KucoinTrading$new(time_source = "server")
 }
 
 }
-\section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{is_async}}{Logical; read-only flag indicating whether this instance
-operates in async mode.}
-
-\item{\code{time_source}}{Character; read-only flag indicating the timestamp
-source used for HMAC signing (\code{"local"} or \code{"server"}).}
-}
-\if{html}{\out{</div>}}
+\section{Super class}{
+\code{\link[connectcore:RestClient]{connectcore::RestClient}} -> \code{KucoinBase}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-KucoinBase-new}{\code{KucoinBase$new()}}
-\item \href{#method-KucoinBase-clone}{\code{KucoinBase$clone()}}
-}
+  \itemize{
+    \item \href{#method-KucoinBase-initialize}{\code{KucoinBase$new()}}
+    \item \href{#method-KucoinBase-clone}{\code{KucoinBase$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-KucoinBase-new"></a>}}
-\if{latex}{\out{\hypertarget{method-KucoinBase-new}{}}}
-\subsection{Method \code{new()}}{
-Initialise a KucoinBase Object
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinBase$new(
+\if{html}{\out{<a id="method-KucoinBase-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-KucoinBase-initialize}{}}}
+\subsection{\code{KucoinBase$new()}}{
+  Initialise a KucoinBase Object
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinBase$new(
   keys = get_api_keys(),
   base_url = get_base_url(),
   async = FALSE,
   time_source = c("local", "server")
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{keys}}{List; API credentials from \code{\link[=get_api_keys]{get_api_keys()}}.
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{keys}}{List; API credentials from \code{\link[=get_api_keys]{get_api_keys()}}.
 Defaults to \code{get_api_keys()}.}
+      \item{\code{base_url}}{Character; API base URL. Defaults to \code{get_base_url()}.}
+      \item{\code{async}}{Logical; if \code{TRUE}, methods return promises. Default \code{FALSE}.}
+      \item{\code{time_source}}{Character; clock source for HMAC request signing.
+\code{"local"} (default) uses the local UTC clock. \code{"server"} fetches the
+KuCoin server time before each authenticated request, which adds latency
+but avoids clock-drift issues.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Invisible self.
+  }
+}
 
-\item{\code{base_url}}{Character; API base URL. Defaults to \code{get_base_url()}.}
-
-\item{\code{async}}{Logical; if \code{TRUE}, methods return promises. Default \code{FALSE}.}
-
-\item{\code{time_source}}{Character; clock source for HMAC request signing.
-\code{"local"} (default) uses \code{lubridate::now()}. \code{"server"} fetches the KuCoin
-server time before each authenticated request, which adds latency but
-avoids clock-drift issues.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Invisible self.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinBase-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinBase-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinBase$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{KucoinBase$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinBase$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

@@ -4,11 +4,6 @@
 \alias{KucoinTransfer}
 \title{KucoinTransfer: Internal Transfer Management}
 \description{
-KucoinTransfer: Internal Transfer Management
-
-KucoinTransfer: Internal Transfer Management
-}
-\details{
 Provides methods for transferring funds between KuCoin accounts (main, trade,
 margin, etc.) and between master and sub-accounts. Inherits from \link{KucoinBase}.
 \subsection{Purpose and Scope}{
@@ -92,7 +87,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinTransfer$add_transfer`
+## Method `KucoinTransfer$add_transfer()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -122,7 +117,7 @@ result <- transfer$add_transfer(
 }
 
 ## ------------------------------------------------
-## Method `KucoinTransfer$get_transferable`
+## Method `KucoinTransfer$get_transferable()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -137,29 +132,27 @@ trade_bal <- transfer$get_transferable(currency = "BTC", type = "TRADE")
 print(trade_bal$transferable)
 }
 }
-\section{Super class}{
-\code{\link[kucoin:KucoinBase]{kucoin::KucoinBase}} -> \code{KucoinTransfer}
+\section{Super classes}{
+\code{\link[connectcore:RestClient]{connectcore::RestClient}} -> \code{\link[kucoin:KucoinBase]{KucoinBase}} -> \code{KucoinTransfer}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-KucoinTransfer-add_transfer}{\code{KucoinTransfer$add_transfer()}}
-\item \href{#method-KucoinTransfer-get_transferable}{\code{KucoinTransfer$get_transferable()}}
-\item \href{#method-KucoinTransfer-clone}{\code{KucoinTransfer$clone()}}
+  \itemize{
+    \item \href{#method-KucoinTransfer-add_transfer}{\code{KucoinTransfer$add_transfer()}}
+    \item \href{#method-KucoinTransfer-get_transferable}{\code{KucoinTransfer$get_transferable()}}
+    \item \href{#method-KucoinTransfer-clone}{\code{KucoinTransfer$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>kucoin::KucoinBase$initialize()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>KucoinBase$initialize()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinTransfer-add_transfer"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinTransfer-add_transfer}{}}}
-\subsection{Method \code{add_transfer()}}{
-Add Transfer (Universal)
+\subsection{\code{KucoinTransfer$add_transfer()}}{
+  Add Transfer (Universal)
 
 Transfers funds between account types within your own KuCoin account, or
 between master and sub-accounts. This is essential for trading bots because
@@ -217,8 +210,9 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinTransfer$add_transfer(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinTransfer$add_transfer(
   clientOid,
   currency,
   amount,
@@ -229,45 +223,35 @@ Verified: 2026-05-23
   fromAccountTag = NULL,
   toUserId = NULL,
   toAccountTag = NULL
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{clientOid}}{Character; unique client order ID for idempotency (max 128 bits, e.g., UUID).}
-
-\item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"USDT"}).}
-
-\item{\code{amount}}{Character; transfer amount (positive, multiple of currency precision).}
-
-\item{\code{type}}{Character; transfer type: \code{"INTERNAL"}, \code{"PARENT_TO_SUB"}, or \code{"SUB_TO_PARENT"}.}
-
-\item{\code{fromAccountType}}{Character; source account type: \code{"MAIN"}, \code{"TRADE"}, \code{"CONTRACT"},
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{clientOid}}{Character; unique client order ID for idempotency (max 128 bits, e.g., UUID).}
+      \item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"USDT"}).}
+      \item{\code{amount}}{Character; transfer amount (positive, multiple of currency precision).}
+      \item{\code{type}}{Character; transfer type: \code{"INTERNAL"}, \code{"PARENT_TO_SUB"}, or \code{"SUB_TO_PARENT"}.}
+      \item{\code{fromAccountType}}{Character; source account type: \code{"MAIN"}, \code{"TRADE"}, \code{"CONTRACT"},
 \code{"MARGIN"}, \code{"ISOLATED"}, \code{"MARGIN_V2"}, \code{"ISOLATED_V2"}.}
-
-\item{\code{toAccountType}}{Character; destination account type (same options as \code{fromAccountType}).}
-
-\item{\code{fromUserId}}{Character or NULL; source user ID (required for \code{"SUB_TO_PARENT"} transfers).}
-
-\item{\code{fromAccountTag}}{Character or NULL; symbol for ISOLATED/ISOLATED_V2 source accounts (e.g., \code{"BTC-USDT"}).}
-
-\item{\code{toUserId}}{Character or NULL; destination user ID (required for \code{"PARENT_TO_SUB"} transfers).}
-
-\item{\code{toAccountTag}}{Character or NULL; symbol for ISOLATED/ISOLATED_V2 destination accounts (e.g., \code{"BTC-USDT"}).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
+      \item{\code{toAccountType}}{Character; destination account type (same options as \code{fromAccountType}).}
+      \item{\code{fromUserId}}{Character or NULL; source user ID (required for \code{"SUB_TO_PARENT"} transfers).}
+      \item{\code{fromAccountTag}}{Character or NULL; symbol for ISOLATED/ISOLATED_V2 source accounts (e.g., \code{"BTC-USDT"}).}
+      \item{\code{toUserId}}{Character or NULL; destination user ID (required for \code{"PARENT_TO_SUB"} transfers).}
+      \item{\code{toAccountTag}}{Character or NULL; symbol for ISOLATED/ISOLATED_V2 destination accounts (e.g., \code{"BTC-USDT"}).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
 \itemize{
 \item \code{order_id} (character): The transfer order identifier.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-transfer <- KucoinTransfer$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{transfer <- KucoinTransfer$new()
 
 # Move USDT from main to trade account for spot trading
 result <- transfer$add_transfer(
@@ -291,17 +275,15 @@ result <- transfer$add_transfer(
   toUserId = "sub-user-id-here"
 )
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinTransfer-get_transferable"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinTransfer-get_transferable}{}}}
-\subsection{Method \code{get_transferable()}}{
-Get Transferable Balance
+\subsection{\code{KucoinTransfer$get_transferable()}}{
+  Get Transferable Balance
 
 Retrieves the amount of a currency that is available for transfer out of a
 specific account type. Use this before calling \code{add_transfer()} to verify
@@ -359,25 +341,24 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinTransfer$get_transferable(currency, type, tag = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"USDT"}).}
-
-\item{\code{type}}{Character; account type: \code{"MAIN"}, \code{"TRADE"}, \code{"MARGIN"},
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinTransfer$get_transferable(currency, type, tag = NULL)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"USDT"}).}
+      \item{\code{type}}{Character; account type: \code{"MAIN"}, \code{"TRADE"}, \code{"MARGIN"},
 \code{"ISOLATED"}, \code{"MARGIN_V2"}, \code{"ISOLATED_V2"}.}
-
-\item{\code{tag}}{Character or NULL; trading pair symbol required for \code{"ISOLATED"}
+      \item{\code{tag}}{Character or NULL; trading pair symbol required for \code{"ISOLATED"}
 account type (e.g., \code{"BTC-USDT"}).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
 \itemize{
 \item \code{currency} (character): Currency code.
 \item \code{balance} (character): Total funds in the account.
@@ -385,11 +366,10 @@ account type (e.g., \code{"BTC-USDT"}).}
 \item \code{holds} (character): Funds on hold (locked in open orders).
 \item \code{transferable} (character): Funds available for transfer.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-transfer <- KucoinTransfer$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{transfer <- KucoinTransfer$new()
 
 # Check transferable USDT in main account
 balance <- transfer$get_transferable(currency = "USDT", type = "MAIN")
@@ -399,27 +379,27 @@ print(balance[, .(currency, balance, transferable)])
 trade_bal <- transfer$get_transferable(currency = "BTC", type = "TRADE")
 print(trade_bal$transferable)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinTransfer-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinTransfer-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinTransfer$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{KucoinTransfer$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinTransfer$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

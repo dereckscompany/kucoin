@@ -4,11 +4,6 @@
 \alias{KucoinSubAccount}
 \title{KucoinSubAccount: Sub-Account Management}
 \description{
-KucoinSubAccount: Sub-Account Management
-
-KucoinSubAccount: Sub-Account Management
-}
-\details{
 Provides methods for managing sub-accounts under a KuCoin master account.
 Inherits from \link{KucoinBase}.
 \subsection{Purpose and Scope}{
@@ -74,7 +69,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinSubAccount$add_sub_account`
+## Method `KucoinSubAccount$add_sub_account()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -99,7 +94,7 @@ result <- sub$add_sub_account(
 }
 
 ## ------------------------------------------------
-## Method `KucoinSubAccount$get_sub_account_list`
+## Method `KucoinSubAccount$get_sub_account_list()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -118,7 +113,7 @@ spot_subs <- all_subs[access == "Spot"]
 }
 
 ## ------------------------------------------------
-## Method `KucoinSubAccount$get_detail_balance`
+## Method `KucoinSubAccount$get_detail_balance()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -140,7 +135,7 @@ print(trade_bal[, .(currency, available, holds)])
 }
 
 ## ------------------------------------------------
-## Method `KucoinSubAccount$get_all_spot_balances`
+## Method `KucoinSubAccount$get_all_spot_balances()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -162,31 +157,29 @@ cat("Total available USDT:", total_avail, "\\\\n")
 all_balances[, .(n_currencies = .N), by = .(sub_name, account_type)]
 }
 }
-\section{Super class}{
-\code{\link[kucoin:KucoinBase]{kucoin::KucoinBase}} -> \code{KucoinSubAccount}
+\section{Super classes}{
+\code{\link[connectcore:RestClient]{connectcore::RestClient}} -> \code{\link[kucoin:KucoinBase]{KucoinBase}} -> \code{KucoinSubAccount}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-KucoinSubAccount-add_sub_account}{\code{KucoinSubAccount$add_sub_account()}}
-\item \href{#method-KucoinSubAccount-get_sub_account_list}{\code{KucoinSubAccount$get_sub_account_list()}}
-\item \href{#method-KucoinSubAccount-get_detail_balance}{\code{KucoinSubAccount$get_detail_balance()}}
-\item \href{#method-KucoinSubAccount-get_all_spot_balances}{\code{KucoinSubAccount$get_all_spot_balances()}}
-\item \href{#method-KucoinSubAccount-clone}{\code{KucoinSubAccount$clone()}}
+  \itemize{
+    \item \href{#method-KucoinSubAccount-add_sub_account}{\code{KucoinSubAccount$add_sub_account()}}
+    \item \href{#method-KucoinSubAccount-get_sub_account_list}{\code{KucoinSubAccount$get_sub_account_list()}}
+    \item \href{#method-KucoinSubAccount-get_detail_balance}{\code{KucoinSubAccount$get_detail_balance()}}
+    \item \href{#method-KucoinSubAccount-get_all_spot_balances}{\code{KucoinSubAccount$get_all_spot_balances()}}
+    \item \href{#method-KucoinSubAccount-clone}{\code{KucoinSubAccount$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>kucoin::KucoinBase$initialize()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>KucoinBase$initialize()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinSubAccount-add_sub_account"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinSubAccount-add_sub_account}{}}}
-\subsection{Method \code{add_sub_account()}}{
-Add Sub-Account
+\subsection{\code{KucoinSubAccount$add_sub_account()}}{
+  Add Sub-Account
 
 Creates a new sub-account under the master account. The sub-account is
 assigned a unique UID and can be granted Spot, Futures, or Margin trading
@@ -245,36 +238,33 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinSubAccount$add_sub_account(password, subName, access, remarks = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{password}}{Character; sub-account password (7-24 chars, must contain both letters and numbers, no special characters).}
-
-\item{\code{subName}}{Character; sub-account name (7-32 chars, must start with a letter, letters and numbers only, no spaces).}
-
-\item{\code{access}}{Character; permission type: \code{"Spot"}, \code{"Futures"}, or \code{"Margin"}. Validated via \code{rlang::arg_match0()}.}
-
-\item{\code{remarks}}{Character or NULL; optional descriptive remarks for the sub-account (1-24 chars). Default \code{NULL}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinSubAccount$add_sub_account(password, subName, access, remarks = NULL)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{password}}{Character; sub-account password (7-24 chars, must contain both letters and numbers, no special characters).}
+      \item{\code{subName}}{Character; sub-account name (7-32 chars, must start with a letter, letters and numbers only, no spaces).}
+      \item{\code{access}}{Character; permission type: \code{"Spot"}, \code{"Futures"}, or \code{"Margin"}. Validated via \code{rlang::arg_match0()}.}
+      \item{\code{remarks}}{Character or NULL; optional descriptive remarks for the sub-account (1-24 chars). Default \code{NULL}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{uid} (integer): Unique user ID assigned to the new sub-account.
 \item \code{sub_name} (character): The sub-account login name.
 \item \code{remarks} (character): The remarks string (if provided).
 \item \code{access} (character): Permission granted (\code{"Spot"}, \code{"Futures"}, or \code{"Margin"}).
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-sub <- KucoinSubAccount$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{sub <- KucoinSubAccount$new()
 
 # Create a Spot sub-account
 result <- sub$add_sub_account(
@@ -293,17 +283,15 @@ result <- sub$add_sub_account(
   access = "Futures"
 )
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinSubAccount-get_sub_account_list"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinSubAccount-get_sub_account_list}{}}}
-\subsection{Method \code{get_sub_account_list()}}{
-Get Sub-Account List Summary
+\subsection{\code{KucoinSubAccount$get_sub_account_list()}}{
+  Get Sub-Account List Summary
 
 Retrieves a paginated summary of all sub-accounts under the master account.
 Automatically handles pagination, fetching up to \code{max_pages} pages of results.
@@ -382,21 +370,21 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinSubAccount$get_sub_account_list(page_size = 100, max_pages = Inf)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{page_size}}{Integer; number of results per page, between 1 and 100. Default \code{100}.}
-
-\item{\code{max_pages}}{Numeric; maximum number of pages to retrieve. Use \code{Inf} (default) to fetch all available pages.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinSubAccount$get_sub_account_list(page_size = 100, max_pages = Inf)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{page_size}}{Integer; number of results per page, between 1 and 100. Default \code{100}.}
+      \item{\code{max_pages}}{Numeric; maximum number of pages to retrieve. Use \code{Inf} (default) to fetch all available pages.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{user_id} (character): Internal user ID string.
 \item \code{uid} (integer): Numeric user ID for the sub-account.
@@ -407,11 +395,10 @@ Verified: 2026-05-23
 \item \code{remarks} (character): Optional remarks string.
 \item \code{created_at} (POSIXct): Creation datetime (coerced from epoch milliseconds).
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-sub <- KucoinSubAccount$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{sub <- KucoinSubAccount$new()
 
 # Fetch all sub-accounts
 all_subs <- sub$get_sub_account_list()
@@ -424,17 +411,15 @@ print(first_page[, .(sub_name, access, created_at)])
 # Filter for Spot sub-accounts
 spot_subs <- all_subs[access == "Spot"]
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinSubAccount-get_detail_balance"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinSubAccount-get_detail_balance}{}}}
-\subsection{Method \code{get_detail_balance()}}{
-Get Sub-Account Detail Balance
+\subsection{\code{KucoinSubAccount$get_detail_balance()}}{
+  Get Sub-Account Detail Balance
 
 Retrieves detailed balance information for a specific sub-account, broken
 down by account type (main, trade, margin). Each currency held in the
@@ -536,21 +521,21 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinSubAccount$get_detail_balance(subUserId, includeBaseAmount = FALSE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{subUserId}}{Character; the sub-account user ID (numeric UID as a string, e.g., \code{"169630809"}).}
-
-\item{\code{includeBaseAmount}}{Logical; if \code{TRUE}, includes currencies with zero balances in the response. Default \code{FALSE}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinSubAccount$get_detail_balance(subUserId, includeBaseAmount = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{subUserId}}{Character; the sub-account user ID (numeric UID as a string, e.g., \code{"169630809"}).}
+      \item{\code{includeBaseAmount}}{Logical; if \code{TRUE}, includes currencies with zero balances in the response. Default \code{FALSE}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{currency} (character): Currency code (e.g., \code{"USDT"}, \code{"BTC"}).
 \item \code{balance} (character): Total balance for that currency.
@@ -564,11 +549,10 @@ Verified: 2026-05-23
 \item \code{sub_user_id} (character): The sub-account user ID.
 \item \code{sub_name} (character): The sub-account name.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-sub <- KucoinSubAccount$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{sub <- KucoinSubAccount$new()
 
 # Get balances for a specific sub-account
 balances <- sub$get_detail_balance(subUserId = "169630809")
@@ -584,17 +568,15 @@ all_balances <- sub$get_detail_balance(
 trade_bal <- balances[account_type == "trade"]
 print(trade_bal[, .(currency, available, holds)])
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinSubAccount-get_all_spot_balances"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinSubAccount-get_all_spot_balances}{}}}
-\subsection{Method \code{get_all_spot_balances()}}{
-Get Spot Sub-Account List (V2)
+\subsection{\code{KucoinSubAccount$get_all_spot_balances()}}{
+  Get Spot Sub-Account List (V2)
 
 Retrieves paginated Spot sub-account balance details for all sub-accounts
 at once via the V2 endpoint. Each sub-account's balances are broken down
@@ -701,21 +683,21 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinSubAccount$get_all_spot_balances(page_size = 100, max_pages = Inf)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{page_size}}{Integer; number of results per page, between 10 and 100. Default \code{100}.}
-
-\item{\code{max_pages}}{Numeric; maximum number of pages to retrieve. Use \code{Inf} (default) to fetch all available pages.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinSubAccount$get_all_spot_balances(page_size = 100, max_pages = Inf)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{page_size}}{Integer; number of results per page, between 10 and 100. Default \code{100}.}
+      \item{\code{max_pages}}{Numeric; maximum number of pages to retrieve. Use \code{Inf} (default) to fetch all available pages.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{sub_user_id} (character): The sub-account user ID.
 \item \code{sub_name} (character): The sub-account name.
@@ -729,11 +711,10 @@ Verified: 2026-05-23
 \item \code{base_amount} (character): Total value in base currency.
 \item \code{tag} (character): Currency tag (if applicable).
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-sub <- KucoinSubAccount$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{sub <- KucoinSubAccount$new()
 
 # Fetch all sub-account Spot balances
 all_balances <- sub$get_all_spot_balances()
@@ -750,27 +731,27 @@ cat("Total available USDT:", total_avail, "\\\\n")
 # Group by sub-account
 all_balances[, .(n_currencies = .N), by = .(sub_name, account_type)]
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinSubAccount-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinSubAccount-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinSubAccount$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{KucoinSubAccount$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinSubAccount$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

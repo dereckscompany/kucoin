@@ -4,11 +4,6 @@
 \alias{KucoinFuturesMarketData}
 \title{KucoinFuturesMarketData: Futures Market Data Retrieval}
 \description{
-KucoinFuturesMarketData: Futures Market Data Retrieval
-
-KucoinFuturesMarketData: Futures Market Data Retrieval
-}
-\details{
 Provides methods for querying KuCoin Futures public market data, including
 contract details, tickers, orderbooks, trade history, klines, mark prices,
 and funding rates. Inherits from \link{KucoinBase}.
@@ -73,7 +68,7 @@ rate <- futures_market$get_funding_rate("XBTUSDTM")
 
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_contract`
+## Method `KucoinFuturesMarketData$get_contract()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -83,7 +78,7 @@ print(contract[, .(symbol, lot_size, tick_size, max_leverage)])
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_all_contracts`
+## Method `KucoinFuturesMarketData$get_all_contracts()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -93,7 +88,7 @@ print(contracts[, .(symbol, status, max_leverage, mark_price)])
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_ticker`
+## Method `KucoinFuturesMarketData$get_ticker()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -103,7 +98,7 @@ print(ticker[, .(symbol, price, best_bid_price, best_ask_price, ts)])
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_all_tickers`
+## Method `KucoinFuturesMarketData$get_all_tickers()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -113,7 +108,7 @@ print(all_tickers[, .(symbol, price, best_bid_price, best_ask_price)])
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_part_orderbook`
+## Method `KucoinFuturesMarketData$get_part_orderbook()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -123,7 +118,7 @@ print(ob[side == "bid"][order(level)][1:5])
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_full_orderbook`
+## Method `KucoinFuturesMarketData$get_full_orderbook()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -133,7 +128,7 @@ print(full_ob[, .N, by = side])
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_trade_history`
+## Method `KucoinFuturesMarketData$get_trade_history()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -143,7 +138,7 @@ print(trades[, .(price, size, side, ts)])
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_klines`
+## Method `KucoinFuturesMarketData$get_klines()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -171,7 +166,7 @@ print(nrow(all_klines))
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_mark_price`
+## Method `KucoinFuturesMarketData$get_mark_price()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -181,7 +176,7 @@ print(mark[, .(symbol, value, index_price, time_point)])
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_funding_rate`
+## Method `KucoinFuturesMarketData$get_funding_rate()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -191,7 +186,7 @@ print(rate[, .(symbol, value, predicted_value, funding_time)])
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_funding_history`
+## Method `KucoinFuturesMarketData$get_funding_history()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -205,7 +200,7 @@ print(history[, .(symbol, funding_rate, timepoint)])
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_server_time`
+## Method `KucoinFuturesMarketData$get_server_time()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -215,7 +210,7 @@ print(server_time$server_time)
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_service_status`
+## Method `KucoinFuturesMarketData$get_service_status()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -224,65 +219,64 @@ status <- futures_market$get_service_status()
 if (status$status == "open") message("Exchange is operational")
 }
 }
-\section{Super class}{
-\code{\link[kucoin:KucoinBase]{kucoin::KucoinBase}} -> \code{KucoinFuturesMarketData}
+\section{Super classes}{
+\code{\link[connectcore:RestClient]{connectcore::RestClient}} -> \code{\link[kucoin:KucoinBase]{KucoinBase}} -> \code{KucoinFuturesMarketData}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-KucoinFuturesMarketData-new}{\code{KucoinFuturesMarketData$new()}}
-\item \href{#method-KucoinFuturesMarketData-get_contract}{\code{KucoinFuturesMarketData$get_contract()}}
-\item \href{#method-KucoinFuturesMarketData-get_all_contracts}{\code{KucoinFuturesMarketData$get_all_contracts()}}
-\item \href{#method-KucoinFuturesMarketData-get_ticker}{\code{KucoinFuturesMarketData$get_ticker()}}
-\item \href{#method-KucoinFuturesMarketData-get_all_tickers}{\code{KucoinFuturesMarketData$get_all_tickers()}}
-\item \href{#method-KucoinFuturesMarketData-get_part_orderbook}{\code{KucoinFuturesMarketData$get_part_orderbook()}}
-\item \href{#method-KucoinFuturesMarketData-get_full_orderbook}{\code{KucoinFuturesMarketData$get_full_orderbook()}}
-\item \href{#method-KucoinFuturesMarketData-get_trade_history}{\code{KucoinFuturesMarketData$get_trade_history()}}
-\item \href{#method-KucoinFuturesMarketData-get_klines}{\code{KucoinFuturesMarketData$get_klines()}}
-\item \href{#method-KucoinFuturesMarketData-get_mark_price}{\code{KucoinFuturesMarketData$get_mark_price()}}
-\item \href{#method-KucoinFuturesMarketData-get_funding_rate}{\code{KucoinFuturesMarketData$get_funding_rate()}}
-\item \href{#method-KucoinFuturesMarketData-get_funding_history}{\code{KucoinFuturesMarketData$get_funding_history()}}
-\item \href{#method-KucoinFuturesMarketData-get_server_time}{\code{KucoinFuturesMarketData$get_server_time()}}
-\item \href{#method-KucoinFuturesMarketData-get_service_status}{\code{KucoinFuturesMarketData$get_service_status()}}
-\item \href{#method-KucoinFuturesMarketData-clone}{\code{KucoinFuturesMarketData$clone()}}
-}
+  \itemize{
+    \item \href{#method-KucoinFuturesMarketData-initialize}{\code{KucoinFuturesMarketData$new()}}
+    \item \href{#method-KucoinFuturesMarketData-get_contract}{\code{KucoinFuturesMarketData$get_contract()}}
+    \item \href{#method-KucoinFuturesMarketData-get_all_contracts}{\code{KucoinFuturesMarketData$get_all_contracts()}}
+    \item \href{#method-KucoinFuturesMarketData-get_ticker}{\code{KucoinFuturesMarketData$get_ticker()}}
+    \item \href{#method-KucoinFuturesMarketData-get_all_tickers}{\code{KucoinFuturesMarketData$get_all_tickers()}}
+    \item \href{#method-KucoinFuturesMarketData-get_part_orderbook}{\code{KucoinFuturesMarketData$get_part_orderbook()}}
+    \item \href{#method-KucoinFuturesMarketData-get_full_orderbook}{\code{KucoinFuturesMarketData$get_full_orderbook()}}
+    \item \href{#method-KucoinFuturesMarketData-get_trade_history}{\code{KucoinFuturesMarketData$get_trade_history()}}
+    \item \href{#method-KucoinFuturesMarketData-get_klines}{\code{KucoinFuturesMarketData$get_klines()}}
+    \item \href{#method-KucoinFuturesMarketData-get_mark_price}{\code{KucoinFuturesMarketData$get_mark_price()}}
+    \item \href{#method-KucoinFuturesMarketData-get_funding_rate}{\code{KucoinFuturesMarketData$get_funding_rate()}}
+    \item \href{#method-KucoinFuturesMarketData-get_funding_history}{\code{KucoinFuturesMarketData$get_funding_history()}}
+    \item \href{#method-KucoinFuturesMarketData-get_server_time}{\code{KucoinFuturesMarketData$get_server_time()}}
+    \item \href{#method-KucoinFuturesMarketData-get_service_status}{\code{KucoinFuturesMarketData$get_service_status()}}
+    \item \href{#method-KucoinFuturesMarketData-clone}{\code{KucoinFuturesMarketData$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-KucoinFuturesMarketData-new"></a>}}
-\if{latex}{\out{\hypertarget{method-KucoinFuturesMarketData-new}{}}}
-\subsection{Method \code{new()}}{
-Create a new KucoinFuturesMarketData instance.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesMarketData$new(
+\if{html}{\out{<a id="method-KucoinFuturesMarketData-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-KucoinFuturesMarketData-initialize}{}}}
+\subsection{\code{KucoinFuturesMarketData$new()}}{
+  Create a new KucoinFuturesMarketData instance.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesMarketData$new(
   keys = get_api_keys(),
   base_url = get_futures_base_url(),
   async = FALSE,
   time_source = c("local", "server")
-)}\if{html}{\out{</div>}}
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{keys}}{List; API credentials from \code{\link[=get_api_keys]{get_api_keys()}}.}
+      \item{\code{base_url}}{Character; Futures API base URL. Defaults to \code{\link[=get_futures_base_url]{get_futures_base_url()}}.}
+      \item{\code{async}}{Logical; if TRUE, methods return promises.}
+      \item{\code{time_source}}{Character; \code{"local"} or \code{"server"}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Invisible self.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{keys}}{List; API credentials from \code{\link[=get_api_keys]{get_api_keys()}}.}
-
-\item{\code{base_url}}{Character; Futures API base URL. Defaults to \code{\link[=get_futures_base_url]{get_futures_base_url()}}.}
-
-\item{\code{async}}{Logical; if TRUE, methods return promises.}
-
-\item{\code{time_source}}{Character; \code{"local"} or \code{"server"}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Invisible self.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesMarketData-get_contract"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesMarketData-get_contract}{}}}
-\subsection{Method \code{get_contract()}}{
-Get Contract Details
+\subsection{\code{KucoinFuturesMarketData$get_contract()}}{
+  Get Contract Details
 
 Retrieves detailed contract specification for a single symbol.
 \subsection{Workflow}{
@@ -376,19 +370,20 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesMarketData$get_contract(symbol)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesMarketData$get_contract(symbol)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A single-row \code{data.table} (or \verb{promise<data.table>} if
 constructed with \code{async = TRUE}) with the contract specification
 flattened to one row per symbol. Key columns:
 \itemize{
@@ -420,25 +415,22 @@ flattened to one row per symbol. Key columns:
 \item \code{price_chg_pct} (numeric): 24h price change percentage.
 \item \code{price_chg} (numeric): 24h price change.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-futures_market <- KucoinFuturesMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{futures_market <- KucoinFuturesMarketData$new()
 contract <- futures_market$get_contract("XBTUSDTM")
 print(contract[, .(symbol, lot_size, tick_size, max_leverage)])
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesMarketData-get_all_contracts"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesMarketData-get_all_contracts}{}}}
-\subsection{Method \code{get_all_contracts()}}{
-Get All Active Contracts
+\subsection{\code{KucoinFuturesMarketData$get_all_contracts()}}{
+  Get All Active Contracts
 
 Retrieves details of all actively traded futures contracts.
 \subsection{Workflow}{
@@ -524,34 +516,32 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesMarketData$get_all_contracts()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesMarketData$get_all_contracts()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \code{data.table} (or \verb{promise<data.table>} if constructed with
 \code{async = TRUE}) with one row per active contract; columns match
 \code{get_contract()}. Returns an empty \code{data.table} if no active
 contracts are returned.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-futures_market <- KucoinFuturesMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{futures_market <- KucoinFuturesMarketData$new()
 contracts <- futures_market$get_all_contracts()
 print(contracts[, .(symbol, status, max_leverage, mark_price)])
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesMarketData-get_ticker"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesMarketData-get_ticker}{}}}
-\subsection{Method \code{get_ticker()}}{
-Get Futures Ticker
+\subsection{\code{KucoinFuturesMarketData$get_ticker()}}{
+  Get Futures Ticker
 
 Retrieves real-time ticker data for a futures contract.
 \subsection{Workflow}{
@@ -608,19 +598,20 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesMarketData$get_ticker(symbol)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesMarketData$get_ticker(symbol)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A single-row \code{data.table} (or \verb{promise<data.table>} if
 constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{sequence} (integer): Sequence number.
@@ -635,25 +626,22 @@ constructed with \code{async = TRUE}) with columns:
 \item \code{best_ask_size} (integer): Quantity at best ask.
 \item \code{ts} (POSIXct): Ticker timestamp (coerced from nanoseconds).
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-futures_market <- KucoinFuturesMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{futures_market <- KucoinFuturesMarketData$new()
 ticker <- futures_market$get_ticker("XBTUSDTM")
 print(ticker[, .(symbol, price, best_bid_price, best_ask_price, ts)])
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesMarketData-get_all_tickers"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesMarketData-get_all_tickers}{}}}
-\subsection{Method \code{get_all_tickers()}}{
-Get All Futures Tickers
+\subsection{\code{KucoinFuturesMarketData$get_all_tickers()}}{
+  Get All Futures Tickers
 
 Retrieves real-time ticker data for all futures contracts.
 \subsection{Workflow}{
@@ -723,34 +711,32 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesMarketData$get_all_tickers()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesMarketData$get_all_tickers()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \code{data.table} (or \verb{promise<data.table>} if constructed with
 \code{async = TRUE}) with one row per contract; columns match
 \code{get_ticker()}. Returns an empty \code{data.table} if no tickers are
 returned.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-futures_market <- KucoinFuturesMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{futures_market <- KucoinFuturesMarketData$new()
 all_tickers <- futures_market$get_all_tickers()
 print(all_tickers[, .(symbol, price, best_bid_price, best_ask_price)])
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesMarketData-get_part_orderbook"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesMarketData-get_part_orderbook}{}}}
-\subsection{Method \code{get_part_orderbook()}}{
-Get Partial Orderbook
+\subsection{\code{KucoinFuturesMarketData$get_part_orderbook()}}{
+  Get Partial Orderbook
 
 Retrieves the top 20 or 100 levels of the orderbook. Does not require
 authentication.
@@ -812,21 +798,21 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesMarketData$get_part_orderbook(symbol, size = 20)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
-
-\item{\code{size}}{Integer; number of levels, either \code{20} or \code{100}. Default \code{20}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesMarketData$get_part_orderbook(symbol, size = 20)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+      \item{\code{size}}{Integer; number of levels, either \code{20} or \code{100}. Default \code{20}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{ts} (POSIXct): Snapshot timestamp (coerced from nanoseconds).
 \item \code{sequence} (character): Sequence number for change detection.
@@ -836,25 +822,22 @@ A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{asy
 \item \code{price} (numeric): Price level.
 \item \code{size} (numeric): Size at this price level.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-futures_market <- KucoinFuturesMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{futures_market <- KucoinFuturesMarketData$new()
 ob <- futures_market$get_part_orderbook("XBTUSDTM", size = 20)
 print(ob[side == "bid"][order(level)][1:5])
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesMarketData-get_full_orderbook"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesMarketData-get_full_orderbook}{}}}
-\subsection{Method \code{get_full_orderbook()}}{
-Get Full Orderbook
+\subsection{\code{KucoinFuturesMarketData$get_full_orderbook()}}{
+  Get Full Orderbook
 
 Retrieves the full Level 2 orderbook snapshot. \strong{Requires authentication.}
 \subsection{Workflow}{
@@ -920,19 +903,20 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesMarketData$get_full_orderbook(symbol)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesMarketData$get_full_orderbook(symbol)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{ts} (POSIXct): Snapshot timestamp (coerced from nanoseconds).
 \item \code{sequence} (character): Sequence number for change detection.
@@ -942,25 +926,22 @@ A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{asy
 \item \code{price} (numeric): Price level.
 \item \code{size} (numeric): Size at this price level.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-futures_market <- KucoinFuturesMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{futures_market <- KucoinFuturesMarketData$new()
 full_ob <- futures_market$get_full_orderbook("XBTUSDTM")
 print(full_ob[, .N, by = side])
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesMarketData-get_trade_history"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesMarketData-get_trade_history}{}}}
-\subsection{Method \code{get_trade_history()}}{
-Get Recent Trade History
+\subsection{\code{KucoinFuturesMarketData$get_trade_history()}}{
+  Get Recent Trade History
 
 Retrieves the most recent trades for a futures contract.
 \subsection{Workflow}{
@@ -1026,19 +1007,20 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesMarketData$get_trade_history(symbol)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesMarketData$get_trade_history(symbol)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \code{data.table} (or \verb{promise<data.table>} if constructed with
 \code{async = TRUE}) with one row per trade. Returns an empty
 \code{data.table} when KuCoin reports no recent trades. Columns:
 \itemize{
@@ -1051,25 +1033,22 @@ A \code{data.table} (or \verb{promise<data.table>} if constructed with
 \item \code{side} (character): Taker side (\code{"buy"} or \code{"sell"}).
 \item \code{ts} (POSIXct): Trade timestamp (coerced from nanoseconds).
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-futures_market <- KucoinFuturesMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{futures_market <- KucoinFuturesMarketData$new()
 trades <- futures_market$get_trade_history("XBTUSDTM")
 print(trades[, .(price, size, side, ts)])
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesMarketData-get_klines"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesMarketData-get_klines}{}}}
-\subsection{Method \code{get_klines()}}{
-Get Klines (Candlestick Data)
+\subsection{\code{KucoinFuturesMarketData$get_klines()}}{
+  Get Klines (Candlestick Data)
 
 Retrieves historical kline/candlestick data for a futures contract.
 Supports both single-call mode and automatic multi-segment fetching
@@ -1123,46 +1102,42 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesMarketData$get_klines(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesMarketData$get_klines(
   symbol,
   granularity,
   from = NULL,
   to = NULL,
   fetch_all = FALSE,
   sleep = 0.2
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
-
-\item{\code{granularity}}{Integer; candle interval in minutes. Supported values:
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+      \item{\code{granularity}}{Integer; candle interval in minutes. Supported values:
 1, 5, 15, 30, 60, 120, 240, 480, 720, 1440, 10080.}
-
-\item{\code{from}}{POSIXct, numeric, or NULL; start time. If POSIXct, converted
+      \item{\code{from}}{POSIXct, numeric, or NULL; start time. If POSIXct, converted
 to milliseconds. If numeric, assumed to be milliseconds.}
-
-\item{\code{to}}{POSIXct, numeric, or NULL; end time.}
-
-\item{\code{fetch_all}}{Logical; if \code{TRUE}, automatically segments the time range
+      \item{\code{to}}{POSIXct, numeric, or NULL; end time.}
+      \item{\code{fetch_all}}{Logical; if \code{TRUE}, automatically segments the time range
 into multiple API calls of up to 200 candles each, fetches all segments,
 deduplicates overlapping boundaries, and returns the combined result sorted
 by \code{datetime}. Both \code{from} and \code{to} are required when enabled.
 \strong{Warning}: large date ranges will consume multiple API requests and may
 impact your rate-limit quota. Default \code{FALSE}.}
-
-\item{\code{sleep}}{Numeric; seconds to wait between consecutive API calls when
+      \item{\code{sleep}}{Numeric; seconds to wait between consecutive API calls when
 \code{fetch_all = TRUE}. Use this to avoid hitting KuCoin rate limits. Only
 applies in synchronous mode; async mode chains requests sequentially via
 promises. Default \code{0.2}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{datetime} (POSIXct): Candle open time (coerced from milliseconds).
 \item \code{open} (numeric): Opening price.
@@ -1172,11 +1147,10 @@ A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{asy
 \item \code{volume} (numeric): Trading volume in contracts.
 \item \code{turnover} (numeric): Trading turnover in settlement currency.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-futures_market <- KucoinFuturesMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{futures_market <- KucoinFuturesMarketData$new()
 
 # Single call: last 200 hourly candles
 klines <- futures_market$get_klines(
@@ -1198,17 +1172,15 @@ all_klines <- futures_market$get_klines(
 )
 print(nrow(all_klines))
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesMarketData-get_mark_price"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesMarketData-get_mark_price}{}}}
-\subsection{Method \code{get_mark_price()}}{
-Get Mark Price
+\subsection{\code{KucoinFuturesMarketData$get_mark_price()}}{
+  Get Mark Price
 
 Retrieves the current mark price for a futures contract. The mark price
 is used for margin calculations and liquidation triggers.
@@ -1260,19 +1232,20 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesMarketData$get_mark_price(symbol)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesMarketData$get_mark_price(symbol)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A single-row \code{data.table} (or \verb{promise<data.table>} if
 constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{symbol} (character): Contract symbol.
@@ -1281,25 +1254,22 @@ constructed with \code{async = TRUE}) with columns:
 \item \code{value} (numeric): Current mark price.
 \item \code{index_price} (numeric): Underlying index price.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-futures_market <- KucoinFuturesMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{futures_market <- KucoinFuturesMarketData$new()
 mark <- futures_market$get_mark_price("XBTUSDTM")
 print(mark[, .(symbol, value, index_price, time_point)])
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesMarketData-get_funding_rate"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesMarketData-get_funding_rate}{}}}
-\subsection{Method \code{get_funding_rate()}}{
-Get Current Funding Rate
+\subsection{\code{KucoinFuturesMarketData$get_funding_rate()}}{
+  Get Current Funding Rate
 
 Retrieves the current funding rate for a perpetual futures contract.
 Funding rates are charged/received every 8 hours for perpetual contracts.
@@ -1352,19 +1322,20 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesMarketData$get_funding_rate(symbol)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesMarketData$get_funding_rate(symbol)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A single-row \code{data.table} (or \verb{promise<data.table>} if
 constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{symbol} (character): Contract symbol.
@@ -1374,25 +1345,22 @@ constructed with \code{async = TRUE}) with columns:
 \item \code{predicted_value} (numeric): Predicted next funding rate.
 \item \code{funding_time} (POSIXct): Next funding settlement time (coerced from milliseconds).
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-futures_market <- KucoinFuturesMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{futures_market <- KucoinFuturesMarketData$new()
 rate <- futures_market$get_funding_rate("XBTUSDTM")
 print(rate[, .(symbol, value, predicted_value, funding_time)])
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesMarketData-get_funding_history"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesMarketData-get_funding_history}{}}}
-\subsection{Method \code{get_funding_history()}}{
-Get Public Funding Rate History
+\subsection{\code{KucoinFuturesMarketData$get_funding_history()}}{
+  Get Public Funding Rate History
 
 Retrieves historical funding rates for a futures contract over a
 specified time range.
@@ -1455,25 +1423,24 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesMarketData$get_funding_history(symbol, from, to)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
-
-\item{\code{from}}{POSIXct or numeric; start time. If POSIXct, converted to milliseconds.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesMarketData$get_funding_history(symbol, from, to)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+      \item{\code{from}}{POSIXct or numeric; start time. If POSIXct, converted to milliseconds.
 If numeric, assumed to be milliseconds.}
-
-\item{\code{to}}{POSIXct or numeric; end time. If POSIXct, converted to milliseconds.
+      \item{\code{to}}{POSIXct or numeric; end time. If POSIXct, converted to milliseconds.
 If numeric, assumed to be milliseconds.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A \code{data.table} (or \verb{promise<data.table>} if constructed with
 \code{async = TRUE}) with one row per funding settlement. Returns an
 empty \code{data.table} when no records cover the time range. Columns:
 \itemize{
@@ -1481,11 +1448,10 @@ empty \code{data.table} when no records cover the time range. Columns:
 \item \code{funding_rate} (numeric): Funding rate for the period.
 \item \code{timepoint} (POSIXct): Settlement timestamp (coerced from milliseconds).
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-futures_market <- KucoinFuturesMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{futures_market <- KucoinFuturesMarketData$new()
 history <- futures_market$get_funding_history(
   symbol = "XBTUSDTM",
   from = as.POSIXct("2024-10-25", tz = "UTC"),
@@ -1493,17 +1459,15 @@ history <- futures_market$get_funding_history(
 )
 print(history[, .(symbol, funding_rate, timepoint)])
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesMarketData-get_server_time"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesMarketData-get_server_time}{}}}
-\subsection{Method \code{get_server_time()}}{
-Get Server Time
+\subsection{\code{KucoinFuturesMarketData$get_server_time()}}{
+  Get Server Time
 
 Retrieves the KuCoin Futures server timestamp. Useful for synchronising
 local clocks and debugging timestamp-related authentication issues.
@@ -1549,35 +1513,33 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesMarketData$get_server_time()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesMarketData$get_server_time()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A single-row \code{data.table} (or \verb{promise<data.table>} if
 constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{server_time} (POSIXct): Server timestamp (coerced from milliseconds).
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-futures_market <- KucoinFuturesMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{futures_market <- KucoinFuturesMarketData$new()
 server_time <- futures_market$get_server_time()
 print(server_time$server_time)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesMarketData-get_service_status"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesMarketData-get_service_status}{}}}
-\subsection{Method \code{get_service_status()}}{
-Get Service Status
+\subsection{\code{KucoinFuturesMarketData$get_service_status()}}{
+  Get Service Status
 
 Retrieves the current service status of the KuCoin Futures exchange.
 Check this before placing orders to confirm the exchange is operational.
@@ -1626,46 +1588,46 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesMarketData$get_service_status()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesMarketData$get_service_status()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A single-row \code{data.table} (or \verb{promise<data.table>} if
 constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{status} (character): Service status (e.g., \code{"open"}, \code{"close"}).
 \item \code{msg} (character): Status message (empty when operational).
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-futures_market <- KucoinFuturesMarketData$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{futures_market <- KucoinFuturesMarketData$new()
 status <- futures_market$get_service_status()
 if (status$status == "open") message("Exchange is operational")
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesMarketData-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesMarketData-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesMarketData$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{KucoinFuturesMarketData$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinFuturesMarketData$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

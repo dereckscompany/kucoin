@@ -4,11 +4,6 @@
 \alias{KucoinAccount}
 \title{KucoinAccount: Account and Funding Management}
 \description{
-KucoinAccount: Account and Funding Management
-
-KucoinAccount: Account and Funding Management
-}
-\details{
 Provides methods for querying account information, balances, and ledger
 history on KuCoin. Inherits from \link{KucoinBase}.
 \subsection{Purpose and Scope}{
@@ -85,7 +80,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_summary`
+## Method `KucoinAccount$get_summary()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -96,7 +91,7 @@ cat("Sub-accounts:", summary$sub_quantity, "/", summary$max_sub_quantity, "\\\\n
 }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_apikey_info`
+## Method `KucoinAccount$get_apikey_info()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -108,7 +103,7 @@ cat("Is Master:", key_info$is_master, "\\\\n")
 }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_spot_account_type`
+## Method `KucoinAccount$get_spot_account_type()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -120,7 +115,7 @@ if (is_hf) {
 }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_spot_accounts`
+## Method `KucoinAccount$get_spot_accounts()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -136,7 +131,7 @@ cat("USDT available:", usdt$available, "\\\\n")
 }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_spot_account_detail`
+## Method `KucoinAccount$get_spot_account_detail()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -152,7 +147,7 @@ cat("Balance:", detail$balance, "Available:", detail$available, "\\\\n")
 }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_cross_margin_account`
+## Method `KucoinAccount$get_cross_margin_account()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -164,7 +159,7 @@ cat("Liabilities:", margin[currency == "USDT", liability], "\\\\n")
 }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_isolated_margin_account`
+## Method `KucoinAccount$get_isolated_margin_account()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -176,7 +171,7 @@ print(isolated)
 }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_spot_ledger`
+## Method `KucoinAccount$get_spot_ledger()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -199,7 +194,7 @@ print(ledger_24h[, .(currency, amount, direction, created_at)])
 }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_hf_ledger`
+## Method `KucoinAccount$get_hf_ledger()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -209,7 +204,7 @@ print(hf[, .(currency, amount, fee, direction, created_at)])
 }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_base_fee_rate`
+## Method `KucoinAccount$get_base_fee_rate()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -219,7 +214,7 @@ cat("Taker:", fees$taker_fee_rate, "Maker:", fees$maker_fee_rate, "\n")
 }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_fee_rate`
+## Method `KucoinAccount$get_fee_rate()`
 ## ------------------------------------------------
 
 \dontrun{
@@ -228,38 +223,36 @@ fees <- account$get_fee_rate("BTC-USDT,ETH-USDT")
 print(fees[, .(symbol, taker_fee_rate, maker_fee_rate)])
 }
 }
-\section{Super class}{
-\code{\link[kucoin:KucoinBase]{kucoin::KucoinBase}} -> \code{KucoinAccount}
+\section{Super classes}{
+\code{\link[connectcore:RestClient]{connectcore::RestClient}} -> \code{\link[kucoin:KucoinBase]{KucoinBase}} -> \code{KucoinAccount}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-KucoinAccount-get_summary}{\code{KucoinAccount$get_summary()}}
-\item \href{#method-KucoinAccount-get_apikey_info}{\code{KucoinAccount$get_apikey_info()}}
-\item \href{#method-KucoinAccount-get_spot_account_type}{\code{KucoinAccount$get_spot_account_type()}}
-\item \href{#method-KucoinAccount-get_spot_accounts}{\code{KucoinAccount$get_spot_accounts()}}
-\item \href{#method-KucoinAccount-get_spot_account_detail}{\code{KucoinAccount$get_spot_account_detail()}}
-\item \href{#method-KucoinAccount-get_cross_margin_account}{\code{KucoinAccount$get_cross_margin_account()}}
-\item \href{#method-KucoinAccount-get_isolated_margin_account}{\code{KucoinAccount$get_isolated_margin_account()}}
-\item \href{#method-KucoinAccount-get_spot_ledger}{\code{KucoinAccount$get_spot_ledger()}}
-\item \href{#method-KucoinAccount-get_hf_ledger}{\code{KucoinAccount$get_hf_ledger()}}
-\item \href{#method-KucoinAccount-get_base_fee_rate}{\code{KucoinAccount$get_base_fee_rate()}}
-\item \href{#method-KucoinAccount-get_fee_rate}{\code{KucoinAccount$get_fee_rate()}}
-\item \href{#method-KucoinAccount-clone}{\code{KucoinAccount$clone()}}
+  \itemize{
+    \item \href{#method-KucoinAccount-get_summary}{\code{KucoinAccount$get_summary()}}
+    \item \href{#method-KucoinAccount-get_apikey_info}{\code{KucoinAccount$get_apikey_info()}}
+    \item \href{#method-KucoinAccount-get_spot_account_type}{\code{KucoinAccount$get_spot_account_type()}}
+    \item \href{#method-KucoinAccount-get_spot_accounts}{\code{KucoinAccount$get_spot_accounts()}}
+    \item \href{#method-KucoinAccount-get_spot_account_detail}{\code{KucoinAccount$get_spot_account_detail()}}
+    \item \href{#method-KucoinAccount-get_cross_margin_account}{\code{KucoinAccount$get_cross_margin_account()}}
+    \item \href{#method-KucoinAccount-get_isolated_margin_account}{\code{KucoinAccount$get_isolated_margin_account()}}
+    \item \href{#method-KucoinAccount-get_spot_ledger}{\code{KucoinAccount$get_spot_ledger()}}
+    \item \href{#method-KucoinAccount-get_hf_ledger}{\code{KucoinAccount$get_hf_ledger()}}
+    \item \href{#method-KucoinAccount-get_base_fee_rate}{\code{KucoinAccount$get_base_fee_rate()}}
+    \item \href{#method-KucoinAccount-get_fee_rate}{\code{KucoinAccount$get_fee_rate()}}
+    \item \href{#method-KucoinAccount-clone}{\code{KucoinAccount$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>kucoin::KucoinBase$initialize()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>KucoinBase$initialize()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinAccount-get_summary"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinAccount-get_summary}{}}}
-\subsection{Method \code{get_summary()}}{
-Get Account Summary
+\subsection{\code{KucoinAccount$get_summary()}}{
+  Get Account Summary
 
 Retrieves account summary information including VIP level, sub-account
 count, and general account metadata for the authenticated user.
@@ -322,12 +315,13 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinAccount$get_summary()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinAccount$get_summary()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
 \itemize{
 \item \code{level} (integer): VIP tier.
 \item \code{sub_quantity} (integer): Total sub-accounts.
@@ -342,26 +336,23 @@ Verified: 2026-05-23
 \item \code{max_futures_sub_quantity} (integer): Max futures sub-accounts.
 \item \code{max_option_sub_quantity} (integer): Max option sub-accounts.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-account <- KucoinAccount$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{account <- KucoinAccount$new()
 summary <- account$get_summary()
 cat("VIP Level:", summary$level, "\\\\n")
 cat("Sub-accounts:", summary$sub_quantity, "/", summary$max_sub_quantity, "\\\\n")
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinAccount-get_apikey_info"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinAccount-get_apikey_info}{}}}
-\subsection{Method \code{get_apikey_info()}}{
-Get API Key Info
+\subsection{\code{KucoinAccount$get_apikey_info()}}{
+  Get API Key Info
 
 Retrieves detailed information about the currently authenticated API key,
 including its permissions, IP whitelist, creation date, and associated UID.
@@ -420,12 +411,13 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinAccount$get_apikey_info()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinAccount$get_apikey_info()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
 \itemize{
 \item \code{remark} (character): Key label.
 \item \code{api_key} (character): API key ID.
@@ -436,27 +428,24 @@ Verified: 2026-05-23
 \item \code{uid} (numeric): User ID.
 \item \code{is_master} (logical): TRUE if master account key.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-account <- KucoinAccount$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{account <- KucoinAccount$new()
 key_info <- account$get_apikey_info()
 cat("Permissions:", key_info$permission, "\\\\n")
 cat("IP Whitelist:", key_info$ip_whitelist, "\\\\n")
 cat("Is Master:", key_info$is_master, "\\\\n")
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinAccount-get_spot_account_type"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinAccount-get_spot_account_type}{}}}
-\subsection{Method \code{get_spot_account_type()}}{
-Get Spot Account Types
+\subsection{\code{KucoinAccount$get_spot_account_type()}}{
+  Get Spot Account Types
 
 Retrieves the account types that have been opened for HF (High-Frequency)
 spot trading. This indicates which account categories are active.
@@ -508,36 +497,34 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinAccount$get_spot_account_type()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-Logical scalar: \code{TRUE} if the user is a spot high-frequency user
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinAccount$get_spot_account_type()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Logical scalar: \code{TRUE} if the user is a spot high-frequency user
 (use \code{trade_hf} for transfers/queries), \code{FALSE} for low-frequency
 (use \code{trade}). This is a compatibility interface for users who enabled
 HF trading before 2024.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-account <- KucoinAccount$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{account <- KucoinAccount$new()
 is_hf <- account$get_spot_account_type()
 if (is_hf) {
   cat("HF trading account is active.\n")
 }
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinAccount-get_spot_accounts"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinAccount-get_spot_accounts}{}}}
-\subsection{Method \code{get_spot_accounts()}}{
-Get Spot Account List
+\subsection{\code{KucoinAccount$get_spot_accounts()}}{
+  Get Spot Account List
 
 Retrieves all spot accounts for the authenticated user, optionally filtered
 by currency or account type. Each row represents a single account with its
@@ -606,23 +593,24 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinAccount$get_spot_accounts(query = list())}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{query}}{Named list; optional filter parameters. Supported keys:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinAccount$get_spot_accounts(query = list())}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{query}}{Named list; optional filter parameters. Supported keys:
 \itemize{
 \item \code{currency} (character): Filter by currency code e.g. \code{"USDT"}, \code{"BTC"}.
 \item \code{type} (character): Filter by account type: \code{"main"}, \code{"trade"}, or \code{"margin"}.
 }}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{id} (character): Account ID.
 \item \code{currency} (character): Currency code.
@@ -633,11 +621,10 @@ Verified: 2026-05-23
 
 Returns an empty \code{data.table} if no accounts match.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-account <- KucoinAccount$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{account <- KucoinAccount$new()
 
 # Get all accounts
 all_accounts <- account$get_spot_accounts()
@@ -647,17 +634,15 @@ print(all_accounts)
 usdt <- account$get_spot_accounts(query = list(currency = "USDT", type = "trade"))
 cat("USDT available:", usdt$available, "\\\\n")
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinAccount-get_spot_account_detail"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinAccount-get_spot_account_detail}{}}}
-\subsection{Method \code{get_spot_account_detail()}}{
-Get Spot Account Detail
+\subsection{\code{KucoinAccount$get_spot_account_detail()}}{
+  Get Spot Account Detail
 
 Retrieves detailed information for a single specific account identified by
 its account ID. Returns currency, type, balance, available, and holds.
@@ -712,31 +697,31 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinAccount$get_spot_account_detail(accountId)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{accountId}}{Character; the unique account ID (e.g. \code{"5bd6e9286d99522a52e458de"}).
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinAccount$get_spot_account_detail(accountId)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{accountId}}{Character; the unique account ID (e.g. \code{"5bd6e9286d99522a52e458de"}).
 Obtain account IDs from \code{get_spot_accounts()}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{currency} (character): Currency code.
 \item \code{balance} (character): Total balance.
 \item \code{available} (character): Available for use.
 \item \code{holds} (character): Amount held in open orders.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-account <- KucoinAccount$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{account <- KucoinAccount$new()
 
 # First get all accounts to find the ID
 accounts <- account$get_spot_accounts(query = list(currency = "USDT", type = "trade"))
@@ -746,17 +731,15 @@ account_id <- accounts$id[1]
 detail <- account$get_spot_account_detail(account_id)
 cat("Balance:", detail$balance, "Available:", detail$available, "\\\\n")
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinAccount-get_cross_margin_account"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinAccount-get_cross_margin_account}{}}}
-\subsection{Method \code{get_cross_margin_account()}}{
-Get Cross Margin Account
+\subsection{\code{KucoinAccount$get_cross_margin_account()}}{
+  Get Cross Margin Account
 
 Retrieves cross margin account information including balances, liabilities,
 and asset details for all currencies held in the cross margin account.
@@ -838,23 +821,24 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinAccount$get_cross_margin_account(query = list())}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{query}}{Named list; optional filter parameters. Supported keys:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinAccount$get_cross_margin_account(query = list())}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{query}}{Named list; optional filter parameters. Supported keys:
 \itemize{
 \item \code{quoteCurrency} (character): Quote currency for valuation e.g. \code{"USDT"}, \code{"BTC"}.
 \item \code{queryType} (character): Query type e.g. \code{"MARGIN"}, \code{"MARGIN_V2"}.
 }}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with
 one row per currency (Treatment B). The account-level summary fields
 (\code{total_asset_of_quote_currency}, \code{total_liability_of_quote_currency}, \code{debt_ratio},
 \code{status}) are replicated on every row so the caller never needs a sibling method.
@@ -877,27 +861,24 @@ Columns (subset; the exact set depends on the KuCoin payload):
 }
 
 Returns an empty \code{data.table} if no margin accounts exist.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-account <- KucoinAccount$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{account <- KucoinAccount$new()
 margin <- account$get_cross_margin_account(query = list(quoteCurrency = "USDT"))
 print(margin)
 # Check debt ratio
 cat("Liabilities:", margin[currency == "USDT", liability], "\\\\n")
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinAccount-get_isolated_margin_account"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinAccount-get_isolated_margin_account}{}}}
-\subsection{Method \code{get_isolated_margin_account()}}{
-Get Isolated Margin Account
+\subsection{\code{KucoinAccount$get_isolated_margin_account()}}{
+  Get Isolated Margin Account
 
 Retrieves isolated margin account information for specific trading pairs.
 Each isolated margin account is tied to a single symbol and has independent
@@ -984,24 +965,25 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinAccount$get_isolated_margin_account(query = list())}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{query}}{Named list; optional filter parameters. Supported keys:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinAccount$get_isolated_margin_account(query = list())}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{query}}{Named list; optional filter parameters. Supported keys:
 \itemize{
 \item \code{symbol} (character): Trading pair e.g. \code{"BTC-USDT"}. Filter to a specific pair.
 \item \code{quoteCurrency} (character): Quote currency for valuation e.g. \code{"USDT"}.
 \item \code{queryType} (character): Query type e.g. \code{"ISOLATED"}, \code{"ISOLATED_V2"}.
 }}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with
 one row per isolated-margin pair (Treatment B) and the nested \code{baseAsset} / \code{quoteAsset}
 objects flattened wide-prefix (Treatment C). The account-level fields
 \code{total_asset_of_quote_currency}, \code{total_liability_of_quote_currency}, and \code{timestamp}
@@ -1037,27 +1019,24 @@ Columns:
 }
 
 Returns an empty \code{data.table} if no isolated-margin pairs exist.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-account <- KucoinAccount$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{account <- KucoinAccount$new()
 isolated <- account$get_isolated_margin_account(
   query = list(symbol = "BTC-USDT", quoteCurrency = "USDT")
 )
 print(isolated)
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinAccount-get_spot_ledger"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinAccount-get_spot_ledger}{}}}
-\subsection{Method \code{get_spot_ledger()}}{
-Get Spot Account Ledger
+\subsection{\code{KucoinAccount$get_spot_ledger()}}{
+  Get Spot Account Ledger
 
 Retrieves paginated account ledger (transaction history) for spot and margin
 accounts. Each entry represents a balance change event such as a trade fill,
@@ -1142,14 +1121,15 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinAccount$get_spot_ledger(query = list(), page_size = 50, max_pages = Inf)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{query}}{Named list; optional filter parameters. Supported keys:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinAccount$get_spot_ledger(query = list(), page_size = 50, max_pages = Inf)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{query}}{Named list; optional filter parameters. Supported keys:
 \itemize{
 \item \code{currency} (character): Filter by currency code e.g. \code{"USDT"}, \code{"BTC"}.
 \item \code{direction} (character): Filter by direction: \code{"in"} or \code{"out"}.
@@ -1158,17 +1138,15 @@ Verified: 2026-05-23
 \item \code{startAt} (numeric): Start time in milliseconds (epoch). Inclusive.
 \item \code{endAt} (numeric): End time in milliseconds (epoch). Inclusive.
 }}
-
-\item{\code{page_size}}{Integer; number of results per page, between 10 and 500.
+      \item{\code{page_size}}{Integer; number of results per page, between 10 and 500.
 Default \code{50}.}
-
-\item{\code{max_pages}}{Numeric; maximum number of pages to fetch. Default \code{Inf}
+      \item{\code{max_pages}}{Numeric; maximum number of pages to fetch. Default \code{Inf}
 (fetch all pages). Set to a finite number to limit API calls.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{id} (character): Ledger entry ID.
 \item \code{currency} (character): Currency code.
@@ -1183,11 +1161,10 @@ Default \code{50}.}
 
 Returns an empty \code{data.table} if no ledger entries match.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-account <- KucoinAccount$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{account <- KucoinAccount$new()
 
 # Get recent USDT trade ledger entries
 ledger <- account$get_spot_ledger(
@@ -1204,17 +1181,15 @@ ledger_24h <- account$get_spot_ledger(
 )
 print(ledger_24h[, .(currency, amount, direction, created_at)])
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinAccount-get_hf_ledger"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinAccount-get_hf_ledger}{}}}
-\subsection{Method \code{get_hf_ledger()}}{
-Get HF Trading Account Ledger
+\subsection{\code{KucoinAccount$get_hf_ledger()}}{
+  Get HF Trading Account Ledger
 
 Retrieves transfer records from high-frequency trading accounts.
 Results are sorted by creation timestamp in descending order.
@@ -1286,8 +1261,9 @@ Verified: 2026-05-23
 \item \strong{Audit Trail}: Build trade-by-trade logs from the \code{context} JSON field.
 }
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinAccount$get_hf_ledger(
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinAccount$get_hf_ledger(
   currency = NULL,
   direction = NULL,
   bizType = NULL,
@@ -1295,31 +1271,25 @@ Verified: 2026-05-23
   limit = NULL,
   startAt = NULL,
   endAt = NULL
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{currency}}{Character or NULL; filter by currency (supports up to 10 comma-separated).}
-
-\item{\code{direction}}{Character or NULL; \code{"in"} or \code{"out"}.}
-
-\item{\code{bizType}}{Character or NULL; transaction type: \code{"TRADE_EXCHANGE"}, \code{"TRANSFER"},
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{currency}}{Character or NULL; filter by currency (supports up to 10 comma-separated).}
+      \item{\code{direction}}{Character or NULL; \code{"in"} or \code{"out"}.}
+      \item{\code{bizType}}{Character or NULL; transaction type: \code{"TRADE_EXCHANGE"}, \code{"TRANSFER"},
 \code{"SUB_TRANSFER"}, \code{"RETURNED_FEES"}, \code{"DEDUCTION_FEES"}, \code{"OTHER"}.}
-
-\item{\code{lastId}}{Character or NULL; pagination cursor for fetching previous batches.}
-
-\item{\code{limit}}{Integer or NULL; results per page (default 100, max 200).}
-
-\item{\code{startAt}}{Integer or NULL; start timestamp in milliseconds.}
-
-\item{\code{endAt}}{Integer or NULL; end timestamp in milliseconds.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+      \item{\code{lastId}}{Character or NULL; pagination cursor for fetching previous batches.}
+      \item{\code{limit}}{Integer or NULL; results per page (default 100, max 200).}
+      \item{\code{startAt}}{Integer or NULL; start timestamp in milliseconds.}
+      \item{\code{endAt}}{Integer or NULL; end timestamp in milliseconds.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{id} (character): Ledger entry ID.
 \item \code{currency} (character): Currency code.
@@ -1333,25 +1303,22 @@ Verified: 2026-05-23
 \item \code{context} (character): JSON metadata.
 \item \code{created_at} (POSIXct): Coerced from epoch milliseconds.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-account <- KucoinAccount$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{account <- KucoinAccount$new()
 hf <- account$get_hf_ledger(currency = "USDT", bizType = "TRADE_EXCHANGE")
 print(hf[, .(currency, amount, fee, direction, created_at)])
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinAccount-get_base_fee_rate"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinAccount-get_base_fee_rate}{}}}
-\subsection{Method \code{get_base_fee_rate()}}{
-Get Base Fee Rate
+\subsection{\code{KucoinAccount$get_base_fee_rate()}}{
+  Get Base Fee Rate
 
 Retrieves the base (tier default) taker and maker fee rates for
 spot/margin trading. This is the account's default rate before
@@ -1398,42 +1365,40 @@ Verified: 2026-05-23
 \item \strong{Fee Budgeting}: Use as baseline for worst-case fee calculations.
 }
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinAccount$get_base_fee_rate(currencyType = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{currencyType}}{Integer or NULL; \code{0} for crypto (default), \code{1} for fiat.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinAccount$get_base_fee_rate(currencyType = NULL)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{currencyType}}{Integer or NULL; \code{0} for crypto (default), \code{1} for fiat.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{taker_fee_rate} (character): Base taker fee rate.
 \item \code{maker_fee_rate} (character): Base maker fee rate.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-account <- KucoinAccount$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{account <- KucoinAccount$new()
 fees <- account$get_base_fee_rate()
 cat("Taker:", fees$taker_fee_rate, "Maker:", fees$maker_fee_rate, "\n")
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinAccount-get_fee_rate"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinAccount-get_fee_rate}{}}}
-\subsection{Method \code{get_fee_rate()}}{
-Get Actual Fee Rate
+\subsection{\code{KucoinAccount$get_fee_rate()}}{
+  Get Actual Fee Rate
 
 Retrieves the actual (per-symbol) taker and maker fee rates after
 VIP/KCS discounts. Supports up to 10 trading pairs per request.
@@ -1488,54 +1453,54 @@ Verified: 2026-05-23
 \item \strong{Batch Query}: Query up to 10 pairs at once to minimize API calls.
 }
 }
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinAccount$get_fee_rate(symbols)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{symbols}}{Character; comma-separated trading pairs (max 10),
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinAccount$get_fee_rate(symbols)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{symbols}}{Character; comma-separated trading pairs (max 10),
 e.g. \code{"BTC-USDT,ETH-USDT"}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{symbol} (character): Trading pair.
 \item \code{taker_fee_rate} (character): Actual taker fee rate.
 \item \code{maker_fee_rate} (character): Actual maker fee rate.
 }
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{\dontrun{
-account <- KucoinAccount$new()
+  }
+  \subsection{Examples}{
+    \if{html}{\out{<div class="r example copy">}}
+    \preformatted{account <- KucoinAccount$new()
 fees <- account$get_fee_rate("BTC-USDT,ETH-USDT")
 print(fees[, .(symbol, taker_fee_rate, maker_fee_rate)])
 }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
 
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinAccount-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinAccount-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinAccount$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{KucoinAccount$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinAccount$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

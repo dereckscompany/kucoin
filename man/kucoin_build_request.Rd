@@ -11,6 +11,8 @@ kucoin_build_request(
   query = list(),
   body = NULL,
   keys = NULL,
+  sign = NULL,
+  parse_envelope = parse_kucoin_response,
   .perform = httr2::req_perform,
   .parser = identity,
   is_async = FALSE,
@@ -31,6 +33,13 @@ kucoin_build_request(
 
 \item{keys}{List or NULL; API credentials. Default \code{NULL}.}
 
+\item{sign}{Function or NULL; \verb{function(req, keys, ctx)} returning a signed
+request, where \code{ctx} carries \code{method}, \code{path}, \code{body}, and \code{get_timestamp_ms}.
+Default \code{sign_request()} (adapted to that signature).}
+
+\item{parse_envelope}{Function; \verb{function(resp)} turning a response into data
+and raising on a KuCoin API error. Default \code{parse_kucoin_response()}.}
+
 \item{.perform}{Function; the httr2 perform function. Default \code{httr2::req_perform}.}
 
 \item{.parser}{Function; post-processing function applied to parsed \verb{$data}.
@@ -41,9 +50,9 @@ Default \code{identity}.}
 \item{timeout}{Numeric; request timeout in seconds. Default \code{10}.}
 
 \item{.get_timestamp_ms}{Function or NULL; zero-argument function returning
-epoch milliseconds for HMAC signing. When \code{NULL} (default), uses
-\code{lubridate::now()}. Pass a custom function (e.g. one that fetches KuCoin server
-time) to avoid clock-drift issues.}
+epoch milliseconds for HMAC signing. When \code{NULL} (default), uses the local
+UTC clock. Pass a custom function (e.g. one that fetches KuCoin server time)
+to avoid clock-drift issues.}
 }
 \value{
 Parsed and post-processed API response data, or a promise thereof.
@@ -54,6 +63,10 @@ Constructs an \link[httr2:request]{httr2::request}, optionally signs it, perform
 point through which all KuCoin API calls flow.
 }
 \details{
+It is KuCoin's specialisation of the connectcore request funnel: signing and
+error-envelope detection are injected as the \code{sign} and \code{parse_envelope}
+functions (the seams \link{KucoinBase} overrides), and the body is sent as the exact
+raw JSON string that was signed, so the HMAC signature matches byte-for-byte.
 \subsection{Sync vs Async}{
 
 The \code{.perform} argument controls execution mode:

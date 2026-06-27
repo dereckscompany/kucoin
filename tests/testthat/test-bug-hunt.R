@@ -193,8 +193,11 @@ test_that("as_dt_row wraps length-1 list fields consistently", {
   row1 <- list(name = "BTC", chains = list("ERC20"))
   row2 <- list(name = "ETH", chains = list("ERC20", "TRC20"))
 
-  dt1 <- kucoin:::as_dt_row(row1)
-  dt2 <- kucoin:::as_dt_row(row2)
+  # as_dt_row now lives in connectcore (the shared transport base) and is
+  # imported into kucoin; `:::` only sees namespace-defined objects, not
+  # imports, so reference connectcore directly.
+  dt1 <- connectcore::as_dt_row(row1)
+  dt2 <- connectcore::as_dt_row(row2)
 
   expect_true(is.list(dt1$chains), info = "Single-element list field should remain a list column")
   expect_true(is.list(dt2$chains), info = "Multi-element list field should remain a list column")
