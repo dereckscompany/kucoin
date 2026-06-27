@@ -305,7 +305,8 @@ KucoinSubAccount <- R6::R6Class(
     #' ### Workflow
     #' 1. **Request**: Authenticated GET to the sub-account detail endpoint with the `subUserId` in the URL path.
     #' 2. **Iteration**: Loops over `mainAccounts`, `tradeAccounts`, and `marginAccounts` arrays in the response.
-    #' 3. **Assembly**: Binds all account entries into a single `data.table` with `account_type`, `sub_user_id`, and `sub_name` columns appended.
+    #' 3. **Assembly**: Binds all account entries into a single `data.table` with `account_type`, `sub_user_id`, and
+    #'    `sub_name` columns appended.
     #'
     #' ### API Endpoint
     #' `GET https://api.kucoin.com/api/v1/sub-accounts/{subUserId}`
@@ -316,7 +317,8 @@ KucoinSubAccount <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Pre-Trade Check**: Query a sub-account's available balance before placing orders to avoid insufficient-funds errors.
+    #' - **Pre-Trade Check**: Query a sub-account's available balance before placing orders to avoid insufficient-funds
+    #'   errors.
     #' - **Risk Monitoring**: Periodically check `holds` across sub-accounts to track capital locked in open orders.
     #' - **Rebalancing**: Compare `available` balances across sub-accounts to decide on internal transfers.
     #'
@@ -479,9 +481,12 @@ KucoinSubAccount <- R6::R6Class(
     #' `data.table` with `sub_user_id` and `sub_name` identifiers.
     #'
     #' ### Workflow
-    #' 1. **Pagination**: Fetches pages of sub-account balance data via the V2 endpoint, `page_size` records per page up to `max_pages`.
-    #' 2. **Nested Iteration**: For each sub-account in each page, iterates over `mainAccounts`, `tradeAccounts`, and `marginAccounts`.
-    #' 3. **Assembly**: Binds all entries into a single `data.table` with `account_type`, `sub_user_id`, and `sub_name` columns appended.
+    #' 1. **Pagination**: Fetches pages of sub-account balance data via the V2 endpoint, `page_size` records per page up
+    #'    to `max_pages`.
+    #' 2. **Nested Iteration**: For each sub-account in each page, iterates over `mainAccounts`, `tradeAccounts`, and
+    #'    `marginAccounts`.
+    #' 3. **Assembly**: Binds all entries into a single `data.table` with `account_type`, `sub_user_id`, and `sub_name`
+    #'    columns appended.
     #'
     #' ### API Endpoint
     #' `GET https://api.kucoin.com/api/v2/sub-accounts`
@@ -493,7 +498,8 @@ KucoinSubAccount <- R6::R6Class(
     #'
     #' ### Automated Trading Usage
     #' - **Portfolio Dashboard**: Aggregate balances across all sub-accounts for a unified portfolio view.
-    #' - **Threshold Alerts**: Check `available` balances across all sub-accounts and trigger alerts when below thresholds.
+    #' - **Threshold Alerts**: Check `available` balances across all sub-accounts and trigger alerts when below
+    #'   thresholds.
     #' - **Capital Allocation**: Compare balances across sub-accounts to identify idle capital for reallocation.
     #'
     #' ### curl

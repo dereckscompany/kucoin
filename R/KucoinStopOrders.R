@@ -911,7 +911,8 @@ KucoinStopOrders <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Portfolio Monitoring**: Periodically poll active stop orders to maintain an accurate view of pending triggers.
+    #' - **Portfolio Monitoring**: Periodically poll active stop orders to maintain an accurate view of pending
+    #'   triggers.
     #' - **Reconciliation**: Compare local order state with exchange state on bot startup or after reconnection.
     #' - **Reporting**: Retrieve historical stop orders filtered by time range for performance analysis.
     #'

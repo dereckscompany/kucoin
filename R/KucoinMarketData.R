@@ -12,14 +12,16 @@
 #'
 #' ### Purpose and Scope
 #' - **Announcements**: Fetch paginated KuCoin platform announcements filtered by type, language, and date range.
-#' - **Currencies**: Retrieve metadata for individual or all listed currencies, including chain-specific deposit/withdrawal details.
+#' - **Currencies**: Retrieve metadata for individual or all listed currencies, including chain-specific
+#'   deposit/withdrawal details.
 #' - **Symbols**: Retrieve trading pair metadata including precision, size limits, fee rates, and trading status.
 #' - **Tickers**: Access real-time Level 1 best bid/ask data for individual symbols or all pairs.
 #' - **Order Books**: Get partial (20/100 levels) or full depth order book snapshots.
 #' - **Trade History**: Retrieve the most recent 100 trades for any symbol.
 #' - **24hr Statistics**: Get rolling 24-hour market statistics (OHLCV, change rate, fees).
 #' - **Market List**: Discover all available market segments (e.g., USDS, DeFi, Meme).
-#' - **Klines**: Fetch historical candlestick data with automatic time-range segmentation to bypass the 1500-candle-per-request limit.
+#' - **Klines**: Fetch historical candlestick data with automatic time-range segmentation to bypass the
+#'   1500-candle-per-request limit.
 #'
 #' ### Usage
 #' Most methods are public endpoints requiring no authentication. The one exception

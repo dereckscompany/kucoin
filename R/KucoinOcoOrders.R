@@ -92,9 +92,12 @@ KucoinOcoOrders <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Take-Profit + Stop-Loss**: Place a sell OCO with `price` as take-profit and `stopPrice`/`limitPrice` as stop-loss to protect positions automatically.
-    #' - **Bracket Entry**: Use a buy OCO to enter a position at a limit price while also setting a stop-entry above resistance.
-    #' - **Client OID Tracking**: Set `clientOid` to a unique strategy identifier for programmatic order tracking and reconciliation.
+    #' - **Take-Profit + Stop-Loss**: Place a sell OCO with `price` as take-profit and `stopPrice`/`limitPrice` as
+    #'   stop-loss to protect positions automatically.
+    #' - **Bracket Entry**: Use a buy OCO to enter a position at a limit price while also setting a stop-entry above
+    #'   resistance.
+    #' - **Client OID Tracking**: Set `clientOid` to a unique strategy identifier for programmatic order tracking and
+    #'   reconciliation.
     #'
     #' ### curl
     #' ```
@@ -342,9 +345,11 @@ KucoinOcoOrders <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Strategy-Based Cancellation**: Cancel OCO orders by your own strategy IDs without needing to store KuCoin order IDs.
+    #' - **Strategy-Based Cancellation**: Cancel OCO orders by your own strategy IDs without needing to store KuCoin
+    #'   order IDs.
     #' - **Idempotent Operations**: Use deterministic `clientOid` values so re-running cancellation logic is safe.
-    #' - **Multi-Bot Coordination**: Each bot uses a unique `clientOid` prefix to manage its own OCO orders independently.
+    #' - **Multi-Bot Coordination**: Each bot uses a unique `clientOid` prefix to manage its own OCO orders
+    #'   independently.
     #'
     #' ### curl
     #' ```
@@ -439,9 +444,12 @@ KucoinOcoOrders <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Emergency Kill Switch**: Call with no filters to cancel all OCO orders during market anomalies or system errors.
-    #' - **Symbol Cleanup**: Pass `symbol` to cancel all OCO orders for a specific pair when exiting a position entirely.
-    #' - **Selective Batch Cancel**: Pass specific `orderIds` to cancel a subset of OCO orders during strategy rebalancing.
+    #' - **Emergency Kill Switch**: Call with no filters to cancel all OCO orders during market anomalies or system
+    #'   errors.
+    #' - **Symbol Cleanup**: Pass `symbol` to cancel all OCO orders for a specific pair when exiting a position
+    #'   entirely.
+    #' - **Selective Batch Cancel**: Pass specific `orderIds` to cancel a subset of OCO orders during strategy
+    #'   rebalancing.
     #'
     #' ### curl
     #' ```
@@ -629,7 +637,8 @@ KucoinOcoOrders <- R6::R6Class(
     #'
     #' ### Automated Trading Usage
     #' - **Strategy Reconciliation**: Look up OCO orders using your strategy-generated IDs for post-trade analysis.
-    #' - **Duplicate Detection**: Check if an OCO order with a given `clientOid` already exists before placing a new one.
+    #' - **Duplicate Detection**: Check if an OCO order with a given `clientOid` already exists before placing a new
+    #'   one.
     #' - **Bot State Recovery**: On restart, recover OCO order state using stored `clientOid` values.
     #'
     #' ### curl
@@ -838,8 +847,10 @@ KucoinOcoOrders <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Portfolio Overview**: List all active OCO orders to display current take-profit/stop-loss levels across positions.
-    #' - **Stale Order Detection**: Filter by `startAt`/`endAt` to find OCO orders that have been open too long and may need adjustment.
+    #' - **Portfolio Overview**: List all active OCO orders to display current take-profit/stop-loss levels across
+    #'   positions.
+    #' - **Stale Order Detection**: Filter by `startAt`/`endAt` to find OCO orders that have been open too long and may
+    #'   need adjustment.
     #' - **Pagination Loop**: Use `currentPage` and `pageSize` to iterate through large result sets in batch processing.
     #'
     #' ### curl

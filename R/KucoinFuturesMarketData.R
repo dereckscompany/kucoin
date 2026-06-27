@@ -99,7 +99,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Contract Discovery**: Query contract specs to determine lot size, tick size, and leverage limits before placing orders.
+    #' - **Contract Discovery**: Query contract specs to determine lot size, tick size, and leverage limits before
+    #'   placing orders.
     #' - **Margin Calculations**: Use `initial_margin` and `maintain_margin` rates to pre-validate margin requirements.
     #' - **Fee Estimation**: Read `maker_fee_rate` and `taker_fee_rate` to estimate trading costs.
     #'
@@ -321,7 +322,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Price Monitoring**: Poll the ticker to track best bid/ask spreads and last trade prices for signal generation.
+    #' - **Price Monitoring**: Poll the ticker to track best bid/ask spreads and last trade prices for signal
+    #'   generation.
     #' - **Execution Timing**: Use `side` of the last trade to gauge short-term directional momentum.
     #' - **Spread Analysis**: Compare `best_bid_price` and `best_ask_price` to measure market liquidity.
     #'
@@ -964,7 +966,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #'
     #' ### Workflow
     #' 1. **Request**: Public GET with the symbol in the URL path.
-    #' 2. **Parsing**: Returns a single-row `data.table`; coerces `time_point` and `funding_time` from milliseconds to POSIXct.
+    #' 2. **Parsing**: Returns a single-row `data.table`; coerces `time_point` and `funding_time` from milliseconds to
+    #'    POSIXct.
     #'
     #' ### API Endpoint
     #' `GET https://api.kucoin.com/api/v1/funding-rate/{symbol}/current`
@@ -975,7 +978,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Funding Arbitrage**: Compare funding rates across exchanges to identify cash-and-carry arbitrage opportunities.
+    #' - **Funding Arbitrage**: Compare funding rates across exchanges to identify cash-and-carry arbitrage
+    #'   opportunities.
     #' - **Position Timing**: Avoid entering positions just before a large negative funding rate settlement.
     #' - **Predicted Rate Monitoring**: Use `predicted_value` to anticipate the next funding cycle and adjust positions.
     #'
@@ -1043,7 +1047,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' ### Workflow
     #' 1. **Time Conversion**: Converts POSIXct `from`/`to` to milliseconds if needed.
     #' 2. **Request**: Public GET with `symbol`, `from`, and `to` query parameters.
-    #' 3. **Parsing**: Returns a `data.table` with one row per funding settlement; coerces `timepoint` from milliseconds to POSIXct.
+    #' 3. **Parsing**: Returns a `data.table` with one row per funding settlement; coerces `timepoint` from milliseconds
+    #'    to POSIXct.
     #'
     #' ### API Endpoint
     #' `GET https://api.kucoin.com/api/v1/contract/funding-rates?symbol={symbol}&from={from}&to={to}`
@@ -1054,9 +1059,12 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Funding Rate Analysis**: Analyse historical funding rates to understand market sentiment (positive = longs pay shorts).
-    #' - **Mean Reversion Signals**: Extreme funding rates often precede reversals; use historical data to calibrate thresholds.
-    #' - **Carry Trade Evaluation**: Calculate cumulative funding paid/received over a time period for carry trade analysis.
+    #' - **Funding Rate Analysis**: Analyse historical funding rates to understand market sentiment (positive = longs
+    #'   pay shorts).
+    #' - **Mean Reversion Signals**: Extreme funding rates often precede reversals; use historical data to calibrate
+    #'   thresholds.
+    #' - **Carry Trade Evaluation**: Calculate cumulative funding paid/received over a time period for carry trade
+    #'   analysis.
     #'
     #' ### curl
     #' ```
@@ -1219,7 +1227,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Health Check**: Poll service status at bot startup and periodically during operation to detect maintenance windows.
+    #' - **Health Check**: Poll service status at bot startup and periodically during operation to detect maintenance
+    #'   windows.
     #' - **Graceful Degradation**: When status is `"close"`, pause order placement and alert the operator.
     #' - **Maintenance Scheduling**: Use the `msg` field to extract maintenance window details for automated scheduling.
     #'

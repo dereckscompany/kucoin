@@ -74,9 +74,12 @@ KucoinDeposit <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Multi-Chain Support**: Specify `chain` (e.g., `"ERC20"`, `"TRC20"`) to create addresses on the correct network for your deposit workflow.
-    #' - **Address Pre-Provisioning**: Create deposit addresses at bot startup so they are ready when funds need to be received.
-    #' - **Account Routing**: Use the `to` parameter to direct deposits to `"main"` or `"trade"` accounts for immediate trading use.
+    #' - **Multi-Chain Support**: Specify `chain` (e.g., `"ERC20"`, `"TRC20"`) to create addresses on the correct
+    #'   network for your deposit workflow.
+    #' - **Address Pre-Provisioning**: Create deposit addresses at bot startup so they are ready when funds need to be
+    #'   received.
+    #' - **Account Routing**: Use the `to` parameter to direct deposits to `"main"` or `"trade"` accounts for immediate
+    #'   trading use.
     #'
     #' ### curl
     #' ```
@@ -204,9 +207,12 @@ KucoinDeposit <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Address Verification**: Query addresses before initiating external transfers to confirm the correct chain and memo.
-    #' - **Multi-Chain Inventory**: Retrieve all addresses for a currency to manage deposits across networks (e.g., ERC20 vs TRC20 for USDT).
-    #' - **Idempotent Setup**: Check if an address exists before calling `add_deposit_address()` to avoid duplicate creation errors.
+    #' - **Address Verification**: Query addresses before initiating external transfers to confirm the correct chain and
+    #'   memo.
+    #' - **Multi-Chain Inventory**: Retrieve all addresses for a currency to manage deposits across networks (e.g.,
+    #'   ERC20 vs TRC20 for USDT).
+    #' - **Idempotent Setup**: Check if an address exists before calling `add_deposit_address()` to avoid duplicate
+    #'   creation errors.
     #'
     #' ### curl
     #' ```
@@ -335,7 +341,8 @@ KucoinDeposit <- R6::R6Class(
     #' ### Automated Trading Usage
     #' - **Deposit Monitoring**: Poll for `"SUCCESS"` status deposits to trigger trading logic when funds arrive.
     #' - **Reconciliation**: Match `wallet_tx_id` against on-chain transaction hashes for audit and verification.
-    #' - **Time-Windowed Queries**: Use `startAt`/`endAt` timestamps to retrieve deposits within a specific period for daily reporting.
+    #' - **Time-Windowed Queries**: Use `startAt`/`endAt` timestamps to retrieve deposits within a specific period for
+    #'   daily reporting.
     #'
     #' ### curl
     #' ```

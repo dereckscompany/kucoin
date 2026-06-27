@@ -8,8 +8,10 @@
 #' and Dead Connection Protection (DCP). Inherits from [KucoinBase].
 #'
 #' ### Purpose and Scope
-#' - **Order Placement**: Place single or batch limit/market futures orders with configurable leverage, margin mode, and position side.
-#' - **Order Cancellation**: Cancel individual orders by system ID or client OID, or cancel all open/stop orders at once.
+#' - **Order Placement**: Place single or batch limit/market futures orders with configurable leverage, margin mode, and
+#'   position side.
+#' - **Order Cancellation**: Cancel individual orders by system ID or client OID, or cancel all open/stop orders at
+#'   once.
 #' - **Order Queries**: Retrieve order details, paginated order lists, recent closed orders, and stop orders.
 #' - **Trade History**: Query fill records (paginated or recent) with fee and liquidity details.
 #' - **Risk Management**: Configure Dead Connection Protection (DCP) to auto-cancel orders on connectivity loss.
@@ -119,8 +121,10 @@ KucoinFuturesTrading <- R6::R6Class(
     #'
     #' ### Automated Trading Usage
     #' - **Leverage Control**: Set `leverage` to manage risk exposure per order.
-    #' - **Position Modes**: Use `positionSide = "LONG"` or `"SHORT"` in hedge mode to manage both directions simultaneously.
-    #' - **Reduce-Only**: Set `reduceOnly = TRUE` to ensure the order only closes existing positions, preventing accidental position increases.
+    #' - **Position Modes**: Use `positionSide = "LONG"` or `"SHORT"` in hedge mode to manage both directions
+    #'   simultaneously.
+    #' - **Reduce-Only**: Set `reduceOnly = TRUE` to ensure the order only closes existing positions, preventing
+    #'   accidental position increases.
     #'
     #' ### curl
     #' ```
@@ -299,7 +303,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Pre-Flight Validation**: Validate order parameters at bot startup to confirm API keys have trading permissions and symbols are correct.
+    #' - **Pre-Flight Validation**: Validate order parameters at bot startup to confirm API keys have trading
+    #'   permissions and symbols are correct.
     #' - **Parameter Testing**: Test edge-case parameters (extreme leverage, unusual sizes) without risking capital.
     #' - **Integration Testing**: Use in CI/CD pipelines to verify order construction logic.
     #'
@@ -692,7 +697,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #'
     #' ### Automated Trading Usage
     #' - **Idempotent Cancellation**: Use client OIDs to cancel orders without needing to store system order IDs.
-    #' - **Consistent State**: Cancel by the same ID used to place the order for easier state management in trading bots.
+    #' - **Consistent State**: Cancel by the same ID used to place the order for easier state management in trading
+    #'   bots.
     #'
     #' ### curl
     #' ```
@@ -765,7 +771,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' ### Automated Trading Usage
     #' - **Emergency Stop**: Cancel all open orders as part of a kill-switch or panic button.
     #' - **Strategy Reset**: Clear all pending orders before deploying a new trading strategy.
-    #' - **Symbol-Scoped Cleanup**: Pass `symbol` to cancel only orders for a specific contract without affecting other positions.
+    #' - **Symbol-Scoped Cleanup**: Pass `symbol` to cancel only orders for a specific contract without affecting other
+    #'   positions.
     #'
     #' ### curl
     #' ```
@@ -1325,7 +1332,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Quick Fill Check**: Rapidly check which orders completed recently without paginating through the full order list.
+    #' - **Quick Fill Check**: Rapidly check which orders completed recently without paginating through the full order
+    #'   list.
     #' - **Slippage Analysis**: Compare `avg_deal_price` against the original `price` for recently filled limit orders.
     #' - **Periodic Sync**: Poll this endpoint at intervals to update local order state.
     #'
@@ -1447,7 +1455,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Stop-Loss Audit**: Verify that stop-loss orders are correctly placed and have not been accidentally cancelled.
+    #' - **Stop-Loss Audit**: Verify that stop-loss orders are correctly placed and have not been accidentally
+    #'   cancelled.
     #' - **Risk Dashboard**: Monitor all pending stop orders to assess worst-case risk exposure.
     #' - **Strategy Sync**: Compare existing stop orders against the strategy's intended levels and correct any drift.
     #'

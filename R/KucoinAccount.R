@@ -97,7 +97,8 @@ KucoinAccount <- R6::R6Class(
     #' ### Automated Trading Usage
     #' - **VIP Tier Monitoring**: Check `level` to confirm fee tier before placing large orders.
     #' - **Sub-Account Awareness**: Use `sub_quantity` to verify sub-account count for multi-strategy bots.
-    #' - **Rate Limit Planning**: Higher VIP levels receive more generous rate limits; adjust request frequency accordingly.
+    #' - **Rate Limit Planning**: Higher VIP levels receive more generous rate limits; adjust request frequency
+    #'   accordingly.
     #'
     #' ### curl
     #' ```
@@ -172,8 +173,10 @@ KucoinAccount <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Permission Verification**: Confirm the key has `Trade` permission before placing orders in a bot startup routine.
-    #' - **IP Whitelist Check**: Validate that the bot's server IP is in `is_master`/`ip_whitelist` to avoid auth failures.
+    #' - **Permission Verification**: Confirm the key has `Trade` permission before placing orders in a bot startup
+    #'   routine.
+    #' - **IP Whitelist Check**: Validate that the bot's server IP is in `is_master`/`ip_whitelist` to avoid auth
+    #'   failures.
     #' - **Key Rotation Monitoring**: Use `created_at` to track key age and schedule rotation for security.
     #'
     #' ### curl
@@ -255,7 +258,8 @@ KucoinAccount <- R6::R6Class(
     #' ### Automated Trading Usage
     #' - **Pre-Trade Validation**: Confirm HF trading accounts are opened before submitting HF orders.
     #' - **Account Provisioning**: Detect missing account types at bot startup and alert the operator.
-    #' - **Multi-Account Bots**: Verify that both `trade` and `margin` types are available for strategies that span both.
+    #' - **Multi-Account Bots**: Verify that both `trade` and `margin` types are available for strategies that span
+    #'   both.
     #'
     #' ### curl
     #' ```
@@ -416,7 +420,8 @@ KucoinAccount <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Precise Balance Check**: Query a specific account by ID when you already know the account to avoid parsing lists.
+    #' - **Precise Balance Check**: Query a specific account by ID when you already know the account to avoid parsing
+    #'   lists.
     #' - **Post-Trade Verification**: After an order fills, query the relevant account to confirm balance changes.
     #' - **Hold Monitoring**: Check `holds` to understand how much capital is locked in open orders.
     #'
@@ -497,9 +502,12 @@ KucoinAccount <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Margin Risk Monitoring**: Check `liability` and `totalAsset` to compute margin ratio and trigger de-risk actions.
-    #' - **Borrowing Capacity**: Use `available_balance` to determine how much additional margin is available before placing leveraged orders.
-    #' - **Cross-Margin Rebalancing**: Periodically query to detect imbalanced positions and repay liabilities automatically.
+    #' - **Margin Risk Monitoring**: Check `liability` and `totalAsset` to compute margin ratio and trigger de-risk
+    #'   actions.
+    #' - **Borrowing Capacity**: Use `available_balance` to determine how much additional margin is available before
+    #'   placing leveraged orders.
+    #' - **Cross-Margin Rebalancing**: Periodically query to detect imbalanced positions and repay liabilities
+    #'   automatically.
     #'
     #' ### curl
     #' ```
@@ -633,9 +641,11 @@ KucoinAccount <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Per-Pair Risk Management**: Monitor isolated margin ratios per symbol to trigger stop-loss or de-leverage actions independently.
+    #' - **Per-Pair Risk Management**: Monitor isolated margin ratios per symbol to trigger stop-loss or de-leverage
+    #'   actions independently.
     #' - **Position Sizing**: Use `available_balance` for the specific trading pair to size new margin orders correctly.
-    #' - **Liquidation Prevention**: Compare `debt_ratio` against liquidation thresholds and add margin or reduce positions automatically.
+    #' - **Liquidation Prevention**: Compare `debt_ratio` against liquidation thresholds and add margin or reduce
+    #'   positions automatically.
     #'
     #' ### curl
     #' ```

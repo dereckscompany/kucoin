@@ -91,7 +91,8 @@ KucoinWithdrawal <- R6::R6Class(
     #' - **Profit Extraction**: Withdraw profits to a cold wallet at regular intervals.
     #' - **Arbitrage Settlement**: Move funds off-exchange after capturing arbitrage spreads.
     #' - **Internal Transfers**: Use `isInner = TRUE` for fee-free transfers between KuCoin accounts.
-    #' - **Multi-Chain Support**: Specify `chain` (e.g., `"trx"`, `"eth"`, `"bsc"`) to select the cheapest or fastest network.
+    #' - **Multi-Chain Support**: Specify `chain` (e.g., `"trx"`, `"eth"`, `"bsc"`) to select the cheapest or fastest
+    #'   network.
     #'
     #' ### curl
     #' ```
@@ -633,9 +634,11 @@ KucoinWithdrawal <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Status Tracking**: Monitor withdrawal progress through `REVIEW` → `PROCESSING` → `WALLET_PROCESSING` → `SUCCESS`.
+    #' - **Status Tracking**: Monitor withdrawal progress through `REVIEW` → `PROCESSING` → `WALLET_PROCESSING` →
+    #'   `SUCCESS`.
     #' - **Failure Diagnosis**: Check `failure_reason` and `failure_reason_msg` to understand why a withdrawal failed.
-    #' - **Cancel Eligibility**: Use `cancel_type` (`"CANCELABLE"`, `"CANCELING"`, `"NON_CANCELABLE"`) to determine if a withdrawal can still be cancelled.
+    #' - **Cancel Eligibility**: Use `cancel_type` (`"CANCELABLE"`, `"CANCELING"`, `"NON_CANCELABLE"`) to determine if a
+    #'   withdrawal can still be cancelled.
     #'
     #' ### curl
     #' ```
