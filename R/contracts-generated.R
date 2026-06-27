@@ -84,13 +84,13 @@ assert_args_KucoinAccount__get_hf_ledger <- function(currency, direction, bizTyp
     assert_scalar_character(lastId)
   }
   if (!is.null(limit)) {
-    assert_scalar_integer(limit)
+    assert_scalar_count(limit)
   }
   if (!is.null(startAt)) {
-    assert_scalar_integer(startAt)
+    assert_scalar_double(startAt)
   }
   if (!is.null(endAt)) {
-    assert_scalar_integer(endAt)
+    assert_scalar_double(endAt)
   }
   return(invisible(NULL))
 }
@@ -102,7 +102,7 @@ assert_return_KucoinAccount__get_hf_ledger <- function(value) {
 
 assert_args_KucoinAccount__get_base_fee_rate <- function(currencyType) {
   if (!is.null(currencyType)) {
-    assert_scalar_integer(currencyType)
+    assert_scalar_count(currencyType)
   }
   return(invisible(NULL))
 }
@@ -177,10 +177,10 @@ assert_args_KucoinDeposit__get_deposit_history <- function(currency, status, sta
     assert_scalar_character(status)
   }
   if (!is.null(startAt)) {
-    assert_scalar_integer(startAt)
+    assert_scalar_double(startAt)
   }
   if (!is.null(endAt)) {
-    assert_scalar_integer(endAt)
+    assert_scalar_double(endAt)
   }
   assert_scalar_count(page_size)
   assert_between(page_size, lower = 1)
@@ -1951,13 +1951,13 @@ assert_args_KucoinTrading__get_fills <- function(symbol, orderId, side, type, la
     assert_scalar_character(lastId)
   }
   if (!is.null(limit)) {
-    assert_scalar_integer(limit)
+    assert_scalar_count(limit)
   }
   if (!is.null(startAt)) {
-    assert_scalar_integer(startAt)
+    assert_scalar_double(startAt)
   }
   if (!is.null(endAt)) {
-    assert_scalar_integer(endAt)
+    assert_scalar_double(endAt)
   }
   return(invisible(NULL))
 }
@@ -1995,13 +1995,13 @@ assert_args_KucoinTrading__get_closed_orders <- function(symbol, side, type, sta
     assert_scalar_character(type)
   }
   if (!is.null(startAt)) {
-    assert_scalar_integer(startAt)
+    assert_scalar_double(startAt)
   }
   if (!is.null(endAt)) {
-    assert_scalar_integer(endAt)
+    assert_scalar_double(endAt)
   }
   if (!is.null(limit)) {
-    assert_scalar_integer(limit)
+    assert_scalar_count(limit)
   }
   if (!is.null(lastId)) {
     assert_scalar_character(lastId)
@@ -2284,10 +2284,10 @@ assert_args_KucoinWithdrawal__get_withdrawal_history <- function(currency, statu
     assert_scalar_character(status)
   }
   if (!is.null(startAt)) {
-    assert_scalar_integer(startAt)
+    assert_scalar_double(startAt)
   }
   if (!is.null(endAt)) {
-    assert_scalar_integer(endAt)
+    assert_scalar_double(endAt)
   }
   assert_scalar_count(page_size)
   assert_between(page_size, lower = 1)

@@ -1035,10 +1035,10 @@ KucoinAccount <- R6::R6Class(
     #'   `"DEDUCTION_FEES"`, `"OTHER"`.
     #' @param lastId (scalar<character> | NULL) pagination cursor for fetching
     #'   previous batches.
-    #' @param limit (scalar<integer> | NULL) results per page (default 100, max
+    #' @param limit (scalar<count> | NULL) results per page (default 100, max
     #'   200).
-    #' @param startAt (scalar<integer> | NULL) start timestamp in milliseconds.
-    #' @param endAt (scalar<integer> | NULL) end timestamp in milliseconds.
+    #' @param startAt (scalar<numeric> | NULL) start timestamp in milliseconds.
+    #' @param endAt (scalar<numeric> | NULL) end timestamp in milliseconds.
     #' @return (data.table | promise<data.table>) one row per ledger entry, each
     #'   giving the entry ID, currency code, transaction amount, fee charged, tax
     #'   amount, balance after the transaction, account type, business type,
@@ -1167,7 +1167,7 @@ KucoinAccount <- R6::R6Class(
     #' - **Tier Awareness**: Know your default fee tier for cost estimation.
     #' - **Fee Budgeting**: Use as baseline for worst-case fee calculations.
     #'
-    #' @param currencyType (scalar<integer> | NULL) `0` for crypto (default), `1`
+    #' @param currencyType (scalar<count> | NULL) `0` for crypto (default), `1`
     #'   for fiat.
     #' @return (data.table | promise<data.table>) one row giving the base taker
     #'   fee rate and the base maker fee rate.

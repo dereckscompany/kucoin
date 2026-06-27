@@ -638,10 +638,10 @@ Verified: 2026-05-23
 Accepted values: \code{"PROCESSING"}, \code{"REVIEW"}, \code{"WALLET_PROCESSING"},
 \code{"SUCCESS"}, \code{"FAILURE"}. When NULL, returns withdrawals of all statuses.}
 
-\item{\code{startAt}}{(scalar<integer> | NULL) start timestamp in milliseconds
+\item{\code{startAt}}{(scalar<numeric> | NULL) start timestamp in milliseconds
 (inclusive).}
 
-\item{\code{endAt}}{(scalar<integer> | NULL) end timestamp in milliseconds
+\item{\code{endAt}}{(scalar<numeric> | NULL) end timestamp in milliseconds
 (inclusive).}
 
 \item{\code{page_size}}{(scalar<count in [1, Inf[>) number of results per page

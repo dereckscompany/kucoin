@@ -1222,9 +1222,9 @@ KucoinTrading <- R6::R6Class(
     #' @param side (scalar<character> | NULL) `"buy"` or `"sell"`.
     #' @param type (scalar<character> | NULL) `"limit"` or `"market"`.
     #' @param lastId (scalar<character> | NULL) pagination cursor for fetching next page.
-    #' @param limit (scalar<integer> | NULL) results per page (default 100, max 200).
-    #' @param startAt (scalar<integer> | NULL) start timestamp in milliseconds.
-    #' @param endAt (scalar<integer> | NULL) end timestamp in milliseconds.
+    #' @param limit (scalar<count> | NULL) results per page (default 100, max 200).
+    #' @param startAt (scalar<numeric> | NULL) start timestamp in milliseconds.
+    #' @param endAt (scalar<numeric> | NULL) end timestamp in milliseconds.
     #' @return (data.table | promise<data.table>) one row per fill giving the fill and trade identifiers, the parent and
     #'   counterparty order IDs, the trading pair, side, liquidity, type, price, size, funds, fee, fee rate, fee
     #'   currency, and the creation datetime (POSIXct, coerced from epoch milliseconds).
@@ -1585,9 +1585,9 @@ KucoinTrading <- R6::R6Class(
     #'   If NULL, returns closed orders across all symbols.
     #' @param side (scalar<character> | NULL) `"buy"` or `"sell"`.
     #' @param type (scalar<character> | NULL) `"limit"` or `"market"`.
-    #' @param startAt (scalar<integer> | NULL) start timestamp in milliseconds.
-    #' @param endAt (scalar<integer> | NULL) end timestamp in milliseconds.
-    #' @param limit (scalar<integer> | NULL) results per page (max 200).
+    #' @param startAt (scalar<numeric> | NULL) start timestamp in milliseconds.
+    #' @param endAt (scalar<numeric> | NULL) end timestamp in milliseconds.
+    #' @param limit (scalar<count> | NULL) results per page (max 200).
     #' @param lastId (scalar<character> | NULL) pagination cursor.
     #' @return (data.table | promise<data.table>) one row per closed order, including the creation datetime (POSIXct).
     #'

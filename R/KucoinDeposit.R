@@ -396,9 +396,9 @@ KucoinDeposit <- R6::R6Class(
     #' @param status (scalar<character> | NULL) filter by deposit status.
     #'   Accepted values: `"PROCESSING"`, `"WALLET_PROCESSING"`, `"SUCCESS"`,
     #'   `"FAILURE"`. When NULL, returns deposits of all statuses.
-    #' @param startAt (scalar<integer> | NULL) start timestamp in milliseconds
+    #' @param startAt (scalar<numeric> | NULL) start timestamp in milliseconds
     #'   (inclusive). Used to filter deposits created on or after this time.
-    #' @param endAt (scalar<integer> | NULL) end timestamp in milliseconds
+    #' @param endAt (scalar<numeric> | NULL) end timestamp in milliseconds
     #'   (inclusive). Used to filter deposits created on or before this time.
     #' @param page_size (scalar<count in [1, Inf[>) number of results per page
     #'   (default 50, max 100).

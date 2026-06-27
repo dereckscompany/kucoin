@@ -507,10 +507,10 @@ Verified: 2026-05-23
 Accepted values: \code{"PROCESSING"}, \code{"WALLET_PROCESSING"}, \code{"SUCCESS"},
 \code{"FAILURE"}. When NULL, returns deposits of all statuses.}
 
-\item{\code{startAt}}{(scalar<integer> | NULL) start timestamp in milliseconds
+\item{\code{startAt}}{(scalar<numeric> | NULL) start timestamp in milliseconds
 (inclusive). Used to filter deposits created on or after this time.}
 
-\item{\code{endAt}}{(scalar<integer> | NULL) end timestamp in milliseconds
+\item{\code{endAt}}{(scalar<numeric> | NULL) end timestamp in milliseconds
 (inclusive). Used to filter deposits created on or before this time.}
 
 \item{\code{page_size}}{(scalar<count in [1, Inf[>) number of results per page

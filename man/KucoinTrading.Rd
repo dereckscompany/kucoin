@@ -1521,11 +1521,11 @@ If NULL, returns fills across all symbols.}
 
 \item{\code{lastId}}{(scalar<character> | NULL) pagination cursor for fetching next page.}
 
-\item{\code{limit}}{(scalar<integer> | NULL) results per page (default 100, max 200).}
+\item{\code{limit}}{(scalar<count> | NULL) results per page (default 100, max 200).}
 
-\item{\code{startAt}}{(scalar<integer> | NULL) start timestamp in milliseconds.}
+\item{\code{startAt}}{(scalar<numeric> | NULL) start timestamp in milliseconds.}
 
-\item{\code{endAt}}{(scalar<integer> | NULL) end timestamp in milliseconds.}
+\item{\code{endAt}}{(scalar<numeric> | NULL) end timestamp in milliseconds.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1837,11 +1837,11 @@ If NULL, returns closed orders across all symbols.}
 
 \item{\code{type}}{(scalar<character> | NULL) \code{"limit"} or \code{"market"}.}
 
-\item{\code{startAt}}{(scalar<integer> | NULL) start timestamp in milliseconds.}
+\item{\code{startAt}}{(scalar<numeric> | NULL) start timestamp in milliseconds.}
 
-\item{\code{endAt}}{(scalar<integer> | NULL) end timestamp in milliseconds.}
+\item{\code{endAt}}{(scalar<numeric> | NULL) end timestamp in milliseconds.}
 
-\item{\code{limit}}{(scalar<integer> | NULL) results per page (max 200).}
+\item{\code{limit}}{(scalar<count> | NULL) results per page (max 200).}
 
 \item{\code{lastId}}{(scalar<character> | NULL) pagination cursor.}
 }

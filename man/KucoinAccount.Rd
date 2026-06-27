@@ -1224,12 +1224,12 @@ to 10 comma-separated).}
 \item{\code{lastId}}{(scalar<character> | NULL) pagination cursor for fetching
 previous batches.}
 
-\item{\code{limit}}{(scalar<integer> | NULL) results per page (default 100, max
+\item{\code{limit}}{(scalar<count> | NULL) results per page (default 100, max
 200).}
 
-\item{\code{startAt}}{(scalar<integer> | NULL) start timestamp in milliseconds.}
+\item{\code{startAt}}{(scalar<numeric> | NULL) start timestamp in milliseconds.}
 
-\item{\code{endAt}}{(scalar<integer> | NULL) end timestamp in milliseconds.}
+\item{\code{endAt}}{(scalar<numeric> | NULL) end timestamp in milliseconds.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1311,7 +1311,7 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{currencyType}}{(scalar<integer> | NULL) \code{0} for crypto (default), \code{1}
+\item{\code{currencyType}}{(scalar<count> | NULL) \code{0} for crypto (default), \code{1}
 for fiat.}
 }
 \if{html}{\out{</div>}}

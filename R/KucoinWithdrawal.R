@@ -511,9 +511,9 @@ KucoinWithdrawal <- R6::R6Class(
     #' @param status (scalar<character> | NULL) filter by withdrawal status.
     #'   Accepted values: `"PROCESSING"`, `"REVIEW"`, `"WALLET_PROCESSING"`,
     #'   `"SUCCESS"`, `"FAILURE"`. When NULL, returns withdrawals of all statuses.
-    #' @param startAt (scalar<integer> | NULL) start timestamp in milliseconds
+    #' @param startAt (scalar<numeric> | NULL) start timestamp in milliseconds
     #'   (inclusive).
-    #' @param endAt (scalar<integer> | NULL) end timestamp in milliseconds
+    #' @param endAt (scalar<numeric> | NULL) end timestamp in milliseconds
     #'   (inclusive).
     #' @param page_size (scalar<count in [1, Inf[>) number of results per page
     #'   (default 50, max 500).
