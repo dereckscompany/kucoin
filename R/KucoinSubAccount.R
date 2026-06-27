@@ -192,7 +192,8 @@ KucoinSubAccount <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v2/sub/user`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Sub-Account List Summary Info](https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-list-summary-info)
+    #' KuCoin Get Sub-Account List Summary Info:
+    #' <https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-list-summary-info>
     #'
     #' Verified: 2026-05-23
     #'
@@ -312,7 +313,8 @@ KucoinSubAccount <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v1/sub-accounts/{subUserId}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Sub-Account Detail Balance](https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-detail-balance)
+    #' KuCoin Get Sub-Account Detail Balance:
+    #' <https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-detail-balance>
     #'
     #' Verified: 2026-05-23
     #'
@@ -492,7 +494,8 @@ KucoinSubAccount <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v2/sub-accounts`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Sub-Account List Spot Balance V2](https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-list-spot-balance-v2)
+    #' KuCoin Get Sub-Account List Spot Balance V2:
+    #' <https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-list-spot-balance-v2>
     #'
     #' Verified: 2026-05-23
     #'

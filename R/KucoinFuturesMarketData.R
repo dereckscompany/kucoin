@@ -973,7 +973,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v1/funding-rate/{symbol}/current`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Current Funding Rate](https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-current-funding-rate)
+    #' KuCoin Get Current Funding Rate:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-current-funding-rate>
     #'
     #' Verified: 2026-05-23
     #'
@@ -1054,7 +1055,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v1/contract/funding-rates?symbol={symbol}&from={from}&to={to}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Public Funding Rate History](https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-public-funding-history)
+    #' KuCoin Get Public Funding Rate History:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-public-funding-history>
     #'
     #' Verified: 2026-05-23
     #'

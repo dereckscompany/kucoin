@@ -59,7 +59,8 @@ KucoinMarginData <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v3/margin/symbols`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Cross Margin Symbols](https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-symbols-cross-margin)
+    #' KuCoin Get Cross Margin Symbols:
+    #' <https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-symbols-cross-margin>
     #'
     #' Verified: 2026-05-23
     #'
@@ -150,7 +151,8 @@ KucoinMarginData <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v1/isolated/symbols`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Isolated Margin Symbols](https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-symbols-isolated-margin)
+    #' KuCoin Get Isolated Margin Symbols:
+    #' <https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-symbols-isolated-margin>
     #'
     #' Verified: 2026-05-23
     #'
@@ -313,7 +315,8 @@ KucoinMarginData <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v3/margin/collateralRatio`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Collateral Ratio](https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-margin-collateral-ratio)
+    #' KuCoin Get Collateral Ratio:
+    #' <https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-margin-collateral-ratio>
     #'
     #' Verified: 2026-05-23
     #'

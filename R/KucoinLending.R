@@ -146,7 +146,8 @@ KucoinLending <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v3/project/marketInterestRate`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Market Interest Rate](https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-loan-market-interest-rate)
+    #' KuCoin Get Market Interest Rate:
+    #' <https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-loan-market-interest-rate>
     #'
     #' Verified: 2026-05-23
     #'

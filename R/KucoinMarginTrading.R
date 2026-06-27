@@ -1253,7 +1253,8 @@ KucoinMarginTrading <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v3/margin/borrowRate`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Borrow Interest Rate](https://www.kucoin.com/docs-new/rest/margin-trading/debit/get-borrow-interest-rate)
+    #' KuCoin Get Borrow Interest Rate:
+    #' <https://www.kucoin.com/docs-new/rest/margin-trading/debit/get-borrow-interest-rate>
     #'
     #' Verified: 2026-05-23
     #'

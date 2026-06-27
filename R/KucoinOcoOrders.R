@@ -244,7 +244,8 @@ KucoinOcoOrders <- R6::R6Class(
     #' `DELETE https://api.kucoin.com/api/v3/oco/order/{orderId}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Cancel OCO Order By OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-oco-order-by-orderld)
+    #' KuCoin Cancel OCO Order By OrderId:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-oco-order-by-orderld>
     #'
     #' Verified: 2026-05-23
     #'
@@ -340,7 +341,8 @@ KucoinOcoOrders <- R6::R6Class(
     #' `DELETE https://api.kucoin.com/api/v3/oco/client-order/{clientOid}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Cancel OCO Order By ClientOid](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-oco-order-by-clientoid)
+    #' KuCoin Cancel OCO Order By ClientOid:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-oco-order-by-clientoid>
     #'
     #' Verified: 2026-05-23
     #'
@@ -544,7 +546,8 @@ KucoinOcoOrders <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v3/oco/order/{orderId}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get OCO Order By OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-by-orderld)
+    #' KuCoin Get OCO Order By OrderId:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-by-orderld>
     #'
     #' Verified: 2026-05-23
     #'
@@ -631,7 +634,8 @@ KucoinOcoOrders <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v3/oco/client-order/{clientOid}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get OCO Order By ClientOid](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-by-clientoid)
+    #' KuCoin Get OCO Order By ClientOid:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-by-clientoid>
     #'
     #' Verified: 2026-05-23
     #'
@@ -719,7 +723,8 @@ KucoinOcoOrders <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v3/oco/order/details/{orderId}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get OCO Order Detail By OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-detail-by-orderld)
+    #' KuCoin Get OCO Order Detail By OrderId:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-detail-by-orderld>
     #'
     #' Verified: 2026-05-23
     #'

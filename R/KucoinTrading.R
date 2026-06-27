@@ -575,7 +575,8 @@ KucoinTrading <- R6::R6Class(
     #' `DELETE https://api.kucoin.com/api/v1/hf/orders/{orderId}?symbol={symbol}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Cancel Order By OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld)
+    #' KuCoin Cancel Order By OrderId:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld>
     #'
     #' Verified: 2026-05-23
     #'
@@ -645,7 +646,8 @@ KucoinTrading <- R6::R6Class(
     #' `DELETE https://api.kucoin.com/api/v1/hf/orders/client-order/{clientOid}?symbol={symbol}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Cancel Order By ClientOid](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid)
+    #' KuCoin Cancel Order By ClientOid:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid>
     #'
     #' Verified: 2026-05-23
     #'
@@ -788,7 +790,8 @@ KucoinTrading <- R6::R6Class(
     #' `DELETE https://api.kucoin.com/api/v1/hf/orders?symbol={symbol}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Cancel All Orders By Symbol](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-all-orders-by-symbol)
+    #' KuCoin Cancel All Orders By Symbol:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-all-orders-by-symbol>
     #'
     #' Verified: 2026-05-23
     #'
@@ -1334,7 +1337,8 @@ KucoinTrading <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v1/hf/orders/active/symbols`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Symbols With Open Order](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-symbols-with-open-order)
+    #' KuCoin Get Symbols With Open Order:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-symbols-with-open-order>
     #'
     #' Verified: 2026-05-23
     #'
@@ -2003,7 +2007,8 @@ KucoinTrading <- R6::R6Class(
     #' `DELETE https://api.kucoin.com/api/v1/hf/orders/sync/{orderId}?symbol={symbol}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Cancel Order By OrderId Sync](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld-sync)
+    #' KuCoin Cancel Order By OrderId Sync:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld-sync>
     #'
     #' Verified: 2026-05-23
     #'
@@ -2079,7 +2084,8 @@ KucoinTrading <- R6::R6Class(
     #' `DELETE https://api.kucoin.com/api/v1/hf/orders/sync/client-order/{clientOid}?symbol={symbol}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Cancel Order By ClientOid Sync](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid-sync)
+    #' KuCoin Cancel Order By ClientOid Sync:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid-sync>
     #'
     #' Verified: 2026-05-23
     #'

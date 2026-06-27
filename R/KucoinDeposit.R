@@ -202,7 +202,8 @@ KucoinDeposit <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v3/deposit-addresses`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Deposit Addresses V3](https://www.kucoin.com/docs-new/rest/account-info/deposit/get-deposit-address-v3/en)
+    #' KuCoin Get Deposit Addresses V3:
+    #' <https://www.kucoin.com/docs-new/rest/account-info/deposit/get-deposit-address-v3/en>
     #'
     #' Verified: 2026-05-23
     #'

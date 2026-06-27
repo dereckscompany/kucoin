@@ -79,7 +79,8 @@ KucoinFuturesAccount <- R6::R6Class(
     #' `GET https://api-futures.kucoin.com/api/v1/account-overview`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Account - Futures](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-futures)
+    #' KuCoin Get Account - Futures:
+    #' <https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-futures>
     #'
     #' Verified: 2026-05-23
     #'
@@ -146,7 +147,8 @@ KucoinFuturesAccount <- R6::R6Class(
     #' `GET https://api-futures.kucoin.com/api/v2/position`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Position Details](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-position-details)
+    #' KuCoin Get Position Details:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-position-details>
     #'
     #' Verified: 2026-05-23
     #'
@@ -338,7 +340,8 @@ KucoinFuturesAccount <- R6::R6Class(
     #' `GET https://api-futures.kucoin.com/api/v1/history-positions`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Position History](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-positions-history)
+    #' KuCoin Get Position History:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-positions-history>
     #'
     #' Verified: 2026-05-23
     #'
@@ -562,7 +565,8 @@ KucoinFuturesAccount <- R6::R6Class(
     #' `GET https://api-futures.kucoin.com/api/v2/getCrossUserLeverage`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Cross Margin Leverage](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-cross-margin-leverage)
+    #' KuCoin Get Cross Margin Leverage:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-cross-margin-leverage>
     #'
     #' Verified: 2026-05-23
     #'
@@ -621,7 +625,8 @@ KucoinFuturesAccount <- R6::R6Class(
     #' `POST https://api-futures.kucoin.com/api/v2/changeCrossUserLeverage`
     #'
     #' ### Official Documentation
-    #' [KuCoin Modify Cross Margin Leverage](https://www.kucoin.com/docs-new/rest/futures-trading/positions/modify-cross-margin-leverage)
+    #' KuCoin Modify Cross Margin Leverage:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/positions/modify-cross-margin-leverage>
     #'
     #' Verified: 2026-05-23
     #'
@@ -752,7 +757,8 @@ KucoinFuturesAccount <- R6::R6Class(
     #' `GET https://api-futures.kucoin.com/api/v1/margin/maxWithdrawMargin`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Max Withdraw Margin](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-max-withdraw-margin)
+    #' KuCoin Get Max Withdraw Margin:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-max-withdraw-margin>
     #'
     #' Verified: 2026-05-23
     #'
@@ -895,7 +901,8 @@ KucoinFuturesAccount <- R6::R6Class(
     #' `POST https://api-futures.kucoin.com/api/v1/margin/withdrawMargin`
     #'
     #' ### Official Documentation
-    #' [KuCoin Remove Isolated Margin](https://www.kucoin.com/docs-new/rest/futures-trading/positions/remove-isolated-margin)
+    #' KuCoin Remove Isolated Margin:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/positions/remove-isolated-margin>
     #'
     #' Verified: 2026-05-23
     #'
@@ -966,7 +973,8 @@ KucoinFuturesAccount <- R6::R6Class(
     #' `GET https://api-futures.kucoin.com/api/v1/contracts/risk-limit/{symbol}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Isolated Margin Risk Limit](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-isolated-margin-risk-limit)
+    #' KuCoin Get Isolated Margin Risk Limit:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-isolated-margin-risk-limit>
     #'
     #' Verified: 2026-05-23
     #'
@@ -1055,7 +1063,8 @@ KucoinFuturesAccount <- R6::R6Class(
     #' `GET https://api-futures.kucoin.com/api/v1/funding-history`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Private Funding History](https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-private-funding-history)
+    #' KuCoin Get Private Funding History:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-private-funding-history>
     #'
     #' Verified: 2026-05-23
     #'

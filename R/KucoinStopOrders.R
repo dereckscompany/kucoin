@@ -370,7 +370,8 @@ KucoinStopOrders <- R6::R6Class(
     #' `DELETE https://api.kucoin.com/api/v1/stop-order/{orderId}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Cancel Stop Order By OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-stop-order-by-orderld)
+    #' KuCoin Cancel Stop Order By OrderId:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-stop-order-by-orderld>
     #'
     #' Verified: 2026-05-23
     #'
@@ -460,7 +461,8 @@ KucoinStopOrders <- R6::R6Class(
     #' `DELETE https://api.kucoin.com/api/v1/stop-order/cancelOrderByClientOid`
     #'
     #' ### Official Documentation
-    #' [KuCoin Cancel Stop Order By ClientOid](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-stop-order-by-clientoid)
+    #' KuCoin Cancel Stop Order By ClientOid:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-stop-order-by-clientoid>
     #'
     #' Verified: 2026-05-23
     #'
@@ -544,7 +546,8 @@ KucoinStopOrders <- R6::R6Class(
     #' `DELETE https://api.kucoin.com/api/v1/stop-order/cancel`
     #'
     #' ### Official Documentation
-    #' [KuCoin Batch Cancel Stop Orders](https://www.kucoin.com/docs-new/rest/spot-trading/orders/batch-cancel-stop-orders)
+    #' KuCoin Batch Cancel Stop Orders:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/batch-cancel-stop-orders>
     #'
     #' Verified: 2026-05-23
     #'
@@ -645,7 +648,8 @@ KucoinStopOrders <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v1/stop-order/{orderId}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Stop Order By OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-stop-order-by-orderld)
+    #' KuCoin Get Stop Order By OrderId:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-stop-order-by-orderld>
     #'
     #' Verified: 2026-05-23
     #'
@@ -768,7 +772,8 @@ KucoinStopOrders <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v1/stop-order/queryOrderByClientOid`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Stop Order By ClientOid](https://www.kucoin.com/docs-new/rest/spot-trading/get-stop-order-by-clientoid)
+    #' KuCoin Get Stop Order By ClientOid:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/get-stop-order-by-clientoid>
     #'
     #' Verified: 2026-05-23
     #'

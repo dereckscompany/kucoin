@@ -604,7 +604,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `DELETE https://api-futures.kucoin.com/api/v1/orders/{orderId}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Cancel Futures Order By OrderId](https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-orderld)
+    #' KuCoin Cancel Futures Order By OrderId:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-orderld>
     #'
     #' Verified: 2026-05-23
     #'
@@ -691,7 +692,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `DELETE https://api-futures.kucoin.com/api/v1/orders/client-order/{clientOid}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Cancel Futures Order By ClientOid](https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-clientoid)
+    #' KuCoin Cancel Futures Order By ClientOid:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-clientoid>
     #'
     #' Verified: 2026-05-23
     #'
@@ -862,7 +864,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `DELETE https://api-futures.kucoin.com/api/v1/stopOrders`
     #'
     #' ### Official Documentation
-    #' [KuCoin Cancel All Futures Stop Orders](https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-all-stop-orders)
+    #' KuCoin Cancel All Futures Stop Orders:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-all-stop-orders>
     #'
     #' Verified: 2026-05-23
     #'
@@ -958,7 +961,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `GET https://api-futures.kucoin.com/api/v1/orders/{orderId}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Futures Order By OrderId](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-by-orderld)
+    #' KuCoin Get Futures Order By OrderId:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-by-orderld>
     #'
     #' Verified: 2026-05-23
     #'
@@ -1072,7 +1076,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `GET https://api-futures.kucoin.com/api/v1/orders/byClientOid`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Futures Order By ClientOid](https://www.kucoin.com/docs-new/rest/futures-trading/get-stop-order-by-clientoid)
+    #' KuCoin Get Futures Order By ClientOid:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/get-stop-order-by-clientoid>
     #'
     #' Note: KuCoin's URL slug here contains `get-stop-order-by-clientoid`,
     #' but the page actually documents the regular order endpoint
@@ -1327,7 +1332,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `GET https://api-futures.kucoin.com/api/v1/recentDoneOrders`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Recent Closed Futures Orders](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-closed-orders)
+    #' KuCoin Get Recent Closed Futures Orders:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-closed-orders>
     #'
     #' Verified: 2026-05-23
     #'
@@ -1450,7 +1456,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `GET https://api-futures.kucoin.com/api/v1/stopOrders`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Futures Untriggered Stop Order List](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-stop-order-list)
+    #' KuCoin Get Futures Untriggered Stop Order List:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-stop-order-list>
     #'
     #' Verified: 2026-05-23
     #'
@@ -1696,7 +1703,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `GET https://api-futures.kucoin.com/api/v1/recentFills`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Recent Futures Filled List](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-trade-history)
+    #' KuCoin Get Recent Futures Filled List:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-trade-history>
     #'
     #' Verified: 2026-05-23
     #'

@@ -90,7 +90,8 @@ KucoinAccount <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v2/user-info`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Account Summary](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-summary-info)
+    #' KuCoin Get Account Summary:
+    #' <https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-summary-info>
     #'
     #' Verified: 2026-05-23
     #'
@@ -251,7 +252,8 @@ KucoinAccount <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v1/hf/accounts/opened`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Spot Account Type](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-type-spot)
+    #' KuCoin Get Spot Account Type:
+    #' <https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-type-spot>
     #'
     #' Verified: 2026-05-23
     #'
@@ -322,7 +324,8 @@ KucoinAccount <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v1/accounts`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Spot Account List](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-list-spot)
+    #' KuCoin Get Spot Account List:
+    #' <https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-list-spot>
     #'
     #' Verified: 2026-05-23
     #'
@@ -415,7 +418,8 @@ KucoinAccount <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v1/accounts/{accountId}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Spot Account Detail](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-detail-spot)
+    #' KuCoin Get Spot Account Detail:
+    #' <https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-detail-spot>
     #'
     #' Verified: 2026-05-23
     #'
@@ -497,7 +501,8 @@ KucoinAccount <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v3/margin/accounts`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Cross Margin Account](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-cross-margin)
+    #' KuCoin Get Cross Margin Account:
+    #' <https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-cross-margin>
     #'
     #' Verified: 2026-05-23
     #'
@@ -636,7 +641,8 @@ KucoinAccount <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v3/isolated/accounts`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Isolated Margin Account](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-isolated-margin)
+    #' KuCoin Get Isolated Margin Account:
+    #' <https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-isolated-margin>
     #'
     #' Verified: 2026-05-23
     #'
@@ -830,7 +836,8 @@ KucoinAccount <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v1/accounts/ledgers`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Account Ledger Spot/Margin](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-ledgers-spot-margin)
+    #' KuCoin Get Account Ledger Spot/Margin:
+    #' <https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-ledgers-spot-margin>
     #'
     #' Verified: 2026-05-23
     #'
@@ -982,7 +989,8 @@ KucoinAccount <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v1/hf/accounts/ledgers`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Account Ledgers Trade_hf](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-ledgers-tradehf)
+    #' KuCoin Get Account Ledgers Trade_hf:
+    #' <https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-ledgers-tradehf>
     #'
     #' Verified: 2026-05-23
     #'

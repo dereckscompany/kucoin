@@ -333,7 +333,8 @@ KucoinWithdrawal <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v1/withdrawals/quotas`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Withdrawal Quotas](https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-quotas)
+    #' KuCoin Get Withdrawal Quotas:
+    #' <https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-quotas>
     #'
     #' Verified: 2026-05-23
     #'
@@ -458,7 +459,8 @@ KucoinWithdrawal <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v1/withdrawals`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Withdrawal History](https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-history)
+    #' KuCoin Get Withdrawal History:
+    #' <https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-history>
     #'
     #' Verified: 2026-05-23
     #'
@@ -629,7 +631,8 @@ KucoinWithdrawal <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v1/withdrawals/{withdrawalId}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Withdrawal Detail](https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-by-id)
+    #' KuCoin Get Withdrawal Detail:
+    #' <https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-by-id>
     #'
     #' Verified: 2026-05-23
     #'
