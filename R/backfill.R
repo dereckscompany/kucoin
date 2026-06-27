@@ -9,32 +9,36 @@
 #' from a partially completed backfill by reading the existing file and skipping
 #' symbol-timeframe combinations that are already up to date.
 #'
-#' @param symbols Character vector of trading pair symbols (e.g.,
+#' @param symbols (vector<character, 1..>) trading pair symbols (e.g.,
 #'   `c("BTC-USDT", "ETH-USDT")`). Must not be NULL or empty.
-#' @param timeframes Character vector of candle timeframes (e.g., `c("1day", "1hour")`).
-#'   Valid values are the names of the internal timeframe map: `"1min"`, `"3min"`,
-#'   `"5min"`, `"15min"`, `"30min"`, `"1hour"`, `"2hour"`, `"4hour"`, `"6hour"`,
-#'   `"8hour"`, `"12hour"`, `"1day"`, `"1week"`, `"1month"`.
-#' @param from POSIXct or numeric; start of the backfill window. Defaults to one
-#'   year ago. Values before `"2017-01-01"` (or `-Inf`) are clamped to
+#' @param timeframes (vector<character, 1..>) candle timeframes (e.g.,
+#'   `c("1day", "1hour")`). Valid values are the names of the internal timeframe
+#'   map: `"1min"`, `"3min"`, `"5min"`, `"15min"`, `"30min"`, `"1hour"`,
+#'   `"2hour"`, `"4hour"`, `"6hour"`, `"8hour"`, `"12hour"`, `"1day"`, `"1week"`,
+#'   `"1month"`.
+#' @param from (POSIXct | scalar<numeric>) start of the backfill window. Defaults
+#'   to one year ago. Values before `"2017-01-01"` (or `-Inf`) are clamped to
 #'   `"2017-01-01"` since KuCoin data does not exist before that date.
-#' @param to POSIXct or numeric; end of the backfill window. Defaults to
+#' @param to (POSIXct | scalar<numeric>) end of the backfill window. Defaults to
 #'   current time. `Inf` is replaced with current time.
-#' @param file Character; path to the output CSV file. Data is appended
+#' @param file (scalar<character>) path to the output CSV file. Data is appended
 #'   incrementally so progress is saved even if the process is interrupted.
-#' @param base_url Character; KuCoin API base URL.
-#' @param sleep Numeric; seconds to sleep between each symbol-timeframe
-#'   combination to respect rate limits.
-#' @param verbose Logical; if `TRUE`, prints progress messages via [rlang::inform()].
+#' @param base_url (scalar<character>) KuCoin API base URL.
+#' @param sleep (scalar<numeric in [0, Inf[>) seconds to sleep between each
+#'   symbol-timeframe combination to respect rate limits.
+#' @param verbose (scalar<logical>) if `TRUE`, prints progress messages via
+#'   [rlang::inform()].
 #'
-#' @return The file path (invisibly). If any symbol-timeframe combinations
-#'   failed, a `"failures"` attribute is attached containing a
-#'   [data.table::data.table] with columns `symbol`, `timeframe`, and `error`.
+#' @return (scalar<character>) the file path (invisibly). If any
+#'   symbol-timeframe combinations failed, a `"failures"` attribute is attached
+#'   containing a [data.table::data.table] with columns `symbol`, `timeframe`,
+#'   and `error`.
 #'
 #' @importFrom httr2 req_perform
 #' @importFrom lubridate as_datetime now
 #' @importFrom rlang abort inform warn
 #' @export
+#' @noassert symbols, from, to
 #'
 #' @examples
 #' \dontrun{
@@ -55,6 +59,10 @@ kucoin_backfill_klines <- function(
   sleep = 0.3,
   verbose = TRUE
 ) {
+  # `symbols` is validated below with a bespoke "non-empty" message (and is
+  # `@noassert`d) so NULL / empty input raises that message rather than a
+  # generated type error.
+  assert_args_kucoin_backfill_klines(timeframes, file, base_url, sleep, verbose)
   # --- Input validation ---
   if (is.null(symbols) || length(symbols) == 0L) {
     rlang::abort("`symbols` must be a non-empty character vector of trading pairs.")
@@ -203,5 +211,5 @@ kucoin_backfill_klines <- function(
     attr(file, "failures") <- data.table::rbindlist(failures)
   }
 
-  return(invisible(file))
+  return(invisible(assert_return_kucoin_backfill_klines(file)))
 }

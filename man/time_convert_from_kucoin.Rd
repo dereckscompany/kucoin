@@ -7,13 +7,13 @@
 time_convert_from_kucoin(time_value, unit = c("ms", "ns", "s"))
 }
 \arguments{
-\item{time_value}{Numeric; the UNIX timestamp.}
+\item{time_value}{(vector<numeric, 1..>) the UNIX timestamp(s).}
 
-\item{unit}{Character; input unit: \code{"ms"} (milliseconds, default),
-\code{"ns"} (nanoseconds), or \code{"s"} (seconds).}
+\item{unit}{(scalar<character in c("ms", "ns", "s")>) input unit: \code{"ms"}
+(milliseconds, default), \code{"ns"} (nanoseconds), or \code{"s"} (seconds).}
 }
 \value{
-POSIXct object in UTC.
+(class<POSIXct>) POSIXct in UTC.
 }
 \description{
 Converts a UNIX timestamp from KuCoin's API into a POSIXct object in UTC.

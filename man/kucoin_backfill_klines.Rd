@@ -16,35 +16,38 @@ kucoin_backfill_klines(
 )
 }
 \arguments{
-\item{symbols}{Character vector of trading pair symbols (e.g.,
+\item{symbols}{(vector<character, 1..>) trading pair symbols (e.g.,
 \code{c("BTC-USDT", "ETH-USDT")}). Must not be NULL or empty.}
 
-\item{timeframes}{Character vector of candle timeframes (e.g., \code{c("1day", "1hour")}).
-Valid values are the names of the internal timeframe map: \code{"1min"}, \code{"3min"},
-\code{"5min"}, \code{"15min"}, \code{"30min"}, \code{"1hour"}, \code{"2hour"}, \code{"4hour"}, \code{"6hour"},
-\code{"8hour"}, \code{"12hour"}, \code{"1day"}, \code{"1week"}, \code{"1month"}.}
+\item{timeframes}{(vector<character, 1..>) candle timeframes (e.g.,
+\code{c("1day", "1hour")}). Valid values are the names of the internal timeframe
+map: \code{"1min"}, \code{"3min"}, \code{"5min"}, \code{"15min"}, \code{"30min"}, \code{"1hour"},
+\code{"2hour"}, \code{"4hour"}, \code{"6hour"}, \code{"8hour"}, \code{"12hour"}, \code{"1day"}, \code{"1week"},
+\code{"1month"}.}
 
-\item{from}{POSIXct or numeric; start of the backfill window. Defaults to one
-year ago. Values before \code{"2017-01-01"} (or \code{-Inf}) are clamped to
+\item{from}{(POSIXct | scalar<numeric>) start of the backfill window. Defaults
+to one year ago. Values before \code{"2017-01-01"} (or \code{-Inf}) are clamped to
 \code{"2017-01-01"} since KuCoin data does not exist before that date.}
 
-\item{to}{POSIXct or numeric; end of the backfill window. Defaults to
+\item{to}{(POSIXct | scalar<numeric>) end of the backfill window. Defaults to
 current time. \code{Inf} is replaced with current time.}
 
-\item{file}{Character; path to the output CSV file. Data is appended
+\item{file}{(scalar<character>) path to the output CSV file. Data is appended
 incrementally so progress is saved even if the process is interrupted.}
 
-\item{base_url}{Character; KuCoin API base URL.}
+\item{base_url}{(scalar<character>) KuCoin API base URL.}
 
-\item{sleep}{Numeric; seconds to sleep between each symbol-timeframe
-combination to respect rate limits.}
+\item{sleep}{(scalar<numeric in [0, Inf[>) seconds to sleep between each
+symbol-timeframe combination to respect rate limits.}
 
-\item{verbose}{Logical; if \code{TRUE}, prints progress messages via \code{\link[rlang:abort]{rlang::inform()}}.}
+\item{verbose}{(scalar<logical>) if \code{TRUE}, prints progress messages via
+\code{\link[rlang:abort]{rlang::inform()}}.}
 }
 \value{
-The file path (invisibly). If any symbol-timeframe combinations
-failed, a \code{"failures"} attribute is attached containing a
-\link[data.table:data.table]{data.table::data.table} with columns \code{symbol}, \code{timeframe}, and \code{error}.
+(scalar<character>) the file path (invisibly). If any
+symbol-timeframe combinations failed, a \code{"failures"} attribute is attached
+containing a \link[data.table:data.table]{data.table::data.table} with columns \code{symbol}, \code{timeframe},
+and \code{error}.
 }
 \description{
 Downloads historical OHLCV candlestick data for one or more trading pairs and

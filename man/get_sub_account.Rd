@@ -10,14 +10,15 @@ get_sub_account(
 )
 }
 \arguments{
-\item{sub_account_name}{Character string; sub-account name.
+\item{sub_account_name}{(scalar<character>) sub-account name.
 Defaults to \code{Sys.getenv("KUCOIN_SUBACCOUNT_NAME")}.}
 
-\item{sub_account_password}{Character string; sub-account password.
+\item{sub_account_password}{(scalar<character>) sub-account password.
 Defaults to \code{Sys.getenv("KUCOIN_SUBACCOUNT_PASSWORD")}.}
 }
 \value{
-Named list with \code{sub_account_name} and \code{sub_account_password}.
+(list) named list with \code{sub_account_name} and
+\code{sub_account_password}.
 }
 \description{
 Fetches sub-account credentials from environment variables or explicit arguments.

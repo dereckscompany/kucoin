@@ -7,13 +7,14 @@
 time_convert_to_kucoin(datetime, unit = c("ms", "ns", "s"))
 }
 \arguments{
-\item{datetime}{POSIXct object to convert.}
+\item{datetime}{(class<POSIXct>) the object to convert.}
 
-\item{unit}{Character; output unit: \code{"ms"} (milliseconds, default),
-\code{"ns"} (nanoseconds), or \code{"s"} (seconds).}
+\item{unit}{(scalar<character in c("ms", "ns", "s")>) output unit: \code{"ms"}
+(milliseconds, default), \code{"ns"} (nanoseconds), or \code{"s"} (seconds).}
 }
 \value{
-Numeric UNIX timestamp in the specified unit.
+(scalar<numeric> | scalar<integer>) UNIX timestamp in the specified
+unit (\code{numeric} for \code{"ms"}/\code{"ns"}, \code{integer} for \code{"s"}).
 }
 \description{
 Converts a POSIXct object into a UNIX timestamp in the specified unit.
