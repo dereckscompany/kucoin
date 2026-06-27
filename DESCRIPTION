@@ -28,7 +28,7 @@ Imports:
     lubridate,
     uuid,
     assert,
-    connectcore
+    connectcore (>= 0.1.0)
 Suggests:
     promises,
     coro,
@@ -39,11 +39,11 @@ Suggests:
     diffviewer,
     knitr,
     rmarkdown,
-    roxyassert
+    roxyassert (>= 0.9.1)
 Remotes:
     dereckscompany/assert,
-    dereckscompany/connectcore@v0.1.0,
-    dereckscompany/roxyassert@v0.9.1
+    dereckscompany/connectcore,
+    dereckscompany/roxyassert
 Config/testthat/edition: 3
 Config/roxygen2/version: 8.0.0
 RoxygenNote: 7.3.3
