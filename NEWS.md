@@ -1,3 +1,9 @@
+# kucoin 4.1.1
+
+## REFACTOR
+
+* **Adopted `connectcore`'s `body_format = "raw"` funnel; the connector now owns no transport.** With `connectcore` v0.1.0 a pre-serialised body can be sent byte-verbatim (no NULL-pruning, no pretty-printing, no re-encoding) and the `.sign()` seam runs after the body is set, so a body-signing venue reads the exact bytes off the request. KuCoin now serialises its body once to compact JSON, routes it through the inherited funnel via `body_format = "raw"`, and signs those exact bytes — making the hand-rolled `kucoin_build_request()` redundant. It has been **removed**; `KucoinBase$.request()` is a thin override of `connectcore::build_request()` and `kucoin_paginate()` routes each page through the same funnel. The wire bytes — and the `KC-API-*` HMAC computed over them — are byte-identical to 4.1.0 (verified end-to-end: identical compact body, identical prehash, identical signature). The public API is otherwise unchanged.
+
 # kucoin 4.1.0
 
 ## REFACTOR

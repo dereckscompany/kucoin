@@ -4,6 +4,11 @@
 \alias{KucoinWithdrawal}
 \title{KucoinWithdrawal: Withdrawal Management}
 \description{
+KucoinWithdrawal: Withdrawal Management
+
+KucoinWithdrawal: Withdrawal Management
+}
+\details{
 Provides methods for creating, cancelling, and querying cryptocurrency
 withdrawals on KuCoin. Inherits from \link{KucoinBase}.
 \subsection{Purpose and Scope}{
@@ -70,7 +75,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinWithdrawal$add_withdrawal()`
+## Method `KucoinWithdrawal$add_withdrawal`
 ## ------------------------------------------------
 
 \dontrun{
@@ -97,7 +102,7 @@ result <- withdrawal$add_withdrawal(
 }
 
 ## ------------------------------------------------
-## Method `KucoinWithdrawal$cancel_withdrawal()`
+## Method `KucoinWithdrawal$cancel_withdrawal`
 ## ------------------------------------------------
 
 \dontrun{
@@ -109,7 +114,7 @@ print(result$withdrawal_id)
 }
 
 ## ------------------------------------------------
-## Method `KucoinWithdrawal$get_withdrawal_quotas()`
+## Method `KucoinWithdrawal$get_withdrawal_quotas`
 ## ------------------------------------------------
 
 \dontrun{
@@ -125,7 +130,7 @@ print(usdt_quotas$withdraw_min_fee)
 }
 
 ## ------------------------------------------------
-## Method `KucoinWithdrawal$get_withdrawal_history()`
+## Method `KucoinWithdrawal$get_withdrawal_history`
 ## ------------------------------------------------
 
 \dontrun{
@@ -148,7 +153,7 @@ recent <- withdrawal$get_withdrawal_history(
 }
 
 ## ------------------------------------------------
-## Method `KucoinWithdrawal$get_withdrawal_by_id()`
+## Method `KucoinWithdrawal$get_withdrawal_by_id`
 ## ------------------------------------------------
 
 \dontrun{
@@ -165,29 +170,31 @@ if (detail$cancel_type == "CANCELABLE") {
 }
 }
 \section{Super classes}{
-\code{\link[connectcore:RestClient]{connectcore::RestClient}} -> \code{\link[kucoin:KucoinBase]{KucoinBase}} -> \code{KucoinWithdrawal}
+\code{\link[connectcore:RestClient]{connectcore::RestClient}} -> \code{\link[kucoin:KucoinBase]{kucoin::KucoinBase}} -> \code{KucoinWithdrawal}
 }
 \section{Methods}{
 \subsection{Public methods}{
-  \itemize{
-    \item \href{#method-KucoinWithdrawal-add_withdrawal}{\code{KucoinWithdrawal$add_withdrawal()}}
-    \item \href{#method-KucoinWithdrawal-cancel_withdrawal}{\code{KucoinWithdrawal$cancel_withdrawal()}}
-    \item \href{#method-KucoinWithdrawal-get_withdrawal_quotas}{\code{KucoinWithdrawal$get_withdrawal_quotas()}}
-    \item \href{#method-KucoinWithdrawal-get_withdrawal_history}{\code{KucoinWithdrawal$get_withdrawal_history()}}
-    \item \href{#method-KucoinWithdrawal-get_withdrawal_by_id}{\code{KucoinWithdrawal$get_withdrawal_by_id()}}
-    \item \href{#method-KucoinWithdrawal-clone}{\code{KucoinWithdrawal$clone()}}
-  }
+\itemize{
+\item \href{#method-KucoinWithdrawal-add_withdrawal}{\code{KucoinWithdrawal$add_withdrawal()}}
+\item \href{#method-KucoinWithdrawal-cancel_withdrawal}{\code{KucoinWithdrawal$cancel_withdrawal()}}
+\item \href{#method-KucoinWithdrawal-get_withdrawal_quotas}{\code{KucoinWithdrawal$get_withdrawal_quotas()}}
+\item \href{#method-KucoinWithdrawal-get_withdrawal_history}{\code{KucoinWithdrawal$get_withdrawal_history()}}
+\item \href{#method-KucoinWithdrawal-get_withdrawal_by_id}{\code{KucoinWithdrawal$get_withdrawal_by_id()}}
+\item \href{#method-KucoinWithdrawal-clone}{\code{KucoinWithdrawal$clone()}}
 }
-\if{html}{\out{<details open><summary>Inherited methods</summary>
+}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
 <ul>
-  <li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>KucoinBase$initialize()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>kucoin::KucoinBase$initialize()</code></a></span></li>
 </ul>
-</details>}}
+</details>
+}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinWithdrawal-add_withdrawal"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinWithdrawal-add_withdrawal}{}}}
-\subsection{\code{KucoinWithdrawal$add_withdrawal()}}{
-  Add Withdrawal
+\subsection{Method \code{add_withdrawal()}}{
+Add Withdrawal
 
 Initiates a new withdrawal request. Supports withdrawals to external
 blockchain addresses, KuCoin UIDs, email addresses, and phone numbers.
@@ -245,9 +252,8 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinWithdrawal$add_withdrawal(
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinWithdrawal$add_withdrawal(
   currency,
   toAddress,
   amount,
@@ -257,34 +263,43 @@ Verified: 2026-05-23
   isInner = NULL,
   remark = NULL,
   feeDeductType = NULL
-)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"USDT"}).}
-      \item{\code{toAddress}}{Character; withdrawal destination address, UID, email, or phone number.}
-      \item{\code{amount}}{Character; withdrawal amount (must be positive, multiple of currency precision).}
-      \item{\code{withdrawType}}{Character; withdrawal type: \code{"ADDRESS"}, \code{"UID"}, \code{"MAIL"}, or \code{"PHONE"}.}
-      \item{\code{chain}}{Character; blockchain network identifier (e.g., \code{"eth"}, \code{"trx"}, \code{"bsc"}).
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"USDT"}).}
+
+\item{\code{toAddress}}{Character; withdrawal destination address, UID, email, or phone number.}
+
+\item{\code{amount}}{Character; withdrawal amount (must be positive, multiple of currency precision).}
+
+\item{\code{withdrawType}}{Character; withdrawal type: \code{"ADDRESS"}, \code{"UID"}, \code{"MAIL"}, or \code{"PHONE"}.}
+
+\item{\code{chain}}{Character; blockchain network identifier (e.g., \code{"eth"}, \code{"trx"}, \code{"bsc"}).
 Required by the KuCoin API.}
-      \item{\code{memo}}{Character or NULL; address memo/tag (required for some currencies like XRP, XLM).}
-      \item{\code{isInner}}{Logical or NULL; if \code{TRUE}, this is an internal KuCoin transfer (no on-chain fee).}
-      \item{\code{remark}}{Character or NULL; optional remark for the withdrawal.}
-      \item{\code{feeDeductType}}{Character or NULL; fee deduction type: \code{"INTERNAL"} or \code{"EXTERNAL"}.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
+
+\item{\code{memo}}{Character or NULL; address memo/tag (required for some currencies like XRP, XLM).}
+
+\item{\code{isInner}}{Logical or NULL; if \code{TRUE}, this is an internal KuCoin transfer (no on-chain fee).}
+
+\item{\code{remark}}{Character or NULL; optional remark for the withdrawal.}
+
+\item{\code{feeDeductType}}{Character or NULL; fee deduction type: \code{"INTERNAL"} or \code{"EXTERNAL"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
 \itemize{
 \item \code{withdrawal_id} (character): The unique withdrawal identifier.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{withdrawal <- KucoinWithdrawal$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+withdrawal <- KucoinWithdrawal$new()
 
 # Withdraw USDT via TRC20
 result <- withdrawal$add_withdrawal(
@@ -305,15 +320,17 @@ result <- withdrawal$add_withdrawal(
   isInner = TRUE
 )
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinWithdrawal-cancel_withdrawal"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinWithdrawal-cancel_withdrawal}{}}}
-\subsection{\code{KucoinWithdrawal$cancel_withdrawal()}}{
-  Cancel Withdrawal
+\subsection{Method \code{cancel_withdrawal()}}{
+Cancel Withdrawal
 
 Cancels a pending withdrawal request. Only withdrawals with \code{PROCESSING}
 status can be cancelled. Once a withdrawal has moved to \code{WALLET_PROCESSING}
@@ -365,42 +382,44 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinWithdrawal$cancel_withdrawal(withdrawalId)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{withdrawalId}}{Character; the unique withdrawal ID to cancel.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinWithdrawal$cancel_withdrawal(withdrawalId)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{withdrawalId}}{Character; the unique withdrawal ID to cancel.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
 \itemize{
 \item \code{withdrawal_id} (character): The cancelled withdrawal ID (echoed from the input
 since KuCoin returns \code{null} data on a successful cancel).
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{withdrawal <- KucoinWithdrawal$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+withdrawal <- KucoinWithdrawal$new()
 
 # Cancel a pending withdrawal
 result <- withdrawal$cancel_withdrawal("670deec84d64da0007d7c946")
 print(result$withdrawal_id)
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinWithdrawal-get_withdrawal_quotas"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinWithdrawal-get_withdrawal_quotas}{}}}
-\subsection{\code{KucoinWithdrawal$get_withdrawal_quotas()}}{
-  Get Withdrawal Quotas
+\subsection{Method \code{get_withdrawal_quotas()}}{
+Get Withdrawal Quotas
 
 Retrieves withdrawal limits, minimum fees, and available balances for a
 currency. Essential for pre-flight checks before initiating withdrawals
@@ -470,22 +489,22 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinWithdrawal$get_withdrawal_quotas(currency, chain = NULL)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"USDT"}).}
-      \item{\code{chain}}{Character or NULL; blockchain network identifier (e.g., \code{"eth"}, \code{"trx"}).
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinWithdrawal$get_withdrawal_quotas(currency, chain = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"USDT"}).}
+
+\item{\code{chain}}{Character or NULL; blockchain network identifier (e.g., \code{"eth"}, \code{"trx"}).
 When NULL, returns quotas for the default chain.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
 \itemize{
 \item \code{currency} (character): Currency code.
 \item \code{limit_btc_amount} (character): Daily withdrawal limit in BTC equivalent.
@@ -504,10 +523,11 @@ When NULL, returns quotas for the default chain.}
 \item \code{reason} (character): Reason if withdrawals are disabled (or NA).
 \item \code{locked_amount} (character): Amount currently locked.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{withdrawal <- KucoinWithdrawal$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+withdrawal <- KucoinWithdrawal$new()
 
 # Check BTC withdrawal quotas
 quotas <- withdrawal$get_withdrawal_quotas(currency = "BTC")
@@ -517,15 +537,17 @@ print(quotas[, .(currency, available_amount, withdraw_min_fee, is_withdraw_enabl
 usdt_quotas <- withdrawal$get_withdrawal_quotas(currency = "USDT", chain = "trx")
 print(usdt_quotas$withdraw_min_fee)
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinWithdrawal-get_withdrawal_history"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinWithdrawal-get_withdrawal_history}{}}}
-\subsection{\code{KucoinWithdrawal$get_withdrawal_history()}}{
-  Get Withdrawal History
+\subsection{Method \code{get_withdrawal_history()}}{
+Get Withdrawal History
 
 Retrieves paginated withdrawal history with optional filtering by currency,
 status, and time range. Automatically converts \code{created_at} timestamps
@@ -600,35 +622,39 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinWithdrawal$get_withdrawal_history(
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinWithdrawal$get_withdrawal_history(
   currency = NULL,
   status = NULL,
   startAt = NULL,
   endAt = NULL,
   page_size = 50,
   max_pages = Inf
-)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{currency}}{Character or NULL; currency code (e.g., \code{"BTC"}, \code{"USDT"}).
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{currency}}{Character or NULL; currency code (e.g., \code{"BTC"}, \code{"USDT"}).
 If NULL, returns withdrawals for all currencies.}
-      \item{\code{status}}{Character or NULL; filter by withdrawal status. Accepted values:
+
+\item{\code{status}}{Character or NULL; filter by withdrawal status. Accepted values:
 \code{"PROCESSING"}, \code{"REVIEW"}, \code{"WALLET_PROCESSING"}, \code{"SUCCESS"}, \code{"FAILURE"}.
 When NULL, returns withdrawals of all statuses.}
-      \item{\code{startAt}}{Integer or NULL; start timestamp in milliseconds (inclusive).}
-      \item{\code{endAt}}{Integer or NULL; end timestamp in milliseconds (inclusive).}
-      \item{\code{page_size}}{Integer; number of results per page (default 50, max 500).}
-      \item{\code{max_pages}}{Numeric; maximum number of pages to fetch (default \code{Inf} for all pages).}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row per withdrawal and columns:
+
+\item{\code{startAt}}{Integer or NULL; start timestamp in milliseconds (inclusive).}
+
+\item{\code{endAt}}{Integer or NULL; end timestamp in milliseconds (inclusive).}
+
+\item{\code{page_size}}{Integer; number of results per page (default 50, max 500).}
+
+\item{\code{max_pages}}{Numeric; maximum number of pages to fetch (default \code{Inf} for all pages).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row per withdrawal and columns:
 \itemize{
 \item \code{currency} (character): Withdrawn currency code.
 \item \code{chain} (character): Blockchain network used.
@@ -646,10 +672,11 @@ When NULL, returns withdrawals of all statuses.}
 }
 
 Returns an empty \code{data.table} if no withdrawals match the filters.
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{withdrawal <- KucoinWithdrawal$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+withdrawal <- KucoinWithdrawal$new()
 
 # Get all successful USDT withdrawals
 history <- withdrawal$get_withdrawal_history(
@@ -666,15 +693,17 @@ recent <- withdrawal$get_withdrawal_history(
   endAt = now_ms
 )
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinWithdrawal-get_withdrawal_by_id"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinWithdrawal-get_withdrawal_by_id}{}}}
-\subsection{\code{KucoinWithdrawal$get_withdrawal_by_id()}}{
-  Get Withdrawal by ID
+\subsection{Method \code{get_withdrawal_by_id()}}{
+Get Withdrawal by ID
 
 Retrieves comprehensive details for a specific withdrawal, including
 chain information, failure reasons, cancel status, and return details.
@@ -741,20 +770,19 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinWithdrawal$get_withdrawal_by_id(withdrawalId)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{withdrawalId}}{Character; the unique withdrawal ID.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinWithdrawal$get_withdrawal_by_id(withdrawalId)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{withdrawalId}}{Character; the unique withdrawal ID.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
 \itemize{
 \item \code{id} (character): Withdrawal ID.
 \item \code{currency} (character): Currency code.
@@ -772,10 +800,11 @@ Verified: 2026-05-23
 \item \code{failure_reason_msg} (character): Human-readable failure message (or NA).
 \item \code{created_at} (POSIXct): Creation datetime (coerced from epoch milliseconds).
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{withdrawal <- KucoinWithdrawal$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+withdrawal <- KucoinWithdrawal$new()
 
 # Get withdrawal details
 detail <- withdrawal$get_withdrawal_by_id("670deec84d64da0007d7c946")
@@ -786,27 +815,27 @@ if (detail$cancel_type == "CANCELABLE") {
   withdrawal$cancel_withdrawal(detail$id)
 }
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinWithdrawal-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinWithdrawal-clone}{}}}
-\subsection{\code{KucoinWithdrawal$clone()}}{
-  The objects of this class are cloneable with this method.
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinWithdrawal$clone(deep = FALSE)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{deep}}{Whether to make a deep clone.}
-    }
-    \if{html}{\out{</div>}}
-  }
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinWithdrawal$clone(deep = FALSE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
 }

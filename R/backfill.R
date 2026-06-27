@@ -92,14 +92,18 @@ kucoin_backfill_klines <- function(
   }
 
   # --- Sync request function closure ---
+  # Public klines endpoints are unauthenticated and bodiless, so route straight
+  # through the connectcore funnel with body_format = "none".
   sync_req_fn <- function(endpoint, method = "GET", query = list(), auth = FALSE, .parser = identity, ...) {
-    return(kucoin_build_request(
+    return(connectcore::build_request(
       base_url = base_url,
       endpoint = endpoint,
       method = method,
       query = query,
       body = NULL,
       keys = NULL,
+      parse_envelope = parse_kucoin_response,
+      body_format = "none",
       .perform = httr2::req_perform,
       .parser = .parser,
       is_async = FALSE

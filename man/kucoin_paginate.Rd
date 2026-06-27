@@ -37,10 +37,11 @@ kucoin_paginate(
 \item{keys}{List or NULL; API credentials. Default \code{NULL}.}
 
 \item{sign}{Function or NULL; the \code{.sign()} seam forwarded to
-\code{\link[=kucoin_build_request]{kucoin_build_request()}}. Default \code{NULL} (use KuCoin's own signer).}
+\code{\link[connectcore:build_request]{connectcore::build_request()}}. Default \code{NULL} (use KuCoin's own
+\code{kucoin_sign_req()} signer).}
 
 \item{parse_envelope}{Function; the \code{.parse_envelope()} seam forwarded to
-\code{\link[=kucoin_build_request]{kucoin_build_request()}}. Default \code{parse_kucoin_response()}.}
+\code{\link[connectcore:build_request]{connectcore::build_request()}}. Default \code{parse_kucoin_response()}.}
 
 \item{.perform}{Function; the httr2 perform function.}
 

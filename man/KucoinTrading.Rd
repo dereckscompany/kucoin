@@ -4,6 +4,11 @@
 \alias{KucoinTrading}
 \title{KucoinTrading: Spot Order Management}
 \description{
+KucoinTrading: Spot Order Management
+
+KucoinTrading: Spot Order Management
+}
+\details{
 Provides methods for placing, cancelling, and querying spot orders on KuCoin.
 All order operations use the HF (High-Frequency) trading endpoints.
 Inherits from \link{KucoinBase}.
@@ -108,7 +113,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinTrading$add_order()`
+## Method `KucoinTrading$add_order`
 ## ------------------------------------------------
 
 \dontrun{
@@ -129,7 +134,7 @@ order <- trading$add_order(
 }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$add_order_test()`
+## Method `KucoinTrading$add_order_test`
 ## ------------------------------------------------
 
 \dontrun{
@@ -142,7 +147,7 @@ print(test)
 }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$add_order_batch()`
+## Method `KucoinTrading$add_order_batch`
 ## ------------------------------------------------
 
 \dontrun{
@@ -158,7 +163,7 @@ print(orders[success == FALSE, .(fail_msg)])
 }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$cancel_order_by_id()`
+## Method `KucoinTrading$cancel_order_by_id`
 ## ------------------------------------------------
 
 \dontrun{
@@ -168,7 +173,7 @@ print(result$order_id)
 }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$cancel_order_by_client_oid()`
+## Method `KucoinTrading$cancel_order_by_client_oid`
 ## ------------------------------------------------
 
 \dontrun{
@@ -178,7 +183,7 @@ print(result$client_oid)
 }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$cancel_partial_order()`
+## Method `KucoinTrading$cancel_partial_order`
 ## ------------------------------------------------
 
 \dontrun{
@@ -189,7 +194,7 @@ result <- trading$cancel_partial_order(
 }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$cancel_all_by_symbol()`
+## Method `KucoinTrading$cancel_all_by_symbol`
 ## ------------------------------------------------
 
 \dontrun{
@@ -198,7 +203,7 @@ trading$cancel_all_by_symbol("BTC-USDT")
 }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$cancel_all()`
+## Method `KucoinTrading$cancel_all`
 ## ------------------------------------------------
 
 \dontrun{
@@ -208,7 +213,7 @@ print(result[status == "failed"])
 }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$get_order_by_id()`
+## Method `KucoinTrading$get_order_by_id`
 ## ------------------------------------------------
 
 \dontrun{
@@ -218,7 +223,7 @@ print(order)
 }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$get_order_by_client_oid()`
+## Method `KucoinTrading$get_order_by_client_oid`
 ## ------------------------------------------------
 
 \dontrun{
@@ -228,7 +233,7 @@ print(order)
 }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$get_fills()`
+## Method `KucoinTrading$get_fills`
 ## ------------------------------------------------
 
 \dontrun{
@@ -239,7 +244,7 @@ all_fills <- trading$get_fills()
 }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$get_symbols_with_open_orders()`
+## Method `KucoinTrading$get_symbols_with_open_orders`
 ## ------------------------------------------------
 
 \dontrun{
@@ -249,7 +254,7 @@ print(active$symbols)
 }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$get_open_orders()`
+## Method `KucoinTrading$get_open_orders`
 ## ------------------------------------------------
 
 \dontrun{
@@ -258,7 +263,7 @@ open_orders <- trading$get_open_orders("BTC-USDT")
 }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$get_closed_orders()`
+## Method `KucoinTrading$get_closed_orders`
 ## ------------------------------------------------
 
 \dontrun{
@@ -269,7 +274,7 @@ all_closed <- trading$get_closed_orders()
 }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$add_order_sync()`
+## Method `KucoinTrading$add_order_sync`
 ## ------------------------------------------------
 
 \dontrun{
@@ -282,7 +287,7 @@ cat("Status:", order$status, "Filled:", order$deal_size, "\n")
 }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$add_order_batch_sync()`
+## Method `KucoinTrading$add_order_batch_sync`
 ## ------------------------------------------------
 
 \dontrun{
@@ -297,7 +302,7 @@ print(orders[success == TRUE, .(order_id, status, deal_size)])
 }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$cancel_order_by_id_sync()`
+## Method `KucoinTrading$cancel_order_by_id_sync`
 ## ------------------------------------------------
 
 \dontrun{
@@ -307,7 +312,7 @@ cat("Status:", result$status, "Cancelled:", result$canceled_size, "\n")
 }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$cancel_order_by_client_oid_sync()`
+## Method `KucoinTrading$cancel_order_by_client_oid_sync`
 ## ------------------------------------------------
 
 \dontrun{
@@ -317,7 +322,7 @@ cat("Status:", result$status, "\n")
 }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$modify_order()`
+## Method `KucoinTrading$modify_order`
 ## ------------------------------------------------
 
 \dontrun{
@@ -331,7 +336,7 @@ cat("New order ID:", result$new_order_id, "\n")
 }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$set_dcp()`
+## Method `KucoinTrading$set_dcp`
 ## ------------------------------------------------
 
 \dontrun{
@@ -345,7 +350,7 @@ trading$set_dcp(timeout = -1)
 }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$get_dcp()`
+## Method `KucoinTrading$get_dcp`
 ## ------------------------------------------------
 
 \dontrun{
@@ -358,45 +363,47 @@ if (nrow(dcp) > 0) {
 }
 }
 \section{Super classes}{
-\code{\link[connectcore:RestClient]{connectcore::RestClient}} -> \code{\link[kucoin:KucoinBase]{KucoinBase}} -> \code{KucoinTrading}
+\code{\link[connectcore:RestClient]{connectcore::RestClient}} -> \code{\link[kucoin:KucoinBase]{kucoin::KucoinBase}} -> \code{KucoinTrading}
 }
 \section{Methods}{
 \subsection{Public methods}{
-  \itemize{
-    \item \href{#method-KucoinTrading-add_order}{\code{KucoinTrading$add_order()}}
-    \item \href{#method-KucoinTrading-add_order_test}{\code{KucoinTrading$add_order_test()}}
-    \item \href{#method-KucoinTrading-add_order_batch}{\code{KucoinTrading$add_order_batch()}}
-    \item \href{#method-KucoinTrading-cancel_order_by_id}{\code{KucoinTrading$cancel_order_by_id()}}
-    \item \href{#method-KucoinTrading-cancel_order_by_client_oid}{\code{KucoinTrading$cancel_order_by_client_oid()}}
-    \item \href{#method-KucoinTrading-cancel_partial_order}{\code{KucoinTrading$cancel_partial_order()}}
-    \item \href{#method-KucoinTrading-cancel_all_by_symbol}{\code{KucoinTrading$cancel_all_by_symbol()}}
-    \item \href{#method-KucoinTrading-cancel_all}{\code{KucoinTrading$cancel_all()}}
-    \item \href{#method-KucoinTrading-get_order_by_id}{\code{KucoinTrading$get_order_by_id()}}
-    \item \href{#method-KucoinTrading-get_order_by_client_oid}{\code{KucoinTrading$get_order_by_client_oid()}}
-    \item \href{#method-KucoinTrading-get_fills}{\code{KucoinTrading$get_fills()}}
-    \item \href{#method-KucoinTrading-get_symbols_with_open_orders}{\code{KucoinTrading$get_symbols_with_open_orders()}}
-    \item \href{#method-KucoinTrading-get_open_orders}{\code{KucoinTrading$get_open_orders()}}
-    \item \href{#method-KucoinTrading-get_closed_orders}{\code{KucoinTrading$get_closed_orders()}}
-    \item \href{#method-KucoinTrading-add_order_sync}{\code{KucoinTrading$add_order_sync()}}
-    \item \href{#method-KucoinTrading-add_order_batch_sync}{\code{KucoinTrading$add_order_batch_sync()}}
-    \item \href{#method-KucoinTrading-cancel_order_by_id_sync}{\code{KucoinTrading$cancel_order_by_id_sync()}}
-    \item \href{#method-KucoinTrading-cancel_order_by_client_oid_sync}{\code{KucoinTrading$cancel_order_by_client_oid_sync()}}
-    \item \href{#method-KucoinTrading-modify_order}{\code{KucoinTrading$modify_order()}}
-    \item \href{#method-KucoinTrading-set_dcp}{\code{KucoinTrading$set_dcp()}}
-    \item \href{#method-KucoinTrading-get_dcp}{\code{KucoinTrading$get_dcp()}}
-    \item \href{#method-KucoinTrading-clone}{\code{KucoinTrading$clone()}}
-  }
+\itemize{
+\item \href{#method-KucoinTrading-add_order}{\code{KucoinTrading$add_order()}}
+\item \href{#method-KucoinTrading-add_order_test}{\code{KucoinTrading$add_order_test()}}
+\item \href{#method-KucoinTrading-add_order_batch}{\code{KucoinTrading$add_order_batch()}}
+\item \href{#method-KucoinTrading-cancel_order_by_id}{\code{KucoinTrading$cancel_order_by_id()}}
+\item \href{#method-KucoinTrading-cancel_order_by_client_oid}{\code{KucoinTrading$cancel_order_by_client_oid()}}
+\item \href{#method-KucoinTrading-cancel_partial_order}{\code{KucoinTrading$cancel_partial_order()}}
+\item \href{#method-KucoinTrading-cancel_all_by_symbol}{\code{KucoinTrading$cancel_all_by_symbol()}}
+\item \href{#method-KucoinTrading-cancel_all}{\code{KucoinTrading$cancel_all()}}
+\item \href{#method-KucoinTrading-get_order_by_id}{\code{KucoinTrading$get_order_by_id()}}
+\item \href{#method-KucoinTrading-get_order_by_client_oid}{\code{KucoinTrading$get_order_by_client_oid()}}
+\item \href{#method-KucoinTrading-get_fills}{\code{KucoinTrading$get_fills()}}
+\item \href{#method-KucoinTrading-get_symbols_with_open_orders}{\code{KucoinTrading$get_symbols_with_open_orders()}}
+\item \href{#method-KucoinTrading-get_open_orders}{\code{KucoinTrading$get_open_orders()}}
+\item \href{#method-KucoinTrading-get_closed_orders}{\code{KucoinTrading$get_closed_orders()}}
+\item \href{#method-KucoinTrading-add_order_sync}{\code{KucoinTrading$add_order_sync()}}
+\item \href{#method-KucoinTrading-add_order_batch_sync}{\code{KucoinTrading$add_order_batch_sync()}}
+\item \href{#method-KucoinTrading-cancel_order_by_id_sync}{\code{KucoinTrading$cancel_order_by_id_sync()}}
+\item \href{#method-KucoinTrading-cancel_order_by_client_oid_sync}{\code{KucoinTrading$cancel_order_by_client_oid_sync()}}
+\item \href{#method-KucoinTrading-modify_order}{\code{KucoinTrading$modify_order()}}
+\item \href{#method-KucoinTrading-set_dcp}{\code{KucoinTrading$set_dcp()}}
+\item \href{#method-KucoinTrading-get_dcp}{\code{KucoinTrading$get_dcp()}}
+\item \href{#method-KucoinTrading-clone}{\code{KucoinTrading$clone()}}
 }
-\if{html}{\out{<details open><summary>Inherited methods</summary>
+}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
 <ul>
-  <li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>KucoinBase$initialize()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>kucoin::KucoinBase$initialize()</code></a></span></li>
 </ul>
-</details>}}
+</details>
+}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinTrading-add_order"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinTrading-add_order}{}}}
-\subsection{\code{KucoinTrading$add_order()}}{
-  Place an Order
+\subsection{Method \code{add_order()}}{
+Place an Order
 
 Places a new limit or market order on KuCoin Spot via the HF endpoint.
 Parameters are validated by \code{validate_order_params()} before submission.
@@ -467,9 +474,8 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinTrading$add_order(
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$add_order(
   type,
   symbol,
   side,
@@ -486,44 +492,60 @@ Verified: 2026-05-23
   hidden = NULL,
   iceberg = NULL,
   visibleSize = NULL
-)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{type}}{Character; \code{"limit"} or \code{"market"}.}
-      \item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
-      \item{\code{side}}{Character; \code{"buy"} or \code{"sell"}.}
-      \item{\code{clientOid}}{Character or NULL; unique client order ID (max 40 chars).}
-      \item{\code{price}}{Numeric or NULL; price for limit orders. Must align with \code{priceIncrement}.
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{type}}{Character; \code{"limit"} or \code{"market"}.}
+
+\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
+
+\item{\code{side}}{Character; \code{"buy"} or \code{"sell"}.}
+
+\item{\code{clientOid}}{Character or NULL; unique client order ID (max 40 chars).}
+
+\item{\code{price}}{Numeric or NULL; price for limit orders. Must align with \code{priceIncrement}.
 Required for limit orders; must NOT be set for market orders.}
-      \item{\code{size}}{Numeric or NULL; quantity in base currency. Must align with \code{baseIncrement}.
+
+\item{\code{size}}{Numeric or NULL; quantity in base currency. Must align with \code{baseIncrement}.
 Required for limit orders; optional for market orders (mutually exclusive with \code{funds}).}
-      \item{\code{funds}}{Numeric or NULL; amount in quote currency for market orders.
+
+\item{\code{funds}}{Numeric or NULL; amount in quote currency for market orders.
 Mutually exclusive with \code{size}. Not applicable for limit orders.}
-      \item{\code{stp}}{Character or NULL; self-trade prevention: \code{"CN"}, \code{"CO"}, \code{"CB"}, \code{"DC"}.}
-      \item{\code{tags}}{Character or NULL; order tag (max 20 ASCII chars).}
-      \item{\code{remark}}{Character or NULL; remarks (max 20 ASCII chars).}
-      \item{\code{timeInForce}}{Character or NULL; \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
-      \item{\code{cancelAfter}}{Numeric or NULL; auto-cancel seconds (requires \code{timeInForce = "GTT"}).}
-      \item{\code{postOnly}}{Logical or NULL; if TRUE, order rejected if it would match immediately.}
-      \item{\code{hidden}}{Logical or NULL; if TRUE, order hidden from order book.}
-      \item{\code{iceberg}}{Logical or NULL; if TRUE, only \code{visibleSize} is shown.}
-      \item{\code{visibleSize}}{Numeric or NULL; visible quantity for iceberg orders.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+
+\item{\code{stp}}{Character or NULL; self-trade prevention: \code{"CN"}, \code{"CO"}, \code{"CB"}, \code{"DC"}.}
+
+\item{\code{tags}}{Character or NULL; order tag (max 20 ASCII chars).}
+
+\item{\code{remark}}{Character or NULL; remarks (max 20 ASCII chars).}
+
+\item{\code{timeInForce}}{Character or NULL; \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
+
+\item{\code{cancelAfter}}{Numeric or NULL; auto-cancel seconds (requires \code{timeInForce = "GTT"}).}
+
+\item{\code{postOnly}}{Logical or NULL; if TRUE, order rejected if it would match immediately.}
+
+\item{\code{hidden}}{Logical or NULL; if TRUE, order hidden from order book.}
+
+\item{\code{iceberg}}{Logical or NULL; if TRUE, only \code{visibleSize} is shown.}
+
+\item{\code{visibleSize}}{Numeric or NULL; visible quantity for iceberg orders.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{order_id} (character): KuCoin-assigned order identifier.
 \item \code{client_oid} (character): Client-provided order identifier.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{trading <- KucoinTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+trading <- KucoinTrading$new()
 
 # Limit buy order
 order <- trading$add_order(
@@ -538,15 +560,17 @@ order <- trading$add_order(
   size = 0.00001
 )
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinTrading-add_order_test"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinTrading-add_order_test}{}}}
-\subsection{\code{KucoinTrading$add_order_test()}}{
-  Test Order Placement
+\subsection{Method \code{add_order_test()}}{
+Test Order Placement
 
 Simulates placing an order without execution. Validates all parameters
 and authentication exactly as \code{add_order()}, but no order is actually created.
@@ -613,9 +637,8 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinTrading$add_order_test(
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$add_order_test(
   type,
   symbol,
   side,
@@ -632,52 +655,70 @@ Verified: 2026-05-23
   hidden = NULL,
   iceberg = NULL,
   visibleSize = NULL
-)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{type}}{Character; \code{"limit"} or \code{"market"}.}
-      \item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
-      \item{\code{side}}{Character; \code{"buy"} or \code{"sell"}.}
-      \item{\code{clientOid}}{Character or NULL; unique client order ID (max 40 chars).}
-      \item{\code{price}}{Numeric or NULL; price for limit orders.}
-      \item{\code{size}}{Numeric or NULL; quantity in base currency.}
-      \item{\code{funds}}{Numeric or NULL; amount in quote currency for market orders.}
-      \item{\code{stp}}{Character or NULL; self-trade prevention: \code{"CN"}, \code{"CO"}, \code{"CB"}, \code{"DC"}.}
-      \item{\code{tags}}{Character or NULL; order tag (max 20 ASCII chars).}
-      \item{\code{remark}}{Character or NULL; remarks (max 20 ASCII chars).}
-      \item{\code{timeInForce}}{Character or NULL; \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
-      \item{\code{cancelAfter}}{Numeric or NULL; auto-cancel seconds (requires \code{timeInForce = "GTT"}).}
-      \item{\code{postOnly}}{Logical or NULL; if TRUE, order rejected if it would match immediately.}
-      \item{\code{hidden}}{Logical or NULL; if TRUE, order hidden from order book.}
-      \item{\code{iceberg}}{Logical or NULL; if TRUE, only \code{visibleSize} is shown.}
-      \item{\code{visibleSize}}{Numeric or NULL; visible quantity for iceberg orders.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with simulated \code{order_id} and \code{client_oid}.
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{trading <- KucoinTrading$new()
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{type}}{Character; \code{"limit"} or \code{"market"}.}
+
+\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
+
+\item{\code{side}}{Character; \code{"buy"} or \code{"sell"}.}
+
+\item{\code{clientOid}}{Character or NULL; unique client order ID (max 40 chars).}
+
+\item{\code{price}}{Numeric or NULL; price for limit orders.}
+
+\item{\code{size}}{Numeric or NULL; quantity in base currency.}
+
+\item{\code{funds}}{Numeric or NULL; amount in quote currency for market orders.}
+
+\item{\code{stp}}{Character or NULL; self-trade prevention: \code{"CN"}, \code{"CO"}, \code{"CB"}, \code{"DC"}.}
+
+\item{\code{tags}}{Character or NULL; order tag (max 20 ASCII chars).}
+
+\item{\code{remark}}{Character or NULL; remarks (max 20 ASCII chars).}
+
+\item{\code{timeInForce}}{Character or NULL; \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
+
+\item{\code{cancelAfter}}{Numeric or NULL; auto-cancel seconds (requires \code{timeInForce = "GTT"}).}
+
+\item{\code{postOnly}}{Logical or NULL; if TRUE, order rejected if it would match immediately.}
+
+\item{\code{hidden}}{Logical or NULL; if TRUE, order hidden from order book.}
+
+\item{\code{iceberg}}{Logical or NULL; if TRUE, only \code{visibleSize} is shown.}
+
+\item{\code{visibleSize}}{Numeric or NULL; visible quantity for iceberg orders.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with simulated \code{order_id} and \code{client_oid}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+trading <- KucoinTrading$new()
 test <- trading$add_order_test(
   type = "limit", symbol = "BTC-USDT", side = "buy",
   price = 50000, size = 0.00001
 )
 print(test)
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinTrading-add_order_batch"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinTrading-add_order_batch}{}}}
-\subsection{\code{KucoinTrading$add_order_batch()}}{
-  Place Batch Orders
+\subsection{Method \code{add_order_batch()}}{
+Place Batch Orders
 
 Places up to 20 orders in a single request. Each order is validated
 independently. Failed orders return \code{success = FALSE} with a \code{fail_msg}.
@@ -765,31 +806,31 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinTrading$add_order_batch(order_list)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{order_list}}{List of named lists; each containing order parameters
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$add_order_batch(order_list)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{order_list}}{List of named lists; each containing order parameters
 (\code{type}, \code{symbol}, \code{side}, plus optional fields). Maximum 20 orders.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with per-order results:
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with per-order results:
 \itemize{
 \item \code{order_id} (character): KuCoin order ID (if successful).
 \item \code{client_oid} (character): Client order ID (if provided).
 \item \code{success} (logical): Whether the order was placed successfully.
 \item \code{fail_msg} (character): Error message (if failed).
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{trading <- KucoinTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+trading <- KucoinTrading$new()
 orders <- trading$add_order_batch(list(
   list(type = "limit", symbol = "BTC-USDT", side = "buy",
        price = "30000", size = "0.00001", clientOid = "order1"),
@@ -799,15 +840,17 @@ orders <- trading$add_order_batch(list(
 print(orders[success == TRUE, .(order_id, client_oid)])
 print(orders[success == FALSE, .(fail_msg)])
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinTrading-cancel_order_by_id"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinTrading-cancel_order_by_id}{}}}
-\subsection{\code{KucoinTrading$cancel_order_by_id()}}{
-  Cancel Order by Order ID
+\subsection{Method \code{cancel_order_by_id()}}{
+Cancel Order by Order ID
 
 Cancels a specific spot HF order by its KuCoin-assigned order ID.
 \subsection{API Endpoint}{
@@ -844,40 +887,43 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinTrading$cancel_order_by_id(orderId, symbol)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{orderId}}{Character; the KuCoin order ID to cancel.}
-      \item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$cancel_order_by_id(orderId, symbol)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{orderId}}{Character; the KuCoin order ID to cancel.}
+
+\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{order_id} (character): Cancelled order ID.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{trading <- KucoinTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+trading <- KucoinTrading$new()
 result <- trading$cancel_order_by_id("671124f9365ccb00073debd4", "BTC-USDT")
 print(result$order_id)
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinTrading-cancel_order_by_client_oid"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinTrading-cancel_order_by_client_oid}{}}}
-\subsection{\code{KucoinTrading$cancel_order_by_client_oid()}}{
-  Cancel Order by Client OID
+\subsection{Method \code{cancel_order_by_client_oid()}}{
+Cancel Order by Client OID
 
 Cancels a spot HF order by its client-assigned order ID.
 \subsection{API Endpoint}{
@@ -914,40 +960,43 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinTrading$cancel_order_by_client_oid(clientOid, symbol)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{clientOid}}{Character; client order ID.}
-      \item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$cancel_order_by_client_oid(clientOid, symbol)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{clientOid}}{Character; client order ID.}
+
+\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{client_oid} (character): Cancelled client order ID.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{trading <- KucoinTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+trading <- KucoinTrading$new()
 result <- trading$cancel_order_by_client_oid("myClientOid123", "BTC-USDT")
 print(result$client_oid)
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinTrading-cancel_partial_order"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinTrading-cancel_partial_order}{}}}
-\subsection{\code{KucoinTrading$cancel_partial_order()}}{
-  Cancel Partial Order
+\subsection{Method \code{cancel_partial_order()}}{
+Cancel Partial Order
 
 Decreases the quantity of an existing open order without fully cancelling it.
 \subsection{API Endpoint}{
@@ -992,39 +1041,43 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinTrading$cancel_partial_order(orderId, symbol, cancelSize)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{orderId}}{Character; order ID.}
-      \item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
-      \item{\code{cancelSize}}{Numeric; quantity to cancel from the order.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with cancellation result.
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{trading <- KucoinTrading$new()
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$cancel_partial_order(orderId, symbol, cancelSize)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{orderId}}{Character; order ID.}
+
+\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
+
+\item{\code{cancelSize}}{Numeric; quantity to cancel from the order.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with cancellation result.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+trading <- KucoinTrading$new()
 result <- trading$cancel_partial_order(
   "671124f9365ccb00073debd4", "BTC-USDT", cancelSize = 0.00001
 )
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinTrading-cancel_all_by_symbol"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinTrading-cancel_all_by_symbol}{}}}
-\subsection{\code{KucoinTrading$cancel_all_by_symbol()}}{
-  Cancel All Orders by Symbol
+\subsection{Method \code{cancel_all_by_symbol()}}{
+Cancel All Orders by Symbol
 
 Cancels all open HF orders for a specific trading pair.
 \subsection{API Endpoint}{
@@ -1066,35 +1119,37 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinTrading$cancel_all_by_symbol(symbol)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with column \code{result} containing the cancellation response.
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{trading <- KucoinTrading$new()
-trading$cancel_all_by_symbol("BTC-USDT")
-}
-    \if{html}{\out{</div>}}
-  }
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$cancel_all_by_symbol(symbol)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with column \code{result} containing the cancellation response.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+trading <- KucoinTrading$new()
+trading$cancel_all_by_symbol("BTC-USDT")
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinTrading-cancel_all"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinTrading-cancel_all}{}}}
-\subsection{\code{KucoinTrading$cancel_all()}}{
-  Cancel All Orders
+\subsection{Method \code{cancel_all()}}{
+Cancel All Orders
 
 Cancels all open spot HF orders across all trading pairs.
 \subsection{API Endpoint}{
@@ -1139,35 +1194,37 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinTrading$cancel_all()}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$cancel_all()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{symbol} (character): Trading pair symbol.
 \item \code{status} (character): \code{"succeed"} or \code{"failed"}.
 }
 
 Returns an empty \code{data.table} if no orders were open.
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{trading <- KucoinTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+trading <- KucoinTrading$new()
 result <- trading$cancel_all()
 print(result[status == "failed"])
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinTrading-get_order_by_id"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinTrading-get_order_by_id}{}}}
-\subsection{\code{KucoinTrading$get_order_by_id()}}{
-  Get Order by Order ID
+\subsection{Method \code{get_order_by_id()}}{
+Get Order by Order ID
 
 Retrieves full details for a specific order by its KuCoin-assigned ID.
 \subsection{API Endpoint}{
@@ -1237,38 +1294,41 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinTrading$get_order_by_id(orderId, symbol = NULL)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{orderId}}{Character; the KuCoin order ID.}
-      \item{\code{symbol}}{Character (optional); trading pair (e.g., \code{"BTC-USDT"}). Defaults to \code{NULL}.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with full order details
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$get_order_by_id(orderId, symbol = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{orderId}}{Character; the KuCoin order ID.}
+
+\item{\code{symbol}}{Character (optional); trading pair (e.g., \code{"BTC-USDT"}). Defaults to \code{NULL}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with full order details
 including \code{created_at} and \code{last_updated_at} (POSIXct) if timestamps are present.
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{trading <- KucoinTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+trading <- KucoinTrading$new()
 order <- trading$get_order_by_id("671124f9365ccb00073debd4", "BTC-USDT")
 print(order)
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinTrading-get_order_by_client_oid"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinTrading-get_order_by_client_oid}{}}}
-\subsection{\code{KucoinTrading$get_order_by_client_oid()}}{
-  Get Order by Client OID
+\subsection{Method \code{get_order_by_client_oid()}}{
+Get Order by Client OID
 
 Retrieves full details for a specific order by its client-assigned ID.
 \subsection{API Endpoint}{
@@ -1338,38 +1398,41 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinTrading$get_order_by_client_oid(clientOid, symbol)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{clientOid}}{Character; client order ID.}
-      \item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with full order details
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$get_order_by_client_oid(clientOid, symbol)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{clientOid}}{Character; client order ID.}
+
+\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with full order details
 including \code{created_at} and \code{last_updated_at} (POSIXct) columns.
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{trading <- KucoinTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+trading <- KucoinTrading$new()
 order <- trading$get_order_by_client_oid("myClientOid123", "BTC-USDT")
 print(order)
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinTrading-get_fills"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinTrading-get_fills}{}}}
-\subsection{\code{KucoinTrading$get_fills()}}{
-  Get Trade Fills
+\subsection{Method \code{get_fills()}}{
+Get Trade Fills
 
 Retrieves execution history for filled or partially filled HF orders.
 Returns detailed fill information including fees, liquidity type, and trade IDs.
@@ -1447,9 +1510,8 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinTrading$get_fills(
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$get_fills(
   symbol = NULL,
   orderId = NULL,
   side = NULL,
@@ -1458,26 +1520,33 @@ Verified: 2026-05-23
   limit = NULL,
   startAt = NULL,
   endAt = NULL
-)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{symbol}}{Character or NULL; trading pair (e.g., \code{"BTC-USDT"}).
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{symbol}}{Character or NULL; trading pair (e.g., \code{"BTC-USDT"}).
 If NULL, returns fills across all symbols.}
-      \item{\code{orderId}}{Character or NULL; filter by specific order ID.}
-      \item{\code{side}}{Character or NULL; \code{"buy"} or \code{"sell"}.}
-      \item{\code{type}}{Character or NULL; \code{"limit"} or \code{"market"}.}
-      \item{\code{lastId}}{Character or NULL; pagination cursor for fetching next page.}
-      \item{\code{limit}}{Integer or NULL; results per page (default 100, max 200).}
-      \item{\code{startAt}}{Integer or NULL; start timestamp in milliseconds.}
-      \item{\code{endAt}}{Integer or NULL; end timestamp in milliseconds.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+
+\item{\code{orderId}}{Character or NULL; filter by specific order ID.}
+
+\item{\code{side}}{Character or NULL; \code{"buy"} or \code{"sell"}.}
+
+\item{\code{type}}{Character or NULL; \code{"limit"} or \code{"market"}.}
+
+\item{\code{lastId}}{Character or NULL; pagination cursor for fetching next page.}
+
+\item{\code{limit}}{Integer or NULL; results per page (default 100, max 200).}
+
+\item{\code{startAt}}{Integer or NULL; start timestamp in milliseconds.}
+
+\item{\code{endAt}}{Integer or NULL; end timestamp in milliseconds.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{id} (numeric): Fill identifier.
 \item \code{order_id} (character): Parent order ID.
@@ -1495,23 +1564,26 @@ If NULL, returns fills across all symbols.}
 \item \code{fee_currency} (character): Currency of fee.
 \item \code{created_at} (POSIXct): Creation datetime (coerced from epoch milliseconds).
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{trading <- KucoinTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+trading <- KucoinTrading$new()
 fills <- trading$get_fills("BTC-USDT")
 # Get all fills across symbols
 all_fills <- trading$get_fills()
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinTrading-get_symbols_with_open_orders"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinTrading-get_symbols_with_open_orders}{}}}
-\subsection{\code{KucoinTrading$get_symbols_with_open_orders()}}{
-  Get Symbols with Open Orders
+\subsection{Method \code{get_symbols_with_open_orders()}}{
+Get Symbols with Open Orders
 
 Returns a list of symbols that have at least one active HF order.
 Useful for determining which pairs need attention.
@@ -1556,32 +1628,34 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinTrading$get_symbols_with_open_orders()}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with column:
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$get_symbols_with_open_orders()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with column:
 \itemize{
 \item \code{symbols} (character): Trading pairs with open orders.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{trading <- KucoinTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+trading <- KucoinTrading$new()
 active <- trading$get_symbols_with_open_orders()
 print(active$symbols)
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinTrading-get_open_orders"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinTrading-get_open_orders}{}}}
-\subsection{\code{KucoinTrading$get_open_orders()}}{
-  Get Open Orders
+\subsection{Method \code{get_open_orders()}}{
+Get Open Orders
 
 Retrieves all currently open HF orders for a specific symbol.
 \subsection{API Endpoint}{
@@ -1661,35 +1735,37 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinTrading$get_open_orders(symbol = NULL)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}). \strong{Required} by the API.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with open order details including \code{created_at} (POSIXct).
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{trading <- KucoinTrading$new()
-open_orders <- trading$get_open_orders("BTC-USDT")
-}
-    \if{html}{\out{</div>}}
-  }
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$get_open_orders(symbol = NULL)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}). \strong{Required} by the API.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with open order details including \code{created_at} (POSIXct).
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+trading <- KucoinTrading$new()
+open_orders <- trading$get_open_orders("BTC-USDT")
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinTrading-get_closed_orders"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinTrading-get_closed_orders}{}}}
-\subsection{\code{KucoinTrading$get_closed_orders()}}{
-  Get Closed Orders
+\subsection{Method \code{get_closed_orders()}}{
+Get Closed Orders
 
 Retrieves recently closed (filled or cancelled) HF orders for a symbol.
 Supports filtering by side, type, and time range.
@@ -1773,9 +1849,8 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinTrading$get_closed_orders(
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$get_closed_orders(
   symbol = NULL,
   side = NULL,
   type = NULL,
@@ -1783,42 +1858,51 @@ Verified: 2026-05-23
   endAt = NULL,
   limit = NULL,
   lastId = NULL
-)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{symbol}}{Character or NULL; trading pair (e.g., \code{"BTC-USDT"}).
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{symbol}}{Character or NULL; trading pair (e.g., \code{"BTC-USDT"}).
 If NULL, returns closed orders across all symbols.}
-      \item{\code{side}}{Character or NULL; \code{"buy"} or \code{"sell"}.}
-      \item{\code{type}}{Character or NULL; \code{"limit"} or \code{"market"}.}
-      \item{\code{startAt}}{Integer or NULL; start timestamp in milliseconds.}
-      \item{\code{endAt}}{Integer or NULL; end timestamp in milliseconds.}
-      \item{\code{limit}}{Integer or NULL; results per page (max 200).}
-      \item{\code{lastId}}{Character or NULL; pagination cursor.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with closed order details including \code{created_at} (POSIXct).
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{trading <- KucoinTrading$new()
+
+\item{\code{side}}{Character or NULL; \code{"buy"} or \code{"sell"}.}
+
+\item{\code{type}}{Character or NULL; \code{"limit"} or \code{"market"}.}
+
+\item{\code{startAt}}{Integer or NULL; start timestamp in milliseconds.}
+
+\item{\code{endAt}}{Integer or NULL; end timestamp in milliseconds.}
+
+\item{\code{limit}}{Integer or NULL; results per page (max 200).}
+
+\item{\code{lastId}}{Character or NULL; pagination cursor.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with closed order details including \code{created_at} (POSIXct).
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+trading <- KucoinTrading$new()
 closed <- trading$get_closed_orders("BTC-USDT", limit = 20)
 # Get all closed orders across symbols
 all_closed <- trading$get_closed_orders()
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinTrading-add_order_sync"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinTrading-add_order_sync}{}}}
-\subsection{\code{KucoinTrading$add_order_sync()}}{
-  Place an Order (Synchronous Return)
+\subsection{Method \code{add_order_sync()}}{
+Place an Order (Synchronous Return)
 
 Places a new limit or market order and waits for the matching engine to
 process it before returning. Returns the fill result in one round trip,
@@ -1886,9 +1970,8 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinTrading$add_order_sync(
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$add_order_sync(
   type,
   symbol,
   side,
@@ -1905,33 +1988,48 @@ Verified: 2026-05-23
   hidden = NULL,
   iceberg = NULL,
   visibleSize = NULL
-)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{type}}{Character; \code{"limit"} or \code{"market"}.}
-      \item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
-      \item{\code{side}}{Character; \code{"buy"} or \code{"sell"}.}
-      \item{\code{clientOid}}{Character or NULL; unique client order ID (max 40 chars).}
-      \item{\code{price}}{Numeric or NULL; price for limit orders.}
-      \item{\code{size}}{Numeric or NULL; quantity in base currency.}
-      \item{\code{funds}}{Numeric or NULL; amount in quote currency for market orders.}
-      \item{\code{stp}}{Character or NULL; self-trade prevention: \code{"CN"}, \code{"CO"}, \code{"CB"}, \code{"DC"}.}
-      \item{\code{tags}}{Character or NULL; order tag (max 20 ASCII chars).}
-      \item{\code{remark}}{Character or NULL; remarks (max 20 ASCII chars).}
-      \item{\code{timeInForce}}{Character or NULL; \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
-      \item{\code{cancelAfter}}{Numeric or NULL; auto-cancel seconds (requires \code{timeInForce = "GTT"}).}
-      \item{\code{postOnly}}{Logical or NULL; if TRUE, order rejected if it would match immediately.}
-      \item{\code{hidden}}{Logical or NULL; if TRUE, order hidden from order book.}
-      \item{\code{iceberg}}{Logical or NULL; if TRUE, only \code{visibleSize} is shown.}
-      \item{\code{visibleSize}}{Numeric or NULL; visible quantity for iceberg orders.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{type}}{Character; \code{"limit"} or \code{"market"}.}
+
+\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
+
+\item{\code{side}}{Character; \code{"buy"} or \code{"sell"}.}
+
+\item{\code{clientOid}}{Character or NULL; unique client order ID (max 40 chars).}
+
+\item{\code{price}}{Numeric or NULL; price for limit orders.}
+
+\item{\code{size}}{Numeric or NULL; quantity in base currency.}
+
+\item{\code{funds}}{Numeric or NULL; amount in quote currency for market orders.}
+
+\item{\code{stp}}{Character or NULL; self-trade prevention: \code{"CN"}, \code{"CO"}, \code{"CB"}, \code{"DC"}.}
+
+\item{\code{tags}}{Character or NULL; order tag (max 20 ASCII chars).}
+
+\item{\code{remark}}{Character or NULL; remarks (max 20 ASCII chars).}
+
+\item{\code{timeInForce}}{Character or NULL; \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
+
+\item{\code{cancelAfter}}{Numeric or NULL; auto-cancel seconds (requires \code{timeInForce = "GTT"}).}
+
+\item{\code{postOnly}}{Logical or NULL; if TRUE, order rejected if it would match immediately.}
+
+\item{\code{hidden}}{Logical or NULL; if TRUE, order hidden from order book.}
+
+\item{\code{iceberg}}{Logical or NULL; if TRUE, only \code{visibleSize} is shown.}
+
+\item{\code{visibleSize}}{Numeric or NULL; visible quantity for iceberg orders.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{order_id} (character): KuCoin-assigned order identifier.
 \item \code{client_oid} (character): Client-provided order identifier (NA if not supplied).
@@ -1942,25 +2040,28 @@ Verified: 2026-05-23
 \item \code{canceled_size} (character): Cancelled size.
 \item \code{status} (character): \code{"open"} or \code{"done"}.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{trading <- KucoinTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+trading <- KucoinTrading$new()
 order <- trading$add_order_sync(
   type = "limit", symbol = "BTC-USDT", side = "buy",
   price = 50000, size = 0.00001
 )
 cat("Status:", order$status, "Filled:", order$deal_size, "\n")
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinTrading-add_order_batch_sync"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinTrading-add_order_batch_sync}{}}}
-\subsection{\code{KucoinTrading$add_order_batch_sync()}}{
-  Place Batch Orders (Synchronous Return)
+\subsection{Method \code{add_order_batch_sync()}}{
+Place Batch Orders (Synchronous Return)
 
 Places up to 20 orders in a single request and waits for the matching
 engine to process them before returning. Returns per-order fill results.
@@ -2052,20 +2153,19 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinTrading$add_order_batch_sync(order_list)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{order_list}}{List of named lists; each containing order parameters. Maximum 20 orders.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with per-order results:
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$add_order_batch_sync(order_list)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{order_list}}{List of named lists; each containing order parameters. Maximum 20 orders.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with per-order results:
 \itemize{
 \item \code{order_id} (character): KuCoin-assigned order identifier.
 \item \code{client_oid} (character): Client-provided order identifier (NA if not supplied).
@@ -2075,10 +2175,11 @@ Verified: 2026-05-23
 \item \code{remain_size} (character): Remaining unfilled quantity.
 \item \code{canceled_size} (character): Cancelled quantity.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{trading <- KucoinTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+trading <- KucoinTrading$new()
 orders <- trading$add_order_batch_sync(list(
   list(type = "limit", symbol = "BTC-USDT", side = "buy",
        price = "30000", size = "0.00001", clientOid = "order1"),
@@ -2087,15 +2188,17 @@ orders <- trading$add_order_batch_sync(list(
 ))
 print(orders[success == TRUE, .(order_id, status, deal_size)])
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinTrading-cancel_order_by_id_sync"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinTrading-cancel_order_by_id_sync}{}}}
-\subsection{\code{KucoinTrading$cancel_order_by_id_sync()}}{
-  Cancel Order by Order ID (Synchronous Return)
+\subsection{Method \code{cancel_order_by_id_sync()}}{
+Cancel Order by Order ID (Synchronous Return)
 
 Cancels an order and waits for the cancellation to complete before returning.
 Returns the final order state including fill and cancellation sizes.
@@ -2145,21 +2248,21 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinTrading$cancel_order_by_id_sync(orderId, symbol)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{orderId}}{Character; the KuCoin order ID to cancel.}
-      \item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$cancel_order_by_id_sync(orderId, symbol)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{orderId}}{Character; the KuCoin order ID to cancel.}
+
+\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{order_id} (character): Order ID.
 \item \code{origin_size} (character): Original order size.
@@ -2168,22 +2271,25 @@ Verified: 2026-05-23
 \item \code{canceled_size} (character): Cancelled size.
 \item \code{status} (character): \code{"open"} or \code{"done"}.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{trading <- KucoinTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+trading <- KucoinTrading$new()
 result <- trading$cancel_order_by_id_sync("671128ee365ccb0007534d45", "BTC-USDT")
 cat("Status:", result$status, "Cancelled:", result$canceled_size, "\n")
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinTrading-cancel_order_by_client_oid_sync"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinTrading-cancel_order_by_client_oid_sync}{}}}
-\subsection{\code{KucoinTrading$cancel_order_by_client_oid_sync()}}{
-  Cancel Order by Client OID (Synchronous Return)
+\subsection{Method \code{cancel_order_by_client_oid_sync()}}{
+Cancel Order by Client OID (Synchronous Return)
 
 Cancels an order by client OID and waits for completion before returning.
 \subsection{API Endpoint}{
@@ -2226,21 +2332,21 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinTrading$cancel_order_by_client_oid_sync(clientOid, symbol)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{clientOid}}{Character; client order ID.}
-      \item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$cancel_order_by_client_oid_sync(clientOid, symbol)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{clientOid}}{Character; client order ID.}
+
+\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{client_oid} (character): Client order ID.
 \item \code{origin_size} (character): Original order size.
@@ -2249,22 +2355,25 @@ Verified: 2026-05-23
 \item \code{canceled_size} (character): Cancelled size.
 \item \code{status} (character): \code{"open"} or \code{"done"}.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{trading <- KucoinTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+trading <- KucoinTrading$new()
 result <- trading$cancel_order_by_client_oid_sync("myClientOid123", "BTC-USDT")
 cat("Status:", result$status, "\n")
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinTrading-modify_order"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinTrading-modify_order}{}}}
-\subsection{\code{KucoinTrading$modify_order()}}{
-  Modify Order
+\subsection{Method \code{modify_order()}}{
+Modify Order
 
 Amends the price and/or size of an existing open order atomically.
 Internally, KuCoin cancels the original order and places a replacement.
@@ -2324,38 +2433,42 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinTrading$modify_order(
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$modify_order(
   symbol,
   orderId = NULL,
   clientOid = NULL,
   newPrice = NULL,
   newSize = NULL
-)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}). Required.}
-      \item{\code{orderId}}{Character or NULL; KuCoin order ID. At least one of \code{orderId} or \code{clientOid} required.}
-      \item{\code{clientOid}}{Character or NULL; client order ID. At least one of \code{orderId} or \code{clientOid} required.}
-      \item{\code{newPrice}}{Character or NULL; new order price. At least one of \code{newPrice} or \code{newSize} required.}
-      \item{\code{newSize}}{Character or NULL; new order size. At least one of \code{newPrice} or \code{newSize} required.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}). Required.}
+
+\item{\code{orderId}}{Character or NULL; KuCoin order ID. At least one of \code{orderId} or \code{clientOid} required.}
+
+\item{\code{clientOid}}{Character or NULL; client order ID. At least one of \code{orderId} or \code{clientOid} required.}
+
+\item{\code{newPrice}}{Character or NULL; new order price. At least one of \code{newPrice} or \code{newSize} required.}
+
+\item{\code{newSize}}{Character or NULL; new order size. At least one of \code{newPrice} or \code{newSize} required.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{new_order_id} (character): The replacement order's ID.
 \item \code{client_oid} (character): The original client order ID.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{trading <- KucoinTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+trading <- KucoinTrading$new()
 result <- trading$modify_order(
   symbol = "BTC-USDT",
   orderId = "671124f9365ccb00073debd4",
@@ -2363,15 +2476,17 @@ result <- trading$modify_order(
 )
 cat("New order ID:", result$new_order_id, "\n")
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinTrading-set_dcp"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinTrading-set_dcp}{}}}
-\subsection{\code{KucoinTrading$set_dcp()}}{
-  Set DCP (Dead Connection Protection)
+\subsection{Method \code{set_dcp()}}{
+Set DCP (Dead Connection Protection)
 
 Configures KuCoin's dead-man's switch. If no user requests are received
 within the timeout window, KuCoin automatically cancels all open HF orders
@@ -2429,30 +2544,31 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinTrading$set_dcp(timeout, symbols = NULL)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{timeout}}{Integer; trigger duration in seconds. Use \code{-1} to disable, or \code{5} to \code{86400}.}
-      \item{\code{symbols}}{Character or NULL; comma-separated trading pairs (max 50).
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$set_dcp(timeout, symbols = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{timeout}}{Integer; trigger duration in seconds. Use \code{-1} to disable, or \code{5} to \code{86400}.}
+
+\item{\code{symbols}}{Character or NULL; comma-separated trading pairs (max 50).
 Empty or NULL applies to all pairs.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{current_time} (integer): Current server time in seconds.
 \item \code{trigger_time} (integer): When cancellation will trigger, in seconds.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{trading <- KucoinTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+trading <- KucoinTrading$new()
 # Enable DCP with 30-second timeout for BTC-USDT
 result <- trading$set_dcp(timeout = 30, symbols = "BTC-USDT")
 cat("Trigger at:", result$trigger_time, "\n")
@@ -2460,15 +2576,17 @@ cat("Trigger at:", result$trigger_time, "\n")
 # Disable DCP
 trading$set_dcp(timeout = -1)
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinTrading-get_dcp"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinTrading-get_dcp}{}}}
-\subsection{\code{KucoinTrading$get_dcp()}}{
-  Get DCP Settings
+\subsection{Method \code{get_dcp()}}{
+Get DCP Settings
 
 Queries the current Dead Connection Protection (dead-man's switch)
 configuration. Returns an empty \code{data.table} if DCP is not configured.
@@ -2509,50 +2627,50 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinTrading$get_dcp()}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$get_dcp()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{timeout} (integer): Auto-cancel trigger time in seconds. \code{-1} if unset.
 \item \code{symbols} (character): Comma-separated trading pairs, or empty for all.
 \item \code{current_time} (integer): Current server time in seconds.
 \item \code{trigger_time} (integer): When cancellation will trigger.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{trading <- KucoinTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+trading <- KucoinTrading$new()
 dcp <- trading$get_dcp()
 if (nrow(dcp) > 0) {
   cat("DCP timeout:", dcp$timeout, "seconds\n")
   cat("Symbols:", dcp$symbols, "\n")
 }
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinTrading-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinTrading-clone}{}}}
-\subsection{\code{KucoinTrading$clone()}}{
-  The objects of this class are cloneable with this method.
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinTrading$clone(deep = FALSE)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{deep}}{Whether to make a deep clone.}
-    }
-    \if{html}{\out{</div>}}
-  }
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$clone(deep = FALSE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
 }

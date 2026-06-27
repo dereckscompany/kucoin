@@ -19,10 +19,11 @@
 #' envelope).
 #'
 #' Unlike most connectors, KuCoin signs the *exact compact JSON request body* and
-#' must send that same byte sequence on the wire, so the request funnel is
-#' KuCoin's own [kucoin_build_request()] (which signs and sends an identical
-#' `req_body_raw` payload) rather than the connectcore default funnel; the two
-#' overridable seams are driven through it.
+#' must send that same byte sequence on the wire. It still owns no transport: the
+#' body is pre-serialised to compact JSON and routed through the connectcore
+#' funnel via `body_format = "raw"` (byte-verbatim — no NULL-pruning, no
+#' pretty-printing), and the `.sign()` seam reads those exact bytes back off the
+#' request to compute the `KC-API-*` HMAC.
 #'
 #' ### Sync vs Async
 #' The `async` parameter controls execution mode for all API methods:
@@ -100,18 +101,12 @@ KucoinBase <- R6::R6Class(
     # Authenticate a KuCoin request via the header-based HMAC scheme: KC-API-KEY /
     # KC-API-SIGN / KC-API-TIMESTAMP / KC-API-PASSPHRASE / KC-API-KEY-VERSION,
     # signing against the configured (local or server) clock exposed via
-    # `ctx$get_timestamp_ms`. KuCoin signs the request method, path (with the
-    # URL-encoded query string), and the raw body, so the seam receives them via
-    # `ctx` and delegates to sign_request().
+    # `ctx$get_timestamp_ms`. connectcore's funnel calls this seam after the
+    # request is fully built, so kucoin_sign_req derives the method, the path
+    # (with the URL-encoded query string), and the exact raw body straight off
+    # `req` and delegates to sign_request().
     .sign = function(req, keys, ctx) {
-      return(sign_request(
-        req,
-        keys,
-        method = ctx$method,
-        path = ctx$path,
-        body = ctx$body,
-        .get_timestamp_ms = ctx$get_timestamp_ms
-      ))
+      return(kucoin_sign_req(req, keys, ctx))
     },
 
     # Parse a KuCoin response, honouring its `code`/`data` envelope (a `code`
@@ -122,12 +117,12 @@ KucoinBase <- R6::R6Class(
 
     # Execute a KuCoin API Request
     #
-    # Routes through KuCoin's kucoin_build_request() funnel (which signs and
-    # sends a byte-identical compact JSON body) rather than the connectcore
-    # default funnel, injecting the instance's base URL, credentials, perform
-    # function, and the .sign / .parse_envelope seams. Accepts a .parser callback
-    # so subclass methods define their data transformation with no sync/async
-    # awareness.
+    # Thin override of connectcore's .request that pre-serialises the body to the
+    # exact compact JSON KuCoin signs and sends, then routes it through the
+    # inherited funnel via body_format = "raw" (byte-verbatim) — or "none" when
+    # there is no body. connectcore builds the URL/method/query/retry and calls
+    # the .sign / .parse_envelope seams; the .parser callback lets subclass
+    # methods define their data transformation with no sync/async awareness.
     .request = function(
       endpoint,
       method = "GET",
@@ -138,29 +133,26 @@ KucoinBase <- R6::R6Class(
       timeout = 30,
       base_url = NULL
     ) {
+      # KuCoin signs and sends the *exact same* compact JSON string, so serialise
+      # once here and hand connectcore the raw bytes to send verbatim.
+      body_json <- kucoin_serialize_body(body)
+      body_format <- if (is.null(body_json)) "none" else "raw"
+
       # `base_url = NULL` (the default) uses the instance's configured host
       # (spot for most classes, futures for the `KucoinFutures*` classes).
       # An explicit `base_url` overrides for the rare cross-host endpoint —
       # e.g. KuCoin's unified `/api/ua/v1/dcp/*` lives on the spot host but
       # is exposed to futures callers through `KucoinFuturesTrading`.
-      effective_base <- private$.base_url
-      if (!is.null(base_url)) {
-        effective_base <- base_url
-      }
-      return(kucoin_build_request(
-        base_url = effective_base,
+      return(super$.request(
         endpoint = endpoint,
         method = method,
         query = query,
-        body = body,
-        keys = if (auth) private$.keys else NULL,
-        sign = private$.sign,
-        parse_envelope = private$.parse_envelope,
-        .perform = private$.perform,
+        body = body_json,
+        auth = auth,
         .parser = .parser,
-        is_async = private$.is_async,
         timeout = timeout,
-        .get_timestamp_ms = private$.get_timestamp_ms
+        base_url = base_url,
+        body_format = body_format
       ))
     },
 

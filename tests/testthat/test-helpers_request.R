@@ -1,6 +1,21 @@
 # tests/testthat/test-helpers_request.R
-# Tests for HTTP request infrastructure: sign_request, kucoin_build_request,
-# parse_kucoin_response, and kucoin_paginate.
+# Tests for HTTP request infrastructure: sign_request, kucoin_sign_req,
+# parse_kucoin_response, and kucoin_paginate. The request funnel itself lives in
+# connectcore (build_request); KuCoin reaches it through KucoinBase$.request,
+# which pre-serialises the body and routes it via body_format = "raw".
+
+# A minimal KucoinBase subclass that exposes the private .request seam so the
+# transport path can be exercised directly (it normally runs behind the public
+# methods of the concrete client classes).
+TestKucoinClient <- R6::R6Class(
+  "TestKucoinClient",
+  inherit = KucoinBase,
+  public = list(
+    request = function(...) {
+      return(private$.request(...))
+    }
+  )
+)
 
 # -- parse_kucoin_response --
 
@@ -93,18 +108,22 @@ test_that("sign_request produces different signatures for different methods", {
   expect_true(!is.null(signed_post$headers[["KC-API-SIGN"]]))
 })
 
-# -- kucoin_build_request with mocked HTTP --
+# -- KucoinBase$.request (connectcore funnel via body_format = "raw") --
 
-test_that("kucoin_build_request parses successful response with .parser", {
+test_that(".request parses successful response with .parser", {
   resp <- mock_kucoin_response(data = mock_ticker_data())
 
   httr2::local_mocked_responses(function(req) resp)
 
-  result <- kucoin_build_request(
-    base_url = "https://api.kucoin.com",
+  client <- TestKucoinClient$new(
+    keys = get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p"),
+    base_url = "https://api.kucoin.com"
+  )
+  result <- client$request(
     endpoint = "/api/v1/market/orderbook/level1",
     method = "GET",
     query = list(symbol = "BTC-USDT"),
+    auth = FALSE,
     .parser = as_dt_row
   )
 
@@ -113,7 +132,7 @@ test_that("kucoin_build_request parses successful response with .parser", {
   expect_true("price" %in% names(result))
 })
 
-test_that("kucoin_build_request passes query parameters correctly", {
+test_that(".request passes query parameters correctly", {
   captured_req <- NULL
   resp <- mock_kucoin_response(data = list())
 
@@ -122,17 +141,21 @@ test_that("kucoin_build_request passes query parameters correctly", {
     return(resp)
   })
 
-  kucoin_build_request(
-    base_url = "https://api.kucoin.com",
+  client <- TestKucoinClient$new(
+    keys = get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p"),
+    base_url = "https://api.kucoin.com"
+  )
+  client$request(
     endpoint = "/api/v1/market/stats",
-    query = list(symbol = "ETH-USDT")
+    query = list(symbol = "ETH-USDT"),
+    auth = FALSE
   )
 
   # The URL should contain the query parameter
   expect_true(grepl("symbol=ETH-USDT", captured_req$url))
 })
 
-test_that("kucoin_build_request applies authentication when keys provided", {
+test_that(".request applies authentication when auth = TRUE", {
   captured_req <- NULL
   resp <- mock_kucoin_response(data = list())
 
@@ -141,20 +164,20 @@ test_that("kucoin_build_request applies authentication when keys provided", {
     return(resp)
   })
 
-  keys <- list(api_key = "k", api_secret = "s", api_passphrase = "p", key_version = "2")
+  keys <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
 
-  kucoin_build_request(
-    base_url = "https://api.kucoin.com",
+  client <- TestKucoinClient$new(keys = keys, base_url = "https://api.kucoin.com")
+  client$request(
     endpoint = "/api/v3/market/orderbook/level2",
     query = list(symbol = "BTC-USDT"),
-    keys = keys
+    auth = TRUE
   )
 
   expect_true("KC-API-KEY" %in% names(captured_req$headers))
   expect_true("KC-API-SIGN" %in% names(captured_req$headers))
 })
 
-test_that("kucoin_build_request skips auth when keys is NULL", {
+test_that(".request skips auth when auth = FALSE", {
   captured_req <- NULL
   resp <- mock_kucoin_response(data = list())
 
@@ -163,46 +186,82 @@ test_that("kucoin_build_request skips auth when keys is NULL", {
     return(resp)
   })
 
-  kucoin_build_request(
-    base_url = "https://api.kucoin.com",
+  client <- TestKucoinClient$new(
+    keys = get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p"),
+    base_url = "https://api.kucoin.com"
+  )
+  client$request(
     endpoint = "/api/v1/market/histories",
-    keys = NULL
+    auth = FALSE
   )
 
   expect_false("KC-API-KEY" %in% names(captured_req$headers))
 })
 
-test_that("kucoin_build_request propagates KuCoin API errors", {
+test_that(".request signs the exact compact JSON body sent on the wire", {
+  captured_req <- NULL
+  resp <- mock_kucoin_response(data = list())
+
+  httr2::local_mocked_responses(function(req) {
+    captured_req <<- req
+    return(resp)
+  })
+
+  keys <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
+  body <- list(clientOid = "abc-123", symbol = "BTC-USDT", side = "buy")
+  expected_body <- as.character(jsonlite::toJSON(body, auto_unbox = TRUE))
+
+  client <- TestKucoinClient$new(keys = keys, base_url = "https://api.kucoin.com")
+  client$request(
+    endpoint = "/api/v1/hf/orders",
+    method = "POST",
+    body = body,
+    auth = TRUE
+  )
+
+  # The body must be sent byte-verbatim (compact JSON, no pretty-printing) so
+  # the HMAC signature, computed over those exact bytes, matches on the wire.
+  expect_equal(as.character(captured_req$body$data), expected_body)
+  expect_true("KC-API-SIGN" %in% names(captured_req$headers))
+})
+
+test_that(".request propagates KuCoin API errors", {
   resp <- mock_kucoin_error(code = "400100", msg = "Order does not exist")
 
   httr2::local_mocked_responses(function(req) resp)
 
+  client <- TestKucoinClient$new(
+    keys = get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p"),
+    base_url = "https://api.kucoin.com"
+  )
   expect_error(
-    kucoin_build_request(
-      base_url = "https://api.kucoin.com",
-      endpoint = "/api/v1/orders/nonexistent"
+    client$request(
+      endpoint = "/api/v1/orders/nonexistent",
+      auth = FALSE
     ),
     "400100.*Order does not exist"
   )
 })
 
-test_that("kucoin_build_request propagates HTTP errors", {
+test_that(".request propagates HTTP errors", {
   resp <- mock_http_error(status_code = 429L, body_text = "Too Many Requests")
 
   httr2::local_mocked_responses(function(req) resp)
 
-  # httr2 raises its own error for non-2xx status codes before our
-  # parse_kucoin_response gets called, so match the httr2 error message.
+  client <- TestKucoinClient$new(
+    keys = get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p"),
+    base_url = "https://api.kucoin.com"
+  )
   expect_error(
-    kucoin_build_request(
-      base_url = "https://api.kucoin.com",
-      endpoint = "/api/v1/market/stats"
+    client$request(
+      endpoint = "/api/v1/market/stats",
+      auth = FALSE
     ),
     "429"
   )
 })
 
-test_that("kucoin_build_request uses .get_timestamp_ms function for signing", {
+test_that(".request uses the configured timestamp source for signing", {
   captured_req <- NULL
   resp <- mock_kucoin_response(data = list(balance = "100"))
 
@@ -211,16 +270,16 @@ test_that("kucoin_build_request uses .get_timestamp_ms function for signing", {
     return(resp)
   })
 
-  keys <- list(api_key = "k", api_secret = "s", api_passphrase = "p", key_version = "2")
+  keys <- get_api_keys(api_key = "k", api_secret = "s", api_passphrase = "p")
+  client <- TestKucoinClient$new(keys = keys, base_url = "https://api.kucoin.com")
+  # Inject a fixed clock the way time_source does, so the timestamp is pinned.
+  client$.__enclos_env__$private$.get_timestamp_ms <- function() 1700000000000
 
-  result <- kucoin_build_request(
-    base_url = "https://api.kucoin.com",
+  client$request(
     endpoint = "/api/v1/accounts",
-    keys = keys,
-    .get_timestamp_ms = function() 1700000000000
+    auth = TRUE
   )
 
-  # The timestamp header should be the value returned by our function
   expect_equal(captured_req$headers[["KC-API-TIMESTAMP"]], "1700000000000")
 })
 

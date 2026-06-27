@@ -66,8 +66,7 @@ Standalone (not on a class):
 | Helper | What it does |
 |---|---|
 | `get_api_keys()`, `get_base_url()`, `get_futures_base_url()` | Read API credentials and base URLs from environment variables |
-| `kucoin_build_request()` | Low-level HTTP / signing primitive — every method goes through this |
-| `kucoin_paginate()` | Generic page-walker for paginated endpoints |
+| `kucoin_paginate()` | Generic page-walker for paginated endpoints (routes through `connectcore::build_request()`) |
 | `kucoin_backfill_klines()` | Bulk historical klines download for many symbols × timeframes with CSV resume |
 | `verify_symbol()` | Sanity-check a symbol against the cached symbol list before placing an order |
 | `time_convert_to_kucoin()`, `time_convert_from_kucoin()` | Millisecond / nanosecond timestamps ↔ `POSIXct` |
@@ -397,11 +396,14 @@ fut_url  <- get_futures_base_url()      # api-futures.kucoin.com
 
 ### Low-level HTTP
 
-`kucoin_build_request()` constructs and signs every request, and
-`kucoin_paginate()` walks the `currentPage` / `pageSize` envelope on
-paginated endpoints. You should rarely call either directly — every
-method goes through them — but both are exported so you can wrap any
-not-yet-bound endpoint without re-implementing HMAC-SHA256 signing.
+Every request flows through `connectcore::build_request()` (the shared
+transport funnel) via `KucoinBase$.request()`, which pre-serialises the
+body to compact JSON and sends it byte-verbatim so the HMAC-SHA256
+signature matches on the wire. `kucoin_paginate()` walks the
+`currentPage` / `pageSize` envelope on paginated endpoints through that
+same funnel. You should rarely call `kucoin_paginate()` directly — every
+method goes through it — but it is exported so you can wrap any
+not-yet-bound paginated endpoint without re-implementing the signing.
 
 ### Bulk klines download
 
@@ -666,8 +668,9 @@ A few intentional non-goals, shared with the sister `alpaca` and
   rate-limit error codes but does not back off on its own — that is
   the caller's job.
 - **No reconnect / retry on transient network errors.** The single
-  call is what you asked for; wrap with `httr2::req_retry()` (passed
-  through `kucoin_build_request()`) if you want retries.
+  call is what you asked for; configure retries through
+  `connectcore::RestClient`'s `max_tries` (the shared transport funnel)
+  if you want them.
 
 ---
 

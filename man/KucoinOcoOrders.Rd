@@ -4,6 +4,11 @@
 \alias{KucoinOcoOrders}
 \title{KucoinOcoOrders: OCO Order Management}
 \description{
+KucoinOcoOrders: OCO Order Management
+
+KucoinOcoOrders: OCO Order Management
+}
+\details{
 Provides methods for managing OCO (One-Cancels-Other) orders on KuCoin Spot.
 Inherits from \link{KucoinBase}.
 \subsection{Purpose and Scope}{
@@ -74,7 +79,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinOcoOrders$add_order()`
+## Method `KucoinOcoOrders$add_order`
 ## ------------------------------------------------
 
 \dontrun{
@@ -98,7 +103,7 @@ order <- oco$add_order(
 }
 
 ## ------------------------------------------------
-## Method `KucoinOcoOrders$cancel_order_by_id()`
+## Method `KucoinOcoOrders$cancel_order_by_id`
 ## ------------------------------------------------
 
 \dontrun{
@@ -110,7 +115,7 @@ print(result$cancelled_order_id)
 }
 
 ## ------------------------------------------------
-## Method `KucoinOcoOrders$cancel_order_by_client_oid()`
+## Method `KucoinOcoOrders$cancel_order_by_client_oid`
 ## ------------------------------------------------
 
 \dontrun{
@@ -122,7 +127,7 @@ print(result$cancelled_order_id)
 }
 
 ## ------------------------------------------------
-## Method `KucoinOcoOrders$cancel_all()`
+## Method `KucoinOcoOrders$cancel_all`
 ## ------------------------------------------------
 
 \dontrun{
@@ -137,7 +142,7 @@ result <- oco$cancel_all()
 }
 
 ## ------------------------------------------------
-## Method `KucoinOcoOrders$get_order_by_id()`
+## Method `KucoinOcoOrders$get_order_by_id`
 ## ------------------------------------------------
 
 \dontrun{
@@ -150,7 +155,7 @@ print(order$symbol)
 }
 
 ## ------------------------------------------------
-## Method `KucoinOcoOrders$get_order_by_client_oid()`
+## Method `KucoinOcoOrders$get_order_by_client_oid`
 ## ------------------------------------------------
 
 \dontrun{
@@ -163,7 +168,7 @@ print(order$status)
 }
 
 ## ------------------------------------------------
-## Method `KucoinOcoOrders$get_order_detail_by_id()`
+## Method `KucoinOcoOrders$get_order_detail_by_id`
 ## ------------------------------------------------
 
 \dontrun{
@@ -177,7 +182,7 @@ details[, .(order_id, status, sub_order_id, sub_order_side, sub_order_price)]
 }
 
 ## ------------------------------------------------
-## Method `KucoinOcoOrders$get_order_list()`
+## Method `KucoinOcoOrders$get_order_list`
 ## ------------------------------------------------
 
 \dontrun{
@@ -203,32 +208,34 @@ orders <- oco$get_order_list(query = list(
 }
 }
 \section{Super classes}{
-\code{\link[connectcore:RestClient]{connectcore::RestClient}} -> \code{\link[kucoin:KucoinBase]{KucoinBase}} -> \code{KucoinOcoOrders}
+\code{\link[connectcore:RestClient]{connectcore::RestClient}} -> \code{\link[kucoin:KucoinBase]{kucoin::KucoinBase}} -> \code{KucoinOcoOrders}
 }
 \section{Methods}{
 \subsection{Public methods}{
-  \itemize{
-    \item \href{#method-KucoinOcoOrders-add_order}{\code{KucoinOcoOrders$add_order()}}
-    \item \href{#method-KucoinOcoOrders-cancel_order_by_id}{\code{KucoinOcoOrders$cancel_order_by_id()}}
-    \item \href{#method-KucoinOcoOrders-cancel_order_by_client_oid}{\code{KucoinOcoOrders$cancel_order_by_client_oid()}}
-    \item \href{#method-KucoinOcoOrders-cancel_all}{\code{KucoinOcoOrders$cancel_all()}}
-    \item \href{#method-KucoinOcoOrders-get_order_by_id}{\code{KucoinOcoOrders$get_order_by_id()}}
-    \item \href{#method-KucoinOcoOrders-get_order_by_client_oid}{\code{KucoinOcoOrders$get_order_by_client_oid()}}
-    \item \href{#method-KucoinOcoOrders-get_order_detail_by_id}{\code{KucoinOcoOrders$get_order_detail_by_id()}}
-    \item \href{#method-KucoinOcoOrders-get_order_list}{\code{KucoinOcoOrders$get_order_list()}}
-    \item \href{#method-KucoinOcoOrders-clone}{\code{KucoinOcoOrders$clone()}}
-  }
+\itemize{
+\item \href{#method-KucoinOcoOrders-add_order}{\code{KucoinOcoOrders$add_order()}}
+\item \href{#method-KucoinOcoOrders-cancel_order_by_id}{\code{KucoinOcoOrders$cancel_order_by_id()}}
+\item \href{#method-KucoinOcoOrders-cancel_order_by_client_oid}{\code{KucoinOcoOrders$cancel_order_by_client_oid()}}
+\item \href{#method-KucoinOcoOrders-cancel_all}{\code{KucoinOcoOrders$cancel_all()}}
+\item \href{#method-KucoinOcoOrders-get_order_by_id}{\code{KucoinOcoOrders$get_order_by_id()}}
+\item \href{#method-KucoinOcoOrders-get_order_by_client_oid}{\code{KucoinOcoOrders$get_order_by_client_oid()}}
+\item \href{#method-KucoinOcoOrders-get_order_detail_by_id}{\code{KucoinOcoOrders$get_order_detail_by_id()}}
+\item \href{#method-KucoinOcoOrders-get_order_list}{\code{KucoinOcoOrders$get_order_list()}}
+\item \href{#method-KucoinOcoOrders-clone}{\code{KucoinOcoOrders$clone()}}
 }
-\if{html}{\out{<details open><summary>Inherited methods</summary>
+}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
 <ul>
-  <li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>KucoinBase$initialize()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>kucoin::KucoinBase$initialize()</code></a></span></li>
 </ul>
-</details>}}
+</details>
+}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinOcoOrders-add_order"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinOcoOrders-add_order}{}}}
-\subsection{\code{KucoinOcoOrders$add_order()}}{
-  Place an OCO Order
+\subsection{Method \code{add_order()}}{
+Place an OCO Order
 
 Places a new OCO (One-Cancels-Other) order on KuCoin Spot. An OCO order
 combines a limit order with a stop-limit order. When one side triggers or
@@ -285,9 +292,8 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinOcoOrders$add_order(
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinOcoOrders$add_order(
   symbol,
   side,
   price,
@@ -297,40 +303,49 @@ Verified: 2026-05-23
   clientOid = NULL,
   remark = NULL,
   tradeType = "TRADE"
-)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}). Must match the
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}). Must match the
 \code{BASE-QUOTE} format validated by \code{verify_symbol()}.}
-      \item{\code{side}}{Character; order side, one of \code{"buy"} or \code{"sell"}.}
-      \item{\code{price}}{Character; limit order price for the take-profit leg.
+
+\item{\code{side}}{Character; order side, one of \code{"buy"} or \code{"sell"}.}
+
+\item{\code{price}}{Character; limit order price for the take-profit leg.
 Must align with the symbol's \code{priceIncrement}.}
-      \item{\code{size}}{Character; order quantity in base currency (e.g., \code{"0.0001"} BTC).
+
+\item{\code{size}}{Character; order quantity in base currency (e.g., \code{"0.0001"} BTC).
 Must align with the symbol's \code{baseIncrement}.}
-      \item{\code{stopPrice}}{Character; trigger price for the stop-limit leg. When the
+
+\item{\code{stopPrice}}{Character; trigger price for the stop-limit leg. When the
 market reaches this price, the stop-limit order is activated.}
-      \item{\code{limitPrice}}{Character; limit price for the stop-limit leg after the
+
+\item{\code{limitPrice}}{Character; limit price for the stop-limit leg after the
 stop is triggered. This is the price at which the stop-limit order is placed.}
-      \item{\code{clientOid}}{Character or NULL; unique client-assigned order identifier
+
+\item{\code{clientOid}}{Character or NULL; unique client-assigned order identifier
 (max 40 characters). Useful for idempotent order placement and tracking.}
-      \item{\code{remark}}{Character or NULL; order remarks or notes (max 20 characters).}
-      \item{\code{tradeType}}{Character; trade type, defaults to \code{"TRADE"} for spot trading.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+
+\item{\code{remark}}{Character or NULL; order remarks or notes (max 20 characters).}
+
+\item{\code{tradeType}}{Character; trade type, defaults to \code{"TRADE"} for spot trading.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{order_id} (character): KuCoin-assigned OCO order identifier.
 \item \code{client_oid} (character): Client-provided order identifier (NA if not supplied).
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{oco <- KucoinOcoOrders$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+oco <- KucoinOcoOrders$new()
 
 # Sell OCO: take-profit at 110k, stop-loss at 90k
 order <- oco$add_order(
@@ -348,15 +363,17 @@ order <- oco$add_order(
   clientOid = "my-bot-oco-001"
 )
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinOcoOrders-cancel_order_by_id"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinOcoOrders-cancel_order_by_id}{}}}
-\subsection{\code{KucoinOcoOrders$cancel_order_by_id()}}{
-  Cancel OCO Order by Order ID
+\subsection{Method \code{cancel_order_by_id()}}{
+Cancel OCO Order by Order ID
 
 Cancels an active OCO order using its KuCoin-assigned order ID. Both the
 limit and stop-limit legs of the OCO order are cancelled.
@@ -413,45 +430,47 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinOcoOrders$cancel_order_by_id(orderId)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{orderId}}{Character; the KuCoin-assigned OCO order ID to cancel
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinOcoOrders$cancel_order_by_id(orderId)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{orderId}}{Character; the KuCoin-assigned OCO order ID to cancel
 (e.g., \code{"674c40d38b4b2f00073deef3"}).}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with
 \code{async = TRUE}) with one row per cancelled order, and column:
 \itemize{
 \item \code{cancelled_order_id} (character): Cancelled order ID (the parent
 OCO and each of its sub-orders appear as separate rows). Empty
 \code{data.table} if nothing matched.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{oco <- KucoinOcoOrders$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+oco <- KucoinOcoOrders$new()
 
 # Cancel a specific OCO order
 result <- oco$cancel_order_by_id("674c40d38b4b2f00073deef3")
 print(result$cancelled_order_id)
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinOcoOrders-cancel_order_by_client_oid"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinOcoOrders-cancel_order_by_client_oid}{}}}
-\subsection{\code{KucoinOcoOrders$cancel_order_by_client_oid()}}{
-  Cancel OCO Order by Client OID
+\subsection{Method \code{cancel_order_by_client_oid()}}{
+Cancel OCO Order by Client OID
 
 Cancels an active OCO order using the client-assigned order ID (\code{clientOid}).
 Both the limit and stop-limit legs of the OCO order are cancelled.
@@ -509,45 +528,47 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinOcoOrders$cancel_order_by_client_oid(clientOid)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{clientOid}}{Character; the client-assigned order ID used when placing
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinOcoOrders$cancel_order_by_client_oid(clientOid)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{clientOid}}{Character; the client-assigned order ID used when placing
 the OCO order (e.g., \code{"my-bot-oco-001"}).}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with
 \code{async = TRUE}) with one row per cancelled order, and column:
 \itemize{
 \item \code{cancelled_order_id} (character): Cancelled order ID (the parent
 OCO and each of its sub-orders appear as separate rows). Empty
 \code{data.table} if nothing matched.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{oco <- KucoinOcoOrders$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+oco <- KucoinOcoOrders$new()
 
 # Cancel by client-assigned ID
 result <- oco$cancel_order_by_client_oid("my-bot-oco-001")
 print(result$cancelled_order_id)
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinOcoOrders-cancel_all"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinOcoOrders-cancel_all}{}}}
-\subsection{\code{KucoinOcoOrders$cancel_all()}}{
-  Cancel All OCO Orders
+\subsection{Method \code{cancel_all()}}{
+Cancel All OCO Orders
 
 Cancels all active OCO orders matching the given filters. Can filter by
 \code{symbol} or specify individual \code{orderIds}. If no filters are provided,
@@ -607,34 +628,34 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinOcoOrders$cancel_all(query = list())}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{query}}{Named list; filter parameters for batch cancellation:
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinOcoOrders$cancel_all(query = list())}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{query}}{Named list; filter parameters for batch cancellation:
 \itemize{
 \item \code{symbol} (character): Optional. Trading pair to filter by (e.g., \code{"BTC-USDT"}).
 \item \code{orderIds} (character): Optional. Comma-separated order IDs to cancel specifically.
 If empty, all active OCO orders are cancelled.
 }}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with
 \code{async = TRUE}) with one row per cancelled order, and column:
 \itemize{
 \item \code{cancelled_order_id} (character): Cancelled order ID. Empty
 \code{data.table} if no active OCO orders matched the filter.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{oco <- KucoinOcoOrders$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+oco <- KucoinOcoOrders$new()
 
 # Cancel all OCO orders for BTC-USDT
 result <- oco$cancel_all(query = list(symbol = "BTC-USDT"))
@@ -643,15 +664,17 @@ print(result$cancelled_order_id)
 # Cancel all OCO orders (no filter)
 result <- oco$cancel_all()
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinOcoOrders-get_order_by_id"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinOcoOrders-get_order_by_id}{}}}
-\subsection{\code{KucoinOcoOrders$get_order_by_id()}}{
-  Get OCO Order by Order ID
+\subsection{Method \code{get_order_by_id()}}{
+Get OCO Order by Order ID
 
 Retrieves summary information for a specific OCO order using its
 KuCoin-assigned order ID. Returns the OCO order metadata without
@@ -709,21 +732,20 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinOcoOrders$get_order_by_id(orderId)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{orderId}}{Character; the KuCoin-assigned OCO order ID
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinOcoOrders$get_order_by_id(orderId)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{orderId}}{Character; the KuCoin-assigned OCO order ID
 (e.g., \code{"674c40d38b4b2f00073deef3"}).}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{order_id} (character): OCO order identifier.
 \item \code{symbol} (character): Trading pair (e.g., \code{"BTC-USDT"}).
@@ -731,25 +753,28 @@ Verified: 2026-05-23
 \item \code{order_time} (POSIXct): Order creation datetime (coerced from epoch milliseconds).
 \item \code{status} (character): Order status (e.g., \code{"NEW"}, \code{"DONE"}, \code{"TRIGGERED"}).
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{oco <- KucoinOcoOrders$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+oco <- KucoinOcoOrders$new()
 
 # Get OCO order summary
 order <- oco$get_order_by_id("674c40d38b4b2f00073deef3")
 print(order$status)
 print(order$symbol)
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinOcoOrders-get_order_by_client_oid"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinOcoOrders-get_order_by_client_oid}{}}}
-\subsection{\code{KucoinOcoOrders$get_order_by_client_oid()}}{
-  Get OCO Order by Client OID
+\subsection{Method \code{get_order_by_client_oid()}}{
+Get OCO Order by Client OID
 
 Retrieves summary information for a specific OCO order using the
 client-assigned order ID (\code{clientOid}). Useful when you track orders
@@ -807,21 +832,20 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinOcoOrders$get_order_by_client_oid(clientOid)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{clientOid}}{Character; the client-assigned order ID used when placing
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinOcoOrders$get_order_by_client_oid(clientOid)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{clientOid}}{Character; the client-assigned order ID used when placing
 the OCO order (e.g., \code{"my-bot-oco-001"}).}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{order_id} (character): KuCoin-assigned OCO order identifier.
 \item \code{symbol} (character): Trading pair (e.g., \code{"BTC-USDT"}).
@@ -829,25 +853,28 @@ the OCO order (e.g., \code{"my-bot-oco-001"}).}
 \item \code{order_time} (POSIXct): Order creation datetime (coerced from epoch milliseconds).
 \item \code{status} (character): Order status (e.g., \code{"NEW"}, \code{"DONE"}, \code{"TRIGGERED"}).
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{oco <- KucoinOcoOrders$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+oco <- KucoinOcoOrders$new()
 
 # Retrieve by client OID
 order <- oco$get_order_by_client_oid("my-bot-oco-001")
 print(order$order_id)
 print(order$status)
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinOcoOrders-get_order_detail_by_id"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinOcoOrders-get_order_detail_by_id}{}}}
-\subsection{\code{KucoinOcoOrders$get_order_detail_by_id()}}{
-  Get OCO Order Details by Order ID
+\subsection{Method \code{get_order_detail_by_id()}}{
+Get OCO Order Details by Order ID
 
 Retrieves detailed information for a specific OCO order, including the
 individual sub-orders (limit leg and stop-limit leg) and their respective
@@ -924,21 +951,20 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinOcoOrders$get_order_detail_by_id(orderId)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{orderId}}{Character; the KuCoin-assigned OCO order ID
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinOcoOrders$get_order_detail_by_id(orderId)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{orderId}}{Character; the KuCoin-assigned OCO order ID
 (e.g., \code{"674c40d38b4b2f00073deef3"}).}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{order_id} (character): OCO order identifier.
 \item \code{symbol} (character): Trading pair (e.g., \code{"BTC-USDT"}).
@@ -960,10 +986,11 @@ fields are added with a \code{sub_order_} prefix. Typical sub-order columns:
 \item \code{sub_order_status} (character)
 \item \code{sub_order_stop_price} (character; only present on the stop leg)
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{oco <- KucoinOcoOrders$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+oco <- KucoinOcoOrders$new()
 
 # Get full OCO order details with sub-orders. The `orders` array
 # is exploded to long format, so each sub-order is its own row
@@ -971,15 +998,17 @@ fields are added with a \code{sub_order_} prefix. Typical sub-order columns:
 details <- oco$get_order_detail_by_id("674c40d38b4b2f00073deef3")
 details[, .(order_id, status, sub_order_id, sub_order_side, sub_order_price)]
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinOcoOrders-get_order_list"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinOcoOrders-get_order_list}{}}}
-\subsection{\code{KucoinOcoOrders$get_order_list()}}{
-  Get OCO Order List
+\subsection{Method \code{get_order_list()}}{
+Get OCO Order List
 
 Retrieves a paginated list of OCO orders with optional filtering by symbol,
 time range, and pagination parameters. Returns all OCO orders matching the
@@ -1053,15 +1082,14 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinOcoOrders$get_order_list(query = list())}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{query}}{Named list; filter and pagination parameters:
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinOcoOrders$get_order_list(query = list())}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{query}}{Named list; filter and pagination parameters:
 \itemize{
 \item \code{symbol} (character): Optional. Trading pair to filter by (e.g., \code{"BTC-USDT"}).
 \item \code{startAt} (numeric): Optional. Start time in milliseconds (inclusive).
@@ -1069,11 +1097,11 @@ Verified: 2026-05-23
 \item \code{pageSize} (integer): Optional. Number of results per page (default 20, max 100).
 \item \code{currentPage} (integer): Optional. Page number to retrieve (default 1).
 }}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns (one row per OCO order):
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns (one row per OCO order):
 \itemize{
 \item \code{order_id} (character): OCO order identifier.
 \item \code{symbol} (character): Trading pair (e.g., \code{"BTC-USDT"}).
@@ -1082,10 +1110,11 @@ Verified: 2026-05-23
 \item \code{status} (character): Order status (e.g., \code{"NEW"}, \code{"DONE"}, \code{"TRIGGERED"}).
 Returns an empty \code{data.table} if no orders match.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{oco <- KucoinOcoOrders$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+oco <- KucoinOcoOrders$new()
 
 # Get all OCO orders
 orders <- oco$get_order_list()
@@ -1105,27 +1134,27 @@ orders <- oco$get_order_list(query = list(
   endAt = as.numeric(lubridate::now()) * 1000
 ))
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinOcoOrders-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinOcoOrders-clone}{}}}
-\subsection{\code{KucoinOcoOrders$clone()}}{
-  The objects of this class are cloneable with this method.
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinOcoOrders$clone(deep = FALSE)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{deep}}{Whether to make a deep clone.}
-    }
-    \if{html}{\out{</div>}}
-  }
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinOcoOrders$clone(deep = FALSE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
 }
