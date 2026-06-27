@@ -11,7 +11,7 @@ point through which all KuCoin API calls flow."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,7 +40,7 @@ point through which all KuCoin API calls flow."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Build and Execute a KuCoin API Request</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.0.3/R/helpers_request.R" class="external-link"><code>R/helpers_request.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.1.0/R/helpers_request.R" class="external-link"><code>R/helpers_request.R</code></a></small>
       <div class="d-none name"><code>kucoin_build_request.Rd</code></div>
     </div>
 
@@ -59,6 +59,8 @@ point through which all KuCoin API calls flow.</p>
 <span>  query <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  body <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  keys <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  sign <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  parse_envelope <span class="op">=</span> <span class="va">parse_kucoin_response</span>,</span>
 <span>  .perform <span class="op">=</span> <span class="fu">httr2</span><span class="fu">::</span><span class="va"><a href="https://httr2.r-lib.org/reference/req_perform.html" class="external-link">req_perform</a></span>,</span>
 <span>  .parser <span class="op">=</span> <span class="va">identity</span>,</span>
 <span>  is_async <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -95,6 +97,17 @@ point through which all KuCoin API calls flow.</p>
 <dd><p>List or NULL; API credentials. Default <code>NULL</code>.</p></dd>
 
 
+<dt id="arg-sign">sign<a class="anchor" aria-label="anchor" href="#arg-sign"></a></dt>
+<dd><p>Function or NULL; <code>function(req, keys, ctx)</code> returning a signed
+request, where <code>ctx</code> carries <code>method</code>, <code>path</code>, <code>body</code>, and <code>get_timestamp_ms</code>.
+Default <code>sign_request()</code> (adapted to that signature).</p></dd>
+
+
+<dt id="arg-parse-envelope">parse_envelope<a class="anchor" aria-label="anchor" href="#arg-parse-envelope"></a></dt>
+<dd><p>Function; <code>function(resp)</code> turning a response into data
+and raising on a KuCoin API error. Default <code>parse_kucoin_response()</code>.</p></dd>
+
+
 <dt id="arg--perform">.perform<a class="anchor" aria-label="anchor" href="#arg--perform"></a></dt>
 <dd><p>Function; the httr2 perform function. Default <code><a href="https://httr2.r-lib.org/reference/req_perform.html" class="external-link">httr2::req_perform</a></code>.</p></dd>
 
@@ -114,9 +127,9 @@ Default <code>identity</code>.</p></dd>
 
 <dt id="arg--get-timestamp-ms">.get_timestamp_ms<a class="anchor" aria-label="anchor" href="#arg--get-timestamp-ms"></a></dt>
 <dd><p>Function or NULL; zero-argument function returning
-epoch milliseconds for HMAC signing. When <code>NULL</code> (default), uses
-<code><a href="https://lubridate.tidyverse.org/reference/now.html" class="external-link">lubridate::now()</a></code>. Pass a custom function (e.g. one that fetches KuCoin server
-time) to avoid clock-drift issues.</p></dd>
+epoch milliseconds for HMAC signing. When <code>NULL</code> (default), uses the local
+UTC clock. Pass a custom function (e.g. one that fetches KuCoin server time)
+to avoid clock-drift issues.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -125,8 +138,10 @@ time) to avoid clock-drift issues.</p></dd>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-
-<div class="section">
+    <p>It is KuCoin's specialisation of the connectcore request funnel: signing and
+error-envelope detection are injected as the <code>sign</code> and <code>parse_envelope</code>
+functions (the seams <a href="KucoinBase.html">KucoinBase</a> overrides), and the body is sent as the exact
+raw JSON string that was signed, so the HMAC signature matches byte-for-byte.</p><div class="section">
 <h3 id="sync-vs-async">Sync vs Async<a class="anchor" aria-label="anchor" href="#sync-vs-async"></a></h3>
 
 

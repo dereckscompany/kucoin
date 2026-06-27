@@ -1,11 +1,5 @@
 # KucoinStopOrders: Stop Order Management
 
-KucoinStopOrders: Stop Order Management
-
-KucoinStopOrders: Stop Order Management
-
-## Details
-
 Provides methods for managing stop orders on KuCoin Spot. Inherits from
 [KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
 
@@ -111,9 +105,11 @@ match each other:
 
 - `"FOK"` (Fill Or Kill): Fill entirely or cancel completely.
 
-## Super class
+## Super classes
 
-[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
+-\>
+[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinStopOrders`
 
 ## Methods
@@ -138,11 +134,11 @@ match each other:
 
 Inherited methods
 
-- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 
-### Method `add_order()`
+### `KucoinStopOrders$add_order()`
 
 Place a Stop Order
 
@@ -333,7 +329,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     stop <- KucoinStopOrders$new()
 
     # Limit stop-loss sell order
@@ -354,11 +349,10 @@ Verified: 2026-05-23
       type = "market", symbol = "BTC-USDT", side = "buy",
       stopPrice = "105000", funds = "100"
     )
-    }
 
 ------------------------------------------------------------------------
 
-### Method `cancel_order_by_id()`
+### `KucoinStopOrders$cancel_order_by_id()`
 
 Cancel Stop Order by Order ID
 
@@ -433,17 +427,15 @@ long format):
 
 #### Examples
 
-    \dontrun{
     stop <- KucoinStopOrders$new()
 
     # Cancel a specific stop order
     result <- stop$cancel_order_by_id("vs8hoo8q2ceshiue003b67c0")
     print(result$cancelled_order_id)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `cancel_order_by_client_oid()`
+### `KucoinStopOrders$cancel_order_by_client_oid()`
 
 Cancel Stop Order by Client OID
 
@@ -527,17 +519,15 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     stop <- KucoinStopOrders$new()
 
     # Cancel by client OID
     result <- stop$cancel_order_by_client_oid("my-stop-001", symbol = "BTC-USDT")
     print(result$cancelled_order_id)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `cancel_all()`
+### `KucoinStopOrders$cancel_all()`
 
 Cancel All Stop Orders
 
@@ -627,7 +617,6 @@ long format):
 
 #### Examples
 
-    \dontrun{
     stop <- KucoinStopOrders$new()
 
     # Cancel all stop orders for BTC-USDT
@@ -637,11 +626,10 @@ long format):
     # Cancel all stop orders (no filter)
     result <- stop$cancel_all()
     print(result$cancelled_order_id)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_order_by_id()`
+### `KucoinStopOrders$get_order_by_id()`
 
 Get Stop Order by Order ID
 
@@ -763,18 +751,16 @@ columns). Key columns include:
 
 #### Examples
 
-    \dontrun{
     stop <- KucoinStopOrders$new()
 
     # Get stop order details
     order <- stop$get_order_by_id("vs8hoo8q2ceshiue003b67c0")
     print(order$stop_price)
     print(order$side)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_order_by_client_oid()`
+### `KucoinStopOrders$get_order_by_client_oid()`
 
 Get Stop Order by Client OID
 
@@ -905,18 +891,16 @@ Key columns include:
 
 #### Examples
 
-    \dontrun{
     stop <- KucoinStopOrders$new()
 
     # Look up stop order by client OID
     order <- stop$get_order_by_client_oid("my-stop-001", symbol = "BTC-USDT")
     print(order$id)
     print(order$stop_price)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_order_list()`
+### `KucoinStopOrders$get_order_list()`
 
 Get Stop Order List
 
@@ -1072,7 +1056,6 @@ include:
 
 #### Examples
 
-    \dontrun{
     stop <- KucoinStopOrders$new()
 
     # Get all BTC-USDT stop orders
@@ -1092,11 +1075,10 @@ include:
       startAt = as.numeric(lubridate::now() - 86400) * 1000,
       endAt = as.numeric(lubridate::now()) * 1000
     ))
-    }
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `KucoinStopOrders$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -1131,7 +1113,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinStopOrders$add_order`
+## Method `KucoinStopOrders$add_order()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1158,7 +1140,7 @@ order <- stop$add_order(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinStopOrders$cancel_order_by_id`
+## Method `KucoinStopOrders$cancel_order_by_id()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1170,7 +1152,7 @@ print(result$cancelled_order_id)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinStopOrders$cancel_order_by_client_oid`
+## Method `KucoinStopOrders$cancel_order_by_client_oid()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1182,7 +1164,7 @@ print(result$cancelled_order_id)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinStopOrders$cancel_all`
+## Method `KucoinStopOrders$cancel_all()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1198,7 +1180,7 @@ print(result$cancelled_order_id)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinStopOrders$get_order_by_id`
+## Method `KucoinStopOrders$get_order_by_id()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1211,7 +1193,7 @@ print(order$side)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinStopOrders$get_order_by_client_oid`
+## Method `KucoinStopOrders$get_order_by_client_oid()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1224,7 +1206,7 @@ print(order$stop_price)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinStopOrders$get_order_list`
+## Method `KucoinStopOrders$get_order_list()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

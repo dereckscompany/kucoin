@@ -1,15 +1,29 @@
 # KucoinBase: Abstract Base Class for KuCoin API Clients
 
-KucoinBase: Abstract Base Class for KuCoin API Clients
-
-KucoinBase: Abstract Base Class for KuCoin API Clients
-
-## Details
-
 Provides shared infrastructure for all KuCoin R6 classes, including API
 credential management, sync/async execution mode, timestamp source
 configuration, and a standardised method for calling implementation
 functions.
+
+### Transport
+
+This class is a thin KuCoin specialisation of
+[connectcore::RestClient](https://rdrr.io/pkg/connectcore/man/RestClient.html),
+the shared transport base. Credential storage, the sync/async mode flag,
+the server-time clock source, and the `is_async` / `time_source` active
+bindings all live in `connectcore`; `KucoinBase` supplies the two
+venue-specific seams — how KuCoin authenticates a request (`.sign()`,
+which adds the header-based HMAC signature, encrypted passphrase, and
+`KC-API-*` headers) and how it reports an error (`.parse_envelope()`,
+which honours KuCoin's `code`/`data` envelope).
+
+Unlike most connectors, KuCoin signs the *exact compact JSON request
+body* and must send that same byte sequence on the wire, so the request
+funnel is KuCoin's own
+[`kucoin_build_request()`](https://dereckscompany.github.io/kucoin/reference/kucoin_build_request.md)
+(which signs and sends an identical `req_body_raw` payload) rather than
+the connectcore default funnel; the two overridable seams are driven
+through it.
 
 ### Sync vs Async
 
@@ -34,9 +48,7 @@ mode (`Suggests` dependency).
 The `time_source` parameter controls which clock is used for HMAC
 request signing:
 
-- `"local"` (default): uses
-  [`lubridate::now()`](https://lubridate.tidyverse.org/reference/now.html)
-  from the local machine.
+- `"local"` (default): uses the local UTC clock.
 
 - `"server"`: fetches the KuCoin server time via `GET /api/v1/timestamp`
   before each authenticated request. This is slower (one extra HTTP
@@ -51,51 +63,22 @@ This class is not meant to be instantiated directly. Subclasses (e.g.,
 inherit from it and define their own public methods that delegate to
 `private$.request()` and `private$.paginate()`.
 
-## Fields
+## Super class
 
-All fields are private:
-
-- `.keys`: List; API credentials from
-  [`get_api_keys()`](https://dereckscompany.github.io/kucoin/reference/get_api_keys.md).
-
-- `.base_url`: Character; API base URL from
-  [`get_base_url()`](https://dereckscompany.github.io/kucoin/reference/get_base_url.md).
-
-- `.perform`: Function; either
-  [httr2::req_perform](https://httr2.r-lib.org/reference/req_perform.html)
-  or
-  [httr2::req_perform_promise](https://httr2.r-lib.org/reference/req_perform_promise.html).
-
-- `.is_async`: Logical; whether the instance is in async mode.
-
-- `.time_source`: Character; `"local"` or `"server"`.
-
-- `.get_timestamp_ms`: Function; returns epoch milliseconds for HMAC
-  signing.
-
-## Active bindings
-
-- `is_async`:
-
-  Logical; read-only flag indicating whether this instance operates in
-  async mode.
-
-- `time_source`:
-
-  Character; read-only flag indicating the timestamp source used for
-  HMAC signing (`"local"` or `"server"`).
+[`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
+-\> `KucoinBase`
 
 ## Methods
 
 ### Public methods
 
-- [`KucoinBase$new()`](#method-KucoinBase-new)
+- [`KucoinBase$new()`](#method-KucoinBase-initialize)
 
 - [`KucoinBase$clone()`](#method-KucoinBase-clone)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `KucoinBase$new()`
 
 Initialise a KucoinBase Object
 
@@ -129,10 +112,9 @@ Initialise a KucoinBase Object
 - `time_source`:
 
   Character; clock source for HMAC request signing. `"local"` (default)
-  uses
-  [`lubridate::now()`](https://lubridate.tidyverse.org/reference/now.html).
-  `"server"` fetches the KuCoin server time before each authenticated
-  request, which adds latency but avoids clock-drift issues.
+  uses the local UTC clock. `"server"` fetches the KuCoin server time
+  before each authenticated request, which adds latency but avoids
+  clock-drift issues.
 
 #### Returns
 
@@ -140,7 +122,7 @@ Invisible self.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `KucoinBase$clone()`
 
 The objects of this class are cloneable with this method.
 

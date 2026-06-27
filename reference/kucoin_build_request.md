@@ -16,6 +16,8 @@ kucoin_build_request(
   query = list(),
   body = NULL,
   keys = NULL,
+  sign = NULL,
+  parse_envelope = parse_kucoin_response,
   .perform = httr2::req_perform,
   .parser = identity,
   is_async = FALSE,
@@ -51,6 +53,18 @@ kucoin_build_request(
 
   List or NULL; API credentials. Default `NULL`.
 
+- sign:
+
+  Function or NULL; `function(req, keys, ctx)` returning a signed
+  request, where `ctx` carries `method`, `path`, `body`, and
+  `get_timestamp_ms`. Default `sign_request()` (adapted to that
+  signature).
+
+- parse_envelope:
+
+  Function; `function(resp)` turning a response into data and raising on
+  a KuCoin API error. Default `parse_kucoin_response()`.
+
 - .perform:
 
   Function; the httr2 perform function. Default
@@ -72,8 +86,7 @@ kucoin_build_request(
 - .get_timestamp_ms:
 
   Function or NULL; zero-argument function returning epoch milliseconds
-  for HMAC signing. When `NULL` (default), uses
-  [`lubridate::now()`](https://lubridate.tidyverse.org/reference/now.html).
+  for HMAC signing. When `NULL` (default), uses the local UTC clock.
   Pass a custom function (e.g. one that fetches KuCoin server time) to
   avoid clock-drift issues.
 
@@ -82,6 +95,13 @@ kucoin_build_request(
 Parsed and post-processed API response data, or a promise thereof.
 
 ## Details
+
+It is KuCoin's specialisation of the connectcore request funnel: signing
+and error-envelope detection are injected as the `sign` and
+`parse_envelope` functions (the seams
+[KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+overrides), and the body is sent as the exact raw JSON string that was
+signed, so the HMAC signature matches byte-for-byte.
 
 ### Sync vs Async
 

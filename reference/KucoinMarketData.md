@@ -1,11 +1,5 @@
 # KucoinMarketData: Spot Market Data Retrieval
 
-KucoinMarketData: Spot Market Data Retrieval
-
-KucoinMarketData: Spot Market Data Retrieval
-
-## Details
-
 Provides methods for retrieving market data from KuCoin's Spot trading
 API, including announcements, klines, currencies, symbols, tickers,
 orderbooks, trade history, and 24-hour statistics.
@@ -76,9 +70,11 @@ Data](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-announce
 | get_service_status | GET /api/v1/status                          | No   |
 | get_fiat_prices    | GET /api/v1/prices                          | No   |
 
-## Super class
+## Super classes
 
-[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
+-\>
+[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinMarketData`
 
 ## Methods
@@ -121,11 +117,11 @@ Data](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-announce
 
 Inherited methods
 
-- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 
-### Method `get_announcements()`
+### `KucoinMarketData$get_announcements()`
 
 Get Announcements
 
@@ -256,7 +252,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     market <- KucoinMarketData$new()
 
     # Get latest announcements
@@ -269,11 +264,10 @@ Verified: 2026-05-23
       page_size = 20,
       max_pages = 3
     )
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_currency()`
+### `KucoinMarketData$get_currency()`
 
 Get Currency Details
 
@@ -413,18 +407,16 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     market <- KucoinMarketData$new()
     btc <- market$get_currency("BTC")
     print(btc[, .(chain_name, withdrawal_min_fee, is_deposit_enabled, confirms)])
 
     # Specific chain
     usdt_erc20 <- market$get_currency("USDT", chain = "ERC20")
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_all_currencies()`
+### `KucoinMarketData$get_all_currencies()`
 
 Get All Currencies
 
@@ -513,17 +505,15 @@ as `get_currency()`, one row per currency-chain combination.
 
 #### Examples
 
-    \dontrun{
     market <- KucoinMarketData$new()
     all_currencies <- market$get_all_currencies()
     # Find all ERC20 tokens
     erc20 <- all_currencies[chain_name == "ERC20"]
     print(erc20[, .(currency, withdrawal_min_fee, is_deposit_enabled)])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_symbol()`
+### `KucoinMarketData$get_symbol()`
 
 Get Symbol Details
 
@@ -644,15 +634,13 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     market <- KucoinMarketData$new()
     btc <- market$get_symbol("BTC-USDT")
     print(btc[, .(price_increment, base_increment, base_min_size, enable_trading)])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_all_symbols()`
+### `KucoinMarketData$get_all_symbols()`
 
 Get All Symbols
 
@@ -782,17 +770,15 @@ R:%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22symbol%22:%20%22BTC-USDT%22,%0A%20%2
 
 #### Examples
 
-    \dontrun{
     market <- KucoinMarketData$new()
     all_symbols <- market$get_all_symbols()
     # Filter to active USDT pairs
     usdt_pairs <- all_symbols[quote_currency == "USDT" & enable_trading == TRUE]
     print(usdt_pairs[, .(symbol, base_min_size, price_increment)])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_ticker()`
+### `KucoinMarketData$get_ticker()`
 
 Get Ticker (Level 1 Market Data)
 
@@ -882,16 +868,14 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     market <- KucoinMarketData$new()
     ticker <- market$get_ticker("BTC-USDT")
     spread <- as.numeric(ticker$best_ask) - as.numeric(ticker$best_bid)
     print(paste("Spread:", spread))
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_all_tickers()`
+### `KucoinMarketData$get_all_tickers()`
 
 Get All Tickers
 
@@ -1008,18 +992,16 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     market <- KucoinMarketData$new()
     all_tickers <- market$get_all_tickers()
     # Top 10 by 24h volume
     all_tickers[, vol_value := as.numeric(vol_value)]
     top10 <- all_tickers[order(-vol_value)][1:10]
     print(top10[, .(symbol, vol_value, change_rate)])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_trade_history()`
+### `KucoinMarketData$get_trade_history()`
 
 Get Trade History
 
@@ -1104,18 +1086,16 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     market <- KucoinMarketData$new()
     trades <- market$get_trade_history("BTC-USDT")
     # Buy/sell ratio
     buys <- trades[side == "buy", sum(as.numeric(size))]
     sells <- trades[side == "sell", sum(as.numeric(size))]
     print(paste("Buy/Sell ratio:", round(buys / sells, 3)))
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_part_orderbook()`
+### `KucoinMarketData$get_part_orderbook()`
 
 Get Partial Orderbook
 
@@ -1206,17 +1186,15 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     market <- KucoinMarketData$new()
     ob <- market$get_part_orderbook("BTC-USDT", size = 20)
     best_bid <- ob[side == "bid" & level == 1L]
     best_ask <- ob[side == "ask" & level == 1L]
     print(paste("Best bid:", best_bid$price, "Best ask:", best_ask$price))
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_full_orderbook()`
+### `KucoinMarketData$get_full_orderbook()`
 
 Get Full Orderbook
 
@@ -1303,17 +1281,15 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     market <- KucoinMarketData$new()
     full_ob <- market$get_full_orderbook("BTC-USDT")
     # Total bid depth
     total_bid_volume <- full_ob[side == "bid", sum(size)]
     print(paste("Total bid depth:", total_bid_volume, "BTC"))
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_24hr_stats()`
+### `KucoinMarketData$get_24hr_stats()`
 
 Get 24-Hour Statistics
 
@@ -1425,16 +1401,14 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     market <- KucoinMarketData$new()
     stats <- market$get_24hr_stats("BTC-USDT")
     range <- as.numeric(stats$high) - as.numeric(stats$low)
     print(paste("24h range:", range, "USDT"))
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_market_list()`
+### `KucoinMarketData$get_market_list()`
 
 Get Market List
 
@@ -1490,17 +1464,15 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     market <- KucoinMarketData$new()
     markets <- market$get_market_list()
     print(markets)
     # Use to filter symbols by market
     defi_symbols <- market$get_all_symbols(market = "DeFi")
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_klines()`
+### `KucoinMarketData$get_klines()`
 
 Get Klines (Candlestick Data)
 
@@ -1619,7 +1591,6 @@ Each candle is an array:
 
 #### Examples
 
-    \dontrun{
     market <- KucoinMarketData$new()
 
     # Most recent candles (up to 1500)
@@ -1634,11 +1605,10 @@ Each candle is an array:
       to = lubridate::now()
     )
     print(paste("Fetched", nrow(klines_7d), "candles"))
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_server_time()`
+### `KucoinMarketData$get_server_time()`
 
 Get Server Time
 
@@ -1693,16 +1663,14 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     market <- KucoinMarketData$new()
     st <- market$get_server_time()
     drift <- as.numeric(lubridate::now()) * 1000 - st$server_time
     cat("Clock drift:", round(drift), "ms\n")
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_service_status()`
+### `KucoinMarketData$get_service_status()`
 
 Get Service Status
 
@@ -1760,17 +1728,15 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     market <- KucoinMarketData$new()
     status <- market$get_service_status()
     if (status$status != "open") {
       cat("Exchange not operational:", status$msg, "\n")
     }
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_fiat_prices()`
+### `KucoinMarketData$get_fiat_prices()`
 
 Get Fiat Prices
 
@@ -1840,15 +1806,13 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     market <- KucoinMarketData$new()
     prices <- market$get_fiat_prices(base = "USD", currencies = "BTC,ETH,USDT")
     print(prices)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `KucoinMarketData$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -1883,7 +1847,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_announcements`
+## Method `KucoinMarketData$get_announcements()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1902,7 +1866,7 @@ listings <- market$get_announcements(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_currency`
+## Method `KucoinMarketData$get_currency()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1915,7 +1879,7 @@ usdt_erc20 <- market$get_currency("USDT", chain = "ERC20")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_all_currencies`
+## Method `KucoinMarketData$get_all_currencies()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1927,7 +1891,7 @@ print(erc20[, .(currency, withdrawal_min_fee, is_deposit_enabled)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_symbol`
+## Method `KucoinMarketData$get_symbol()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1937,7 +1901,7 @@ print(btc[, .(price_increment, base_increment, base_min_size, enable_trading)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_all_symbols`
+## Method `KucoinMarketData$get_all_symbols()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1949,7 +1913,7 @@ print(usdt_pairs[, .(symbol, base_min_size, price_increment)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_ticker`
+## Method `KucoinMarketData$get_ticker()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1960,7 +1924,7 @@ print(paste("Spread:", spread))
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_all_tickers`
+## Method `KucoinMarketData$get_all_tickers()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1973,7 +1937,7 @@ print(top10[, .(symbol, vol_value, change_rate)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_trade_history`
+## Method `KucoinMarketData$get_trade_history()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1986,7 +1950,7 @@ print(paste("Buy/Sell ratio:", round(buys / sells, 3)))
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_part_orderbook`
+## Method `KucoinMarketData$get_part_orderbook()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1998,7 +1962,7 @@ print(paste("Best bid:", best_bid$price, "Best ask:", best_ask$price))
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_full_orderbook`
+## Method `KucoinMarketData$get_full_orderbook()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2010,7 +1974,7 @@ print(paste("Total bid depth:", total_bid_volume, "BTC"))
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_24hr_stats`
+## Method `KucoinMarketData$get_24hr_stats()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2021,7 +1985,7 @@ print(paste("24h range:", range, "USDT"))
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_market_list`
+## Method `KucoinMarketData$get_market_list()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2033,7 +1997,7 @@ defi_symbols <- market$get_all_symbols(market = "DeFi")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_klines`
+## Method `KucoinMarketData$get_klines()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2054,7 +2018,7 @@ print(paste("Fetched", nrow(klines_7d), "candles"))
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_server_time`
+## Method `KucoinMarketData$get_server_time()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2065,7 +2029,7 @@ cat("Clock drift:", round(drift), "ms\n")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_service_status`
+## Method `KucoinMarketData$get_service_status()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2077,7 +2041,7 @@ if (status$status != "open") {
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_fiat_prices`
+## Method `KucoinMarketData$get_fiat_prices()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

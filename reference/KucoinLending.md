@@ -1,11 +1,5 @@
 # KucoinLending: Margin Lending Operations
 
-KucoinLending: Margin Lending Operations
-
-KucoinLending: Margin Lending Operations
-
-## Details
-
 Provides methods for lending assets on the KuCoin margin lending market,
 managing purchase (lend) orders, and redeeming lent assets. Inherits
 from
@@ -47,9 +41,11 @@ Market](https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-loan-mark
 | redeem               | POST /api/v3/redeem                    | POST |
 | get_redeem_orders    | GET /api/v3/redeem/orders              | GET  |
 
-## Super class
+## Super classes
 
-[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
+-\>
+[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinLending`
 
 ## Methods
@@ -74,11 +70,11 @@ Market](https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-loan-mark
 
 Inherited methods
 
-- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 
-### Method `get_loan_market()`
+### `KucoinLending$get_loan_market()`
 
 Get Loan Market Information
 
@@ -170,15 +166,13 @@ Empty response yields an empty `data.table`.
 
 #### Examples
 
-    \dontrun{
     lending <- KucoinLending$new()
     market <- lending$get_loan_market(query = list(currency = "USDT"))
     print(market)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_loan_market_rate()`
+### `KucoinLending$get_loan_market_rate()`
 
 Get Loan Market Interest Rate History
 
@@ -241,15 +235,13 @@ Empty response yields an empty `data.table`.
 
 #### Examples
 
-    \dontrun{
     lending <- KucoinLending$new()
     rates <- lending$get_loan_market_rate(currency = "USDT")
     print(rates)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `purchase()`
+### `KucoinLending$purchase()`
 
 Purchase (Lend) Assets
 
@@ -322,15 +314,13 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     lending <- KucoinLending$new()
     order <- lending$purchase(currency = "USDT", size = 1000, interestRate = 0.05)
     print(order$order_no)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `modify_purchase()`
+### `KucoinLending$modify_purchase()`
 
 Modify Purchase Interest Rate
 
@@ -407,18 +397,16 @@ with columns:
 
 #### Examples
 
-    \dontrun{
     lending <- KucoinLending$new()
     lending$modify_purchase(
       currency = "USDT",
       purchaseOrderNo = "abc123",
       interestRate = 0.06
     )
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_purchase_orders()`
+### `KucoinLending$get_purchase_orders()`
 
 Get Purchase Orders
 
@@ -516,15 +504,13 @@ Empty response yields an empty `data.table`.
 
 #### Examples
 
-    \dontrun{
     lending <- KucoinLending$new()
     orders <- lending$get_purchase_orders(query = list(currency = "USDT", status = "DONE"))
     print(orders)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `redeem()`
+### `KucoinLending$redeem()`
 
 Redeem Lent Assets
 
@@ -597,17 +583,15 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     lending <- KucoinLending$new()
     result <- lending$redeem(
       currency = "USDT", size = 500, purchaseOrderNo = "abc123"
     )
     print(result$order_no)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_redeem_orders()`
+### `KucoinLending$get_redeem_orders()`
 
 Get Redeem Orders
 
@@ -702,15 +686,13 @@ Empty response yields an empty `data.table`.
 
 #### Examples
 
-    \dontrun{
     lending <- KucoinLending$new()
     orders <- lending$get_redeem_orders(query = list(currency = "USDT", status = "DONE"))
     print(orders)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `KucoinLending$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -745,7 +727,7 @@ result <- lending$redeem(currency = "USDT", size = 1000,
 
 
 ## ------------------------------------------------
-## Method `KucoinLending$get_loan_market`
+## Method `KucoinLending$get_loan_market()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -755,7 +737,7 @@ print(market)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinLending$get_loan_market_rate`
+## Method `KucoinLending$get_loan_market_rate()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -765,7 +747,7 @@ print(rates)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinLending$purchase`
+## Method `KucoinLending$purchase()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -775,7 +757,7 @@ print(order$order_no)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinLending$modify_purchase`
+## Method `KucoinLending$modify_purchase()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -788,7 +770,7 @@ lending$modify_purchase(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinLending$get_purchase_orders`
+## Method `KucoinLending$get_purchase_orders()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -798,7 +780,7 @@ print(orders)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinLending$redeem`
+## Method `KucoinLending$redeem()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -810,7 +792,7 @@ print(result$order_no)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinLending$get_redeem_orders`
+## Method `KucoinLending$get_redeem_orders()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

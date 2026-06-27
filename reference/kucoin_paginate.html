@@ -9,7 +9,7 @@ the items from each page into a list."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,7 @@ the items from each page into a list."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Paginate a KuCoin API Endpoint</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.0.3/R/helpers_request.R" class="external-link"><code>R/helpers_request.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.1.0/R/helpers_request.R" class="external-link"><code>R/helpers_request.R</code></a></small>
       <div class="d-none name"><code>kucoin_paginate.Rd</code></div>
     </div>
 
@@ -56,6 +56,8 @@ the items from each page into a list.</p>
 <span>  query <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  body <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  keys <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  sign <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  parse_envelope <span class="op">=</span> <span class="va">parse_kucoin_response</span>,</span>
 <span>  .perform <span class="op">=</span> <span class="fu">httr2</span><span class="fu">::</span><span class="va"><a href="https://httr2.r-lib.org/reference/req_perform.html" class="external-link">req_perform</a></span>,</span>
 <span>  .parser <span class="op">=</span> <span class="va">identity</span>,</span>
 <span>  is_async <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -93,6 +95,16 @@ the items from each page into a list.</p>
 
 <dt id="arg-keys">keys<a class="anchor" aria-label="anchor" href="#arg-keys"></a></dt>
 <dd><p>List or NULL; API credentials. Default <code>NULL</code>.</p></dd>
+
+
+<dt id="arg-sign">sign<a class="anchor" aria-label="anchor" href="#arg-sign"></a></dt>
+<dd><p>Function or NULL; the <code>.sign()</code> seam forwarded to
+<code><a href="kucoin_build_request.html">kucoin_build_request()</a></code>. Default <code>NULL</code> (use KuCoin's own signer).</p></dd>
+
+
+<dt id="arg-parse-envelope">parse_envelope<a class="anchor" aria-label="anchor" href="#arg-parse-envelope"></a></dt>
+<dd><p>Function; the <code>.parse_envelope()</code> seam forwarded to
+<code><a href="kucoin_build_request.html">kucoin_build_request()</a></code>. Default <code>parse_kucoin_response()</code>.</p></dd>
 
 
 <dt id="arg--perform">.perform<a class="anchor" aria-label="anchor" href="#arg--perform"></a></dt>

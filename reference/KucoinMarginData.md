@@ -1,11 +1,5 @@
 # KucoinMarginData: Margin Market Information
 
-KucoinMarginData: Margin Market Information
-
-KucoinMarginData: Margin Market Information
-
-## Details
-
 Provides methods for querying margin-specific market data including
 supported symbols, configuration, risk limits, and collateral ratios.
 Inherits from
@@ -47,9 +41,11 @@ Info](https://www.kucoin.com/docs-new/rest/margin-trading/risk-limit/get-margin-
 | get_collateral_ratio        | GET /api/v3/margin/collateralRatio | GET  |
 | get_risk_limit              | GET /api/v3/margin/currencies      | GET  |
 
-## Super class
+## Super classes
 
-[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
+-\>
+[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinMarginData`
 
 ## Methods
@@ -70,11 +66,11 @@ Info](https://www.kucoin.com/docs-new/rest/margin-trading/risk-limit/get-margin-
 
 Inherited methods
 
-- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 
-### Method `get_cross_margin_symbols()`
+### `KucoinMarginData$get_cross_margin_symbols()`
 
 Get Cross Margin Symbols
 
@@ -186,15 +182,13 @@ Empty response yields an empty `data.table`.
 
 #### Examples
 
-    \dontrun{
     margin_data <- KucoinMarginData$new()
     symbols <- margin_data$get_cross_margin_symbols(query = list(symbol = "BTC-USDT"))
     print(symbols)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_isolated_margin_symbols()`
+### `KucoinMarginData$get_isolated_margin_symbols()`
 
 Get Isolated Margin Symbols
 
@@ -280,15 +274,13 @@ Empty response yields an empty `data.table`.
 
 #### Examples
 
-    \dontrun{
     margin_data <- KucoinMarginData$new()
     symbols <- margin_data$get_isolated_margin_symbols()
     print(symbols[trade_enable == TRUE])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_margin_config()`
+### `KucoinMarginData$get_margin_config()`
 
 Get Margin Configuration
 
@@ -352,16 +344,14 @@ Empty `currencyList` yields a zero-row `data.table` with this schema.
 
 #### Examples
 
-    \dontrun{
     margin_data <- KucoinMarginData$new()
     config <- margin_data$get_margin_config()
     cat("Max leverage:", config$max_leverage[1], "\n")
     cat("Supported currencies:", paste(config$currency, collapse = ", "), "\n")
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_collateral_ratio()`
+### `KucoinMarginData$get_collateral_ratio()`
 
 Get Collateral Ratios
 
@@ -439,17 +429,15 @@ Empty response yields a zero-row `data.table` with this schema.
 
 #### Examples
 
-    \dontrun{
     margin_data <- KucoinMarginData$new()
     ratios <- margin_data$get_collateral_ratio(query = list(currencyList = "BTC,ETH"))
     print(ratios)
     # Filter high-ratio tiers
     ratios[as.numeric(collateral_ratio) >= 0.9]
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_risk_limit()`
+### `KucoinMarginData$get_risk_limit()`
 
 Get Margin Risk Limit
 
@@ -546,7 +534,6 @@ Empty response yields an empty `data.table`.
 
 #### Examples
 
-    \dontrun{
     margin_data <- KucoinMarginData$new()
 
     # Cross margin risk limits
@@ -558,11 +545,10 @@ Empty response yields an empty `data.table`.
       isIsolated = TRUE,
       query = list(symbol = "BTC-USDT")
     )
-    }
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `KucoinMarginData$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -593,7 +579,7 @@ print(config)
 
 
 ## ------------------------------------------------
-## Method `KucoinMarginData$get_cross_margin_symbols`
+## Method `KucoinMarginData$get_cross_margin_symbols()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -603,7 +589,7 @@ print(symbols)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarginData$get_isolated_margin_symbols`
+## Method `KucoinMarginData$get_isolated_margin_symbols()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -613,7 +599,7 @@ print(symbols[trade_enable == TRUE])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarginData$get_margin_config`
+## Method `KucoinMarginData$get_margin_config()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -624,7 +610,7 @@ cat("Supported currencies:", paste(config$currency, collapse = ", "), "\n")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarginData$get_collateral_ratio`
+## Method `KucoinMarginData$get_collateral_ratio()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -636,7 +622,7 @@ ratios[as.numeric(collateral_ratio) >= 0.9]
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarginData$get_risk_limit`
+## Method `KucoinMarginData$get_risk_limit()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

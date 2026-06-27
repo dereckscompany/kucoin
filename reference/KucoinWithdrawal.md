@@ -1,11 +1,5 @@
 # KucoinWithdrawal: Withdrawal Management
 
-KucoinWithdrawal: Withdrawal Management
-
-KucoinWithdrawal: Withdrawal Management
-
-## Details
-
 Provides methods for creating, cancelling, and querying cryptocurrency
 withdrawals on KuCoin. Inherits from
 [KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
@@ -61,9 +55,11 @@ Endpoints](https://www.kucoin.com/docs-new/rest/account-info/withdrawals/withdra
 | get_withdrawal_history | GET /api/v1/withdrawals                   | GET    |
 | get_withdrawal_by_id   | GET /api/v1/withdrawals/{withdrawalId}    | GET    |
 
-## Super class
+## Super classes
 
-[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
+-\>
+[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinWithdrawal`
 
 ## Methods
@@ -84,11 +80,11 @@ Endpoints](https://www.kucoin.com/docs-new/rest/account-info/withdrawals/withdra
 
 Inherited methods
 
-- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 
-### Method `add_withdrawal()`
+### `KucoinWithdrawal$add_withdrawal()`
 
 Add Withdrawal
 
@@ -218,7 +214,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     withdrawal <- KucoinWithdrawal$new()
 
     # Withdraw USDT via TRC20
@@ -239,11 +234,10 @@ Verified: 2026-05-23
       withdrawType = "UID",
       isInner = TRUE
     )
-    }
 
 ------------------------------------------------------------------------
 
-### Method `cancel_withdrawal()`
+### `KucoinWithdrawal$cancel_withdrawal()`
 
 Cancel Withdrawal
 
@@ -317,17 +311,15 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     withdrawal <- KucoinWithdrawal$new()
 
     # Cancel a pending withdrawal
     result <- withdrawal$cancel_withdrawal("670deec84d64da0007d7c946")
     print(result$withdrawal_id)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_withdrawal_quotas()`
+### `KucoinWithdrawal$get_withdrawal_quotas()`
 
 Get Withdrawal Quotas
 
@@ -462,7 +454,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     withdrawal <- KucoinWithdrawal$new()
 
     # Check BTC withdrawal quotas
@@ -472,11 +463,10 @@ Verified: 2026-05-23
     # Check USDT quotas on TRC20
     usdt_quotas <- withdrawal$get_withdrawal_quotas(currency = "USDT", chain = "trx")
     print(usdt_quotas$withdraw_min_fee)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_withdrawal_history()`
+### `KucoinWithdrawal$get_withdrawal_history()`
 
 Get Withdrawal History
 
@@ -634,7 +624,6 @@ Returns an empty `data.table` if no withdrawals match the filters.
 
 #### Examples
 
-    \dontrun{
     withdrawal <- KucoinWithdrawal$new()
 
     # Get all successful USDT withdrawals
@@ -651,11 +640,10 @@ Returns an empty `data.table` if no withdrawals match the filters.
       startAt = now_ms - 86400000L,
       endAt = now_ms
     )
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_withdrawal_by_id()`
+### `KucoinWithdrawal$get_withdrawal_by_id()`
 
 Get Withdrawal by ID
 
@@ -776,7 +764,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     withdrawal <- KucoinWithdrawal$new()
 
     # Get withdrawal details
@@ -787,11 +774,10 @@ Verified: 2026-05-23
     if (detail$cancel_type == "CANCELABLE") {
       withdrawal$cancel_withdrawal(detail$id)
     }
-    }
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `KucoinWithdrawal$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -826,7 +812,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinWithdrawal$add_withdrawal`
+## Method `KucoinWithdrawal$add_withdrawal()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -853,7 +839,7 @@ result <- withdrawal$add_withdrawal(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinWithdrawal$cancel_withdrawal`
+## Method `KucoinWithdrawal$cancel_withdrawal()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -865,7 +851,7 @@ print(result$withdrawal_id)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinWithdrawal$get_withdrawal_quotas`
+## Method `KucoinWithdrawal$get_withdrawal_quotas()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -881,7 +867,7 @@ print(usdt_quotas$withdraw_min_fee)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinWithdrawal$get_withdrawal_history`
+## Method `KucoinWithdrawal$get_withdrawal_history()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -904,7 +890,7 @@ recent <- withdrawal$get_withdrawal_history(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinWithdrawal$get_withdrawal_by_id`
+## Method `KucoinWithdrawal$get_withdrawal_by_id()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

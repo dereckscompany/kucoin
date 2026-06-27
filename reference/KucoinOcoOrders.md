@@ -1,11 +1,5 @@
 # KucoinOcoOrders: OCO Order Management
 
-KucoinOcoOrders: OCO Order Management
-
-KucoinOcoOrders: OCO Order Management
-
-## Details
-
 Provides methods for managing OCO (One-Cancels-Other) orders on KuCoin
 Spot. Inherits from
 [KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
@@ -60,9 +54,11 @@ Orders](https://www.kucoin.com/docs-new/rest/spot-trading/orders/add-oco-order)
 | get_order_detail_by_id | GET /api/v3/oco/order/details/{orderId} | GET |
 | get_order_list | GET /api/v3/oco/orders | GET |
 
-## Super class
+## Super classes
 
-[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
+-\>
+[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinOcoOrders`
 
 ## Methods
@@ -89,11 +85,11 @@ Orders](https://www.kucoin.com/docs-new/rest/spot-trading/orders/add-oco-order)
 
 Inherited methods
 
-- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 
-### Method `add_order()`
+### `KucoinOcoOrders$add_order()`
 
 Place an OCO Order
 
@@ -227,7 +223,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     oco <- KucoinOcoOrders$new()
 
     # Sell OCO: take-profit at 110k, stop-loss at 90k
@@ -245,11 +240,10 @@ Verified: 2026-05-23
       stopPrice = "3500", limitPrice = "3550",
       clientOid = "my-bot-oco-001"
     )
-    }
 
 ------------------------------------------------------------------------
 
-### Method `cancel_order_by_id()`
+### `KucoinOcoOrders$cancel_order_by_id()`
 
 Cancel OCO Order by Order ID
 
@@ -330,17 +324,15 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     oco <- KucoinOcoOrders$new()
 
     # Cancel a specific OCO order
     result <- oco$cancel_order_by_id("674c40d38b4b2f00073deef3")
     print(result$cancelled_order_id)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `cancel_order_by_client_oid()`
+### `KucoinOcoOrders$cancel_order_by_client_oid()`
 
 Cancel OCO Order by Client OID
 
@@ -425,17 +417,15 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     oco <- KucoinOcoOrders$new()
 
     # Cancel by client-assigned ID
     result <- oco$cancel_order_by_client_oid("my-bot-oco-001")
     print(result$cancelled_order_id)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `cancel_all()`
+### `KucoinOcoOrders$cancel_all()`
 
 Cancel All OCO Orders
 
@@ -526,7 +516,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     oco <- KucoinOcoOrders$new()
 
     # Cancel all OCO orders for BTC-USDT
@@ -535,11 +524,10 @@ Verified: 2026-05-23
 
     # Cancel all OCO orders (no filter)
     result <- oco$cancel_all()
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_order_by_id()`
+### `KucoinOcoOrders$get_order_by_id()`
 
 Get OCO Order by Order ID
 
@@ -630,18 +618,16 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     oco <- KucoinOcoOrders$new()
 
     # Get OCO order summary
     order <- oco$get_order_by_id("674c40d38b4b2f00073deef3")
     print(order$status)
     print(order$symbol)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_order_by_client_oid()`
+### `KucoinOcoOrders$get_order_by_client_oid()`
 
 Get OCO Order by Client OID
 
@@ -732,18 +718,16 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     oco <- KucoinOcoOrders$new()
 
     # Retrieve by client OID
     order <- oco$get_order_by_client_oid("my-bot-oco-001")
     print(order$order_id)
     print(order$status)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_order_detail_by_id()`
+### `KucoinOcoOrders$get_order_detail_by_id()`
 
 Get OCO Order Details by Order ID
 
@@ -872,7 +856,6 @@ with a `sub_order_` prefix. Typical sub-order columns:
 
 #### Examples
 
-    \dontrun{
     oco <- KucoinOcoOrders$new()
 
     # Get full OCO order details with sub-orders. The `orders` array
@@ -880,11 +863,10 @@ with a `sub_order_` prefix. Typical sub-order columns:
     # with `sub_order_*` columns alongside the parent OCO fields.
     details <- oco$get_order_detail_by_id("674c40d38b4b2f00073deef3")
     details[, .(order_id, status, sub_order_id, sub_order_side, sub_order_price)]
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_order_list()`
+### `KucoinOcoOrders$get_order_list()`
 
 Get OCO Order List
 
@@ -1007,7 +989,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     oco <- KucoinOcoOrders$new()
 
     # Get all OCO orders
@@ -1027,11 +1008,10 @@ Verified: 2026-05-23
       startAt = as.numeric(lubridate::now() - 86400) * 1000,
       endAt = as.numeric(lubridate::now()) * 1000
     ))
-    }
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `KucoinOcoOrders$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -1066,7 +1046,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinOcoOrders$add_order`
+## Method `KucoinOcoOrders$add_order()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1090,7 +1070,7 @@ order <- oco$add_order(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinOcoOrders$cancel_order_by_id`
+## Method `KucoinOcoOrders$cancel_order_by_id()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1102,7 +1082,7 @@ print(result$cancelled_order_id)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinOcoOrders$cancel_order_by_client_oid`
+## Method `KucoinOcoOrders$cancel_order_by_client_oid()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1114,7 +1094,7 @@ print(result$cancelled_order_id)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinOcoOrders$cancel_all`
+## Method `KucoinOcoOrders$cancel_all()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1129,7 +1109,7 @@ result <- oco$cancel_all()
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinOcoOrders$get_order_by_id`
+## Method `KucoinOcoOrders$get_order_by_id()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1142,7 +1122,7 @@ print(order$symbol)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinOcoOrders$get_order_by_client_oid`
+## Method `KucoinOcoOrders$get_order_by_client_oid()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1155,7 +1135,7 @@ print(order$status)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinOcoOrders$get_order_detail_by_id`
+## Method `KucoinOcoOrders$get_order_detail_by_id()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1169,7 +1149,7 @@ details[, .(order_id, status, sub_order_id, sub_order_side, sub_order_price)]
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinOcoOrders$get_order_list`
+## Method `KucoinOcoOrders$get_order_list()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

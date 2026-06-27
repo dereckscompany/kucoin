@@ -1,11 +1,5 @@
 # KucoinAccount: Account and Funding Management
 
-KucoinAccount: Account and Funding Management
-
-KucoinAccount: Account and Funding Management
-
-## Details
-
 Provides methods for querying account information, balances, and ledger
 history on KuCoin. Inherits from
 [KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
@@ -71,9 +65,11 @@ Funding](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-a
 | get_base_fee_rate           | GET /api/v1/base-fee             | GET  |
 | get_fee_rate                | GET /api/v1/trade-fees           | GET  |
 
-## Super class
+## Super classes
 
-[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
+-\>
+[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinAccount`
 
 ## Methods
@@ -106,11 +102,11 @@ Funding](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-a
 
 Inherited methods
 
-- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 
-### Method `get_summary()`
+### `KucoinAccount$get_summary()`
 
 Get Account Summary
 
@@ -209,16 +205,14 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     account <- KucoinAccount$new()
     summary <- account$get_summary()
     cat("VIP Level:", summary$level, "\\n")
     cat("Sub-accounts:", summary$sub_quantity, "/", summary$max_sub_quantity, "\\n")
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_apikey_info()`
+### `KucoinAccount$get_apikey_info()`
 
 Get API Key Info
 
@@ -310,17 +304,15 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     account <- KucoinAccount$new()
     key_info <- account$get_apikey_info()
     cat("Permissions:", key_info$permission, "\\n")
     cat("IP Whitelist:", key_info$ip_whitelist, "\\n")
     cat("Is Master:", key_info$is_master, "\\n")
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_spot_account_type()`
+### `KucoinAccount$get_spot_account_type()`
 
 Get Spot Account Types
 
@@ -388,17 +380,15 @@ trading before 2024.
 
 #### Examples
 
-    \dontrun{
     account <- KucoinAccount$new()
     is_hf <- account$get_spot_account_type()
     if (is_hf) {
       cat("HF trading account is active.\n")
     }
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_spot_accounts()`
+### `KucoinAccount$get_spot_accounts()`
 
 Get Spot Account List
 
@@ -506,7 +496,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     account <- KucoinAccount$new()
 
     # Get all accounts
@@ -516,11 +505,10 @@ Verified: 2026-05-23
     # Get only USDT trade accounts
     usdt <- account$get_spot_accounts(query = list(currency = "USDT", type = "trade"))
     cat("USDT available:", usdt$available, "\\n")
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_spot_account_detail()`
+### `KucoinAccount$get_spot_account_detail()`
 
 Get Spot Account Detail
 
@@ -604,7 +592,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     account <- KucoinAccount$new()
 
     # First get all accounts to find the ID
@@ -614,11 +601,10 @@ Verified: 2026-05-23
     # Then query the specific account
     detail <- account$get_spot_account_detail(account_id)
     cat("Balance:", detail$balance, "Available:", detail$available, "\\n")
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_cross_margin_account()`
+### `KucoinAccount$get_cross_margin_account()`
 
 Get Cross Margin Account
 
@@ -761,17 +747,15 @@ Returns an empty `data.table` if no margin accounts exist.
 
 #### Examples
 
-    \dontrun{
     account <- KucoinAccount$new()
     margin <- account$get_cross_margin_account(query = list(quoteCurrency = "USDT"))
     print(margin)
     # Check debt ratio
     cat("Liabilities:", margin[currency == "USDT", liability], "\\n")
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_isolated_margin_account()`
+### `KucoinAccount$get_isolated_margin_account()`
 
 Get Isolated Margin Account
 
@@ -956,17 +940,15 @@ Returns an empty `data.table` if no isolated-margin pairs exist.
 
 #### Examples
 
-    \dontrun{
     account <- KucoinAccount$new()
     isolated <- account$get_isolated_margin_account(
       query = list(symbol = "BTC-USDT", quoteCurrency = "USDT")
     )
     print(isolated)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_spot_ledger()`
+### `KucoinAccount$get_spot_ledger()`
 
 Get Spot Account Ledger
 
@@ -1116,7 +1098,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     account <- KucoinAccount$new()
 
     # Get recent USDT trade ledger entries
@@ -1133,11 +1114,10 @@ Verified: 2026-05-23
       query = list(startAt = now_ms - 86400000, endAt = now_ms)
     )
     print(ledger_24h[, .(currency, amount, direction, created_at)])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_hf_ledger()`
+### `KucoinAccount$get_hf_ledger()`
 
 Get HF Trading Account Ledger
 
@@ -1284,15 +1264,13 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     account <- KucoinAccount$new()
     hf <- account$get_hf_ledger(currency = "USDT", bizType = "TRADE_EXCHANGE")
     print(hf[, .(currency, amount, fee, direction, created_at)])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_base_fee_rate()`
+### `KucoinAccount$get_base_fee_rate()`
 
 Get Base Fee Rate
 
@@ -1358,15 +1336,13 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     account <- KucoinAccount$new()
     fees <- account$get_base_fee_rate()
     cat("Taker:", fees$taker_fee_rate, "Maker:", fees$maker_fee_rate, "\n")
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_fee_rate()`
+### `KucoinAccount$get_fee_rate()`
 
 Get Actual Fee Rate
 
@@ -1446,15 +1422,13 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     account <- KucoinAccount$new()
     fees <- account$get_fee_rate("BTC-USDT,ETH-USDT")
     print(fees[, .(symbol, taker_fee_rate, maker_fee_rate)])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `KucoinAccount$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -1489,7 +1463,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_summary`
+## Method `KucoinAccount$get_summary()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1500,7 +1474,7 @@ cat("Sub-accounts:", summary$sub_quantity, "/", summary$max_sub_quantity, "\\n")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_apikey_info`
+## Method `KucoinAccount$get_apikey_info()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1512,7 +1486,7 @@ cat("Is Master:", key_info$is_master, "\\n")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_spot_account_type`
+## Method `KucoinAccount$get_spot_account_type()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1524,7 +1498,7 @@ if (is_hf) {
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_spot_accounts`
+## Method `KucoinAccount$get_spot_accounts()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1540,7 +1514,7 @@ cat("USDT available:", usdt$available, "\\n")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_spot_account_detail`
+## Method `KucoinAccount$get_spot_account_detail()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1556,7 +1530,7 @@ cat("Balance:", detail$balance, "Available:", detail$available, "\\n")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_cross_margin_account`
+## Method `KucoinAccount$get_cross_margin_account()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1568,7 +1542,7 @@ cat("Liabilities:", margin[currency == "USDT", liability], "\\n")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_isolated_margin_account`
+## Method `KucoinAccount$get_isolated_margin_account()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1580,7 +1554,7 @@ print(isolated)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_spot_ledger`
+## Method `KucoinAccount$get_spot_ledger()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1603,7 +1577,7 @@ print(ledger_24h[, .(currency, amount, direction, created_at)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_hf_ledger`
+## Method `KucoinAccount$get_hf_ledger()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1613,7 +1587,7 @@ print(hf[, .(currency, amount, fee, direction, created_at)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_base_fee_rate`
+## Method `KucoinAccount$get_base_fee_rate()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1623,7 +1597,7 @@ cat("Taker:", fees$taker_fee_rate, "Maker:", fees$maker_fee_rate, "\n")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_fee_rate`
+## Method `KucoinAccount$get_fee_rate()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

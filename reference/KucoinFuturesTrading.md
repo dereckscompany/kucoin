@@ -1,11 +1,5 @@
 # KucoinFuturesTrading: Futures Order Management
 
-KucoinFuturesTrading: Futures Order Management
-
-KucoinFuturesTrading: Futures Order Management
-
-## Details
-
 Provides methods for placing, cancelling, and querying futures orders on
 KuCoin. Supports limit and market orders, stop orders, batch operations,
 and Dead Connection Protection (DCP). Inherits from
@@ -64,16 +58,18 @@ Orders](https://www.kucoin.com/docs-new/rest/futures-trading/orders/add-order)
 | set_dcp | POST /api/ua/v1/dcp/set (spot host, tradeType=FUTURES) | POST |
 | get_dcp | GET /api/ua/v1/dcp/query (spot host, tradeType=FUTURES) | GET |
 
-## Super class
+## Super classes
 
-[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
+-\>
+[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinFuturesTrading`
 
 ## Methods
 
 ### Public methods
 
-- [`KucoinFuturesTrading$new()`](#method-KucoinFuturesTrading-new)
+- [`KucoinFuturesTrading$new()`](#method-KucoinFuturesTrading-initialize)
 
 - [`KucoinFuturesTrading$add_order()`](#method-KucoinFuturesTrading-add_order)
 
@@ -113,7 +109,7 @@ Orders](https://www.kucoin.com/docs-new/rest/futures-trading/orders/add-order)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `KucoinFuturesTrading$new()`
 
 Create a new KucoinFuturesTrading instance.
 
@@ -152,7 +148,7 @@ Invisible self.
 
 ------------------------------------------------------------------------
 
-### Method `add_order()`
+### `KucoinFuturesTrading$add_order()`
 
 Place a Futures Order
 
@@ -324,7 +320,6 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
 #### Examples
 
-    \dontrun{
     ft <- KucoinFuturesTrading$new()
 
     # Place a limit buy order
@@ -349,11 +344,10 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
       size = 2,
       reduceOnly = TRUE
     )
-    }
 
 ------------------------------------------------------------------------
 
-### Method `add_order_test()`
+### `KucoinFuturesTrading$add_order_test()`
 
 Place a Test Futures Order (Dry Run)
 
@@ -524,7 +518,6 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
 #### Examples
 
-    \dontrun{
     ft <- KucoinFuturesTrading$new()
 
     # Validate a limit order without placing it
@@ -538,11 +531,10 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
       price = "50000"
     )
     print(result)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `add_order_batch()`
+### `KucoinFuturesTrading$add_order_batch()`
 
 Batch Place Futures Orders
 
@@ -686,7 +678,6 @@ A `data.table` (or `promise<data.table>` if constructed with
 
 #### Examples
 
-    \dontrun{
     ft <- KucoinFuturesTrading$new()
 
     orders <- list(
@@ -697,11 +688,10 @@ A `data.table` (or `promise<data.table>` if constructed with
     )
     results <- ft$add_order_batch(orders)
     print(results[, .(order_id, client_oid, code)])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `cancel_order_by_id()`
+### `KucoinFuturesTrading$cancel_order_by_id()`
 
 Cancel Order by Order ID
 
@@ -775,15 +765,13 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     ft <- KucoinFuturesTrading$new()
     result <- ft$cancel_order_by_id("234125150956625920")
     print(result$cancelled_order_id)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `cancel_order_by_client_oid()`
+### `KucoinFuturesTrading$cancel_order_by_client_oid()`
 
 Cancel Order by Client Order ID
 
@@ -860,15 +848,13 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
 #### Examples
 
-    \dontrun{
     ft <- KucoinFuturesTrading$new()
     result <- ft$cancel_order_by_client_oid("my-order-001", symbol = "XBTUSDTM")
     print(result$client_oid)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `cancel_all()`
+### `KucoinFuturesTrading$cancel_all()`
 
 Cancel All Orders
 
@@ -950,7 +936,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     ft <- KucoinFuturesTrading$new()
 
     # Cancel all open orders for XBTUSDTM
@@ -959,11 +944,10 @@ Verified: 2026-05-23
 
     # Cancel all open orders across all symbols
     result <- ft$cancel_all()
-    }
 
 ------------------------------------------------------------------------
 
-### Method `cancel_all_stop_orders()`
+### `KucoinFuturesTrading$cancel_all_stop_orders()`
 
 Cancel All Stop Orders
 
@@ -1042,7 +1026,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     ft <- KucoinFuturesTrading$new()
 
     # Cancel all stop orders for XBTUSDTM
@@ -1051,11 +1034,10 @@ Verified: 2026-05-23
 
     # Cancel all stop orders across all symbols
     result <- ft$cancel_all_stop_orders()
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_order_by_id()`
+### `KucoinFuturesTrading$get_order_by_id()`
 
 Get Order by Order ID
 
@@ -1192,15 +1174,13 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
 #### Examples
 
-    \dontrun{
     ft <- KucoinFuturesTrading$new()
     order <- ft$get_order_by_id("234125150956625920")
     print(order[, .(id, symbol, side, price, size, status)])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_order_by_client_oid()`
+### `KucoinFuturesTrading$get_order_by_client_oid()`
 
 Get Order by Client Order ID
 
@@ -1317,15 +1297,13 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
 #### Examples
 
-    \dontrun{
     ft <- KucoinFuturesTrading$new()
     order <- ft$get_order_by_client_oid("my-order-001")
     print(order[, .(id, symbol, side, price, size, status)])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_order_list()`
+### `KucoinFuturesTrading$get_order_list()`
 
 Get Order List
 
@@ -1451,7 +1429,6 @@ Returns an empty `data.table` if no orders match the filters.
 
 #### Examples
 
-    \dontrun{
     ft <- KucoinFuturesTrading$new()
 
     # Get all active orders for XBTUSDTM
@@ -1465,11 +1442,10 @@ Returns an empty `data.table` if no orders match the filters.
       startAt = now_ms - 7 * 86400000L,
       endAt = now_ms
     ))
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_recent_closed_orders()`
+### `KucoinFuturesTrading$get_recent_closed_orders()`
 
 Get Recent Closed Orders
 
@@ -1587,7 +1563,6 @@ Returns an empty `data.table` if no recently closed orders exist.
 
 #### Examples
 
-    \dontrun{
     ft <- KucoinFuturesTrading$new()
 
     # Get recently closed orders for XBTUSDTM
@@ -1596,11 +1571,10 @@ Returns an empty `data.table` if no recently closed orders exist.
 
     # Get all recently closed orders
     all_recent <- ft$get_recent_closed_orders()
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_stop_orders()`
+### `KucoinFuturesTrading$get_stop_orders()`
 
 Get Stop Orders List
 
@@ -1706,7 +1680,6 @@ Returns an empty `data.table` if no untriggered stop orders exist.
 
 #### Examples
 
-    \dontrun{
     ft <- KucoinFuturesTrading$new()
 
     # Get all untriggered stop orders for XBTUSDTM
@@ -1715,11 +1688,10 @@ Returns an empty `data.table` if no untriggered stop orders exist.
 
     # Get all untriggered stop orders
     all_stops <- ft$get_stop_orders()
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_fills()`
+### `KucoinFuturesTrading$get_fills()`
 
 Get Trade History (Fills)
 
@@ -1878,7 +1850,6 @@ Returns an empty `data.table` if no fills match the filters.
 
 #### Examples
 
-    \dontrun{
     ft <- KucoinFuturesTrading$new()
 
     # Get all fills for XBTUSDTM
@@ -1887,11 +1858,10 @@ Returns an empty `data.table` if no fills match the filters.
 
     # Get fills for a specific order
     order_fills <- ft$get_fills(query = list(orderId = "234125150956625920"))
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_recent_fills()`
+### `KucoinFuturesTrading$get_recent_fills()`
 
 Get Recent Fills
 
@@ -1992,7 +1962,6 @@ Returns an empty `data.table` if no recent fills exist.
 
 #### Examples
 
-    \dontrun{
     ft <- KucoinFuturesTrading$new()
 
     # Get recent fills for XBTUSDTM
@@ -2001,11 +1970,10 @@ Returns an empty `data.table` if no recent fills exist.
 
     # Get all recent fills
     all_recent <- ft$get_recent_fills()
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_open_order_value()`
+### `KucoinFuturesTrading$get_open_order_value()`
 
 Get Open Order Value Statistics
 
@@ -2093,15 +2061,13 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
 #### Examples
 
-    \dontrun{
     ft <- KucoinFuturesTrading$new()
     stats <- ft$get_open_order_value(symbol = "XBTUSDTM")
     print(stats[, .(open_order_buy_qty, open_order_sell_qty, settle_currency)])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `set_dcp()`
+### `KucoinFuturesTrading$set_dcp()`
 
 Set Dead Connection Protection (DCP)
 
@@ -2212,7 +2178,6 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
 #### Examples
 
-    \dontrun{
     ft <- KucoinFuturesTrading$new()
 
     # Enable DCP with 60-second timeout for XBTUSDTM
@@ -2221,11 +2186,10 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
     # Disable DCP
     ft$set_dcp(timeout = -1)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_dcp()`
+### `KucoinFuturesTrading$get_dcp()`
 
 Get Dead Connection Protection (DCP) Settings
 
@@ -2313,7 +2277,6 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
 #### Examples
 
-    \dontrun{
     ft <- KucoinFuturesTrading$new()
 
     # Check DCP settings for XBTUSDTM
@@ -2322,11 +2285,10 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
     # Check global DCP settings
     dcp_global <- ft$get_dcp()
-    }
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `KucoinFuturesTrading$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -2373,7 +2335,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$add_order`
+## Method `KucoinFuturesTrading$add_order()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2404,7 +2366,7 @@ result <- ft$add_order(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$add_order_test`
+## Method `KucoinFuturesTrading$add_order_test()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2424,7 +2386,7 @@ print(result)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$add_order_batch`
+## Method `KucoinFuturesTrading$add_order_batch()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2441,7 +2403,7 @@ print(results[, .(order_id, client_oid, code)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$cancel_order_by_id`
+## Method `KucoinFuturesTrading$cancel_order_by_id()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2451,7 +2413,7 @@ print(result$cancelled_order_id)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$cancel_order_by_client_oid`
+## Method `KucoinFuturesTrading$cancel_order_by_client_oid()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2461,7 +2423,7 @@ print(result$client_oid)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$cancel_all`
+## Method `KucoinFuturesTrading$cancel_all()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2476,7 +2438,7 @@ result <- ft$cancel_all()
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$cancel_all_stop_orders`
+## Method `KucoinFuturesTrading$cancel_all_stop_orders()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2491,7 +2453,7 @@ result <- ft$cancel_all_stop_orders()
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_order_by_id`
+## Method `KucoinFuturesTrading$get_order_by_id()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2501,7 +2463,7 @@ print(order[, .(id, symbol, side, price, size, status)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_order_by_client_oid`
+## Method `KucoinFuturesTrading$get_order_by_client_oid()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2511,7 +2473,7 @@ print(order[, .(id, symbol, side, price, size, status)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_order_list`
+## Method `KucoinFuturesTrading$get_order_list()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2531,7 +2493,7 @@ done <- ft$get_order_list(query = list(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_recent_closed_orders`
+## Method `KucoinFuturesTrading$get_recent_closed_orders()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2546,7 +2508,7 @@ all_recent <- ft$get_recent_closed_orders()
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_stop_orders`
+## Method `KucoinFuturesTrading$get_stop_orders()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2561,7 +2523,7 @@ all_stops <- ft$get_stop_orders()
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_fills`
+## Method `KucoinFuturesTrading$get_fills()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2576,7 +2538,7 @@ order_fills <- ft$get_fills(query = list(orderId = "234125150956625920"))
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_recent_fills`
+## Method `KucoinFuturesTrading$get_recent_fills()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2591,7 +2553,7 @@ all_recent <- ft$get_recent_fills()
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_open_order_value`
+## Method `KucoinFuturesTrading$get_open_order_value()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2601,7 +2563,7 @@ print(stats[, .(open_order_buy_qty, open_order_sell_qty, settle_currency)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$set_dcp`
+## Method `KucoinFuturesTrading$set_dcp()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2616,7 +2578,7 @@ ft$set_dcp(timeout = -1)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_dcp`
+## Method `KucoinFuturesTrading$get_dcp()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

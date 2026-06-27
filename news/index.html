@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,9 +36,25 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.0.3/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.1.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="4.1.0" id="kucoin-410">kucoin 4.1.0<a class="anchor" aria-label="anchor" href="#kucoin-410"></a></h2>
+<div class="section level3">
+<h3 id="refactor-4-1-0">REFACTOR<a class="anchor" aria-label="anchor" href="#refactor-4-1-0"></a></h3>
+<ul><li>
+<strong>Migrated the transport layer onto <code>connectcore</code>, the shared connector base.</strong> <code>KucoinBase</code> now inherits <a href="https://github.com/dereckscompany/connectcore" class="external-link"><code>connectcore::RestClient</code></a> instead of carrying its own copy of the credential-storage / sync-async / server-time / active-binding plumbing. KuCoin plugs into the base through the two documented seams — <code>.sign()</code> (the header-based HMAC scheme: <code>KC-API-KEY</code> / <code>KC-API-SIGN</code> / <code>KC-API-TIMESTAMP</code> / <code>KC-API-PASSPHRASE</code> / <code>KC-API-KEY-VERSION</code>, signing the timestamp + method + URL-encoded path + raw body) and <code>.parse_envelope()</code> (KuCoin’s <code>code</code> / <code>data</code> envelope). The public API is unchanged: every <code>Kucoin*</code> class, method, and the exported <code><a href="../reference/kucoin_build_request.html">kucoin_build_request()</a></code> / <code><a href="../reference/kucoin_paginate.html">kucoin_paginate()</a></code> helpers keep their exact signatures and behaviour.</li>
+<li>
+<strong>The generic transport helpers now come from <code>connectcore</code> instead of being duplicated here.</strong> The package-private <code>then_or_now()</code> and <code>fetch_server_time_ms()</code>, plus the generic JSON→data.table toolkit (<code>to_snake_case()</code>, <code>as_dt_row()</code>, <code>as_dt_list()</code>), are imported from <code>connectcore</code> (their KuCoin copies were byte-for-byte equivalents). KuCoin-specific parsers (<code>parse_orderbook()</code>, <code>parse_klines()</code>, <code>flatten_pages()</code>, the futures kline parser) and the helpers whose precise behaviour the test-suite pins (<code>ms_to_datetime()</code> / <code>ns_to_datetime()</code> shape contracts, <code>coerce_cols()</code> dedup, the <code>;</code>-collapse warning id) stay in the package.</li>
+<li>
+<strong>Why KuCoin keeps its own request funnel.</strong> Unlike most venues, KuCoin signs the <em>exact compact JSON request body</em> and must transmit that same byte sequence on the wire, so <code><a href="../reference/kucoin_build_request.html">kucoin_build_request()</a></code> continues to send the body via <code>req_body_raw()</code> (the signed string verbatim) rather than <code>connectcore</code>’s default funnel, which pretty-prints the body and would invalidate the signature. <code><a href="../reference/kucoin_build_request.html">kucoin_build_request()</a></code> / <code><a href="../reference/kucoin_paginate.html">kucoin_paginate()</a></code> gained optional <code>sign</code> / <code>parse_envelope</code> parameters (defaulting to KuCoin’s own) so the seams drive the funnel; existing callers are unaffected.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="dependencies-4-1-0">DEPENDENCIES<a class="anchor" aria-label="anchor" href="#dependencies-4-1-0"></a></h3>
+<ul><li>Added <code>connectcore</code> to <code>Imports</code> (pinned to <code>dereckscompany/connectcore@v0.0.1</code> via <code>Remotes</code> and <code>renv.lock</code>).</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="4.0.3" id="kucoin-403">kucoin 4.0.3<a class="anchor" aria-label="anchor" href="#kucoin-403"></a></h2>
 <div class="section level3">

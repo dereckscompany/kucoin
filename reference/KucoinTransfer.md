@@ -1,11 +1,5 @@
 # KucoinTransfer: Internal Transfer Management
 
-KucoinTransfer: Internal Transfer Management
-
-KucoinTransfer: Internal Transfer Management
-
-## Details
-
 Provides methods for transferring funds between KuCoin accounts (main,
 trade, margin, etc.) and between master and sub-accounts. Inherits from
 [KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
@@ -74,9 +68,11 @@ KuCoin uses separate accounts for different purposes:
 
 - `"SUB_TO_PARENT"`: From sub-account to master.
 
-## Super class
+## Super classes
 
-[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
+-\>
+[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinTransfer`
 
 ## Methods
@@ -91,11 +87,11 @@ KuCoin uses separate accounts for different purposes:
 
 Inherited methods
 
-- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 
-### Method `add_transfer()`
+### `KucoinTransfer$add_transfer()`
 
 Add Transfer (Universal)
 
@@ -232,7 +228,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     transfer <- KucoinTransfer$new()
 
     # Move USDT from main to trade account for spot trading
@@ -256,11 +251,10 @@ Verified: 2026-05-23
       toAccountType = "MAIN",
       toUserId = "sub-user-id-here"
     )
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_transferable()`
+### `KucoinTransfer$get_transferable()`
 
 Get Transferable Balance
 
@@ -357,7 +351,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     transfer <- KucoinTransfer$new()
 
     # Check transferable USDT in main account
@@ -367,11 +360,10 @@ Verified: 2026-05-23
     # Check transferable BTC in trade account
     trade_bal <- transfer$get_transferable(currency = "BTC", type = "TRADE")
     print(trade_bal$transferable)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `KucoinTransfer$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -406,7 +398,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinTransfer$add_transfer`
+## Method `KucoinTransfer$add_transfer()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -436,7 +428,7 @@ result <- transfer$add_transfer(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTransfer$get_transferable`
+## Method `KucoinTransfer$get_transferable()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

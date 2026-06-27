@@ -13,6 +13,8 @@ kucoin_paginate(
   query = list(),
   body = NULL,
   keys = NULL,
+  sign = NULL,
+  parse_envelope = parse_kucoin_response,
   .perform = httr2::req_perform,
   .parser = identity,
   is_async = FALSE,
@@ -50,6 +52,18 @@ kucoin_paginate(
 - keys:
 
   List or NULL; API credentials. Default `NULL`.
+
+- sign:
+
+  Function or NULL; the `.sign()` seam forwarded to
+  [`kucoin_build_request()`](https://dereckscompany.github.io/kucoin/reference/kucoin_build_request.md).
+  Default `NULL` (use KuCoin's own signer).
+
+- parse_envelope:
+
+  Function; the `.parse_envelope()` seam forwarded to
+  [`kucoin_build_request()`](https://dereckscompany.github.io/kucoin/reference/kucoin_build_request.md).
+  Default `parse_kucoin_response()`.
 
 - .perform:
 

@@ -1,11 +1,5 @@
 # KucoinTrading: Spot Order Management
 
-KucoinTrading: Spot Order Management
-
-KucoinTrading: Spot Order Management
-
-## Details
-
 Provides methods for placing, cancelling, and querying spot orders on
 KuCoin. All order operations use the HF (High-Frequency) trading
 endpoints. Inherits from
@@ -96,9 +90,11 @@ match each other:
 
 - `"FOK"` (Fill Or Kill): Fill entirely or cancel completely.
 
-## Super class
+## Super classes
 
-[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
+-\>
+[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinTrading`
 
 ## Methods
@@ -151,11 +147,11 @@ match each other:
 
 Inherited methods
 
-- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 
-### Method `add_order()`
+### `KucoinTrading$add_order()`
 
 Place an Order
 
@@ -334,7 +330,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     trading <- KucoinTrading$new()
 
     # Limit buy order
@@ -349,11 +344,10 @@ Verified: 2026-05-23
       type = "market", symbol = "BTC-USDT", side = "sell",
       size = 0.00001
     )
-    }
 
 ------------------------------------------------------------------------
 
-### Method `add_order_test()`
+### `KucoinTrading$add_order_test()`
 
 Test Order Placement
 
@@ -515,18 +509,16 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     trading <- KucoinTrading$new()
     test <- trading$add_order_test(
       type = "limit", symbol = "BTC-USDT", side = "buy",
       price = 50000, size = 0.00001
     )
     print(test)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `add_order_batch()`
+### `KucoinTrading$add_order_batch()`
 
 Place Batch Orders
 
@@ -641,7 +633,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     trading <- KucoinTrading$new()
     orders <- trading$add_order_batch(list(
       list(type = "limit", symbol = "BTC-USDT", side = "buy",
@@ -651,11 +642,10 @@ Verified: 2026-05-23
     ))
     print(orders[success == TRUE, .(order_id, client_oid)])
     print(orders[success == FALSE, .(fail_msg)])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `cancel_order_by_id()`
+### `KucoinTrading$cancel_order_by_id()`
 
 Cancel Order by Order ID
 
@@ -714,15 +704,13 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     trading <- KucoinTrading$new()
     result <- trading$cancel_order_by_id("671124f9365ccb00073debd4", "BTC-USDT")
     print(result$order_id)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `cancel_order_by_client_oid()`
+### `KucoinTrading$cancel_order_by_client_oid()`
 
 Cancel Order by Client OID
 
@@ -781,15 +769,13 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     trading <- KucoinTrading$new()
     result <- trading$cancel_order_by_client_oid("myClientOid123", "BTC-USDT")
     print(result$client_oid)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `cancel_partial_order()`
+### `KucoinTrading$cancel_partial_order()`
 
 Cancel Partial Order
 
@@ -859,16 +845,14 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     trading <- KucoinTrading$new()
     result <- trading$cancel_partial_order(
       "671124f9365ccb00073debd4", "BTC-USDT", cancelSize = 0.00001
     )
-    }
 
 ------------------------------------------------------------------------
 
-### Method `cancel_all_by_symbol()`
+### `KucoinTrading$cancel_all_by_symbol()`
 
 Cancel All Orders by Symbol
 
@@ -928,14 +912,12 @@ response.
 
 #### Examples
 
-    \dontrun{
     trading <- KucoinTrading$new()
     trading$cancel_all_by_symbol("BTC-USDT")
-    }
 
 ------------------------------------------------------------------------
 
-### Method `cancel_all()`
+### `KucoinTrading$cancel_all()`
 
 Cancel All Orders
 
@@ -996,15 +978,13 @@ Returns an empty `data.table` if no orders were open.
 
 #### Examples
 
-    \dontrun{
     trading <- KucoinTrading$new()
     result <- trading$cancel_all()
     print(result[status == "failed"])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_order_by_id()`
+### `KucoinTrading$get_order_by_id()`
 
 Get Order by Order ID
 
@@ -1096,15 +1076,13 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     trading <- KucoinTrading$new()
     order <- trading$get_order_by_id("671124f9365ccb00073debd4", "BTC-USDT")
     print(order)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_order_by_client_oid()`
+### `KucoinTrading$get_order_by_client_oid()`
 
 Get Order by Client OID
 
@@ -1195,15 +1173,13 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     trading <- KucoinTrading$new()
     order <- trading$get_order_by_client_oid("myClientOid123", "BTC-USDT")
     print(order)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_fills()`
+### `KucoinTrading$get_fills()`
 
 Get Trade Fills
 
@@ -1372,16 +1348,14 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     trading <- KucoinTrading$new()
     fills <- trading$get_fills("BTC-USDT")
     # Get all fills across symbols
     all_fills <- trading$get_fills()
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_symbols_with_open_orders()`
+### `KucoinTrading$get_symbols_with_open_orders()`
 
 Get Symbols with Open Orders
 
@@ -1438,15 +1412,13 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     trading <- KucoinTrading$new()
     active <- trading$get_symbols_with_open_orders()
     print(active$symbols)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_open_orders()`
+### `KucoinTrading$get_open_orders()`
 
 Get Open Orders
 
@@ -1545,14 +1517,12 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     trading <- KucoinTrading$new()
     open_orders <- trading$get_open_orders("BTC-USDT")
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_closed_orders()`
+### `KucoinTrading$get_closed_orders()`
 
 Get Closed Orders
 
@@ -1688,16 +1658,14 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     trading <- KucoinTrading$new()
     closed <- trading$get_closed_orders("BTC-USDT", limit = 20)
     # Get all closed orders across symbols
     all_closed <- trading$get_closed_orders()
-    }
 
 ------------------------------------------------------------------------
 
-### Method `add_order_sync()`
+### `KucoinTrading$add_order_sync()`
 
 Place an Order (Synchronous Return)
 
@@ -1877,18 +1845,16 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     trading <- KucoinTrading$new()
     order <- trading$add_order_sync(
       type = "limit", symbol = "BTC-USDT", side = "buy",
       price = 50000, size = 0.00001
     )
     cat("Status:", order$status, "Filled:", order$deal_size, "\n")
-    }
 
 ------------------------------------------------------------------------
 
-### Method `add_order_batch_sync()`
+### `KucoinTrading$add_order_batch_sync()`
 
 Place Batch Orders (Synchronous Return)
 
@@ -2011,7 +1977,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     trading <- KucoinTrading$new()
     orders <- trading$add_order_batch_sync(list(
       list(type = "limit", symbol = "BTC-USDT", side = "buy",
@@ -2020,11 +1985,10 @@ Verified: 2026-05-23
            price = "2000", size = "0.001", clientOid = "order2")
     ))
     print(orders[success == TRUE, .(order_id, status, deal_size)])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `cancel_order_by_id_sync()`
+### `KucoinTrading$cancel_order_by_id_sync()`
 
 Cancel Order by Order ID (Synchronous Return)
 
@@ -2108,15 +2072,13 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     trading <- KucoinTrading$new()
     result <- trading$cancel_order_by_id_sync("671128ee365ccb0007534d45", "BTC-USDT")
     cat("Status:", result$status, "Cancelled:", result$canceled_size, "\n")
-    }
 
 ------------------------------------------------------------------------
 
-### Method `cancel_order_by_client_oid_sync()`
+### `KucoinTrading$cancel_order_by_client_oid_sync()`
 
 Cancel Order by Client OID (Synchronous Return)
 
@@ -2192,15 +2154,13 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     trading <- KucoinTrading$new()
     result <- trading$cancel_order_by_client_oid_sync("myClientOid123", "BTC-USDT")
     cat("Status:", result$status, "\n")
-    }
 
 ------------------------------------------------------------------------
 
-### Method `modify_order()`
+### `KucoinTrading$modify_order()`
 
 Modify Order
 
@@ -2305,7 +2265,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     trading <- KucoinTrading$new()
     result <- trading$modify_order(
       symbol = "BTC-USDT",
@@ -2313,11 +2272,10 @@ Verified: 2026-05-23
       newPrice = "51000"
     )
     cat("New order ID:", result$new_order_id, "\n")
-    }
 
 ------------------------------------------------------------------------
 
-### Method `set_dcp()`
+### `KucoinTrading$set_dcp()`
 
 Set DCP (Dead Connection Protection)
 
@@ -2402,7 +2360,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     trading <- KucoinTrading$new()
     # Enable DCP with 30-second timeout for BTC-USDT
     result <- trading$set_dcp(timeout = 30, symbols = "BTC-USDT")
@@ -2410,11 +2367,10 @@ Verified: 2026-05-23
 
     # Disable DCP
     trading$set_dcp(timeout = -1)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_dcp()`
+### `KucoinTrading$get_dcp()`
 
 Get DCP Settings
 
@@ -2475,18 +2431,16 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     trading <- KucoinTrading$new()
     dcp <- trading$get_dcp()
     if (nrow(dcp) > 0) {
       cat("DCP timeout:", dcp$timeout, "seconds\n")
       cat("Symbols:", dcp$symbols, "\n")
     }
-    }
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `KucoinTrading$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -2525,7 +2479,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinTrading$add_order`
+## Method `KucoinTrading$add_order()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2546,7 +2500,7 @@ order <- trading$add_order(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$add_order_test`
+## Method `KucoinTrading$add_order_test()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2559,7 +2513,7 @@ print(test)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$add_order_batch`
+## Method `KucoinTrading$add_order_batch()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2575,7 +2529,7 @@ print(orders[success == FALSE, .(fail_msg)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$cancel_order_by_id`
+## Method `KucoinTrading$cancel_order_by_id()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2585,7 +2539,7 @@ print(result$order_id)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$cancel_order_by_client_oid`
+## Method `KucoinTrading$cancel_order_by_client_oid()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2595,7 +2549,7 @@ print(result$client_oid)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$cancel_partial_order`
+## Method `KucoinTrading$cancel_partial_order()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2606,7 +2560,7 @@ result <- trading$cancel_partial_order(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$cancel_all_by_symbol`
+## Method `KucoinTrading$cancel_all_by_symbol()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2615,7 +2569,7 @@ trading$cancel_all_by_symbol("BTC-USDT")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$cancel_all`
+## Method `KucoinTrading$cancel_all()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2625,7 +2579,7 @@ print(result[status == "failed"])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$get_order_by_id`
+## Method `KucoinTrading$get_order_by_id()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2635,7 +2589,7 @@ print(order)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$get_order_by_client_oid`
+## Method `KucoinTrading$get_order_by_client_oid()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2645,7 +2599,7 @@ print(order)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$get_fills`
+## Method `KucoinTrading$get_fills()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2656,7 +2610,7 @@ all_fills <- trading$get_fills()
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$get_symbols_with_open_orders`
+## Method `KucoinTrading$get_symbols_with_open_orders()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2666,7 +2620,7 @@ print(active$symbols)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$get_open_orders`
+## Method `KucoinTrading$get_open_orders()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2675,7 +2629,7 @@ open_orders <- trading$get_open_orders("BTC-USDT")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$get_closed_orders`
+## Method `KucoinTrading$get_closed_orders()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2686,7 +2640,7 @@ all_closed <- trading$get_closed_orders()
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$add_order_sync`
+## Method `KucoinTrading$add_order_sync()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2699,7 +2653,7 @@ cat("Status:", order$status, "Filled:", order$deal_size, "\n")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$add_order_batch_sync`
+## Method `KucoinTrading$add_order_batch_sync()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2714,7 +2668,7 @@ print(orders[success == TRUE, .(order_id, status, deal_size)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$cancel_order_by_id_sync`
+## Method `KucoinTrading$cancel_order_by_id_sync()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2724,7 +2678,7 @@ cat("Status:", result$status, "Cancelled:", result$canceled_size, "\n")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$cancel_order_by_client_oid_sync`
+## Method `KucoinTrading$cancel_order_by_client_oid_sync()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2734,7 +2688,7 @@ cat("Status:", result$status, "\n")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$modify_order`
+## Method `KucoinTrading$modify_order()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2748,7 +2702,7 @@ cat("New order ID:", result$new_order_id, "\n")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$set_dcp`
+## Method `KucoinTrading$set_dcp()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2762,7 +2716,7 @@ trading$set_dcp(timeout = -1)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$get_dcp`
+## Method `KucoinTrading$get_dcp()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

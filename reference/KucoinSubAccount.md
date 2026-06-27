@@ -1,11 +1,5 @@
 # KucoinSubAccount: Sub-Account Management
 
-KucoinSubAccount: Sub-Account Management
-
-KucoinSubAccount: Sub-Account Management
-
-## Details
-
 Provides methods for managing sub-accounts under a KuCoin master
 account. Inherits from
 [KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
@@ -59,9 +53,11 @@ Management](https://www.kucoin.com/docs-new/rest/account-info/sub-account/add-su
 | get_detail_balance    | GET /api/v1/sub-accounts/{subUserId} | GET  |
 | get_all_spot_balances | GET /api/v2/sub-accounts             | GET  |
 
-## Super class
+## Super classes
 
-[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
+-\>
+[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinSubAccount`
 
 ## Methods
@@ -80,11 +76,11 @@ Management](https://www.kucoin.com/docs-new/rest/account-info/sub-account/add-su
 
 Inherited methods
 
-- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 
-### Method `add_sub_account()`
+### `KucoinSubAccount$add_sub_account()`
 
 Add Sub-Account
 
@@ -191,7 +187,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     sub <- KucoinSubAccount$new()
 
     # Create a Spot sub-account
@@ -210,11 +205,10 @@ Verified: 2026-05-23
       subName = "futuresbot1",
       access = "Futures"
     )
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_sub_account_list()`
+### `KucoinSubAccount$get_sub_account_list()`
 
 Get Sub-Account List Summary
 
@@ -339,7 +333,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     sub <- KucoinSubAccount$new()
 
     # Fetch all sub-accounts
@@ -352,11 +345,10 @@ Verified: 2026-05-23
 
     # Filter for Spot sub-accounts
     spot_subs <- all_subs[access == "Spot"]
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_detail_balance()`
+### `KucoinSubAccount$get_detail_balance()`
 
 Get Sub-Account Detail Balance
 
@@ -510,7 +502,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     sub <- KucoinSubAccount$new()
 
     # Get balances for a specific sub-account
@@ -526,11 +517,10 @@ Verified: 2026-05-23
     # Filter for trade account balances only
     trade_bal <- balances[account_type == "trade"]
     print(trade_bal[, .(currency, available, holds)])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_all_spot_balances()`
+### `KucoinSubAccount$get_all_spot_balances()`
 
 Get Spot Sub-Account List (V2)
 
@@ -690,7 +680,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     sub <- KucoinSubAccount$new()
 
     # Fetch all sub-account Spot balances
@@ -707,11 +696,10 @@ Verified: 2026-05-23
 
     # Group by sub-account
     all_balances[, .(n_currencies = .N), by = .(sub_name, account_type)]
-    }
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `KucoinSubAccount$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -746,7 +734,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinSubAccount$add_sub_account`
+## Method `KucoinSubAccount$add_sub_account()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -771,7 +759,7 @@ result <- sub$add_sub_account(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinSubAccount$get_sub_account_list`
+## Method `KucoinSubAccount$get_sub_account_list()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -790,7 +778,7 @@ spot_subs <- all_subs[access == "Spot"]
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinSubAccount$get_detail_balance`
+## Method `KucoinSubAccount$get_detail_balance()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -812,7 +800,7 @@ print(trade_bal[, .(currency, available, holds)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinSubAccount$get_all_spot_balances`
+## Method `KucoinSubAccount$get_all_spot_balances()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

@@ -1,11 +1,5 @@
 # KucoinDeposit: Deposit Management
 
-KucoinDeposit: Deposit Management
-
-KucoinDeposit: Deposit Management
-
-## Details
-
 Provides methods for managing deposit addresses and retrieving deposit
 history on KuCoin. Inherits from
 [KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
@@ -44,9 +38,11 @@ Endpoints](https://www.kucoin.com/docs-new/rest/account-info/deposit/add-deposit
 | get_deposit_addresses | GET /api/v3/deposit-addresses       | GET  |
 | get_deposit_history   | GET /api/v1/deposits                | GET  |
 
-## Super class
+## Super classes
 
-[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
+-\>
+[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinDeposit`
 
 ## Methods
@@ -63,11 +59,11 @@ Endpoints](https://www.kucoin.com/docs-new/rest/account-info/deposit/add-deposit
 
 Inherited methods
 
-- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 
-### Method `add_deposit_address()`
+### `KucoinDeposit$add_deposit_address()`
 
 Add Deposit Address
 
@@ -190,7 +186,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     deposit <- KucoinDeposit$new()
 
     # Create a BTC deposit address on the default chain
@@ -204,11 +199,10 @@ Verified: 2026-05-23
       to = "trade"
     )
     print(usdt_addr[, .(address, chain, to)])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_deposit_addresses()`
+### `KucoinDeposit$get_deposit_addresses()`
 
 Get Deposit Addresses
 
@@ -331,7 +325,6 @@ Returns an empty `data.table` if no addresses exist for the currency.
 
 #### Examples
 
-    \dontrun{
     deposit <- KucoinDeposit$new()
 
     # Get all BTC deposit addresses across all chains
@@ -344,11 +337,10 @@ Returns an empty `data.table` if no addresses exist for the currency.
       chain = "ERC20"
     )
     print(usdt_erc20$address)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_deposit_history()`
+### `KucoinDeposit$get_deposit_history()`
 
 Get Deposit History
 
@@ -520,7 +512,6 @@ Returns an empty `data.table` if no deposits match the filters.
 
 #### Examples
 
-    \dontrun{
     deposit <- KucoinDeposit$new()
 
     # Get all successful BTC deposits
@@ -539,11 +530,10 @@ Returns an empty `data.table` if no deposits match the filters.
       max_pages = 5
     )
     print(recent[, .(currency, amount, wallet_tx_id, created_at)])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `KucoinDeposit$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -578,7 +568,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinDeposit$add_deposit_address`
+## Method `KucoinDeposit$add_deposit_address()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -598,7 +588,7 @@ print(usdt_addr[, .(address, chain, to)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinDeposit$get_deposit_addresses`
+## Method `KucoinDeposit$get_deposit_addresses()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -617,7 +607,7 @@ print(usdt_erc20$address)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinDeposit$get_deposit_history`
+## Method `KucoinDeposit$get_deposit_history()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

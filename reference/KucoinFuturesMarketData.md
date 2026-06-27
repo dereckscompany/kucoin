@@ -1,11 +1,5 @@
 # KucoinFuturesMarketData: Futures Market Data Retrieval
 
-KucoinFuturesMarketData: Futures Market Data Retrieval
-
-KucoinFuturesMarketData: Futures Market Data Retrieval
-
-## Details
-
 Provides methods for querying KuCoin Futures public market data,
 including contract details, tickers, orderbooks, trade history, klines,
 mark prices, and funding rates. Inherits from
@@ -58,16 +52,18 @@ Data](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-all-s
 | get_server_time     | GET /api/v1/timestamp                     | GET  |
 | get_service_status  | GET /api/v1/status                        | GET  |
 
-## Super class
+## Super classes
 
-[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
+-\>
+[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinFuturesMarketData`
 
 ## Methods
 
 ### Public methods
 
-- [`KucoinFuturesMarketData$new()`](#method-KucoinFuturesMarketData-new)
+- [`KucoinFuturesMarketData$new()`](#method-KucoinFuturesMarketData-initialize)
 
 - [`KucoinFuturesMarketData$get_contract()`](#method-KucoinFuturesMarketData-get_contract)
 
@@ -99,7 +95,7 @@ Data](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-all-s
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `KucoinFuturesMarketData$new()`
 
 Create a new KucoinFuturesMarketData instance.
 
@@ -138,7 +134,7 @@ Invisible self.
 
 ------------------------------------------------------------------------
 
-### Method `get_contract()`
+### `KucoinFuturesMarketData$get_contract()`
 
 Get Contract Details
 
@@ -308,15 +304,13 @@ symbol. Key columns:
 
 #### Examples
 
-    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
     contract <- futures_market$get_contract("XBTUSDTM")
     print(contract[, .(symbol, lot_size, tick_size, max_leverage)])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_all_contracts()`
+### `KucoinFuturesMarketData$get_all_contracts()`
 
 Get All Active Contracts
 
@@ -417,15 +411,13 @@ are returned.
 
 #### Examples
 
-    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
     contracts <- futures_market$get_all_contracts()
     print(contracts[, .(symbol, status, max_leverage, mark_price)])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_ticker()`
+### `KucoinFuturesMarketData$get_ticker()`
 
 Get Futures Ticker
 
@@ -523,15 +515,13 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
 #### Examples
 
-    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
     ticker <- futures_market$get_ticker("XBTUSDTM")
     print(ticker[, .(symbol, price, best_bid_price, best_ask_price, ts)])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_all_tickers()`
+### `KucoinFuturesMarketData$get_all_tickers()`
 
 Get All Futures Tickers
 
@@ -615,15 +605,13 @@ Returns an empty `data.table` if no tickers are returned.
 
 #### Examples
 
-    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
     all_tickers <- futures_market$get_all_tickers()
     print(all_tickers[, .(symbol, price, best_bid_price, best_ask_price)])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_part_orderbook()`
+### `KucoinFuturesMarketData$get_part_orderbook()`
 
 Get Partial Orderbook
 
@@ -723,15 +711,13 @@ A `data.table` (or `promise<data.table>` if constructed with
 
 #### Examples
 
-    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
     ob <- futures_market$get_part_orderbook("XBTUSDTM", size = 20)
     print(ob[side == "bid"][order(level)][1:5])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_full_orderbook()`
+### `KucoinFuturesMarketData$get_full_orderbook()`
 
 Get Full Orderbook
 
@@ -830,15 +816,13 @@ A `data.table` (or `promise<data.table>` if constructed with
 
 #### Examples
 
-    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
     full_ob <- futures_market$get_full_orderbook("XBTUSDTM")
     print(full_ob[, .N, by = side])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_trade_history()`
+### `KucoinFuturesMarketData$get_trade_history()`
 
 Get Recent Trade History
 
@@ -940,15 +924,13 @@ when KuCoin reports no recent trades. Columns:
 
 #### Examples
 
-    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
     trades <- futures_market$get_trade_history("XBTUSDTM")
     print(trades[, .(price, size, side, ts)])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_klines()`
+### `KucoinFuturesMarketData$get_klines()`
 
 Get Klines (Candlestick Data)
 
@@ -1075,7 +1057,6 @@ A `data.table` (or `promise<data.table>` if constructed with
 
 #### Examples
 
-    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
 
     # Single call: last 200 hourly candles
@@ -1097,11 +1078,10 @@ A `data.table` (or `promise<data.table>` if constructed with
       sleep = 0.3
     )
     print(nrow(all_klines))
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_mark_price()`
+### `KucoinFuturesMarketData$get_mark_price()`
 
 Get Mark Price
 
@@ -1182,15 +1162,13 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
 #### Examples
 
-    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
     mark <- futures_market$get_mark_price("XBTUSDTM")
     print(mark[, .(symbol, value, index_price, time_point)])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_funding_rate()`
+### `KucoinFuturesMarketData$get_funding_rate()`
 
 Get Current Funding Rate
 
@@ -1277,15 +1255,13 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
 #### Examples
 
-    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
     rate <- futures_market$get_funding_rate("XBTUSDTM")
     print(rate[, .(symbol, value, predicted_value, funding_time)])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_funding_history()`
+### `KucoinFuturesMarketData$get_funding_history()`
 
 Get Public Funding Rate History
 
@@ -1388,7 +1364,6 @@ A `data.table` (or `promise<data.table>` if constructed with
 
 #### Examples
 
-    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
     history <- futures_market$get_funding_history(
       symbol = "XBTUSDTM",
@@ -1396,11 +1371,10 @@ A `data.table` (or `promise<data.table>` if constructed with
       to = as.POSIXct("2024-10-26", tz = "UTC")
     )
     print(history[, .(symbol, funding_rate, timepoint)])
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_server_time()`
+### `KucoinFuturesMarketData$get_server_time()`
 
 Get Server Time
 
@@ -1461,15 +1435,13 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
 #### Examples
 
-    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
     server_time <- futures_market$get_server_time()
     print(server_time$server_time)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_service_status()`
+### `KucoinFuturesMarketData$get_service_status()`
 
 Get Service Status
 
@@ -1535,15 +1507,13 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
 #### Examples
 
-    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
     status <- futures_market$get_service_status()
     if (status$status == "open") message("Exchange is operational")
-    }
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `KucoinFuturesMarketData$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -1578,7 +1548,7 @@ rate <- futures_market$get_funding_rate("XBTUSDTM")
 
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_contract`
+## Method `KucoinFuturesMarketData$get_contract()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1588,7 +1558,7 @@ print(contract[, .(symbol, lot_size, tick_size, max_leverage)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_all_contracts`
+## Method `KucoinFuturesMarketData$get_all_contracts()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1598,7 +1568,7 @@ print(contracts[, .(symbol, status, max_leverage, mark_price)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_ticker`
+## Method `KucoinFuturesMarketData$get_ticker()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1608,7 +1578,7 @@ print(ticker[, .(symbol, price, best_bid_price, best_ask_price, ts)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_all_tickers`
+## Method `KucoinFuturesMarketData$get_all_tickers()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1618,7 +1588,7 @@ print(all_tickers[, .(symbol, price, best_bid_price, best_ask_price)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_part_orderbook`
+## Method `KucoinFuturesMarketData$get_part_orderbook()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1628,7 +1598,7 @@ print(ob[side == "bid"][order(level)][1:5])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_full_orderbook`
+## Method `KucoinFuturesMarketData$get_full_orderbook()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1638,7 +1608,7 @@ print(full_ob[, .N, by = side])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_trade_history`
+## Method `KucoinFuturesMarketData$get_trade_history()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1648,7 +1618,7 @@ print(trades[, .(price, size, side, ts)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_klines`
+## Method `KucoinFuturesMarketData$get_klines()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1676,7 +1646,7 @@ print(nrow(all_klines))
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_mark_price`
+## Method `KucoinFuturesMarketData$get_mark_price()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1686,7 +1656,7 @@ print(mark[, .(symbol, value, index_price, time_point)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_funding_rate`
+## Method `KucoinFuturesMarketData$get_funding_rate()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1696,7 +1666,7 @@ print(rate[, .(symbol, value, predicted_value, funding_time)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_funding_history`
+## Method `KucoinFuturesMarketData$get_funding_history()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1710,7 +1680,7 @@ print(history[, .(symbol, funding_rate, timepoint)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_server_time`
+## Method `KucoinFuturesMarketData$get_server_time()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1720,7 +1690,7 @@ print(server_time$server_time)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_service_status`
+## Method `KucoinFuturesMarketData$get_service_status()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

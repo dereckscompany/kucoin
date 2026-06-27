@@ -1,11 +1,5 @@
 # KucoinMarginTrading: Margin Order and Debit Management
 
-KucoinMarginTrading: Margin Order and Debit Management
-
-KucoinMarginTrading: Margin Order and Debit Management
-
-## Details
-
 Provides intent-based methods for margin trading on KuCoin. Instead of
 raw `side = "buy"` / `side = "sell"` parameters (which are ambiguous in
 a margin context), this class exposes four clear actions:
@@ -71,9 +65,11 @@ Trading](https://www.kucoin.com/docs-new/rest/margin-trading/orders/add-order)
 | get_borrow_rate | GET /api/v3/margin/borrowRate | GET |
 | modify_leverage | POST /api/v3/position/update-user-leverage | POST |
 
-## Super class
+## Super classes
 
-[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
+-\>
+[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinMarginTrading`
 
 ## Methods
@@ -106,11 +102,11 @@ Trading](https://www.kucoin.com/docs-new/rest/margin-trading/orders/add-order)
 
 Inherited methods
 
-- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 
-### Method `open_short()`
+### `KucoinMarginTrading$open_short()`
 
 Open a Short Position (Borrow and Sell)
 
@@ -287,7 +283,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     margin <- KucoinMarginTrading$new()
 
     # Market short: sell 0.001 BTC you don't own
@@ -301,11 +296,10 @@ Verified: 2026-05-23
 
     # Dry run (test without placing)
     margin$open_short(symbol = "BTC-USDT", size = 0.001, dry_run = TRUE)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `close_short()`
+### `KucoinMarginTrading$close_short()`
 
 Close a Short Position (Buy Back and Repay)
 
@@ -466,15 +460,13 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     margin <- KucoinMarginTrading$new()
     order <- margin$close_short(symbol = "BTC-USDT", size = 0.001)
     print(order)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `open_long()`
+### `KucoinMarginTrading$open_long()`
 
 Open a Leveraged Long Position (Borrow and Buy)
 
@@ -642,7 +634,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     margin <- KucoinMarginTrading$new()
 
     # Market long: buy 0.001 BTC with borrowed USDT
@@ -653,11 +644,10 @@ Verified: 2026-05-23
       symbol = "BTC-USDT", type = "limit",
       price = 50000, size = 0.001
     )
-    }
 
 ------------------------------------------------------------------------
 
-### Method `close_long()`
+### `KucoinMarginTrading$close_long()`
 
 Close a Leveraged Long Position (Sell and Repay)
 
@@ -816,15 +806,13 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     margin <- KucoinMarginTrading$new()
     order <- margin$close_long(symbol = "BTC-USDT", size = 0.001)
     print(order)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `borrow()`
+### `KucoinMarginTrading$borrow()`
 
 Borrow Assets for Margin Trading
 
@@ -933,7 +921,6 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     margin <- KucoinMarginTrading$new()
 
     # Cross margin borrow
@@ -945,11 +932,10 @@ Verified: 2026-05-23
       currency = "BTC", size = 0.01,
       isIsolated = TRUE, symbol = "BTC-USDT"
     )
-    }
 
 ------------------------------------------------------------------------
 
-### Method `repay()`
+### `KucoinMarginTrading$repay()`
 
 Repay Borrowed Assets
 
@@ -1025,15 +1011,13 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     margin <- KucoinMarginTrading$new()
     result <- margin$repay(currency = "USDT", size = 100)
     print(result)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_borrow_history()`
+### `KucoinMarginTrading$get_borrow_history()`
 
 Get Borrow History
 
@@ -1133,15 +1117,13 @@ Empty response yields an empty `data.table`.
 
 #### Examples
 
-    \dontrun{
     margin <- KucoinMarginTrading$new()
     history <- margin$get_borrow_history(query = list(currency = "USDT"))
     print(history)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_repay_history()`
+### `KucoinMarginTrading$get_repay_history()`
 
 Get Repay History
 
@@ -1225,15 +1207,13 @@ Empty response yields an empty `data.table`.
 
 #### Examples
 
-    \dontrun{
     margin <- KucoinMarginTrading$new()
     history <- margin$get_repay_history(query = list(currency = "USDT"))
     print(history)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_interest_history()`
+### `KucoinMarginTrading$get_interest_history()`
 
 Get Interest History
 
@@ -1322,15 +1302,13 @@ Empty response yields an empty `data.table`.
 
 #### Examples
 
-    \dontrun{
     margin <- KucoinMarginTrading$new()
     interest <- margin$get_interest_history(query = list(currency = "USDT"))
     print(interest)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `get_borrow_rate()`
+### `KucoinMarginTrading$get_borrow_rate()`
 
 Get Borrow Interest Rate
 
@@ -1403,15 +1381,13 @@ Verified: 2026-05-23
 
 #### Examples
 
-    \dontrun{
     margin <- KucoinMarginTrading$new()
     rates <- margin$get_borrow_rate(query = list(currency = "BTC,USDT,ETH"))
     print(rates)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `modify_leverage()`
+### `KucoinMarginTrading$modify_leverage()`
 
 Modify Leverage
 
@@ -1475,14 +1451,12 @@ with columns:
 
 #### Examples
 
-    \dontrun{
     margin <- KucoinMarginTrading$new()
     margin$modify_leverage(leverage = 5)
-    }
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `KucoinMarginTrading$clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -1531,7 +1505,7 @@ print(rates)
 
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$open_short`
+## Method `KucoinMarginTrading$open_short()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1551,7 +1525,7 @@ margin$open_short(symbol = "BTC-USDT", size = 0.001, dry_run = TRUE)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$close_short`
+## Method `KucoinMarginTrading$close_short()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1561,7 +1535,7 @@ print(order)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$open_long`
+## Method `KucoinMarginTrading$open_long()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1578,7 +1552,7 @@ order <- margin$open_long(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$close_long`
+## Method `KucoinMarginTrading$close_long()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1588,7 +1562,7 @@ print(order)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$borrow`
+## Method `KucoinMarginTrading$borrow()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1606,7 +1580,7 @@ loan <- margin$borrow(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$repay`
+## Method `KucoinMarginTrading$repay()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1616,7 +1590,7 @@ print(result)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$get_borrow_history`
+## Method `KucoinMarginTrading$get_borrow_history()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1626,7 +1600,7 @@ print(history)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$get_repay_history`
+## Method `KucoinMarginTrading$get_repay_history()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1636,7 +1610,7 @@ print(history)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$get_interest_history`
+## Method `KucoinMarginTrading$get_interest_history()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1646,7 +1620,7 @@ print(interest)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$get_borrow_rate`
+## Method `KucoinMarginTrading$get_borrow_rate()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1656,7 +1630,7 @@ print(rates)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$modify_leverage`
+## Method `KucoinMarginTrading$modify_leverage()`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

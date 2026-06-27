@@ -1,11 +1,5 @@
 # KucoinFuturesAccount: Futures Account and Position Management
 
-KucoinFuturesAccount: Futures Account and Position Management
-
-KucoinFuturesAccount: Futures Account and Position Management
-
-## Details
-
 Provides methods for querying futures account details, managing
 positions, configuring margin mode and leverage, and tracking funding
 fee history. Inherits from
@@ -36,16 +30,18 @@ Positions](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-po
 | get_risk_limit            | GET /api/v1/contracts/risk-limit/{symbol}   | GET  |
 | get_funding_history       | GET /api/v1/funding-history                 | GET  |
 
-## Super class
+## Super classes
 
-[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
+-\>
+[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinFuturesAccount`
 
 ## Methods
 
 ### Public methods
 
-- [`KucoinFuturesAccount$new()`](#method-KucoinFuturesAccount-new)
+- [`KucoinFuturesAccount$new()`](#method-KucoinFuturesAccount-initialize)
 
 - [`KucoinFuturesAccount$get_account_overview()`](#method-KucoinFuturesAccount-get_account_overview)
 
@@ -79,7 +75,7 @@ Positions](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-po
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `KucoinFuturesAccount$new()`
 
 Create a new KucoinFuturesAccount instance.
 
@@ -118,7 +114,7 @@ Invisible self.
 
 ------------------------------------------------------------------------
 
-### Method `get_account_overview()`
+### `KucoinFuturesAccount$get_account_overview()`
 
 Get Account Overview
 
@@ -202,7 +198,7 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
 ------------------------------------------------------------------------
 
-### Method `get_position()`
+### `KucoinFuturesAccount$get_position()`
 
 Get Position Details
 
@@ -352,7 +348,7 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
 ------------------------------------------------------------------------
 
-### Method `get_positions()`
+### `KucoinFuturesAccount$get_positions()`
 
 Get All Positions
 
@@ -453,7 +449,7 @@ positions.
 
 ------------------------------------------------------------------------
 
-### Method `get_positions_history()`
+### `KucoinFuturesAccount$get_positions_history()`
 
 Get Position History
 
@@ -582,7 +578,7 @@ empty `data.table` when no history records match. Columns:
 
 ------------------------------------------------------------------------
 
-### Method `get_margin_mode()`
+### `KucoinFuturesAccount$get_margin_mode()`
 
 Get Margin Mode
 
@@ -647,7 +643,7 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
 ------------------------------------------------------------------------
 
-### Method `set_margin_mode()`
+### `KucoinFuturesAccount$set_margin_mode()`
 
 Set Margin Mode
 
@@ -726,7 +722,7 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
 ------------------------------------------------------------------------
 
-### Method `get_cross_margin_leverage()`
+### `KucoinFuturesAccount$get_cross_margin_leverage()`
 
 Get Cross Margin Leverage
 
@@ -791,7 +787,7 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
 ------------------------------------------------------------------------
 
-### Method `set_cross_margin_leverage()`
+### `KucoinFuturesAccount$set_cross_margin_leverage()`
 
 Set Cross Margin Leverage
 
@@ -871,7 +867,7 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
 ------------------------------------------------------------------------
 
-### Method `get_max_open_size()`
+### `KucoinFuturesAccount$get_max_open_size()`
 
 Get Maximum Open Size
 
@@ -948,7 +944,7 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
 ------------------------------------------------------------------------
 
-### Method `get_max_withdraw_margin()`
+### `KucoinFuturesAccount$get_max_withdraw_margin()`
 
 Get Maximum Withdrawable Margin
 
@@ -1011,7 +1007,7 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
 ------------------------------------------------------------------------
 
-### Method `add_isolated_margin()`
+### `KucoinFuturesAccount$add_isolated_margin()`
 
 Add Isolated Margin
 
@@ -1102,7 +1098,7 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
 ------------------------------------------------------------------------
 
-### Method `remove_isolated_margin()`
+### `KucoinFuturesAccount$remove_isolated_margin()`
 
 Remove Isolated Margin
 
@@ -1188,7 +1184,7 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
 ------------------------------------------------------------------------
 
-### Method `get_risk_limit()`
+### `KucoinFuturesAccount$get_risk_limit()`
 
 Get Risk Limit Level
 
@@ -1290,7 +1286,7 @@ A `data.table` (or `promise<data.table>` if constructed with
 
 ------------------------------------------------------------------------
 
-### Method `get_funding_history()`
+### `KucoinFuturesAccount$get_funding_history()`
 
 Get Private Funding Fee History
 
@@ -1403,7 +1399,7 @@ A `data.table` (or `promise<data.table>` if constructed with
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `KucoinFuturesAccount$clone()`
 
 The objects of this class are cloneable with this method.
 
