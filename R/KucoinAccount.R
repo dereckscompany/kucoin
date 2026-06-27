@@ -130,19 +130,9 @@ KucoinAccount <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row and columns:
-    #' - `level` (integer): VIP tier.
-    #' - `sub_quantity` (integer): Total sub-accounts.
-    #' - `max_default_sub_quantity` (integer): Max default sub-accounts.
-    #' - `max_sub_quantity` (integer): Max sub-accounts.
-    #' - `spot_sub_quantity` (integer): Spot sub-accounts.
-    #' - `margin_sub_quantity` (integer): Margin sub-accounts.
-    #' - `futures_sub_quantity` (integer): Futures sub-accounts.
-    #' - `option_sub_quantity` (integer): Option sub-accounts.
-    #' - `max_spot_sub_quantity` (integer): Max spot sub-accounts.
-    #' - `max_margin_sub_quantity` (integer): Max margin sub-accounts.
-    #' - `max_futures_sub_quantity` (integer): Max futures sub-accounts.
-    #' - `max_option_sub_quantity` (integer): Max option sub-accounts.
+    #' @return (data.table | promise<data.table>) one row giving the VIP tier
+    #'   level and the sub-account counts (total, spot, margin, futures, option)
+    #'   alongside their respective maxima.
     #'
     #' @examples
     #' \dontrun{
@@ -152,9 +142,14 @@ KucoinAccount <- R6::R6Class(
     #' cat("Sub-accounts:", summary$sub_quantity, "/", summary$max_sub_quantity, "\\n")
     #' }
     get_summary = function() {
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v2/user-info",
         .parser = as_dt_row
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinAccount__get_summary,
+        is_async = private$.is_async
       ))
     },
 
@@ -208,15 +203,10 @@ KucoinAccount <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row and columns:
-    #' - `remark` (character): Key label.
-    #' - `api_key` (character): API key ID.
-    #' - `api_version` (integer): Key version.
-    #' - `permission` (character): Comma-separated permissions e.g. `"General,Spot"` (already a single string from KuCoin, not a JSON array; recover the vector with `strsplit(dt$permission[1], ",", fixed = TRUE)[[1]]`).
-    #' - `ip_whitelist` (character): Allowed IPs (comma-separated string).
-    #' - `created_at` (POSIXct): Key creation datetime (coerced from epoch milliseconds).
-    #' - `uid` (numeric): User ID.
-    #' - `is_master` (logical): TRUE if master account key.
+    #' @return (data.table | promise<data.table>) one row describing the active
+    #'   API key: its label, key ID, version, comma-separated permissions and IP
+    #'   whitelist, creation datetime (POSIXct, coerced from epoch milliseconds),
+    #'   user ID, and whether it belongs to the master account.
     #'
     #' @examples
     #' \dontrun{
@@ -227,13 +217,18 @@ KucoinAccount <- R6::R6Class(
     #' cat("Is Master:", key_info$is_master, "\\n")
     #' }
     get_apikey_info = function() {
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/user/api-key",
         .parser = function(data) {
           dt <- as_dt_row(data)
           coerce_cols(dt, "created_at", ms_to_datetime)
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinAccount__get_apikey_info,
+        is_async = private$.is_async
       ))
     },
 
@@ -280,10 +275,10 @@ KucoinAccount <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return Logical scalar: `TRUE` if the user is a spot high-frequency user
-    #'   (use `trade_hf` for transfers/queries), `FALSE` for low-frequency
-    #'   (use `trade`). This is a compatibility interface for users who enabled
-    #'   HF trading before 2024.
+    #' @return (scalar<logical> | promise<scalar<logical>>) TRUE if the user is a
+    #'   spot HF user (use `trade_hf` for transfers/queries), FALSE for
+    #'   low-frequency (use `trade`). This is a compatibility interface for users
+    #'   who enabled HF trading before 2024.
     #'
     #' @examples
     #' \dontrun{
@@ -294,11 +289,16 @@ KucoinAccount <- R6::R6Class(
     #' }
     #' }
     get_spot_account_type = function() {
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/hf/accounts/opened",
         .parser = function(data) {
           return(isTRUE(data))
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinAccount__get_spot_account_type,
+        is_async = private$.is_async
       ))
     },
 
@@ -362,19 +362,14 @@ KucoinAccount <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param query Named list; optional filter parameters. Supported keys:
-    #'   - `currency` (character): Filter by currency code e.g. `"USDT"`, `"BTC"`.
-    #'   - `type` (character): Filter by account type: `"main"`, `"trade"`, or `"margin"`.
+    #' @param query (list) optional filter parameters. Supported keys:
+    #'   `currency` (filter by currency code e.g. `"USDT"`, `"BTC"`) and `type`
+    #'   (filter by account type: `"main"`, `"trade"`, or `"margin"`).
     #'
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #' - `id` (character): Account ID.
-    #' - `currency` (character): Currency code.
-    #' - `type` (character): Account type.
-    #' - `balance` (character): Total balance.
-    #' - `available` (character): Available for trading.
-    #' - `holds` (character): Amount on hold in open orders.
-    #'
-    #'   Returns an empty `data.table` if no accounts match.
+    #' @return (data.table | promise<data.table>) one row per spot account, each
+    #'   giving the account ID, currency code, account type, total balance, the
+    #'   amount available for trading, and the amount on hold in open orders.
+    #'   Returns an empty data.table if no accounts match.
     #'
     #' @examples
     #' \dontrun{
@@ -389,10 +384,16 @@ KucoinAccount <- R6::R6Class(
     #' cat("USDT available:", usdt$available, "\\n")
     #' }
     get_spot_accounts = function(query = list()) {
-      return(private$.request(
+      assert_args_KucoinAccount__get_spot_accounts(query)
+      res <- private$.request(
         endpoint = "/api/v1/accounts",
         query = query,
         .parser = as_dt_list
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinAccount__get_spot_accounts,
+        is_async = private$.is_async
       ))
     },
 
@@ -442,14 +443,13 @@ KucoinAccount <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param accountId Character; the unique account ID (e.g. `"5bd6e9286d99522a52e458de"`).
-    #'   Obtain account IDs from `get_spot_accounts()`.
+    #' @param accountId (scalar<character>) the unique account ID (e.g.
+    #'   `"5bd6e9286d99522a52e458de"`). Obtain account IDs from
+    #'   `get_spot_accounts()`.
     #'
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #' - `currency` (character): Currency code.
-    #' - `balance` (character): Total balance.
-    #' - `available` (character): Available for use.
-    #' - `holds` (character): Amount held in open orders.
+    #' @return (data.table | promise<data.table>) one row giving the currency
+    #'   code, total balance, the amount available for use, and the amount held
+    #'   in open orders for the requested account.
     #'
     #' @examples
     #' \dontrun{
@@ -464,9 +464,16 @@ KucoinAccount <- R6::R6Class(
     #' cat("Balance:", detail$balance, "Available:", detail$available, "\\n")
     #' }
     get_spot_account_detail = function(accountId) {
-      return(private$.request(
+      assert_args_KucoinAccount__get_spot_account_detail(accountId)
+      assert::assert_nonempty_strings(accountId)
+      res <- private$.request(
         endpoint = paste0("/api/v1/accounts/", accountId),
         .parser = as_dt_row
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinAccount__get_spot_account_detail,
+        is_async = private$.is_async
       ))
     },
 
@@ -543,31 +550,17 @@ KucoinAccount <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param query Named list; optional filter parameters. Supported keys:
-    #'   - `quoteCurrency` (character): Quote currency for valuation e.g. `"USDT"`, `"BTC"`.
-    #'   - `queryType` (character): Query type e.g. `"MARGIN"`, `"MARGIN_V2"`.
+    #' @param query (list) optional filter parameters. Supported keys:
+    #'   `quoteCurrency` (quote currency for valuation e.g. `"USDT"`, `"BTC"`) and
+    #'   `queryType` (query type e.g. `"MARGIN"`, `"MARGIN_V2"`).
     #'
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with
-    #'   one row per currency (Treatment B). The account-level summary fields
-    #'   (`total_asset_of_quote_currency`, `total_liability_of_quote_currency`, `debt_ratio`,
-    #'   `status`) are replicated on every row so the caller never needs a sibling method.
-    #'   Columns (subset; the exact set depends on the KuCoin payload):
-    #'   - `currency` (character): Currency code (e.g. `"USDT"`, `"BTC"`).
-    #'   - `total` (character): Total balance.
-    #'   - `available` (character): Available balance.
-    #'   - `hold` (character): Amount on hold.
-    #'   - `liability` (character): Total liability.
-    #'   - `liability_principal` (character): Liability principal.
-    #'   - `liability_interest` (character): Liability interest.
-    #'   - `max_borrow_size` (character): Maximum borrowable amount.
-    #'   - `borrow_enabled` (logical): Whether borrowing is enabled.
-    #'   - `transfer_in_enabled` (logical): Whether transfer-in is enabled.
-    #'   - `total_asset_of_quote_currency` (character): Account-level total asset (repeated).
-    #'   - `total_liability_of_quote_currency` (character): Account-level total liability (repeated).
-    #'   - `debt_ratio` (character): Account-level debt ratio (repeated).
-    #'   - `status` (character): Account-level status (repeated).
-    #'
-    #'   Returns an empty `data.table` if no margin accounts exist.
+    #' @return (data.table | promise<data.table>) one row per currency in the
+    #'   cross-margin account, each giving the currency code, total/available/hold
+    #'   balances, total liability with its principal and interest, the maximum
+    #'   borrowable size, and the borrow- and transfer-in-enabled flags; the
+    #'   account-level total asset, total liability, debt ratio, and status are
+    #'   replicated on every row. Returns an empty data.table if no margin
+    #'   accounts exist.
     #'
     #' @examples
     #' \dontrun{
@@ -578,7 +571,8 @@ KucoinAccount <- R6::R6Class(
     #' cat("Liabilities:", margin[currency == "USDT", liability], "\\n")
     #' }
     get_cross_margin_account = function(query = list()) {
-      return(private$.request(
+      assert_args_KucoinAccount__get_cross_margin_account(query)
+      res <- private$.request(
         endpoint = "/api/v3/margin/accounts",
         query = query,
         .parser = function(data) {
@@ -610,6 +604,11 @@ KucoinAccount <- R6::R6Class(
           }
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinAccount__get_cross_margin_account,
+        is_async = private$.is_async
       ))
     },
 
@@ -691,45 +690,20 @@ KucoinAccount <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param query Named list; optional filter parameters. Supported keys:
-    #'   - `symbol` (character): Trading pair e.g. `"BTC-USDT"`. Filter to a specific pair.
-    #'   - `quoteCurrency` (character): Quote currency for valuation e.g. `"USDT"`.
-    #'   - `queryType` (character): Query type e.g. `"ISOLATED"`, `"ISOLATED_V2"`.
+    #' @param query (list) optional filter parameters. Supported keys: `symbol`
+    #'   (trading pair e.g. `"BTC-USDT"`, to filter to a specific pair),
+    #'   `quoteCurrency` (quote currency for valuation e.g. `"USDT"`), and
+    #'   `queryType` (query type e.g. `"ISOLATED"`, `"ISOLATED_V2"`).
     #'
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with
-    #'   one row per isolated-margin pair (Treatment B) and the nested `baseAsset` / `quoteAsset`
-    #'   objects flattened wide-prefix (Treatment C). The account-level fields
-    #'   `total_asset_of_quote_currency`, `total_liability_of_quote_currency`, and `timestamp`
-    #'   are replicated on every row.
-    #'   Columns:
-    #'   - `symbol` (character): Isolated pair symbol (e.g. `"BTC-USDT"`).
-    #'   - `status` (character): Account status (e.g. `"EFFECTIVE"`).
-    #'   - `debt_ratio` (character): Liability-to-asset ratio.
-    #'   - `base_asset_currency` (character): Base asset code.
-    #'   - `base_asset_borrow_enabled` (logical): Whether borrowing the base asset is allowed.
-    #'   - `base_asset_transfer_in_enabled` (logical): Whether transferring the base asset in is allowed.
-    #'   - `base_asset_liability` (character): Total base-asset liability.
-    #'   - `base_asset_liability_principal` (character): Base-asset liability principal.
-    #'   - `base_asset_liability_interest` (character): Base-asset liability interest.
-    #'   - `base_asset_total` (character): Base-asset total balance.
-    #'   - `base_asset_available` (character): Base-asset available balance.
-    #'   - `base_asset_hold` (character): Base-asset amount on hold.
-    #'   - `base_asset_max_borrow_size` (character): Base-asset maximum borrowable.
-    #'   - `quote_asset_currency` (character): Quote asset code.
-    #'   - `quote_asset_borrow_enabled` (logical): Whether borrowing the quote asset is allowed.
-    #'   - `quote_asset_transfer_in_enabled` (logical): Whether transferring the quote asset in is allowed.
-    #'   - `quote_asset_liability` (character): Total quote-asset liability.
-    #'   - `quote_asset_liability_principal` (character): Quote-asset liability principal.
-    #'   - `quote_asset_liability_interest` (character): Quote-asset liability interest.
-    #'   - `quote_asset_total` (character): Quote-asset total balance.
-    #'   - `quote_asset_available` (character): Quote-asset available balance.
-    #'   - `quote_asset_hold` (character): Quote-asset amount on hold.
-    #'   - `quote_asset_max_borrow_size` (character): Quote-asset maximum borrowable.
-    #'   - `total_asset_of_quote_currency` (character): Account-level total asset (repeated).
-    #'   - `total_liability_of_quote_currency` (character): Account-level total liability (repeated).
-    #'   - `timestamp` (POSIXct): Snapshot timestamp (repeated).
-    #'
-    #'   Returns an empty `data.table` if no isolated-margin pairs exist.
+    #' @return (data.table | promise<data.table>) one row per isolated-margin
+    #'   pair, each giving the pair symbol, account status, and debt ratio, with
+    #'   the nested base-asset and quote-asset objects flattened to wide-prefix
+    #'   columns (currency, borrow- and transfer-in-enabled flags, liability with
+    #'   principal and interest, total/available/hold balances, and maximum
+    #'   borrowable size); the account-level total asset, total liability, and
+    #'   snapshot timestamp (POSIXct, coerced from epoch milliseconds) are
+    #'   replicated on every row. Returns an empty data.table if no
+    #'   isolated-margin pairs exist.
     #'
     #' @examples
     #' \dontrun{
@@ -740,7 +714,8 @@ KucoinAccount <- R6::R6Class(
     #' print(isolated)
     #' }
     get_isolated_margin_account = function(query = list()) {
-      return(private$.request(
+      assert_args_KucoinAccount__get_isolated_margin_account(query)
+      res <- private$.request(
         endpoint = "/api/v3/isolated/accounts",
         query = query,
         .parser = function(data) {
@@ -819,6 +794,11 @@ KucoinAccount <- R6::R6Class(
           data.table::setcolorder(dt, intersect(expected, names(dt)))
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinAccount__get_isolated_margin_account,
+        is_async = private$.is_async
       ))
     },
 
@@ -898,31 +878,24 @@ KucoinAccount <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param query Named list; optional filter parameters. Supported keys:
-    #'   - `currency` (character): Filter by currency code e.g. `"USDT"`, `"BTC"`.
-    #'   - `direction` (character): Filter by direction: `"in"` or `"out"`.
-    #'   - `bizType` (character): Business type filter e.g. `"Exchange"`, `"Deposit"`,
-    #'     `"Withdrawal"`, `"Transfer"`, `"Trade_Exchange"`.
-    #'   - `startAt` (numeric): Start time in milliseconds (epoch). Inclusive.
-    #'   - `endAt` (numeric): End time in milliseconds (epoch). Inclusive.
-    #' @param page_size Integer; number of results per page, between 10 and 500.
-    #'   Default `50`.
-    #' @param max_pages Numeric; maximum number of pages to fetch. Default `Inf`
-    #'   (fetch all pages). Set to a finite number to limit API calls.
+    #' @param query (list) optional filter parameters. Supported keys: `currency`
+    #'   (filter by currency code e.g. `"USDT"`, `"BTC"`), `direction` (filter by
+    #'   direction: `"in"` or `"out"`), `bizType` (business type filter e.g.
+    #'   `"Exchange"`, `"Deposit"`, `"Withdrawal"`, `"Transfer"`,
+    #'   `"Trade_Exchange"`), `startAt` (start time in milliseconds epoch,
+    #'   inclusive), and `endAt` (end time in milliseconds epoch, inclusive).
+    #' @param page_size (scalar<count in [1, Inf[>) number of results per page,
+    #'   between 10 and 500 (default 50).
+    #' @param max_pages (scalar<numeric in [1, Inf]>) maximum number of pages to
+    #'   fetch (default `Inf` for all pages). Set to a finite number to limit API
+    #'   calls.
     #'
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #' - `id` (character): Ledger entry ID.
-    #' - `currency` (character): Currency code.
-    #' - `amount` (character): Transaction amount.
-    #' - `fee` (character): Fee charged.
-    #' - `balance` (character): Balance after transaction.
-    #' - `account_type` (character): Account type e.g. `"TRADE"`, `"MAIN"`.
-    #' - `biz_type` (character): Business type.
-    #' - `direction` (character): `"in"` or `"out"`.
-    #' - `context` (character): JSON metadata.
-    #' - `created_at` (POSIXct): Coerced from epoch milliseconds.
-    #'
-    #'   Returns an empty `data.table` if no ledger entries match.
+    #' @return (data.table | promise<data.table>) one row per ledger entry, each
+    #'   giving the entry ID, currency code, transaction amount, fee charged,
+    #'   balance after the transaction, account type (`"TRADE"`, `"MAIN"`),
+    #'   business type, direction (`"in"` or `"out"`), the JSON context metadata,
+    #'   and the creation datetime (POSIXct, coerced from epoch milliseconds).
+    #'   Returns an empty data.table if no ledger entries match.
     #'
     #' @examples
     #' \dontrun{
@@ -944,7 +917,8 @@ KucoinAccount <- R6::R6Class(
     #' print(ledger_24h[, .(currency, amount, direction, created_at)])
     #' }
     get_spot_ledger = function(query = list(), page_size = 50, max_pages = Inf) {
-      return(private$.paginate(
+      assert_args_KucoinAccount__get_spot_ledger(query, page_size, max_pages)
+      res <- private$.paginate(
         endpoint = "/api/v1/accounts/ledgers",
         query = query,
         page_size = page_size,
@@ -977,6 +951,11 @@ KucoinAccount <- R6::R6Class(
           )
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinAccount__get_spot_ledger,
+        is_async = private$.is_async
       ))
     },
 
@@ -1048,26 +1027,23 @@ KucoinAccount <- R6::R6Class(
     #' - **Fee Reconciliation**: Use `fee` and `tax` fields for accurate fee accounting.
     #' - **Audit Trail**: Build trade-by-trade logs from the `context` JSON field.
     #'
-    #' @param currency Character or NULL; filter by currency (supports up to 10 comma-separated).
-    #' @param direction Character or NULL; `"in"` or `"out"`.
-    #' @param bizType Character or NULL; transaction type: `"TRADE_EXCHANGE"`, `"TRANSFER"`,
-    #'   `"SUB_TRANSFER"`, `"RETURNED_FEES"`, `"DEDUCTION_FEES"`, `"OTHER"`.
-    #' @param lastId Character or NULL; pagination cursor for fetching previous batches.
-    #' @param limit Integer or NULL; results per page (default 100, max 200).
-    #' @param startAt Integer or NULL; start timestamp in milliseconds.
-    #' @param endAt Integer or NULL; end timestamp in milliseconds.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #' - `id` (character): Ledger entry ID.
-    #' - `currency` (character): Currency code.
-    #' - `amount` (character): Transaction amount.
-    #' - `fee` (character): Fee charged.
-    #' - `tax` (character): Tax amount.
-    #' - `balance` (character): Balance after transaction.
-    #' - `account_type` (character): Account type.
-    #' - `biz_type` (character): Business type.
-    #' - `direction` (character): `"in"` or `"out"`.
-    #' - `context` (character): JSON metadata.
-    #' - `created_at` (POSIXct): Coerced from epoch milliseconds.
+    #' @param currency (scalar<character> | NULL) filter by currency (supports up
+    #'   to 10 comma-separated).
+    #' @param direction (scalar<character> | NULL) `"in"` or `"out"`.
+    #' @param bizType (scalar<character> | NULL) transaction type:
+    #'   `"TRADE_EXCHANGE"`, `"TRANSFER"`, `"SUB_TRANSFER"`, `"RETURNED_FEES"`,
+    #'   `"DEDUCTION_FEES"`, `"OTHER"`.
+    #' @param lastId (scalar<character> | NULL) pagination cursor for fetching
+    #'   previous batches.
+    #' @param limit (scalar<integer> | NULL) results per page (default 100, max
+    #'   200).
+    #' @param startAt (scalar<integer> | NULL) start timestamp in milliseconds.
+    #' @param endAt (scalar<integer> | NULL) end timestamp in milliseconds.
+    #' @return (data.table | promise<data.table>) one row per ledger entry, each
+    #'   giving the entry ID, currency code, transaction amount, fee charged, tax
+    #'   amount, balance after the transaction, account type, business type,
+    #'   direction (`"in"` or `"out"`), the JSON context metadata, and the
+    #'   creation datetime (POSIXct, coerced from epoch milliseconds).
     #'
     #' @examples
     #' \dontrun{
@@ -1084,7 +1060,16 @@ KucoinAccount <- R6::R6Class(
       startAt = NULL,
       endAt = NULL
     ) {
-      return(private$.request(
+      assert_args_KucoinAccount__get_hf_ledger(
+        currency,
+        direction,
+        bizType,
+        lastId,
+        limit,
+        startAt,
+        endAt
+      )
+      res <- private$.request(
         endpoint = "/api/v1/hf/accounts/ledgers",
         query = list(
           currency = currency,
@@ -1131,6 +1116,11 @@ KucoinAccount <- R6::R6Class(
           )
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinAccount__get_hf_ledger,
+        is_async = private$.is_async
       ))
     },
 
@@ -1177,10 +1167,10 @@ KucoinAccount <- R6::R6Class(
     #' - **Tier Awareness**: Know your default fee tier for cost estimation.
     #' - **Fee Budgeting**: Use as baseline for worst-case fee calculations.
     #'
-    #' @param currencyType Integer or NULL; `0` for crypto (default), `1` for fiat.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `taker_fee_rate` (character): Base taker fee rate.
-    #'   - `maker_fee_rate` (character): Base maker fee rate.
+    #' @param currencyType (scalar<integer> | NULL) `0` for crypto (default), `1`
+    #'   for fiat.
+    #' @return (data.table | promise<data.table>) one row giving the base taker
+    #'   fee rate and the base maker fee rate.
     #'
     #' @examples
     #' \dontrun{
@@ -1189,10 +1179,16 @@ KucoinAccount <- R6::R6Class(
     #' cat("Taker:", fees$taker_fee_rate, "Maker:", fees$maker_fee_rate, "\n")
     #' }
     get_base_fee_rate = function(currencyType = NULL) {
-      return(private$.request(
+      assert_args_KucoinAccount__get_base_fee_rate(currencyType)
+      res <- private$.request(
         endpoint = "/api/v1/base-fee",
         query = list(currencyType = currencyType),
         .parser = as_dt_row
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinAccount__get_base_fee_rate,
+        is_async = private$.is_async
       ))
     },
 
@@ -1245,12 +1241,11 @@ KucoinAccount <- R6::R6Class(
     #' - **Fee Optimization**: Compare rates across pairs to choose the cheapest execution venue.
     #' - **Batch Query**: Query up to 10 pairs at once to minimize API calls.
     #'
-    #' @param symbols Character; comma-separated trading pairs (max 10),
+    #' @param symbols (scalar<character>) comma-separated trading pairs (max 10),
     #'   e.g. `"BTC-USDT,ETH-USDT"`.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `symbol` (character): Trading pair.
-    #'   - `taker_fee_rate` (character): Actual taker fee rate.
-    #'   - `maker_fee_rate` (character): Actual maker fee rate.
+    #' @return (data.table | promise<data.table>) one row per trading pair, each
+    #'   giving the pair symbol, the actual taker fee rate, and the actual maker
+    #'   fee rate.
     #'
     #' @examples
     #' \dontrun{
@@ -1259,11 +1254,12 @@ KucoinAccount <- R6::R6Class(
     #' print(fees[, .(symbol, taker_fee_rate, maker_fee_rate)])
     #' }
     get_fee_rate = function(symbols) {
+      assert_args_KucoinAccount__get_fee_rate(symbols)
       if (!is.character(symbols) || !nzchar(symbols)) {
         rlang::abort("Parameter 'symbols' must be a non-empty string of comma-separated pairs.")
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/trade-fees",
         query = list(symbols = symbols),
         .parser = function(data) {
@@ -1277,6 +1273,11 @@ KucoinAccount <- R6::R6Class(
           data.table::setcolorder(dt, intersect(c("symbol", "taker_fee_rate", "maker_fee_rate"), names(dt)))
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinAccount__get_fee_rate,
+        is_async = private$.is_async
       ))
     }
   )

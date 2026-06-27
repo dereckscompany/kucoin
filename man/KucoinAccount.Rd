@@ -327,21 +327,9 @@ Verified: 2026-05-23
 }
 
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
-\itemize{
-\item \code{level} (integer): VIP tier.
-\item \code{sub_quantity} (integer): Total sub-accounts.
-\item \code{max_default_sub_quantity} (integer): Max default sub-accounts.
-\item \code{max_sub_quantity} (integer): Max sub-accounts.
-\item \code{spot_sub_quantity} (integer): Spot sub-accounts.
-\item \code{margin_sub_quantity} (integer): Margin sub-accounts.
-\item \code{futures_sub_quantity} (integer): Futures sub-accounts.
-\item \code{option_sub_quantity} (integer): Option sub-accounts.
-\item \code{max_spot_sub_quantity} (integer): Max spot sub-accounts.
-\item \code{max_margin_sub_quantity} (integer): Max margin sub-accounts.
-\item \code{max_futures_sub_quantity} (integer): Max futures sub-accounts.
-\item \code{max_option_sub_quantity} (integer): Max option sub-accounts.
-}
+(data.table | promise<data.table>) one row giving the VIP tier
+level and the sub-account counts (total, spot, margin, futures, option)
+alongside their respective maxima.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -425,17 +413,10 @@ Verified: 2026-05-23
 }
 
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
-\itemize{
-\item \code{remark} (character): Key label.
-\item \code{api_key} (character): API key ID.
-\item \code{api_version} (integer): Key version.
-\item \code{permission} (character): Comma-separated permissions e.g. \code{"General,Spot"} (already a single string from KuCoin, not a JSON array; recover the vector with \code{strsplit(dt$permission[1], ",", fixed = TRUE)[[1]]}).
-\item \code{ip_whitelist} (character): Allowed IPs (comma-separated string).
-\item \code{created_at} (POSIXct): Key creation datetime (coerced from epoch milliseconds).
-\item \code{uid} (numeric): User ID.
-\item \code{is_master} (logical): TRUE if master account key.
-}
+(data.table | promise<data.table>) one row describing the active
+API key: its label, key ID, version, comma-separated permissions and IP
+whitelist, creation datetime (POSIXct, coerced from epoch milliseconds),
+user ID, and whether it belongs to the master account.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -513,10 +494,10 @@ Verified: 2026-05-23
 }
 
 \subsection{Returns}{
-Logical scalar: \code{TRUE} if the user is a spot high-frequency user
-(use \code{trade_hf} for transfers/queries), \code{FALSE} for low-frequency
-(use \code{trade}). This is a compatibility interface for users who enabled
-HF trading before 2024.
+(scalar<logical> | promise<scalar<logical>>) TRUE if the user is a
+spot HF user (use \code{trade_hf} for transfers/queries), FALSE for
+low-frequency (use \code{trade}). This is a compatibility interface for users
+who enabled HF trading before 2024.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -613,26 +594,17 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{query}}{Named list; optional filter parameters. Supported keys:
-\itemize{
-\item \code{currency} (character): Filter by currency code e.g. \code{"USDT"}, \code{"BTC"}.
-\item \code{type} (character): Filter by account type: \code{"main"}, \code{"trade"}, or \code{"margin"}.
-}}
+\item{\code{query}}{(list) optional filter parameters. Supported keys:
+\code{currency} (filter by currency code e.g. \code{"USDT"}, \code{"BTC"}) and \code{type}
+(filter by account type: \code{"main"}, \code{"trade"}, or \code{"margin"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{id} (character): Account ID.
-\item \code{currency} (character): Currency code.
-\item \code{type} (character): Account type.
-\item \code{balance} (character): Total balance.
-\item \code{available} (character): Available for trading.
-\item \code{holds} (character): Amount on hold in open orders.
-
-Returns an empty \code{data.table} if no accounts match.
-}
+(data.table | promise<data.table>) one row per spot account, each
+giving the account ID, currency code, account type, total balance, the
+amount available for trading, and the amount on hold in open orders.
+Returns an empty data.table if no accounts match.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -719,19 +691,16 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{accountId}}{Character; the unique account ID (e.g. \code{"5bd6e9286d99522a52e458de"}).
-Obtain account IDs from \code{get_spot_accounts()}.}
+\item{\code{accountId}}{(scalar<character>) the unique account ID (e.g.
+\code{"5bd6e9286d99522a52e458de"}). Obtain account IDs from
+\code{get_spot_accounts()}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{currency} (character): Currency code.
-\item \code{balance} (character): Total balance.
-\item \code{available} (character): Available for use.
-\item \code{holds} (character): Amount held in open orders.
-}
+(data.table | promise<data.table>) one row giving the currency
+code, total balance, the amount available for use, and the amount held
+in open orders for the requested account.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -845,38 +814,20 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{query}}{Named list; optional filter parameters. Supported keys:
-\itemize{
-\item \code{quoteCurrency} (character): Quote currency for valuation e.g. \code{"USDT"}, \code{"BTC"}.
-\item \code{queryType} (character): Query type e.g. \code{"MARGIN"}, \code{"MARGIN_V2"}.
-}}
+\item{\code{query}}{(list) optional filter parameters. Supported keys:
+\code{quoteCurrency} (quote currency for valuation e.g. \code{"USDT"}, \code{"BTC"}) and
+\code{queryType} (query type e.g. \code{"MARGIN"}, \code{"MARGIN_V2"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with
-one row per currency (Treatment B). The account-level summary fields
-(\code{total_asset_of_quote_currency}, \code{total_liability_of_quote_currency}, \code{debt_ratio},
-\code{status}) are replicated on every row so the caller never needs a sibling method.
-Columns (subset; the exact set depends on the KuCoin payload):
-\itemize{
-\item \code{currency} (character): Currency code (e.g. \code{"USDT"}, \code{"BTC"}).
-\item \code{total} (character): Total balance.
-\item \code{available} (character): Available balance.
-\item \code{hold} (character): Amount on hold.
-\item \code{liability} (character): Total liability.
-\item \code{liability_principal} (character): Liability principal.
-\item \code{liability_interest} (character): Liability interest.
-\item \code{max_borrow_size} (character): Maximum borrowable amount.
-\item \code{borrow_enabled} (logical): Whether borrowing is enabled.
-\item \code{transfer_in_enabled} (logical): Whether transfer-in is enabled.
-\item \code{total_asset_of_quote_currency} (character): Account-level total asset (repeated).
-\item \code{total_liability_of_quote_currency} (character): Account-level total liability (repeated).
-\item \code{debt_ratio} (character): Account-level debt ratio (repeated).
-\item \code{status} (character): Account-level status (repeated).
-}
-
-Returns an empty \code{data.table} if no margin accounts exist.
+(data.table | promise<data.table>) one row per currency in the
+cross-margin account, each giving the currency code, total/available/hold
+balances, total liability with its principal and interest, the maximum
+borrowable size, and the borrow- and transfer-in-enabled flags; the
+account-level total asset, total liability, debt ratio, and status are
+replicated on every row. Returns an empty data.table if no margin
+accounts exist.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -991,52 +942,23 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{query}}{Named list; optional filter parameters. Supported keys:
-\itemize{
-\item \code{symbol} (character): Trading pair e.g. \code{"BTC-USDT"}. Filter to a specific pair.
-\item \code{quoteCurrency} (character): Quote currency for valuation e.g. \code{"USDT"}.
-\item \code{queryType} (character): Query type e.g. \code{"ISOLATED"}, \code{"ISOLATED_V2"}.
-}}
+\item{\code{query}}{(list) optional filter parameters. Supported keys: \code{symbol}
+(trading pair e.g. \code{"BTC-USDT"}, to filter to a specific pair),
+\code{quoteCurrency} (quote currency for valuation e.g. \code{"USDT"}), and
+\code{queryType} (query type e.g. \code{"ISOLATED"}, \code{"ISOLATED_V2"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with
-one row per isolated-margin pair (Treatment B) and the nested \code{baseAsset} / \code{quoteAsset}
-objects flattened wide-prefix (Treatment C). The account-level fields
-\code{total_asset_of_quote_currency}, \code{total_liability_of_quote_currency}, and \code{timestamp}
-are replicated on every row.
-Columns:
-\itemize{
-\item \code{symbol} (character): Isolated pair symbol (e.g. \code{"BTC-USDT"}).
-\item \code{status} (character): Account status (e.g. \code{"EFFECTIVE"}).
-\item \code{debt_ratio} (character): Liability-to-asset ratio.
-\item \code{base_asset_currency} (character): Base asset code.
-\item \code{base_asset_borrow_enabled} (logical): Whether borrowing the base asset is allowed.
-\item \code{base_asset_transfer_in_enabled} (logical): Whether transferring the base asset in is allowed.
-\item \code{base_asset_liability} (character): Total base-asset liability.
-\item \code{base_asset_liability_principal} (character): Base-asset liability principal.
-\item \code{base_asset_liability_interest} (character): Base-asset liability interest.
-\item \code{base_asset_total} (character): Base-asset total balance.
-\item \code{base_asset_available} (character): Base-asset available balance.
-\item \code{base_asset_hold} (character): Base-asset amount on hold.
-\item \code{base_asset_max_borrow_size} (character): Base-asset maximum borrowable.
-\item \code{quote_asset_currency} (character): Quote asset code.
-\item \code{quote_asset_borrow_enabled} (logical): Whether borrowing the quote asset is allowed.
-\item \code{quote_asset_transfer_in_enabled} (logical): Whether transferring the quote asset in is allowed.
-\item \code{quote_asset_liability} (character): Total quote-asset liability.
-\item \code{quote_asset_liability_principal} (character): Quote-asset liability principal.
-\item \code{quote_asset_liability_interest} (character): Quote-asset liability interest.
-\item \code{quote_asset_total} (character): Quote-asset total balance.
-\item \code{quote_asset_available} (character): Quote-asset available balance.
-\item \code{quote_asset_hold} (character): Quote-asset amount on hold.
-\item \code{quote_asset_max_borrow_size} (character): Quote-asset maximum borrowable.
-\item \code{total_asset_of_quote_currency} (character): Account-level total asset (repeated).
-\item \code{total_liability_of_quote_currency} (character): Account-level total liability (repeated).
-\item \code{timestamp} (POSIXct): Snapshot timestamp (repeated).
-}
-
-Returns an empty \code{data.table} if no isolated-margin pairs exist.
+(data.table | promise<data.table>) one row per isolated-margin
+pair, each giving the pair symbol, account status, and debt ratio, with
+the nested base-asset and quote-asset objects flattened to wide-prefix
+columns (currency, borrow- and transfer-in-enabled flags, liability with
+principal and interest, total/available/hold balances, and maximum
+borrowable size); the account-level total asset, total liability, and
+snapshot timestamp (POSIXct, coerced from epoch milliseconds) are
+replicated on every row. Returns an empty data.table if no
+isolated-margin pairs exist.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1149,40 +1071,29 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{query}}{Named list; optional filter parameters. Supported keys:
-\itemize{
-\item \code{currency} (character): Filter by currency code e.g. \code{"USDT"}, \code{"BTC"}.
-\item \code{direction} (character): Filter by direction: \code{"in"} or \code{"out"}.
-\item \code{bizType} (character): Business type filter e.g. \code{"Exchange"}, \code{"Deposit"},
-\code{"Withdrawal"}, \code{"Transfer"}, \code{"Trade_Exchange"}.
-\item \code{startAt} (numeric): Start time in milliseconds (epoch). Inclusive.
-\item \code{endAt} (numeric): End time in milliseconds (epoch). Inclusive.
-}}
+\item{\code{query}}{(list) optional filter parameters. Supported keys: \code{currency}
+(filter by currency code e.g. \code{"USDT"}, \code{"BTC"}), \code{direction} (filter by
+direction: \code{"in"} or \code{"out"}), \code{bizType} (business type filter e.g.
+\code{"Exchange"}, \code{"Deposit"}, \code{"Withdrawal"}, \code{"Transfer"},
+\code{"Trade_Exchange"}), \code{startAt} (start time in milliseconds epoch,
+inclusive), and \code{endAt} (end time in milliseconds epoch, inclusive).}
 
-\item{\code{page_size}}{Integer; number of results per page, between 10 and 500.
-Default \code{50}.}
+\item{\code{page_size}}{(scalar<count in [1, Inf[>) number of results per page,
+between 10 and 500 (default 50).}
 
-\item{\code{max_pages}}{Numeric; maximum number of pages to fetch. Default \code{Inf}
-(fetch all pages). Set to a finite number to limit API calls.}
+\item{\code{max_pages}}{(scalar<numeric in [1, Inf]>) maximum number of pages to
+fetch (default \code{Inf} for all pages). Set to a finite number to limit API
+calls.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{id} (character): Ledger entry ID.
-\item \code{currency} (character): Currency code.
-\item \code{amount} (character): Transaction amount.
-\item \code{fee} (character): Fee charged.
-\item \code{balance} (character): Balance after transaction.
-\item \code{account_type} (character): Account type e.g. \code{"TRADE"}, \code{"MAIN"}.
-\item \code{biz_type} (character): Business type.
-\item \code{direction} (character): \code{"in"} or \code{"out"}.
-\item \code{context} (character): JSON metadata.
-\item \code{created_at} (POSIXct): Coerced from epoch milliseconds.
-
-Returns an empty \code{data.table} if no ledger entries match.
-}
+(data.table | promise<data.table>) one row per ledger entry, each
+giving the entry ID, currency code, transaction amount, fee charged,
+balance after the transaction, account type (\code{"TRADE"}, \code{"MAIN"}),
+business type, direction (\code{"in"} or \code{"out"}), the JSON context metadata,
+and the creation datetime (POSIXct, coerced from epoch milliseconds).
+Returns an empty data.table if no ledger entries match.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1301,38 +1212,33 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{currency}}{Character or NULL; filter by currency (supports up to 10 comma-separated).}
+\item{\code{currency}}{(scalar<character> | NULL) filter by currency (supports up
+to 10 comma-separated).}
 
-\item{\code{direction}}{Character or NULL; \code{"in"} or \code{"out"}.}
+\item{\code{direction}}{(scalar<character> | NULL) \code{"in"} or \code{"out"}.}
 
-\item{\code{bizType}}{Character or NULL; transaction type: \code{"TRADE_EXCHANGE"}, \code{"TRANSFER"},
-\code{"SUB_TRANSFER"}, \code{"RETURNED_FEES"}, \code{"DEDUCTION_FEES"}, \code{"OTHER"}.}
+\item{\code{bizType}}{(scalar<character> | NULL) transaction type:
+\code{"TRADE_EXCHANGE"}, \code{"TRANSFER"}, \code{"SUB_TRANSFER"}, \code{"RETURNED_FEES"},
+\code{"DEDUCTION_FEES"}, \code{"OTHER"}.}
 
-\item{\code{lastId}}{Character or NULL; pagination cursor for fetching previous batches.}
+\item{\code{lastId}}{(scalar<character> | NULL) pagination cursor for fetching
+previous batches.}
 
-\item{\code{limit}}{Integer or NULL; results per page (default 100, max 200).}
+\item{\code{limit}}{(scalar<integer> | NULL) results per page (default 100, max
+200).}
 
-\item{\code{startAt}}{Integer or NULL; start timestamp in milliseconds.}
+\item{\code{startAt}}{(scalar<integer> | NULL) start timestamp in milliseconds.}
 
-\item{\code{endAt}}{Integer or NULL; end timestamp in milliseconds.}
+\item{\code{endAt}}{(scalar<integer> | NULL) end timestamp in milliseconds.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{id} (character): Ledger entry ID.
-\item \code{currency} (character): Currency code.
-\item \code{amount} (character): Transaction amount.
-\item \code{fee} (character): Fee charged.
-\item \code{tax} (character): Tax amount.
-\item \code{balance} (character): Balance after transaction.
-\item \code{account_type} (character): Account type.
-\item \code{biz_type} (character): Business type.
-\item \code{direction} (character): \code{"in"} or \code{"out"}.
-\item \code{context} (character): JSON metadata.
-\item \code{created_at} (POSIXct): Coerced from epoch milliseconds.
-}
+(data.table | promise<data.table>) one row per ledger entry, each
+giving the entry ID, currency code, transaction amount, fee charged, tax
+amount, balance after the transaction, account type, business type,
+direction (\code{"in"} or \code{"out"}), the JSON context metadata, and the
+creation datetime (POSIXct, coerced from epoch milliseconds).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1405,16 +1311,14 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{currencyType}}{Integer or NULL; \code{0} for crypto (default), \code{1} for fiat.}
+\item{\code{currencyType}}{(scalar<integer> | NULL) \code{0} for crypto (default), \code{1}
+for fiat.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{taker_fee_rate} (character): Base taker fee rate.
-\item \code{maker_fee_rate} (character): Base maker fee rate.
-}
+(data.table | promise<data.table>) one row giving the base taker
+fee rate and the base maker fee rate.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1495,18 +1399,15 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbols}}{Character; comma-separated trading pairs (max 10),
+\item{\code{symbols}}{(scalar<character>) comma-separated trading pairs (max 10),
 e.g. \code{"BTC-USDT,ETH-USDT"}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{symbol} (character): Trading pair.
-\item \code{taker_fee_rate} (character): Actual taker fee rate.
-\item \code{maker_fee_rate} (character): Actual maker fee rate.
-}
+(data.table | promise<data.table>) one row per trading pair, each
+giving the pair symbol, the actual taker fee rate, and the actual maker
+fee rate.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

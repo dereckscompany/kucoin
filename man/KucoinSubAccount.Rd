@@ -252,24 +252,24 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{password}}{Character; sub-account password (7-24 chars, must contain both letters and numbers, no special characters).}
+\item{\code{password}}{(scalar<character>) sub-account password (7-24 chars, must
+contain both letters and numbers, no special characters).}
 
-\item{\code{subName}}{Character; sub-account name (7-32 chars, must start with a letter, letters and numbers only, no spaces).}
+\item{\code{subName}}{(scalar<character>) sub-account name (7-32 chars, must start
+with a letter, letters and numbers only, no spaces).}
 
-\item{\code{access}}{Character; permission type: \code{"Spot"}, \code{"Futures"}, or \code{"Margin"}. Validated via \code{rlang::arg_match0()}.}
+\item{\code{access}}{(scalar<character>) permission type: \code{"Spot"}, \code{"Futures"},
+or \code{"Margin"}. Validated via \code{rlang::arg_match0()}.}
 
-\item{\code{remarks}}{Character or NULL; optional descriptive remarks for the sub-account (1-24 chars). Default \code{NULL}.}
+\item{\code{remarks}}{(scalar<character> | NULL) optional descriptive remarks for
+the sub-account (1-24 chars).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{uid} (integer): Unique user ID assigned to the new sub-account.
-\item \code{sub_name} (character): The sub-account login name.
-\item \code{remarks} (character): The remarks string (if provided).
-\item \code{access} (character): Permission granted (\code{"Spot"}, \code{"Futures"}, or \code{"Margin"}).
-}
+(data.table | promise<data.table>) one row with the newly created
+sub-account details: the unique user ID \code{uid}, the login name \code{sub_name},
+the \code{remarks} string, and the granted permission \code{access}.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -389,24 +389,19 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{page_size}}{Integer; number of results per page, between 1 and 100. Default \code{100}.}
+\item{\code{page_size}}{(scalar<count in [1, Inf[>) number of results per page,
+between 1 and 100.}
 
-\item{\code{max_pages}}{Numeric; maximum number of pages to retrieve. Use \code{Inf} (default) to fetch all available pages.}
+\item{\code{max_pages}}{(scalar<numeric in [1, Inf]>) maximum number of pages to
+retrieve. Use \code{Inf} (default) to fetch all available pages.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{user_id} (character): Internal user ID string.
-\item \code{uid} (integer): Numeric user ID for the sub-account.
-\item \code{sub_name} (character): Sub-account login name.
-\item \code{status} (integer): Account status code (2 = active).
-\item \code{type} (integer): Account type code.
-\item \code{access} (character): Permission type (\code{"Spot"}, \code{"Futures"}, \code{"Margin"}).
-\item \code{remarks} (character): Optional remarks string.
-\item \code{created_at} (POSIXct): Creation datetime (coerced from epoch milliseconds).
-}
+(data.table | promise<data.table>) one row per sub-account with its
+internal \code{user_id}, numeric \code{uid}, login \code{sub_name}, \code{status} and \code{type}
+codes, \code{access} permission, \code{remarks}, and \code{created_at} creation datetime
+(coerced from epoch milliseconds).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -543,27 +538,20 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{subUserId}}{Character; the sub-account user ID (numeric UID as a string, e.g., \code{"169630809"}).}
+\item{\code{subUserId}}{(scalar<character>) the sub-account user ID (numeric UID
+as a string, e.g., \code{"169630809"}).}
 
-\item{\code{includeBaseAmount}}{Logical; if \code{TRUE}, includes currencies with zero balances in the response. Default \code{FALSE}.}
+\item{\code{includeBaseAmount}}{(scalar<logical>) if \code{TRUE}, includes currencies
+with zero balances in the response.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{currency} (character): Currency code (e.g., \code{"USDT"}, \code{"BTC"}).
-\item \code{balance} (character): Total balance for that currency.
-\item \code{available} (character): Available (unfrozen) balance.
-\item \code{holds} (character): Amount held in open orders or pending withdrawals.
-\item \code{base_currency} (character): Base currency for value conversion.
-\item \code{base_currency_price} (character): Price of the currency in base currency terms.
-\item \code{base_amount} (character): Total value in base currency.
-\item \code{tag} (character): Currency tag (if applicable).
-\item \code{account_type} (character): One of \code{"main"}, \code{"trade"}, \code{"margin"}.
-\item \code{sub_user_id} (character): The sub-account user ID.
-\item \code{sub_name} (character): The sub-account name.
-}
+(data.table | promise<data.table>) one row per currency and account
+type holding the \code{currency}, \code{balance}, \code{available}, and \code{holds} amounts,
+the \code{base_currency}, \code{base_currency_price} and \code{base_amount} value
+conversion, the currency \code{tag}, the \code{account_type} (\code{"main"}, \code{"trade"},
+or \code{"margin"}), and the \code{sub_user_id} and \code{sub_name} identifiers.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -708,27 +696,21 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{page_size}}{Integer; number of results per page, between 10 and 100. Default \code{100}.}
+\item{\code{page_size}}{(scalar<count in [1, Inf[>) number of results per page,
+between 10 and 100.}
 
-\item{\code{max_pages}}{Numeric; maximum number of pages to retrieve. Use \code{Inf} (default) to fetch all available pages.}
+\item{\code{max_pages}}{(scalar<numeric in [1, Inf]>) maximum number of pages to
+retrieve. Use \code{Inf} (default) to fetch all available pages.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{sub_user_id} (character): The sub-account user ID.
-\item \code{sub_name} (character): The sub-account name.
-\item \code{account_type} (character): One of \code{"main"}, \code{"trade"}, \code{"margin"}.
-\item \code{currency} (character): Currency code (e.g., \code{"USDT"}, \code{"BTC"}, \code{"ETH"}).
-\item \code{balance} (character): Total balance for that currency.
-\item \code{available} (character): Available (unfrozen) balance.
-\item \code{holds} (character): Amount held in open orders or pending withdrawals.
-\item \code{base_currency} (character): Base currency for value conversion.
-\item \code{base_currency_price} (character): Price of the currency in base currency terms.
-\item \code{base_amount} (character): Total value in base currency.
-\item \code{tag} (character): Currency tag (if applicable).
-}
+(data.table | promise<data.table>) one row per currency, account
+type and sub-account holding the \code{sub_user_id} and \code{sub_name}
+identifiers, the \code{account_type} (\code{"main"}, \code{"trade"}, or \code{"margin"}), the
+\code{currency}, \code{balance}, \code{available} and \code{holds} amounts, and the
+\code{base_currency}, \code{base_currency_price}, \code{base_amount} and \code{tag}
+value-conversion fields.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
