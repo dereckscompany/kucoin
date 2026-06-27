@@ -264,18 +264,19 @@ Create a new KucoinFuturesMarketData instance.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{keys}}{List; API credentials from \code{\link[=get_api_keys]{get_api_keys()}}.}
+\item{\code{keys}}{(list) API credentials from \code{\link[=get_api_keys]{get_api_keys()}}.}
 
-\item{\code{base_url}}{Character; Futures API base URL. Defaults to \code{\link[=get_futures_base_url]{get_futures_base_url()}}.}
+\item{\code{base_url}}{(scalar<character>) Futures API base URL. Defaults to
+\code{\link[=get_futures_base_url]{get_futures_base_url()}}.}
 
-\item{\code{async}}{Logical; if TRUE, methods return promises.}
+\item{\code{async}}{(scalar<logical>) if TRUE, methods return promises.}
 
-\item{\code{time_source}}{Character; \code{"local"} or \code{"server"}.}
+\item{\code{time_source}}{(scalar<character>) \code{"local"} or \code{"server"}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Invisible self.
+(class<KucoinFuturesMarketData>) invisibly, the new instance.
 }
 }
 \if{html}{\out{<hr>}}
@@ -383,43 +384,18 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+\item{\code{symbol}}{(scalar<character>) futures symbol (e.g., \code{"XBTUSDTM"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
-constructed with \code{async = TRUE}) with the contract specification
-flattened to one row per symbol. Key columns:
-\itemize{
-\item \code{symbol} (character): Contract symbol.
-\item \code{root_symbol} (character): Root symbol (e.g., \code{"USDT"}).
-\item \code{type} (character): Contract type (e.g., \code{"FFWCSX"} for perpetual).
-\item \code{base_currency} (character): Base currency code.
-\item \code{quote_currency} (character): Quote currency code.
-\item \code{settle_currency} (character): Settlement currency code.
-\item \code{lot_size} (integer): Minimum order size in contracts.
-\item \code{tick_size} (numeric): Minimum price increment.
-\item \code{multiplier} (numeric): Contract value multiplier.
-\item \code{initial_margin} (numeric): Initial margin rate.
-\item \code{maintain_margin} (numeric): Maintenance margin rate.
-\item \code{max_leverage} (integer): Maximum allowed leverage.
-\item \code{maker_fee_rate} (numeric): Maker fee rate.
-\item \code{taker_fee_rate} (numeric): Taker fee rate.
-\item \code{status} (character): Contract status (e.g., \code{"Open"}).
-\item \code{mark_price} (numeric): Current mark price.
-\item \code{index_price} (numeric): Underlying index price.
-\item \code{last_trade_price} (numeric): Last traded price.
-\item \code{funding_fee_rate} (numeric): Current funding fee rate.
-\item \code{predicted_funding_fee_rate} (numeric): Predicted next funding fee rate.
-\item \code{open_interest} (character): Current open interest.
-\item \code{turnover_of24h} (numeric): 24h turnover in settlement currency.
-\item \code{volume_of24h} (numeric): 24h trading volume.
-\item \code{low_price} (numeric): 24h low price.
-\item \code{high_price} (numeric): 24h high price.
-\item \code{price_chg_pct} (numeric): 24h price change percentage.
-\item \code{price_chg} (numeric): 24h price change.
-}
+(data.table | promise<data.table>) one row giving the contract
+specification flattened to a single row, carrying the contract symbol,
+root symbol, type, base/quote/settlement currencies, lot and tick sizes,
+value multiplier, initial and maintenance margin rates, maximum leverage,
+maker and taker fee rates, status, mark/index/last-trade prices, current
+and predicted funding fee rates, open interest, 24-hour turnover, volume,
+low and high prices, and the 24-hour price change percentage and amount.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -529,10 +505,8 @@ Verified: 2026-05-23
 }
 
 \subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with
-\code{async = TRUE}) with one row per active contract; columns match
-\code{get_contract()}. Returns an empty \code{data.table} if no active
-contracts are returned.
+(data.table | promise<data.table>) one row per active contract,
+carrying the same contract metadata as \code{get_contract()}.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -615,26 +589,16 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+\item{\code{symbol}}{(scalar<character>) futures symbol (e.g., \code{"XBTUSDTM"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
-constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{sequence} (integer): Sequence number.
-\item \code{symbol} (character): Contract symbol.
-\item \code{side} (character): Side of the last trade (\code{"buy"} or \code{"sell"}).
-\item \code{size} (integer): Size of the last trade.
-\item \code{trade_id} (character): Identifier of the last trade.
-\item \code{price} (character): Last trade price.
-\item \code{best_bid_size} (integer): Quantity at best bid.
-\item \code{best_bid_price} (character): Best bid price.
-\item \code{best_ask_price} (character): Best ask price.
-\item \code{best_ask_size} (integer): Quantity at best ask.
-\item \code{ts} (POSIXct): Ticker timestamp (coerced from nanoseconds).
-}
+(data.table | promise<data.table>) one row giving the real-time
+ticker snapshot: the sequence number, contract symbol, last trade side,
+size, trade identifier and price, the best bid and ask prices with their
+sizes, and the ticker datetime (POSIXct, coerced from the nanosecond
+timestamp).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -728,10 +692,8 @@ Verified: 2026-05-23
 }
 
 \subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with
-\code{async = TRUE}) with one row per contract; columns match
-\code{get_ticker()}. Returns an empty \code{data.table} if no tickers are
-returned.
+(data.table | promise<data.table>) one row per contract, carrying
+the same ticker fields as \code{get_ticker()}.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -819,23 +781,16 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+\item{\code{symbol}}{(scalar<character>) futures symbol (e.g., \code{"XBTUSDTM"}).}
 
-\item{\code{size}}{Integer; number of levels, either \code{20} or \code{100}. Default \code{20}.}
+\item{\code{size}}{(scalar<count>) number of levels, either \code{20} or \code{100}.
+Default \code{20}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{ts} (POSIXct): Snapshot timestamp (coerced from nanoseconds).
-\item \code{sequence} (character): Sequence number for change detection.
-\item \code{side} (character): \code{"bid"} or \code{"ask"}.
-\item \code{level} (integer): 1-indexed depth from top-of-book within the side
-(\code{level == 1} is best bid / best ask).
-\item \code{price} (numeric): Price level.
-\item \code{size} (numeric): Size at this price level.
-}
+(data.table | promise<data.table>) the level-2 order book in long
+format (ts, sequence, side, level, price, size, and symbol when present).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -927,21 +882,13 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+\item{\code{symbol}}{(scalar<character>) futures symbol (e.g., \code{"XBTUSDTM"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{ts} (POSIXct): Snapshot timestamp (coerced from nanoseconds).
-\item \code{sequence} (character): Sequence number for change detection.
-\item \code{side} (character): \code{"bid"} or \code{"ask"}.
-\item \code{level} (integer): 1-indexed depth from top-of-book within the side
-(\code{level == 1} is best bid / best ask).
-\item \code{price} (numeric): Price level.
-\item \code{size} (numeric): Size at this price level.
-}
+(data.table | promise<data.table>) the level-2 order book in long
+format (ts, sequence, side, level, price, size, and symbol when present).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1033,24 +980,15 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+\item{\code{symbol}}{(scalar<character>) futures symbol (e.g., \code{"XBTUSDTM"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with
-\code{async = TRUE}) with one row per trade. Returns an empty
-\code{data.table} when KuCoin reports no recent trades. Columns:
-\itemize{
-\item \code{sequence} (integer): Trade sequence number.
-\item \code{trade_id} (character): Unique trade identifier.
-\item \code{taker_order_id} (character): Taker's order ID.
-\item \code{maker_order_id} (character): Maker's order ID.
-\item \code{price} (character): Trade price.
-\item \code{size} (integer): Trade size in contracts.
-\item \code{side} (character): Taker side (\code{"buy"} or \code{"sell"}).
-\item \code{ts} (POSIXct): Trade timestamp (coerced from nanoseconds).
-}
+(data.table | promise<data.table>) one row per recent trade, each
+giving the trade sequence number, trade identifier, taker and maker order
+identifiers, price, size in contracts, taker side (\code{"buy"} or \code{"sell"}),
+and the trade datetime (POSIXct, coerced from the nanosecond timestamp).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1137,41 +1075,32 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+\item{\code{symbol}}{(scalar<character>) futures symbol (e.g., \code{"XBTUSDTM"}).}
 
-\item{\code{granularity}}{Integer; candle interval in minutes. Supported values:
-1, 5, 15, 30, 60, 120, 240, 480, 720, 1440, 10080.}
+\item{\code{granularity}}{(scalar<count in [1, Inf[>) candle interval in minutes.
+Supported values: 1, 5, 15, 30, 60, 120, 240, 480, 720, 1440, 10080.}
 
-\item{\code{from}}{POSIXct, numeric, or NULL; start time. If POSIXct, converted
-to milliseconds. If numeric, assumed to be milliseconds.}
+\item{\code{from}}{(POSIXct | scalar<numeric> | NULL) start time. If POSIXct,
+converted to milliseconds. If numeric, assumed to be milliseconds.}
 
-\item{\code{to}}{POSIXct, numeric, or NULL; end time.}
+\item{\code{to}}{(POSIXct | scalar<numeric> | NULL) end time.}
 
-\item{\code{fetch_all}}{Logical; if \code{TRUE}, automatically segments the time range
-into multiple API calls of up to 200 candles each, fetches all segments,
-deduplicates overlapping boundaries, and returns the combined result sorted
-by \code{datetime}. Both \code{from} and \code{to} are required when enabled.
-\strong{Warning}: large date ranges will consume multiple API requests and may
-impact your rate-limit quota. Default \code{FALSE}.}
+\item{\code{fetch_all}}{(scalar<logical>) if \code{TRUE}, automatically segments the
+time range into multiple API calls of up to 200 candles each, fetches all
+segments, deduplicates overlapping boundaries, and returns the combined
+result sorted by \code{datetime}. Both \code{from} and \code{to} are required when
+enabled. \strong{Warning}: large date ranges will consume multiple API requests
+and may impact your rate-limit quota. Default \code{FALSE}.}
 
-\item{\code{sleep}}{Numeric; seconds to wait between consecutive API calls when
-\code{fetch_all = TRUE}. Use this to avoid hitting KuCoin rate limits. Only
-applies in synchronous mode; async mode chains requests sequentially via
-promises. Default \code{0.2}.}
+\item{\code{sleep}}{(scalar<numeric in [0, Inf[>) seconds to wait between
+consecutive API calls when \code{fetch_all = TRUE}. Use this to avoid hitting
+KuCoin rate limits. Only applies in synchronous mode; async mode chains
+requests sequentially via promises. Default \code{0.2}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{datetime} (POSIXct): Candle open time (coerced from milliseconds).
-\item \code{open} (numeric): Opening price.
-\item \code{high} (numeric): Highest price.
-\item \code{low} (numeric): Lowest price.
-\item \code{close} (numeric): Closing price.
-\item \code{volume} (numeric): Trading volume in contracts.
-\item \code{turnover} (numeric): Trading turnover in settlement currency.
-}
+(Klines | promise<Klines>) one row per candle ascending by datetime.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1267,20 +1196,15 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+\item{\code{symbol}}{(scalar<character>) futures symbol (e.g., \code{"XBTUSDTM"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
-constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{symbol} (character): Contract symbol.
-\item \code{granularity} (integer): Price granularity in milliseconds.
-\item \code{time_point} (POSIXct): Timestamp (coerced from milliseconds).
-\item \code{value} (numeric): Current mark price.
-\item \code{index_price} (numeric): Underlying index price.
-}
+(data.table | promise<data.table>) one row giving the current mark
+price: the contract symbol, price granularity in milliseconds, the rate
+datetime (POSIXct, coerced from epoch milliseconds), the mark price, and
+the underlying index price.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1359,21 +1283,16 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+\item{\code{symbol}}{(scalar<character>) futures symbol (e.g., \code{"XBTUSDTM"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
-constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{symbol} (character): Contract symbol.
-\item \code{granularity} (integer): Funding interval in milliseconds.
-\item \code{time_point} (POSIXct): Current rate timestamp (coerced from milliseconds).
-\item \code{value} (numeric): Current funding rate.
-\item \code{predicted_value} (numeric): Predicted next funding rate.
-\item \code{funding_time} (POSIXct): Next funding settlement time (coerced from milliseconds).
-}
+(data.table | promise<data.table>) one row giving the current
+funding rate: the contract symbol, funding interval in milliseconds, the
+rate datetime (POSIXct, coerced from epoch milliseconds), the current and
+predicted funding rates, and the next funding settlement datetime (POSIXct,
+coerced from epoch milliseconds).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1462,25 +1381,20 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+\item{\code{symbol}}{(scalar<character>) futures symbol (e.g., \code{"XBTUSDTM"}).}
 
-\item{\code{from}}{POSIXct or numeric; start time. If POSIXct, converted to milliseconds.
-If numeric, assumed to be milliseconds.}
+\item{\code{from}}{(POSIXct | scalar<numeric>) start time. If POSIXct, converted to
+milliseconds. If numeric, assumed to be milliseconds.}
 
-\item{\code{to}}{POSIXct or numeric; end time. If POSIXct, converted to milliseconds.
-If numeric, assumed to be milliseconds.}
+\item{\code{to}}{(POSIXct | scalar<numeric>) end time. If POSIXct, converted to
+milliseconds. If numeric, assumed to be milliseconds.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with
-\code{async = TRUE}) with one row per funding settlement. Returns an
-empty \code{data.table} when no records cover the time range. Columns:
-\itemize{
-\item \code{symbol} (character): Contract symbol.
-\item \code{funding_rate} (numeric): Funding rate for the period.
-\item \code{timepoint} (POSIXct): Settlement timestamp (coerced from milliseconds).
-}
+(data.table | promise<data.table>) one row per funding settlement,
+each giving the contract symbol, the funding rate for the period, and the
+settlement datetime (POSIXct, coerced from epoch milliseconds).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1554,11 +1468,8 @@ Verified: 2026-05-23
 }
 
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
-constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{server_time} (POSIXct): Server timestamp (coerced from milliseconds).
-}
+(data.table | promise<data.table>) one row giving the server
+datetime (POSIXct, coerced from epoch milliseconds).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1631,12 +1542,9 @@ Verified: 2026-05-23
 }
 
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
-constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{status} (character): Service status (e.g., \code{"open"}, \code{"close"}).
-\item \code{msg} (character): Status message (empty when operational).
-}
+(data.table | promise<data.table>) one row giving the operational
+status (\code{"open"}, \code{"close"}, or \code{"cancelonly"}) and an optional
+remark/message.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

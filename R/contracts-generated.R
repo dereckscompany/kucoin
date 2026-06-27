@@ -182,6 +182,185 @@ assert_return_KucoinDeposit__get_deposit_history <- function(value) {
   return(value)
 }
 
+assert_args_KucoinFuturesMarketData__initialize <- function(keys, base_url, async) {
+  assert_list(keys)
+  assert_scalar_character(base_url)
+  assert_scalar_logical(async)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesMarketData__initialize <- function(value) {
+  assert_class(value, "KucoinFuturesMarketData")
+  return(value)
+}
+
+assert_args_KucoinFuturesMarketData__get_contract <- function(symbol) {
+  assert_scalar_character(symbol)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesMarketData__get_contract <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_return_KucoinFuturesMarketData__get_all_contracts <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinFuturesMarketData__get_ticker <- function(symbol) {
+  assert_scalar_character(symbol)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesMarketData__get_ticker <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_return_KucoinFuturesMarketData__get_all_tickers <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinFuturesMarketData__get_part_orderbook <- function(symbol) {
+  assert_scalar_character(symbol)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesMarketData__get_part_orderbook <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinFuturesMarketData__get_full_orderbook <- function(symbol) {
+  assert_scalar_character(symbol)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesMarketData__get_full_orderbook <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinFuturesMarketData__get_trade_history <- function(symbol) {
+  assert_scalar_character(symbol)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesMarketData__get_trade_history <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinFuturesMarketData__get_klines <- function(symbol, granularity, fetch_all, sleep) {
+  assert_scalar_character(symbol)
+  assert_scalar_count(granularity)
+  assert_between(granularity, lower = 1)
+  assert_scalar_logical(fetch_all)
+  assert_scalar_double(sleep)
+  assert_between(sleep, lower = 0, upper = Inf, upper_inclusive = FALSE)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesMarketData__get_klines <- function(value) {
+  assert_data_table(value)
+  assert_has_columns(value, c("datetime", "open", "high", "low", "close", "volume", "turnover"))
+  assert_datetime(value[["datetime"]])
+  assert_no_missing_values(value[["datetime"]])
+  assert_double(value[["open"]])
+  assert_no_missing_values(value[["open"]])
+  assert_double(value[["high"]])
+  assert_no_missing_values(value[["high"]])
+  assert_double(value[["low"]])
+  assert_no_missing_values(value[["low"]])
+  assert_double(value[["close"]])
+  assert_no_missing_values(value[["close"]])
+  assert_double(value[["volume"]])
+  assert_no_missing_values(value[["volume"]])
+  assert_double(value[["turnover"]])
+  assert_no_missing_values(value[["turnover"]])
+  return(value)
+}
+
+assert_args_KucoinFuturesMarketData__get_mark_price <- function(symbol) {
+  assert_scalar_character(symbol)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesMarketData__get_mark_price <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinFuturesMarketData__get_funding_rate <- function(symbol) {
+  assert_scalar_character(symbol)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesMarketData__get_funding_rate <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinFuturesMarketData__get_funding_history <- function(symbol) {
+  assert_scalar_character(symbol)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesMarketData__get_funding_history <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_return_KucoinFuturesMarketData__get_server_time <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_return_KucoinFuturesMarketData__get_service_status <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_parse_futures_orderbook <- function(data) {
+  assert_list(data)
+  return(invisible(NULL))
+}
+
+assert_return_parse_futures_orderbook <- function(value) {
+  assert_class(value, "data.table")
+  return(value)
+}
+
+assert_args_parse_futures_klines <- function(data) {
+  if (!is.null(data)) {
+    assert_list(data)
+  }
+  return(invisible(NULL))
+}
+
+assert_return_parse_futures_klines <- function(value) {
+  assert_data_table(value)
+  assert_has_columns(value, c("datetime", "open", "high", "low", "close", "volume", "turnover"))
+  assert_datetime(value[["datetime"]])
+  assert_no_missing_values(value[["datetime"]])
+  assert_double(value[["open"]])
+  assert_no_missing_values(value[["open"]])
+  assert_double(value[["high"]])
+  assert_no_missing_values(value[["high"]])
+  assert_double(value[["low"]])
+  assert_no_missing_values(value[["low"]])
+  assert_double(value[["close"]])
+  assert_no_missing_values(value[["close"]])
+  assert_double(value[["volume"]])
+  assert_no_missing_values(value[["volume"]])
+  assert_double(value[["turnover"]])
+  assert_no_missing_values(value[["turnover"]])
+  return(value)
+}
+
 assert_args_KucoinLending__get_loan_market <- function(query) {
   assert_list(query)
   return(invisible(NULL))
