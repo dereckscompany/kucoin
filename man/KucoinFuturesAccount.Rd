@@ -93,18 +93,19 @@ Create a new KucoinFuturesAccount instance.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{keys}}{List; API credentials from \code{\link[=get_api_keys]{get_api_keys()}}.}
+\item{\code{keys}}{(list) API credentials from \code{\link[=get_api_keys]{get_api_keys()}}.}
 
-\item{\code{base_url}}{Character; Futures API base URL. Defaults to \code{\link[=get_futures_base_url]{get_futures_base_url()}}.}
+\item{\code{base_url}}{(scalar<character>) Futures API base URL. Defaults to
+\code{\link[=get_futures_base_url]{get_futures_base_url()}}.}
 
-\item{\code{async}}{Logical; if TRUE, methods return promises.}
+\item{\code{async}}{(scalar<logical>) if TRUE, methods return promises.}
 
-\item{\code{time_source}}{Character; \code{"local"} or \code{"server"}.}
+\item{\code{time_source}}{(scalar<character>) \code{"local"} or \code{"server"}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Invisible self.
+(class<KucoinFuturesAccount>) invisibly, the new instance.
 }
 }
 \if{html}{\out{<hr>}}
@@ -170,24 +171,16 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{currency}}{Character; settlement currency (e.g., \code{"USDT"}).
+\item{\code{currency}}{(scalar<character>) settlement currency (e.g., \code{"USDT"}).
 Default \code{"USDT"}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
-constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{account_equity} (numeric): Total account equity.
-\item \code{unrealised_pnl} (numeric): Unrealised profit and loss.
-\item \code{margin_balance} (numeric): Margin balance (equity + unrealised PNL).
-\item \code{position_margin} (numeric): Margin held by open positions.
-\item \code{order_margin} (numeric): Margin held by open orders.
-\item \code{frozen_funds} (numeric): Frozen funds.
-\item \code{available_balance} (numeric): Available balance for trading.
-\item \code{currency} (character): Settlement currency code.
-}
+(data.table | promise<data.table>) one row giving the futures
+account overview: total account equity, unrealised profit and loss,
+margin balance, position and order margin, frozen funds, available
+balance, and the settlement currency code.
 }
 }
 \if{html}{\out{<hr>}}
@@ -273,44 +266,20 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+\item{\code{symbol}}{(scalar<character>) futures symbol (e.g., \code{"XBTUSDTM"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
-constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{id} (character): Position identifier.
-\item \code{symbol} (character): Contract symbol.
-\item \code{auto_deposit} (logical): Auto-deposit margin flag.
-\item \code{real_leverage} (numeric): Effective leverage.
-\item \code{cross_mode} (logical): Whether cross margin mode is active.
-\item \code{delev_percentage} (numeric): Auto-deleveraging percentage.
-\item \code{current_qty} (integer): Current position size in contracts.
-\item \code{current_cost} (character): Cost of the current position.
-\item \code{current_comm} (character): Current commission paid.
-\item \code{unrealised_cost} (character): Unrealised cost.
-\item \code{realised_gross_cost} (character): Realised gross cost.
-\item \code{realised_cost} (character): Realised cost.
-\item \code{is_open} (logical): Whether the position is open.
-\item \code{mark_price} (numeric): Current mark price.
-\item \code{mark_value} (character): Mark value of the position.
-\item \code{pos_cost} (character): Position cost.
-\item \code{pos_init} (character): Initial margin.
-\item \code{pos_comm} (character): Position commission.
-\item \code{pos_margin} (character): Position margin.
-\item \code{unrealised_pnl} (character): Unrealised profit and loss.
-\item \code{unrealised_pnl_pcnt} (numeric): Unrealised PnL as a percentage.
-\item \code{avg_entry_price} (character): Average entry price.
-\item \code{liquidation_price} (character): Estimated liquidation price.
-\item \code{bankrupt_price} (character): Bankruptcy price.
-\item \code{settle_currency} (character): Settlement currency.
-\item \code{margin_mode} (character): \code{"ISOLATED"} or \code{"CROSS"}.
-\item \code{position_side} (character): \code{"BOTH"}, \code{"LONG"}, or \code{"SHORT"}.
-\item \code{opening_timestamp} (POSIXct): Position opened time (coerced from milliseconds).
-\item \code{current_timestamp} (POSIXct): Current server time (coerced from milliseconds).
-}
+(data.table | promise<data.table>) one row giving the position
+details: identifier, contract symbol, auto-deposit flag, effective
+leverage, cross-mode flag, auto-deleveraging percentage, current
+position size, current and unrealised/realised costs and commissions,
+open flag, mark price and value, position cost/init/commission/margin,
+unrealised PnL and its percentage, average entry, liquidation and
+bankruptcy prices, settlement currency, margin mode, position side, and
+the opening and current datetimes (POSIXct, coerced from epoch
+milliseconds).
 }
 }
 \if{html}{\out{<hr>}}
@@ -404,15 +373,14 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{currency}}{Character or NULL; filter by settlement currency.}
+\item{\code{currency}}{(scalar<character> | NULL) filter by settlement currency.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with
-\code{async = TRUE}) with one row per open position; same columns as
-\code{get_position()}. Returns an empty \code{data.table} when there are no
-open positions.
+(data.table | promise<data.table>) one row per open position,
+carrying the same columns as \code{get_position()}; an empty \code{data.table}
+when there are no open positions.
 }
 }
 \if{html}{\out{<hr>}}
@@ -496,35 +464,19 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{query}}{Named list; query parameters. Optional: \code{symbol},
-\code{from}, \code{to}, \code{limit}, \code{pageId}.}
+\item{\code{query}}{(list) query parameters. Optional keys: symbol, from, to,
+limit, pageId.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with
-\code{async = TRUE}) with one row per closed position record. Returns an
-empty \code{data.table} when no history records match. Columns:
-\itemize{
-\item \code{close_id} (character): Close-event identifier.
-\item \code{position_id} (character): Position identifier.
-\item \code{uid} (integer): Numeric user ID.
-\item \code{user_id} (character): String user ID.
-\item \code{symbol} (character): Contract symbol.
-\item \code{settle_currency} (character): Settlement currency.
-\item \code{leverage} (character): Leverage used.
-\item \code{type} (character): Close type (e.g., \code{"Close"}).
-\item \code{pnl} (character): Realised PnL.
-\item \code{realised_gross_cost} (character): Gross realised cost.
-\item \code{withdraw_pnl} (character): Withdrawn PnL.
-\item \code{trade_fee} (character): Trading fee.
-\item \code{funding_fee} (character): Funding fee.
-\item \code{open_price} (character): Average open price.
-\item \code{close_price} (character): Average close price.
-\item \code{margin_mode} (character): \code{"ISOLATED"} or \code{"CROSS"}.
-\item \code{open_time} (POSIXct): Position opened time (coerced from milliseconds).
-\item \code{close_time} (POSIXct): Position closed time (coerced from milliseconds).
-}
+(data.table | promise<data.table>) one row per closed position
+record, each giving the close-event and position identifiers, numeric
+and string user IDs, contract symbol, settlement currency, leverage,
+close type, realised PnL, gross realised cost, withdrawn PnL, trade and
+funding fees, average open and close prices, margin mode, and the
+opening and closing datetimes (POSIXct, coerced from epoch
+milliseconds); an empty \code{data.table} when no history records match.
 }
 }
 \if{html}{\out{<hr>}}
@@ -583,17 +535,13 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; futures symbol.}
+\item{\code{symbol}}{(scalar<character>) futures symbol.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
-constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{symbol} (character): Contract symbol.
-\item \code{margin_mode} (character): \code{"ISOLATED"} or \code{"CROSS"}.
-}
+(data.table | promise<data.table>) one row giving the contract
+symbol and its current margin mode (\code{"ISOLATED"} or \code{"CROSS"}).
 }
 }
 \if{html}{\out{<hr>}}
@@ -663,19 +611,15 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; futures symbol.}
+\item{\code{symbol}}{(scalar<character>) futures symbol.}
 
-\item{\code{marginMode}}{Character; \code{"ISOLATED"} or \code{"CROSS"}.}
+\item{\code{marginMode}}{(scalar<character>) \code{"ISOLATED"} or \code{"CROSS"}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
-constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{symbol} (character): Contract symbol.
-\item \code{margin_mode} (character): Updated margin mode.
-}
+(data.table | promise<data.table>) one row giving the contract
+symbol and its updated margin mode.
 }
 }
 \if{html}{\out{<hr>}}
@@ -734,17 +678,13 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; futures symbol.}
+\item{\code{symbol}}{(scalar<character>) futures symbol.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
-constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{symbol} (character): Contract symbol.
-\item \code{leverage} (character): Current leverage multiplier.
-}
+(data.table | promise<data.table>) one row giving the contract
+symbol and its current cross-margin leverage multiplier.
 }
 }
 \if{html}{\out{<hr>}}
@@ -814,19 +754,15 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; futures symbol.}
+\item{\code{symbol}}{(scalar<character>) futures symbol.}
 
-\item{\code{leverage}}{Integer; leverage multiplier.}
+\item{\code{leverage}}{(scalar<count in [1, Inf[>) leverage multiplier.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
-constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{symbol} (character): Contract symbol.
-\item \code{leverage} (character): Updated leverage multiplier.
-}
+(data.table | promise<data.table>) one row giving the contract
+symbol and its updated cross-margin leverage multiplier.
 }
 }
 \if{html}{\out{<hr>}}
@@ -886,22 +822,18 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; futures symbol.}
+\item{\code{symbol}}{(scalar<character>) futures symbol.}
 
-\item{\code{price}}{Character; order price.}
+\item{\code{price}}{(scalar<character>) order price.}
 
-\item{\code{leverage}}{Integer; leverage multiplier.}
+\item{\code{leverage}}{(scalar<count in [1, Inf[>) leverage multiplier.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
-constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{symbol} (character): Contract symbol.
-\item \code{max_buy_open_size} (integer): Maximum buy contracts.
-\item \code{max_sell_open_size} (integer): Maximum sell contracts.
-}
+(data.table | promise<data.table>) one row giving the contract
+symbol and the maximum number of contracts that can be opened on the
+buy and sell sides.
 }
 }
 \if{html}{\out{<hr>}}
@@ -957,19 +889,15 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; futures symbol.}
+\item{\code{symbol}}{(scalar<character>) futures symbol.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
-constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{max_withdraw_margin} (character): Maximum amount of isolated
-margin that can be withdrawn from the position. Returned by
-KuCoin as a fixed-precision string so the caller controls
+(data.table | promise<data.table>) one row giving the maximum
+amount of isolated margin that can be withdrawn from the position,
+returned by KuCoin as a fixed-precision string so the caller controls
 numeric coercion.
-}
 }
 }
 \if{html}{\out{<hr>}}
@@ -1042,23 +970,18 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; futures symbol.}
+\item{\code{symbol}}{(scalar<character>) futures symbol.}
 
-\item{\code{margin}}{Numeric; amount of margin to add.}
+\item{\code{margin}}{(scalar<numeric>) amount of margin to add.}
 
-\item{\code{bizNo}}{Character; unique business ID for idempotency.}
+\item{\code{bizNo}}{(scalar<character>) unique business ID for idempotency.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
-constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{id} (character): Margin operation ID.
-\item \code{symbol} (character): Contract symbol.
-\item \code{margin} (character): Amount deposited.
-\item \code{margin_type} (character): Operation type (e.g., \code{"ADD"}).
-}
+(data.table | promise<data.table>) one row giving the margin
+operation ID, contract symbol, amount deposited, and operation type
+(e.g., \code{"ADD"}).
 }
 }
 \if{html}{\out{<hr>}}
@@ -1130,21 +1053,15 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; futures symbol.}
+\item{\code{symbol}}{(scalar<character>) futures symbol.}
 
-\item{\code{withdrawAmount}}{Numeric; amount of margin to withdraw.}
+\item{\code{withdrawAmount}}{(scalar<numeric>) amount of margin to withdraw.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if
-constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{id} (character): Margin operation ID.
-\item \code{symbol} (character): Contract symbol.
-\item \code{margin} (character): Amount withdrawn.
-\item \code{margin_type} (character): Operation type.
-}
+(data.table | promise<data.table>) one row giving the margin
+operation ID, contract symbol, amount withdrawn, and operation type.
 }
 }
 \if{html}{\out{<hr>}}
@@ -1228,23 +1145,16 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; futures symbol.}
+\item{\code{symbol}}{(scalar<character>) futures symbol.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with
-\code{async = TRUE}) with one row per risk-limit tier. Returns an empty
-\code{data.table} when KuCoin returns no tiers. Columns:
-\itemize{
-\item \code{symbol} (character): Contract symbol.
-\item \code{level} (integer): Risk limit tier level.
-\item \code{max_risk_limit} (integer): Maximum position value for this tier.
-\item \code{min_risk_limit} (integer): Minimum position value for this tier.
-\item \code{max_leverage} (integer): Maximum leverage at this tier.
-\item \code{initial_margin} (numeric): Initial margin rate.
-\item \code{maintain_margin} (numeric): Maintenance margin rate.
-}
+(data.table | promise<data.table>) one row per risk-limit tier,
+each giving the contract symbol, tier level, maximum and minimum
+position values for the tier, maximum leverage, and the initial and
+maintenance margin rates; an empty \code{data.table} when KuCoin returns no
+tiers.
 }
 }
 \if{html}{\out{<hr>}}
@@ -1327,28 +1237,21 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; futures symbol.}
+\item{\code{symbol}}{(scalar<character>) futures symbol.}
 
-\item{\code{query}}{Named list; additional query parameters. Optional:
-\code{startAt}, \code{endAt}, \code{reverse}, \code{offset}, \code{forward}, \code{maxCount}.}
+\item{\code{query}}{(list) additional query parameters. Optional keys: startAt,
+endAt, reverse, offset, forward, maxCount.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with
-\code{async = TRUE}) with one row per funding settlement. Returns an
-empty \code{data.table} when no records are returned. Columns:
-\itemize{
-\item \code{id} (integer): Record identifier.
-\item \code{symbol} (character): Contract symbol.
-\item \code{time_point} (POSIXct): Funding settlement time (coerced from milliseconds).
-\item \code{funding_rate} (numeric): Funding rate applied.
-\item \code{mark_price} (numeric): Mark price at settlement.
-\item \code{position_qty} (integer): Position size at settlement.
-\item \code{position_cost} (character): Position cost at settlement.
-\item \code{funding} (character): Funding fee amount (negative = paid, positive = received).
-\item \code{settle_currency} (character): Settlement currency.
-}
+(data.table | promise<data.table>) one row per funding
+settlement, each giving the record identifier, contract symbol, the
+funding settlement datetime (POSIXct, coerced from epoch milliseconds),
+funding rate applied, mark price at settlement, position size and cost
+at settlement, the funding fee amount (negative = paid, positive =
+received), and the settlement currency; an empty \code{data.table} when no
+records are returned.
 }
 }
 \if{html}{\out{<hr>}}
