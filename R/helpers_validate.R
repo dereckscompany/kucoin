@@ -7,8 +7,8 @@
 #' (e.g., `"BTC-USDT"`), consisting of alphanumeric characters separated
 #' by a single dash.
 #'
-#' @param ticker Character string; the ticker symbol to verify.
-#' @return Logical; `TRUE` if valid, `FALSE` otherwise.
+#' @param ticker (scalar<character>) the ticker symbol to verify.
+#' @return (scalar<logical>) `TRUE` if valid, `FALSE` otherwise.
 #'
 #' @examples
 #' \dontrun{
@@ -19,7 +19,8 @@
 #' }
 #' @export
 verify_symbol <- function(ticker) {
-  return(grepl("^[A-Za-z0-9]+-[A-Za-z0-9]+$", ticker))
+  assert_args_verify_symbol(ticker)
+  return(assert_return_verify_symbol(grepl("^[A-Za-z0-9]+-[A-Za-z0-9]+$", ticker)))
 }
 
 #' Validate Order Parameters
@@ -36,23 +37,28 @@ verify_symbol <- function(ticker) {
 #' - `postOnly` cannot be `TRUE` with IOC/FOK.
 #' - `iceberg` and `hidden` cannot both be `TRUE`.
 #'
-#' @param type Character; `"limit"` or `"market"`.
-#' @param symbol Character; trading pair (e.g., `"BTC-USDT"`).
-#' @param side Character; `"buy"` or `"sell"`.
-#' @param clientOid Character or NULL; client order ID (max 40 chars).
-#' @param price Numeric or NULL; price for limit orders.
-#' @param size Numeric or NULL; quantity.
-#' @param funds Numeric or NULL; funds for market orders.
-#' @param stp Character or NULL; self-trade prevention: `"CN"`, `"CO"`, `"CB"`, `"DC"`.
-#' @param tags Character or NULL; order tag (max 20 ASCII chars).
-#' @param remark Character or NULL; remarks (max 20 ASCII chars).
-#' @param timeInForce Character or NULL; `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
-#' @param cancelAfter Numeric or NULL; seconds until cancel (for GTT).
-#' @param postOnly Logical or NULL; passive order flag.
-#' @param hidden Logical or NULL; hidden order flag.
-#' @param iceberg Logical or NULL; iceberg order flag.
-#' @param visibleSize Numeric or NULL; visible quantity for iceberg.
-#' @return Named list of validated order parameters (NULLs removed).
+#' @param type (scalar<character in c("limit", "market")>) the order type.
+#' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
+#' @param side (scalar<character in c("buy", "sell")>) the order side.
+#' @param clientOid (scalar<character> | NULL) client order ID (max 40 chars).
+#' @param price (scalar<numeric> | scalar<character> | NULL) price for limit
+#'   orders.
+#' @param size (scalar<numeric> | scalar<character> | NULL) quantity.
+#' @param funds (scalar<numeric> | scalar<character> | NULL) funds for market
+#'   orders.
+#' @param stp (scalar<character> | NULL) self-trade prevention: `"CN"`, `"CO"`,
+#'   `"CB"`, `"DC"`.
+#' @param tags (scalar<character> | NULL) order tag (max 20 ASCII chars).
+#' @param remark (scalar<character> | NULL) remarks (max 20 ASCII chars).
+#' @param timeInForce (scalar<character> | NULL) `"GTC"`, `"GTT"`, `"IOC"`,
+#'   `"FOK"`.
+#' @param cancelAfter (scalar<numeric> | NULL) seconds until cancel (for GTT).
+#' @param postOnly (scalar<logical> | NULL) passive order flag.
+#' @param hidden (scalar<logical> | NULL) hidden order flag.
+#' @param iceberg (scalar<logical> | NULL) iceberg order flag.
+#' @param visibleSize (scalar<numeric> | scalar<character> | NULL) visible
+#'   quantity for iceberg.
+#' @return (list) named list of validated order parameters (NULLs removed).
 #'
 #' @importFrom rlang abort arg_match0
 #' @keywords internal
@@ -75,6 +81,24 @@ validate_order_params <- function(
   iceberg = NULL,
   visibleSize = NULL
 ) {
+  assert_args_validate_order_params(
+    type,
+    symbol,
+    side,
+    clientOid,
+    price,
+    size,
+    funds,
+    stp,
+    tags,
+    remark,
+    timeInForce,
+    cancelAfter,
+    postOnly,
+    hidden,
+    iceberg,
+    visibleSize
+  )
   # Required field validation
   type <- rlang::arg_match0(type, c("limit", "market"))
   side <- rlang::arg_match0(side, c("buy", "sell"))
@@ -198,7 +222,7 @@ validate_order_params <- function(
   )
   params <- params[!vapply(params, is.null, logical(1))]
 
-  return(params)
+  return(assert_return_validate_order_params(params))
 }
 
 #' Validate Margin Order Parameters
@@ -208,13 +232,13 @@ validate_order_params <- function(
 #' `autoRepay`). Delegates core order validation to `validate_order_params()`.
 #'
 #' @inheritParams validate_order_params
-#' @param isIsolated Logical or NULL; `TRUE` for isolated margin, `FALSE`
-#'   (default) for cross margin.
-#' @param autoBorrow Logical or NULL; if `TRUE`, auto-borrow any shortfall at
-#'   the lowest market rate.
-#' @param autoRepay Logical or NULL; if `TRUE`, auto-repay when closing
+#' @param isIsolated (scalar<logical> | NULL) `TRUE` for isolated margin,
+#'   `FALSE` (default) for cross margin.
+#' @param autoBorrow (scalar<logical> | NULL) if `TRUE`, auto-borrow any
+#'   shortfall at the lowest market rate.
+#' @param autoRepay (scalar<logical> | NULL) if `TRUE`, auto-repay when closing
 #'   positions.
-#' @return Named list of validated order parameters (NULLs removed).
+#' @return (list) named list of validated order parameters (NULLs removed).
 #'
 #' @importFrom rlang abort
 #' @keywords internal
@@ -240,14 +264,15 @@ validate_margin_order_params <- function(
   autoBorrow = NULL,
   autoRepay = NULL
 ) {
-  # clientOid is required for margin orders; auto-generate UUID if not provided
+  # The order-shared parameters are validated by `validate_order_params()`'s own
+  # contract (this function delegates to it); the generated contract here covers
+  # only the margin-specific additions, which `@inheritParams` does not re-type.
+  assert_args_validate_margin_order_params(isIsolated, autoBorrow, autoRepay)
+  # clientOid is required for margin orders; auto-generate a real UUID via the
+  # vetted `uuid` package if the caller did not supply one (replaces a
+  # hand-rolled 4-group hex string that was neither a valid UUID nor unique).
   if (is.null(clientOid)) {
-    clientOid <- as.character(
-      paste0(
-        sprintf("%04x", sample.int(65536, 4, replace = TRUE) - 1L),
-        collapse = "-"
-      )
-    )
+    clientOid <- uuid::UUIDgenerate()
   }
 
   # Validate core order params via existing helper
@@ -289,7 +314,7 @@ validate_margin_order_params <- function(
   # Drop NULLs again
   params <- params[!vapply(params, is.null, logical(1))]
 
-  return(params)
+  return(assert_return_validate_margin_order_params(params))
 }
 
 #' Validate a Single Order in a Batch
@@ -297,13 +322,14 @@ validate_margin_order_params <- function(
 #' Validates one order within a batch request by delegating to
 #' `validate_order_params()`. Accepts a named list and extracts fields.
 #'
-#' @param order Named list; a single order's parameters.
-#' @return Named list of validated order parameters.
+#' @param order (list) a single order's parameters.
+#' @return (list) named list of validated order parameters.
 #'
 #' @importFrom rlang abort
 #' @keywords internal
 #' @noRd
 validate_batch_order <- function(order) {
+  assert_args_validate_batch_order(order)
   if (!is.list(order)) {
     rlang::abort("Each order in a batch must be a list.")
   }
@@ -314,7 +340,7 @@ validate_batch_order <- function(order) {
     rlang::abort(paste0("Missing required field(s) in batch order: ", paste(missing, collapse = ", ")))
   }
 
-  return(validate_order_params(
+  return(assert_return_validate_batch_order(validate_order_params(
     type = order$type,
     symbol = order$symbol,
     side = order$side,
@@ -331,5 +357,5 @@ validate_batch_order <- function(order) {
     hidden = order$hidden,
     iceberg = order$iceberg,
     visibleSize = order$visibleSize
-  ))
+  )))
 }
