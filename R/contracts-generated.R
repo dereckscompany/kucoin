@@ -525,6 +525,243 @@ assert_return_parse_futures_klines <- function(value) {
   return(value)
 }
 
+assert_args_KucoinFuturesTrading__initialize <- function(keys, base_url, async) {
+  assert_list(keys)
+  assert_scalar_character(base_url)
+  assert_scalar_logical(async)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesTrading__initialize <- function(value) {
+  assert_class(value, "KucoinFuturesTrading")
+  return(value)
+}
+
+assert_args_KucoinFuturesTrading__add_order <- function(clientOid, symbol, side, type, leverage, size, price, marginMode, positionSide, timeInForce, reduceOnly, remark) {
+  assert_scalar_character(clientOid)
+  assert_scalar_character(symbol)
+  assert_scalar_character(side)
+  assert_scalar_character(type)
+  assert_scalar_count(leverage)
+  assert_between(leverage, lower = 1)
+  assert_scalar_count(size)
+  assert_between(size, lower = 1)
+  if (!is.null(price)) {
+    assert_scalar_character(price)
+  }
+  assert_scalar_character(marginMode)
+  assert_scalar_character(positionSide)
+  if (!is.null(timeInForce)) {
+    assert_scalar_character(timeInForce)
+  }
+  if (!is.null(reduceOnly)) {
+    assert_scalar_logical(reduceOnly)
+  }
+  if (!is.null(remark)) {
+    assert_scalar_character(remark)
+  }
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesTrading__add_order <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinFuturesTrading__add_order_test <- function(clientOid, symbol, side, type, leverage, size, price, marginMode, positionSide, timeInForce, reduceOnly, remark) {
+  assert_scalar_character(clientOid)
+  assert_scalar_character(symbol)
+  assert_scalar_character(side)
+  assert_scalar_character(type)
+  assert_scalar_count(leverage)
+  assert_between(leverage, lower = 1)
+  assert_scalar_count(size)
+  assert_between(size, lower = 1)
+  if (!is.null(price)) {
+    assert_scalar_character(price)
+  }
+  assert_scalar_character(marginMode)
+  assert_scalar_character(positionSide)
+  if (!is.null(timeInForce)) {
+    assert_scalar_character(timeInForce)
+  }
+  if (!is.null(reduceOnly)) {
+    assert_scalar_logical(reduceOnly)
+  }
+  if (!is.null(remark)) {
+    assert_scalar_character(remark)
+  }
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesTrading__add_order_test <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinFuturesTrading__add_order_batch <- function(orders) {
+  assert_list(orders)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesTrading__add_order_batch <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinFuturesTrading__cancel_order_by_id <- function(orderId) {
+  assert_scalar_character(orderId)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesTrading__cancel_order_by_id <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinFuturesTrading__cancel_order_by_client_oid <- function(clientOid, symbol) {
+  assert_scalar_character(clientOid)
+  assert_scalar_character(symbol)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesTrading__cancel_order_by_client_oid <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinFuturesTrading__cancel_all <- function(symbol) {
+  if (!is.null(symbol)) {
+    assert_scalar_character(symbol)
+  }
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesTrading__cancel_all <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinFuturesTrading__cancel_all_stop_orders <- function(symbol) {
+  if (!is.null(symbol)) {
+    assert_scalar_character(symbol)
+  }
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesTrading__cancel_all_stop_orders <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinFuturesTrading__get_order_by_id <- function(orderId) {
+  assert_scalar_character(orderId)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesTrading__get_order_by_id <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinFuturesTrading__get_order_by_client_oid <- function(clientOid) {
+  assert_scalar_character(clientOid)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesTrading__get_order_by_client_oid <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinFuturesTrading__get_order_list <- function(query) {
+  assert_list(query)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesTrading__get_order_list <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinFuturesTrading__get_recent_closed_orders <- function(symbol) {
+  if (!is.null(symbol)) {
+    assert_scalar_character(symbol)
+  }
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesTrading__get_recent_closed_orders <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinFuturesTrading__get_stop_orders <- function(query) {
+  assert_list(query)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesTrading__get_stop_orders <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinFuturesTrading__get_fills <- function(query) {
+  assert_list(query)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesTrading__get_fills <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinFuturesTrading__get_recent_fills <- function(symbol) {
+  if (!is.null(symbol)) {
+    assert_scalar_character(symbol)
+  }
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesTrading__get_recent_fills <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinFuturesTrading__get_open_order_value <- function(symbol) {
+  assert_scalar_character(symbol)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesTrading__get_open_order_value <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinFuturesTrading__set_dcp <- function(symbol) {
+  if (!is.null(symbol)) {
+    assert_scalar_character(symbol)
+  }
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesTrading__set_dcp <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinFuturesTrading__get_dcp <- function(symbol) {
+  if (!is.null(symbol)) {
+    assert_scalar_character(symbol)
+  }
+  return(invisible(NULL))
+}
+
+assert_return_KucoinFuturesTrading__get_dcp <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
 assert_args_KucoinLending__get_loan_market <- function(query) {
   assert_list(query)
   return(invisible(NULL))
