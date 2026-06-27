@@ -2,30 +2,9 @@
 
 ## Type contracts (roxyassert)
 
-* **Adopted `roxyassert` for runtime type contracts across the whole package.**
-  Every `@param`/`@return` is now written in the `roxyassert` grammar (zero prose
-  type annotations remain), and the `roxyassert::contract_roclet` generates
-  `assert_args_*()` / `assert_return_*()` helpers into `R/contracts-generated.R`
-  at `document()` time — so each function's documented contract and its runtime
-  validation come from a single source. Every public R6 table method validates
-  its arguments at entry and validates the parsed result (synchronous value or
-  the resolved value of a promise alike) at the boundary via
-  `connectcore::then_or_now(res, assert_return_*, is_async = private$.is_async)`.
-  `assert` is now an import; `uuid` and `roxyassert` are added (the margin
-  client-order-id auto-generator now uses `uuid::UUIDgenerate()` instead of a
-  hand-rolled hex string).
+* **Adopted `roxyassert` for runtime type contracts across the whole package.** Every `@param`/`@return` is now written in the `roxyassert` grammar (zero prose type annotations remain), and the `roxyassert::contract_roclet` generates `assert_args_*()` / `assert_return_*()` helpers into `R/contracts-generated.R` at `document()` time — so each function's documented contract and its runtime validation come from a single source. Every public R6 table method validates its arguments at entry and validates the parsed result (synchronous value or the resolved value of a promise alike) at the boundary via `connectcore::then_or_now(res, assert_return_*, is_async = private$.is_async)`. `assert` is now an import; `uuid` and `roxyassert` are added (the margin client-order-id auto-generator now uses `uuid::UUIDgenerate()` instead of a hand-rolled hex string).
 
-* **Reusable `@type` shapes for the fixed-schema returns.** `R/types_kucoin.R`
-  defines `Klines` (the spot and futures OHLCV candles) and `Orderbook` (the spot
-  level-2 book in long format); the kline and spot-order-book parsers return the
-  fully-typed table and a typed zero-row empty on no data. Every other endpoint
-  returns a payload-dependent schema (built by the generic
-  `as_dt_row`/`as_dt_list`/`flatten_pages` flatteners or a bespoke inline
-  parser), so those returns stay the generic `(data.table | promise<data.table>)`
-  — including the futures order book, whose `symbol` column is optional. No
-  contracts are exported (`kucoin` is a leaf connector): the shapes expand inline
-  into each method's generated `assert_return_*` and nothing downstream validates
-  against them. The public API and the wire bytes are unchanged.
+* **Reusable `@type` shapes for the fixed-schema returns.** `R/types_kucoin.R` defines `Klines` (the spot and futures OHLCV candles) and `Orderbook` (the spot level-2 book in long format); the kline and spot-order-book parsers return the fully-typed table and a typed zero-row empty on no data. Every other endpoint returns a payload-dependent schema (built by the generic `as_dt_row`/`as_dt_list`/`flatten_pages` flatteners or a bespoke inline parser), so those returns stay the generic `(data.table | promise<data.table>)` — including the futures order book, whose `symbol` column is optional. No contracts are exported (`kucoin` is a leaf connector): the shapes expand inline into each method's generated `assert_return_*` and nothing downstream validates against them. The public API and the wire bytes are unchanged.
 
 # kucoin 4.1.1
 
