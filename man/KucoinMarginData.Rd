@@ -4,6 +4,11 @@
 \alias{KucoinMarginData}
 \title{KucoinMarginData: Margin Market Information}
 \description{
+KucoinMarginData: Margin Market Information
+
+KucoinMarginData: Margin Market Information
+}
+\details{
 Provides methods for querying margin-specific market data including
 supported symbols, configuration, risk limits, and collateral ratios.
 Inherits from \link{KucoinBase}.
@@ -54,7 +59,7 @@ print(config)
 
 
 ## ------------------------------------------------
-## Method `KucoinMarginData$get_cross_margin_symbols()`
+## Method `KucoinMarginData$get_cross_margin_symbols`
 ## ------------------------------------------------
 
 \dontrun{
@@ -64,7 +69,7 @@ print(symbols)
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarginData$get_isolated_margin_symbols()`
+## Method `KucoinMarginData$get_isolated_margin_symbols`
 ## ------------------------------------------------
 
 \dontrun{
@@ -74,7 +79,7 @@ print(symbols[trade_enable == TRUE])
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarginData$get_margin_config()`
+## Method `KucoinMarginData$get_margin_config`
 ## ------------------------------------------------
 
 \dontrun{
@@ -85,7 +90,7 @@ cat("Supported currencies:", paste(config$currency, collapse = ", "), "\n")
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarginData$get_collateral_ratio()`
+## Method `KucoinMarginData$get_collateral_ratio`
 ## ------------------------------------------------
 
 \dontrun{
@@ -97,7 +102,7 @@ ratios[as.numeric(collateral_ratio) >= 0.9]
 }
 
 ## ------------------------------------------------
-## Method `KucoinMarginData$get_risk_limit()`
+## Method `KucoinMarginData$get_risk_limit`
 ## ------------------------------------------------
 
 \dontrun{
@@ -115,29 +120,31 @@ limits <- margin_data$get_risk_limit(
 }
 }
 \section{Super classes}{
-\code{\link[connectcore:RestClient]{connectcore::RestClient}} -> \code{\link[kucoin:KucoinBase]{KucoinBase}} -> \code{KucoinMarginData}
+\code{\link[connectcore:RestClient]{connectcore::RestClient}} -> \code{\link[kucoin:KucoinBase]{kucoin::KucoinBase}} -> \code{KucoinMarginData}
 }
 \section{Methods}{
 \subsection{Public methods}{
-  \itemize{
-    \item \href{#method-KucoinMarginData-get_cross_margin_symbols}{\code{KucoinMarginData$get_cross_margin_symbols()}}
-    \item \href{#method-KucoinMarginData-get_isolated_margin_symbols}{\code{KucoinMarginData$get_isolated_margin_symbols()}}
-    \item \href{#method-KucoinMarginData-get_margin_config}{\code{KucoinMarginData$get_margin_config()}}
-    \item \href{#method-KucoinMarginData-get_collateral_ratio}{\code{KucoinMarginData$get_collateral_ratio()}}
-    \item \href{#method-KucoinMarginData-get_risk_limit}{\code{KucoinMarginData$get_risk_limit()}}
-    \item \href{#method-KucoinMarginData-clone}{\code{KucoinMarginData$clone()}}
-  }
+\itemize{
+\item \href{#method-KucoinMarginData-get_cross_margin_symbols}{\code{KucoinMarginData$get_cross_margin_symbols()}}
+\item \href{#method-KucoinMarginData-get_isolated_margin_symbols}{\code{KucoinMarginData$get_isolated_margin_symbols()}}
+\item \href{#method-KucoinMarginData-get_margin_config}{\code{KucoinMarginData$get_margin_config()}}
+\item \href{#method-KucoinMarginData-get_collateral_ratio}{\code{KucoinMarginData$get_collateral_ratio()}}
+\item \href{#method-KucoinMarginData-get_risk_limit}{\code{KucoinMarginData$get_risk_limit()}}
+\item \href{#method-KucoinMarginData-clone}{\code{KucoinMarginData$clone()}}
 }
-\if{html}{\out{<details open><summary>Inherited methods</summary>
+}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
 <ul>
-  <li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>KucoinBase$initialize()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="kucoin" data-topic="KucoinBase" data-id="initialize"><a href='../../kucoin/html/KucoinBase.html#method-KucoinBase-initialize'><code>kucoin::KucoinBase$initialize()</code></a></span></li>
 </ul>
-</details>}}
+</details>
+}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarginData-get_cross_margin_symbols"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarginData-get_cross_margin_symbols}{}}}
-\subsection{\code{KucoinMarginData$get_cross_margin_symbols()}}{
-  Get Cross Margin Symbols
+\subsection{Method \code{get_cross_margin_symbols()}}{
+Get Cross Margin Symbols
 
 Retrieves symbols (trading pairs) available for cross margin trading,
 including increment sizes, min/max order sizes, and fee information.
@@ -195,23 +202,22 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinMarginData$get_cross_margin_symbols(query = list())}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{query}}{Named list; optional. Supported keys:
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinMarginData$get_cross_margin_symbols(query = list())}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{query}}{Named list; optional. Supported keys:
 \itemize{
 \item \code{symbol} (character): Filter by specific symbol (e.g., \code{"BTC-USDT"}).
 }}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
 with \strong{one row per cross-margin symbol} and the following columns
 (subset shown — KuCoin may add fields):
 \itemize{
@@ -234,22 +240,25 @@ with \strong{one row per cross-margin symbol} and the following columns
 }
 
 Empty response yields an empty \code{data.table}.
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{margin_data <- KucoinMarginData$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+margin_data <- KucoinMarginData$new()
 symbols <- margin_data$get_cross_margin_symbols(query = list(symbol = "BTC-USDT"))
 print(symbols)
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarginData-get_isolated_margin_symbols"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarginData-get_isolated_margin_symbols}{}}}
-\subsection{\code{KucoinMarginData$get_isolated_margin_symbols()}}{
-  Get Isolated Margin Symbols
+\subsection{Method \code{get_isolated_margin_symbols()}}{
+Get Isolated Margin Symbols
 
 Retrieves symbols available for isolated margin trading, including
 leverage limits, debt ratios, and borrowing parameters per pair.
@@ -299,13 +308,12 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinMarginData$get_isolated_margin_symbols()}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinMarginData$get_isolated_margin_symbols()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
 with \strong{one row per isolated-margin pair} and columns:
 \itemize{
 \item \code{symbol} (character): Trading pair identifier.
@@ -322,22 +330,25 @@ with \strong{one row per isolated-margin pair} and columns:
 }
 
 Empty response yields an empty \code{data.table}.
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{margin_data <- KucoinMarginData$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+margin_data <- KucoinMarginData$new()
 symbols <- margin_data$get_isolated_margin_symbols()
 print(symbols[trade_enable == TRUE])
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarginData-get_margin_config"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarginData-get_margin_config}{}}}
-\subsection{\code{KucoinMarginData$get_margin_config()}}{
-  Get Margin Configuration
+\subsection{Method \code{get_margin_config()}}{
+Get Margin Configuration
 
 Retrieves global margin configuration including maximum leverage,
 warning debt ratio, liquidation debt ratio, and list of supported
@@ -379,13 +390,12 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinMarginData$get_margin_config()}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinMarginData$get_margin_config()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
 with \strong{one row per supported currency} (the \code{currencyList} array is
 exploded so each currency gets its own row with the config-level fields
 replicated). Columns:
@@ -397,23 +407,26 @@ replicated). Columns:
 }
 
 Empty \code{currencyList} yields a zero-row \code{data.table} with this schema.
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{margin_data <- KucoinMarginData$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+margin_data <- KucoinMarginData$new()
 config <- margin_data$get_margin_config()
 cat("Max leverage:", config$max_leverage[1], "\n")
 cat("Supported currencies:", paste(config$currency, collapse = ", "), "\n")
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarginData-get_collateral_ratio"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarginData-get_collateral_ratio}{}}}
-\subsection{\code{KucoinMarginData$get_collateral_ratio()}}{
-  Get Collateral Ratios
+\subsection{Method \code{get_collateral_ratio()}}{
+Get Collateral Ratios
 
 Retrieves collateral ratio tiers for margin currencies. Each currency
 has multiple tiers based on collateral amount ranges.
@@ -460,23 +473,22 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinMarginData$get_collateral_ratio(query = list())}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{query}}{Named list; optional. Supported keys:
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinMarginData$get_collateral_ratio(query = list())}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{query}}{Named list; optional. Supported keys:
 \itemize{
 \item \code{currencyList} (character): Comma-separated currencies (e.g., \code{"BTC,ETH"}).
 }}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
 with \strong{one row per (currency, tier) pair}. The nested
 \code{currencyList}/\code{items} arrays are cross-joined to a flat long table.
 Columns:
@@ -488,24 +500,27 @@ Columns:
 }
 
 Empty response yields a zero-row \code{data.table} with this schema.
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{margin_data <- KucoinMarginData$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+margin_data <- KucoinMarginData$new()
 ratios <- margin_data$get_collateral_ratio(query = list(currencyList = "BTC,ETH"))
 print(ratios)
 # Filter high-ratio tiers
 ratios[as.numeric(collateral_ratio) >= 0.9]
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarginData-get_risk_limit"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarginData-get_risk_limit}{}}}
-\subsection{\code{KucoinMarginData$get_risk_limit()}}{
-  Get Margin Risk Limit
+\subsection{Method \code{get_risk_limit()}}{
+Get Margin Risk Limit
 
 Retrieves borrow and hold limits for margin currencies. Supports both
 cross and isolated margin. This endpoint requires authentication.
@@ -554,25 +569,25 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinMarginData$get_risk_limit(isIsolated, query = list())}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{isIsolated}}{Logical; \code{TRUE} for isolated margin limits, \code{FALSE} for cross margin.}
-      \item{\code{query}}{Named list; optional additional filters. Supported keys:
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinMarginData$get_risk_limit(isIsolated, query = list())}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{isIsolated}}{Logical; \code{TRUE} for isolated margin limits, \code{FALSE} for cross margin.}
+
+\item{\code{query}}{Named list; optional additional filters. Supported keys:
 \itemize{
 \item \code{currency} (character): Currency filter (cross margin).
 \item \code{symbol} (character): Symbol filter (isolated margin only).
 }}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
 with \strong{one row per currency} (cross) or \strong{one row per (symbol, currency)
 pair} (isolated). Common columns:
 \itemize{
@@ -590,10 +605,11 @@ pair} (isolated). Common columns:
 
 For isolated margin an extra \code{symbol} (character) column is present.
 Empty response yields an empty \code{data.table}.
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{margin_data <- KucoinMarginData$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+margin_data <- KucoinMarginData$new()
 
 # Cross margin risk limits
 limits <- margin_data$get_risk_limit(isIsolated = FALSE)
@@ -605,27 +621,27 @@ limits <- margin_data$get_risk_limit(
   query = list(symbol = "BTC-USDT")
 )
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinMarginData-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinMarginData-clone}{}}}
-\subsection{\code{KucoinMarginData$clone()}}{
-  The objects of this class are cloneable with this method.
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinMarginData$clone(deep = FALSE)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{deep}}{Whether to make a deep clone.}
-    }
-    \if{html}{\out{</div>}}
-  }
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinMarginData$clone(deep = FALSE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
 }

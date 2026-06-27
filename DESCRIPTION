@@ -1,7 +1,7 @@
 Package: kucoin
 Type: Package
 Title: API Wrapper to KuCoin Cryptocurrency Exchange
-Version: 4.1.0
+Version: 4.1.1
 URL: https://dereckscompany.github.io/kucoin/
 BugReports: https://github.com/dereckscompany/kucoin/issues
 Authors@R: 
@@ -41,3 +41,4 @@ Remotes:
     dereckscompany/connectcore@v0.1.0
 Config/testthat/edition: 3
 Config/roxygen2/version: 8.0.0
+RoxygenNote: 7.3.3

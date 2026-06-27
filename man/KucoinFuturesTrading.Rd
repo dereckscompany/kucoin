@@ -4,6 +4,11 @@
 \alias{KucoinFuturesTrading}
 \title{KucoinFuturesTrading: Futures Order Management}
 \description{
+KucoinFuturesTrading: Futures Order Management
+
+KucoinFuturesTrading: Futures Order Management
+}
+\details{
 Provides methods for placing, cancelling, and querying futures orders on
 KuCoin. Supports limit and market orders, stop orders, batch operations,
 and Dead Connection Protection (DCP). Inherits from \link{KucoinBase}.
@@ -84,7 +89,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$add_order()`
+## Method `KucoinFuturesTrading$add_order`
 ## ------------------------------------------------
 
 \dontrun{
@@ -115,7 +120,7 @@ result <- ft$add_order(
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$add_order_test()`
+## Method `KucoinFuturesTrading$add_order_test`
 ## ------------------------------------------------
 
 \dontrun{
@@ -135,7 +140,7 @@ print(result)
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$add_order_batch()`
+## Method `KucoinFuturesTrading$add_order_batch`
 ## ------------------------------------------------
 
 \dontrun{
@@ -152,7 +157,7 @@ print(results[, .(order_id, client_oid, code)])
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$cancel_order_by_id()`
+## Method `KucoinFuturesTrading$cancel_order_by_id`
 ## ------------------------------------------------
 
 \dontrun{
@@ -162,7 +167,7 @@ print(result$cancelled_order_id)
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$cancel_order_by_client_oid()`
+## Method `KucoinFuturesTrading$cancel_order_by_client_oid`
 ## ------------------------------------------------
 
 \dontrun{
@@ -172,7 +177,7 @@ print(result$client_oid)
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$cancel_all()`
+## Method `KucoinFuturesTrading$cancel_all`
 ## ------------------------------------------------
 
 \dontrun{
@@ -187,7 +192,7 @@ result <- ft$cancel_all()
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$cancel_all_stop_orders()`
+## Method `KucoinFuturesTrading$cancel_all_stop_orders`
 ## ------------------------------------------------
 
 \dontrun{
@@ -202,7 +207,7 @@ result <- ft$cancel_all_stop_orders()
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_order_by_id()`
+## Method `KucoinFuturesTrading$get_order_by_id`
 ## ------------------------------------------------
 
 \dontrun{
@@ -212,7 +217,7 @@ print(order[, .(id, symbol, side, price, size, status)])
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_order_by_client_oid()`
+## Method `KucoinFuturesTrading$get_order_by_client_oid`
 ## ------------------------------------------------
 
 \dontrun{
@@ -222,7 +227,7 @@ print(order[, .(id, symbol, side, price, size, status)])
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_order_list()`
+## Method `KucoinFuturesTrading$get_order_list`
 ## ------------------------------------------------
 
 \dontrun{
@@ -242,7 +247,7 @@ done <- ft$get_order_list(query = list(
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_recent_closed_orders()`
+## Method `KucoinFuturesTrading$get_recent_closed_orders`
 ## ------------------------------------------------
 
 \dontrun{
@@ -257,7 +262,7 @@ all_recent <- ft$get_recent_closed_orders()
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_stop_orders()`
+## Method `KucoinFuturesTrading$get_stop_orders`
 ## ------------------------------------------------
 
 \dontrun{
@@ -272,7 +277,7 @@ all_stops <- ft$get_stop_orders()
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_fills()`
+## Method `KucoinFuturesTrading$get_fills`
 ## ------------------------------------------------
 
 \dontrun{
@@ -287,7 +292,7 @@ order_fills <- ft$get_fills(query = list(orderId = "234125150956625920"))
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_recent_fills()`
+## Method `KucoinFuturesTrading$get_recent_fills`
 ## ------------------------------------------------
 
 \dontrun{
@@ -302,7 +307,7 @@ all_recent <- ft$get_recent_fills()
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_open_order_value()`
+## Method `KucoinFuturesTrading$get_open_order_value`
 ## ------------------------------------------------
 
 \dontrun{
@@ -312,7 +317,7 @@ print(stats[, .(open_order_buy_qty, open_order_sell_qty, settle_currency)])
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$set_dcp()`
+## Method `KucoinFuturesTrading$set_dcp`
 ## ------------------------------------------------
 
 \dontrun{
@@ -327,7 +332,7 @@ ft$set_dcp(timeout = -1)
 }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_dcp()`
+## Method `KucoinFuturesTrading$get_dcp`
 ## ------------------------------------------------
 
 \dontrun{
@@ -342,67 +347,68 @@ dcp_global <- ft$get_dcp()
 }
 }
 \section{Super classes}{
-\code{\link[connectcore:RestClient]{connectcore::RestClient}} -> \code{\link[kucoin:KucoinBase]{KucoinBase}} -> \code{KucoinFuturesTrading}
+\code{\link[connectcore:RestClient]{connectcore::RestClient}} -> \code{\link[kucoin:KucoinBase]{kucoin::KucoinBase}} -> \code{KucoinFuturesTrading}
 }
 \section{Methods}{
 \subsection{Public methods}{
-  \itemize{
-    \item \href{#method-KucoinFuturesTrading-initialize}{\code{KucoinFuturesTrading$new()}}
-    \item \href{#method-KucoinFuturesTrading-add_order}{\code{KucoinFuturesTrading$add_order()}}
-    \item \href{#method-KucoinFuturesTrading-add_order_test}{\code{KucoinFuturesTrading$add_order_test()}}
-    \item \href{#method-KucoinFuturesTrading-add_order_batch}{\code{KucoinFuturesTrading$add_order_batch()}}
-    \item \href{#method-KucoinFuturesTrading-cancel_order_by_id}{\code{KucoinFuturesTrading$cancel_order_by_id()}}
-    \item \href{#method-KucoinFuturesTrading-cancel_order_by_client_oid}{\code{KucoinFuturesTrading$cancel_order_by_client_oid()}}
-    \item \href{#method-KucoinFuturesTrading-cancel_all}{\code{KucoinFuturesTrading$cancel_all()}}
-    \item \href{#method-KucoinFuturesTrading-cancel_all_stop_orders}{\code{KucoinFuturesTrading$cancel_all_stop_orders()}}
-    \item \href{#method-KucoinFuturesTrading-get_order_by_id}{\code{KucoinFuturesTrading$get_order_by_id()}}
-    \item \href{#method-KucoinFuturesTrading-get_order_by_client_oid}{\code{KucoinFuturesTrading$get_order_by_client_oid()}}
-    \item \href{#method-KucoinFuturesTrading-get_order_list}{\code{KucoinFuturesTrading$get_order_list()}}
-    \item \href{#method-KucoinFuturesTrading-get_recent_closed_orders}{\code{KucoinFuturesTrading$get_recent_closed_orders()}}
-    \item \href{#method-KucoinFuturesTrading-get_stop_orders}{\code{KucoinFuturesTrading$get_stop_orders()}}
-    \item \href{#method-KucoinFuturesTrading-get_fills}{\code{KucoinFuturesTrading$get_fills()}}
-    \item \href{#method-KucoinFuturesTrading-get_recent_fills}{\code{KucoinFuturesTrading$get_recent_fills()}}
-    \item \href{#method-KucoinFuturesTrading-get_open_order_value}{\code{KucoinFuturesTrading$get_open_order_value()}}
-    \item \href{#method-KucoinFuturesTrading-set_dcp}{\code{KucoinFuturesTrading$set_dcp()}}
-    \item \href{#method-KucoinFuturesTrading-get_dcp}{\code{KucoinFuturesTrading$get_dcp()}}
-    \item \href{#method-KucoinFuturesTrading-clone}{\code{KucoinFuturesTrading$clone()}}
-  }
+\itemize{
+\item \href{#method-KucoinFuturesTrading-new}{\code{KucoinFuturesTrading$new()}}
+\item \href{#method-KucoinFuturesTrading-add_order}{\code{KucoinFuturesTrading$add_order()}}
+\item \href{#method-KucoinFuturesTrading-add_order_test}{\code{KucoinFuturesTrading$add_order_test()}}
+\item \href{#method-KucoinFuturesTrading-add_order_batch}{\code{KucoinFuturesTrading$add_order_batch()}}
+\item \href{#method-KucoinFuturesTrading-cancel_order_by_id}{\code{KucoinFuturesTrading$cancel_order_by_id()}}
+\item \href{#method-KucoinFuturesTrading-cancel_order_by_client_oid}{\code{KucoinFuturesTrading$cancel_order_by_client_oid()}}
+\item \href{#method-KucoinFuturesTrading-cancel_all}{\code{KucoinFuturesTrading$cancel_all()}}
+\item \href{#method-KucoinFuturesTrading-cancel_all_stop_orders}{\code{KucoinFuturesTrading$cancel_all_stop_orders()}}
+\item \href{#method-KucoinFuturesTrading-get_order_by_id}{\code{KucoinFuturesTrading$get_order_by_id()}}
+\item \href{#method-KucoinFuturesTrading-get_order_by_client_oid}{\code{KucoinFuturesTrading$get_order_by_client_oid()}}
+\item \href{#method-KucoinFuturesTrading-get_order_list}{\code{KucoinFuturesTrading$get_order_list()}}
+\item \href{#method-KucoinFuturesTrading-get_recent_closed_orders}{\code{KucoinFuturesTrading$get_recent_closed_orders()}}
+\item \href{#method-KucoinFuturesTrading-get_stop_orders}{\code{KucoinFuturesTrading$get_stop_orders()}}
+\item \href{#method-KucoinFuturesTrading-get_fills}{\code{KucoinFuturesTrading$get_fills()}}
+\item \href{#method-KucoinFuturesTrading-get_recent_fills}{\code{KucoinFuturesTrading$get_recent_fills()}}
+\item \href{#method-KucoinFuturesTrading-get_open_order_value}{\code{KucoinFuturesTrading$get_open_order_value()}}
+\item \href{#method-KucoinFuturesTrading-set_dcp}{\code{KucoinFuturesTrading$set_dcp()}}
+\item \href{#method-KucoinFuturesTrading-get_dcp}{\code{KucoinFuturesTrading$get_dcp()}}
+\item \href{#method-KucoinFuturesTrading-clone}{\code{KucoinFuturesTrading$clone()}}
+}
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-KucoinFuturesTrading-initialize"></a>}}
-\if{latex}{\out{\hypertarget{method-KucoinFuturesTrading-initialize}{}}}
-\subsection{\code{KucoinFuturesTrading$new()}}{
-  Create a new KucoinFuturesTrading instance.
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinFuturesTrading$new(
+\if{html}{\out{<a id="method-KucoinFuturesTrading-new"></a>}}
+\if{latex}{\out{\hypertarget{method-KucoinFuturesTrading-new}{}}}
+\subsection{Method \code{new()}}{
+Create a new KucoinFuturesTrading instance.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$new(
   keys = get_api_keys(),
   base_url = get_futures_base_url(),
   async = FALSE,
   time_source = c("local", "server")
-)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{keys}}{List; API credentials from \code{\link[=get_api_keys]{get_api_keys()}}.}
-      \item{\code{base_url}}{Character; Futures API base URL. Defaults to \code{\link[=get_futures_base_url]{get_futures_base_url()}}.}
-      \item{\code{async}}{Logical; if TRUE, methods return promises.}
-      \item{\code{time_source}}{Character; \code{"local"} or \code{"server"}.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    Invisible self.
-  }
+)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{keys}}{List; API credentials from \code{\link[=get_api_keys]{get_api_keys()}}.}
+
+\item{\code{base_url}}{Character; Futures API base URL. Defaults to \code{\link[=get_futures_base_url]{get_futures_base_url()}}.}
+
+\item{\code{async}}{Logical; if TRUE, methods return promises.}
+
+\item{\code{time_source}}{Character; \code{"local"} or \code{"server"}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Invisible self.
+}
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesTrading-add_order"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesTrading-add_order}{}}}
-\subsection{\code{KucoinFuturesTrading$add_order()}}{
-  Place a Futures Order
+\subsection{Method \code{add_order()}}{
+Place a Futures Order
 
 Places a new futures order (limit or market) on KuCoin. Supports isolated
 and cross margin modes, one-way and hedge position modes, and optional
@@ -487,9 +493,8 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinFuturesTrading$add_order(
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$add_order(
   clientOid,
   symbol,
   side,
@@ -503,39 +508,52 @@ Verified: 2026-05-23
   reduceOnly = NULL,
   remark = NULL,
   ...
-)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{clientOid}}{Character; unique client order ID.}
-      \item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
-      \item{\code{side}}{Character; \code{"buy"} or \code{"sell"}.}
-      \item{\code{type}}{Character; \code{"limit"} or \code{"market"}.}
-      \item{\code{leverage}}{Integer; leverage multiplier.}
-      \item{\code{size}}{Integer; order quantity (number of contracts).}
-      \item{\code{price}}{Character or NULL; price (required for limit orders).}
-      \item{\code{marginMode}}{Character; \code{"ISOLATED"} or \code{"CROSS"}. Default \code{"ISOLATED"}.}
-      \item{\code{positionSide}}{Character; \code{"BOTH"} for one-way mode, \code{"LONG"} or
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{clientOid}}{Character; unique client order ID.}
+
+\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+
+\item{\code{side}}{Character; \code{"buy"} or \code{"sell"}.}
+
+\item{\code{type}}{Character; \code{"limit"} or \code{"market"}.}
+
+\item{\code{leverage}}{Integer; leverage multiplier.}
+
+\item{\code{size}}{Integer; order quantity (number of contracts).}
+
+\item{\code{price}}{Character or NULL; price (required for limit orders).}
+
+\item{\code{marginMode}}{Character; \code{"ISOLATED"} or \code{"CROSS"}. Default \code{"ISOLATED"}.}
+
+\item{\code{positionSide}}{Character; \code{"BOTH"} for one-way mode, \code{"LONG"} or
 \code{"SHORT"} for hedge mode. Default \code{"BOTH"}.}
-      \item{\code{timeInForce}}{Character or NULL; e.g., \code{"GTC"}, \code{"IOC"}, \code{"FOK"}.}
-      \item{\code{reduceOnly}}{Logical or NULL; if TRUE, order only reduces position.}
-      \item{\code{remark}}{Character or NULL; order notes.}
-      \item{\code{...}}{Additional order parameters.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+
+\item{\code{timeInForce}}{Character or NULL; e.g., \code{"GTC"}, \code{"IOC"}, \code{"FOK"}.}
+
+\item{\code{reduceOnly}}{Logical or NULL; if TRUE, order only reduces position.}
+
+\item{\code{remark}}{Character or NULL; order notes.}
+
+\item{\code{...}}{Additional order parameters.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{order_id} (character): System-assigned order ID.
 \item \code{client_oid} (character): Client-provided order ID.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{ft <- KucoinFuturesTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+ft <- KucoinFuturesTrading$new()
 
 # Place a limit buy order
 result <- ft$add_order(
@@ -560,15 +578,17 @@ result <- ft$add_order(
   reduceOnly = TRUE
 )
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesTrading-add_order_test"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesTrading-add_order_test}{}}}
-\subsection{\code{KucoinFuturesTrading$add_order_test()}}{
-  Place a Test Futures Order (Dry Run)
+\subsection{Method \code{add_order_test()}}{
+Place a Test Futures Order (Dry Run)
 
 Validates order parameters without placing a real order. The API performs
 all validation checks (balance, symbol, price, etc.) and returns a
@@ -651,9 +671,8 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinFuturesTrading$add_order_test(
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$add_order_test(
   clientOid,
   symbol,
   side,
@@ -667,39 +686,52 @@ Verified: 2026-05-23
   reduceOnly = NULL,
   remark = NULL,
   ...
-)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{clientOid}}{Character; unique client order ID.}
-      \item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
-      \item{\code{side}}{Character; \code{"buy"} or \code{"sell"}.}
-      \item{\code{type}}{Character; \code{"limit"} or \code{"market"}.}
-      \item{\code{leverage}}{Integer; leverage multiplier.}
-      \item{\code{size}}{Integer; order quantity (number of contracts).}
-      \item{\code{price}}{Character or NULL; price (required for limit orders).}
-      \item{\code{marginMode}}{Character; \code{"ISOLATED"} or \code{"CROSS"}. Default \code{"ISOLATED"}.}
-      \item{\code{positionSide}}{Character; \code{"BOTH"} for one-way mode, \code{"LONG"} or
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{clientOid}}{Character; unique client order ID.}
+
+\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+
+\item{\code{side}}{Character; \code{"buy"} or \code{"sell"}.}
+
+\item{\code{type}}{Character; \code{"limit"} or \code{"market"}.}
+
+\item{\code{leverage}}{Integer; leverage multiplier.}
+
+\item{\code{size}}{Integer; order quantity (number of contracts).}
+
+\item{\code{price}}{Character or NULL; price (required for limit orders).}
+
+\item{\code{marginMode}}{Character; \code{"ISOLATED"} or \code{"CROSS"}. Default \code{"ISOLATED"}.}
+
+\item{\code{positionSide}}{Character; \code{"BOTH"} for one-way mode, \code{"LONG"} or
 \code{"SHORT"} for hedge mode. Default \code{"BOTH"}.}
-      \item{\code{timeInForce}}{Character or NULL; e.g., \code{"GTC"}, \code{"IOC"}, \code{"FOK"}.}
-      \item{\code{reduceOnly}}{Logical or NULL; if TRUE, order only reduces position.}
-      \item{\code{remark}}{Character or NULL; order notes.}
-      \item{\code{...}}{Additional order parameters.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+
+\item{\code{timeInForce}}{Character or NULL; e.g., \code{"GTC"}, \code{"IOC"}, \code{"FOK"}.}
+
+\item{\code{reduceOnly}}{Logical or NULL; if TRUE, order only reduces position.}
+
+\item{\code{remark}}{Character or NULL; order notes.}
+
+\item{\code{...}}{Additional order parameters.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{order_id} (character): Simulated order ID.
 \item \code{client_oid} (character): Client-provided order ID.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{ft <- KucoinFuturesTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+ft <- KucoinFuturesTrading$new()
 
 # Validate a limit order without placing it
 result <- ft$add_order_test(
@@ -713,15 +745,17 @@ result <- ft$add_order_test(
 )
 print(result)
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesTrading-add_order_batch"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesTrading-add_order_batch}{}}}
-\subsection{\code{KucoinFuturesTrading$add_order_batch()}}{
-  Batch Place Futures Orders
+\subsection{Method \code{add_order_batch()}}{
+Batch Place Futures Orders
 
 Places multiple futures orders in a single API request. Each order in the
 batch uses the same parameter structure as \code{add_order()}. The API processes
@@ -835,22 +869,21 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinFuturesTrading$add_order_batch(orders)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{orders}}{List of order lists, each with the same fields as \code{add_order()}
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$add_order_batch(orders)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{orders}}{List of order lists, each with the same fields as \code{add_order()}
 (i.e., \code{clientOid}, \code{symbol}, \code{side}, \code{type}, \code{leverage}, \code{size}, and optional
 \code{price}, \code{marginMode}, \code{positionSide}, etc.).}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row per order result:
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row per order result:
 \itemize{
 \item \code{order_id} (character): System-assigned order ID.
 \item \code{client_oid} (character): Client-provided order ID.
@@ -858,10 +891,11 @@ Verified: 2026-05-23
 \item \code{code} (character): Per-order status code (\code{"200000"} for success).
 \item \code{msg} (character): Per-order status message.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{ft <- KucoinFuturesTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+ft <- KucoinFuturesTrading$new()
 
 orders <- list(
   list(clientOid = "b1", symbol = "XBTUSDTM", side = "buy",
@@ -872,15 +906,17 @@ orders <- list(
 results <- ft$add_order_batch(orders)
 print(results[, .(order_id, client_oid, code)])
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesTrading-cancel_order_by_id"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesTrading-cancel_order_by_id}{}}}
-\subsection{\code{KucoinFuturesTrading$cancel_order_by_id()}}{
-  Cancel Order by Order ID
+\subsection{Method \code{cancel_order_by_id()}}{
+Cancel Order by Order ID
 
 Cancels an open futures order using the system-assigned order ID. If the
 order has already been filled or cancelled, the API returns an error.
@@ -934,41 +970,43 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinFuturesTrading$cancel_order_by_id(orderId)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{orderId}}{Character; the system order ID to cancel.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$cancel_order_by_id(orderId)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{orderId}}{Character; the system order ID to cancel.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with
 \code{async = TRUE}) with one row per cancelled order, and column:
 \itemize{
 \item \code{cancelled_order_id} (character): Cancelled order ID. Empty
 \code{data.table} (zero rows) if no orders matched.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{ft <- KucoinFuturesTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+ft <- KucoinFuturesTrading$new()
 result <- ft$cancel_order_by_id("234125150956625920")
 print(result$cancelled_order_id)
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesTrading-cancel_order_by_client_oid"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesTrading-cancel_order_by_client_oid}{}}}
-\subsection{\code{KucoinFuturesTrading$cancel_order_by_client_oid()}}{
-  Cancel Order by Client Order ID
+\subsection{Method \code{cancel_order_by_client_oid()}}{
+Cancel Order by Client Order ID
 
 Cancels an open futures order using the client-provided order ID. Requires
 the symbol to disambiguate in case client OIDs are reused across symbols.
@@ -1020,40 +1058,43 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinFuturesTrading$cancel_order_by_client_oid(clientOid, symbol)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{clientOid}}{Character; the client order ID to cancel.}
-      \item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$cancel_order_by_client_oid(clientOid, symbol)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{clientOid}}{Character; the client order ID to cancel.}
+
+\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{client_oid} (character): Cancelled client order ID.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{ft <- KucoinFuturesTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+ft <- KucoinFuturesTrading$new()
 result <- ft$cancel_order_by_client_oid("my-order-001", symbol = "XBTUSDTM")
 print(result$client_oid)
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesTrading-cancel_all"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesTrading-cancel_all}{}}}
-\subsection{\code{KucoinFuturesTrading$cancel_all()}}{
-  Cancel All Orders
+\subsection{Method \code{cancel_all()}}{
+Cancel All Orders
 
 Cancels all open futures orders, optionally filtered by symbol. This is a
 bulk operation that cancels limit and market orders (but not stop orders;
@@ -1111,30 +1152,30 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinFuturesTrading$cancel_all(symbol = NULL)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{symbol}}{Character or NULL; filter by futures symbol. When NULL,
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$cancel_all(symbol = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{symbol}}{Character or NULL; filter by futures symbol. When NULL,
 cancels all open orders across all symbols.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with
 \code{async = TRUE}) with one row per cancelled order, and column:
 \itemize{
 \item \code{cancelled_order_id} (character): Cancelled order ID. Empty
 \code{data.table} (zero rows) if no orders matched.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{ft <- KucoinFuturesTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+ft <- KucoinFuturesTrading$new()
 
 # Cancel all open orders for XBTUSDTM
 result <- ft$cancel_all(symbol = "XBTUSDTM")
@@ -1143,15 +1184,17 @@ print(result$cancelled_order_id)
 # Cancel all open orders across all symbols
 result <- ft$cancel_all()
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesTrading-cancel_all_stop_orders"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesTrading-cancel_all_stop_orders}{}}}
-\subsection{\code{KucoinFuturesTrading$cancel_all_stop_orders()}}{
-  Cancel All Stop Orders
+\subsection{Method \code{cancel_all_stop_orders()}}{
+Cancel All Stop Orders
 
 Cancels all untriggered stop orders, optionally filtered by symbol. This
 only affects stop orders that have not yet been triggered; already-triggered
@@ -1207,30 +1250,30 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinFuturesTrading$cancel_all_stop_orders(symbol = NULL)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{symbol}}{Character or NULL; filter by futures symbol. When NULL,
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$cancel_all_stop_orders(symbol = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{symbol}}{Character or NULL; filter by futures symbol. When NULL,
 cancels all untriggered stop orders across all symbols.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{data.table} (or \verb{promise<data.table>} if constructed with
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{data.table} (or \verb{promise<data.table>} if constructed with
 \code{async = TRUE}) with one row per cancelled order, and column:
 \itemize{
 \item \code{cancelled_order_id} (character): Cancelled order ID. Empty
 \code{data.table} (zero rows) if no orders matched.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{ft <- KucoinFuturesTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+ft <- KucoinFuturesTrading$new()
 
 # Cancel all stop orders for XBTUSDTM
 result <- ft$cancel_all_stop_orders(symbol = "XBTUSDTM")
@@ -1239,15 +1282,17 @@ print(result$cancelled_order_id)
 # Cancel all stop orders across all symbols
 result <- ft$cancel_all_stop_orders()
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesTrading-get_order_by_id"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesTrading-get_order_by_id}{}}}
-\subsection{\code{KucoinFuturesTrading$get_order_by_id()}}{
-  Get Order by Order ID
+\subsection{Method \code{get_order_by_id()}}{
+Get Order by Order ID
 
 Retrieves full details of a single futures order by its system-assigned
 order ID. Returns order status, fill details, timestamps, and all
@@ -1339,20 +1384,19 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinFuturesTrading$get_order_by_id(orderId)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{orderId}}{Character; the system order ID.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$get_order_by_id(orderId)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{orderId}}{Character; the system order ID.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{id} (character): Order ID.
 \item \code{symbol} (character): Contract symbol.
@@ -1367,22 +1411,25 @@ Verified: 2026-05-23
 \item \code{updated_at} (POSIXct): Last update time (coerced from milliseconds).
 \item \code{client_oid} (character): Client-provided order ID.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{ft <- KucoinFuturesTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+ft <- KucoinFuturesTrading$new()
 order <- ft$get_order_by_id("234125150956625920")
 print(order[, .(id, symbol, side, price, size, status)])
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesTrading-get_order_by_client_oid"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesTrading-get_order_by_client_oid}{}}}
-\subsection{\code{KucoinFuturesTrading$get_order_by_client_oid()}}{
-  Get Order by Client Order ID
+\subsection{Method \code{get_order_by_client_oid()}}{
+Get Order by Client Order ID
 
 Retrieves full details of a single futures order by its client-provided
 order ID. Useful when the system order ID was not stored at placement time.
@@ -1478,36 +1525,38 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinFuturesTrading$get_order_by_client_oid(clientOid)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{clientOid}}{Character; the client order ID.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}); same columns as \code{get_order_by_id()}.
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{ft <- KucoinFuturesTrading$new()
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$get_order_by_client_oid(clientOid)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{clientOid}}{Character; the client order ID.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}); same columns as \code{get_order_by_id()}.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+ft <- KucoinFuturesTrading$new()
 order <- ft$get_order_by_client_oid("my-order-001")
 print(order[, .(id, symbol, side, price, size, status)])
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesTrading-get_order_list"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesTrading-get_order_list}{}}}
-\subsection{\code{KucoinFuturesTrading$get_order_list()}}{
-  Get Order List
+\subsection{Method \code{get_order_list()}}{
+Get Order List
 
 Retrieves a paginated list of futures orders with optional filtering by
 status, symbol, side, type, and time range. Use \code{status = "active"} for
@@ -1607,28 +1656,28 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinFuturesTrading$get_order_list(query = list())}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{query}}{Named list; query parameters. Use \code{status = "active"} for
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$get_order_list(query = list())}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{query}}{Named list; query parameters. Use \code{status = "active"} for
 open orders, \code{status = "done"} for closed orders. Optional: \code{symbol},
 \code{side}, \code{type}, \code{startAt}, \code{endAt}.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with order records; same columns as \code{get_order_by_id()}.
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with order records; same columns as \code{get_order_by_id()}.
 
 Returns an empty \code{data.table} if no orders match the filters.
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{ft <- KucoinFuturesTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+ft <- KucoinFuturesTrading$new()
 
 # Get all active orders for XBTUSDTM
 active <- ft$get_order_list(query = list(status = "active", symbol = "XBTUSDTM"))
@@ -1642,15 +1691,17 @@ done <- ft$get_order_list(query = list(
   endAt = now_ms
 ))
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesTrading-get_recent_closed_orders"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesTrading-get_recent_closed_orders}{}}}
-\subsection{\code{KucoinFuturesTrading$get_recent_closed_orders()}}{
-  Get Recent Closed Orders
+\subsection{Method \code{get_recent_closed_orders()}}{
+Get Recent Closed Orders
 
 Retrieves the most recently closed (filled or cancelled) futures orders
 from the last 24 hours. This is a convenience endpoint that does not
@@ -1744,26 +1795,26 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinFuturesTrading$get_recent_closed_orders(symbol = NULL)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{symbol}}{Character or NULL; filter by futures symbol.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with order records; same columns as \code{get_order_by_id()}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$get_recent_closed_orders(symbol = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{symbol}}{Character or NULL; filter by futures symbol.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with order records; same columns as \code{get_order_by_id()}.
 
 Returns an empty \code{data.table} if no recently closed orders exist.
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{ft <- KucoinFuturesTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+ft <- KucoinFuturesTrading$new()
 
 # Get recently closed orders for XBTUSDTM
 recent <- ft$get_recent_closed_orders(symbol = "XBTUSDTM")
@@ -1772,15 +1823,17 @@ print(recent[, .(id, side, price, status, created_at)])
 # Get all recently closed orders
 all_recent <- ft$get_recent_closed_orders()
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesTrading-get_stop_orders"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesTrading-get_stop_orders}{}}}
-\subsection{\code{KucoinFuturesTrading$get_stop_orders()}}{
-  Get Stop Orders List
+\subsection{Method \code{get_stop_orders()}}{
+Get Stop Orders List
 
 Retrieves a paginated list of untriggered stop orders. Stop orders are
 conditional orders that become active when a trigger price is reached.
@@ -1860,27 +1913,27 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinFuturesTrading$get_stop_orders(query = list())}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{query}}{Named list; query parameters. Optional: \code{symbol}, \code{side},
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$get_stop_orders(query = list())}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{query}}{Named list; query parameters. Optional: \code{symbol}, \code{side},
 \code{type}, \code{startAt}, \code{endAt}.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with stop order records; same columns as \code{get_order_by_id()}.
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with stop order records; same columns as \code{get_order_by_id()}.
 
 Returns an empty \code{data.table} if no untriggered stop orders exist.
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{ft <- KucoinFuturesTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+ft <- KucoinFuturesTrading$new()
 
 # Get all untriggered stop orders for XBTUSDTM
 stops <- ft$get_stop_orders(query = list(symbol = "XBTUSDTM"))
@@ -1889,15 +1942,17 @@ print(stops[, .(id, side, stop_price, price, status)])
 # Get all untriggered stop orders
 all_stops <- ft$get_stop_orders()
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesTrading-get_fills"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesTrading-get_fills}{}}}
-\subsection{\code{KucoinFuturesTrading$get_fills()}}{
-  Get Trade History (Fills)
+\subsection{Method \code{get_fills()}}{
+Get Trade History (Fills)
 
 Retrieves paginated fill (trade execution) history. Each fill represents
 a partial or complete execution of an order. Includes fee details,
@@ -2005,21 +2060,20 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinFuturesTrading$get_fills(query = list())}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{query}}{Named list; query parameters. Optional: \code{orderId}, \code{symbol},
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$get_fills(query = list())}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{query}}{Named list; query parameters. Optional: \code{orderId}, \code{symbol},
 \code{side}, \code{type}, \code{startAt}, \code{endAt}.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{symbol} (character): Contract symbol.
 \item \code{trade_id} (character): Unique trade identifier.
@@ -2037,10 +2091,11 @@ Verified: 2026-05-23
 }
 
 Returns an empty \code{data.table} if no fills match the filters.
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{ft <- KucoinFuturesTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+ft <- KucoinFuturesTrading$new()
 
 # Get all fills for XBTUSDTM
 fills <- ft$get_fills(query = list(symbol = "XBTUSDTM"))
@@ -2049,15 +2104,17 @@ print(fills[, .(trade_id, side, price, size, fee, trade_time)])
 # Get fills for a specific order
 order_fills <- ft$get_fills(query = list(orderId = "234125150956625920"))
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesTrading-get_recent_fills"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesTrading-get_recent_fills}{}}}
-\subsection{\code{KucoinFuturesTrading$get_recent_fills()}}{
-  Get Recent Fills
+\subsection{Method \code{get_recent_fills()}}{
+Get Recent Fills
 
 Retrieves the most recent fills (last 24 hours, max 1000 records) without
 pagination. This is a convenience endpoint for quickly checking recent
@@ -2135,26 +2192,26 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinFuturesTrading$get_recent_fills(symbol = NULL)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{symbol}}{Character or NULL; filter by futures symbol.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}); same columns as \code{get_fills()}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$get_recent_fills(symbol = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{symbol}}{Character or NULL; filter by futures symbol.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}); same columns as \code{get_fills()}.
 
 Returns an empty \code{data.table} if no recent fills exist.
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{ft <- KucoinFuturesTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+ft <- KucoinFuturesTrading$new()
 
 # Get recent fills for XBTUSDTM
 recent <- ft$get_recent_fills(symbol = "XBTUSDTM")
@@ -2163,15 +2220,17 @@ print(recent[, .(trade_id, side, price, size, fee, trade_time)])
 # Get all recent fills
 all_recent <- ft$get_recent_fills()
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesTrading-get_open_order_value"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesTrading-get_open_order_value}{}}}
-\subsection{\code{KucoinFuturesTrading$get_open_order_value()}}{
-  Get Open Order Value Statistics
+\subsection{Method \code{get_open_order_value()}}{
+Get Open Order Value Statistics
 
 Retrieves aggregate statistics about open orders for a specific futures
 symbol, including total buy/sell quantity and cost. Useful for assessing
@@ -2229,20 +2288,19 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinFuturesTrading$get_open_order_value(symbol)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$get_open_order_value(symbol)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{open_order_buy_qty} (integer): Total buy order quantity.
 \item \code{open_order_sell_qty} (integer): Total sell order quantity.
@@ -2250,22 +2308,25 @@ Verified: 2026-05-23
 \item \code{open_order_sell_cost} (character): Total sell order cost.
 \item \code{settle_currency} (character): Settlement currency.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{ft <- KucoinFuturesTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+ft <- KucoinFuturesTrading$new()
 stats <- ft$get_open_order_value(symbol = "XBTUSDTM")
 print(stats[, .(open_order_buy_qty, open_order_sell_qty, settle_currency)])
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesTrading-set_dcp"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesTrading-set_dcp}{}}}
-\subsection{\code{KucoinFuturesTrading$set_dcp()}}{
-  Set Dead Connection Protection (DCP)
+\subsection{Method \code{set_dcp()}}{
+Set Dead Connection Protection (DCP)
 
 Configures a dead-man's switch that auto-cancels open futures orders if
 the client stops sending heartbeat requests within the specified timeout.
@@ -2343,33 +2404,34 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinFuturesTrading$set_dcp(timeout, symbol = NULL)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{timeout}}{Integer; timeout in seconds. The DCP will cancel all applicable
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$set_dcp(timeout, symbol = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{timeout}}{Integer; timeout in seconds. The DCP will cancel all applicable
 orders if no heartbeat (re-call of \code{set_dcp()}) is received within this period.
 Use \code{-1} to disable DCP.}
-      \item{\code{symbol}}{Character or NULL; restrict DCP to a specific futures symbol.
+
+\item{\code{symbol}}{Character or NULL; restrict DCP to a specific futures symbol.
 When NULL, DCP applies to all symbols.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{timeout} (integer): Configured timeout in seconds.
 \item \code{symbols} (character): Applicable symbols (empty for all).
 \item \code{current_time} (integer): Server time when DCP was set.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{ft <- KucoinFuturesTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+ft <- KucoinFuturesTrading$new()
 
 # Enable DCP with 60-second timeout for XBTUSDTM
 result <- ft$set_dcp(timeout = 60, symbol = "XBTUSDTM")
@@ -2378,15 +2440,17 @@ print(result)
 # Disable DCP
 ft$set_dcp(timeout = -1)
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesTrading-get_dcp"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesTrading-get_dcp}{}}}
-\subsection{\code{KucoinFuturesTrading$get_dcp()}}{
-  Get Dead Connection Protection (DCP) Settings
+\subsection{Method \code{get_dcp()}}{
+Get Dead Connection Protection (DCP) Settings
 
 Retrieves the current DCP configuration, including the active timeout
 value, applicable symbols, and the server time of the query. Use this
@@ -2450,30 +2514,30 @@ Verified: 2026-05-23
 \}
 }\if{html}{\out{</div>}}
 }
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinFuturesTrading$get_dcp(symbol = NULL)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{symbol}}{Character or NULL; query DCP settings for a specific futures symbol.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$get_dcp(symbol = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{symbol}}{Character or NULL; query DCP settings for a specific futures symbol.
 When NULL, returns the global DCP configuration.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
 \itemize{
 \item \code{timeout} (integer): Configured timeout in seconds.
 \item \code{symbols} (character): Applicable symbols.
 \item \code{current_time} (integer): Server time of the query.
 }
-  }
-  \subsection{Examples}{
-    \if{html}{\out{<div class="r example copy">}}
-    \preformatted{ft <- KucoinFuturesTrading$new()
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+ft <- KucoinFuturesTrading$new()
 
 # Check DCP settings for XBTUSDTM
 dcp <- ft$get_dcp(symbol = "XBTUSDTM")
@@ -2482,27 +2546,27 @@ print(dcp[, .(timeout, symbols)])
 # Check global DCP settings
 dcp_global <- ft$get_dcp()
 }
-    \if{html}{\out{</div>}}
-  }
+}
+\if{html}{\out{</div>}}
+
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinFuturesTrading-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinFuturesTrading-clone}{}}}
-\subsection{\code{KucoinFuturesTrading$clone()}}{
-  The objects of this class are cloneable with this method.
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{KucoinFuturesTrading$clone(deep = FALSE)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{deep}}{Whether to make a deep clone.}
-    }
-    \if{html}{\out{</div>}}
-  }
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$clone(deep = FALSE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
 }
