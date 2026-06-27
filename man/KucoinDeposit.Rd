@@ -223,31 +223,27 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"ETH"}, \code{"USDT"}).
-Must be a valid KuCoin-supported currency symbol.}
+\item{\code{currency}}{(scalar<character>) currency code (e.g., \code{"BTC"},
+\code{"ETH"}, \code{"USDT"}). Must be a valid KuCoin-supported currency symbol.}
 
-\item{\code{chain}}{Character; blockchain network identifier (e.g., \code{"ERC20"},
-\code{"TRC20"}, \code{"btc"}). Required by the KuCoin API.}
+\item{\code{chain}}{(scalar<character> | NULL) blockchain network identifier
+(e.g., \code{"ERC20"}, \code{"TRC20"}, \code{"btc"}). Required by the KuCoin API.}
 
-\item{\code{to}}{Character; target account type for the deposit. Accepted values
-include \code{"main"} (funding account) and \code{"trade"} (trading account). Required by the KuCoin API.}
+\item{\code{to}}{(scalar<character> | NULL) target account type for the deposit.
+Accepted values include \code{"main"} (funding account) and \code{"trade"}
+(trading account). Required by the KuCoin API.}
 
-\item{\code{amount}}{Character or NULL; deposit amount. Required for some invoice-based
-deposit addresses (e.g., Lightning Network).}
+\item{\code{amount}}{(scalar<character> | NULL) deposit amount. Required for some
+invoice-based deposit addresses (e.g., Lightning Network).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
-\itemize{
-\item \code{address} (character): The generated deposit address.
-\item \code{memo} (character): Memo/tag for the address (empty string if not applicable).
-\item \code{chain} (character): Blockchain network name.
-\item \code{chain_id} (character): Chain identifier.
-\item \code{to} (character): Target account type.
-\item \code{currency} (character): Currency code.
-\item \code{contract_address} (character): Token contract address (empty for native coins).
-}
+(data.table | promise<data.table>) one row describing the newly
+created deposit address: the generated address, its memo/tag (empty
+string if not applicable), the blockchain network name, the chain
+identifier, the target account type, the currency code, and the token
+contract address (empty for native coins) -- all character.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -355,29 +351,26 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"ETH"}, \code{"USDT"}). \strong{Required} by the API.}
+\item{\code{currency}}{(scalar<character>) currency code (e.g., \code{"BTC"},
+\code{"ETH"}, \code{"USDT"}). \strong{Required} by the API.}
 
-\item{\code{amount}}{Character or NULL; deposit amount. Some chains require an amount
-to generate invoice-based addresses (e.g., Lightning Network).}
+\item{\code{amount}}{(scalar<character> | NULL) deposit amount. Some chains
+require an amount to generate invoice-based addresses (e.g., Lightning
+Network).}
 
-\item{\code{chain}}{Character or NULL; blockchain network identifier (e.g., \code{"ERC20"},
-\code{"TRC20"}, \code{"btc"}). When NULL, returns addresses for all chains.}
+\item{\code{chain}}{(scalar<character> | NULL) blockchain network identifier
+(e.g., \code{"ERC20"}, \code{"TRC20"}, \code{"btc"}). When NULL, returns addresses for
+all chains.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row per address and columns:
-\itemize{
-\item \code{address} (character): The deposit address string.
-\item \code{memo} (character): Memo/tag for the address (empty string if not applicable).
-\item \code{chain} (character): Blockchain network name.
-\item \code{chain_id} (character): Chain identifier.
-\item \code{to} (character): Target account type.
-\item \code{currency} (character): Currency code.
-\item \code{contract_address} (character): Token contract address (empty for native coins).
-}
-
-Returns an empty \code{data.table} if no addresses exist for the currency.
+(data.table | promise<data.table>) one row per deposit address,
+each giving the deposit address string, its memo/tag (empty string if
+not applicable), the blockchain network name, the chain identifier, the
+target account type, the currency code, and the token contract address
+(empty for native coins) -- all character. Returns an empty data.table
+if no addresses exist for the currency.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -507,43 +500,37 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{currency}}{Character or NULL; filter by currency code (e.g., \code{"BTC"}, \code{"USDT"}).
-When NULL, returns deposits for all currencies.}
+\item{\code{currency}}{(scalar<character> | NULL) filter by currency code (e.g.,
+\code{"BTC"}, \code{"USDT"}). When NULL, returns deposits for all currencies.}
 
-\item{\code{status}}{Character or NULL; filter by deposit status. Accepted values:
-\code{"PROCESSING"}, \code{"WALLET_PROCESSING"}, \code{"SUCCESS"}, \code{"FAILURE"}.
-When NULL, returns deposits of all statuses.}
+\item{\code{status}}{(scalar<character> | NULL) filter by deposit status.
+Accepted values: \code{"PROCESSING"}, \code{"WALLET_PROCESSING"}, \code{"SUCCESS"},
+\code{"FAILURE"}. When NULL, returns deposits of all statuses.}
 
-\item{\code{startAt}}{Integer or NULL; start timestamp in milliseconds (inclusive).
-Used to filter deposits created on or after this time.}
+\item{\code{startAt}}{(scalar<integer> | NULL) start timestamp in milliseconds
+(inclusive). Used to filter deposits created on or after this time.}
 
-\item{\code{endAt}}{Integer or NULL; end timestamp in milliseconds (inclusive).
-Used to filter deposits created on or before this time.}
+\item{\code{endAt}}{(scalar<integer> | NULL) end timestamp in milliseconds
+(inclusive). Used to filter deposits created on or before this time.}
 
-\item{\code{page_size}}{Integer; number of results per page (default 50, max 100).}
+\item{\code{page_size}}{(scalar<count in [1, Inf[>) number of results per page
+(default 50, max 100).}
 
-\item{\code{max_pages}}{Numeric; maximum number of pages to fetch (default \code{Inf} for all pages).}
+\item{\code{max_pages}}{(scalar<numeric in [1, Inf]>) maximum number of pages to
+fetch (default \code{Inf} for all pages).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row per deposit and columns:
-\itemize{
-\item \code{currency} (character): Deposited currency code.
-\item \code{chain} (character): Blockchain network used for the deposit.
-\item \code{status} (character): Deposit status (\code{"PROCESSING"}, \code{"SUCCESS"}, \code{"FAILURE"}).
-\item \code{address} (character): Deposit address.
-\item \code{memo} (character): Memo/tag (empty string if not applicable).
-\item \code{is_inner} (logical): Whether this was an internal KuCoin transfer.
-\item \code{amount} (character): Deposit amount.
-\item \code{fee} (character): Deposit fee charged.
-\item \code{wallet_tx_id} (character): On-chain transaction hash.
-\item \code{created_at} (POSIXct): Creation datetime (coerced from epoch milliseconds).
-\item \code{updated_at} (POSIXct): Last update datetime (coerced from epoch milliseconds).
-\item \code{remark} (character): Optional remark.
-}
-
-Returns an empty \code{data.table} if no deposits match the filters.
+(data.table | promise<data.table>) one row per deposit, each
+giving the deposited currency code, the blockchain network used, the
+deposit status (\code{"PROCESSING"}, \code{"SUCCESS"}, \code{"FAILURE"}), the deposit
+address, the memo/tag (empty string if not applicable), whether the
+deposit was an internal KuCoin transfer (logical), the deposit amount,
+the fee charged, the on-chain transaction hash, the creation and last
+update datetimes (POSIXct, coerced from epoch milliseconds), and an
+optional remark. Returns an empty data.table if no deposits match the
+filters.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
