@@ -831,6 +831,282 @@ assert_return_KucoinMarketData__get_fiat_prices <- function(value) {
   return(value)
 }
 
+assert_args_KucoinOcoOrders__add_order <- function(symbol, side, price, size, stopPrice, limitPrice, clientOid, remark, tradeType) {
+  assert_scalar_character(symbol)
+  assert_scalar_character(side)
+  assert_any_of(
+    price,
+    function(.x) {
+      assert_scalar_double(.x)
+    },
+    function(.x) {
+      assert_scalar_character(.x)
+    }
+  )
+  assert_any_of(
+    size,
+    function(.x) {
+      assert_scalar_double(.x)
+    },
+    function(.x) {
+      assert_scalar_character(.x)
+    }
+  )
+  assert_any_of(
+    stopPrice,
+    function(.x) {
+      assert_scalar_double(.x)
+    },
+    function(.x) {
+      assert_scalar_character(.x)
+    }
+  )
+  assert_any_of(
+    limitPrice,
+    function(.x) {
+      assert_scalar_double(.x)
+    },
+    function(.x) {
+      assert_scalar_character(.x)
+    }
+  )
+  if (!is.null(clientOid)) {
+    assert_scalar_character(clientOid)
+  }
+  if (!is.null(remark)) {
+    assert_scalar_character(remark)
+  }
+  assert_scalar_character(tradeType)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinOcoOrders__add_order <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinOcoOrders__cancel_order_by_id <- function(orderId) {
+  assert_scalar_character(orderId)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinOcoOrders__cancel_order_by_id <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinOcoOrders__cancel_order_by_client_oid <- function(clientOid) {
+  assert_scalar_character(clientOid)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinOcoOrders__cancel_order_by_client_oid <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinOcoOrders__cancel_all <- function(query) {
+  assert_list(query)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinOcoOrders__cancel_all <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinOcoOrders__get_order_by_id <- function(orderId) {
+  assert_scalar_character(orderId)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinOcoOrders__get_order_by_id <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinOcoOrders__get_order_by_client_oid <- function(clientOid) {
+  assert_scalar_character(clientOid)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinOcoOrders__get_order_by_client_oid <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinOcoOrders__get_order_detail_by_id <- function(orderId) {
+  assert_scalar_character(orderId)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinOcoOrders__get_order_detail_by_id <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinOcoOrders__get_order_list <- function(query) {
+  assert_list(query)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinOcoOrders__get_order_list <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinStopOrders__add_order <- function(type, symbol, side, stopPrice, clientOid, price, size, funds, stp, remark, timeInForce, cancelAfter, postOnly, hidden, iceberg, visibleSize, tradeType) {
+  assert_scalar_character(type)
+  assert_scalar_character(symbol)
+  assert_scalar_character(side)
+  assert_any_of(
+    stopPrice,
+    function(.x) {
+      assert_scalar_double(.x)
+    },
+    function(.x) {
+      assert_scalar_character(.x)
+    }
+  )
+  if (!is.null(clientOid)) {
+    assert_scalar_character(clientOid)
+  }
+  if (!is.null(price)) {
+    assert_any_of(
+      price,
+      function(.x) {
+        assert_scalar_double(.x)
+      },
+      function(.x) {
+        assert_scalar_character(.x)
+      }
+    )
+  }
+  if (!is.null(size)) {
+    assert_any_of(
+      size,
+      function(.x) {
+        assert_scalar_double(.x)
+      },
+      function(.x) {
+        assert_scalar_character(.x)
+      }
+    )
+  }
+  if (!is.null(funds)) {
+    assert_any_of(
+      funds,
+      function(.x) {
+        assert_scalar_double(.x)
+      },
+      function(.x) {
+        assert_scalar_character(.x)
+      }
+    )
+  }
+  if (!is.null(stp)) {
+    assert_scalar_character(stp)
+  }
+  if (!is.null(remark)) {
+    assert_scalar_character(remark)
+  }
+  if (!is.null(timeInForce)) {
+    assert_scalar_character(timeInForce)
+  }
+  if (!is.null(cancelAfter)) {
+    assert_scalar_double(cancelAfter)
+  }
+  if (!is.null(postOnly)) {
+    assert_scalar_logical(postOnly)
+  }
+  if (!is.null(hidden)) {
+    assert_scalar_logical(hidden)
+  }
+  if (!is.null(iceberg)) {
+    assert_scalar_logical(iceberg)
+  }
+  if (!is.null(visibleSize)) {
+    assert_any_of(
+      visibleSize,
+      function(.x) {
+        assert_scalar_double(.x)
+      },
+      function(.x) {
+        assert_scalar_character(.x)
+      }
+    )
+  }
+  assert_scalar_character(tradeType)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinStopOrders__add_order <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinStopOrders__cancel_order_by_id <- function(orderId) {
+  assert_scalar_character(orderId)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinStopOrders__cancel_order_by_id <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinStopOrders__cancel_order_by_client_oid <- function(clientOid, symbol) {
+  assert_scalar_character(clientOid)
+  assert_scalar_character(symbol)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinStopOrders__cancel_order_by_client_oid <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinStopOrders__cancel_all <- function(query) {
+  assert_list(query)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinStopOrders__cancel_all <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinStopOrders__get_order_by_id <- function(orderId) {
+  assert_scalar_character(orderId)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinStopOrders__get_order_by_id <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinStopOrders__get_order_by_client_oid <- function(clientOid, symbol) {
+  assert_scalar_character(clientOid)
+  assert_scalar_character(symbol)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinStopOrders__get_order_by_client_oid <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
+assert_args_KucoinStopOrders__get_order_list <- function(query) {
+  assert_list(query)
+  return(invisible(NULL))
+}
+
+assert_return_KucoinStopOrders__get_order_list <- function(value) {
+  assert_data_table(value)
+  return(value)
+}
+
 assert_args_KucoinSubAccount__add_sub_account <- function(password, subName, access, remarks) {
   assert_scalar_character(password)
   assert_scalar_character(subName)

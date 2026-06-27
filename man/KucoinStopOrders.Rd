@@ -359,62 +359,70 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{type}}{Character; order type, one of \code{"limit"} or \code{"market"}.
-Determines which additional parameters are required.}
+\item{\code{type}}{(scalar<character>) order type, one of \code{"limit"} or
+\code{"market"}. Determines which additional parameters are required.}
 
-\item{\code{symbol}}{Character; trading pair symbol (e.g., \code{"BTC-USDT"}).
-Must match the \code{BASE-QUOTE} format validated by \code{verify_symbol()}.}
+\item{\code{symbol}}{(scalar<character>) trading pair symbol (e.g.,
+\code{"BTC-USDT"}). Must match the \code{BASE-QUOTE} format validated by
+\code{verify_symbol()}.}
 
-\item{\code{side}}{Character; order side, one of \code{"buy"} or \code{"sell"}.}
+\item{\code{side}}{(scalar<character>) order side, one of \code{"buy"} or \code{"sell"}.}
 
-\item{\code{stopPrice}}{Character; the trigger price at which the stop order activates.
-When the last traded price reaches this value, the order is placed.}
+\item{\code{stopPrice}}{(scalar<numeric> | scalar<character>) the trigger price at
+which the stop order activates. When the last traded price reaches this
+value, the order is placed.}
 
-\item{\code{clientOid}}{Character or NULL; optional client-assigned unique identifier
-for the order (max 40 characters). Useful for tracking orders in automated systems.}
+\item{\code{clientOid}}{(scalar<character> | NULL) optional client-assigned unique
+identifier for the order (max 40 characters). Useful for tracking orders
+in automated systems.}
 
-\item{\code{price}}{Character or NULL; limit order price. Required for limit stop orders;
-must NOT be set for market stop orders. Should align with the symbol's \code{priceIncrement}.}
+\item{\code{price}}{(scalar<numeric> | scalar<character> | NULL) limit order price.
+Required for limit stop orders; must NOT be set for market stop orders.
+Should align with the symbol's \code{priceIncrement}.}
 
-\item{\code{size}}{Character or NULL; order quantity in base currency.
-Required for limit stop orders. For market stop orders, mutually exclusive with \code{funds}.}
+\item{\code{size}}{(scalar<numeric> | scalar<character> | NULL) order quantity in
+base currency. Required for limit stop orders. For market stop orders,
+mutually exclusive with \code{funds}.}
 
-\item{\code{funds}}{Character or NULL; order amount in quote currency for market stop orders.
-Mutually exclusive with \code{size}. Not applicable for limit stop orders.}
+\item{\code{funds}}{(scalar<numeric> | scalar<character> | NULL) order amount in
+quote currency for market stop orders. Mutually exclusive with \code{size}. Not
+applicable for limit stop orders.}
 
-\item{\code{stp}}{Character or NULL; self-trade prevention strategy.
-One of \code{"DC"} (Decrement and Cancel), \code{"CO"} (Cancel Oldest),
-\code{"CN"} (Cancel Newest), \code{"CB"} (Cancel Both).}
+\item{\code{stp}}{(scalar<character> | NULL) self-trade prevention strategy. One of
+\code{"DC"} (Decrement and Cancel), \code{"CO"} (Cancel Oldest), \code{"CN"} (Cancel
+Newest), \code{"CB"} (Cancel Both).}
 
-\item{\code{remark}}{Character or NULL; order remarks or notes (max 20 ASCII characters).}
+\item{\code{remark}}{(scalar<character> | NULL) order remarks or notes (max 20
+ASCII characters).}
 
-\item{\code{timeInForce}}{Character or NULL; time-in-force policy for the triggered order.
-One of \code{"GTC"} (Good Till Cancelled), \code{"GTT"} (Good Till Time),
-\code{"IOC"} (Immediate Or Cancel), \code{"FOK"} (Fill Or Kill).}
+\item{\code{timeInForce}}{(scalar<character> | NULL) time-in-force policy for the
+triggered order. One of \code{"GTC"} (Good Till Cancelled), \code{"GTT"} (Good Till
+Time), \code{"IOC"} (Immediate Or Cancel), \code{"FOK"} (Fill Or Kill).}
 
-\item{\code{cancelAfter}}{Numeric or NULL; number of seconds after which to auto-cancel.
-Only valid when \code{timeInForce = "GTT"}.}
+\item{\code{cancelAfter}}{(scalar<numeric> | NULL) number of seconds after which to
+auto-cancel. Only valid when \code{timeInForce = "GTT"}.}
 
-\item{\code{postOnly}}{Logical or NULL; if \code{TRUE}, the triggered order is rejected if it
-would immediately match (guarantees maker fee).}
+\item{\code{postOnly}}{(scalar<logical> | NULL) if \code{TRUE}, the triggered order is
+rejected if it would immediately match (guarantees maker fee).}
 
-\item{\code{hidden}}{Logical or NULL; if \code{TRUE}, the triggered order is hidden from the order book.}
+\item{\code{hidden}}{(scalar<logical> | NULL) if \code{TRUE}, the triggered order is
+hidden from the order book.}
 
-\item{\code{iceberg}}{Logical or NULL; if \code{TRUE}, only \code{visibleSize} of the order is displayed.}
+\item{\code{iceberg}}{(scalar<logical> | NULL) if \code{TRUE}, only \code{visibleSize} of the
+order is displayed.}
 
-\item{\code{visibleSize}}{Character or NULL; the visible portion of an iceberg order.
-Only applicable when \code{iceberg = TRUE}.}
+\item{\code{visibleSize}}{(scalar<numeric> | scalar<character> | NULL) the visible
+portion of an iceberg order. Only applicable when \code{iceberg = TRUE}.}
 
-\item{\code{tradeType}}{Character; trade type, defaults to \code{"TRADE"} for spot trading.}
+\item{\code{tradeType}}{(scalar<character>) trade type, defaults to \code{"TRADE"} for
+spot trading.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{order_id} (character): KuCoin-assigned stop order identifier.
-\item \code{client_oid} (character or NA): Client-provided order identifier, if supplied.
-}
+(data.table | promise<data.table>) one row giving the
+KuCoin-assigned stop order identifier and the client-provided order
+identifier (NA if not supplied).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -509,18 +517,14 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{orderId}}{Character; the KuCoin-assigned stop order ID to cancel.}
+\item{\code{orderId}}{(scalar<character>) the KuCoin-assigned stop order ID to
+cancel.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
-with one row per cancelled stop order (Treatment B — long format):
-\itemize{
-\item \code{cancelled_order_id} (character): KuCoin order ID of a cancelled stop order.
-Returns an empty \code{data.table} if no stop orders matched (per the
-"empty response -> empty data.table" cross-package convention).
-}
+(data.table | promise<data.table>) one row per cancelled stop order
+giving the KuCoin order ID; an empty data.table if no stop orders matched.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -601,20 +605,17 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{clientOid}}{Character; the client-assigned order ID used when placing the stop order.}
+\item{\code{clientOid}}{(scalar<character>) the client-assigned order ID used when
+placing the stop order.}
 
-\item{\code{symbol}}{Character; trading pair symbol (e.g., \code{"BTC-USDT"}). Required to
-disambiguate client OIDs across different trading pairs.}
+\item{\code{symbol}}{(scalar<character>) trading pair symbol (e.g., \code{"BTC-USDT"}).
+Required to disambiguate client OIDs across different trading pairs.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
-with a single row:
-\itemize{
-\item \code{cancelled_order_id} (character): The KuCoin order ID of the cancelled stop order.
-\item \code{client_oid} (character): The client-assigned order ID that was cancelled.
-}
+(data.table | promise<data.table>) one row giving the KuCoin order
+ID and the client-assigned order ID of the cancelled stop order.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -699,23 +700,17 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{query}}{Named list; optional filter parameters:
-\itemize{
-\item \code{symbol} (character): Trading pair to filter by (e.g., \code{"BTC-USDT"}).
-\item \code{tradeType} (character): Trade type, typically \code{"TRADE"} for spot.
-\item \code{orderIds} (character): Comma-separated list of specific stop order IDs to cancel.
-}}
+\item{\code{query}}{(list) optional filter parameters. Supported keys: \code{symbol}
+(trading pair to filter by e.g. \code{"BTC-USDT"}), \code{tradeType} (trade type,
+typically \code{"TRADE"} for spot), and \code{orderIds} (comma-separated list of
+specific stop order IDs to cancel).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
-with one row per cancelled stop order (Treatment B — long format):
-\itemize{
-\item \code{cancelled_order_id} (character): KuCoin order ID of a cancelled stop order.
-Returns an empty \code{data.table} if no stop orders matched the filters
-(per the "empty response -> empty data.table" cross-package convention).
-}
+(data.table | promise<data.table>) one row per cancelled stop order
+giving the KuCoin order ID; an empty data.table if no stop orders matched
+the filters.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -823,27 +818,17 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{orderId}}{Character; the KuCoin-assigned stop order ID to retrieve.}
+\item{\code{orderId}}{(scalar<character>) the KuCoin-assigned stop order ID to
+retrieve.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
-with a single row containing order details (no list columns). Key columns include:
-\itemize{
-\item \code{id} (character): Stop order identifier.
-\item \code{symbol} (character): Trading pair (e.g., \code{"BTC-USDT"}).
-\item \code{type} (character): Order type (\code{"limit"} or \code{"market"}).
-\item \code{side} (character): Order side (\code{"buy"} or \code{"sell"}).
-\item \code{price} (character): Limit price (NULL for market orders).
-\item \code{size} (character): Order quantity in base currency.
-\item \code{stop_price} (character): Trigger price for the stop order.
-\item \code{stop} (character): Stop direction (\code{"loss"} or \code{"entry"}).
-\item \code{created_at} (POSIXct): Creation datetime (coerced from epoch milliseconds).
-\item \code{order_time} (POSIXct): Order placement datetime (coerced from epoch nanoseconds).
-\item \code{stop_trigger_time} (POSIXct): Trigger datetime if triggered (coerced from
-epoch milliseconds), \code{NA} if not yet triggered.
-}
+(data.table | promise<data.table>) one row of order details giving
+the order ID, trading pair symbol, order type and side, limit price and
+size, the stop trigger price and direction, and the creation, order, and
+stop-trigger datetimes (POSIXct, coerced from epoch milliseconds and
+nanoseconds; the trigger time is NA until triggered).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -951,31 +936,21 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{clientOid}}{Character; the client-assigned order ID to search for.}
+\item{\code{clientOid}}{(scalar<character>) the client-assigned order ID to search
+for.}
 
-\item{\code{symbol}}{Character; trading pair symbol (e.g., \code{"BTC-USDT"}). Required to
-scope the search to a specific trading pair.}
+\item{\code{symbol}}{(scalar<character>) trading pair symbol (e.g., \code{"BTC-USDT"}).
+Required to scope the search to a specific trading pair.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
-with one row per matching stop order (no list columns). Key columns include:
-\itemize{
-\item \code{id} (character): Stop order identifier.
-\item \code{symbol} (character): Trading pair (e.g., \code{"BTC-USDT"}).
-\item \code{type} (character): Order type (\code{"limit"} or \code{"market"}).
-\item \code{side} (character): Order side (\code{"buy"} or \code{"sell"}).
-\item \code{price} (character): Limit price (NULL for market orders).
-\item \code{size} (character): Order quantity in base currency.
-\item \code{stop_price} (character): Trigger price for the stop order.
-\item \code{client_oid} (character): The client-assigned order ID.
-\item \code{created_at} (POSIXct): Creation datetime (coerced from epoch milliseconds).
-\item \code{order_time} (POSIXct): Order placement datetime (coerced from epoch nanoseconds).
-\item \code{stop_trigger_time} (POSIXct): Trigger datetime if triggered (coerced from
-epoch milliseconds), \code{NA} if not yet triggered.
-Returns an empty \code{data.table} if no stop orders match.
-}
+(data.table | promise<data.table>) one row per matching stop order
+giving the order ID, trading pair symbol, order type and side, limit price
+and size, the stop trigger price, the client-assigned order ID, and the
+creation, order, and stop-trigger datetimes (POSIXct, coerced from epoch
+milliseconds and nanoseconds; the trigger time is NA until triggered); an
+empty data.table if no stop orders match.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1089,40 +1064,25 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{query}}{Named list; optional filter and pagination parameters:
-\itemize{
-\item \code{symbol} (character): Trading pair to filter by (e.g., \code{"BTC-USDT"}).
-\item \code{side} (character): Order side filter, \code{"buy"} or \code{"sell"}.
-\item \code{type} (character): Order type filter, \code{"limit"} or \code{"market"}.
-\item \code{startAt} (numeric): Start time in milliseconds (UNIX epoch).
-\item \code{endAt} (numeric): End time in milliseconds (UNIX epoch).
-\item \code{currentPage} (integer): Page number for pagination (default 1).
-\item \code{pageSize} (integer): Number of results per page (default 50, max 100).
-\item \code{tradeType} (character): Trade type, typically \code{"TRADE"} for spot.
-\item \code{orderIds} (character): Comma-separated list of specific stop order IDs.
-}}
+\item{\code{query}}{(list) optional filter and pagination parameters. Supported
+keys: \code{symbol} (trading pair to filter by e.g. \code{"BTC-USDT"}), \code{side}
+(order side filter, \code{"buy"} or \code{"sell"}), \code{type} (order type filter,
+\code{"limit"} or \code{"market"}), \code{startAt} (start time in milliseconds, UNIX
+epoch), \code{endAt} (end time in milliseconds, UNIX epoch), \code{currentPage}
+(page number for pagination, default 1), \code{pageSize} (number of results per
+page, default 50, max 100), \code{tradeType} (trade type, typically \code{"TRADE"}
+for spot), and \code{orderIds} (comma-separated list of specific stop order
+IDs).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
-with one row per stop order (no list columns). Returns an empty \code{data.table}
-if no stop orders match the query. Key columns include:
-\itemize{
-\item \code{id} (character): Stop order identifier.
-\item \code{symbol} (character): Trading pair (e.g., \code{"BTC-USDT"}).
-\item \code{type} (character): Order type (\code{"limit"} or \code{"market"}).
-\item \code{side} (character): Order side (\code{"buy"} or \code{"sell"}).
-\item \code{price} (character): Limit price (NULL for market orders).
-\item \code{size} (character): Order quantity in base currency.
-\item \code{stop_price} (character): Trigger price for the stop order.
-\item \code{stop} (character): Stop direction (\code{"loss"} or \code{"entry"}).
-\item \code{time_in_force} (character): Time-in-force policy.
-\item \code{created_at} (POSIXct): Creation datetime (coerced from epoch milliseconds).
-\item \code{order_time} (POSIXct): Order placement datetime (coerced from epoch nanoseconds).
-\item \code{stop_trigger_time} (POSIXct): Trigger datetime if triggered (coerced from
-epoch milliseconds), \code{NA} if not yet triggered.
-}
+(data.table | promise<data.table>) one row per stop order giving the
+order ID, trading pair symbol, order type and side, limit price and size,
+the stop trigger price and direction, the time-in-force policy, and the
+creation, order, and stop-trigger datetimes (POSIXct, coerced from epoch
+milliseconds and nanoseconds; the trigger time is NA until triggered); an
+empty data.table if no stop orders match the query.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
