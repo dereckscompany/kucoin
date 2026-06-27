@@ -1369,8 +1369,9 @@ KucoinMarginTrading <- R6::R6Class(
     #'
     #' @param leverage (scalar<numeric>) the desired leverage multiplier (e.g.,
     #'   `3`, `5`, `10`).
-    #' @return (data.table | promise<data.table>) one row giving the new leverage
-    #'   multiplier and a `"success"` status.
+    #' @return (data.table | promise<data.table>) one row:
+    #' - leverage (numeric) the new leverage multiplier.
+    #' - status (character) the local outcome marker, always `"success"`.
     #' @noassert leverage
     #'
     #' @examples

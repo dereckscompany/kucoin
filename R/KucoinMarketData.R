@@ -134,7 +134,7 @@ KucoinMarketData <- R6::R6Class(
     #'   `endTime` (end timestamp in milliseconds).
     #' @param page_size (scalar<count in [1, Inf[>) results per page (default 50,
     #'   max 100).
-    #' @param max_pages (scalar<numeric in [1, Inf]>) maximum number of pages to
+    #' @param max_pages (scalar<numeric in [1, Inf[>) maximum number of pages to
     #'   fetch (default `Inf` for all).
     #' @return (data.table | promise<data.table>) one row per announcement, each
     #'   giving the announcement ID, title, `;`-separated category tags, short
@@ -1195,8 +1195,8 @@ KucoinMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return (data.table | promise<data.table>) one row per market segment,
-    #'   giving the segment identifier.
+    #' @return (data.table | promise<data.table>) one row per market segment:
+    #' - market (character) the segment identifier, e.g. `"USDS"`, `"DeFi"`.
     #'
     #' @examples
     #' \dontrun{
@@ -1353,8 +1353,9 @@ KucoinMarketData <- R6::R6Class(
     #' - **Auth Debugging**: KuCoin tolerates +/-5s; verify your timestamps are in range.
     #' - **Heartbeat**: Lightweight endpoint suitable for connectivity health checks.
     #'
-    #' @return (data.table | promise<data.table>) one row giving the server
-    #'   timestamp in milliseconds and the converted server datetime (POSIXct).
+    #' @return (data.table | promise<data.table>) one row:
+    #' - server_time (numeric) the server clock in epoch milliseconds.
+    #' - datetime (POSIXct) the same instant as a POSIXct (UTC).
     #'
     #' @examples
     #' \dontrun{

@@ -1081,7 +1081,7 @@ inclusive), and \code{endAt} (end time in milliseconds epoch, inclusive).}
 \item{\code{page_size}}{(scalar<count in [1, Inf[>) number of results per page,
 between 10 and 500 (default 50).}
 
-\item{\code{max_pages}}{(scalar<numeric in [1, Inf]>) maximum number of pages to
+\item{\code{max_pages}}{(scalar<numeric in [1, Inf[>) maximum number of pages to
 fetch (default \code{Inf} for all pages). Set to a finite number to limit API
 calls.}
 }

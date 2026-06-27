@@ -61,7 +61,7 @@ assert_args_KucoinAccount__get_spot_ledger <- function(query, page_size, max_pag
   assert_scalar_count(page_size)
   assert_between(page_size, lower = 1)
   assert_scalar_double(max_pages)
-  assert_between(max_pages, lower = 1)
+  assert_between(max_pages, lower = 1, upper = Inf, upper_inclusive = FALSE)
   return(invisible(NULL))
 }
 
@@ -185,7 +185,7 @@ assert_args_KucoinDeposit__get_deposit_history <- function(currency, status, sta
   assert_scalar_count(page_size)
   assert_between(page_size, lower = 1)
   assert_scalar_double(max_pages)
-  assert_between(max_pages, lower = 1)
+  assert_between(max_pages, lower = 1, upper = Inf, upper_inclusive = FALSE)
   return(invisible(NULL))
 }
 
@@ -815,6 +815,15 @@ assert_args_KucoinLending__modify_purchase <- function(currency, purchaseOrderNo
 
 assert_return_KucoinLending__modify_purchase <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("currency", "purchase_order_no", "interest_rate", "status"))
+  assert_character(value[["currency"]])
+  assert_no_missing_values(value[["currency"]])
+  assert_character(value[["purchase_order_no"]])
+  assert_no_missing_values(value[["purchase_order_no"]])
+  assert_double(value[["interest_rate"]])
+  assert_no_missing_values(value[["interest_rate"]])
+  assert_character(value[["status"]])
+  assert_no_missing_values(value[["status"]])
   return(value)
 }
 
@@ -1157,6 +1166,11 @@ assert_return_KucoinMarginTrading__get_borrow_rate <- function(value) {
 
 assert_return_KucoinMarginTrading__modify_leverage <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("leverage", "status"))
+  assert_double(value[["leverage"]])
+  assert_no_missing_values(value[["leverage"]])
+  assert_character(value[["status"]])
+  assert_no_missing_values(value[["status"]])
   return(value)
 }
 
@@ -1165,7 +1179,7 @@ assert_args_KucoinMarketData__get_announcements <- function(query, page_size, ma
   assert_scalar_count(page_size)
   assert_between(page_size, lower = 1)
   assert_scalar_double(max_pages)
-  assert_between(max_pages, lower = 1)
+  assert_between(max_pages, lower = 1, upper = Inf, upper_inclusive = FALSE)
   return(invisible(NULL))
 }
 
@@ -1295,6 +1309,9 @@ assert_return_KucoinMarketData__get_24hr_stats <- function(value) {
 
 assert_return_KucoinMarketData__get_market_list <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("market"))
+  assert_character(value[["market"]])
+  assert_no_missing_values(value[["market"]])
   return(value)
 }
 
@@ -1326,6 +1343,11 @@ assert_return_KucoinMarketData__get_klines <- function(value) {
 
 assert_return_KucoinMarketData__get_server_time <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("server_time", "datetime"))
+  assert_double(value[["server_time"]])
+  assert_no_missing_values(value[["server_time"]])
+  assert_datetime(value[["datetime"]])
+  assert_no_missing_values(value[["datetime"]])
   return(value)
 }
 
@@ -1644,7 +1666,7 @@ assert_args_KucoinSubAccount__get_sub_account_list <- function(page_size, max_pa
   assert_scalar_count(page_size)
   assert_between(page_size, lower = 1)
   assert_scalar_double(max_pages)
-  assert_between(max_pages, lower = 1)
+  assert_between(max_pages, lower = 1, upper = Inf, upper_inclusive = FALSE)
   return(invisible(NULL))
 }
 
@@ -1668,7 +1690,7 @@ assert_args_KucoinSubAccount__get_all_spot_balances <- function(page_size, max_p
   assert_scalar_count(page_size)
   assert_between(page_size, lower = 1)
   assert_scalar_double(max_pages)
-  assert_between(max_pages, lower = 1)
+  assert_between(max_pages, lower = 1, upper = Inf, upper_inclusive = FALSE)
   return(invisible(NULL))
 }
 
@@ -1902,11 +1924,19 @@ assert_args_KucoinTrading__cancel_all_by_symbol <- function(symbol) {
 
 assert_return_KucoinTrading__cancel_all_by_symbol <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("result"))
+  assert_character(value[["result"]])
+  assert_no_missing_values(value[["result"]])
   return(value)
 }
 
 assert_return_KucoinTrading__cancel_all <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("symbol", "status"))
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_character(value[["status"]])
+  assert_no_missing_values(value[["status"]])
   return(value)
 }
 
@@ -1969,6 +1999,9 @@ assert_return_KucoinTrading__get_fills <- function(value) {
 
 assert_return_KucoinTrading__get_symbols_with_open_orders <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("symbols"))
+  assert_character(value[["symbols"]])
+  assert_no_missing_values(value[["symbols"]])
   return(value)
 }
 
@@ -2260,6 +2293,9 @@ assert_args_KucoinWithdrawal__cancel_withdrawal <- function(withdrawalId) {
 
 assert_return_KucoinWithdrawal__cancel_withdrawal <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("withdrawal_id"))
+  assert_character(value[["withdrawal_id"]])
+  assert_no_missing_values(value[["withdrawal_id"]])
   return(value)
 }
 
@@ -2292,7 +2328,7 @@ assert_args_KucoinWithdrawal__get_withdrawal_history <- function(currency, statu
   assert_scalar_count(page_size)
   assert_between(page_size, lower = 1)
   assert_scalar_double(max_pages)
-  assert_between(max_pages, lower = 1)
+  assert_between(max_pages, lower = 1, upper = Inf, upper_inclusive = FALSE)
   return(invisible(NULL))
 }
 
@@ -2503,7 +2539,7 @@ assert_args_kucoin_paginate <- function(base_url, endpoint, method, query, body,
   assert_scalar_count(page_size)
   assert_between(page_size, lower = 1)
   assert_scalar_double(max_pages)
-  assert_between(max_pages, lower = 1)
+  assert_between(max_pages, lower = 1, upper = Inf, upper_inclusive = FALSE)
   assert_scalar_character(items_field)
   assert_scalar_double(timeout)
   assert_between(timeout, lower = 0, lower_inclusive = FALSE, upper = Inf, upper_inclusive = FALSE)

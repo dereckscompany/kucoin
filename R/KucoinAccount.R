@@ -886,7 +886,7 @@ KucoinAccount <- R6::R6Class(
     #'   inclusive), and `endAt` (end time in milliseconds epoch, inclusive).
     #' @param page_size (scalar<count in [1, Inf[>) number of results per page,
     #'   between 10 and 500 (default 50).
-    #' @param max_pages (scalar<numeric in [1, Inf]>) maximum number of pages to
+    #' @param max_pages (scalar<numeric in [1, Inf[>) maximum number of pages to
     #'   fetch (default `Inf` for all pages). Set to a finite number to limit API
     #'   calls.
     #'

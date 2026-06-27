@@ -402,7 +402,7 @@ KucoinDeposit <- R6::R6Class(
     #'   (inclusive). Used to filter deposits created on or before this time.
     #' @param page_size (scalar<count in [1, Inf[>) number of results per page
     #'   (default 50, max 100).
-    #' @param max_pages (scalar<numeric in [1, Inf]>) maximum number of pages to
+    #' @param max_pages (scalar<numeric in [1, Inf[>) maximum number of pages to
     #'   fetch (default `Inf` for all pages).
     #' @return (data.table | promise<data.table>) one row per deposit, each
     #'   giving the deposited currency code, the blockchain network used, the

@@ -404,7 +404,7 @@ Verified: 2026-05-23
 \item{\code{page_size}}{(scalar<count in [1, Inf[>) results per page (default 50,
 max 100).}
 
-\item{\code{max_pages}}{(scalar<numeric in [1, Inf]>) maximum number of pages to
+\item{\code{max_pages}}{(scalar<numeric in [1, Inf[>) maximum number of pages to
 fetch (default \code{Inf} for all).}
 }
 \if{html}{\out{</div>}}
@@ -1563,8 +1563,10 @@ Verified: 2026-05-23
 }
 
 \subsection{Returns}{
-(data.table | promise<data.table>) one row per market segment,
-giving the segment identifier.
+(data.table | promise<data.table>) one row per market segment:
+\itemize{
+\item market (character) the segment identifier, e.g. \code{"USDS"}, \code{"DeFi"}.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1742,8 +1744,11 @@ Verified: 2026-05-23
 }
 
 \subsection{Returns}{
-(data.table | promise<data.table>) one row giving the server
-timestamp in milliseconds and the converted server datetime (POSIXct).
+(data.table | promise<data.table>) one row:
+\itemize{
+\item server_time (numeric) the server clock in epoch milliseconds.
+\item datetime (POSIXct) the same instant as a POSIXct (UTC).
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

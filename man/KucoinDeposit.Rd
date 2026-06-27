@@ -516,7 +516,7 @@ Accepted values: \code{"PROCESSING"}, \code{"WALLET_PROCESSING"}, \code{"SUCCESS
 \item{\code{page_size}}{(scalar<count in [1, Inf[>) number of results per page
 (default 50, max 100).}
 
-\item{\code{max_pages}}{(scalar<numeric in [1, Inf]>) maximum number of pages to
+\item{\code{max_pages}}{(scalar<numeric in [1, Inf[>) maximum number of pages to
 fetch (default \code{Inf} for all pages).}
 }
 \if{html}{\out{</div>}}

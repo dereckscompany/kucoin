@@ -346,8 +346,11 @@ KucoinLending <- R6::R6Class(
     #' @param currency (scalar<character>) the currency of the lending order.
     #' @param purchaseOrderNo (scalar<character>) the order number to modify.
     #' @param interestRate (scalar<numeric>) the new interest rate.
-    #' @return (data.table | promise<data.table>) one row echoing the currency, the
-    #'   modified order number, the new interest rate, and a success status.
+    #' @return (data.table | promise<data.table>) one row echoing the request:
+    #' - currency (character) the lending currency.
+    #' - purchase_order_no (character) the modified order number.
+    #' - interest_rate (numeric) the new interest rate.
+    #' - status (character) the local outcome marker, always `"success"`.
     #'
     #' @examples
     #' \dontrun{

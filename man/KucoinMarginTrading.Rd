@@ -1518,8 +1518,11 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row giving the new leverage
-multiplier and a \code{"success"} status.
+(data.table | promise<data.table>) one row:
+\itemize{
+\item leverage (numeric) the new leverage multiplier.
+\item status (character) the local outcome marker, always \code{"success"}.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

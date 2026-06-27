@@ -402,9 +402,12 @@ cancel.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row with column
-\code{withdrawal_id} (character): the cancelled withdrawal ID, echoed from the
-input since KuCoin returns \code{null} data on a successful cancel.
+(data.table | promise<data.table>) one row, the cancelled
+withdrawal ID echoed from the input (KuCoin returns \code{null} data on a
+successful cancel):
+\itemize{
+\item withdrawal_id (character) the cancelled withdrawal ID.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -647,7 +650,7 @@ Accepted values: \code{"PROCESSING"}, \code{"REVIEW"}, \code{"WALLET_PROCESSING"
 \item{\code{page_size}}{(scalar<count in [1, Inf[>) number of results per page
 (default 50, max 500).}
 
-\item{\code{max_pages}}{(scalar<numeric in [1, Inf]>) maximum number of pages to
+\item{\code{max_pages}}{(scalar<numeric in [1, Inf[>) maximum number of pages to
 fetch (default \code{Inf} for all pages).}
 }
 \if{html}{\out{</div>}}

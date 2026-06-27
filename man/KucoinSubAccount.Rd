@@ -392,7 +392,7 @@ Verified: 2026-05-23
 \item{\code{page_size}}{(scalar<count in [1, Inf[>) number of results per page,
 between 1 and 100.}
 
-\item{\code{max_pages}}{(scalar<numeric in [1, Inf]>) maximum number of pages to
+\item{\code{max_pages}}{(scalar<numeric in [1, Inf[>) maximum number of pages to
 retrieve. Use \code{Inf} (default) to fetch all available pages.}
 }
 \if{html}{\out{</div>}}
@@ -699,7 +699,7 @@ Verified: 2026-05-23
 \item{\code{page_size}}{(scalar<count in [1, Inf[>) number of results per page,
 between 10 and 100.}
 
-\item{\code{max_pages}}{(scalar<numeric in [1, Inf]>) maximum number of pages to
+\item{\code{max_pages}}{(scalar<numeric in [1, Inf[>) maximum number of pages to
 retrieve. Use \code{Inf} (default) to fetch all available pages.}
 }
 \if{html}{\out{</div>}}

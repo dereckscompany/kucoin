@@ -224,7 +224,7 @@ parse_kucoin_response <- function(resp) {
 #'   Default `identity`.
 #' @param is_async (scalar<logical>) whether in async mode. Default `FALSE`.
 #' @param page_size (scalar<count in [1, Inf[>) results per page. Default `50`.
-#' @param max_pages (scalar<numeric in [1, Inf]>) maximum pages to fetch.
+#' @param max_pages (scalar<numeric in [1, Inf[>) maximum pages to fetch.
 #'   Default `Inf`.
 #' @param items_field (scalar<character>) name of the items field. Default
 #'   `"items"`.

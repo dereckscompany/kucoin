@@ -474,8 +474,13 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row echoing the currency, the
-modified order number, the new interest rate, and a success status.
+(data.table | promise<data.table>) one row echoing the request:
+\itemize{
+\item currency (character) the lending currency.
+\item purchase_order_no (character) the modified order number.
+\item interest_rate (numeric) the new interest rate.
+\item status (character) the local outcome marker, always \code{"success"}.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

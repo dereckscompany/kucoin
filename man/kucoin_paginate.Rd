@@ -52,7 +52,7 @@ Default \code{identity}.}
 
 \item{page_size}{(scalar<count in [1, Inf[>) results per page. Default \code{50}.}
 
-\item{max_pages}{(scalar<numeric in [1, Inf]>) maximum pages to fetch.
+\item{max_pages}{(scalar<numeric in [1, Inf[>) maximum pages to fetch.
 Default \code{Inf}.}
 
 \item{items_field}{(scalar<character>) name of the items field. Default

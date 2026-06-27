@@ -816,7 +816,9 @@ KucoinTrading <- R6::R6Class(
     #' ```
     #'
     #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
-    #' @return (data.table | promise<data.table>) one row giving the cancellation response in the `result` column.
+    #' @return (data.table | promise<data.table>) one row giving the cancellation
+    #'   response:
+    #' - result (character) the KuCoin response string, e.g. `"success"`.
     #'
     #' @examples
     #' \dontrun{
@@ -883,8 +885,10 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return (data.table | promise<data.table>) one row per cancelled symbol giving the trading pair and its
-    #'   `"succeed"` or `"failed"` status; an empty data.table if no orders were open.
+    #' @return (data.table | promise<data.table>) one row per cancelled symbol;
+    #'   an empty (but typed) data.table if no orders were open:
+    #' - symbol (character) the trading pair, e.g. `"BTC-USDT"`.
+    #' - status (character) per-symbol outcome, `"succeed"` or `"failed"`.
     #'
     #' @examples
     #' \dontrun{
@@ -1359,7 +1363,9 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return (data.table | promise<data.table>) one row per trading pair that has at least one open order.
+    #' @return (data.table | promise<data.table>) one row per trading pair that
+    #'   has at least one open order:
+    #' - symbols (character) the trading pair, e.g. `"BTC-USDT"`.
     #'
     #' @examples
     #' \dontrun{

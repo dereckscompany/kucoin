@@ -284,9 +284,10 @@ KucoinWithdrawal <- R6::R6Class(
     #'
     #' @param withdrawalId (scalar<character>) the unique withdrawal ID to
     #'   cancel.
-    #' @return (data.table | promise<data.table>) one row with column
-    #'   `withdrawal_id` (character): the cancelled withdrawal ID, echoed from the
-    #'   input since KuCoin returns `null` data on a successful cancel.
+    #' @return (data.table | promise<data.table>) one row, the cancelled
+    #'   withdrawal ID echoed from the input (KuCoin returns `null` data on a
+    #'   successful cancel):
+    #' - withdrawal_id (character) the cancelled withdrawal ID.
     #'
     #' @examples
     #' \dontrun{
@@ -517,7 +518,7 @@ KucoinWithdrawal <- R6::R6Class(
     #'   (inclusive).
     #' @param page_size (scalar<count in [1, Inf[>) number of results per page
     #'   (default 50, max 500).
-    #' @param max_pages (scalar<numeric in [1, Inf]>) maximum number of pages to
+    #' @param max_pages (scalar<numeric in [1, Inf[>) maximum number of pages to
     #'   fetch (default `Inf` for all pages).
     #' @return (data.table | promise<data.table>) one row per withdrawal record
     #'   (currency, chain, status, address, memo, is_inner, amount, fee,

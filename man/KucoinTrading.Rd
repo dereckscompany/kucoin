@@ -1120,7 +1120,11 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row giving the cancellation response in the \code{result} column.
+(data.table | promise<data.table>) one row giving the cancellation
+response:
+\itemize{
+\item result (character) the KuCoin response string, e.g. \code{"success"}.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1188,8 +1192,12 @@ Verified: 2026-05-23
 }
 
 \subsection{Returns}{
-(data.table | promise<data.table>) one row per cancelled symbol giving the trading pair and its
-\code{"succeed"} or \code{"failed"} status; an empty data.table if no orders were open.
+(data.table | promise<data.table>) one row per cancelled symbol;
+an empty (but typed) data.table if no orders were open:
+\itemize{
+\item symbol (character) the trading pair, e.g. \code{"BTC-USDT"}.
+\item status (character) per-symbol outcome, \code{"succeed"} or \code{"failed"}.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1602,7 +1610,11 @@ Verified: 2026-05-23
 }
 
 \subsection{Returns}{
-(data.table | promise<data.table>) one row per trading pair that has at least one open order.
+(data.table | promise<data.table>) one row per trading pair that
+has at least one open order:
+\itemize{
+\item symbols (character) the trading pair, e.g. \code{"BTC-USDT"}.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
