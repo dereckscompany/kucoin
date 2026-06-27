@@ -225,7 +225,8 @@ Verified: 2026-05-23
 \item \strong{Profit Extraction}: Withdraw profits to a cold wallet at regular intervals.
 \item \strong{Arbitrage Settlement}: Move funds off-exchange after capturing arbitrage spreads.
 \item \strong{Internal Transfers}: Use \code{isInner = TRUE} for fee-free transfers between KuCoin accounts.
-\item \strong{Multi-Chain Support}: Specify \code{chain} (e.g., \code{"trx"}, \code{"eth"}, \code{"bsc"}) to select the cheapest or fastest network.
+\item \strong{Multi-Chain Support}: Specify \code{chain} (e.g., \code{"trx"}, \code{"eth"}, \code{"bsc"}) to select the cheapest or fastest
+network.
 }
 }
 
@@ -238,7 +239,9 @@ Verified: 2026-05-23
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
   --header 'KC-API-PASSPHRASE: your-passphrase' \\
   --header 'KC-API-KEY-VERSION: 2' \\
-  --data-raw '\{"currency":"USDT","toAddress":"TKFRQXSDcY4kd3QLzw7uK16GmLrjJggwX8","amount":"10","withdrawType":"ADDRESS","chain":"trx"\}'
+  --data-raw \\
+  '\{"currency":"USDT","toAddress":"TKFRQXSDcY4kd3QLzw7uK16GmLrjJggwX8","amount":"10","withdrawType":"ADDRESS",
+  "chain":"trx"\}'
 }\if{html}{\out{</div>}}
 }
 
@@ -447,7 +450,8 @@ to ensure sufficient balance and valid amount parameters.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-quotas}{KuCoin Get Withdrawal Quotas}
+KuCoin Get Withdrawal Quotas:
+\url{https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-quotas}
 
 Verified: 2026-05-23
 }
@@ -565,7 +569,8 @@ to POSIXct for convenient analysis.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-history}{KuCoin Get Withdrawal History}
+KuCoin Get Withdrawal History:
+\url{https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-history}
 
 Verified: 2026-05-23
 }
@@ -650,7 +655,7 @@ Accepted values: \code{"PROCESSING"}, \code{"REVIEW"}, \code{"WALLET_PROCESSING"
 \item{\code{page_size}}{(scalar<count in [1, Inf[>) number of results per page
 (default 50, max 500).}
 
-\item{\code{max_pages}}{(scalar<numeric in [1, Inf[>) maximum number of pages to
+\item{\code{max_pages}}{(scalar<numeric in [1, Inf]>) maximum number of pages to
 fetch (default \code{Inf} for all pages).}
 }
 \if{html}{\out{</div>}}
@@ -712,16 +717,19 @@ Provides more information than the history endpoint.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-by-id}{KuCoin Get Withdrawal Detail}
+KuCoin Get Withdrawal Detail:
+\url{https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-by-id}
 
 Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Status Tracking}: Monitor withdrawal progress through \code{REVIEW} → \code{PROCESSING} → \code{WALLET_PROCESSING} → \code{SUCCESS}.
+\item \strong{Status Tracking}: Monitor withdrawal progress through \code{REVIEW} → \code{PROCESSING} → \code{WALLET_PROCESSING} →
+\code{SUCCESS}.
 \item \strong{Failure Diagnosis}: Check \code{failure_reason} and \code{failure_reason_msg} to understand why a withdrawal failed.
-\item \strong{Cancel Eligibility}: Use \code{cancel_type} (\code{"CANCELABLE"}, \code{"CANCELING"}, \code{"NON_CANCELABLE"}) to determine if a withdrawal can still be cancelled.
+\item \strong{Cancel Eligibility}: Use \code{cancel_type} (\code{"CANCELABLE"}, \code{"CANCELING"}, \code{"NON_CANCELABLE"}) to determine if a
+withdrawal can still be cancelled.
 }
 }
 

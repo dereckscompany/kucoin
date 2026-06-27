@@ -307,7 +307,8 @@ Verified: 2026-05-23
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Contract Discovery}: Query contract specs to determine lot size, tick size, and leverage limits before placing orders.
+\item \strong{Contract Discovery}: Query contract specs to determine lot size, tick size, and leverage limits before
+placing orders.
 \item \strong{Margin Calculations}: Use \code{initial_margin} and \code{maintain_margin} rates to pre-validate margin requirements.
 \item \strong{Fee Estimation}: Read \code{maker_fee_rate} and \code{taker_fee_rate} to estimate trading costs.
 }
@@ -549,7 +550,8 @@ Verified: 2026-05-23
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Price Monitoring}: Poll the ticker to track best bid/ask spreads and last trade prices for signal generation.
+\item \strong{Price Monitoring}: Poll the ticker to track best bid/ask spreads and last trade prices for signal
+generation.
 \item \strong{Execution Timing}: Use \code{side} of the last trade to gauge short-term directional momentum.
 \item \strong{Spread Analysis}: Compare \code{best_bid_price} and \code{best_ask_price} to measure market liquidity.
 }
@@ -1230,7 +1232,8 @@ Funding rates are charged/received every 8 hours for perpetual contracts.
 \subsection{Workflow}{
 \enumerate{
 \item \strong{Request}: Public GET with the symbol in the URL path.
-\item \strong{Parsing}: Returns a single-row \code{data.table}; coerces \code{time_point} and \code{funding_time} from milliseconds to POSIXct.
+\item \strong{Parsing}: Returns a single-row \code{data.table}; coerces \code{time_point} and \code{funding_time} from milliseconds to
+POSIXct.
 }
 }
 
@@ -1241,14 +1244,16 @@ Funding rates are charged/received every 8 hours for perpetual contracts.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-current-funding-rate}{KuCoin Get Current Funding Rate}
+KuCoin Get Current Funding Rate:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-current-funding-rate}
 
 Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Funding Arbitrage}: Compare funding rates across exchanges to identify cash-and-carry arbitrage opportunities.
+\item \strong{Funding Arbitrage}: Compare funding rates across exchanges to identify cash-and-carry arbitrage
+opportunities.
 \item \strong{Position Timing}: Avoid entering positions just before a large negative funding rate settlement.
 \item \strong{Predicted Rate Monitoring}: Use \code{predicted_value} to anticipate the next funding cycle and adjust positions.
 }
@@ -1319,7 +1324,8 @@ specified time range.
 \enumerate{
 \item \strong{Time Conversion}: Converts POSIXct \code{from}/\code{to} to milliseconds if needed.
 \item \strong{Request}: Public GET with \code{symbol}, \code{from}, and \code{to} query parameters.
-\item \strong{Parsing}: Returns a \code{data.table} with one row per funding settlement; coerces \code{timepoint} from milliseconds to POSIXct.
+\item \strong{Parsing}: Returns a \code{data.table} with one row per funding settlement; coerces \code{timepoint} from milliseconds
+to POSIXct.
 }
 }
 
@@ -1330,16 +1336,20 @@ specified time range.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-public-funding-history}{KuCoin Get Public Funding Rate History}
+KuCoin Get Public Funding Rate History:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-public-funding-history}
 
 Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Funding Rate Analysis}: Analyse historical funding rates to understand market sentiment (positive = longs pay shorts).
-\item \strong{Mean Reversion Signals}: Extreme funding rates often precede reversals; use historical data to calibrate thresholds.
-\item \strong{Carry Trade Evaluation}: Calculate cumulative funding paid/received over a time period for carry trade analysis.
+\item \strong{Funding Rate Analysis}: Analyse historical funding rates to understand market sentiment (positive = longs
+pay shorts).
+\item \strong{Mean Reversion Signals}: Extreme funding rates often precede reversals; use historical data to calibrate
+thresholds.
+\item \strong{Carry Trade Evaluation}: Calculate cumulative funding paid/received over a time period for carry trade
+analysis.
 }
 }
 
@@ -1513,7 +1523,8 @@ Verified: 2026-05-23
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Health Check}: Poll service status at bot startup and periodically during operation to detect maintenance windows.
+\item \strong{Health Check}: Poll service status at bot startup and periodically during operation to detect maintenance
+windows.
 \item \strong{Graceful Degradation}: When status is \code{"close"}, pause order placement and alert the operator.
 \item \strong{Maintenance Scheduling}: Use the \code{msg} field to extract maintenance window details for automated scheduling.
 }

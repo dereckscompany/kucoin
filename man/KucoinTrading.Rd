@@ -759,7 +759,9 @@ Verified: 2026-05-23
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
   --header 'KC-API-PASSPHRASE: your-passphrase' \\
   --header 'KC-API-KEY-VERSION: 2' \\
-  --data-raw '\{"orderList":[\{"clientOid":"id1","symbol":"BTC-USDT","type":"limit","side":"buy","price":"30000","size":"0.00001"\}]\}'
+  --data-raw \\
+  '\{"orderList":[\{"clientOid":"id1","symbol":"BTC-USDT","type":"limit","side":"buy","price":"30000",
+  "size":"0.00001"\}]\}'
 }\if{html}{\out{</div>}}
 }
 
@@ -855,7 +857,8 @@ Cancels a specific spot HF order by its KuCoin-assigned order ID.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld}{KuCoin Cancel Order By OrderId}
+KuCoin Cancel Order By OrderId:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld}
 
 Verified: 2026-05-23
 }
@@ -925,7 +928,8 @@ Cancels a spot HF order by its client-assigned order ID.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid}{KuCoin Cancel Order By ClientOid}
+KuCoin Cancel Order By ClientOid:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid}
 
 Verified: 2026-05-23
 }
@@ -1076,7 +1080,8 @@ Cancels all open HF orders for a specific trading pair.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-all-orders-by-symbol}{KuCoin Cancel All Orders By Symbol}
+KuCoin Cancel All Orders By Symbol:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-all-orders-by-symbol}
 
 Verified: 2026-05-23
 }
@@ -1571,7 +1576,8 @@ Useful for determining which pairs need attention.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-symbols-with-open-order}{KuCoin Get Symbols With Open Order}
+KuCoin Get Symbols With Open Order:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-symbols-with-open-order}
 
 Verified: 2026-05-23
 }
@@ -2062,7 +2068,9 @@ Verified: 2026-05-23
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
   --header 'KC-API-PASSPHRASE: your-passphrase' \\
   --header 'KC-API-KEY-VERSION: 2' \\
-  --data-raw '\{"orderList":[\{"clientOid":"id1","symbol":"BTC-USDT","type":"limit","side":"buy","price":"30000","size":"0.00001"\}]\}'
+  --data-raw \\
+  '\{"orderList":[\{"clientOid":"id1","symbol":"BTC-USDT","type":"limit","side":"buy","price":"30000",
+  "size":"0.00001"\}]\}'
 }\if{html}{\out{</div>}}
 }
 
@@ -2170,7 +2178,8 @@ Returns the final order state including fill and cancellation sizes.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld-sync}{KuCoin Cancel Order By OrderId Sync}
+KuCoin Cancel Order By OrderId Sync:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld-sync}
 
 Verified: 2026-05-23
 }
@@ -2253,7 +2262,8 @@ Cancels an order by client OID and waits for completion before returning.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid-sync}{KuCoin Cancel Order By ClientOid Sync}
+KuCoin Cancel Order By ClientOid Sync:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid-sync}
 
 Verified: 2026-05-23
 }

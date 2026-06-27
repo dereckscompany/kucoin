@@ -277,7 +277,8 @@ count, and general account metadata for the authenticated user.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-summary-info}{KuCoin Get Account Summary}
+KuCoin Get Account Summary:
+\url{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-summary-info}
 
 Verified: 2026-05-23
 }
@@ -286,7 +287,8 @@ Verified: 2026-05-23
 \itemize{
 \item \strong{VIP Tier Monitoring}: Check \code{level} to confirm fee tier before placing large orders.
 \item \strong{Sub-Account Awareness}: Use \code{sub_quantity} to verify sub-account count for multi-strategy bots.
-\item \strong{Rate Limit Planning}: Higher VIP levels receive more generous rate limits; adjust request frequency accordingly.
+\item \strong{Rate Limit Planning}: Higher VIP levels receive more generous rate limits; adjust request frequency
+accordingly.
 }
 }
 
@@ -374,8 +376,10 @@ Verified: 2026-05-23
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Permission Verification}: Confirm the key has \code{Trade} permission before placing orders in a bot startup routine.
-\item \strong{IP Whitelist Check}: Validate that the bot's server IP is in \code{is_master}/\code{ip_whitelist} to avoid auth failures.
+\item \strong{Permission Verification}: Confirm the key has \code{Trade} permission before placing orders in a bot startup
+routine.
+\item \strong{IP Whitelist Check}: Validate that the bot's server IP is in \code{is_master}/\code{ip_whitelist} to avoid auth
+failures.
 \item \strong{Key Rotation Monitoring}: Use \code{created_at} to track key age and schedule rotation for security.
 }
 }
@@ -457,7 +461,8 @@ Returns an empty \code{data.table} if no accounts are opened.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-type-spot}{KuCoin Get Spot Account Type}
+KuCoin Get Spot Account Type:
+\url{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-type-spot}
 
 Verified: 2026-05-23
 }
@@ -466,7 +471,8 @@ Verified: 2026-05-23
 \itemize{
 \item \strong{Pre-Trade Validation}: Confirm HF trading accounts are opened before submitting HF orders.
 \item \strong{Account Provisioning}: Detect missing account types at bot startup and alert the operator.
-\item \strong{Multi-Account Bots}: Verify that both \code{trade} and \code{margin} types are available for strategies that span both.
+\item \strong{Multi-Account Bots}: Verify that both \code{trade} and \code{margin} types are available for strategies that span
+both.
 }
 }
 
@@ -538,7 +544,8 @@ Returns an empty \code{data.table} if no accounts match the filter.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-list-spot}{KuCoin Get Spot Account List}
+KuCoin Get Spot Account List:
+\url{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-list-spot}
 
 Verified: 2026-05-23
 }
@@ -647,14 +654,16 @@ its account ID. Returns currency, type, balance, available, and holds.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-detail-spot}{KuCoin Get Spot Account Detail}
+KuCoin Get Spot Account Detail:
+\url{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-detail-spot}
 
 Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Precise Balance Check}: Query a specific account by ID when you already know the account to avoid parsing lists.
+\item \strong{Precise Balance Check}: Query a specific account by ID when you already know the account to avoid parsing
+lists.
 \item \strong{Post-Trade Verification}: After an order fills, query the relevant account to confirm balance changes.
 \item \strong{Hold Monitoring}: Check \code{holds} to understand how much capital is locked in open orders.
 }
@@ -744,22 +753,27 @@ row-binds into a \code{data.table}. Returns empty \code{data.table} if no accoun
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-cross-margin}{KuCoin Get Cross Margin Account}
+KuCoin Get Cross Margin Account:
+\url{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-cross-margin}
 
 Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Margin Risk Monitoring}: Check \code{liability} and \code{totalAsset} to compute margin ratio and trigger de-risk actions.
-\item \strong{Borrowing Capacity}: Use \code{available_balance} to determine how much additional margin is available before placing leveraged orders.
-\item \strong{Cross-Margin Rebalancing}: Periodically query to detect imbalanced positions and repay liabilities automatically.
+\item \strong{Margin Risk Monitoring}: Check \code{liability} and \code{totalAsset} to compute margin ratio and trigger de-risk
+actions.
+\item \strong{Borrowing Capacity}: Use \code{available_balance} to determine how much additional margin is available before
+placing leveraged orders.
+\item \strong{Cross-Margin Rebalancing}: Periodically query to detect imbalanced positions and repay liabilities
+automatically.
 }
 }
 
 \subsection{curl}{
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET 'https://api.kucoin.com/api/v3/margin/accounts?quoteCurrency=USDT&queryType=MARGIN' \\
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET \\
+  'https://api.kucoin.com/api/v3/margin/accounts?quoteCurrency=USDT&queryType=MARGIN' \\
   --header 'KC-API-KEY: your-api-key' \\
   --header 'KC-API-SIGN: your-signature' \\
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
@@ -868,22 +882,26 @@ row-binds into a \code{data.table}. Returns empty \code{data.table} if no assets
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-isolated-margin}{KuCoin Get Isolated Margin Account}
+KuCoin Get Isolated Margin Account:
+\url{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-isolated-margin}
 
 Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Per-Pair Risk Management}: Monitor isolated margin ratios per symbol to trigger stop-loss or de-leverage actions independently.
+\item \strong{Per-Pair Risk Management}: Monitor isolated margin ratios per symbol to trigger stop-loss or de-leverage
+actions independently.
 \item \strong{Position Sizing}: Use \code{available_balance} for the specific trading pair to size new margin orders correctly.
-\item \strong{Liquidation Prevention}: Compare \code{debt_ratio} against liquidation thresholds and add margin or reduce positions automatically.
+\item \strong{Liquidation Prevention}: Compare \code{debt_ratio} against liquidation thresholds and add margin or reduce
+positions automatically.
 }
 }
 
 \subsection{curl}{
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET 'https://api.kucoin.com/api/v3/isolated/accounts?symbol=BTC-USDT&quoteCurrency=USDT&queryType=ISOLATED' \\
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET \\
+  'https://api.kucoin.com/api/v3/isolated/accounts?symbol=BTC-USDT&quoteCurrency=USDT&queryType=ISOLATED' \\
   --header 'KC-API-KEY: your-api-key' \\
   --header 'KC-API-SIGN: your-signature' \\
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
@@ -1001,7 +1019,8 @@ pages until all results are retrieved or \code{max_pages} is reached.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-ledgers-spot-margin}{KuCoin Get Account Ledger Spot/Margin}
+KuCoin Get Account Ledger Spot/Margin:
+\url{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-ledgers-spot-margin}
 
 Verified: 2026-05-23
 }
@@ -1016,7 +1035,8 @@ Verified: 2026-05-23
 
 \subsection{curl}{
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET 'https://api.kucoin.com/api/v1/accounts/ledgers?currency=USDT&direction=in&bizType=Exchange&pageSize=50&currentPage=1' \\
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET \\
+  'https://api.kucoin.com/api/v1/accounts/ledgers?currency=USDT&direction=in&bizType=Exchange' \\
   --header 'KC-API-KEY: your-api-key' \\
   --header 'KC-API-SIGN: your-signature' \\
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
@@ -1081,7 +1101,7 @@ inclusive), and \code{endAt} (end time in milliseconds epoch, inclusive).}
 \item{\code{page_size}}{(scalar<count in [1, Inf[>) number of results per page,
 between 10 and 500 (default 50).}
 
-\item{\code{max_pages}}{(scalar<numeric in [1, Inf[>) maximum number of pages to
+\item{\code{max_pages}}{(scalar<numeric in [1, Inf]>) maximum number of pages to
 fetch (default \code{Inf} for all pages). Set to a finite number to limit API
 calls.}
 }
@@ -1137,7 +1157,8 @@ Data is limited to a rolling 7-day window.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-ledgers-tradehf}{KuCoin Get Account Ledgers Trade_hf}
+KuCoin Get Account Ledgers Trade_hf:
+\url{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-ledgers-tradehf}
 
 Verified: 2026-05-23
 }

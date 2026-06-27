@@ -319,7 +319,9 @@ Verified: 2026-05-23
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
   --header 'KC-API-PASSPHRASE: your-passphrase' \\
   --header 'KC-API-KEY-VERSION: 2' \\
-  --data-raw '\{"type":"limit","symbol":"BTC-USDT","side":"sell","stopPrice":"90000","price":"89500","size":"0.00001","tradeType":"TRADE"\}'
+  --data-raw \\
+  '\{"type":"limit","symbol":"BTC-USDT","side":"sell","stopPrice":"90000","price":"89500","size":"0.00001",
+  "tradeType":"TRADE"\}'
 }\if{html}{\out{</div>}}
 }
 
@@ -476,7 +478,8 @@ Only stop orders that have not yet been triggered can be cancelled.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-stop-order-by-orderld}{KuCoin Cancel Stop Order By OrderId}
+KuCoin Cancel Stop Order By OrderId:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-stop-order-by-orderld}
 
 Verified: 2026-05-23
 }
@@ -563,7 +566,8 @@ Both \code{clientOid} and \code{symbol} are required as query parameters.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-stop-order-by-clientoid}{KuCoin Cancel Stop Order By ClientOid}
+KuCoin Cancel Stop Order By ClientOid:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-stop-order-by-clientoid}
 
 Verified: 2026-05-23
 }
@@ -578,7 +582,8 @@ Verified: 2026-05-23
 
 \subsection{curl}{
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request DELETE 'https://api.kucoin.com/api/v1/stop-order/cancelOrderByClientOid?clientOid=my-stop-001&symbol=BTC-USDT' \\
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request DELETE \\
+  'https://api.kucoin.com/api/v1/stop-order/cancelOrderByClientOid?clientOid=my-stop-001&symbol=BTC-USDT' \\
   --header 'KC-API-KEY: your-api-key' \\
   --header 'KC-API-SIGN: your-signature' \\
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
@@ -655,7 +660,8 @@ all pending stop orders are cancelled.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/batch-cancel-stop-orders}{KuCoin Batch Cancel Stop Orders}
+KuCoin Batch Cancel Stop Orders:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/batch-cancel-stop-orders}
 
 Verified: 2026-05-23
 }
@@ -670,7 +676,8 @@ Verified: 2026-05-23
 
 \subsection{curl}{
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request DELETE 'https://api.kucoin.com/api/v1/stop-order/cancel?symbol=BTC-USDT&tradeType=TRADE' \\
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request DELETE \\
+  'https://api.kucoin.com/api/v1/stop-order/cancel?symbol=BTC-USDT&tradeType=TRADE' \\
   --header 'KC-API-KEY: your-api-key' \\
   --header 'KC-API-SIGN: your-signature' \\
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
@@ -753,7 +760,8 @@ order ID. Returns order parameters, status, trigger price, and timestamps.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-stop-order-by-orderld}{KuCoin Get Stop Order By OrderId}
+KuCoin Get Stop Order By OrderId:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-stop-order-by-orderld}
 
 Verified: 2026-05-23
 }
@@ -869,7 +877,8 @@ otherwise returns a single-row \code{data.table}.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/get-stop-order-by-clientoid}{KuCoin Get Stop Order By ClientOid}
+KuCoin Get Stop Order By ClientOid:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/get-stop-order-by-clientoid}
 
 Verified: 2026-05-23
 }
@@ -884,7 +893,8 @@ Verified: 2026-05-23
 
 \subsection{curl}{
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET 'https://api.kucoin.com/api/v1/stop-order/queryOrderByClientOid?clientOid=my-stop-001&symbol=BTC-USDT' \\
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET \\
+  'https://api.kucoin.com/api/v1/stop-order/queryOrderByClientOid?clientOid=my-stop-001&symbol=BTC-USDT' \\
   --header 'KC-API-KEY: your-api-key' \\
   --header 'KC-API-SIGN: your-signature' \\
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
@@ -998,7 +1008,8 @@ Verified: 2026-05-23
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Portfolio Monitoring}: Periodically poll active stop orders to maintain an accurate view of pending triggers.
+\item \strong{Portfolio Monitoring}: Periodically poll active stop orders to maintain an accurate view of pending
+triggers.
 \item \strong{Reconciliation}: Compare local order state with exchange state on bot startup or after reconnection.
 \item \strong{Reporting}: Retrieve historical stop orders filtered by time range for performance analysis.
 }
@@ -1006,7 +1017,8 @@ Verified: 2026-05-23
 
 \subsection{curl}{
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET 'https://api.kucoin.com/api/v1/stop-order?symbol=BTC-USDT&side=sell&pageSize=50&currentPage=1' \\
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET \\
+  'https://api.kucoin.com/api/v1/stop-order?symbol=BTC-USDT&side=sell&pageSize=50&currentPage=1' \\
   --header 'KC-API-KEY: your-api-key' \\
   --header 'KC-API-SIGN: your-signature' \\
   --header 'KC-API-TIMESTAMP: 1729176273859' \\

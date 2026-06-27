@@ -121,7 +121,9 @@ KucoinMarginTrading <- R6::R6Class(
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
     #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
     #'   --header 'KC-API-KEY-VERSION: 2' \
-    #'   --data-raw '{"clientOid":"my-short-001","side":"sell","symbol":"BTC-USDT","type":"market","size":"0.001","autoBorrow":true,"autoRepay":false}'
+    #'   --data-raw \
+    #'   '{"clientOid":"my-short-001","side":"sell","symbol":"BTC-USDT","type":"market","size":"0.001",
+    #'   "autoBorrow":true,"autoRepay":false}'
     #' ```
     #'
     #' ### JSON Request
@@ -300,7 +302,9 @@ KucoinMarginTrading <- R6::R6Class(
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
     #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
     #'   --header 'KC-API-KEY-VERSION: 2' \
-    #'   --data-raw '{"clientOid":"my-close-short-001","side":"buy","symbol":"BTC-USDT","type":"market","size":"0.001","autoBorrow":false,"autoRepay":true}'
+    #'   --data-raw \
+    #'   '{"clientOid":"my-close-short-001","side":"buy","symbol":"BTC-USDT","type":"market","size":"0.001",
+    #'   "autoBorrow":false,"autoRepay":true}'
     #' ```
     #'
     #' ### JSON Request
@@ -457,7 +461,9 @@ KucoinMarginTrading <- R6::R6Class(
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
     #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
     #'   --header 'KC-API-KEY-VERSION: 2' \
-    #'   --data-raw '{"clientOid":"my-long-001","side":"buy","symbol":"BTC-USDT","type":"market","size":"0.001","autoBorrow":true,"autoRepay":false}'
+    #'   --data-raw \
+    #'   '{"clientOid":"my-long-001","side":"buy","symbol":"BTC-USDT","type":"market","size":"0.001","autoBorrow":true,
+    #'   "autoRepay":false}'
     #' ```
     #'
     #' ### JSON Request
@@ -619,7 +625,9 @@ KucoinMarginTrading <- R6::R6Class(
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
     #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
     #'   --header 'KC-API-KEY-VERSION: 2' \
-    #'   --data-raw '{"clientOid":"my-close-long-001","side":"sell","symbol":"BTC-USDT","type":"market","size":"0.001","autoBorrow":false,"autoRepay":true}'
+    #'   --data-raw \
+    #'   '{"clientOid":"my-close-long-001","side":"sell","symbol":"BTC-USDT","type":"market","size":"0.001",
+    #'   "autoBorrow":false,"autoRepay":true}'
     #' ```
     #'
     #' ### JSON Request

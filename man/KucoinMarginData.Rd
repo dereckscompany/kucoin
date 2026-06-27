@@ -155,7 +155,8 @@ including increment sizes, min/max order sizes, and fee information.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-symbols-cross-margin}{KuCoin Get Cross Margin Symbols}
+KuCoin Get Cross Margin Symbols:
+\url{https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-symbols-cross-margin}
 
 Verified: 2026-05-23
 }
@@ -246,7 +247,8 @@ leverage limits, debt ratios, and borrowing parameters per pair.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-symbols-isolated-margin}{KuCoin Get Isolated Margin Symbols}
+KuCoin Get Isolated Margin Symbols:
+\url{https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-symbols-isolated-margin}
 
 Verified: 2026-05-23
 }
@@ -391,7 +393,8 @@ has multiple tiers based on collateral amount ranges.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-margin-collateral-ratio}{KuCoin Get Collateral Ratio}
+KuCoin Get Collateral Ratio:
+\url{https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-margin-collateral-ratio}
 
 Verified: 2026-05-23
 }

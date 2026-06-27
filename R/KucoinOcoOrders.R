@@ -108,7 +108,9 @@ KucoinOcoOrders <- R6::R6Class(
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
     #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
     #'   --header 'KC-API-KEY-VERSION: 2' \
-    #'   --data-raw '{"symbol":"BTC-USDT","side":"sell","price":"110000","size":"0.0001","stopPrice":"90000","limitPrice":"89500","tradeType":"TRADE"}'
+    #'   --data-raw \
+    #'   '{"symbol":"BTC-USDT","side":"sell","price":"110000","size":"0.0001","stopPrice":"90000","limitPrice":"89500",
+    #'   "tradeType":"TRADE"}'
     #' ```
     #'
     #' ### JSON Response
@@ -860,7 +862,8 @@ KucoinOcoOrders <- R6::R6Class(
     #'
     #' ### curl
     #' ```
-    #' curl --location --request GET 'https://api.kucoin.com/api/v3/oco/orders?symbol=BTC-USDT&pageSize=20&currentPage=1' \
+    #' curl --location --request GET \
+    #'   'https://api.kucoin.com/api/v3/oco/orders?symbol=BTC-USDT&pageSize=20&currentPage=1' \
     #'   --header 'KC-API-KEY: your-api-key' \
     #'   --header 'KC-API-SIGN: your-signature' \
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \

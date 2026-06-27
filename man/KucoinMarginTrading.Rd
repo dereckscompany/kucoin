@@ -301,7 +301,9 @@ Verified: 2026-05-23
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
   --header 'KC-API-PASSPHRASE: your-passphrase' \\
   --header 'KC-API-KEY-VERSION: 2' \\
-  --data-raw '\{"clientOid":"my-short-001","side":"sell","symbol":"BTC-USDT","type":"market","size":"0.001","autoBorrow":true,"autoRepay":false\}'
+  --data-raw \\
+  '\{"clientOid":"my-short-001","side":"sell","symbol":"BTC-USDT","type":"market","size":"0.001",
+  "autoBorrow":true,"autoRepay":false\}'
 }\if{html}{\out{</div>}}
 }
 
@@ -475,7 +477,9 @@ Verified: 2026-05-23
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
   --header 'KC-API-PASSPHRASE: your-passphrase' \\
   --header 'KC-API-KEY-VERSION: 2' \\
-  --data-raw '\{"clientOid":"my-close-short-001","side":"buy","symbol":"BTC-USDT","type":"market","size":"0.001","autoBorrow":false,"autoRepay":true\}'
+  --data-raw \\
+  '\{"clientOid":"my-close-short-001","side":"buy","symbol":"BTC-USDT","type":"market","size":"0.001",
+  "autoBorrow":false,"autoRepay":true\}'
 }\if{html}{\out{</div>}}
 }
 
@@ -627,7 +631,9 @@ Verified: 2026-05-23
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
   --header 'KC-API-PASSPHRASE: your-passphrase' \\
   --header 'KC-API-KEY-VERSION: 2' \\
-  --data-raw '\{"clientOid":"my-long-001","side":"buy","symbol":"BTC-USDT","type":"market","size":"0.001","autoBorrow":true,"autoRepay":false\}'
+  --data-raw \\
+  '\{"clientOid":"my-long-001","side":"buy","symbol":"BTC-USDT","type":"market","size":"0.001","autoBorrow":true,
+  "autoRepay":false\}'
 }\if{html}{\out{</div>}}
 }
 
@@ -784,7 +790,9 @@ Verified: 2026-05-23
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
   --header 'KC-API-PASSPHRASE: your-passphrase' \\
   --header 'KC-API-KEY-VERSION: 2' \\
-  --data-raw '\{"clientOid":"my-close-long-001","side":"sell","symbol":"BTC-USDT","type":"market","size":"0.001","autoBorrow":false,"autoRepay":true\}'
+  --data-raw \\
+  '\{"clientOid":"my-close-long-001","side":"sell","symbol":"BTC-USDT","type":"market","size":"0.001",
+  "autoBorrow":false,"autoRepay":true\}'
 }\if{html}{\out{</div>}}
 }
 
@@ -1388,7 +1396,8 @@ Retrieves current borrow interest rates for one or more currencies.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/margin-trading/debit/get-borrow-interest-rate}{KuCoin Get Borrow Interest Rate}
+KuCoin Get Borrow Interest Rate:
+\url{https://www.kucoin.com/docs-new/rest/margin-trading/debit/get-borrow-interest-rate}
 
 Verified: 2026-05-23
 }

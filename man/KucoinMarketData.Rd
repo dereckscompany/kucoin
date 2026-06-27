@@ -18,14 +18,16 @@ asynchronous execution depending on the \code{async} parameter at construction.
 \subsection{Purpose and Scope}{
 \itemize{
 \item \strong{Announcements}: Fetch paginated KuCoin platform announcements filtered by type, language, and date range.
-\item \strong{Currencies}: Retrieve metadata for individual or all listed currencies, including chain-specific deposit/withdrawal details.
+\item \strong{Currencies}: Retrieve metadata for individual or all listed currencies, including chain-specific
+deposit/withdrawal details.
 \item \strong{Symbols}: Retrieve trading pair metadata including precision, size limits, fee rates, and trading status.
 \item \strong{Tickers}: Access real-time Level 1 best bid/ask data for individual symbols or all pairs.
 \item \strong{Order Books}: Get partial (20/100 levels) or full depth order book snapshots.
 \item \strong{Trade History}: Retrieve the most recent 100 trades for any symbol.
 \item \strong{24hr Statistics}: Get rolling 24-hour market statistics (OHLCV, change rate, fees).
 \item \strong{Market List}: Discover all available market segments (e.g., USDS, DeFi, Meme).
-\item \strong{Klines}: Fetch historical candlestick data with automatic time-range segmentation to bypass the 1500-candle-per-request limit.
+\item \strong{Klines}: Fetch historical candlestick data with automatic time-range segmentation to bypass the
+1500-candle-per-request limit.
 }
 }
 
@@ -404,7 +406,7 @@ Verified: 2026-05-23
 \item{\code{page_size}}{(scalar<count in [1, Inf[>) results per page (default 50,
 max 100).}
 
-\item{\code{max_pages}}{(scalar<numeric in [1, Inf[>) maximum number of pages to
+\item{\code{max_pages}}{(scalar<numeric in [1, Inf]>) maximum number of pages to
 fetch (default \code{Inf} for all).}
 }
 \if{html}{\out{</div>}}

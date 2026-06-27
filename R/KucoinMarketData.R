@@ -136,7 +136,7 @@ KucoinMarketData <- R6::R6Class(
     #'   `endTime` (end timestamp in milliseconds).
     #' @param page_size (scalar<count in [1, Inf[>) results per page (default 50,
     #'   max 100).
-    #' @param max_pages (scalar<numeric in [1, Inf[>) maximum number of pages to
+    #' @param max_pages (scalar<numeric in [1, Inf]>) maximum number of pages to
     #'   fetch (default `Inf` for all).
     #' @return (data.table | promise<data.table>) one row per announcement, each
     #'   giving the announcement ID, title, `;`-separated category tags, short

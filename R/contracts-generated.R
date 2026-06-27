@@ -61,7 +61,7 @@ assert_args_KucoinAccount__get_spot_ledger <- function(query, page_size, max_pag
   assert_scalar_count(page_size)
   assert_between(page_size, lower = 1)
   assert_scalar_double(max_pages)
-  assert_between(max_pages, lower = 1, upper = Inf, upper_inclusive = FALSE)
+  assert_between(max_pages, lower = 1)
   return(invisible(NULL))
 }
 
@@ -185,7 +185,7 @@ assert_args_KucoinDeposit__get_deposit_history <- function(currency, status, sta
   assert_scalar_count(page_size)
   assert_between(page_size, lower = 1)
   assert_scalar_double(max_pages)
-  assert_between(max_pages, lower = 1, upper = Inf, upper_inclusive = FALSE)
+  assert_between(max_pages, lower = 1)
   return(invisible(NULL))
 }
 
@@ -1179,7 +1179,7 @@ assert_args_KucoinMarketData__get_announcements <- function(query, page_size, ma
   assert_scalar_count(page_size)
   assert_between(page_size, lower = 1)
   assert_scalar_double(max_pages)
-  assert_between(max_pages, lower = 1, upper = Inf, upper_inclusive = FALSE)
+  assert_between(max_pages, lower = 1)
   return(invisible(NULL))
 }
 
@@ -1666,7 +1666,7 @@ assert_args_KucoinSubAccount__get_sub_account_list <- function(page_size, max_pa
   assert_scalar_count(page_size)
   assert_between(page_size, lower = 1)
   assert_scalar_double(max_pages)
-  assert_between(max_pages, lower = 1, upper = Inf, upper_inclusive = FALSE)
+  assert_between(max_pages, lower = 1)
   return(invisible(NULL))
 }
 
@@ -1690,7 +1690,7 @@ assert_args_KucoinSubAccount__get_all_spot_balances <- function(page_size, max_p
   assert_scalar_count(page_size)
   assert_between(page_size, lower = 1)
   assert_scalar_double(max_pages)
-  assert_between(max_pages, lower = 1, upper = Inf, upper_inclusive = FALSE)
+  assert_between(max_pages, lower = 1)
   return(invisible(NULL))
 }
 
@@ -2328,7 +2328,7 @@ assert_args_KucoinWithdrawal__get_withdrawal_history <- function(currency, statu
   assert_scalar_count(page_size)
   assert_between(page_size, lower = 1)
   assert_scalar_double(max_pages)
-  assert_between(max_pages, lower = 1, upper = Inf, upper_inclusive = FALSE)
+  assert_between(max_pages, lower = 1)
   return(invisible(NULL))
 }
 
@@ -2539,7 +2539,7 @@ assert_args_kucoin_paginate <- function(base_url, endpoint, method, query, body,
   assert_scalar_count(page_size)
   assert_between(page_size, lower = 1)
   assert_scalar_double(max_pages)
-  assert_between(max_pages, lower = 1, upper = Inf, upper_inclusive = FALSE)
+  assert_between(max_pages, lower = 1)
   assert_scalar_character(items_field)
   assert_scalar_double(timeout)
   assert_between(timeout, lower = 0, lower_inclusive = FALSE, upper = Inf, upper_inclusive = FALSE)

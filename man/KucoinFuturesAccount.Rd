@@ -130,7 +130,8 @@ margin, and P&L.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-futures}{KuCoin Get Account - Futures}
+KuCoin Get Account - Futures:
+\url{https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-futures}
 
 Verified: 2026-05-23
 }
@@ -205,7 +206,8 @@ Retrieves position details for a specific symbol.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-position-details}{KuCoin Get Position Details}
+KuCoin Get Position Details:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-position-details}
 
 Verified: 2026-05-23
 }
@@ -405,7 +407,8 @@ Retrieves historical position records.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-positions-history}{KuCoin Get Position History}
+KuCoin Get Position History:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-positions-history}
 
 Verified: 2026-05-23
 }
@@ -643,7 +646,8 @@ Retrieves the current cross margin leverage for a symbol.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-cross-margin-leverage}{KuCoin Get Cross Margin Leverage}
+KuCoin Get Cross Margin Leverage:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-cross-margin-leverage}
 
 Verified: 2026-05-23
 }
@@ -709,7 +713,8 @@ Modifies the cross margin leverage for a symbol.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/positions/modify-cross-margin-leverage}{KuCoin Modify Cross Margin Leverage}
+KuCoin Modify Cross Margin Leverage:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/positions/modify-cross-margin-leverage}
 
 Verified: 2026-05-23
 }
@@ -857,7 +862,8 @@ Retrieves the maximum margin that can be withdrawn from an isolated position.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-max-withdraw-margin}{KuCoin Get Max Withdraw Margin}
+KuCoin Get Max Withdraw Margin:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-max-withdraw-margin}
 
 Verified: 2026-05-23
 }
@@ -1006,7 +1012,8 @@ Withdraws excess margin from an isolated margin position.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/positions/remove-isolated-margin}{KuCoin Remove Isolated Margin}
+KuCoin Remove Isolated Margin:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/positions/remove-isolated-margin}
 
 Verified: 2026-05-23
 }
@@ -1085,7 +1092,8 @@ Retrieves risk limit tiers for a futures contract.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-isolated-margin-risk-limit}{KuCoin Get Isolated Margin Risk Limit}
+KuCoin Get Isolated Margin Risk Limit:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-isolated-margin-risk-limit}
 
 Verified: 2026-05-23
 }
@@ -1179,7 +1187,8 @@ Retrieves your personal funding fee settlement records.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-private-funding-history}{KuCoin Get Private Funding History}
+KuCoin Get Private Funding History:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-private-funding-history}
 
 Verified: 2026-05-23
 }

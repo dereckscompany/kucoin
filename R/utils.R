@@ -80,7 +80,10 @@ get_api_keys <- function(
   assert_args_get_api_keys(api_key, api_secret, api_passphrase, key_version)
   if (!nzchar(api_key) || !nzchar(api_secret) || !nzchar(api_passphrase)) {
     rlang::warn(
-      "KuCoin API credentials are empty. Set KUCOIN_API_KEY, KUCOIN_API_SECRET, and KUCOIN_API_PASSPHRASE environment variables or pass them explicitly."
+      paste0(
+        "KuCoin API credentials are empty. Set KUCOIN_API_KEY, KUCOIN_API_SECRET, ",
+        "and KUCOIN_API_PASSPHRASE environment variables or pass them explicitly."
+      )
     )
   }
   return(assert_return_get_api_keys(list(

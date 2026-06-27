@@ -323,7 +323,8 @@ The \code{created_at} column is coerced from epoch milliseconds to POSIXct.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-list-summary-info}{KuCoin Get Sub-Account List Summary Info}
+KuCoin Get Sub-Account List Summary Info:
+\url{https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-list-summary-info}
 
 Verified: 2026-05-23
 }
@@ -392,7 +393,7 @@ Verified: 2026-05-23
 \item{\code{page_size}}{(scalar<count in [1, Inf[>) number of results per page,
 between 1 and 100.}
 
-\item{\code{max_pages}}{(scalar<numeric in [1, Inf[>) maximum number of pages to
+\item{\code{max_pages}}{(scalar<numeric in [1, Inf]>) maximum number of pages to
 retrieve. Use \code{Inf} (default) to fetch all available pages.}
 }
 \if{html}{\out{</div>}}
@@ -439,7 +440,8 @@ holds amounts.
 \enumerate{
 \item \strong{Request}: Authenticated GET to the sub-account detail endpoint with the \code{subUserId} in the URL path.
 \item \strong{Iteration}: Loops over \code{mainAccounts}, \code{tradeAccounts}, and \code{marginAccounts} arrays in the response.
-\item \strong{Assembly}: Binds all account entries into a single \code{data.table} with \code{account_type}, \code{sub_user_id}, and \code{sub_name} columns appended.
+\item \strong{Assembly}: Binds all account entries into a single \code{data.table} with \code{account_type}, \code{sub_user_id}, and
+\code{sub_name} columns appended.
 }
 }
 
@@ -450,14 +452,16 @@ holds amounts.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-detail-balance}{KuCoin Get Sub-Account Detail Balance}
+KuCoin Get Sub-Account Detail Balance:
+\url{https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-detail-balance}
 
 Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Pre-Trade Check}: Query a sub-account's available balance before placing orders to avoid insufficient-funds errors.
+\item \strong{Pre-Trade Check}: Query a sub-account's available balance before placing orders to avoid insufficient-funds
+errors.
 \item \strong{Risk Monitoring}: Periodically check \code{holds} across sub-accounts to track capital locked in open orders.
 \item \strong{Rebalancing}: Compare \code{available} balances across sub-accounts to decide on internal transfers.
 }
@@ -590,9 +594,12 @@ by account type (main, trade, margin) and combined into a single
 \code{data.table} with \code{sub_user_id} and \code{sub_name} identifiers.
 \subsection{Workflow}{
 \enumerate{
-\item \strong{Pagination}: Fetches pages of sub-account balance data via the V2 endpoint, \code{page_size} records per page up to \code{max_pages}.
-\item \strong{Nested Iteration}: For each sub-account in each page, iterates over \code{mainAccounts}, \code{tradeAccounts}, and \code{marginAccounts}.
-\item \strong{Assembly}: Binds all entries into a single \code{data.table} with \code{account_type}, \code{sub_user_id}, and \code{sub_name} columns appended.
+\item \strong{Pagination}: Fetches pages of sub-account balance data via the V2 endpoint, \code{page_size} records per page up
+to \code{max_pages}.
+\item \strong{Nested Iteration}: For each sub-account in each page, iterates over \code{mainAccounts}, \code{tradeAccounts}, and
+\code{marginAccounts}.
+\item \strong{Assembly}: Binds all entries into a single \code{data.table} with \code{account_type}, \code{sub_user_id}, and \code{sub_name}
+columns appended.
 }
 }
 
@@ -603,7 +610,8 @@ by account type (main, trade, margin) and combined into a single
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-list-spot-balance-v2}{KuCoin Get Sub-Account List Spot Balance V2}
+KuCoin Get Sub-Account List Spot Balance V2:
+\url{https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-list-spot-balance-v2}
 
 Verified: 2026-05-23
 }
@@ -611,7 +619,8 @@ Verified: 2026-05-23
 \subsection{Automated Trading Usage}{
 \itemize{
 \item \strong{Portfolio Dashboard}: Aggregate balances across all sub-accounts for a unified portfolio view.
-\item \strong{Threshold Alerts}: Check \code{available} balances across all sub-accounts and trigger alerts when below thresholds.
+\item \strong{Threshold Alerts}: Check \code{available} balances across all sub-accounts and trigger alerts when below
+thresholds.
 \item \strong{Capital Allocation}: Compare balances across sub-accounts to identify idle capital for reallocation.
 }
 }
@@ -699,7 +708,7 @@ Verified: 2026-05-23
 \item{\code{page_size}}{(scalar<count in [1, Inf[>) number of results per page,
 between 10 and 100.}
 
-\item{\code{max_pages}}{(scalar<numeric in [1, Inf[>) maximum number of pages to
+\item{\code{max_pages}}{(scalar<numeric in [1, Inf]>) maximum number of pages to
 retrieve. Use \code{Inf} (default) to fetch all available pages.}
 }
 \if{html}{\out{</div>}}

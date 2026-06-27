@@ -103,7 +103,9 @@ KucoinWithdrawal <- R6::R6Class(
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
     #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
     #'   --header 'KC-API-KEY-VERSION: 2' \
-    #'   --data-raw '{"currency":"USDT","toAddress":"TKFRQXSDcY4kd3QLzw7uK16GmLrjJggwX8","amount":"10","withdrawType":"ADDRESS","chain":"trx"}'
+    #'   --data-raw \
+    #'   '{"currency":"USDT","toAddress":"TKFRQXSDcY4kd3QLzw7uK16GmLrjJggwX8","amount":"10","withdrawType":"ADDRESS",
+    #'   "chain":"trx"}'
     #' ```
     #'
     #' ### JSON Response
@@ -521,7 +523,7 @@ KucoinWithdrawal <- R6::R6Class(
     #'   (inclusive).
     #' @param page_size (scalar<count in [1, Inf[>) number of results per page
     #'   (default 50, max 500).
-    #' @param max_pages (scalar<numeric in [1, Inf[>) maximum number of pages to
+    #' @param max_pages (scalar<numeric in [1, Inf]>) maximum number of pages to
     #'   fetch (default `Inf` for all pages).
     #' @return (data.table | promise<data.table>) one row per withdrawal record
     #'   (currency, chain, status, address, memo, is_inner, amount, fee,

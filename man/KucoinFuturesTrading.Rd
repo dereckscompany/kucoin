@@ -14,8 +14,10 @@ KuCoin. Supports limit and market orders, stop orders, batch operations,
 and Dead Connection Protection (DCP). Inherits from \link{KucoinBase}.
 \subsection{Purpose and Scope}{
 \itemize{
-\item \strong{Order Placement}: Place single or batch limit/market futures orders with configurable leverage, margin mode, and position side.
-\item \strong{Order Cancellation}: Cancel individual orders by system ID or client OID, or cancel all open/stop orders at once.
+\item \strong{Order Placement}: Place single or batch limit/market futures orders with configurable leverage, margin mode, and
+position side.
+\item \strong{Order Cancellation}: Cancel individual orders by system ID or client OID, or cancel all open/stop orders at
+once.
 \item \strong{Order Queries}: Retrieve order details, paginated order lists, recent closed orders, and stop orders.
 \item \strong{Trade History}: Query fill records (paginated or recent) with fee and liquidity details.
 \item \strong{Risk Management}: Configure Dead Connection Protection (DCP) to auto-cancel orders on connectivity loss.
@@ -437,8 +439,10 @@ Verified: 2026-05-23
 \subsection{Automated Trading Usage}{
 \itemize{
 \item \strong{Leverage Control}: Set \code{leverage} to manage risk exposure per order.
-\item \strong{Position Modes}: Use \code{positionSide = "LONG"} or \code{"SHORT"} in hedge mode to manage both directions simultaneously.
-\item \strong{Reduce-Only}: Set \code{reduceOnly = TRUE} to ensure the order only closes existing positions, preventing accidental position increases.
+\item \strong{Position Modes}: Use \code{positionSide = "LONG"} or \code{"SHORT"} in hedge mode to manage both directions
+simultaneously.
+\item \strong{Reduce-Only}: Set \code{reduceOnly = TRUE} to ensure the order only closes existing positions, preventing
+accidental position increases.
 }
 }
 
@@ -613,7 +617,8 @@ Verified: 2026-05-23
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Pre-Flight Validation}: Validate order parameters at bot startup to confirm API keys have trading permissions and symbols are correct.
+\item \strong{Pre-Flight Validation}: Validate order parameters at bot startup to confirm API keys have trading
+permissions and symbols are correct.
 \item \strong{Parameter Testing}: Test edge-case parameters (extreme leverage, unusual sizes) without risking capital.
 \item \strong{Integration Testing}: Use in CI/CD pipelines to verify order construction logic.
 }
@@ -923,7 +928,8 @@ order has already been filled or cancelled, the API returns an error.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-orderld}{KuCoin Cancel Futures Order By OrderId}
+KuCoin Cancel Futures Order By OrderId:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-orderld}
 
 Verified: 2026-05-23
 }
@@ -1009,7 +1015,8 @@ the symbol to disambiguate in case client OIDs are reused across symbols.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-clientoid}{KuCoin Cancel Futures Order By ClientOid}
+KuCoin Cancel Futures Order By ClientOid:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-clientoid}
 
 Verified: 2026-05-23
 }
@@ -1017,7 +1024,8 @@ Verified: 2026-05-23
 \subsection{Automated Trading Usage}{
 \itemize{
 \item \strong{Idempotent Cancellation}: Use client OIDs to cancel orders without needing to store system order IDs.
-\item \strong{Consistent State}: Cancel by the same ID used to place the order for easier state management in trading bots.
+\item \strong{Consistent State}: Cancel by the same ID used to place the order for easier state management in trading
+bots.
 }
 }
 
@@ -1104,7 +1112,8 @@ Verified: 2026-05-23
 \itemize{
 \item \strong{Emergency Stop}: Cancel all open orders as part of a kill-switch or panic button.
 \item \strong{Strategy Reset}: Clear all pending orders before deploying a new trading strategy.
-\item \strong{Symbol-Scoped Cleanup}: Pass \code{symbol} to cancel only orders for a specific contract without affecting other positions.
+\item \strong{Symbol-Scoped Cleanup}: Pass \code{symbol} to cancel only orders for a specific contract without affecting other
+positions.
 }
 }
 
@@ -1191,7 +1200,8 @@ stop orders become regular orders and must be cancelled via \code{cancel_all()}.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-all-stop-orders}{KuCoin Cancel All Futures Stop Orders}
+KuCoin Cancel All Futures Stop Orders:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-all-stop-orders}
 
 Verified: 2026-05-23
 }
@@ -1286,7 +1296,8 @@ configuration parameters.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-by-orderld}{KuCoin Get Futures Order By OrderId}
+KuCoin Get Futures Order By OrderId:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-by-orderld}
 
 Verified: 2026-05-23
 }
@@ -1409,7 +1420,8 @@ order ID. Useful when the system order ID was not stored at placement time.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/get-stop-order-by-clientoid}{KuCoin Get Futures Order By ClientOid}
+KuCoin Get Futures Order By ClientOid:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/get-stop-order-by-clientoid}
 
 Note: KuCoin's URL slug here contains \code{get-stop-order-by-clientoid},
 but the page actually documents the regular order endpoint
@@ -1681,14 +1693,16 @@ require pagination -- it returns up to 1000 records in a single response.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-closed-orders}{KuCoin Get Recent Closed Futures Orders}
+KuCoin Get Recent Closed Futures Orders:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-closed-orders}
 
 Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Quick Fill Check}: Rapidly check which orders completed recently without paginating through the full order list.
+\item \strong{Quick Fill Check}: Rapidly check which orders completed recently without paginating through the full order
+list.
 \item \strong{Slippage Analysis}: Compare \code{avg_deal_price} against the original \code{price} for recently filled limit orders.
 \item \strong{Periodic Sync}: Poll this endpoint at intervals to update local order state.
 }
@@ -1812,14 +1826,16 @@ Once triggered, they appear in the regular order list.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-stop-order-list}{KuCoin Get Futures Untriggered Stop Order List}
+KuCoin Get Futures Untriggered Stop Order List:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-stop-order-list}
 
 Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Stop-Loss Audit}: Verify that stop-loss orders are correctly placed and have not been accidentally cancelled.
+\item \strong{Stop-Loss Audit}: Verify that stop-loss orders are correctly placed and have not been accidentally
+cancelled.
 \item \strong{Risk Dashboard}: Monitor all pending stop orders to assess worst-case risk exposure.
 \item \strong{Strategy Sync}: Compare existing stop orders against the strategy's intended levels and correct any drift.
 }
@@ -2078,7 +2094,8 @@ trade executions.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-trade-history}{KuCoin Get Recent Futures Filled List}
+KuCoin Get Recent Futures Filled List:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-trade-history}
 
 Verified: 2026-05-23
 }

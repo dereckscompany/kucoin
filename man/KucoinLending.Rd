@@ -262,7 +262,8 @@ past 7 days.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-loan-market-interest-rate}{KuCoin Get Market Interest Rate}
+KuCoin Get Market Interest Rate:
+\url{https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-loan-market-interest-rate}
 
 Verified: 2026-05-23
 }

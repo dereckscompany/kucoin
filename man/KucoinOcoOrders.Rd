@@ -263,9 +263,12 @@ Verified: 2026-05-23
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Take-Profit + Stop-Loss}: Place a sell OCO with \code{price} as take-profit and \code{stopPrice}/\code{limitPrice} as stop-loss to protect positions automatically.
-\item \strong{Bracket Entry}: Use a buy OCO to enter a position at a limit price while also setting a stop-entry above resistance.
-\item \strong{Client OID Tracking}: Set \code{clientOid} to a unique strategy identifier for programmatic order tracking and reconciliation.
+\item \strong{Take-Profit + Stop-Loss}: Place a sell OCO with \code{price} as take-profit and \code{stopPrice}/\code{limitPrice} as
+stop-loss to protect positions automatically.
+\item \strong{Bracket Entry}: Use a buy OCO to enter a position at a limit price while also setting a stop-entry above
+resistance.
+\item \strong{Client OID Tracking}: Set \code{clientOid} to a unique strategy identifier for programmatic order tracking and
+reconciliation.
 }
 }
 
@@ -278,7 +281,9 @@ Verified: 2026-05-23
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
   --header 'KC-API-PASSPHRASE: your-passphrase' \\
   --header 'KC-API-KEY-VERSION: 2' \\
-  --data-raw '\{"symbol":"BTC-USDT","side":"sell","price":"110000","size":"0.0001","stopPrice":"90000","limitPrice":"89500","tradeType":"TRADE"\}'
+  --data-raw \\
+  '\{"symbol":"BTC-USDT","side":"sell","price":"110000","size":"0.0001","stopPrice":"90000","limitPrice":"89500",
+  "tradeType":"TRADE"\}'
 }\if{html}{\out{</div>}}
 }
 
@@ -396,7 +401,8 @@ limit and stop-limit legs of the OCO order are cancelled.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-oco-order-by-orderld}{KuCoin Cancel OCO Order By OrderId}
+KuCoin Cancel OCO Order By OrderId:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-oco-order-by-orderld}
 
 Verified: 2026-05-23
 }
@@ -490,16 +496,19 @@ Both the limit and stop-limit legs of the OCO order are cancelled.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-oco-order-by-clientoid}{KuCoin Cancel OCO Order By ClientOid}
+KuCoin Cancel OCO Order By ClientOid:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-oco-order-by-clientoid}
 
 Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Strategy-Based Cancellation}: Cancel OCO orders by your own strategy IDs without needing to store KuCoin order IDs.
+\item \strong{Strategy-Based Cancellation}: Cancel OCO orders by your own strategy IDs without needing to store KuCoin
+order IDs.
 \item \strong{Idempotent Operations}: Use deterministic \code{clientOid} values so re-running cancellation logic is safe.
-\item \strong{Multi-Bot Coordination}: Each bot uses a unique \code{clientOid} prefix to manage its own OCO orders independently.
+\item \strong{Multi-Bot Coordination}: Each bot uses a unique \code{clientOid} prefix to manage its own OCO orders
+independently.
 }
 }
 
@@ -592,9 +601,12 @@ Verified: 2026-05-23
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Emergency Kill Switch}: Call with no filters to cancel all OCO orders during market anomalies or system errors.
-\item \strong{Symbol Cleanup}: Pass \code{symbol} to cancel all OCO orders for a specific pair when exiting a position entirely.
-\item \strong{Selective Batch Cancel}: Pass specific \code{orderIds} to cancel a subset of OCO orders during strategy rebalancing.
+\item \strong{Emergency Kill Switch}: Call with no filters to cancel all OCO orders during market anomalies or system
+errors.
+\item \strong{Symbol Cleanup}: Pass \code{symbol} to cancel all OCO orders for a specific pair when exiting a position
+entirely.
+\item \strong{Selective Batch Cancel}: Pass specific \code{orderIds} to cancel a subset of OCO orders during strategy
+rebalancing.
 }
 }
 
@@ -685,7 +697,8 @@ detailed sub-order information (use \code{get_order_detail_by_id()} for that).
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-by-orderld}{KuCoin Get OCO Order By OrderId}
+KuCoin Get OCO Order By OrderId:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-by-orderld}
 
 Verified: 2026-05-23
 }
@@ -781,7 +794,8 @@ by your own identifiers rather than KuCoin-assigned IDs.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-by-clientoid}{KuCoin Get OCO Order By ClientOid}
+KuCoin Get OCO Order By ClientOid:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-by-clientoid}
 
 Verified: 2026-05-23
 }
@@ -789,7 +803,8 @@ Verified: 2026-05-23
 \subsection{Automated Trading Usage}{
 \itemize{
 \item \strong{Strategy Reconciliation}: Look up OCO orders using your strategy-generated IDs for post-trade analysis.
-\item \strong{Duplicate Detection}: Check if an OCO order with a given \code{clientOid} already exists before placing a new one.
+\item \strong{Duplicate Detection}: Check if an OCO order with a given \code{clientOid} already exists before placing a new
+one.
 \item \strong{Bot State Recovery}: On restart, recover OCO order state using stored \code{clientOid} values.
 }
 }
@@ -877,7 +892,8 @@ statuses. This provides more information than \code{get_order_by_id()}.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-detail-by-orderld}{KuCoin Get OCO Order Detail By OrderId}
+KuCoin Get OCO Order Detail By OrderId:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-detail-by-orderld}
 
 Verified: 2026-05-23
 }
@@ -1005,15 +1021,18 @@ Verified: 2026-05-23
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Portfolio Overview}: List all active OCO orders to display current take-profit/stop-loss levels across positions.
-\item \strong{Stale Order Detection}: Filter by \code{startAt}/\code{endAt} to find OCO orders that have been open too long and may need adjustment.
+\item \strong{Portfolio Overview}: List all active OCO orders to display current take-profit/stop-loss levels across
+positions.
+\item \strong{Stale Order Detection}: Filter by \code{startAt}/\code{endAt} to find OCO orders that have been open too long and may
+need adjustment.
 \item \strong{Pagination Loop}: Use \code{currentPage} and \code{pageSize} to iterate through large result sets in batch processing.
 }
 }
 
 \subsection{curl}{
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET 'https://api.kucoin.com/api/v3/oco/orders?symbol=BTC-USDT&pageSize=20&currentPage=1' \\
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET \\
+  'https://api.kucoin.com/api/v3/oco/orders?symbol=BTC-USDT&pageSize=20&currentPage=1' \\
   --header 'KC-API-KEY: your-api-key' \\
   --header 'KC-API-SIGN: your-signature' \\
   --header 'KC-API-TIMESTAMP: 1729176273859' \\

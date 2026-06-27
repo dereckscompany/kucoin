@@ -516,7 +516,8 @@ KucoinAccount <- R6::R6Class(
     #'
     #' ### curl
     #' ```
-    #' curl --location --request GET 'https://api.kucoin.com/api/v3/margin/accounts?quoteCurrency=USDT&queryType=MARGIN' \
+    #' curl --location --request GET \
+    #'   'https://api.kucoin.com/api/v3/margin/accounts?quoteCurrency=USDT&queryType=MARGIN' \
     #'   --header 'KC-API-KEY: your-api-key' \
     #'   --header 'KC-API-SIGN: your-signature' \
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
@@ -655,7 +656,8 @@ KucoinAccount <- R6::R6Class(
     #'
     #' ### curl
     #' ```
-    #' curl --location --request GET 'https://api.kucoin.com/api/v3/isolated/accounts?symbol=BTC-USDT&quoteCurrency=USDT&queryType=ISOLATED' \
+    #' curl --location --request GET \
+    #'   'https://api.kucoin.com/api/v3/isolated/accounts?symbol=BTC-USDT&quoteCurrency=USDT&queryType=ISOLATED' \
     #'   --header 'KC-API-KEY: your-api-key' \
     #'   --header 'KC-API-SIGN: your-signature' \
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
@@ -848,7 +850,8 @@ KucoinAccount <- R6::R6Class(
     #'
     #' ### curl
     #' ```
-    #' curl --location --request GET 'https://api.kucoin.com/api/v1/accounts/ledgers?currency=USDT&direction=in&bizType=Exchange&pageSize=50&currentPage=1' \
+    #' curl --location --request GET \
+    #'   'https://api.kucoin.com/api/v1/accounts/ledgers?currency=USDT&direction=in&bizType=Exchange' \
     #'   --header 'KC-API-KEY: your-api-key' \
     #'   --header 'KC-API-SIGN: your-signature' \
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
@@ -903,7 +906,7 @@ KucoinAccount <- R6::R6Class(
     #'   inclusive), and `endAt` (end time in milliseconds epoch, inclusive).
     #' @param page_size (scalar<count in [1, Inf[>) number of results per page,
     #'   between 10 and 500 (default 50).
-    #' @param max_pages (scalar<numeric in [1, Inf[>) maximum number of pages to
+    #' @param max_pages (scalar<numeric in [1, Inf]>) maximum number of pages to
     #'   fetch (default `Inf` for all pages). Set to a finite number to limit API
     #'   calls.
     #'

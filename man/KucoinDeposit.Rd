@@ -176,9 +176,12 @@ Verified: 2026-05-23
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Multi-Chain Support}: Specify \code{chain} (e.g., \code{"ERC20"}, \code{"TRC20"}) to create addresses on the correct network for your deposit workflow.
-\item \strong{Address Pre-Provisioning}: Create deposit addresses at bot startup so they are ready when funds need to be received.
-\item \strong{Account Routing}: Use the \code{to} parameter to direct deposits to \code{"main"} or \code{"trade"} accounts for immediate trading use.
+\item \strong{Multi-Chain Support}: Specify \code{chain} (e.g., \code{"ERC20"}, \code{"TRC20"}) to create addresses on the correct
+network for your deposit workflow.
+\item \strong{Address Pre-Provisioning}: Create deposit addresses at bot startup so they are ready when funds need to be
+received.
+\item \strong{Account Routing}: Use the \code{to} parameter to direct deposits to \code{"main"} or \code{"trade"} accounts for immediate
+trading use.
 }
 }
 
@@ -292,16 +295,20 @@ given chain. Useful for looking up addresses before creating new ones.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/account-info/deposit/get-deposit-address-v3/en}{KuCoin Get Deposit Addresses V3}
+KuCoin Get Deposit Addresses V3:
+\url{https://www.kucoin.com/docs-new/rest/account-info/deposit/get-deposit-address-v3/en}
 
 Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Address Verification}: Query addresses before initiating external transfers to confirm the correct chain and memo.
-\item \strong{Multi-Chain Inventory}: Retrieve all addresses for a currency to manage deposits across networks (e.g., ERC20 vs TRC20 for USDT).
-\item \strong{Idempotent Setup}: Check if an address exists before calling \code{add_deposit_address()} to avoid duplicate creation errors.
+\item \strong{Address Verification}: Query addresses before initiating external transfers to confirm the correct chain and
+memo.
+\item \strong{Multi-Chain Inventory}: Retrieve all addresses for a currency to manage deposits across networks (e.g.,
+ERC20 vs TRC20 for USDT).
+\item \strong{Idempotent Setup}: Check if an address exists before calling \code{add_deposit_address()} to avoid duplicate
+creation errors.
 }
 }
 
@@ -427,7 +434,8 @@ Verified: 2026-05-23
 \itemize{
 \item \strong{Deposit Monitoring}: Poll for \code{"SUCCESS"} status deposits to trigger trading logic when funds arrive.
 \item \strong{Reconciliation}: Match \code{wallet_tx_id} against on-chain transaction hashes for audit and verification.
-\item \strong{Time-Windowed Queries}: Use \code{startAt}/\code{endAt} timestamps to retrieve deposits within a specific period for daily reporting.
+\item \strong{Time-Windowed Queries}: Use \code{startAt}/\code{endAt} timestamps to retrieve deposits within a specific period for
+daily reporting.
 }
 }
 
@@ -516,7 +524,7 @@ Accepted values: \code{"PROCESSING"}, \code{"WALLET_PROCESSING"}, \code{"SUCCESS
 \item{\code{page_size}}{(scalar<count in [1, Inf[>) number of results per page
 (default 50, max 100).}
 
-\item{\code{max_pages}}{(scalar<numeric in [1, Inf[>) maximum number of pages to
+\item{\code{max_pages}}{(scalar<numeric in [1, Inf]>) maximum number of pages to
 fetch (default \code{Inf} for all pages).}
 }
 \if{html}{\out{</div>}}

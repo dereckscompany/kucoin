@@ -249,7 +249,7 @@ KucoinSubAccount <- R6::R6Class(
     #'
     #' @param page_size (scalar<count in [1, Inf[>) number of results per page,
     #'   between 1 and 100.
-    #' @param max_pages (scalar<numeric in [1, Inf[>) maximum number of pages to
+    #' @param max_pages (scalar<numeric in [1, Inf]>) maximum number of pages to
     #'   retrieve. Use `Inf` (default) to fetch all available pages.
     #' @return (data.table | promise<data.table>) one row per sub-account with its
     #'   internal `user_id`, numeric `uid`, login `sub_name`, `status` and `type`
@@ -579,7 +579,7 @@ KucoinSubAccount <- R6::R6Class(
     #'
     #' @param page_size (scalar<count in [1, Inf[>) number of results per page,
     #'   between 10 and 100.
-    #' @param max_pages (scalar<numeric in [1, Inf[>) maximum number of pages to
+    #' @param max_pages (scalar<numeric in [1, Inf]>) maximum number of pages to
     #'   retrieve. Use `Inf` (default) to fetch all available pages.
     #' @return (data.table | promise<data.table>) one row per currency, account
     #'   type and sub-account holding the `sub_user_id` and `sub_name`
