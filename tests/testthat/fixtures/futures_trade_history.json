@@ -1,0 +1,25 @@
+{
+  "code": "200000",
+  "data": [
+    {
+      "sequence": 100,
+      "tradeId": "trade-001",
+      "takerOrderId": "order-001",
+      "makerOrderId": "order-002",
+      "price": "98250.0",
+      "size": 1,
+      "side": "buy",
+      "ts": 1729159459033000000
+    },
+    {
+      "sequence": 101,
+      "tradeId": "trade-002",
+      "takerOrderId": "order-003",
+      "makerOrderId": "order-004",
+      "price": "98251.0",
+      "size": 2,
+      "side": "sell",
+      "ts": 1729159459034000000
+    }
+  ]
+}

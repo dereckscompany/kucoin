@@ -28,7 +28,7 @@ Imports:
     lubridate,
     uuid,
     assert,
-    connectcore (>= 0.1.0)
+    connectcore (>= 0.2.0)
 Suggests:
     promises,
     coro,

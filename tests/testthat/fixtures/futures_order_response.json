@@ -1,0 +1,7 @@
+{
+  "code": "200000",
+  "data": {
+    "orderId": "futures-order-001",
+    "clientOid": "futures-client-001"
+  }
+}

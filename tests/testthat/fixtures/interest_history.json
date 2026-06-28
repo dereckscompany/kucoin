@@ -1,0 +1,12 @@
+{
+  "code": "200000",
+  "data": {
+    "items": [
+      {
+        "currency": "USDT",
+        "interestPaymentAmount": "0.5",
+        "createdTime": 1729655606816
+      }
+    ]
+  }
+}

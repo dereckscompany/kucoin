@@ -1,0 +1,44 @@
+{
+  "code": "200000",
+  "data": {
+    "timestamp": 1772993986642,
+    "items": [
+      {
+        "symbol": "BTC-USDT",
+        "name": "BTC-USDT",
+        "baseCurrency": "BTC",
+        "quoteCurrency": "USDT",
+        "baseIncrement": "0.00000001",
+        "baseMinSize": "0.00001",
+        "baseMaxSize": "10000000000",
+        "quoteIncrement": "0.000001",
+        "quoteMinSize": "0.1",
+        "quoteMaxSize": "99999999",
+        "priceIncrement": "0.1",
+        "feeCurrency": "USDT",
+        "priceLimitRate": "0.01",
+        "minFunds": "0.1",
+        "enableTrading": true,
+        "market": "USDS"
+      },
+      {
+        "symbol": "ETH-USDT",
+        "name": "ETH-USDT",
+        "baseCurrency": "ETH",
+        "quoteCurrency": "USDT",
+        "baseIncrement": "0.0000001",
+        "baseMinSize": "0.0001",
+        "baseMaxSize": "10000000000",
+        "quoteIncrement": "0.000001",
+        "quoteMinSize": "0.1",
+        "quoteMaxSize": "99999999",
+        "priceIncrement": "0.01",
+        "feeCurrency": "USDT",
+        "priceLimitRate": "0.01",
+        "minFunds": "0.1",
+        "enableTrading": true,
+        "market": "USDS"
+      }
+    ]
+  }
+}

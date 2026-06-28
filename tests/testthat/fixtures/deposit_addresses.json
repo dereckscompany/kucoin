@@ -1,0 +1,27 @@
+{
+  "code": "200000",
+  "data": [
+    {
+      "address": "0x1a2b3c4d5e6f7890abcdef1234567890abcdef12",
+      "memo": "",
+      "chain": "ERC20",
+      "chainId": "eth",
+      "to": "main",
+      "currency": "USDT",
+      "contractAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+      "chainName": "ERC20",
+      "expirationDate": 0
+    },
+    {
+      "address": "TXyz123abcDEF456ghiJKL789mnoPQR012stuVW",
+      "memo": "",
+      "chain": "TRC20",
+      "chainId": "trx",
+      "to": "main",
+      "currency": "USDT",
+      "contractAddress": "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t",
+      "chainName": "TRC20",
+      "expirationDate": 0
+    }
+  ]
+}

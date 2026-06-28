@@ -1,0 +1,8 @@
+{
+  "code": "200000",
+  "data": {
+    "symbol": "XBTUSDTM",
+    "maxBuyOpenSize": 500,
+    "maxSellOpenSize": 500
+  }
+}

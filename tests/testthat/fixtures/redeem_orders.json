@@ -1,0 +1,20 @@
+{
+  "code": "200000",
+  "data": {
+    "currentPage": 1,
+    "pageSize": 50,
+    "totalNum": 1,
+    "totalPage": 1,
+    "items": [
+      {
+        "currency": "USDT",
+        "purchaseOrderNo": "lending-purchase-001",
+        "redeemOrderNo": "lending-redeem-001",
+        "redeemSize": "500",
+        "receiptSize": "500",
+        "applyTime": 1729655606816,
+        "status": "DONE"
+      }
+    ]
+  }
+}

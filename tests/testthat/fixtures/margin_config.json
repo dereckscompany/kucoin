@@ -1,0 +1,14 @@
+{
+  "code": "200000",
+  "data": {
+    "maxLeverage": 10,
+    "warningDebtRatio": "0.95",
+    "liqDebtRatio": "0.97",
+    "currencyList": [
+      "BTC",
+      "ETH",
+      "USDT",
+      "KCS"
+    ]
+  }
+}

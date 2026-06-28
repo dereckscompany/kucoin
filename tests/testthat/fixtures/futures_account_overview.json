@@ -1,0 +1,13 @@
+{
+  "code": "200000",
+  "data": {
+    "accountEquity": 100000.5,
+    "unrealisedPNL": 50.25,
+    "marginBalance": 100050.75,
+    "positionMargin": 1000,
+    "orderMargin": 500,
+    "frozenFunds": 0,
+    "availableBalance": 98550.75,
+    "currency": "USDT"
+  }
+}

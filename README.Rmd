@@ -89,13 +89,17 @@ remotes::install_github("dereckscompany/kucoin")
 ## Setup
 
 ```{r}
-# special mock for local build
+# special mock for local build: the shared connectcore mock harness installs the
+# route table from ./tests/testthat/mock_router as the httr2 mock hook, so every
+# request below is served from the captured JSON fixtures -- no network, no real
+# credentials, no funds.
 box::use(
   kucoin[
     get_api_keys,
     get_futures_base_url
   ],
-  ./tests/testthat/mock_router[mock_router]
+  connectcore[local_mock_api],
+  ./tests/testthat/mock_router[.mock_routes]
 )
 
 KEYS <- get_api_keys(
@@ -107,7 +111,7 @@ KEYS <- get_api_keys(
 BASE <- "https://api.kucoin.com"
 FBASE <- "https://api-futures.kucoin.com"
 
-options(httr2_mock = mock_router)
+local_mock_api(.mock_routes)
 
 # normal imports
 box::use(

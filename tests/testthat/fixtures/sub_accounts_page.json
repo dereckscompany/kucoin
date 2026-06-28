@@ -1,0 +1,31 @@
+{
+  "code": "200000",
+  "data": {
+    "currentPage": 1,
+    "pageSize": 100,
+    "totalNum": 2,
+    "totalPage": 1,
+    "items": [
+      {
+        "userId": "641e7f09df0db80001f1e5ac",
+        "uid": 169630809,
+        "subName": "bot-alpha",
+        "status": 2,
+        "type": 0,
+        "access": "Spot",
+        "remarks": "Trading bot",
+        "createdAt": 1729159459033
+      },
+      {
+        "userId": "641e8027df0db80001f1e6bb",
+        "uid": 169630810,
+        "subName": "bot-beta",
+        "status": 2,
+        "type": 0,
+        "access": "Futures",
+        "remarks": "Futures bot",
+        "createdAt": 1729159559033
+      }
+    ]
+  }
+}

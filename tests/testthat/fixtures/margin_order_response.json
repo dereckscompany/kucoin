@@ -1,0 +1,9 @@
+{
+  "code": "200000",
+  "data": {
+    "orderId": "6789abcd1234ef0007ab1234",
+    "clientOid": "margin-order-001",
+    "borrowSize": "0.001",
+    "loanApplyId": "loan-apply-001"
+  }
+}

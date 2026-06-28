@@ -1,0 +1,29 @@
+{
+  "code": "200000",
+  "data": [
+    {
+      "currency": "BTC",
+      "borrowMaxAmount": "100",
+      "buyMaxAmount": "100",
+      "holdMaxAmount": "100",
+      "borrowCoefficient": "1",
+      "marginCoefficient": "1",
+      "precision": 8,
+      "borrowMinAmount": "0.001",
+      "borrowMinUnit": "0.001",
+      "borrowEnabled": true
+    },
+    {
+      "currency": "USDT",
+      "borrowMaxAmount": "1000000",
+      "buyMaxAmount": "1000000",
+      "holdMaxAmount": "1000000",
+      "borrowCoefficient": "1",
+      "marginCoefficient": "1",
+      "precision": 2,
+      "borrowMinAmount": "10",
+      "borrowMinUnit": "0.01",
+      "borrowEnabled": true
+    }
+  ]
+}
