@@ -9,10 +9,13 @@
       "maxLeverage": 10,
       "flDebtRatio": "0.97",
       "tradeEnable": true,
+      "autoRenewMaxDebtRatio": "0.94",
       "baseBorrowEnable": true,
       "quoteBorrowEnable": true,
       "baseTransferInEnable": true,
-      "quoteTransferInEnable": true
+      "quoteTransferInEnable": true,
+      "baseBorrowCoefficient": "1",
+      "quoteBorrowCoefficient": "1"
     },
     {
       "symbol": "ETH-USDT",
@@ -22,10 +25,13 @@
       "maxLeverage": 5,
       "flDebtRatio": "0.97",
       "tradeEnable": true,
+      "autoRenewMaxDebtRatio": "0.94",
       "baseBorrowEnable": true,
       "quoteBorrowEnable": true,
       "baseTransferInEnable": true,
-      "quoteTransferInEnable": true
+      "quoteTransferInEnable": true,
+      "baseBorrowCoefficient": "1",
+      "quoteBorrowCoefficient": "1"
     }
   ]
 }

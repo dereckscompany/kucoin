@@ -21,6 +21,13 @@
     "feeCategory": 1,
     "makerFeeCoefficient": "1.00",
     "takerFeeCoefficient": "1.00",
-    "st": false
+    "st": false,
+    "callauctionIsEnabled": false,
+    "callauctionPriceFloor": null,
+    "callauctionPriceCeiling": null,
+    "callauctionFirstStageStartTime": null,
+    "callauctionSecondStageStartTime": null,
+    "callauctionThirdStageStartTime": null,
+    "tradingStartTime": null
   }
 }

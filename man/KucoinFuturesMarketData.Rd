@@ -187,7 +187,7 @@ print(mark[, .(symbol, value, index_price, time_point)])
 \dontrun{
 futures_market <- KucoinFuturesMarketData$new()
 rate <- futures_market$get_funding_rate("XBTUSDTM")
-print(rate[, .(symbol, value, predicted_value, funding_time)])
+print(rate[, .(symbol, value, funding_rate_cap, funding_time)])
 }
 
 ## ------------------------------------------------
@@ -1255,7 +1255,7 @@ Verified: 2026-05-23
 \item \strong{Funding Arbitrage}: Compare funding rates across exchanges to identify cash-and-carry arbitrage
 opportunities.
 \item \strong{Position Timing}: Avoid entering positions just before a large negative funding rate settlement.
-\item \strong{Predicted Rate Monitoring}: Use \code{predicted_value} to anticipate the next funding cycle and adjust positions.
+\item \strong{Rate Bound Monitoring}: Use \code{funding_rate_cap} / \code{funding_rate_floor} to bound the next funding cycle and adjust positions.
 }
 }
 
@@ -1275,7 +1275,10 @@ opportunities.
     "granularity": 28800000,
     "timePoint": 1698267054000,
     "value": 0.000065,
-    "predictedValue": 0.000035,
+    "dailyInterestRate": 0.0003,
+    "fundingRateCap": 0.003,
+    "fundingRateFloor": -0.003,
+    "period": 1,
     "fundingTime": 1698278400000
   \}
 \}
@@ -1295,16 +1298,17 @@ opportunities.
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the current
 funding rate: the contract symbol, funding interval in milliseconds, the
-rate datetime (POSIXct, coerced from epoch milliseconds), the current and
-predicted funding rates, and the next funding settlement datetime (POSIXct,
-coerced from epoch milliseconds).
+rate datetime (POSIXct, coerced from epoch milliseconds), the current
+funding rate, the daily interest rate, the funding-rate cap and floor, the
+funding period, and the next funding settlement datetime (POSIXct, coerced
+from epoch milliseconds).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{\dontrun{
 futures_market <- KucoinFuturesMarketData$new()
 rate <- futures_market$get_funding_rate("XBTUSDTM")
-print(rate[, .(symbol, value, predicted_value, funding_time)])
+print(rate[, .(symbol, value, funding_rate_cap, funding_time)])
 }
 }
 \if{html}{\out{</div>}}

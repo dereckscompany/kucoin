@@ -2,6 +2,7 @@
   "code": "200000",
   "data": [
     {
+      "timestamp": 1729159459033,
       "currency": "BTC",
       "borrowMaxAmount": "100",
       "buyMaxAmount": "100",
@@ -14,6 +15,7 @@
       "borrowEnabled": true
     },
     {
+      "timestamp": 1729159459033,
       "currency": "USDT",
       "borrowMaxAmount": "1000000",
       "buyMaxAmount": "1000000",

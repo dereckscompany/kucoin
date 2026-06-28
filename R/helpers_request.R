@@ -186,7 +186,13 @@ parse_kucoin_response <- function(resp) {
   # When TRUE, jsonlite coerces arrays-of-arrays (e.g. orderbook bids/asks,
   # klines) into matrices, breaking downstream vapply-based parsers.
   # See research/json_matrix_behavior.R for details.
-  parsed <- httr2::resp_body_json(resp, simplifyVector = FALSE)
+  #
+  # check_type = FALSE: KuCoin's futures `GET /api/v1/status` returns a JSON
+  # body with a `text/plain` Content-Type (observed live 2026-06), which makes
+  # the default content-type guard in `resp_body_json()` abort before parsing.
+  # The body is still valid JSON, so we parse it regardless of the declared
+  # type. Synthetic mock fixtures (served as `application/json`) hid this.
+  parsed <- httr2::resp_body_json(resp, simplifyVector = FALSE, check_type = FALSE)
 
   if (is.null(parsed$code)) {
     rlang::abort("Invalid KuCoin API response: missing 'code' field.")

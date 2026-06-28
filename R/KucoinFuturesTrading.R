@@ -1834,8 +1834,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' {
     #'   "code": "200000",
     #'   "data": {
-    #'     "openOrderBuyQty": 5,
-    #'     "openOrderSellQty": 3,
+    #'     "openOrderBuySize": 5,
+    #'     "openOrderSellSize": 3,
     #'     "openOrderBuyCost": "0.0005",
     #'     "openOrderSellCost": "0.0003",
     #'     "settleCurrency": "USDT"
@@ -1844,14 +1844,14 @@ KucoinFuturesTrading <- R6::R6Class(
     #' ```
     #'
     #' @param symbol (scalar<character>) futures symbol (e.g., `"XBTUSDTM"`).
-    #' @return (data.table | promise<data.table>) one row giving the total buy order quantity, total sell order
-    #'   quantity, total buy order cost, total sell order cost, and the settlement currency.
+    #' @return (data.table | promise<data.table>) one row giving the total buy order size, total sell order
+    #'   size, total buy order cost, total sell order cost, and the settlement currency.
     #'
     #' @examples
     #' \dontrun{
     #' ft <- KucoinFuturesTrading$new()
     #' stats <- ft$get_open_order_value(symbol = "XBTUSDTM")
-    #' print(stats[, .(open_order_buy_qty, open_order_sell_qty, settle_currency)])
+    #' print(stats[, .(open_order_buy_size, open_order_sell_size, settle_currency)])
     #' }
     get_open_order_value = function(symbol) {
       assert_args_KucoinFuturesTrading__get_open_order_value(symbol)

@@ -4,6 +4,7 @@
     {
       "address": "0x1a2b3c4d5e6f7890abcdef1234567890abcdef12",
       "memo": "",
+      "remark": "",
       "chain": "ERC20",
       "chainId": "eth",
       "to": "main",
@@ -15,6 +16,7 @@
     {
       "address": "TXyz123abcDEF456ghiJKL789mnoPQR012stuVW",
       "memo": "",
+      "remark": "",
       "chain": "TRC20",
       "chainId": "trx",
       "to": "main",

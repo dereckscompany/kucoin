@@ -1,4 +1,18 @@
-# kucoin 4.2.1
+# kucoin 4.2.2
+
+## Live-capture fixture hardening + bugs the synthetic fixtures hid
+
+This release validates every committed fixture against a read-only capture of the REAL KuCoin API (spot + futures, public + private GET) and fixes the divergences that synthetic, shape-only fixtures could not surface. A new `dev/capture-kucoin.R` drives the package's own read methods through a raw-response interceptor and dumps each verbatim body to the git-ignored `local/raw-data/kucoin/`; `dev/validate-fixtures.R` diffs each fixture's record keys against its capture. All enrichment uses synthetic values — no real account id, balance, or order id is committed.
+
+* **Futures `GET /api/v1/status` returns a `text/plain` Content-Type.** KuCoin sends a valid JSON body for the futures service-status endpoint but labels it `text/plain`, so `httr2::resp_body_json()`'s default content-type guard aborted before parsing and `KucoinFuturesMarketData$get_service_status()` failed against the live API. The synthetic mock (served as `application/json`) hid this. `parse_kucoin_response()` now parses with `check_type = FALSE`.
+
+* **Futures contract `sourceExchanges` produced a forbidden list column.** The live `GET /api/v1/contracts/active` and `/api/v1/contracts/{symbol}` payloads carry a `sourceExchanges` JSON array (the mark-price source venues) that the generic flattener turned into a list column, violating the package's no-list-column invariant on real data. The old array-free fixtures hid it. `KucoinFuturesMarketData$get_contract()` / `$get_all_contracts()` now collapse `sourceExchanges` to a `;`-separated scalar via `collapse_string_array_fields()`, matching the cross-package Treatment-A convention.
+
+* **`get_open_order_value()` field rename `Qty` → `Size`.** The live `GET /api/v1/openOrderStatistics` response returns `openOrderBuySize` / `openOrderSellSize`; the fixture, mock helper, and unit assertion still used the retired `openOrderBuyQty` / `openOrderSellQty` names. The fixture, the `@return` / example docs, and the test now use `open_order_buy_size` / `open_order_sell_size`.
+
+* **`get_funding_rate()` fictional `predictedValue` replaced with the real fields.** The live `GET /api/v1/funding-rate/{symbol}/current` response carries `dailyInterestRate`, `fundingRateCap`, `fundingRateFloor`, and `period` and does NOT return `predictedValue`; the fixture and docs invented a `predictedValue` field. Both now reflect the real payload.
+
+* **Fixtures enriched to the real superset (synthetic values).** Added the real-but-missing fields: `futures_account_overview` (`availableMargin`, `riskRatio`, `maxWithdrawAmount`); `futures_contract` / `futures_all_contracts` (the full real field set — `displaySymbol`, `marketMaxOrderQty`, `fundingRateCap`/`Floor`, `crossRiskLimit`, `marketType`, `sourceExchanges`, and ~30 more); `futures_trade_history` (`contractId`); `symbol` (the `callauction*` stage fields and `tradingStartTime`, present-but-null); `isolated_margin_symbols` (`autoRenewMaxDebtRatio`, `baseBorrowCoefficient`, `quoteBorrowCoefficient`); `risk_limit` (`timestamp`); `sub_accounts_page` (`tradeTypes`, `openedTradeTypes`); `deposit_addresses` (`remark`); and spot `trade_history` (`tradeId`).
 
 ## Type contract corrections (coinbase gold-standard remediation)
 

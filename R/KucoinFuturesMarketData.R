@@ -192,6 +192,10 @@ KucoinFuturesMarketData <- R6::R6Class(
           if (is.null(data) || length(data) == 0L) {
             return(data.table::data.table()[])
           }
+          # `sourceExchanges` arrives as a JSON array (the mark-price source
+          # venues). Collapse it to a `;`-separated scalar so the generic
+          # flattener yields a plain character column, not a list column.
+          data <- collapse_string_array_fields(data, "sourceExchanges")
           return(as_dt_row(data)[])
         }
       )
@@ -295,6 +299,10 @@ KucoinFuturesMarketData <- R6::R6Class(
           if (is.null(data) || length(data) == 0L) {
             return(data.table::data.table()[])
           }
+          # `sourceExchanges` arrives as a JSON array (the mark-price source
+          # venues). Collapse it to a `;`-separated scalar so the generic
+          # flattener yields a plain character column, not a list column.
+          data <- lapply(data, collapse_string_array_fields, fields = "sourceExchanges")
           return(as_dt_list(data)[])
         }
       )
@@ -982,7 +990,7 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' - **Funding Arbitrage**: Compare funding rates across exchanges to identify cash-and-carry arbitrage
     #'   opportunities.
     #' - **Position Timing**: Avoid entering positions just before a large negative funding rate settlement.
-    #' - **Predicted Rate Monitoring**: Use `predicted_value` to anticipate the next funding cycle and adjust positions.
+    #' - **Rate Bound Monitoring**: Use `funding_rate_cap` / `funding_rate_floor` to bound the next funding cycle and adjust positions.
     #'
     #' ### curl
     #' ```
@@ -999,7 +1007,10 @@ KucoinFuturesMarketData <- R6::R6Class(
     #'     "granularity": 28800000,
     #'     "timePoint": 1698267054000,
     #'     "value": 0.000065,
-    #'     "predictedValue": 0.000035,
+    #'     "dailyInterestRate": 0.0003,
+    #'     "fundingRateCap": 0.003,
+    #'     "fundingRateFloor": -0.003,
+    #'     "period": 1,
     #'     "fundingTime": 1698278400000
     #'   }
     #' }
@@ -1008,15 +1019,16 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' @param symbol (scalar<character>) futures symbol (e.g., `"XBTUSDTM"`).
     #' @return (data.table | promise<data.table>) one row giving the current
     #'   funding rate: the contract symbol, funding interval in milliseconds, the
-    #'   rate datetime (POSIXct, coerced from epoch milliseconds), the current and
-    #'   predicted funding rates, and the next funding settlement datetime (POSIXct,
-    #'   coerced from epoch milliseconds).
+    #'   rate datetime (POSIXct, coerced from epoch milliseconds), the current
+    #'   funding rate, the daily interest rate, the funding-rate cap and floor, the
+    #'   funding period, and the next funding settlement datetime (POSIXct, coerced
+    #'   from epoch milliseconds).
     #'
     #' @examples
     #' \dontrun{
     #' futures_market <- KucoinFuturesMarketData$new()
     #' rate <- futures_market$get_funding_rate("XBTUSDTM")
-    #' print(rate[, .(symbol, value, predicted_value, funding_time)])
+    #' print(rate[, .(symbol, value, funding_rate_cap, funding_time)])
     #' }
     get_funding_rate = function(symbol) {
       assert_args_KucoinFuturesMarketData__get_funding_rate(symbol)

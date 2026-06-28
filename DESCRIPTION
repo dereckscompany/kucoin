@@ -1,7 +1,7 @@
 Package: kucoin
 Type: Package
 Title: API Wrapper to KuCoin Cryptocurrency Exchange
-Version: 4.2.1
+Version: 4.2.2
 URL: https://dereckscompany.github.io/kucoin/
 BugReports: https://github.com/dereckscompany/kucoin/issues
 Authors@R: 

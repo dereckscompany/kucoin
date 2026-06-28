@@ -269,7 +269,7 @@ test_that("get_open_order_value returns data.table", {
   dt <- new_futures_trading()$get_open_order_value("XBTUSDTM")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
-  expect_true("open_order_buy_qty" %in% names(dt))
+  expect_true("open_order_buy_size" %in% names(dt))
   expect_true("settle_currency" %in% names(dt))
 })
 

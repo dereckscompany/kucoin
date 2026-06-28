@@ -315,7 +315,7 @@ all_recent <- ft$get_recent_fills()
 \dontrun{
 ft <- KucoinFuturesTrading$new()
 stats <- ft$get_open_order_value(symbol = "XBTUSDTM")
-print(stats[, .(open_order_buy_qty, open_order_sell_qty, settle_currency)])
+print(stats[, .(open_order_buy_size, open_order_sell_size, settle_currency)])
 }
 
 ## ------------------------------------------------
@@ -2239,8 +2239,8 @@ Verified: 2026-05-23
 \if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
   "code": "200000",
   "data": \{
-    "openOrderBuyQty": 5,
-    "openOrderSellQty": 3,
+    "openOrderBuySize": 5,
+    "openOrderSellSize": 3,
     "openOrderBuyCost": "0.0005",
     "openOrderSellCost": "0.0003",
     "settleCurrency": "USDT"
@@ -2260,15 +2260,15 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row giving the total buy order quantity, total sell order
-quantity, total buy order cost, total sell order cost, and the settlement currency.
+(data.table | promise<data.table>) one row giving the total buy order size, total sell order
+size, total buy order cost, total sell order cost, and the settlement currency.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{\dontrun{
 ft <- KucoinFuturesTrading$new()
 stats <- ft$get_open_order_value(symbol = "XBTUSDTM")
-print(stats[, .(open_order_buy_qty, open_order_sell_qty, settle_currency)])
+print(stats[, .(open_order_buy_size, open_order_sell_size, settle_currency)])
 }
 }
 \if{html}{\out{</div>}}

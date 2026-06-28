@@ -3,6 +3,7 @@
   "data": [
     {
       "sequence": 100,
+      "contractId": 101,
       "tradeId": "trade-001",
       "takerOrderId": "order-001",
       "makerOrderId": "order-002",
@@ -13,6 +14,7 @@
     },
     {
       "sequence": 101,
+      "contractId": 101,
       "tradeId": "trade-002",
       "takerOrderId": "order-003",
       "makerOrderId": "order-004",

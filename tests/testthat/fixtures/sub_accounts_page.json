@@ -13,6 +13,12 @@
         "status": 2,
         "type": 0,
         "access": "Spot",
+        "tradeTypes": [
+          "Spot"
+        ],
+        "openedTradeTypes": [
+          "Spot"
+        ],
         "remarks": "Trading bot",
         "createdAt": 1729159459033
       },
@@ -23,6 +29,14 @@
         "status": 2,
         "type": 0,
         "access": "Futures",
+        "tradeTypes": [
+          "Spot",
+          "Futures"
+        ],
+        "openedTradeTypes": [
+          "Spot",
+          "Futures"
+        ],
         "remarks": "Futures bot",
         "createdAt": 1729159559033
       }

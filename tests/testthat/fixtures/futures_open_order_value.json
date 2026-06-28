@@ -1,8 +1,8 @@
 {
   "code": "200000",
   "data": {
-    "openOrderBuyQty": 1,
-    "openOrderSellQty": 0,
+    "openOrderBuySize": 1,
+    "openOrderSellSize": 0,
     "openOrderBuyCost": "0.0196",
     "openOrderSellCost": "0",
     "settleCurrency": "USDT"
