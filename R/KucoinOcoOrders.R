@@ -146,7 +146,9 @@ KucoinOcoOrders <- R6::R6Class(
     #'   spot trading.
     #' @return (data.table | promise<data.table>) one row giving the
     #'   KuCoin-assigned OCO order identifier and the client-provided order
-    #'   identifier (NA if not supplied).
+    #'   identifier (NA if not supplied):
+    #' - order_id (character) the system order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -587,7 +589,12 @@ KucoinOcoOrders <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row giving the OCO order
     #'   identifier, trading pair, client-assigned order identifier, order
     #'   creation datetime (POSIXct, coerced from epoch milliseconds), and order
-    #'   status (e.g., `"NEW"`, `"DONE"`, `"TRIGGERED"`).
+    #'   status (e.g., `"NEW"`, `"DONE"`, `"TRIGGERED"`):
+    #' - order_id (character) the system order identifier.
+    #' - symbol (character) the trading pair symbol.
+    #' - client_oid (character) the client-supplied order identifier.
+    #' - order_time (POSIXct) the order time (UTC).
+    #' - status (character) the status.
     #'
     #' @examples
     #' \dontrun{
@@ -676,7 +683,12 @@ KucoinOcoOrders <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row giving the
     #'   KuCoin-assigned OCO order identifier, trading pair, client-assigned order
     #'   identifier, order creation datetime (POSIXct, coerced from epoch
-    #'   milliseconds), and order status (e.g., `"NEW"`, `"DONE"`, `"TRIGGERED"`).
+    #'   milliseconds), and order status (e.g., `"NEW"`, `"DONE"`, `"TRIGGERED"`):
+    #' - order_id (character) the system order identifier.
+    #' - symbol (character) the trading pair symbol.
+    #' - client_oid (character) the client-supplied order identifier.
+    #' - order_time (POSIXct) the order time (UTC).
+    #' - status (character) the status.
     #'
     #' @examples
     #' \dontrun{
@@ -787,7 +799,19 @@ KucoinOcoOrders <- R6::R6Class(
     #'   array (typically the limit leg plus the stop-limit leg) exploded to long
     #'   format by replicating the parent OCO row once per sub-order and adding
     #'   each sub-order's id, symbol, side, price, size, status, and stop price
-    #'   (present only on the stop leg) as `sub_order_`-prefixed columns.
+    #'   (present only on the stop leg) as `sub_order_`-prefixed columns:
+    #' - order_id (character) the system order identifier.
+    #' - symbol (character) the trading pair symbol.
+    #' - client_oid (character) the client-supplied order identifier.
+    #' - order_time (POSIXct) the order time (UTC).
+    #' - status (character) the status.
+    #' - sub_order_id (character) the sub order id.
+    #' - sub_order_symbol (character) the sub order symbol.
+    #' - sub_order_side (character) the sub order side.
+    #' - sub_order_price (character) the sub order price.
+    #' - sub_order_size (character) the sub order size.
+    #' - sub_order_status (character) the sub order status.
+    #' - sub_order_stop_price (character | NA) the sub order stop price.
     #'
     #' @examples
     #' \dontrun{

@@ -181,7 +181,17 @@ Default \code{"USDT"}.}
 (data.table | promise<data.table>) one row giving the futures
 account overview: total account equity, unrealised profit and loss,
 margin balance, position and order margin, frozen funds, available
-balance, and the settlement currency code.
+balance, and the settlement currency code:
+\itemize{
+\item account_equity (numeric) the account equity.
+\item unrealised_pnl (numeric) the unrealised pnl.
+\item margin_balance (numeric) the margin balance.
+\item available_balance (numeric) the available balance.
+\item available_margin (numeric) the available margin.
+\item currency (character) the currency code.
+\item risk_ratio (numeric) the risk ratio.
+\item max_withdraw_amount (numeric) the max withdraw amount.
+}
 }
 }
 \if{html}{\out{<hr>}}
@@ -544,7 +554,11 @@ Verified: 2026-05-23
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the contract
-symbol and its current margin mode (\code{"ISOLATED"} or \code{"CROSS"}).
+symbol and its current margin mode (\code{"ISOLATED"} or \code{"CROSS"}):
+\itemize{
+\item symbol (character) the trading pair symbol.
+\item margin_mode (character) the margin mode.
+}
 }
 }
 \if{html}{\out{<hr>}}
@@ -622,7 +636,11 @@ Verified: 2026-05-23
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the contract
-symbol and its updated margin mode.
+symbol and its updated margin mode:
+\itemize{
+\item symbol (character) the trading pair symbol.
+\item margin_mode (character) the margin mode.
+}
 }
 }
 \if{html}{\out{<hr>}}
@@ -688,7 +706,11 @@ Verified: 2026-05-23
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the contract
-symbol and its current cross-margin leverage multiplier.
+symbol and its current cross-margin leverage multiplier:
+\itemize{
+\item symbol (character) the trading pair symbol.
+\item leverage (character) the leverage.
+}
 }
 }
 \if{html}{\out{<hr>}}
@@ -767,7 +789,11 @@ Verified: 2026-05-23
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the contract
-symbol and its updated cross-margin leverage multiplier.
+symbol and its updated cross-margin leverage multiplier:
+\itemize{
+\item symbol (character) the trading pair symbol.
+\item leverage (character) the leverage.
+}
 }
 }
 \if{html}{\out{<hr>}}
@@ -838,7 +864,12 @@ Verified: 2026-05-23
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the contract
 symbol and the maximum number of contracts that can be opened on the
-buy and sell sides.
+buy and sell sides:
+\itemize{
+\item symbol (character) the trading pair symbol.
+\item max_buy_open_size (integer) the max buy open size.
+\item max_sell_open_size (integer) the max sell open size.
+}
 }
 }
 \if{html}{\out{<hr>}}
@@ -987,7 +1018,13 @@ Verified: 2026-05-23
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the margin
 operation ID, contract symbol, amount deposited, and operation type
-(e.g., \code{"ADD"}).
+(e.g., \code{"ADD"}):
+\itemize{
+\item id (character) the record identifier.
+\item symbol (character) the trading pair symbol.
+\item margin (character) the margin amount.
+\item margin_type (character) the margin type.
+}
 }
 }
 \if{html}{\out{<hr>}}
@@ -1068,7 +1105,13 @@ Verified: 2026-05-23
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the margin
-operation ID, contract symbol, amount withdrawn, and operation type.
+operation ID, contract symbol, amount withdrawn, and operation type:
+\itemize{
+\item id (character) the record identifier.
+\item symbol (character) the trading pair symbol.
+\item margin (character) the margin amount.
+\item margin_type (character) the margin type.
+}
 }
 }
 \if{html}{\out{<hr>}}

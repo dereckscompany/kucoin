@@ -357,7 +357,9 @@ KucoinMarginTrading <- R6::R6Class(
     #'   Default `FALSE`.
     #' @return (data.table | promise<data.table>) one row giving the
     #'   KuCoin-assigned order identifier and the client-provided order
-    #'   identifier (NA if not supplied).
+    #'   identifier (NA if not supplied):
+    #' - order_id (character) the system order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -517,7 +519,9 @@ KucoinMarginTrading <- R6::R6Class(
     #'   Default `FALSE`.
     #' @return (data.table | promise<data.table>) one row giving the
     #'   KuCoin-assigned order identifier, the client-provided order identifier,
-    #'   the amount borrowed, and the loan application ID.
+    #'   the amount borrowed, and the loan application ID:
+    #' - order_id (character) the system order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -678,7 +682,9 @@ KucoinMarginTrading <- R6::R6Class(
     #'   Default `FALSE`.
     #' @return (data.table | promise<data.table>) one row giving the
     #'   KuCoin-assigned order identifier and the client-provided order
-    #'   identifier (NA if not supplied).
+    #'   identifier (NA if not supplied):
+    #' - order_id (character) the system order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -822,7 +828,9 @@ KucoinMarginTrading <- R6::R6Class(
     #' @param isHf (scalar<logical>) `TRUE` for high-frequency trading mode,
     #'   `FALSE` (default).
     #' @return (data.table | promise<data.table>) one row giving the borrow order
-    #'   number and the amount actually borrowed.
+    #'   number and the amount actually borrowed:
+    #' - order_no (character) the order number.
+    #' - actual_size (character) the actual filled size.
     #'
     #' @examples
     #' \dontrun{
@@ -1380,7 +1388,9 @@ KucoinMarginTrading <- R6::R6Class(
     #'   `3`, `5`, `10`).
     #' @return (data.table | promise<data.table>) one row:
     #' - leverage (numeric) the new leverage multiplier.
-    #' - status (character) the local outcome marker, always `"success"`.
+    #' - status (character) the local outcome marker, always `"success"`:
+    #' - leverage (numeric) the leverage.
+    #' - status (character) the status.
     #' @noassert leverage
     #'
     #' @examples

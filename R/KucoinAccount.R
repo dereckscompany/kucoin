@@ -134,7 +134,19 @@ KucoinAccount <- R6::R6Class(
     #'
     #' @return (data.table | promise<data.table>) one row giving the VIP tier
     #'   level and the sub-account counts (total, spot, margin, futures, option)
-    #'   alongside their respective maxima.
+    #'   alongside their respective maxima:
+    #' - level (integer) the tier level.
+    #' - sub_quantity (integer) the sub quantity.
+    #' - max_default_sub_quantity (integer) the max default sub quantity.
+    #' - max_sub_quantity (integer) the max sub quantity.
+    #' - spot_sub_quantity (integer) the spot sub quantity.
+    #' - margin_sub_quantity (integer) the margin sub quantity.
+    #' - futures_sub_quantity (integer) the futures sub quantity.
+    #' - option_sub_quantity (integer) the option sub quantity.
+    #' - max_spot_sub_quantity (integer) the max spot sub quantity.
+    #' - max_margin_sub_quantity (integer) the max margin sub quantity.
+    #' - max_futures_sub_quantity (integer) the max futures sub quantity.
+    #' - max_option_sub_quantity (integer) the max option sub quantity.
     #'
     #' @examples
     #' \dontrun{
@@ -210,7 +222,15 @@ KucoinAccount <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row describing the active
     #'   API key: its label, key ID, version, comma-separated permissions and IP
     #'   whitelist, creation datetime (POSIXct, coerced from epoch milliseconds),
-    #'   user ID, and whether it belongs to the master account.
+    #'   user ID, and whether it belongs to the master account:
+    #' - remark (character) an optional remark.
+    #' - api_key (character) the api key.
+    #' - api_version (integer) the api version.
+    #' - permission (character) the permission.
+    #' - ip_whitelist (character) the ip whitelist.
+    #' - created_at (POSIXct) the created at (UTC).
+    #' - uid (integer) the user identifier.
+    #' - is_master (logical) the is master.
     #'
     #' @examples
     #' \dontrun{
@@ -458,7 +478,11 @@ KucoinAccount <- R6::R6Class(
     #'
     #' @return (data.table | promise<data.table>) one row giving the currency
     #'   code, total balance, the amount available for use, and the amount held
-    #'   in open orders for the requested account.
+    #'   in open orders for the requested account:
+    #' - currency (character) the currency code.
+    #' - balance (character) the total balance.
+    #' - available (character) the amount available.
+    #' - holds (character) the amount on hold.
     #'
     #' @examples
     #' \dontrun{
@@ -1191,7 +1215,9 @@ KucoinAccount <- R6::R6Class(
     #' @param currencyType (scalar<count> | NULL) `0` for crypto (default), `1`
     #'   for fiat.
     #' @return (data.table | promise<data.table>) one row giving the base taker
-    #'   fee rate and the base maker fee rate.
+    #'   fee rate and the base maker fee rate:
+    #' - taker_fee_rate (character) the taker fee rate.
+    #' - maker_fee_rate (character) the maker fee rate.
     #'
     #' @examples
     #' \dontrun{
@@ -1266,7 +1292,10 @@ KucoinAccount <- R6::R6Class(
     #'   e.g. `"BTC-USDT,ETH-USDT"`.
     #' @return (data.table | promise<data.table>) one row per trading pair, each
     #'   giving the pair symbol, the actual taker fee rate, and the actual maker
-    #'   fee rate.
+    #'   fee rate:
+    #' - symbol (character) the trading pair symbol.
+    #' - taker_fee_rate (character) the taker fee rate.
+    #' - maker_fee_rate (character) the maker fee rate.
     #'
     #' @examples
     #' \dontrun{

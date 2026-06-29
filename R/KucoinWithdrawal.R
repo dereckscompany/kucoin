@@ -138,7 +138,8 @@ KucoinWithdrawal <- R6::R6Class(
     #' @param feeDeductType (scalar<character> | NULL) fee deduction type:
     #'   `"INTERNAL"` or `"EXTERNAL"`.
     #' @return (data.table | promise<data.table>) one row with column
-    #'   `withdrawal_id` (character): the unique withdrawal identifier.
+    #'   `withdrawal_id` (character): the unique withdrawal identifier:
+    #' - withdrawal_id (character) the withdrawal id.
     #'
     #' @examples
     #' \dontrun{
@@ -290,7 +291,8 @@ KucoinWithdrawal <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row, the cancelled
     #'   withdrawal ID echoed from the input (KuCoin returns `null` data on a
     #'   successful cancel):
-    #' - withdrawal_id (character) the cancelled withdrawal ID.
+    #' - withdrawal_id (character) the cancelled withdrawal ID:
+    #' - withdrawal_id (character) the withdrawal id.
     #'
     #' @examples
     #' \dontrun{
@@ -392,7 +394,23 @@ KucoinWithdrawal <- R6::R6Class(
     #'   quota_currency, limit_quota_currency_amount, used_quota_currency_amount,
     #'   remain_amount, available_amount, withdraw_min_fee, inner_withdraw_min_fee,
     #'   withdraw_min_size, is_withdraw_enabled, precision, chain, reason,
-    #'   locked_amount, ...).
+    #'   locked_amount, ...):
+    #' - currency (character) the currency code.
+    #' - chain (character) the chain code.
+    #' - is_withdraw_enabled (logical) the is withdraw enabled.
+    #' - available_amount (character) the available amount.
+    #' - remain_amount (character) the remain amount.
+    #' - withdraw_min_fee (character) the withdraw min fee.
+    #' - inner_withdraw_min_fee (character) the inner withdraw min fee.
+    #' - withdraw_min_size (character) the withdraw min size.
+    #' - precision (integer) the decimal precision.
+    #' - limit_btc_amount (character) the limit btc amount.
+    #' - used_btc_amount (character) the used btc amount.
+    #' - locked_amount (character) the locked amount.
+    #' - quota_currency (character) the quota currency.
+    #' - limit_quota_currency_amount (character) the limit quota currency amount.
+    #' - used_quota_currency_amount (character) the used quota currency amount.
+    #' - reason (logical | NA) the reason, when present.
     #'
     #' @examples
     #' \dontrun{
@@ -683,7 +701,32 @@ KucoinWithdrawal <- R6::R6Class(
     #'   withdrawal detail (id, currency, chain_id, chain_name, status, address,
     #'   memo, is_inner, amount, fee, wallet_tx_id, cancel_type, failure_reason,
     #'   failure_reason_msg, created_at, ...), with `created_at` coerced to
-    #'   POSIXct.
+    #'   POSIXct:
+    #' - id (character) the record identifier.
+    #' - currency (character) the currency code.
+    #' - chain_id (character) the chain identifier.
+    #' - chain_name (character) the chain name.
+    #' - status (character) the status.
+    #' - address (character) the address.
+    #' - memo (character) the address memo/tag.
+    #' - is_inner (logical) the is inner.
+    #' - amount (character) the amount.
+    #' - fee (character) the fee.
+    #' - wallet_tx_id (logical | NA) the wallet tx id.
+    #' - created_at (POSIXct) the created at (UTC).
+    #' - cancel_type (character) the cancel type.
+    #' - uid (integer) the user identifier.
+    #' - currency_name (character) the currency name.
+    #' - failure_reason (character) the failure reason.
+    #' - failure_reason_msg (logical | NA) the failure reason msg.
+    #' - address_remark (character) the address remark.
+    #' - remark (character) an optional remark.
+    #' - taxes (logical | NA) the taxes.
+    #' - tax_description (logical | NA) the tax description.
+    #' - tx_id (logical | NA) the tx id.
+    #' - return_status (character) the return status.
+    #' - return_amount (logical | NA) the return amount.
+    #' - return_currency (character) the return currency.
     #'
     #' @examples
     #' \dontrun{

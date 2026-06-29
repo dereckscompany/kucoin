@@ -258,7 +258,11 @@ KucoinMarginData <- R6::R6Class(
     #'
     #' @return (data.table | promise<data.table>) one row per supported currency, with the `currencyList` array exploded
     #'   so each currency carries the replicated config-level fields for maximum leverage, warning debt ratio and
-    #'   liquidation debt ratio; an empty `currencyList` yields a zero-row data.table with this schema.
+    #'   liquidation debt ratio; an empty `currencyList` yields a zero-row data.table with this schema:
+    #' - currency (character) the currency code.
+    #' - max_leverage (integer) the max leverage.
+    #' - warning_debt_ratio (character) the warning debt ratio.
+    #' - liq_debt_ratio (character) the liq debt ratio.
     #'
     #' @examples
     #' \dontrun{
@@ -354,7 +358,11 @@ KucoinMarginData <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row per (currency, tier) pair, with the nested `currencyList` and
     #'   `items` arrays cross-joined into a flat long table carrying the currency code, lower and upper bounds of the
     #'   collateral range, and the collateral ratio applied in that range; an empty response yields a zero-row
-    #'   data.table with this schema.
+    #'   data.table with this schema:
+    #' - currency (character) the currency code.
+    #' - lower_limit (character) the lower limit.
+    #' - upper_limit (character) the upper limit.
+    #' - collateral_ratio (character) the collateral ratio.
     #'
     #' @examples
     #' \dontrun{

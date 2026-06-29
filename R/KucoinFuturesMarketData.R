@@ -366,7 +366,18 @@ KucoinFuturesMarketData <- R6::R6Class(
     #'   ticker snapshot: the sequence number, contract symbol, last trade side,
     #'   size, trade identifier and price, the best bid and ask prices with their
     #'   sizes, and the ticker datetime (POSIXct, coerced from the nanosecond
-    #'   timestamp).
+    #'   timestamp):
+    #' - sequence (integer) the sequence.
+    #' - symbol (character) the trading pair symbol.
+    #' - side (character) the order side.
+    #' - size (integer) the size.
+    #' - price (character) the price.
+    #' - best_bid_size (integer) the best bid size.
+    #' - best_bid_price (character) the best bid price.
+    #' - best_ask_price (character) the best ask price.
+    #' - best_ask_size (integer) the best ask size.
+    #' - trade_id (character) the trade identifier.
+    #' - ts (POSIXct) the ts (UTC).
     #'
     #' @examples
     #' \dontrun{
@@ -543,7 +554,14 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' @param size (scalar<count>) number of levels, either `20` or `100`.
     #'   Default `20`.
     #' @return (data.table | promise<data.table>) the level-2 order book in long
-    #'   format (ts, sequence, side, level, price, size, and symbol when present).
+    #'   format (ts, sequence, side, level, price, size, and symbol when present):
+    #' - ts (POSIXct) the ts (UTC).
+    #' - sequence (character) the sequence.
+    #' - side (character) the order side.
+    #' - level (integer) the tier level.
+    #' - price (numeric) the price.
+    #' - size (numeric) the size.
+    #' - symbol (character) the trading pair symbol.
     #'
     #' @examples
     #' \dontrun{
@@ -628,7 +646,14 @@ KucoinFuturesMarketData <- R6::R6Class(
     #'
     #' @param symbol (scalar<character>) futures symbol (e.g., `"XBTUSDTM"`).
     #' @return (data.table | promise<data.table>) the level-2 order book in long
-    #'   format (ts, sequence, side, level, price, size, and symbol when present).
+    #'   format (ts, sequence, side, level, price, size, and symbol when present):
+    #' - ts (POSIXct) the ts (UTC).
+    #' - sequence (character) the sequence.
+    #' - side (character) the order side.
+    #' - level (integer) the tier level.
+    #' - price (numeric) the price.
+    #' - size (numeric) the size.
+    #' - symbol (character) the trading pair symbol.
     #'
     #' @examples
     #' \dontrun{
@@ -937,7 +962,12 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row giving the current mark
     #'   price: the contract symbol, price granularity in milliseconds, the rate
     #'   datetime (POSIXct, coerced from epoch milliseconds), the mark price, and
-    #'   the underlying index price.
+    #'   the underlying index price:
+    #' - symbol (character) the trading pair symbol.
+    #' - granularity (integer) the granularity.
+    #' - time_point (POSIXct) the time point (UTC).
+    #' - value (numeric) the order value.
+    #' - index_price (numeric) the index price.
     #'
     #' @examples
     #' \dontrun{
@@ -1023,7 +1053,16 @@ KucoinFuturesMarketData <- R6::R6Class(
     #'   rate datetime (POSIXct, coerced from epoch milliseconds), the current
     #'   funding rate, the daily interest rate, the funding-rate cap and floor, the
     #'   funding period, and the next funding settlement datetime (POSIXct, coerced
-    #'   from epoch milliseconds).
+    #'   from epoch milliseconds):
+    #' - symbol (character) the trading pair symbol.
+    #' - granularity (integer) the granularity.
+    #' - time_point (POSIXct) the time point (UTC).
+    #' - value (numeric) the order value.
+    #' - daily_interest_rate (numeric) the daily interest rate.
+    #' - funding_rate_cap (numeric) the funding rate cap.
+    #' - funding_rate_floor (numeric) the funding rate floor.
+    #' - period (integer) the period.
+    #' - funding_time (POSIXct) the funding time (UTC).
     #'
     #' @examples
     #' \dontrun{
@@ -1199,7 +1238,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' ```
     #'
     #' @return (data.table | promise<data.table>) one row giving the server
-    #'   datetime (POSIXct, coerced from epoch milliseconds).
+    #'   datetime (POSIXct, coerced from epoch milliseconds):
+    #' - server_time (POSIXct) the server time (UTC).
     #'
     #' @examples
     #' \dontrun{
@@ -1267,7 +1307,9 @@ KucoinFuturesMarketData <- R6::R6Class(
     #'
     #' @return (data.table | promise<data.table>) one row giving the operational
     #'   status (`"open"`, `"close"`, or `"cancelonly"`) and an optional
-    #'   remark/message.
+    #'   remark/message:
+    #' - status (character) the status.
+    #' - msg (character) the msg.
     #'
     #' @examples
     #' \dontrun{

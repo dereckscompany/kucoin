@@ -539,7 +539,11 @@ Mutually exclusive with \code{size}. Not applicable for limit orders.}
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the KuCoin-assigned order identifier and the
-client-provided order identifier.
+client-provided order identifier:
+\itemize{
+\item order_id (character) the system order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -696,7 +700,11 @@ Verified: 2026-05-23
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the simulated order identifier and the client-provided
-order identifier.
+order identifier:
+\itemize{
+\item order_id (character) the system order identifier.
+\item client_oid (character) the client-supplied order identifier.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -822,7 +830,13 @@ Verified: 2026-05-23
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row per order giving the KuCoin order ID, client order ID, the
-success flag, and any failure message.
+success flag, and any failure message:
+\itemize{
+\item order_id (character | NA) the system order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
+\item success (logical) whether the order succeeded.
+\item fail_msg (character | NA) the failure message.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -899,7 +913,10 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row giving the cancelled order ID.
+(data.table | promise<data.table>) one row giving the cancelled order ID:
+\itemize{
+\item order_id (character) the system order identifier.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -970,7 +987,10 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row giving the cancelled client order ID.
+(data.table | promise<data.table>) one row giving the cancelled client order ID:
+\itemize{
+\item client_oid (character) the client-supplied order identifier.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1050,7 +1070,11 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row giving the cancellation result.
+(data.table | promise<data.table>) one row giving the cancellation result:
+\itemize{
+\item order_id (character) the system order identifier.
+\item cancel_size (character) the cancelled size.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1128,7 +1152,8 @@ Verified: 2026-05-23
 (data.table | promise<data.table>) one row giving the cancellation
 response:
 \itemize{
-\item result (character) the KuCoin response string, e.g. \code{"success"}.
+\item result (character) the KuCoin response string, e.g. \code{"success"}:
+\item result (character) the result.
 }
 }
 \subsection{Examples}{
@@ -1201,7 +1226,9 @@ Verified: 2026-05-23
 an empty (but typed) data.table if no orders were open:
 \itemize{
 \item symbol (character) the trading pair, e.g. \code{"BTC-USDT"}.
-\item status (character) per-symbol outcome, \code{"succeed"} or \code{"failed"}.
+\item status (character) per-symbol outcome, \code{"succeed"} or \code{"failed"}:
+\item symbol (character) the trading pair symbol.
+\item status (character) the status.
 }
 }
 \subsection{Examples}{
@@ -1306,7 +1333,17 @@ Verified: 2026-05-23
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row of full order details, including the creation and last-updated
-datetimes (POSIXct) when timestamps are present.
+datetimes (POSIXct) when timestamps are present:
+\itemize{
+\item order_id (character) the system order identifier.
+\item symbol (character) the trading pair symbol.
+\item side (character) the order side.
+\item type (character) the type.
+\item price (character) the price.
+\item size (character) the size.
+\item created_at (POSIXct) the created at (UTC).
+\item last_updated_at (POSIXct) the last updated at (UTC).
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1410,7 +1447,13 @@ Verified: 2026-05-23
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row of full order details, including the creation and last-updated
-datetimes (POSIXct).
+datetimes (POSIXct):
+\itemize{
+\item client_oid (character) the client-supplied order identifier.
+\item symbol (character) the trading pair symbol.
+\item side (character) the order side.
+\item created_at (POSIXct) the created at (UTC).
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1619,7 +1662,8 @@ Verified: 2026-05-23
 (data.table | promise<data.table>) one row per trading pair that
 has at least one open order:
 \itemize{
-\item symbols (character) the trading pair, e.g. \code{"BTC-USDT"}.
+\item symbols (character) the trading pair, e.g. \code{"BTC-USDT"}:
+\item symbols (character) the symbols.
 }
 }
 \subsection{Examples}{
@@ -1866,7 +1910,13 @@ If NULL, returns closed orders across all symbols.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row per closed order, including the creation datetime (POSIXct).
+(data.table | promise<data.table>) one row per closed order, including the creation datetime (POSIXct):
+\itemize{
+\item order_id (character) the system order identifier.
+\item symbol (character) the trading pair symbol.
+\item side (character) the order side.
+\item created_at (POSIXct) the created at (UTC).
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2143,7 +2193,17 @@ Verified: 2026-05-23
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row per order giving the order and client identifiers, the success
-flag, the fill status, and the filled, remaining, and cancelled quantities.
+flag, the fill status, and the filled, remaining, and cancelled quantities:
+\itemize{
+\item order_id (character | NA) the system order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
+\item success (logical) whether the order succeeded.
+\item status (character | NA) the status.
+\item deal_size (character | NA) the filled size.
+\item remain_size (character | NA) the unfilled size.
+\item canceled_size (character | NA) the cancelled size.
+\item fail_msg (character | NA) the failure message.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2233,7 +2293,15 @@ Verified: 2026-05-23
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the order ID, the original, filled, remaining, and
-cancelled sizes, and the fill status.
+cancelled sizes, and the fill status:
+\itemize{
+\item order_id (character) the system order identifier.
+\item origin_size (character) the original size.
+\item deal_size (character) the filled size.
+\item remain_size (character) the unfilled size.
+\item canceled_size (character) the cancelled size.
+\item status (character) the status.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2311,7 +2379,15 @@ Verified: 2026-05-23
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the client order ID, the original, filled, remaining,
-and cancelled sizes, and the fill status.
+and cancelled sizes, and the fill status:
+\itemize{
+\item client_oid (character) the client-supplied order identifier.
+\item origin_size (character) the original size.
+\item deal_size (character) the filled size.
+\item remain_size (character) the unfilled size.
+\item canceled_size (character) the cancelled size.
+\item status (character) the status.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2419,7 +2495,11 @@ Verified: 2026-05-23
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the replacement order's ID and the original client
-order ID.
+order ID:
+\itemize{
+\item new_order_id (character) the new order identifier.
+\item client_oid (character) the client-supplied order identifier.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2516,7 +2596,11 @@ Empty or NULL applies to all pairs.}
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the current server time and the time at which
-cancellation will trigger, both in seconds.
+cancellation will trigger, both in seconds:
+\itemize{
+\item current_time (integer) the current server time, in epoch seconds.
+\item trigger_time (integer) the time at which cancellation triggers, in epoch seconds.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

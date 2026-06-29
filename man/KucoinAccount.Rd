@@ -331,7 +331,21 @@ accordingly.
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the VIP tier
 level and the sub-account counts (total, spot, margin, futures, option)
-alongside their respective maxima.
+alongside their respective maxima:
+\itemize{
+\item level (integer) the tier level.
+\item sub_quantity (integer) the sub quantity.
+\item max_default_sub_quantity (integer) the max default sub quantity.
+\item max_sub_quantity (integer) the max sub quantity.
+\item spot_sub_quantity (integer) the spot sub quantity.
+\item margin_sub_quantity (integer) the margin sub quantity.
+\item futures_sub_quantity (integer) the futures sub quantity.
+\item option_sub_quantity (integer) the option sub quantity.
+\item max_spot_sub_quantity (integer) the max spot sub quantity.
+\item max_margin_sub_quantity (integer) the max margin sub quantity.
+\item max_futures_sub_quantity (integer) the max futures sub quantity.
+\item max_option_sub_quantity (integer) the max option sub quantity.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -420,7 +434,17 @@ failures.
 (data.table | promise<data.table>) one row describing the active
 API key: its label, key ID, version, comma-separated permissions and IP
 whitelist, creation datetime (POSIXct, coerced from epoch milliseconds),
-user ID, and whether it belongs to the master account.
+user ID, and whether it belongs to the master account:
+\itemize{
+\item remark (character) an optional remark.
+\item api_key (character) the api key.
+\item api_version (integer) the api version.
+\item permission (character) the permission.
+\item ip_whitelist (character) the ip whitelist.
+\item created_at (POSIXct) the created at (UTC).
+\item uid (integer) the user identifier.
+\item is_master (logical) the is master.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -709,7 +733,13 @@ lists.
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the currency
 code, total balance, the amount available for use, and the amount held
-in open orders for the requested account.
+in open orders for the requested account:
+\itemize{
+\item currency (character) the currency code.
+\item balance (character) the total balance.
+\item available (character) the amount available.
+\item holds (character) the amount on hold.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1339,7 +1369,11 @@ for fiat.}
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the base taker
-fee rate and the base maker fee rate.
+fee rate and the base maker fee rate:
+\itemize{
+\item taker_fee_rate (character) the taker fee rate.
+\item maker_fee_rate (character) the maker fee rate.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1428,7 +1462,12 @@ e.g. \code{"BTC-USDT,ETH-USDT"}.}
 \subsection{Returns}{
 (data.table | promise<data.table>) one row per trading pair, each
 giving the pair symbol, the actual taker fee rate, and the actual maker
-fee rate.
+fee rate:
+\itemize{
+\item symbol (character) the trading pair symbol.
+\item taker_fee_rate (character) the taker fee rate.
+\item maker_fee_rate (character) the maker fee rate.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

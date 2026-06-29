@@ -148,7 +148,8 @@ KucoinTransfer <- R6::R6Class(
     #' @param toAccountTag (scalar<character> | NULL) symbol for
     #'   ISOLATED/ISOLATED_V2 destination accounts (e.g., `"BTC-USDT"`).
     #' @return (data.table | promise<data.table>) one row with column `order_id`
-    #'   (character): the transfer order identifier.
+    #'   (character): the transfer order identifier:
+    #' - order_id (character) the system order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -326,7 +327,12 @@ KucoinTransfer <- R6::R6Class(
     #'   breakdown: `currency` (currency code), `balance` (total funds),
     #'   `available` (funds available to withdraw or trade), `holds` (funds
     #'   locked in open orders), and `transferable` (funds available for
-    #'   transfer) -- all character.
+    #'   transfer) -- all character:
+    #' - currency (character) the currency code.
+    #' - balance (character) the total balance.
+    #' - available (character) the amount available.
+    #' - holds (character) the amount on hold.
+    #' - transferable (character) the transferable amount.
     #'
     #' @examples
     #' \dontrun{

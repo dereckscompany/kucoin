@@ -262,7 +262,8 @@ KucoinLending <- R6::R6Class(
     #' @param interestRate (scalar<numeric>) the interest rate (e.g., `0.05` for
     #'   5%).
     #' @return (data.table | promise<data.table>) one row with the lending order
-    #'   number.
+    #'   number:
+    #' - order_no (character) the order number.
     #'
     #' @examples
     #' \dontrun{
@@ -351,7 +352,11 @@ KucoinLending <- R6::R6Class(
     #' - currency (character) the lending currency.
     #' - purchase_order_no (character) the modified order number.
     #' - interest_rate (numeric) the new interest rate.
-    #' - status (character) the local outcome marker, always `"success"`.
+    #' - status (character) the local outcome marker, always `"success"`:
+    #' - currency (character) the currency code.
+    #' - purchase_order_no (character) the purchase order no.
+    #' - interest_rate (numeric) the interest rate.
+    #' - status (character) the status.
     #'
     #' @examples
     #' \dontrun{
@@ -556,7 +561,8 @@ KucoinLending <- R6::R6Class(
     #' @param purchaseOrderNo (scalar<character>) the purchase order to redeem
     #'   from.
     #' @return (data.table | promise<data.table>) one row with the redemption order
-    #'   number.
+    #'   number:
+    #' - order_no (character) the order number.
     #'
     #' @examples
     #' \dontrun{

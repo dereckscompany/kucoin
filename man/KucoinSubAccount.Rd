@@ -269,7 +269,13 @@ the sub-account (1-24 chars).}
 \subsection{Returns}{
 (data.table | promise<data.table>) one row with the newly created
 sub-account details: the unique user ID \code{uid}, the login name \code{sub_name},
-the \code{remarks} string, and the granted permission \code{access}.
+the \code{remarks} string, and the granted permission \code{access}:
+\itemize{
+\item uid (integer) the user identifier.
+\item sub_name (character) the sub name.
+\item remarks (character) an optional remark.
+\item access (character) the access.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

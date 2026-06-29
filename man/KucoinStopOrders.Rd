@@ -424,7 +424,10 @@ spot trading.}
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the
 KuCoin-assigned stop order identifier and the client-provided order
-identifier (NA if not supplied).
+identifier (NA if not supplied):
+\itemize{
+\item order_id (character) the system order identifier.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -620,7 +623,11 @@ Required to disambiguate client OIDs across different trading pairs.}
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the KuCoin order
-ID and the client-assigned order ID of the cancelled stop order.
+ID and the client-assigned order ID of the cancelled stop order:
+\itemize{
+\item cancelled_order_id (character) the cancelled order identifier.
+\item client_oid (character) the client-supplied order identifier.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

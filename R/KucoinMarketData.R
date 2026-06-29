@@ -141,7 +141,14 @@ KucoinMarketData <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row per announcement, each
     #'   giving the announcement ID, title, `;`-separated category tags, short
     #'   description, creation datetime (POSIXct, coerced from epoch milliseconds),
-    #'   language code, and the full announcement URL.
+    #'   language code, and the full announcement URL:
+    #' - ann_id (integer) the ann id.
+    #' - ann_title (character) the ann title.
+    #' - ann_type (character | NA) the ann type.
+    #' - ann_desc (character) the ann desc.
+    #' - c_time (POSIXct) the c time (UTC).
+    #' - language (character) the language.
+    #' - ann_url (character) the ann url.
     #'
     #' @examples
     #' \dontrun{
@@ -493,7 +500,35 @@ KucoinMarketData <- R6::R6Class(
     #'   the base and quote minimum and maximum order sizes, the base and quote
     #'   size increments, the price increment and price-limit rate, the minimum
     #'   order value in quote currency, the margin- and trading-enabled flags, and
-    #'   the maker and taker fee coefficients.
+    #'   the maker and taker fee coefficients:
+    #' - symbol (character) the trading pair symbol.
+    #' - name (character) the name.
+    #' - base_currency (character) the base currency.
+    #' - quote_currency (character) the quote currency.
+    #' - fee_currency (character) the fee currency.
+    #' - market (character) the market.
+    #' - base_min_size (character) the base min size.
+    #' - quote_min_size (character) the quote min size.
+    #' - base_max_size (character) the base max size.
+    #' - quote_max_size (character) the quote max size.
+    #' - base_increment (character) the base increment.
+    #' - quote_increment (character) the quote increment.
+    #' - price_increment (character) the price increment.
+    #' - price_limit_rate (character) the price limit rate.
+    #' - min_funds (character) the min funds.
+    #' - is_margin_enabled (logical) the is margin enabled.
+    #' - enable_trading (logical) the enable trading.
+    #' - fee_category (integer) the fee category.
+    #' - maker_fee_coefficient (character) the maker fee coefficient.
+    #' - taker_fee_coefficient (character) the taker fee coefficient.
+    #' - st (logical) whether the symbol is in special treatment.
+    #' - callauction_is_enabled (logical) the callauction is enabled.
+    #' - callauction_price_floor (logical | NA) the callauction price floor.
+    #' - callauction_price_ceiling (logical | NA) the callauction price ceiling.
+    #' - callauction_first_stage_start_time (logical | NA) the callauction first stage start time.
+    #' - callauction_second_stage_start_time (logical | NA) the callauction second stage start time.
+    #' - callauction_third_stage_start_time (logical | NA) the callauction third stage start time.
+    #' - trading_start_time (logical | NA) the trading start time.
     #'
     #' @examples
     #' \dontrun{
@@ -605,7 +640,35 @@ KucoinMarketData <- R6::R6Class(
     #'   `"USDS"`, `"BTC"`, `"KCS"`, `"DeFi"`). Use `get_market_list()` for
     #'   available values.
     #' @return (data.table | promise<data.table>) one row per trading pair,
-    #'   carrying the same symbol metadata as `get_symbol()`.
+    #'   carrying the same symbol metadata as `get_symbol()`:
+    #' - symbol (character) the trading pair symbol.
+    #' - name (character) the name.
+    #' - base_currency (character) the base currency.
+    #' - quote_currency (character) the quote currency.
+    #' - fee_currency (character) the fee currency.
+    #' - market (character) the market.
+    #' - base_min_size (character) the base min size.
+    #' - quote_min_size (character) the quote min size.
+    #' - base_max_size (character) the base max size.
+    #' - quote_max_size (character) the quote max size.
+    #' - base_increment (character) the base increment.
+    #' - quote_increment (character) the quote increment.
+    #' - price_increment (character) the price increment.
+    #' - price_limit_rate (character) the price limit rate.
+    #' - min_funds (character) the min funds.
+    #' - is_margin_enabled (logical) the is margin enabled.
+    #' - enable_trading (logical) the enable trading.
+    #' - fee_category (integer) the fee category.
+    #' - maker_fee_coefficient (character) the maker fee coefficient.
+    #' - taker_fee_coefficient (character) the taker fee coefficient.
+    #' - st (logical) whether the symbol is in special treatment.
+    #' - callauction_is_enabled (logical) the callauction is enabled.
+    #' - callauction_price_floor (logical | NA) the callauction price floor.
+    #' - callauction_price_ceiling (logical | NA) the callauction price ceiling.
+    #' - callauction_first_stage_start_time (logical | NA) the callauction first stage start time.
+    #' - callauction_second_stage_start_time (logical | NA) the callauction second stage start time.
+    #' - callauction_third_stage_start_time (logical | NA) the callauction third stage start time.
+    #' - trading_start_time (logical | NA) the trading start time.
     #'
     #' @examples
     #' \dontrun{
@@ -689,7 +752,15 @@ KucoinMarketData <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row giving the Level 1
     #'   snapshot: server datetime (POSIXct, coerced from epoch milliseconds), the
     #'   order book sequence number, the last trade price and size, and the best
-    #'   bid and ask prices with their sizes.
+    #'   bid and ask prices with their sizes:
+    #' - time (POSIXct) the time (UTC).
+    #' - sequence (character) the sequence.
+    #' - price (character) the price.
+    #' - size (character) the size.
+    #' - best_bid (character) the best bid price.
+    #' - best_bid_size (character) the best bid size.
+    #' - best_ask (character) the best ask price.
+    #' - best_ask_size (character) the best ask size.
     #'
     #' @examples
     #' \dontrun{
@@ -787,7 +858,22 @@ KucoinMarketData <- R6::R6Class(
     #'   their sizes, the 24-hour change rate and amount, the 24-hour high, low,
     #'   base-currency volume and quote-currency volume, the last trade and average
     #'   prices, the taker and maker fee rates, and the snapshot datetime (POSIXct,
-    #'   coerced from epoch milliseconds).
+    #'   coerced from epoch milliseconds):
+    #' - symbol (character) the trading pair symbol.
+    #' - symbol_name (character) the symbol name.
+    #' - buy (character) the best bid price.
+    #' - sell (character) the best ask price.
+    #' - change_rate (character) the 24h change rate.
+    #' - change_price (character) the 24h change in price.
+    #' - high (character) the 24h high price.
+    #' - low (character) the 24h low price.
+    #' - vol (character) the 24h traded volume.
+    #' - vol_value (character) the 24h traded turnover.
+    #' - last (character) the last traded price.
+    #' - average_price (character) the average price.
+    #' - taker_fee_rate (character) the taker fee rate.
+    #' - maker_fee_rate (character) the maker fee rate.
+    #' - time (POSIXct) the time (UTC).
     #'
     #' @examples
     #' \dontrun{
@@ -874,7 +960,13 @@ KucoinMarketData <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row per recent trade, each
     #'   giving the trade sequence number, price, quantity, direction (`"buy"` or
     #'   `"sell"`), and the trade datetime (POSIXct, coerced from the nanosecond
-    #'   timestamp).
+    #'   timestamp):
+    #' - sequence (character) the sequence.
+    #' - side (character) the order side.
+    #' - price (character) the price.
+    #' - size (character) the size.
+    #' - time (POSIXct) the time (UTC).
+    #' - trade_id (character) the trade identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -1128,7 +1220,23 @@ KucoinMarketData <- R6::R6Class(
     #'   milliseconds), the trading pair, the best bid and ask prices, the 24-hour
     #'   change rate and amount, the 24-hour high, low, base-currency volume and
     #'   quote-currency volume, the last trade and average prices, and the taker
-    #'   and maker fee rates.
+    #'   and maker fee rates:
+    #' - time (POSIXct) the time (UTC).
+    #' - symbol (character) the trading pair symbol.
+    #' - buy (character) the best bid price.
+    #' - sell (character) the best ask price.
+    #' - change_rate (character) the 24h change rate.
+    #' - change_price (character) the 24h change in price.
+    #' - high (character) the 24h high price.
+    #' - low (character) the 24h low price.
+    #' - vol (character) the 24h traded volume.
+    #' - vol_value (character) the 24h traded turnover.
+    #' - last (character) the last traded price.
+    #' - average_price (character) the average price.
+    #' - taker_fee_rate (character) the taker fee rate.
+    #' - maker_fee_rate (character) the maker fee rate.
+    #' - taker_coefficient (character) the taker fee coefficient.
+    #' - maker_coefficient (character) the maker fee coefficient.
     #'
     #' @examples
     #' \dontrun{
@@ -1198,7 +1306,8 @@ KucoinMarketData <- R6::R6Class(
     #' ```
     #'
     #' @return (data.table | promise<data.table>) one row per market segment:
-    #' - market (character) the segment identifier, e.g. `"USDS"`, `"DeFi"`.
+    #' - market (character) the segment identifier, e.g. `"USDS"`, `"DeFi"`:
+    #' - market (character) the market.
     #'
     #' @examples
     #' \dontrun{
@@ -1357,7 +1466,9 @@ KucoinMarketData <- R6::R6Class(
     #'
     #' @return (data.table | promise<data.table>) one row:
     #' - server_time (numeric) the server clock in epoch milliseconds.
-    #' - datetime (POSIXct) the same instant as a POSIXct (UTC).
+    #' - datetime (POSIXct) the same instant as a POSIXct (UTC):
+    #' - server_time (numeric) the server time.
+    #' - datetime (POSIXct) the datetime (UTC).
     #'
     #' @examples
     #' \dontrun{
@@ -1423,7 +1534,9 @@ KucoinMarketData <- R6::R6Class(
     #'
     #' @return (data.table | promise<data.table>) one row giving the operational
     #'   status (`"open"`, `"close"`, or `"cancelonly"`) and an optional
-    #'   remark/message.
+    #'   remark/message:
+    #' - status (character) the status.
+    #' - msg (character) the msg.
     #'
     #' @examples
     #' \dontrun{

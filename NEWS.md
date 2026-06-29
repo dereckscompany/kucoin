@@ -1,3 +1,9 @@
+# kucoin 4.2.3
+
+## data.table return shapes documented with typed column bullets
+
+The `@return` of every public method that yields a fixed-shape `data.table` now lists each column as a typed nested bullet, following the roxyassert convention: bare element types (`character`, `integer`, `numeric`, `logical`, `POSIXct`) with ` | NA` appended wherever a column can legitimately be missing in a real response. Documenting the columns regenerates `assert_has_columns` plus the per-column type asserts, so the parsed shape is now enforced at the public boundary — for the synchronous value and for the resolved value of a promise alike — rather than relying on the old loose `assert_data_table` check. Methods whose tables are genuinely variable-shape are deliberately left as the generic `(data.table | promise<data.table>)`: those that return a zero-column empty `data.table` on an empty response, the heterogeneous futures position tables whose numeric fields arrive sometimes as numbers and sometimes as strings, and the wide futures-contract metadata tables. This matches the package's existing flattener convention and keeps the empty-response and variable-payload paths working untouched.
+
 # kucoin 4.2.2
 
 ## Live-capture fixture hardening + bugs the synthetic fixtures hid

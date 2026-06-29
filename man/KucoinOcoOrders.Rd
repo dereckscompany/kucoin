@@ -349,7 +349,11 @@ spot trading.}
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the
 KuCoin-assigned OCO order identifier and the client-provided order
-identifier (NA if not supplied).
+identifier (NA if not supplied):
+\itemize{
+\item order_id (character) the system order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -752,7 +756,14 @@ Verified: 2026-05-23
 (data.table | promise<data.table>) one row giving the OCO order
 identifier, trading pair, client-assigned order identifier, order
 creation datetime (POSIXct, coerced from epoch milliseconds), and order
-status (e.g., \code{"NEW"}, \code{"DONE"}, \code{"TRIGGERED"}).
+status (e.g., \code{"NEW"}, \code{"DONE"}, \code{"TRIGGERED"}):
+\itemize{
+\item order_id (character) the system order identifier.
+\item symbol (character) the trading pair symbol.
+\item client_oid (character) the client-supplied order identifier.
+\item order_time (POSIXct) the order time (UTC).
+\item status (character) the status.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -850,7 +861,14 @@ placing the OCO order (e.g., \code{"my-bot-oco-001"}).}
 (data.table | promise<data.table>) one row giving the
 KuCoin-assigned OCO order identifier, trading pair, client-assigned order
 identifier, order creation datetime (POSIXct, coerced from epoch
-milliseconds), and order status (e.g., \code{"NEW"}, \code{"DONE"}, \code{"TRIGGERED"}).
+milliseconds), and order status (e.g., \code{"NEW"}, \code{"DONE"}, \code{"TRIGGERED"}):
+\itemize{
+\item order_id (character) the system order identifier.
+\item symbol (character) the trading pair symbol.
+\item client_oid (character) the client-supplied order identifier.
+\item order_time (POSIXct) the order time (UTC).
+\item status (character) the status.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -970,7 +988,21 @@ milliseconds), and overall OCO order status, with the nested \code{orders}
 array (typically the limit leg plus the stop-limit leg) exploded to long
 format by replicating the parent OCO row once per sub-order and adding
 each sub-order's id, symbol, side, price, size, status, and stop price
-(present only on the stop leg) as \code{sub_order_}-prefixed columns.
+(present only on the stop leg) as \code{sub_order_}-prefixed columns:
+\itemize{
+\item order_id (character) the system order identifier.
+\item symbol (character) the trading pair symbol.
+\item client_oid (character) the client-supplied order identifier.
+\item order_time (POSIXct) the order time (UTC).
+\item status (character) the status.
+\item sub_order_id (character) the sub order id.
+\item sub_order_symbol (character) the sub order symbol.
+\item sub_order_side (character) the sub order side.
+\item sub_order_price (character) the sub order price.
+\item sub_order_size (character) the sub order size.
+\item sub_order_status (character) the sub order status.
+\item sub_order_stop_price (character | NA) the sub order stop price.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
