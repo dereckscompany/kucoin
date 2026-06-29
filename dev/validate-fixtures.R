@@ -15,22 +15,39 @@ map <- c(
 )
 # Fixtures that are WRITE/POST responses or otherwise have no GET capture.
 no_capture <- c(
-  "cancel_order", "order_response", "oco_order_response", "stop_order_response",
-  "margin_order_response", "margin_borrow_response", "margin_repay_response",
-  "purchase_response", "redeem_response", "futures_order_response",
-  "futures_cancel_order", "futures_margin_response", "futures_dcp",
-  "sub_accounts_empty_page", "empty", "futures_order_detail", "futures_order_list",
-  "futures_fills", "futures_positions_history"
+  "cancel_order",
+  "order_response",
+  "oco_order_response",
+  "stop_order_response",
+  "margin_order_response",
+  "margin_borrow_response",
+  "margin_repay_response",
+  "purchase_response",
+  "redeem_response",
+  "futures_order_response",
+  "futures_cancel_order",
+  "futures_margin_response",
+  "futures_dcp",
+  "sub_accounts_empty_page",
+  "empty",
+  "futures_order_detail",
+  "futures_order_list",
+  "futures_fills",
+  "futures_positions_history"
 )
 
 # Pull the representative record(s) from a parsed KuCoin envelope's `data`.
 record_keys <- function(parsed) {
   d <- parsed$data
-  if (is.null(d)) return(list(kind = "null", keys = character()))
+  if (is.null(d)) {
+    return(list(kind = "null", keys = character()))
+  }
   # Paginated: data$items is an array of records.
   if (is.list(d) && !is.null(d$items)) {
     items <- d$items
-    if (length(items) == 0L) return(list(kind = "items-empty", keys = character()))
+    if (length(items) == 0L) {
+      return(list(kind = "items-empty", keys = character()))
+    }
     ks <- unique(unlist(lapply(items, names)))
     return(list(kind = "items", keys = ks))
   }
@@ -75,7 +92,7 @@ for (f in sort(fix_files)) {
     next
   }
   missing_in_fix <- setdiff(ck$keys, fk$keys) # real has, fixture lacks
-  extra_in_fix <- setdiff(fk$keys, ck$keys)   # fixture has, real lacks
+  extra_in_fix <- setdiff(fk$keys, ck$keys) # fixture has, real lacks
   if (length(missing_in_fix) == 0L && length(extra_in_fix) == 0L) {
     cat(sprintf("%-28s %-14s kind=%s keys=%d\n", base, "MATCH", ck$kind, length(ck$keys)))
   } else {

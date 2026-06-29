@@ -46,12 +46,15 @@ dir.create(OUT_DIR, recursive = TRUE, showWarnings = FALSE)
 if (Sys.which("git") != "") {
   probe <- file.path(OUT_DIR, "ignore-probe.json")
   ignored <- suppressWarnings(system2(
-    "git", c("check-ignore", probe),
-    stdout = TRUE, stderr = FALSE
+    "git",
+    c("check-ignore", probe),
+    stdout = TRUE,
+    stderr = FALSE
   ))
   if (length(ignored) == 0L) {
     stop(
-      "Refusing to write: ", OUT_DIR,
+      "Refusing to write: ",
+      OUT_DIR,
       " is NOT git-ignored. Aborting to avoid committing real account data."
     )
   }
@@ -90,11 +93,19 @@ install_capture <- function(client) {
 }
 
 is_empty_data <- function(parsed) {
-  if (is.null(parsed)) return(TRUE)
+  if (is.null(parsed)) {
+    return(TRUE)
+  }
   d <- parsed$data
-  if (is.null(d)) return(TRUE)
-  if (length(d) == 0L) return(TRUE)
-  if (is.list(d) && !is.null(d$items) && length(d$items) == 0L) return(TRUE)
+  if (is.null(d)) {
+    return(TRUE)
+  }
+  if (length(d) == 0L) {
+    return(TRUE)
+  }
+  if (is.list(d) && !is.null(d$items) && length(d$items) == 0L) {
+    return(TRUE)
+  }
   return(FALSE)
 }
 
@@ -102,7 +113,9 @@ is_empty_data <- function(parsed) {
 cap <- function(name, expr) {
   .state$name <- name
   out_path <- file.path(OUT_DIR, paste0(name, ".json"))
-  if (file.exists(out_path)) file.remove(out_path)
+  if (file.exists(out_path)) {
+    file.remove(out_path)
+  }
   res <- tryCatch(
     {
       force(expr)
@@ -134,7 +147,10 @@ cap <- function(name, expr) {
   parse_state <- if (identical(res, "ok")) "parse-ok" else "PARSE-FAIL"
   cat(sprintf(
     "%-28s %-14s %-9s bytes=%-7s %s%s\n",
-    name, state, parse_state, bytes,
+    name,
+    state,
+    parse_state,
+    bytes,
     if (!identical(res, "ok")) substr(res, 1, 60) else "",
     ""
   ))
@@ -165,10 +181,15 @@ cap("stats_24hr", market$get_24hr_stats("BTC-USDT"))
 cap("trade_history", market$get_trade_history("BTC-USDT"))
 cap("orderbook_part", market$get_part_orderbook("BTC-USDT", size = 20))
 cap("fiat_prices", market$get_fiat_prices())
-cap("klines", market$get_klines(
-  symbol = "BTC-USDT", timeframe = "1hour",
-  from = Sys.time() - 86400, to = Sys.time()
-))
+cap(
+  "klines",
+  market$get_klines(
+    symbol = "BTC-USDT",
+    timeframe = "1hour",
+    from = Sys.time() - 86400,
+    to = Sys.time()
+  )
+)
 cap("announcements_page", market$get_announcements(query = list(), page_size = 5, max_pages = 1))
 cap("orderbook", market$get_full_orderbook("BTC-USDT"))
 
@@ -258,9 +279,14 @@ cap("futures_trade_history", futures_market$get_trade_history("XBTUSDTM"))
 cap("futures_klines", futures_market$get_klines("XBTUSDTM", granularity = 60))
 cap("futures_mark_price", futures_market$get_mark_price("XBTUSDTM"))
 cap("futures_funding_rate", futures_market$get_funding_rate("XBTUSDTM"))
-cap("futures_funding_history", futures_market$get_funding_history(
-  "XBTUSDTM", from = now_ms() - 7 * 86400 * 1000, to = now_ms()
-))
+cap(
+  "futures_funding_history",
+  futures_market$get_funding_history(
+    "XBTUSDTM",
+    from = now_ms() - 7 * 86400 * 1000,
+    to = now_ms()
+  )
+)
 cap("futures_orderbook", futures_market$get_full_orderbook("XBTUSDTM"))
 
 # ---------------------------------------------------------------------------

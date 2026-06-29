@@ -967,6 +967,7 @@ KucoinFuturesMarketData <- R6::R6Class(
       ))
     },
 
+    # nolint start: line_length_linter.
     #' @description Get Current Funding Rate
     #'
     #' Retrieves the current funding rate for a perpetual futures contract.
@@ -1030,6 +1031,7 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' rate <- futures_market$get_funding_rate("XBTUSDTM")
     #' print(rate[, .(symbol, value, funding_rate_cap, funding_time)])
     #' }
+    # nolint end
     get_funding_rate = function(symbol) {
       assert_args_KucoinFuturesMarketData__get_funding_rate(symbol)
       assert::assert_nonempty_strings(symbol)
