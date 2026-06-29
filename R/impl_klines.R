@@ -110,14 +110,14 @@ kucoin_fetch_klines <- function(
   }
 
   if (length(segments) == 0L) {
-    return(data.table::data.table()[])
+    return(empty_dt_klines())
   }
 
   # Combiner: rbindlist, dedup by datetime, sort ascending
   combine_klines <- function(results_list) {
     dts <- Filter(function(x) nrow(x) > 0, results_list)
     if (length(dts) == 0L) {
-      return(data.table::data.table()[])
+      return(empty_dt_klines())
     }
     dt <- data.table::rbindlist(dts)
     dt <- unique(dt, by = "datetime")
@@ -230,14 +230,14 @@ kucoin_fetch_futures_klines <- function(
   }
 
   if (length(segments) == 0L) {
-    return(data.table::data.table()[])
+    return(empty_dt_klines())
   }
 
   # Combiner: rbindlist, dedup by datetime, sort ascending
   combine_klines <- function(results_list) {
     dts <- Filter(function(x) nrow(x) > 0, results_list)
     if (length(dts) == 0L) {
-      return(data.table::data.table()[])
+      return(empty_dt_klines())
     }
     dt <- data.table::rbindlist(dts)
     dt <- unique(dt, by = "datetime")

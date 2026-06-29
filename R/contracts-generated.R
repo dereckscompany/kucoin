@@ -293,7 +293,8 @@ assert_return_KucoinFuturesAccount__set_cross_margin_leverage <- function(value)
 
 assert_args_KucoinFuturesAccount__get_max_open_size <- function(symbol, price, leverage) {
   assert_scalar_character(symbol)
-  assert_scalar_character(price)
+  assert_scalar_double(price)
+  assert_between(price, lower = 0, lower_inclusive = FALSE, upper = Inf, upper_inclusive = FALSE)
   assert_scalar_count(leverage)
   assert_between(leverage, lower = 1)
   return(invisible(NULL))

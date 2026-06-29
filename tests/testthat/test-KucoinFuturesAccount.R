@@ -152,7 +152,7 @@ test_that("get_max_open_size returns data.table", {
   resp <- mock_kucoin_response(data = mock_futures_max_open_size_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_futures_account()$get_max_open_size("XBTUSDTM", price = "98000", leverage = 5)
+  dt <- new_futures_account()$get_max_open_size("XBTUSDTM", price = 98000, leverage = 5)
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
   expect_true("max_buy_open_size" %in% names(dt))
@@ -347,7 +347,7 @@ test_that("get_max_open_size has no list columns", {
   resp <- mock_kucoin_response(data = mock_futures_max_open_size_data())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_futures_account()$get_max_open_size("XBTUSDTM", price = "98000", leverage = 5)
+  dt <- new_futures_account()$get_max_open_size("XBTUSDTM", price = 98000, leverage = 5)
   expect_equal(n_list_cols(dt), 0L)
 })
 

@@ -723,7 +723,7 @@ KucoinFuturesAccount <- R6::R6Class(
     #' ```
     #'
     #' @param symbol (scalar<character>) futures symbol.
-    #' @param price (scalar<character>) order price.
+    #' @param price (scalar<numeric in ]0, Inf[>) order price.
     #' @param leverage (scalar<count in [1, Inf[>) leverage multiplier.
     #' @return (data.table | promise<data.table>) one row giving the contract
     #'   symbol and the maximum number of contracts that can be opened on the

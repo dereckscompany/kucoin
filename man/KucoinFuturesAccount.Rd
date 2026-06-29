@@ -829,7 +829,7 @@ Verified: 2026-05-23
 \describe{
 \item{\code{symbol}}{(scalar<character>) futures symbol.}
 
-\item{\code{price}}{(scalar<character>) order price.}
+\item{\code{price}}{(scalar<numeric in ]0, Inf[>) order price.}
 
 \item{\code{leverage}}{(scalar<count in [1, Inf[>) leverage multiplier.}
 }
