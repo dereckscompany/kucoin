@@ -1,0 +1,27 @@
+{
+  "template": "https://github.com/dereckscompany/templates-cookiecutter.git",
+  "commit": "5f86cbc79d59efc845845db678820e28ad63d905",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "package_name": "kucoin",
+      "package_title": "API Wrapper to KuCoin Cryptocurrency Exchange",
+      "description": "R API wrapper to the KuCoin cryptocurrency exchange supporting both synchronous and asynchronous (promise based) operations. Provides R6 classes for market data, spot trading, OCO orders, stop orders, margin trading (short selling, leveraged longs, borrowing, repayment), margin lending, futures trading (order management, positions, funding rates, mark prices), account management, deposits, withdrawals, transfers, and sub-accounts.",
+      "author_given": "Dereck",
+      "author_family": "Mezquita",
+      "author_email": "dereck@mezquita.io",
+      "author_orcid": "0000-0002-9307-6762",
+      "github_org": "dereckscompany",
+      "license": "MIT",
+      "use_rcpp": false,
+      "_copy_without_render": [
+        "renv/*",
+        "renv.lock",
+        "scripts/*"
+      ],
+      "_template": "https://github.com/dereckscompany/templates-cookiecutter.git",
+      "_commit": "5f86cbc79d59efc845845db678820e28ad63d905"
+    }
+  },
+  "directory": "template-r-package"
+}
