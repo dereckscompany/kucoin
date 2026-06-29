@@ -39,3 +39,16 @@ log.txt
 ^doc$
 ^Meta$
 ^local$
+
+# --- merged from cruft template ---
+^demo$
+^dev$
+^\.github$
+^docs$
+^.*\.csv$
+^scripts$
+^\.cruft\.json$
+^\.lintr$
+^LICENSE$
+^\.clang-format$
+^README\.Rmd$

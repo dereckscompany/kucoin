@@ -74,3 +74,30 @@ rsconnect/
 
 # Claude Code local state (worktrees from parallel subagents, etc.)
 .claude/
+
+# --- merged from cruft template ---
+*.ignore
+
+# build
+.vscode/
+
+# Compiled objects
+*.o
+*.o.tmp
+*.so
+
+# R specific
+.Rproj.user
+
+
+
+
+
+
+
+
+
+
+
+
+
