@@ -172,6 +172,18 @@ KucoinDeposit <- R6::R6Class(
         method = "POST",
         body = body,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              address = character(0),
+              memo = character(0),
+              chain = character(0),
+              chain_id = character(0),
+              to = character(0),
+              currency = character(0),
+              contract_address = character(0)
+            )[])
+          }
+
           dt <- as_dt_row(data)
           if (nrow(dt) == 0L) {
             return(dt[])

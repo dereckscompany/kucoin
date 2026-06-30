@@ -171,7 +171,17 @@ KucoinSubAccount <- R6::R6Class(
         endpoint = "/api/v2/sub/user/created",
         method = "POST",
         body = body,
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              uid = integer(0),
+              sub_name = character(0),
+              remarks = character(0),
+              access = character(0)
+            )[])
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,

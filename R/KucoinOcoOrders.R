@@ -218,6 +218,10 @@ KucoinOcoOrders <- R6::R6Class(
         method = "POST",
         body = body,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_order_ack())
+          }
+
           dt <- as_dt_row(data)
           if (is.null(dt$client_oid)) {
             dt[, client_oid := NA_character_]
@@ -611,6 +615,10 @@ KucoinOcoOrders <- R6::R6Class(
       res <- private$.request(
         endpoint = paste0("/api/v3/oco/order/", orderId),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_oco_order())
+          }
+
           dt <- as_dt_row(data)
           if ("order_time" %in% names(dt)) {
             dt[, order_time := ms_to_datetime(order_time)]
@@ -705,6 +713,10 @@ KucoinOcoOrders <- R6::R6Class(
       res <- private$.request(
         endpoint = paste0("/api/v3/oco/client-order/", clientOid),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_oco_order())
+          }
+
           dt <- as_dt_row(data)
           if ("order_time" %in% names(dt)) {
             dt[, order_time := ms_to_datetime(order_time)]
@@ -829,6 +841,23 @@ KucoinOcoOrders <- R6::R6Class(
       res <- private$.request(
         endpoint = paste0("/api/v3/oco/order/details/", orderId),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              order_id = character(0),
+              symbol = character(0),
+              client_oid = character(0),
+              order_time = ms_to_datetime(numeric(0)),
+              status = character(0),
+              sub_order_id = character(0),
+              sub_order_symbol = character(0),
+              sub_order_side = character(0),
+              sub_order_price = character(0),
+              sub_order_size = character(0),
+              sub_order_status = character(0),
+              sub_order_stop_price = character(0)
+            )[])
+          }
+
           orders <- data$orders
           data$orders <- NULL
           dt <- as_dt_row(data)

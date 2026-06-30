@@ -260,6 +260,10 @@ KucoinTrading <- R6::R6Class(
         method = "POST",
         body = body,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_order_ack())
+          }
+
           dt <- as_dt_row(data)
           if (is.null(dt$client_oid)) {
             dt[, client_oid := NA_character_]
@@ -423,6 +427,10 @@ KucoinTrading <- R6::R6Class(
         method = "POST",
         body = body,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_order_ack())
+          }
+
           dt <- as_dt_row(data)
           if (is.null(dt$client_oid)) {
             dt[, client_oid := NA_character_]
@@ -554,7 +562,12 @@ KucoinTrading <- R6::R6Class(
         body = body,
         .parser = function(data) {
           if (is.null(data) || length(data) == 0) {
-            return(data.table::data.table()[])
+            return(data.table::data.table(
+              order_id = character(0),
+              client_oid = character(0),
+              success = logical(0),
+              fail_msg = character(0)
+            )[])
           }
           dt <- data.table::rbindlist(
             lapply(data, as_dt_row),
@@ -786,7 +799,12 @@ KucoinTrading <- R6::R6Class(
         endpoint = paste0("/api/v1/hf/orders/cancel/", orderId),
         method = "DELETE",
         query = list(symbol = symbol, cancelSize = as.character(cancelSize)),
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(order_id = character(0), cancel_size = character(0))[])
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,
@@ -1054,6 +1072,19 @@ KucoinTrading <- R6::R6Class(
         endpoint = paste0("/api/v1/hf/orders/", orderId),
         query = if (!is.null(symbol)) list(symbol = symbol) else list(),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              order_id = character(0),
+              symbol = character(0),
+              side = character(0),
+              type = character(0),
+              price = numeric(0),
+              size = numeric(0),
+              created_at = ms_to_datetime(numeric(0)),
+              last_updated_at = ms_to_datetime(numeric(0))
+            )[])
+          }
+
           dt <- as_dt_row(data)
           if ("created_at" %in% names(dt)) {
             dt[, created_at := ms_to_datetime(created_at)]
@@ -1166,6 +1197,15 @@ KucoinTrading <- R6::R6Class(
         endpoint = paste0("/api/v1/hf/orders/client-order/", clientOid),
         query = list(symbol = symbol),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              client_oid = character(0),
+              symbol = character(0),
+              side = character(0),
+              created_at = ms_to_datetime(numeric(0))
+            )[])
+          }
+
           dt <- as_dt_row(data)
           if ("created_at" %in% names(dt)) {
             dt[, created_at := ms_to_datetime(created_at)]
@@ -1681,7 +1721,12 @@ KucoinTrading <- R6::R6Class(
             items <- data$items
           }
           if (is.null(items) || length(items) == 0) {
-            return(data.table::data.table()[])
+            return(data.table::data.table(
+              order_id = character(0),
+              symbol = character(0),
+              side = character(0),
+              created_at = ms_to_datetime(numeric(0))
+            )[])
           }
           dt <- data.table::rbindlist(
             lapply(items, as_dt_row),
@@ -2015,7 +2060,16 @@ KucoinTrading <- R6::R6Class(
         body = body,
         .parser = function(data) {
           if (is.null(data) || length(data) == 0) {
-            return(data.table::data.table()[])
+            return(data.table::data.table(
+              order_id = character(0),
+              client_oid = character(0),
+              success = logical(0),
+              status = character(0),
+              deal_size = character(0),
+              remain_size = character(0),
+              canceled_size = character(0),
+              fail_msg = character(0)
+            )[])
           }
           dt <- data.table::rbindlist(
             lapply(data, as_dt_row),
@@ -2116,7 +2170,19 @@ KucoinTrading <- R6::R6Class(
         endpoint = paste0("/api/v1/hf/orders/sync/", orderId),
         method = "DELETE",
         query = list(symbol = symbol),
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              order_id = character(0),
+              origin_size = character(0),
+              deal_size = character(0),
+              remain_size = character(0),
+              canceled_size = character(0),
+              status = character(0)
+            )[])
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,
@@ -2196,7 +2262,19 @@ KucoinTrading <- R6::R6Class(
         endpoint = paste0("/api/v1/hf/orders/sync/client-order/", clientOid),
         method = "DELETE",
         query = list(symbol = symbol),
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              client_oid = character(0),
+              origin_size = character(0),
+              deal_size = character(0),
+              remain_size = character(0),
+              canceled_size = character(0),
+              status = character(0)
+            )[])
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,
@@ -2312,7 +2390,12 @@ KucoinTrading <- R6::R6Class(
         endpoint = "/api/v1/hf/orders/alter",
         method = "POST",
         body = body,
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(new_order_id = character(0), client_oid = character(0))[])
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,
@@ -2411,7 +2494,12 @@ KucoinTrading <- R6::R6Class(
         endpoint = "/api/v1/hf/orders/dead-cancel-all",
         method = "POST",
         body = body,
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(current_time = integer(0), trigger_time = integer(0))[])
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,

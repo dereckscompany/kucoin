@@ -333,6 +333,7 @@ coerce_numeric_quantities <- function(x) {
   return(x[])
 }
 
+
 #' Process Orderbook Data into a data.table
 #'
 #' Transforms the bids/asks arrays from a KuCoin orderbook response into a
@@ -478,4 +479,169 @@ flatten_pages <- function(pages) {
   )
   data.table::setnames(dt, to_snake_case(names(dt)))
   return(assert_return_flatten_pages(dt[]))
+}
+
+# ---- Typed zero-row empties for shapes returned by more than one method ----
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_dcp <- function() {
+  return(data.table::data.table(timeout = integer(0), symbols = character(0), current_time = numeric(0))[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_futures_order <- function() {
+  return(data.table::data.table(
+    id = character(0),
+    symbol = character(0),
+    type = character(0),
+    side = character(0),
+    price = numeric(0),
+    size = numeric(0),
+    value = character(0),
+    deal_value = character(0),
+    deal_size = integer(0),
+    leverage = integer(0),
+    margin_mode = character(0),
+    position_side = character(0),
+    status = character(0),
+    created_at = ms_to_datetime(numeric(0)),
+    updated_at = ms_to_datetime(numeric(0)),
+    client_oid = character(0)
+  )[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_futures_orderbook <- function() {
+  return(data.table::data.table(
+    ts = ms_to_datetime(numeric(0)),
+    sequence = character(0),
+    side = character(0),
+    level = integer(0),
+    price = numeric(0),
+    size = numeric(0),
+    symbol = character(0)
+  )[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_isolated_margin <- function() {
+  return(data.table::data.table(
+    id = character(0),
+    symbol = character(0),
+    margin = character(0),
+    margin_type = character(0)
+  )[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_leverage <- function() {
+  return(data.table::data.table(symbol = character(0), leverage = character(0))[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_margin_mode <- function() {
+  return(data.table::data.table(symbol = character(0), margin_mode = character(0))[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_oco_order <- function() {
+  return(data.table::data.table(
+    order_id = character(0),
+    symbol = character(0),
+    client_oid = character(0),
+    order_time = ms_to_datetime(numeric(0)),
+    status = character(0)
+  )[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_order_ack <- function() {
+  return(data.table::data.table(order_id = character(0), client_oid = character(0))[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_order_id <- function() {
+  return(data.table::data.table(order_id = character(0))[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_order_no <- function() {
+  return(data.table::data.table(order_no = character(0))[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_orderbook <- function() {
+  return(data.table::data.table(
+    time = ms_to_datetime(numeric(0)),
+    sequence = character(0),
+    side = character(0),
+    level = character(0),
+    price = numeric(0),
+    size = numeric(0)
+  )[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_service_status <- function() {
+  return(data.table::data.table(status = character(0), msg = character(0))[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_symbol <- function() {
+  return(data.table::data.table(
+    symbol = character(0),
+    name = character(0),
+    base_currency = character(0),
+    quote_currency = character(0),
+    fee_currency = character(0),
+    market = character(0),
+    base_min_size = numeric(0),
+    quote_min_size = numeric(0),
+    base_max_size = numeric(0),
+    quote_max_size = numeric(0),
+    base_increment = numeric(0),
+    quote_increment = numeric(0),
+    price_increment = numeric(0),
+    price_limit_rate = numeric(0),
+    min_funds = numeric(0),
+    is_margin_enabled = logical(0),
+    enable_trading = logical(0),
+    fee_category = integer(0),
+    maker_fee_coefficient = numeric(0),
+    taker_fee_coefficient = numeric(0),
+    st = logical(0),
+    callauction_is_enabled = logical(0),
+    callauction_price_floor = numeric(0),
+    callauction_price_ceiling = numeric(0),
+    callauction_first_stage_start_time = numeric(0),
+    callauction_second_stage_start_time = numeric(0),
+    callauction_third_stage_start_time = numeric(0),
+    trading_start_time = numeric(0)
+  )[])
 }

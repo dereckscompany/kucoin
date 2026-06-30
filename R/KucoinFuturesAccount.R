@@ -132,6 +132,19 @@ KucoinFuturesAccount <- R6::R6Class(
         endpoint = "/api/v1/account-overview",
         query = list(currency = currency),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              account_equity = numeric(0),
+              unrealised_pnl = numeric(0),
+              margin_balance = numeric(0),
+              available_balance = numeric(0),
+              available_margin = numeric(0),
+              currency = character(0),
+              risk_ratio = numeric(0),
+              max_withdraw_amount = numeric(0)
+            )[])
+          }
+
           return(as_dt_row(data)[])
         }
       )
@@ -483,6 +496,10 @@ KucoinFuturesAccount <- R6::R6Class(
         endpoint = "/api/v2/position/getMarginMode",
         query = list(symbol = symbol),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_margin_mode())
+          }
+
           return(as_dt_row(data)[])
         }
       )
@@ -555,6 +572,10 @@ KucoinFuturesAccount <- R6::R6Class(
         method = "POST",
         body = list(symbol = symbol, marginMode = marginMode),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_margin_mode())
+          }
+
           return(as_dt_row(data)[])
         }
       )
@@ -616,6 +637,10 @@ KucoinFuturesAccount <- R6::R6Class(
         endpoint = "/api/v2/getCrossUserLeverage",
         query = list(symbol = symbol),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_leverage())
+          }
+
           return(as_dt_row(data)[])
         }
       )
@@ -689,6 +714,10 @@ KucoinFuturesAccount <- R6::R6Class(
         method = "POST",
         body = list(symbol = symbol, leverage = leverage),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_leverage())
+          }
+
           return(as_dt_row(data)[])
         }
       )
@@ -754,6 +783,14 @@ KucoinFuturesAccount <- R6::R6Class(
         endpoint = "/api/v2/getMaxOpenSize",
         query = list(symbol = symbol, price = price, leverage = leverage),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              symbol = character(0),
+              max_buy_open_size = integer(0),
+              max_sell_open_size = integer(0)
+            )[])
+          }
+
           return(as_dt_row(data)[])
         }
       )
@@ -901,6 +938,10 @@ KucoinFuturesAccount <- R6::R6Class(
         method = "POST",
         body = list(symbol = symbol, margin = margin, bizNo = bizNo),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_isolated_margin())
+          }
+
           return(as_dt_row(data)[])
         }
       )
@@ -978,6 +1019,10 @@ KucoinFuturesAccount <- R6::R6Class(
         method = "POST",
         body = list(symbol = symbol, withdrawAmount = withdrawAmount),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_isolated_margin())
+          }
+
           return(as_dt_row(data)[])
         }
       )

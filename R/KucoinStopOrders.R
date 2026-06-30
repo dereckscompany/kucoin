@@ -344,6 +344,10 @@ KucoinStopOrders <- R6::R6Class(
         method = "POST",
         body = body,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_order_id())
+          }
+
           dt <- as_dt_row(data)
           if (is.null(dt$client_oid)) {
             dt[, client_oid := NA_character_]
@@ -522,6 +526,10 @@ KucoinStopOrders <- R6::R6Class(
         method = "DELETE",
         query = list(clientOid = clientOid, symbol = symbol),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(cancelled_order_id = character(0), client_oid = character(0))[])
+          }
+
           dt <- as_dt_row(data)
           data.table::setcolorder(
             dt,

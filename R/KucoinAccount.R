@@ -158,7 +158,25 @@ KucoinAccount <- R6::R6Class(
     get_summary = function() {
       res <- private$.request(
         endpoint = "/api/v2/user-info",
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              level = integer(0),
+              sub_quantity = integer(0),
+              max_default_sub_quantity = integer(0),
+              max_sub_quantity = integer(0),
+              spot_sub_quantity = integer(0),
+              margin_sub_quantity = integer(0),
+              futures_sub_quantity = integer(0),
+              option_sub_quantity = integer(0),
+              max_spot_sub_quantity = integer(0),
+              max_margin_sub_quantity = integer(0),
+              max_futures_sub_quantity = integer(0),
+              max_option_sub_quantity = integer(0)
+            )[])
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,
@@ -247,6 +265,21 @@ KucoinAccount <- R6::R6Class(
       res <- private$.request(
         endpoint = "/api/v1/user/api-key",
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              remark = character(0),
+              api_key = character(0),
+              api_version = integer(0),
+              permission = character(0),
+              created_at = ms_to_datetime(numeric(0)),
+              uid = integer(0),
+              is_master = logical(0),
+              region = character(0),
+              kyc_status = character(0),
+              site_type = character(0)
+            )[])
+          }
+
           dt <- as_dt_row(data)
           coerce_cols(dt, "created_at", ms_to_datetime)
           # region/kyc_status/site_type are null for some accounts; coerce so
@@ -507,7 +540,17 @@ KucoinAccount <- R6::R6Class(
       assert::assert_nonempty_strings(accountId)
       res <- private$.request(
         endpoint = paste0("/api/v1/accounts/", accountId),
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              currency = character(0),
+              balance = numeric(0),
+              available = numeric(0),
+              holds = numeric(0)
+            )[])
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,
@@ -1236,7 +1279,12 @@ KucoinAccount <- R6::R6Class(
       res <- private$.request(
         endpoint = "/api/v1/base-fee",
         query = list(currencyType = currencyType),
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(taker_fee_rate = numeric(0), maker_fee_rate = numeric(0))[])
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,
@@ -1320,7 +1368,11 @@ KucoinAccount <- R6::R6Class(
         query = list(symbols = symbols),
         .parser = function(data) {
           if (is.null(data) || length(data) == 0) {
-            return(data.table::data.table()[])
+            return(data.table::data.table(
+              symbol = character(0),
+              taker_fee_rate = numeric(0),
+              maker_fee_rate = numeric(0)
+            )[])
           }
           dt <- data.table::rbindlist(
             lapply(data, as_dt_row),

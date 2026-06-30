@@ -394,7 +394,19 @@ KucoinFuturesMarketData <- R6::R6Class(
         auth = FALSE,
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
-            return(data.table::data.table()[])
+            return(data.table::data.table(
+              sequence = numeric(0),
+              symbol = character(0),
+              side = character(0),
+              size = numeric(0),
+              price = numeric(0),
+              best_bid_size = numeric(0),
+              best_bid_price = numeric(0),
+              best_ask_price = numeric(0),
+              best_ask_size = numeric(0),
+              trade_id = character(0),
+              ts = ms_to_datetime(numeric(0))
+            )[])
           }
           dt <- as_dt_row(data)
           coerce_cols(dt, "ts", ns_to_datetime)
@@ -578,6 +590,10 @@ KucoinFuturesMarketData <- R6::R6Class(
         query = list(symbol = symbol),
         auth = FALSE,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_futures_orderbook())
+          }
+
           return(parse_futures_orderbook(data)[])
         }
       )
@@ -669,6 +685,10 @@ KucoinFuturesMarketData <- R6::R6Class(
         query = list(symbol = symbol),
         auth = TRUE,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_futures_orderbook())
+          }
+
           return(parse_futures_orderbook(data)[])
         }
       )
@@ -906,6 +926,18 @@ KucoinFuturesMarketData <- R6::R6Class(
         query = list(symbol = symbol, granularity = granularity, from = from, to = to),
         auth = FALSE,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              datetime = ms_to_datetime(numeric(0)),
+              open = numeric(0),
+              high = numeric(0),
+              low = numeric(0),
+              close = numeric(0),
+              volume = numeric(0),
+              turnover = numeric(0)
+            )[])
+          }
+
           return(parse_futures_klines(data)[])
         }
       )
@@ -983,7 +1015,13 @@ KucoinFuturesMarketData <- R6::R6Class(
         auth = FALSE,
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
-            return(data.table::data.table()[])
+            return(data.table::data.table(
+              symbol = character(0),
+              granularity = integer(0),
+              time_point = ms_to_datetime(numeric(0)),
+              value = numeric(0),
+              index_price = numeric(0)
+            )[])
           }
           dt <- as_dt_row(data)
           coerce_cols(dt, "time_point", ms_to_datetime)
@@ -1079,7 +1117,17 @@ KucoinFuturesMarketData <- R6::R6Class(
         auth = FALSE,
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
-            return(data.table::data.table()[])
+            return(data.table::data.table(
+              symbol = character(0),
+              granularity = integer(0),
+              time_point = ms_to_datetime(numeric(0)),
+              value = numeric(0),
+              daily_interest_rate = numeric(0),
+              funding_rate_cap = numeric(0),
+              funding_rate_floor = numeric(0),
+              period = integer(0),
+              funding_time = ms_to_datetime(numeric(0))
+            )[])
           }
           dt <- as_dt_row(data)
           coerce_cols(dt, c("time_point", "funding_time"), ms_to_datetime)
@@ -1253,7 +1301,7 @@ KucoinFuturesMarketData <- R6::R6Class(
         auth = FALSE,
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
-            return(data.table::data.table()[])
+            return(data.table::data.table(server_time = ms_to_datetime(numeric(0)))[])
           }
           return(data.table::data.table(server_time = ms_to_datetime(data))[])
         }
@@ -1323,7 +1371,7 @@ KucoinFuturesMarketData <- R6::R6Class(
         auth = FALSE,
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
-            return(data.table::data.table()[])
+            return(empty_dt_service_status())
           }
           return(as_dt_row(data)[])
         }

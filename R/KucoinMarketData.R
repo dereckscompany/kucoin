@@ -173,7 +173,15 @@ KucoinMarketData <- R6::R6Class(
         auth = FALSE,
         .parser = function(pages) {
           if (length(pages) == 0) {
-            return(data.table::data.table()[])
+            return(data.table::data.table(
+              ann_id = integer(0),
+              ann_title = character(0),
+              ann_type = character(0),
+              ann_desc = character(0),
+              c_time = ms_to_datetime(numeric(0)),
+              language = character(0),
+              ann_url = character(0)
+            )[])
           }
           # Treatment A: `annType` is an array of plain strings (e.g.
           # `c("latest-announcements", "new-listings")`). Collapse to a
@@ -543,6 +551,10 @@ KucoinMarketData <- R6::R6Class(
         endpoint = paste0("/api/v2/symbols/", symbol),
         auth = FALSE,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_symbol())
+          }
+
           dt <- as_dt_row(data)
           # KuCoin returns the call-auction fields as null for non-auction
           # symbols; coerce so each column lands as its documented type (price
@@ -703,7 +715,7 @@ KucoinMarketData <- R6::R6Class(
         auth = FALSE,
         .parser = function(data) {
           if (is.null(data) || length(data) == 0) {
-            return(data.table::data.table()[])
+            return(empty_dt_symbol())
           }
           dt <- data.table::rbindlist(lapply(data, as_dt_row), fill = TRUE)
           # As in get_symbol: coerce the call-auction fields (null for
@@ -805,6 +817,19 @@ KucoinMarketData <- R6::R6Class(
         query = list(symbol = symbol),
         auth = FALSE,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              time = ms_to_datetime(numeric(0)),
+              sequence = character(0),
+              price = numeric(0),
+              size = numeric(0),
+              best_bid = numeric(0),
+              best_bid_size = numeric(0),
+              best_ask = numeric(0),
+              best_ask_size = numeric(0)
+            )[])
+          }
+
           dt <- as_dt_row(data)
           if (nrow(dt) > 0 && "time" %in% names(dt)) {
             dt[, time := ms_to_datetime(time)]
@@ -920,7 +945,23 @@ KucoinMarketData <- R6::R6Class(
           global_time <- data$time
           tickers <- data$ticker
           if (is.null(tickers) || length(tickers) == 0) {
-            return(data.table::data.table()[])
+            return(data.table::data.table(
+              symbol = character(0),
+              symbol_name = character(0),
+              buy = numeric(0),
+              sell = numeric(0),
+              change_rate = numeric(0),
+              change_price = numeric(0),
+              high = numeric(0),
+              low = numeric(0),
+              vol = numeric(0),
+              vol_value = numeric(0),
+              last = numeric(0),
+              average_price = numeric(0),
+              taker_fee_rate = numeric(0),
+              maker_fee_rate = numeric(0),
+              time = ms_to_datetime(numeric(0))
+            )[])
           }
           dt <- data.table::rbindlist(
             lapply(tickers, as_dt_row),
@@ -1014,7 +1055,14 @@ KucoinMarketData <- R6::R6Class(
         auth = FALSE,
         .parser = function(data) {
           if (is.null(data) || length(data) == 0) {
-            return(data.table::data.table()[])
+            return(data.table::data.table(
+              sequence = character(0),
+              side = character(0),
+              price = numeric(0),
+              size = numeric(0),
+              time = ms_to_datetime(numeric(0)),
+              trade_id = character(0)
+            )[])
           }
           dt <- data.table::rbindlist(
             lapply(data, as_dt_row),
@@ -1103,7 +1151,12 @@ KucoinMarketData <- R6::R6Class(
         endpoint = paste0("/api/v1/market/orderbook/level2_", size),
         query = list(symbol = symbol),
         auth = FALSE,
-        .parser = parse_orderbook
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_orderbook())
+          }
+          return(parse_orderbook(data))
+        }
       )
       return(connectcore::then_or_now(
         res,
@@ -1178,7 +1231,12 @@ KucoinMarketData <- R6::R6Class(
         endpoint = "/api/v3/market/orderbook/level2",
         query = list(symbol = symbol),
         auth = TRUE,
-        .parser = parse_orderbook
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_orderbook())
+          }
+          return(parse_orderbook(data))
+        }
       )
       return(connectcore::then_or_now(
         res,
@@ -1281,6 +1339,27 @@ KucoinMarketData <- R6::R6Class(
         query = list(symbol = symbol),
         auth = FALSE,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              time = ms_to_datetime(numeric(0)),
+              symbol = character(0),
+              buy = numeric(0),
+              sell = numeric(0),
+              change_rate = numeric(0),
+              change_price = numeric(0),
+              high = numeric(0),
+              low = numeric(0),
+              vol = numeric(0),
+              vol_value = numeric(0),
+              last = numeric(0),
+              average_price = numeric(0),
+              taker_fee_rate = numeric(0),
+              maker_fee_rate = numeric(0),
+              taker_coefficient = numeric(0),
+              maker_coefficient = numeric(0)
+            )[])
+          }
+
           dt <- as_dt_row(data)
           if (nrow(dt) > 0 && "time" %in% names(dt)) {
             dt[, time := ms_to_datetime(time)]
@@ -1578,7 +1657,12 @@ KucoinMarketData <- R6::R6Class(
       res <- private$.request(
         endpoint = "/api/v1/status",
         auth = FALSE,
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_service_status())
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,

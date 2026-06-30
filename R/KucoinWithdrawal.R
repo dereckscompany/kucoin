@@ -234,7 +234,12 @@ KucoinWithdrawal <- R6::R6Class(
         endpoint = "/api/v3/withdrawals",
         method = "POST",
         body = body,
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(withdrawal_id = character(0))[])
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,
@@ -434,6 +439,27 @@ KucoinWithdrawal <- R6::R6Class(
         endpoint = "/api/v1/withdrawals/quotas",
         query = list(currency = currency, chain = chain),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              currency = character(0),
+              chain = character(0),
+              is_withdraw_enabled = logical(0),
+              available_amount = numeric(0),
+              remain_amount = numeric(0),
+              withdraw_min_fee = numeric(0),
+              inner_withdraw_min_fee = numeric(0),
+              withdraw_min_size = numeric(0),
+              precision = integer(0),
+              limit_btc_amount = numeric(0),
+              used_btc_amount = numeric(0),
+              locked_amount = numeric(0),
+              quota_currency = character(0),
+              limit_quota_currency_amount = numeric(0),
+              used_quota_currency_amount = numeric(0),
+              reason = logical(0)
+            )[])
+          }
+
           dt <- as_dt_row(data)
           if (nrow(dt) == 0L) {
             return(dt[])
@@ -750,6 +776,36 @@ KucoinWithdrawal <- R6::R6Class(
       res <- private$.request(
         endpoint = paste0("/api/v1/withdrawals/", withdrawalId),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              id = character(0),
+              currency = character(0),
+              chain_id = character(0),
+              chain_name = character(0),
+              status = character(0),
+              address = character(0),
+              memo = character(0),
+              is_inner = logical(0),
+              amount = numeric(0),
+              fee = numeric(0),
+              wallet_tx_id = logical(0),
+              created_at = ms_to_datetime(numeric(0)),
+              cancel_type = character(0),
+              uid = integer(0),
+              currency_name = character(0),
+              failure_reason = character(0),
+              failure_reason_msg = logical(0),
+              address_remark = character(0),
+              remark = character(0),
+              taxes = logical(0),
+              tax_description = logical(0),
+              tx_id = logical(0),
+              return_status = character(0),
+              return_amount = logical(0),
+              return_currency = character(0)
+            )[])
+          }
+
           dt <- as_dt_row(data)
           if (nrow(dt) == 0L) {
             return(dt[])

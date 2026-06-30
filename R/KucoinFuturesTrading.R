@@ -275,6 +275,10 @@ KucoinFuturesTrading <- R6::R6Class(
         method = "POST",
         body = body,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_order_ack())
+          }
+
           return(as_dt_row(data))
         }
       )
@@ -446,6 +450,10 @@ KucoinFuturesTrading <- R6::R6Class(
         method = "POST",
         body = body,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_order_ack())
+          }
+
           return(as_dt_row(data))
         }
       )
@@ -587,6 +595,10 @@ KucoinFuturesTrading <- R6::R6Class(
         method = "POST",
         body = orders,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_order_ack())
+          }
+
           return(as_dt_list(data))
         }
       )
@@ -933,7 +945,7 @@ KucoinFuturesTrading <- R6::R6Class(
             data$cancelledOrderIds <- NULL
           }
           if (is.null(ids) || length(ids) == 0) {
-            return(data.table::data.table()[])
+            return(data.table::data.table(cancelled_order_id = character(0))[])
           }
           dt <- as_dt_row(data)
           id_vals <- as.character(unlist(ids, use.names = FALSE))
@@ -1068,6 +1080,10 @@ KucoinFuturesTrading <- R6::R6Class(
       res <- private$.request(
         endpoint = paste0("/api/v1/orders/", orderId),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_futures_order())
+          }
+
           dt <- as_dt_row(data)
           if (nrow(dt) > 0 && "created_at" %in% names(dt)) {
             dt[, created_at := ms_to_datetime(created_at)]
@@ -1204,6 +1220,10 @@ KucoinFuturesTrading <- R6::R6Class(
         endpoint = "/api/v1/orders/byClientOid",
         query = list(clientOid = clientOid),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_futures_order())
+          }
+
           dt <- as_dt_row(data)
           if (nrow(dt) > 0 && "created_at" %in% names(dt)) {
             dt[, created_at := ms_to_datetime(created_at)]
@@ -1356,6 +1376,9 @@ KucoinFuturesTrading <- R6::R6Class(
         query = query,
         .parser = function(pages) {
           dt <- flatten_pages(pages)
+          if (nrow(dt) == 0L) {
+            return(empty_dt_futures_order())
+          }
           if (nrow(dt) > 0 && "created_at" %in% names(dt)) {
             dt[, created_at := ms_to_datetime(created_at)]
           }
@@ -1495,6 +1518,10 @@ KucoinFuturesTrading <- R6::R6Class(
         endpoint = "/api/v1/recentDoneOrders",
         query = list(symbol = symbol),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_futures_order())
+          }
+
           dt <- as_dt_list(data)
           if (nrow(dt) > 0 && "created_at" %in% names(dt)) {
             dt[, created_at := ms_to_datetime(created_at)]
@@ -1866,6 +1893,28 @@ KucoinFuturesTrading <- R6::R6Class(
         endpoint = "/api/v1/recentFills",
         query = list(symbol = symbol),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              symbol = character(0),
+              trade_id = character(0),
+              order_id = character(0),
+              side = character(0),
+              liquidity = character(0),
+              force_taker = logical(0),
+              price = numeric(0),
+              size = numeric(0),
+              value = character(0),
+              fee_rate = character(0),
+              fix_fee = character(0),
+              fee_currency = character(0),
+              fee = numeric(0),
+              order_type = character(0),
+              trade_type = character(0),
+              trade_time = ms_to_datetime(numeric(0)),
+              created_at = ms_to_datetime(numeric(0))
+            )[])
+          }
+
           dt <- as_dt_list(data)
           if (nrow(dt) > 0 && "trade_time" %in% names(dt)) {
             dt[, trade_time := ns_to_datetime(trade_time)]
@@ -1953,6 +2002,16 @@ KucoinFuturesTrading <- R6::R6Class(
         endpoint = "/api/v1/openOrderStatistics",
         query = list(symbol = symbol),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              open_order_buy_size = integer(0),
+              open_order_sell_size = integer(0),
+              open_order_buy_cost = character(0),
+              open_order_sell_cost = character(0),
+              settle_currency = character(0)
+            )[])
+          }
+
           return(as_dt_row(data))
         }
       )
@@ -2063,6 +2122,10 @@ KucoinFuturesTrading <- R6::R6Class(
         body = body,
         base_url = get_base_url(),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_dcp())
+          }
+
           return(as_dt_row(data))
         }
       )
@@ -2155,6 +2218,10 @@ KucoinFuturesTrading <- R6::R6Class(
         query = query,
         base_url = get_base_url(),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_dcp())
+          }
+
           return(as_dt_row(data))
         }
       )

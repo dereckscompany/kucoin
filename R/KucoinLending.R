@@ -293,7 +293,12 @@ KucoinLending <- R6::R6Class(
         endpoint = "/api/v3/purchase",
         method = "POST",
         body = body,
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_order_no())
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,
@@ -594,7 +599,12 @@ KucoinLending <- R6::R6Class(
         endpoint = "/api/v3/redeem",
         method = "POST",
         body = body,
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_order_no())
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,

@@ -259,7 +259,12 @@ KucoinTransfer <- R6::R6Class(
         endpoint = "/api/v3/accounts/universal-transfer",
         method = "POST",
         body = body,
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_order_id())
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,
@@ -364,6 +369,16 @@ KucoinTransfer <- R6::R6Class(
         endpoint = "/api/v1/accounts/transferable",
         query = list(currency = currency, type = type, tag = tag),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              currency = character(0),
+              balance = numeric(0),
+              available = numeric(0),
+              holds = numeric(0),
+              transferable = numeric(0)
+            )[])
+          }
+
           dt <- as_dt_row(data)
           if (nrow(dt) == 0L) {
             return(dt[])
