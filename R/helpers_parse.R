@@ -597,7 +597,7 @@ empty_dt_orderbook <- function() {
     time = ms_to_datetime(numeric(0)),
     sequence = character(0),
     side = character(0),
-    level = character(0),
+    level = integer(0),
     price = numeric(0),
     size = numeric(0)
   )[])

@@ -172,17 +172,6 @@ KucoinMarketData <- R6::R6Class(
         query = query,
         auth = FALSE,
         .parser = function(pages) {
-          if (length(pages) == 0) {
-            return(data.table::data.table(
-              ann_id = integer(0),
-              ann_title = character(0),
-              ann_type = character(0),
-              ann_desc = character(0),
-              c_time = ms_to_datetime(numeric(0)),
-              language = character(0),
-              ann_url = character(0)
-            )[])
-          }
           # Treatment A: `annType` is an array of plain strings (e.g.
           # `c("latest-announcements", "new-listings")`). Collapse to a
           # single `;`-separated character column via the shared helper
@@ -194,7 +183,15 @@ KucoinMarketData <- R6::R6Class(
           })
           dt <- flatten_pages(pages_clean)
           if (nrow(dt) == 0) {
-            return(dt[])
+            return(data.table::data.table(
+              ann_id = integer(0),
+              ann_title = character(0),
+              ann_type = character(0),
+              ann_desc = character(0),
+              c_time = ms_to_datetime(numeric(0)),
+              language = character(0),
+              ann_url = character(0)
+            )[])
           }
           coerce_cols(dt, "c_time", ms_to_datetime)
           return(dt[])
