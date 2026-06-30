@@ -370,12 +370,12 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' - sequence (numeric) the sequence.
     #' - symbol (character) the trading pair symbol.
     #' - side (character) the order side.
-    #' - size (integer | NA) the size.
-    #' - price (character | NA) the price.
-    #' - best_bid_size (integer | NA) the best bid size.
-    #' - best_bid_price (character | NA) the best bid price.
-    #' - best_ask_price (character | NA) the best ask price.
-    #' - best_ask_size (integer | NA) the best ask size.
+    #' - size (numeric | NA) the size.
+    #' - price (numeric | NA) the price.
+    #' - best_bid_size (numeric | NA) the best bid size.
+    #' - best_bid_price (numeric | NA) the best bid price.
+    #' - best_ask_price (numeric | NA) the best ask price.
+    #' - best_ask_size (numeric | NA) the best ask size.
     #' - trade_id (character) the trade identifier.
     #' - ts (POSIXct) the ts (UTC).
     #'

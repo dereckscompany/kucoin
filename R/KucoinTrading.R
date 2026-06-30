@@ -1030,8 +1030,8 @@ KucoinTrading <- R6::R6Class(
     #' - symbol (character) the trading pair symbol.
     #' - side (character) the order side.
     #' - type (character) the type.
-    #' - price (character | NA) the price.
-    #' - size (character | NA) the size.
+    #' - price (numeric | NA) the price.
+    #' - size (numeric | NA) the size.
     #' - created_at (POSIXct) the created at (UTC).
     #' - last_updated_at (POSIXct) the last updated at (UTC).
     #'

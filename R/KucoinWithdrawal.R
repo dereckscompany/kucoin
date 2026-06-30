@@ -398,18 +398,18 @@ KucoinWithdrawal <- R6::R6Class(
     #' - currency (character) the currency code.
     #' - chain (character) the chain code.
     #' - is_withdraw_enabled (logical | NA) the is withdraw enabled.
-    #' - available_amount (character | NA) the available amount.
-    #' - remain_amount (character | NA) the remain amount.
-    #' - withdraw_min_fee (character | NA) the withdraw min fee.
-    #' - inner_withdraw_min_fee (character | NA) the inner withdraw min fee.
-    #' - withdraw_min_size (character | NA) the withdraw min size.
+    #' - available_amount (numeric | NA) the available amount.
+    #' - remain_amount (numeric | NA) the remain amount.
+    #' - withdraw_min_fee (numeric | NA) the withdraw min fee.
+    #' - inner_withdraw_min_fee (numeric | NA) the inner withdraw min fee.
+    #' - withdraw_min_size (numeric | NA) the withdraw min size.
     #' - precision (integer | NA) the decimal precision.
-    #' - limit_btc_amount (character | NA) the limit btc amount.
-    #' - used_btc_amount (character | NA) the used btc amount.
-    #' - locked_amount (character | NA) the locked amount.
+    #' - limit_btc_amount (numeric | NA) the limit btc amount.
+    #' - used_btc_amount (numeric | NA) the used btc amount.
+    #' - locked_amount (numeric | NA) the locked amount.
     #' - quota_currency (character) the quota currency.
-    #' - limit_quota_currency_amount (character | NA) the limit quota currency amount.
-    #' - used_quota_currency_amount (character | NA) the used quota currency amount.
+    #' - limit_quota_currency_amount (numeric | NA) the limit quota currency amount.
+    #' - used_quota_currency_amount (numeric | NA) the used quota currency amount.
     #' - reason (logical | NA) the reason, when present.
     #'
     #' @examples
@@ -710,8 +710,8 @@ KucoinWithdrawal <- R6::R6Class(
     #' - address (character) the address.
     #' - memo (character) the address memo/tag.
     #' - is_inner (logical) the is inner.
-    #' - amount (character | NA) the amount.
-    #' - fee (character | NA) the fee.
+    #' - amount (numeric | NA) the amount.
+    #' - fee (numeric | NA) the fee.
     #' - wallet_tx_id (logical | NA) the wallet tx id.
     #' - created_at (POSIXct) the created at (UTC).
     #' - cancel_type (character) the cancel type.

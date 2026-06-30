@@ -739,9 +739,9 @@ code, total balance, the amount available for use, and the amount held
 in open orders for the requested account:
 \itemize{
 \item currency (character) the currency code.
-\item balance (character | NA) the total balance.
-\item available (character | NA) the amount available.
-\item holds (character | NA) the amount on hold.
+\item balance (numeric | NA) the total balance.
+\item available (numeric | NA) the amount available.
+\item holds (numeric | NA) the amount on hold.
 }
 }
 \subsection{Examples}{
@@ -1374,8 +1374,8 @@ for fiat.}
 (data.table | promise<data.table>) one row giving the base taker
 fee rate and the base maker fee rate:
 \itemize{
-\item taker_fee_rate (character | NA) the taker fee rate.
-\item maker_fee_rate (character | NA) the maker fee rate.
+\item taker_fee_rate (numeric | NA) the taker fee rate.
+\item maker_fee_rate (numeric | NA) the maker fee rate.
 }
 }
 \subsection{Examples}{
@@ -1468,8 +1468,8 @@ giving the pair symbol, the actual taker fee rate, and the actual maker
 fee rate:
 \itemize{
 \item symbol (character) the trading pair symbol.
-\item taker_fee_rate (character | NA) the taker fee rate.
-\item maker_fee_rate (character | NA) the maker fee rate.
+\item taker_fee_rate (numeric | NA) the taker fee rate.
+\item maker_fee_rate (numeric | NA) the maker fee rate.
 }
 }
 \subsection{Examples}{

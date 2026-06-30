@@ -261,8 +261,8 @@ KucoinMarginData <- R6::R6Class(
     #'   liquidation debt ratio; an empty `currencyList` yields a zero-row data.table with this schema:
     #' - currency (character) the currency code.
     #' - max_leverage (integer | NA) the max leverage.
-    #' - warning_debt_ratio (character | NA) the warning debt ratio.
-    #' - liq_debt_ratio (character | NA) the liq debt ratio.
+    #' - warning_debt_ratio (numeric | NA) the warning debt ratio.
+    #' - liq_debt_ratio (numeric | NA) the liq debt ratio.
     #'
     #' @examples
     #' \dontrun{
@@ -281,8 +281,8 @@ KucoinMarginData <- R6::R6Class(
           empty_dt <- data.table::data.table(
             currency = character(),
             max_leverage = integer(),
-            warning_debt_ratio = character(),
-            liq_debt_ratio = character()
+            warning_debt_ratio = numeric(),
+            liq_debt_ratio = numeric()
           )
           if (is.null(data) || length(data) == 0L) {
             return(empty_dt[])
@@ -360,9 +360,9 @@ KucoinMarginData <- R6::R6Class(
     #'   collateral range, and the collateral ratio applied in that range; an empty response yields a zero-row
     #'   data.table with this schema:
     #' - currency (character) the currency code.
-    #' - lower_limit (character | NA) the lower limit.
-    #' - upper_limit (character | NA) the upper limit.
-    #' - collateral_ratio (character | NA) the collateral ratio.
+    #' - lower_limit (numeric | NA) the lower limit.
+    #' - upper_limit (numeric | NA) the upper limit.
+    #' - collateral_ratio (numeric | NA) the collateral ratio.
     #'
     #' @examples
     #' \dontrun{
@@ -382,9 +382,9 @@ KucoinMarginData <- R6::R6Class(
           if (is.null(data) || length(data) == 0) {
             return(data.table::data.table(
               currency = character(),
-              lower_limit = character(),
-              upper_limit = character(),
-              collateral_ratio = character()
+              lower_limit = numeric(),
+              upper_limit = numeric(),
+              collateral_ratio = numeric()
             )[])
           }
           rows <- list()

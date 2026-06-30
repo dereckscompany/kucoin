@@ -533,18 +533,18 @@ locked_amount, ...):
 \item currency (character) the currency code.
 \item chain (character) the chain code.
 \item is_withdraw_enabled (logical | NA) the is withdraw enabled.
-\item available_amount (character | NA) the available amount.
-\item remain_amount (character | NA) the remain amount.
-\item withdraw_min_fee (character | NA) the withdraw min fee.
-\item inner_withdraw_min_fee (character | NA) the inner withdraw min fee.
-\item withdraw_min_size (character | NA) the withdraw min size.
+\item available_amount (numeric | NA) the available amount.
+\item remain_amount (numeric | NA) the remain amount.
+\item withdraw_min_fee (numeric | NA) the withdraw min fee.
+\item inner_withdraw_min_fee (numeric | NA) the inner withdraw min fee.
+\item withdraw_min_size (numeric | NA) the withdraw min size.
 \item precision (integer | NA) the decimal precision.
-\item limit_btc_amount (character | NA) the limit btc amount.
-\item used_btc_amount (character | NA) the used btc amount.
-\item locked_amount (character | NA) the locked amount.
+\item limit_btc_amount (numeric | NA) the limit btc amount.
+\item used_btc_amount (numeric | NA) the used btc amount.
+\item locked_amount (numeric | NA) the locked amount.
 \item quota_currency (character) the quota currency.
-\item limit_quota_currency_amount (character | NA) the limit quota currency amount.
-\item used_quota_currency_amount (character | NA) the used quota currency amount.
+\item limit_quota_currency_amount (numeric | NA) the limit quota currency amount.
+\item used_quota_currency_amount (numeric | NA) the used quota currency amount.
 \item reason (logical | NA) the reason, when present.
 }
 }
@@ -815,8 +815,8 @@ POSIXct:
 \item address (character) the address.
 \item memo (character) the address memo/tag.
 \item is_inner (logical) the is inner.
-\item amount (character | NA) the amount.
-\item fee (character | NA) the fee.
+\item amount (numeric | NA) the amount.
+\item fee (numeric | NA) the fee.
 \item wallet_tx_id (logical | NA) the wallet tx id.
 \item created_at (POSIXct) the created at (UTC).
 \item cancel_type (character) the cancel type.

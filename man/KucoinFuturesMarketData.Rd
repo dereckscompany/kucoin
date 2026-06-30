@@ -605,12 +605,12 @@ timestamp):
 \item sequence (numeric) the sequence.
 \item symbol (character) the trading pair symbol.
 \item side (character) the order side.
-\item size (integer | NA) the size.
-\item price (character | NA) the price.
-\item best_bid_size (integer | NA) the best bid size.
-\item best_bid_price (character | NA) the best bid price.
-\item best_ask_price (character | NA) the best ask price.
-\item best_ask_size (integer | NA) the best ask size.
+\item size (numeric | NA) the size.
+\item price (numeric | NA) the price.
+\item best_bid_size (numeric | NA) the best bid size.
+\item best_bid_price (numeric | NA) the best bid price.
+\item best_ask_price (numeric | NA) the best ask price.
+\item best_ask_size (numeric | NA) the best ask size.
 \item trade_id (character) the trade identifier.
 \item ts (POSIXct) the ts (UTC).
 }

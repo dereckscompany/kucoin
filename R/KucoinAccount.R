@@ -486,9 +486,9 @@ KucoinAccount <- R6::R6Class(
     #'   code, total balance, the amount available for use, and the amount held
     #'   in open orders for the requested account:
     #' - currency (character) the currency code.
-    #' - balance (character | NA) the total balance.
-    #' - available (character | NA) the amount available.
-    #' - holds (character | NA) the amount on hold.
+    #' - balance (numeric | NA) the total balance.
+    #' - available (numeric | NA) the amount available.
+    #' - holds (numeric | NA) the amount on hold.
     #'
     #' @examples
     #' \dontrun{
@@ -1222,8 +1222,8 @@ KucoinAccount <- R6::R6Class(
     #'   for fiat.
     #' @return (data.table | promise<data.table>) one row giving the base taker
     #'   fee rate and the base maker fee rate:
-    #' - taker_fee_rate (character | NA) the taker fee rate.
-    #' - maker_fee_rate (character | NA) the maker fee rate.
+    #' - taker_fee_rate (numeric | NA) the taker fee rate.
+    #' - maker_fee_rate (numeric | NA) the maker fee rate.
     #'
     #' @examples
     #' \dontrun{
@@ -1300,8 +1300,8 @@ KucoinAccount <- R6::R6Class(
     #'   giving the pair symbol, the actual taker fee rate, and the actual maker
     #'   fee rate:
     #' - symbol (character) the trading pair symbol.
-    #' - taker_fee_rate (character | NA) the taker fee rate.
-    #' - maker_fee_rate (character | NA) the maker fee rate.
+    #' - taker_fee_rate (numeric | NA) the taker fee rate.
+    #' - maker_fee_rate (numeric | NA) the maker fee rate.
     #'
     #' @examples
     #' \dontrun{

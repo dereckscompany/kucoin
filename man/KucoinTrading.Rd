@@ -1339,8 +1339,8 @@ datetimes (POSIXct) when timestamps are present:
 \item symbol (character) the trading pair symbol.
 \item side (character) the order side.
 \item type (character) the type.
-\item price (character | NA) the price.
-\item size (character | NA) the size.
+\item price (numeric | NA) the price.
+\item size (numeric | NA) the size.
 \item created_at (POSIXct) the created at (UTC).
 \item last_updated_at (POSIXct) the last updated at (UTC).
 }

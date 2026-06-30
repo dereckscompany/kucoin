@@ -400,7 +400,7 @@ test_that("get_fiat_prices returns currency-price table", {
   expect_equal(nrow(dt), 3L)
   expect_equal(names(dt), c("currency", "price"))
   expect_true("BTC" %in% dt$currency)
-  expect_equal(dt[currency == "BTC", price], "67133.4165")
+  expect_equal(dt[currency == "BTC", price], 67133.4165)
 })
 
 test_that("get_fiat_prices handles empty response", {

@@ -507,24 +507,24 @@ KucoinMarketData <- R6::R6Class(
     #' - quote_currency (character) the quote currency.
     #' - fee_currency (character) the fee currency.
     #' - market (character) the market.
-    #' - base_min_size (character | NA) the base min size.
-    #' - quote_min_size (character | NA) the quote min size.
-    #' - base_max_size (character | NA) the base max size.
-    #' - quote_max_size (character | NA) the quote max size.
-    #' - base_increment (character | NA) the base increment.
-    #' - quote_increment (character | NA) the quote increment.
-    #' - price_increment (character | NA) the price increment.
-    #' - price_limit_rate (character | NA) the price limit rate.
-    #' - min_funds (character | NA) the min funds.
+    #' - base_min_size (numeric | NA) the base min size.
+    #' - quote_min_size (numeric | NA) the quote min size.
+    #' - base_max_size (numeric | NA) the base max size.
+    #' - quote_max_size (numeric | NA) the quote max size.
+    #' - base_increment (numeric | NA) the base increment.
+    #' - quote_increment (numeric | NA) the quote increment.
+    #' - price_increment (numeric | NA) the price increment.
+    #' - price_limit_rate (numeric | NA) the price limit rate.
+    #' - min_funds (numeric | NA) the min funds.
     #' - is_margin_enabled (logical) the is margin enabled.
     #' - enable_trading (logical) the enable trading.
     #' - fee_category (integer) the fee category.
-    #' - maker_fee_coefficient (character | NA) the maker fee coefficient.
-    #' - taker_fee_coefficient (character | NA) the taker fee coefficient.
+    #' - maker_fee_coefficient (numeric | NA) the maker fee coefficient.
+    #' - taker_fee_coefficient (numeric | NA) the taker fee coefficient.
     #' - st (logical) whether the symbol is in special treatment.
     #' - callauction_is_enabled (logical) the callauction is enabled.
-    #' - callauction_price_floor (character | NA) the callauction price floor.
-    #' - callauction_price_ceiling (character | NA) the callauction price ceiling.
+    #' - callauction_price_floor (numeric | NA) the callauction price floor.
+    #' - callauction_price_ceiling (numeric | NA) the callauction price ceiling.
     #' - callauction_first_stage_start_time (numeric | NA) the callauction first stage start time (epoch ms).
     #' - callauction_second_stage_start_time (numeric | NA) the callauction second stage start time (epoch ms).
     #' - callauction_third_stage_start_time (numeric | NA) the callauction third stage start time (epoch ms).
@@ -664,24 +664,24 @@ KucoinMarketData <- R6::R6Class(
     #' - quote_currency (character) the quote currency.
     #' - fee_currency (character) the fee currency.
     #' - market (character) the market.
-    #' - base_min_size (character | NA) the base min size.
-    #' - quote_min_size (character | NA) the quote min size.
-    #' - base_max_size (character | NA) the base max size.
-    #' - quote_max_size (character | NA) the quote max size.
-    #' - base_increment (character | NA) the base increment.
-    #' - quote_increment (character | NA) the quote increment.
-    #' - price_increment (character | NA) the price increment.
-    #' - price_limit_rate (character | NA) the price limit rate.
-    #' - min_funds (character | NA) the min funds.
+    #' - base_min_size (numeric | NA) the base min size.
+    #' - quote_min_size (numeric | NA) the quote min size.
+    #' - base_max_size (numeric | NA) the base max size.
+    #' - quote_max_size (numeric | NA) the quote max size.
+    #' - base_increment (numeric | NA) the base increment.
+    #' - quote_increment (numeric | NA) the quote increment.
+    #' - price_increment (numeric | NA) the price increment.
+    #' - price_limit_rate (numeric | NA) the price limit rate.
+    #' - min_funds (numeric | NA) the min funds.
     #' - is_margin_enabled (logical) the is margin enabled.
     #' - enable_trading (logical) the enable trading.
     #' - fee_category (integer) the fee category.
-    #' - maker_fee_coefficient (character | NA) the maker fee coefficient.
-    #' - taker_fee_coefficient (character | NA) the taker fee coefficient.
+    #' - maker_fee_coefficient (numeric | NA) the maker fee coefficient.
+    #' - taker_fee_coefficient (numeric | NA) the taker fee coefficient.
     #' - st (logical) whether the symbol is in special treatment.
     #' - callauction_is_enabled (logical) the callauction is enabled.
-    #' - callauction_price_floor (character | NA) the callauction price floor.
-    #' - callauction_price_ceiling (character | NA) the callauction price ceiling.
+    #' - callauction_price_floor (numeric | NA) the callauction price floor.
+    #' - callauction_price_ceiling (numeric | NA) the callauction price ceiling.
     #' - callauction_first_stage_start_time (numeric | NA) the callauction first stage start time (epoch ms).
     #' - callauction_second_stage_start_time (numeric | NA) the callauction second stage start time (epoch ms).
     #' - callauction_third_stage_start_time (numeric | NA) the callauction third stage start time (epoch ms).
@@ -783,12 +783,12 @@ KucoinMarketData <- R6::R6Class(
     #'   bid and ask prices with their sizes:
     #' - time (POSIXct) the time (UTC).
     #' - sequence (character) the sequence.
-    #' - price (character | NA) the price.
-    #' - size (character | NA) the size.
-    #' - best_bid (character | NA) the best bid price.
-    #' - best_bid_size (character | NA) the best bid size.
-    #' - best_ask (character | NA) the best ask price.
-    #' - best_ask_size (character | NA) the best ask size.
+    #' - price (numeric | NA) the price.
+    #' - size (numeric | NA) the size.
+    #' - best_bid (numeric | NA) the best bid price.
+    #' - best_bid_size (numeric | NA) the best bid size.
+    #' - best_ask (numeric | NA) the best ask price.
+    #' - best_ask_size (numeric | NA) the best ask size.
     #'
     #' @examples
     #' \dontrun{
@@ -889,18 +889,18 @@ KucoinMarketData <- R6::R6Class(
     #'   coerced from epoch milliseconds):
     #' - symbol (character) the trading pair symbol.
     #' - symbol_name (character) the symbol name.
-    #' - buy (character | NA) the best bid price.
-    #' - sell (character | NA) the best ask price.
-    #' - change_rate (character | NA) the 24h change rate.
-    #' - change_price (character | NA) the 24h change in price.
-    #' - high (character | NA) the 24h high price.
-    #' - low (character | NA) the 24h low price.
-    #' - vol (character | NA) the 24h traded volume.
-    #' - vol_value (character | NA) the 24h traded turnover.
-    #' - last (character | NA) the last traded price.
-    #' - average_price (character | NA) the average price.
-    #' - taker_fee_rate (character | NA) the taker fee rate.
-    #' - maker_fee_rate (character | NA) the maker fee rate.
+    #' - buy (numeric | NA) the best bid price.
+    #' - sell (numeric | NA) the best ask price.
+    #' - change_rate (numeric | NA) the 24h change rate.
+    #' - change_price (numeric | NA) the 24h change in price.
+    #' - high (numeric | NA) the 24h high price.
+    #' - low (numeric | NA) the 24h low price.
+    #' - vol (numeric | NA) the 24h traded volume.
+    #' - vol_value (numeric | NA) the 24h traded turnover.
+    #' - last (numeric | NA) the last traded price.
+    #' - average_price (numeric | NA) the average price.
+    #' - taker_fee_rate (numeric | NA) the taker fee rate.
+    #' - maker_fee_rate (numeric | NA) the maker fee rate.
     #' - time (POSIXct) the time (UTC).
     #'
     #' @examples
@@ -991,8 +991,8 @@ KucoinMarketData <- R6::R6Class(
     #'   timestamp):
     #' - sequence (character) the sequence.
     #' - side (character) the order side.
-    #' - price (character | NA) the price.
-    #' - size (character | NA) the size.
+    #' - price (numeric | NA) the price.
+    #' - size (numeric | NA) the size.
     #' - time (POSIXct) the time (UTC).
     #' - trade_id (character) the trade identifier.
     #'
@@ -1251,20 +1251,20 @@ KucoinMarketData <- R6::R6Class(
     #'   and maker fee rates:
     #' - time (POSIXct) the time (UTC).
     #' - symbol (character) the trading pair symbol.
-    #' - buy (character | NA) the best bid price.
-    #' - sell (character | NA) the best ask price.
-    #' - change_rate (character | NA) the 24h change rate.
-    #' - change_price (character | NA) the 24h change in price.
-    #' - high (character | NA) the 24h high price.
-    #' - low (character | NA) the 24h low price.
-    #' - vol (character | NA) the 24h traded volume.
-    #' - vol_value (character | NA) the 24h traded turnover.
-    #' - last (character | NA) the last traded price.
-    #' - average_price (character | NA) the average price.
-    #' - taker_fee_rate (character | NA) the taker fee rate.
-    #' - maker_fee_rate (character | NA) the maker fee rate.
-    #' - taker_coefficient (character | NA) the taker fee coefficient.
-    #' - maker_coefficient (character | NA) the maker fee coefficient.
+    #' - buy (numeric | NA) the best bid price.
+    #' - sell (numeric | NA) the best ask price.
+    #' - change_rate (numeric | NA) the 24h change rate.
+    #' - change_price (numeric | NA) the 24h change in price.
+    #' - high (numeric | NA) the 24h high price.
+    #' - low (numeric | NA) the 24h low price.
+    #' - vol (numeric | NA) the 24h traded volume.
+    #' - vol_value (numeric | NA) the 24h traded turnover.
+    #' - last (numeric | NA) the last traded price.
+    #' - average_price (numeric | NA) the average price.
+    #' - taker_fee_rate (numeric | NA) the taker fee rate.
+    #' - maker_fee_rate (numeric | NA) the maker fee rate.
+    #' - taker_coefficient (numeric | NA) the taker fee coefficient.
+    #' - maker_coefficient (numeric | NA) the maker fee coefficient.
     #'
     #' @examples
     #' \dontrun{

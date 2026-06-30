@@ -145,7 +145,7 @@ test_that("get_spot_account_detail returns single-row data.table", {
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
   expect_equal(dt$currency, "USDT")
-  expect_equal(dt$balance, "1250.75")
+  expect_equal(dt$balance, 1250.75)
   expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
 
@@ -195,8 +195,8 @@ test_that("get_cross_margin_account extracts accounts sub-list", {
   expect_true("total_liability_of_quote_currency" %in% names(dt))
   expect_true("debt_ratio" %in% names(dt))
   expect_true("status" %in% names(dt))
-  expect_equal(unique(dt$total_asset_of_quote_currency), "15234.67")
-  expect_equal(unique(dt$debt_ratio), "0.1641")
+  expect_equal(unique(dt$total_asset_of_quote_currency), 15234.67)
+  expect_equal(unique(dt$debt_ratio), 0.1641)
   # No list columns
   expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
@@ -270,16 +270,16 @@ test_that("get_isolated_margin_account flattens baseAsset/quoteAsset wide-prefix
   expect_true("base_asset_total" %in% names(dt))
   expect_true("base_asset_max_borrow_size" %in% names(dt))
   expect_equal(dt$base_asset_currency, "BTC")
-  expect_equal(dt$base_asset_total, "0.1")
+  expect_equal(dt$base_asset_total, 0.1)
   # Wide-prefixed quoteAsset columns
   expect_true("quote_asset_currency" %in% names(dt))
   expect_true("quote_asset_total" %in% names(dt))
   expect_equal(dt$quote_asset_currency, "USDT")
-  expect_equal(dt$quote_asset_liability_principal, "950.00")
+  expect_equal(dt$quote_asset_liability_principal, 950.00)
   # Account-level summary replicated
   expect_true("total_asset_of_quote_currency" %in% names(dt))
   expect_true("total_liability_of_quote_currency" %in% names(dt))
-  expect_equal(dt$total_asset_of_quote_currency, "5234.67")
+  expect_equal(dt$total_asset_of_quote_currency, 5234.67)
   # Timestamp coerced to POSIXct
   expect_s3_class(dt$timestamp, "POSIXct")
   # No list columns anywhere
@@ -437,8 +437,8 @@ test_that("get_base_fee_rate returns fee rates", {
   dt <- new_account()$get_base_fee_rate()
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
-  expect_equal(dt$taker_fee_rate, "0.001")
-  expect_equal(dt$maker_fee_rate, "0.001")
+  expect_equal(dt$taker_fee_rate, 0.001)
+  expect_equal(dt$maker_fee_rate, 0.001)
   expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
 

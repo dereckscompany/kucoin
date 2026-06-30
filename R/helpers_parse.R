@@ -179,6 +179,160 @@ coerce_cols <- function(dt, cols, fn) {
   return(invisible(assert_return_coerce_cols(dt)))
 }
 
+#' Coerce KuCoin Number-as-String Columns to Numeric
+#'
+#' KuCoin transports numeric quantities (prices, sizes, amounts, fees, rates,
+#' balances, ...) as JSON strings to avoid float rounding in transit. This
+#' coerces every such column that is present to `numeric`, so the client
+#' receives a usable number rather than a verbatim string. The set was derived
+#' from a live sweep of the API: a column qualifies only where every real value
+#' it returns is numeric-coercible and it is not an identifier. Identifiers,
+#' symbols, currencies, statuses, enums and flags are left as-is; timestamps are
+#' handled separately. Applied centrally between parse and contract validation
+#' (see [KucoinBase]'s request funnel), so it runs once per endpoint over
+#' whichever of these columns that endpoint returns. Order *input* prices/sizes
+#' are unaffected — they are validated as strings before the request is sent.
+#'
+#' @param x (any) a parser result; coerced only when it is a `data.table`.
+#' @return (any) `x`, with its numeric-quantity columns coerced to numeric.
+#'
+#' @keywords internal
+#' @noRd
+#' @noassert
+coerce_numeric_quantities <- function(x) {
+  if (!data.table::is.data.table(x)) {
+    return(x)
+  }
+  quantities <- c(
+    "amount",
+    "annualized_borrow_rate",
+    "auto_renew_max_debt_ratio",
+    "available",
+    "available_amount",
+    "average_price",
+    "balance",
+    "base_amount",
+    "base_asset_available",
+    "base_asset_hold",
+    "base_asset_liability",
+    "base_asset_liability_interest",
+    "base_asset_liability_principal",
+    "base_asset_max_borrow_size",
+    "base_asset_total",
+    "base_borrow_coefficient",
+    "base_borrow_min_amount",
+    "base_borrow_min_unit",
+    "base_currency_price",
+    "base_increment",
+    "base_margin_coefficient",
+    "base_max_borrow_amount",
+    "base_max_buy_amount",
+    "base_max_hold_amount",
+    "base_max_size",
+    "base_min_size",
+    "best_ask",
+    "best_ask_price",
+    "best_ask_size",
+    "best_bid",
+    "best_bid_price",
+    "best_bid_size",
+    "borrow_coefficient",
+    "borrow_max_amount",
+    "borrow_min_amount",
+    "borrow_min_unit",
+    "buy",
+    "buy_max_amount",
+    "callauction_price_ceiling",
+    "callauction_price_floor",
+    "change_price",
+    "change_rate",
+    "collateral_ratio",
+    "debt_ratio",
+    "deposit_min_size",
+    "fee",
+    "fl_debt_ratio",
+    "high",
+    "hold",
+    "hold_max_amount",
+    "holds",
+    "hourly_borrow_rate",
+    "increment",
+    "inner_withdraw_min_fee",
+    "interest_increment",
+    "last",
+    "last_size",
+    "liability",
+    "liability_interest",
+    "liability_principal",
+    "limit_btc_amount",
+    "limit_quota_currency_amount",
+    "liq_debt_ratio",
+    "locked_amount",
+    "low",
+    "lower_limit",
+    "maker_coefficient",
+    "maker_fee_coefficient",
+    "maker_fee_rate",
+    "margin_coefficient",
+    "market_interest_rate",
+    "max_borrow_size",
+    "max_deposit",
+    "max_interest_rate",
+    "max_purchase_size",
+    "min_funds",
+    "min_interest_rate",
+    "min_purchase_size",
+    "open",
+    "open_interest",
+    "price",
+    "price_change",
+    "price_change_percent",
+    "price_increment",
+    "price_limit_rate",
+    "quote_asset_available",
+    "quote_asset_hold",
+    "quote_asset_liability",
+    "quote_asset_liability_interest",
+    "quote_asset_liability_principal",
+    "quote_asset_max_borrow_size",
+    "quote_asset_total",
+    "quote_borrow_coefficient",
+    "quote_borrow_min_amount",
+    "quote_borrow_min_unit",
+    "quote_increment",
+    "quote_margin_coefficient",
+    "quote_max_borrow_amount",
+    "quote_max_buy_amount",
+    "quote_max_hold_amount",
+    "quote_max_size",
+    "quote_min_size",
+    "remain_amount",
+    "sell",
+    "size",
+    "taker_coefficient",
+    "taker_fee_coefficient",
+    "taker_fee_rate",
+    "total",
+    "total_asset_of_quote_currency",
+    "total_liability_of_quote_currency",
+    "transferable",
+    "upper_limit",
+    "used_btc_amount",
+    "used_quota_currency_amount",
+    "vol",
+    "vol_value",
+    "warning_debt_ratio",
+    "withdraw_fee_rate",
+    "withdraw_max_fee",
+    "withdraw_min_fee",
+    "withdraw_min_size",
+    "withdrawal_min_fee",
+    "withdrawal_min_size"
+  )
+  coerce_cols(x, quantities, as.numeric)
+  return(x[])
+}
+
 #' Process Orderbook Data into a data.table
 #'
 #' Transforms the bids/asks arrays from a KuCoin orderbook response into a

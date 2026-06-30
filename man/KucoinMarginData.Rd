@@ -366,8 +366,8 @@ liquidation debt ratio; an empty \code{currencyList} yields a zero-row data.tabl
 \itemize{
 \item currency (character) the currency code.
 \item max_leverage (integer | NA) the max leverage.
-\item warning_debt_ratio (character | NA) the warning debt ratio.
-\item liq_debt_ratio (character | NA) the liq debt ratio.
+\item warning_debt_ratio (numeric | NA) the warning debt ratio.
+\item liq_debt_ratio (numeric | NA) the liq debt ratio.
 }
 }
 \subsection{Examples}{
@@ -454,9 +454,9 @@ collateral range, and the collateral ratio applied in that range; an empty respo
 data.table with this schema:
 \itemize{
 \item currency (character) the currency code.
-\item lower_limit (character | NA) the lower limit.
-\item upper_limit (character | NA) the upper limit.
-\item collateral_ratio (character | NA) the collateral ratio.
+\item lower_limit (numeric | NA) the lower limit.
+\item upper_limit (numeric | NA) the upper limit.
+\item collateral_ratio (numeric | NA) the collateral ratio.
 }
 }
 \subsection{Examples}{

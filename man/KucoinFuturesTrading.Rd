@@ -1403,8 +1403,8 @@ datetimes (POSIXct, coerced from epoch milliseconds):
 \item symbol (character) the trading pair symbol.
 \item type (character) the type.
 \item side (character) the order side.
-\item price (character | NA) the price.
-\item size (integer | NA) the size.
+\item price (numeric | NA) the price.
+\item size (numeric | NA) the size.
 \item value (character | NA) the order value.
 \item deal_value (character | NA) the filled value.
 \item deal_size (integer | NA) the filled size.
@@ -1549,8 +1549,8 @@ Verified: 2026-05-23
 \item symbol (character) the trading pair symbol.
 \item type (character) the type.
 \item side (character) the order side.
-\item price (character | NA) the price.
-\item size (integer | NA) the size.
+\item price (numeric | NA) the price.
+\item size (numeric | NA) the size.
 \item value (character | NA) the order value.
 \item deal_value (character | NA) the filled value.
 \item deal_size (integer | NA) the filled size.
@@ -1701,8 +1701,8 @@ empty data.table if no orders match the filters:
 \item symbol (character) the trading pair symbol.
 \item type (character) the type.
 \item side (character) the order side.
-\item price (character | NA) the price.
-\item size (integer | NA) the size.
+\item price (numeric | NA) the price.
+\item size (numeric | NA) the size.
 \item value (character | NA) the order value.
 \item deal_value (character | NA) the filled value.
 \item deal_size (integer | NA) the filled size.
@@ -1857,8 +1857,8 @@ empty data.table if no recently closed orders exist:
 \item symbol (character) the trading pair symbol.
 \item type (character) the type.
 \item side (character) the order side.
-\item price (character | NA) the price.
-\item size (integer | NA) the size.
+\item price (numeric | NA) the price.
+\item size (numeric | NA) the size.
 \item value (character | NA) the order value.
 \item deal_value (character | NA) the filled value.
 \item deal_size (integer | NA) the filled size.
@@ -2261,13 +2261,13 @@ if no recent fills exist:
 \item side (character) the order side.
 \item liquidity (character) the liquidity role.
 \item force_taker (logical) the force taker.
-\item price (character | NA) the price.
-\item size (integer | NA) the size.
+\item price (numeric | NA) the price.
+\item size (numeric | NA) the size.
 \item value (character | NA) the order value.
 \item fee_rate (character | NA) the fee rate.
 \item fix_fee (character | NA) the fix fee.
 \item fee_currency (character) the fee currency.
-\item fee (character | NA) the fee.
+\item fee (numeric | NA) the fee.
 \item order_type (character) the order type.
 \item trade_type (character) the trade type.
 \item trade_time (POSIXct) the trade time (UTC).

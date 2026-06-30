@@ -411,8 +411,8 @@ test_that("get_borrow_rate schema: no list columns", {
   dt <- new_margin()$get_borrow_rate()
   expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
   expect_true(is.character(dt$currency))
-  expect_true(is.character(dt$hourly_borrow_rate))
-  expect_true(is.character(dt$annualized_borrow_rate))
+  expect_true(is.numeric(dt$hourly_borrow_rate))
+  expect_true(is.numeric(dt$annualized_borrow_rate))
 })
 
 test_that("get_borrow_rate returns empty data.table for empty response", {

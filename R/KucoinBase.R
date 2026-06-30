@@ -153,7 +153,9 @@ KucoinBase <- R6::R6Class(
         query = query,
         body = body_json,
         auth = auth,
-        .parser = .parser,
+        # Coerce KuCoin's number-as-string quantity columns to numeric between
+        # parsing and contract validation (see coerce_numeric_quantities()).
+        .parser = function(parsed) coerce_numeric_quantities(.parser(parsed)),
         timeout = timeout,
         base_url = base_url,
         body_format = body_format
@@ -186,7 +188,9 @@ KucoinBase <- R6::R6Class(
         sign = private$.sign,
         parse_envelope = private$.parse_envelope,
         .perform = private$.perform,
-        .parser = .parser,
+        # Coerce number-as-string quantity columns to numeric on the accumulated
+        # paginated result (see coerce_numeric_quantities()).
+        .parser = function(parsed) coerce_numeric_quantities(.parser(parsed)),
         is_async = private$.is_async,
         page_size = page_size,
         max_pages = max_pages,

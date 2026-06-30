@@ -1043,8 +1043,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' - symbol (character) the trading pair symbol.
     #' - type (character) the type.
     #' - side (character) the order side.
-    #' - price (character | NA) the price.
-    #' - size (integer | NA) the size.
+    #' - price (numeric | NA) the price.
+    #' - size (numeric | NA) the size.
     #' - value (character | NA) the order value.
     #' - deal_value (character | NA) the filled value.
     #' - deal_size (integer | NA) the filled size.
@@ -1178,8 +1178,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' - symbol (character) the trading pair symbol.
     #' - type (character) the type.
     #' - side (character) the order side.
-    #' - price (character | NA) the price.
-    #' - size (integer | NA) the size.
+    #' - price (numeric | NA) the price.
+    #' - size (numeric | NA) the size.
     #' - value (character | NA) the order value.
     #' - deal_value (character | NA) the filled value.
     #' - deal_size (integer | NA) the filled size.
@@ -1320,8 +1320,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' - symbol (character) the trading pair symbol.
     #' - type (character) the type.
     #' - side (character) the order side.
-    #' - price (character | NA) the price.
-    #' - size (integer | NA) the size.
+    #' - price (numeric | NA) the price.
+    #' - size (numeric | NA) the size.
     #' - value (character | NA) the order value.
     #' - deal_value (character | NA) the filled value.
     #' - deal_size (integer | NA) the filled size.
@@ -1465,8 +1465,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' - symbol (character) the trading pair symbol.
     #' - type (character) the type.
     #' - side (character) the order side.
-    #' - price (character | NA) the price.
-    #' - size (integer | NA) the size.
+    #' - price (numeric | NA) the price.
+    #' - size (numeric | NA) the size.
     #' - value (character | NA) the order value.
     #' - deal_value (character | NA) the filled value.
     #' - deal_size (integer | NA) the filled size.
@@ -1837,13 +1837,13 @@ KucoinFuturesTrading <- R6::R6Class(
     #' - side (character) the order side.
     #' - liquidity (character) the liquidity role.
     #' - force_taker (logical) the force taker.
-    #' - price (character | NA) the price.
-    #' - size (integer | NA) the size.
+    #' - price (numeric | NA) the price.
+    #' - size (numeric | NA) the size.
     #' - value (character | NA) the order value.
     #' - fee_rate (character | NA) the fee rate.
     #' - fix_fee (character | NA) the fix fee.
     #' - fee_currency (character) the fee currency.
-    #' - fee (character | NA) the fee.
+    #' - fee (numeric | NA) the fee.
     #' - order_type (character) the order type.
     #' - trade_type (character) the trade type.
     #' - trade_time (POSIXct) the trade time (UTC).
