@@ -128,7 +128,7 @@ KucoinSubAccount <- R6::R6Class(
     #'   the `remarks` string, and the granted permission `access`:
     #' - uid (integer) the user identifier.
     #' - sub_name (character) the sub name.
-    #' - remarks (character) an optional remark.
+    #' - remarks (character | NA) an optional remark.
     #' - access (character) the access.
     #'
     #' @examples

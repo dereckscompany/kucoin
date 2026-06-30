@@ -605,12 +605,12 @@ timestamp):
 \item sequence (integer) the sequence.
 \item symbol (character) the trading pair symbol.
 \item side (character) the order side.
-\item size (integer) the size.
-\item price (character) the price.
-\item best_bid_size (integer) the best bid size.
-\item best_bid_price (character) the best bid price.
-\item best_ask_price (character) the best ask price.
-\item best_ask_size (integer) the best ask size.
+\item size (integer | NA) the size.
+\item price (character | NA) the price.
+\item best_bid_size (integer | NA) the best bid size.
+\item best_bid_price (character | NA) the best bid price.
+\item best_ask_price (character | NA) the best ask price.
+\item best_ask_size (integer | NA) the best ask size.
 \item trade_id (character) the trade identifier.
 \item ts (POSIXct) the ts (UTC).
 }
@@ -810,9 +810,9 @@ format (ts, sequence, side, level, price, size, and symbol when present):
 \item ts (POSIXct) the ts (UTC).
 \item sequence (character) the sequence.
 \item side (character) the order side.
-\item level (integer) the tier level.
-\item price (numeric) the price.
-\item size (numeric) the size.
+\item level (integer | NA) the tier level.
+\item price (numeric | NA) the price.
+\item size (numeric | NA) the size.
 \item symbol (character) the trading pair symbol.
 }
 }
@@ -917,9 +917,9 @@ format (ts, sequence, side, level, price, size, and symbol when present):
 \item ts (POSIXct) the ts (UTC).
 \item sequence (character) the sequence.
 \item side (character) the order side.
-\item level (integer) the tier level.
-\item price (numeric) the price.
-\item size (numeric) the size.
+\item level (integer | NA) the tier level.
+\item price (numeric | NA) the price.
+\item size (numeric | NA) the size.
 \item symbol (character) the trading pair symbol.
 }
 }
@@ -1240,10 +1240,10 @@ datetime (POSIXct, coerced from epoch milliseconds), the mark price, and
 the underlying index price:
 \itemize{
 \item symbol (character) the trading pair symbol.
-\item granularity (integer) the granularity.
+\item granularity (integer | NA) the granularity.
 \item time_point (POSIXct) the time point (UTC).
-\item value (numeric) the order value.
-\item index_price (numeric) the index price.
+\item value (numeric | NA) the order value.
+\item index_price (numeric | NA) the index price.
 }
 }
 \subsection{Examples}{
@@ -1342,13 +1342,13 @@ funding period, and the next funding settlement datetime (POSIXct, coerced
 from epoch milliseconds):
 \itemize{
 \item symbol (character) the trading pair symbol.
-\item granularity (integer) the granularity.
+\item granularity (integer | NA) the granularity.
 \item time_point (POSIXct) the time point (UTC).
-\item value (numeric) the order value.
-\item daily_interest_rate (numeric) the daily interest rate.
-\item funding_rate_cap (numeric) the funding rate cap.
-\item funding_rate_floor (numeric) the funding rate floor.
-\item period (integer) the period.
+\item value (numeric | NA) the order value.
+\item daily_interest_rate (numeric | NA) the daily interest rate.
+\item funding_rate_cap (numeric | NA) the funding rate cap.
+\item funding_rate_floor (numeric | NA) the funding rate floor.
+\item period (integer | NA) the period.
 \item funding_time (POSIXct) the funding time (UTC).
 }
 }

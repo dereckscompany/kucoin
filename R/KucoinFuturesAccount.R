@@ -118,14 +118,14 @@ KucoinFuturesAccount <- R6::R6Class(
     #'   account overview: total account equity, unrealised profit and loss,
     #'   margin balance, position and order margin, frozen funds, available
     #'   balance, and the settlement currency code:
-    #' - account_equity (numeric) the account equity.
-    #' - unrealised_pnl (numeric) the unrealised pnl.
-    #' - margin_balance (numeric) the margin balance.
-    #' - available_balance (numeric) the available balance.
-    #' - available_margin (numeric) the available margin.
+    #' - account_equity (numeric | NA) the account equity.
+    #' - unrealised_pnl (numeric | NA) the unrealised pnl.
+    #' - margin_balance (numeric | NA) the margin balance.
+    #' - available_balance (numeric | NA) the available balance.
+    #' - available_margin (numeric | NA) the available margin.
     #' - currency (character) the currency code.
-    #' - risk_ratio (numeric) the risk ratio.
-    #' - max_withdraw_amount (numeric) the max withdraw amount.
+    #' - risk_ratio (numeric | NA) the risk ratio.
+    #' - max_withdraw_amount (numeric | NA) the max withdraw amount.
     get_account_overview = function(currency = "USDT") {
       assert_args_KucoinFuturesAccount__get_account_overview(currency)
       res <- private$.request(
@@ -608,7 +608,7 @@ KucoinFuturesAccount <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row giving the contract
     #'   symbol and its current cross-margin leverage multiplier:
     #' - symbol (character) the trading pair symbol.
-    #' - leverage (character) the leverage.
+    #' - leverage (character | NA) the leverage.
     get_cross_margin_leverage = function(symbol) {
       assert_args_KucoinFuturesAccount__get_cross_margin_leverage(symbol)
       assert::assert_nonempty_strings(symbol)
@@ -680,7 +680,7 @@ KucoinFuturesAccount <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row giving the contract
     #'   symbol and its updated cross-margin leverage multiplier:
     #' - symbol (character) the trading pair symbol.
-    #' - leverage (character) the leverage.
+    #' - leverage (character | NA) the leverage.
     set_cross_margin_leverage = function(symbol, leverage) {
       assert_args_KucoinFuturesAccount__set_cross_margin_leverage(symbol, leverage)
       assert::assert_nonempty_strings(symbol)
@@ -745,8 +745,8 @@ KucoinFuturesAccount <- R6::R6Class(
     #'   symbol and the maximum number of contracts that can be opened on the
     #'   buy and sell sides:
     #' - symbol (character) the trading pair symbol.
-    #' - max_buy_open_size (integer) the max buy open size.
-    #' - max_sell_open_size (integer) the max sell open size.
+    #' - max_buy_open_size (integer | NA) the max buy open size.
+    #' - max_sell_open_size (integer | NA) the max sell open size.
     get_max_open_size = function(symbol, price, leverage) {
       assert_args_KucoinFuturesAccount__get_max_open_size(symbol, price, leverage)
       assert::assert_nonempty_strings(symbol)
@@ -890,7 +890,7 @@ KucoinFuturesAccount <- R6::R6Class(
     #'   (e.g., `"ADD"`):
     #' - id (character) the record identifier.
     #' - symbol (character) the trading pair symbol.
-    #' - margin (character) the margin amount.
+    #' - margin (character | NA) the margin amount.
     #' - margin_type (character) the margin type.
     add_isolated_margin = function(symbol, margin, bizNo) {
       assert_args_KucoinFuturesAccount__add_isolated_margin(symbol, margin, bizNo)
@@ -968,7 +968,7 @@ KucoinFuturesAccount <- R6::R6Class(
     #'   operation ID, contract symbol, amount withdrawn, and operation type:
     #' - id (character) the record identifier.
     #' - symbol (character) the trading pair symbol.
-    #' - margin (character) the margin amount.
+    #' - margin (character | NA) the margin amount.
     #' - margin_type (character) the margin type.
     remove_isolated_margin = function(symbol, withdrawAmount) {
       assert_args_KucoinFuturesAccount__remove_isolated_margin(symbol, withdrawAmount)

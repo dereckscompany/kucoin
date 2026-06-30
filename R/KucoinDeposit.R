@@ -126,10 +126,10 @@ KucoinDeposit <- R6::R6Class(
     #' - address (character) the address.
     #' - memo (character) the address memo/tag.
     #' - chain (character) the chain code.
-    #' - chain_id (character) the chain identifier.
+    #' - chain_id (character | NA) the chain identifier.
     #' - to (character) the destination.
     #' - currency (character) the currency code.
-    #' - contract_address (character) the token contract address.
+    #' - contract_address (character | NA) the token contract address.
     #'
     #' @examples
     #' \dontrun{

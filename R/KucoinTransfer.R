@@ -329,10 +329,10 @@ KucoinTransfer <- R6::R6Class(
     #'   locked in open orders), and `transferable` (funds available for
     #'   transfer) -- all character:
     #' - currency (character) the currency code.
-    #' - balance (character) the total balance.
-    #' - available (character) the amount available.
-    #' - holds (character) the amount on hold.
-    #' - transferable (character) the transferable amount.
+    #' - balance (character | NA) the total balance.
+    #' - available (character | NA) the amount available.
+    #' - holds (character | NA) the amount on hold.
+    #' - transferable (character | NA) the transferable amount.
     #'
     #' @examples
     #' \dontrun{

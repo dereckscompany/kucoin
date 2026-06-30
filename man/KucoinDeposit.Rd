@@ -251,10 +251,10 @@ contract address (empty for native coins) -- all character:
 \item address (character) the address.
 \item memo (character) the address memo/tag.
 \item chain (character) the chain code.
-\item chain_id (character) the chain identifier.
+\item chain_id (character | NA) the chain identifier.
 \item to (character) the destination.
 \item currency (character) the currency code.
-\item contract_address (character) the token contract address.
+\item contract_address (character | NA) the token contract address.
 }
 }
 \subsection{Examples}{

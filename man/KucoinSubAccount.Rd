@@ -273,7 +273,7 @@ the \code{remarks} string, and the granted permission \code{access}:
 \itemize{
 \item uid (integer) the user identifier.
 \item sub_name (character) the sub name.
-\item remarks (character) an optional remark.
+\item remarks (character | NA) an optional remark.
 \item access (character) the access.
 }
 }

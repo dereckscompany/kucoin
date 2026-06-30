@@ -365,9 +365,9 @@ so each currency carries the replicated config-level fields for maximum leverage
 liquidation debt ratio; an empty \code{currencyList} yields a zero-row data.table with this schema:
 \itemize{
 \item currency (character) the currency code.
-\item max_leverage (integer) the max leverage.
-\item warning_debt_ratio (character) the warning debt ratio.
-\item liq_debt_ratio (character) the liq debt ratio.
+\item max_leverage (integer | NA) the max leverage.
+\item warning_debt_ratio (character | NA) the warning debt ratio.
+\item liq_debt_ratio (character | NA) the liq debt ratio.
 }
 }
 \subsection{Examples}{
@@ -454,9 +454,9 @@ collateral range, and the collateral ratio applied in that range; an empty respo
 data.table with this schema:
 \itemize{
 \item currency (character) the currency code.
-\item lower_limit (character) the lower limit.
-\item upper_limit (character) the upper limit.
-\item collateral_ratio (character) the collateral ratio.
+\item lower_limit (character | NA) the lower limit.
+\item upper_limit (character | NA) the upper limit.
+\item collateral_ratio (character | NA) the collateral ratio.
 }
 }
 \subsection{Examples}{

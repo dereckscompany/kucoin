@@ -398,10 +398,10 @@ locked in open orders), and \code{transferable} (funds available for
 transfer) -- all character:
 \itemize{
 \item currency (character) the currency code.
-\item balance (character) the total balance.
-\item available (character) the amount available.
-\item holds (character) the amount on hold.
-\item transferable (character) the transferable amount.
+\item balance (character | NA) the total balance.
+\item available (character | NA) the amount available.
+\item holds (character | NA) the amount on hold.
+\item transferable (character | NA) the transferable amount.
 }
 }
 \subsection{Examples}{

@@ -532,19 +532,19 @@ locked_amount, ...):
 \itemize{
 \item currency (character) the currency code.
 \item chain (character) the chain code.
-\item is_withdraw_enabled (logical) the is withdraw enabled.
-\item available_amount (character) the available amount.
-\item remain_amount (character) the remain amount.
-\item withdraw_min_fee (character) the withdraw min fee.
-\item inner_withdraw_min_fee (character) the inner withdraw min fee.
-\item withdraw_min_size (character) the withdraw min size.
-\item precision (integer) the decimal precision.
-\item limit_btc_amount (character) the limit btc amount.
-\item used_btc_amount (character) the used btc amount.
-\item locked_amount (character) the locked amount.
+\item is_withdraw_enabled (logical | NA) the is withdraw enabled.
+\item available_amount (character | NA) the available amount.
+\item remain_amount (character | NA) the remain amount.
+\item withdraw_min_fee (character | NA) the withdraw min fee.
+\item inner_withdraw_min_fee (character | NA) the inner withdraw min fee.
+\item withdraw_min_size (character | NA) the withdraw min size.
+\item precision (integer | NA) the decimal precision.
+\item limit_btc_amount (character | NA) the limit btc amount.
+\item used_btc_amount (character | NA) the used btc amount.
+\item locked_amount (character | NA) the locked amount.
 \item quota_currency (character) the quota currency.
-\item limit_quota_currency_amount (character) the limit quota currency amount.
-\item used_quota_currency_amount (character) the used quota currency amount.
+\item limit_quota_currency_amount (character | NA) the limit quota currency amount.
+\item used_quota_currency_amount (character | NA) the used quota currency amount.
 \item reason (logical | NA) the reason, when present.
 }
 }
@@ -809,23 +809,23 @@ POSIXct:
 \itemize{
 \item id (character) the record identifier.
 \item currency (character) the currency code.
-\item chain_id (character) the chain identifier.
-\item chain_name (character) the chain name.
+\item chain_id (character | NA) the chain identifier.
+\item chain_name (character | NA) the chain name.
 \item status (character) the status.
 \item address (character) the address.
 \item memo (character) the address memo/tag.
 \item is_inner (logical) the is inner.
-\item amount (character) the amount.
-\item fee (character) the fee.
+\item amount (character | NA) the amount.
+\item fee (character | NA) the fee.
 \item wallet_tx_id (logical | NA) the wallet tx id.
 \item created_at (POSIXct) the created at (UTC).
 \item cancel_type (character) the cancel type.
 \item uid (integer) the user identifier.
 \item currency_name (character) the currency name.
-\item failure_reason (character) the failure reason.
+\item failure_reason (character | NA) the failure reason.
 \item failure_reason_msg (logical | NA) the failure reason msg.
 \item address_remark (character) the address remark.
-\item remark (character) an optional remark.
+\item remark (character | NA) an optional remark.
 \item taxes (logical | NA) the taxes.
 \item tax_description (logical | NA) the tax description.
 \item tx_id (logical | NA) the tx id.

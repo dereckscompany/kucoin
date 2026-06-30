@@ -764,7 +764,7 @@ KucoinTrading <- R6::R6Class(
     #' @param cancelSize (scalar<numeric> | scalar<character>) quantity to cancel from the order.
     #' @return (data.table | promise<data.table>) one row giving the cancellation result:
     #' - order_id (character) the system order identifier.
-    #' - cancel_size (character) the cancelled size.
+    #' - cancel_size (character | NA) the cancelled size.
     #'
     #' @examples
     #' \dontrun{
@@ -1030,8 +1030,8 @@ KucoinTrading <- R6::R6Class(
     #' - symbol (character) the trading pair symbol.
     #' - side (character) the order side.
     #' - type (character) the type.
-    #' - price (character) the price.
-    #' - size (character) the size.
+    #' - price (character | NA) the price.
+    #' - size (character | NA) the size.
     #' - created_at (POSIXct) the created at (UTC).
     #' - last_updated_at (POSIXct) the last updated at (UTC).
     #'
@@ -2091,10 +2091,10 @@ KucoinTrading <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row giving the order ID, the original, filled, remaining, and
     #'   cancelled sizes, and the fill status:
     #' - order_id (character) the system order identifier.
-    #' - origin_size (character) the original size.
-    #' - deal_size (character) the filled size.
-    #' - remain_size (character) the unfilled size.
-    #' - canceled_size (character) the cancelled size.
+    #' - origin_size (character | NA) the original size.
+    #' - deal_size (character | NA) the filled size.
+    #' - remain_size (character | NA) the unfilled size.
+    #' - canceled_size (character | NA) the cancelled size.
     #' - status (character) the status.
     #'
     #' @examples
@@ -2171,10 +2171,10 @@ KucoinTrading <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row giving the client order ID, the original, filled, remaining,
     #'   and cancelled sizes, and the fill status:
     #' - client_oid (character) the client-supplied order identifier.
-    #' - origin_size (character) the original size.
-    #' - deal_size (character) the filled size.
-    #' - remain_size (character) the unfilled size.
-    #' - canceled_size (character) the cancelled size.
+    #' - origin_size (character | NA) the original size.
+    #' - deal_size (character | NA) the filled size.
+    #' - remain_size (character | NA) the unfilled size.
+    #' - canceled_size (character | NA) the cancelled size.
     #' - status (character) the status.
     #'
     #' @examples

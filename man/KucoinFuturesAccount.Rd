@@ -183,14 +183,14 @@ account overview: total account equity, unrealised profit and loss,
 margin balance, position and order margin, frozen funds, available
 balance, and the settlement currency code:
 \itemize{
-\item account_equity (numeric) the account equity.
-\item unrealised_pnl (numeric) the unrealised pnl.
-\item margin_balance (numeric) the margin balance.
-\item available_balance (numeric) the available balance.
-\item available_margin (numeric) the available margin.
+\item account_equity (numeric | NA) the account equity.
+\item unrealised_pnl (numeric | NA) the unrealised pnl.
+\item margin_balance (numeric | NA) the margin balance.
+\item available_balance (numeric | NA) the available balance.
+\item available_margin (numeric | NA) the available margin.
 \item currency (character) the currency code.
-\item risk_ratio (numeric) the risk ratio.
-\item max_withdraw_amount (numeric) the max withdraw amount.
+\item risk_ratio (numeric | NA) the risk ratio.
+\item max_withdraw_amount (numeric | NA) the max withdraw amount.
 }
 }
 }
@@ -709,7 +709,7 @@ Verified: 2026-05-23
 symbol and its current cross-margin leverage multiplier:
 \itemize{
 \item symbol (character) the trading pair symbol.
-\item leverage (character) the leverage.
+\item leverage (character | NA) the leverage.
 }
 }
 }
@@ -792,7 +792,7 @@ Verified: 2026-05-23
 symbol and its updated cross-margin leverage multiplier:
 \itemize{
 \item symbol (character) the trading pair symbol.
-\item leverage (character) the leverage.
+\item leverage (character | NA) the leverage.
 }
 }
 }
@@ -867,8 +867,8 @@ symbol and the maximum number of contracts that can be opened on the
 buy and sell sides:
 \itemize{
 \item symbol (character) the trading pair symbol.
-\item max_buy_open_size (integer) the max buy open size.
-\item max_sell_open_size (integer) the max sell open size.
+\item max_buy_open_size (integer | NA) the max buy open size.
+\item max_sell_open_size (integer | NA) the max sell open size.
 }
 }
 }
@@ -1022,7 +1022,7 @@ operation ID, contract symbol, amount deposited, and operation type
 \itemize{
 \item id (character) the record identifier.
 \item symbol (character) the trading pair symbol.
-\item margin (character) the margin amount.
+\item margin (character | NA) the margin amount.
 \item margin_type (character) the margin type.
 }
 }
@@ -1109,7 +1109,7 @@ operation ID, contract symbol, amount withdrawn, and operation type:
 \itemize{
 \item id (character) the record identifier.
 \item symbol (character) the trading pair symbol.
-\item margin (character) the margin amount.
+\item margin (character | NA) the margin amount.
 \item margin_type (character) the margin type.
 }
 }

@@ -418,12 +418,12 @@ description, creation datetime (POSIXct, coerced from epoch milliseconds),
 language code, and the full announcement URL:
 \itemize{
 \item ann_id (integer) the ann id.
-\item ann_title (character) the ann title.
+\item ann_title (character | NA) the ann title.
 \item ann_type (character | NA) the ann type.
-\item ann_desc (character) the ann desc.
+\item ann_desc (character | NA) the ann desc.
 \item c_time (POSIXct) the c time (UTC).
 \item language (character) the language.
-\item ann_url (character) the ann url.
+\item ann_url (character | NA) the ann url.
 }
 }
 \subsection{Examples}{
@@ -768,20 +768,20 @@ the maker and taker fee coefficients:
 \item quote_currency (character) the quote currency.
 \item fee_currency (character) the fee currency.
 \item market (character) the market.
-\item base_min_size (character) the base min size.
-\item quote_min_size (character) the quote min size.
-\item base_max_size (character) the base max size.
-\item quote_max_size (character) the quote max size.
-\item base_increment (character) the base increment.
-\item quote_increment (character) the quote increment.
-\item price_increment (character) the price increment.
-\item price_limit_rate (character) the price limit rate.
-\item min_funds (character) the min funds.
+\item base_min_size (character | NA) the base min size.
+\item quote_min_size (character | NA) the quote min size.
+\item base_max_size (character | NA) the base max size.
+\item quote_max_size (character | NA) the quote max size.
+\item base_increment (character | NA) the base increment.
+\item quote_increment (character | NA) the quote increment.
+\item price_increment (character | NA) the price increment.
+\item price_limit_rate (character | NA) the price limit rate.
+\item min_funds (character | NA) the min funds.
 \item is_margin_enabled (logical) the is margin enabled.
 \item enable_trading (logical) the enable trading.
 \item fee_category (integer) the fee category.
-\item maker_fee_coefficient (character) the maker fee coefficient.
-\item taker_fee_coefficient (character) the taker fee coefficient.
+\item maker_fee_coefficient (character | NA) the maker fee coefficient.
+\item taker_fee_coefficient (character | NA) the taker fee coefficient.
 \item st (logical) whether the symbol is in special treatment.
 \item callauction_is_enabled (logical) the callauction is enabled.
 \item callauction_price_floor (logical | NA) the callauction price floor.
@@ -975,20 +975,20 @@ carrying the same symbol metadata as \code{get_symbol()}:
 \item quote_currency (character) the quote currency.
 \item fee_currency (character) the fee currency.
 \item market (character) the market.
-\item base_min_size (character) the base min size.
-\item quote_min_size (character) the quote min size.
-\item base_max_size (character) the base max size.
-\item quote_max_size (character) the quote max size.
-\item base_increment (character) the base increment.
-\item quote_increment (character) the quote increment.
-\item price_increment (character) the price increment.
-\item price_limit_rate (character) the price limit rate.
-\item min_funds (character) the min funds.
+\item base_min_size (character | NA) the base min size.
+\item quote_min_size (character | NA) the quote min size.
+\item base_max_size (character | NA) the base max size.
+\item quote_max_size (character | NA) the quote max size.
+\item base_increment (character | NA) the base increment.
+\item quote_increment (character | NA) the quote increment.
+\item price_increment (character | NA) the price increment.
+\item price_limit_rate (character | NA) the price limit rate.
+\item min_funds (character | NA) the min funds.
 \item is_margin_enabled (logical) the is margin enabled.
 \item enable_trading (logical) the enable trading.
 \item fee_category (integer) the fee category.
-\item maker_fee_coefficient (character) the maker fee coefficient.
-\item taker_fee_coefficient (character) the taker fee coefficient.
+\item maker_fee_coefficient (character | NA) the maker fee coefficient.
+\item taker_fee_coefficient (character | NA) the taker fee coefficient.
 \item st (logical) whether the symbol is in special treatment.
 \item callauction_is_enabled (logical) the callauction is enabled.
 \item callauction_price_floor (logical | NA) the callauction price floor.
@@ -1093,12 +1093,12 @@ bid and ask prices with their sizes:
 \itemize{
 \item time (POSIXct) the time (UTC).
 \item sequence (character) the sequence.
-\item price (character) the price.
-\item size (character) the size.
-\item best_bid (character) the best bid price.
-\item best_bid_size (character) the best bid size.
-\item best_ask (character) the best ask price.
-\item best_ask_size (character) the best ask size.
+\item price (character | NA) the price.
+\item size (character | NA) the size.
+\item best_bid (character | NA) the best bid price.
+\item best_bid_size (character | NA) the best bid size.
+\item best_ask (character | NA) the best ask price.
+\item best_ask_size (character | NA) the best ask size.
 }
 }
 \subsection{Examples}{
@@ -1203,18 +1203,18 @@ coerced from epoch milliseconds):
 \itemize{
 \item symbol (character) the trading pair symbol.
 \item symbol_name (character) the symbol name.
-\item buy (character) the best bid price.
-\item sell (character) the best ask price.
-\item change_rate (character) the 24h change rate.
-\item change_price (character) the 24h change in price.
-\item high (character) the 24h high price.
-\item low (character) the 24h low price.
-\item vol (character) the 24h traded volume.
-\item vol_value (character) the 24h traded turnover.
-\item last (character) the last traded price.
-\item average_price (character) the average price.
-\item taker_fee_rate (character) the taker fee rate.
-\item maker_fee_rate (character) the maker fee rate.
+\item buy (character | NA) the best bid price.
+\item sell (character | NA) the best ask price.
+\item change_rate (character | NA) the 24h change rate.
+\item change_price (character | NA) the 24h change in price.
+\item high (character | NA) the 24h high price.
+\item low (character | NA) the 24h low price.
+\item vol (character | NA) the 24h traded volume.
+\item vol_value (character | NA) the 24h traded turnover.
+\item last (character | NA) the last traded price.
+\item average_price (character | NA) the average price.
+\item taker_fee_rate (character | NA) the taker fee rate.
+\item maker_fee_rate (character | NA) the maker fee rate.
 \item time (POSIXct) the time (UTC).
 }
 }
@@ -1312,8 +1312,8 @@ timestamp):
 \itemize{
 \item sequence (character) the sequence.
 \item side (character) the order side.
-\item price (character) the price.
-\item size (character) the size.
+\item price (character | NA) the price.
+\item size (character | NA) the size.
 \item time (POSIXct) the time (UTC).
 \item trade_id (character) the trade identifier.
 }
@@ -1602,20 +1602,20 @@ and maker fee rates:
 \itemize{
 \item time (POSIXct) the time (UTC).
 \item symbol (character) the trading pair symbol.
-\item buy (character) the best bid price.
-\item sell (character) the best ask price.
-\item change_rate (character) the 24h change rate.
-\item change_price (character) the 24h change in price.
-\item high (character) the 24h high price.
-\item low (character) the 24h low price.
-\item vol (character) the 24h traded volume.
-\item vol_value (character) the 24h traded turnover.
-\item last (character) the last traded price.
-\item average_price (character) the average price.
-\item taker_fee_rate (character) the taker fee rate.
-\item maker_fee_rate (character) the maker fee rate.
-\item taker_coefficient (character) the taker fee coefficient.
-\item maker_coefficient (character) the maker fee coefficient.
+\item buy (character | NA) the best bid price.
+\item sell (character | NA) the best ask price.
+\item change_rate (character | NA) the 24h change rate.
+\item change_price (character | NA) the 24h change in price.
+\item high (character | NA) the 24h high price.
+\item low (character | NA) the 24h low price.
+\item vol (character | NA) the 24h traded volume.
+\item vol_value (character | NA) the 24h traded turnover.
+\item last (character | NA) the last traded price.
+\item average_price (character | NA) the average price.
+\item taker_fee_rate (character | NA) the taker fee rate.
+\item maker_fee_rate (character | NA) the maker fee rate.
+\item taker_coefficient (character | NA) the taker fee coefficient.
+\item maker_coefficient (character | NA) the maker fee coefficient.
 }
 }
 \subsection{Examples}{

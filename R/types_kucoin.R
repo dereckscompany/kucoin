@@ -38,12 +38,12 @@
 #' @type Klines (data.table) one row per candle, ascending by `datetime`
 #'   (`parse_klines` / `parse_futures_klines`):
 #' - datetime (POSIXct) candle open time (UTC).
-#' - open (numeric) open price.
-#' - high (numeric) high price.
-#' - low (numeric) low price.
-#' - close (numeric) close price.
-#' - volume (numeric) traded volume in the base asset.
-#' - turnover (numeric) traded turnover in the quote asset.
+#' - open (numeric | NA) open price.
+#' - high (numeric | NA) high price.
+#' - low (numeric | NA) low price.
+#' - close (numeric | NA) close price.
+#' - volume (numeric | NA) traded volume in the base asset.
+#' - turnover (numeric | NA) traded turnover in the quote asset.
 #'
 #' @type Orderbook (data.table) the spot level-2 order book in long format, one
 #'   row per price level per side, best price first (`parse_orderbook`):
@@ -52,6 +52,6 @@
 #'   verbatim string to avoid precision loss).
 #' - side (character) the book side, `"bid"` or `"ask"`.
 #' - level (count) 1-indexed depth from the top of book (`1` is best bid/ask).
-#' - price (numeric) the price at this level.
-#' - size (numeric) the size at this level.
+#' - price (numeric | NA) the price at this level.
+#' - size (numeric | NA) the size at this level.
 NULL

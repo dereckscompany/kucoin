@@ -351,11 +351,11 @@ KucoinLending <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row echoing the request:
     #' - currency (character) the lending currency.
     #' - purchase_order_no (character) the modified order number.
-    #' - interest_rate (numeric) the new interest rate.
+    #' - interest_rate (numeric | NA) the new interest rate.
     #' - status (character) the local outcome marker, always `"success"`:
     #' - currency (character) the currency code.
     #' - purchase_order_no (character) the purchase order no.
-    #' - interest_rate (numeric) the interest rate.
+    #' - interest_rate (numeric | NA) the interest rate.
     #' - status (character) the status.
     #'
     #' @examples

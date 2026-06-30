@@ -370,12 +370,12 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' - sequence (integer) the sequence.
     #' - symbol (character) the trading pair symbol.
     #' - side (character) the order side.
-    #' - size (integer) the size.
-    #' - price (character) the price.
-    #' - best_bid_size (integer) the best bid size.
-    #' - best_bid_price (character) the best bid price.
-    #' - best_ask_price (character) the best ask price.
-    #' - best_ask_size (integer) the best ask size.
+    #' - size (integer | NA) the size.
+    #' - price (character | NA) the price.
+    #' - best_bid_size (integer | NA) the best bid size.
+    #' - best_bid_price (character | NA) the best bid price.
+    #' - best_ask_price (character | NA) the best ask price.
+    #' - best_ask_size (integer | NA) the best ask size.
     #' - trade_id (character) the trade identifier.
     #' - ts (POSIXct) the ts (UTC).
     #'
@@ -558,9 +558,9 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' - ts (POSIXct) the ts (UTC).
     #' - sequence (character) the sequence.
     #' - side (character) the order side.
-    #' - level (integer) the tier level.
-    #' - price (numeric) the price.
-    #' - size (numeric) the size.
+    #' - level (integer | NA) the tier level.
+    #' - price (numeric | NA) the price.
+    #' - size (numeric | NA) the size.
     #' - symbol (character) the trading pair symbol.
     #'
     #' @examples
@@ -650,9 +650,9 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' - ts (POSIXct) the ts (UTC).
     #' - sequence (character) the sequence.
     #' - side (character) the order side.
-    #' - level (integer) the tier level.
-    #' - price (numeric) the price.
-    #' - size (numeric) the size.
+    #' - level (integer | NA) the tier level.
+    #' - price (numeric | NA) the price.
+    #' - size (numeric | NA) the size.
     #' - symbol (character) the trading pair symbol.
     #'
     #' @examples
@@ -964,10 +964,10 @@ KucoinFuturesMarketData <- R6::R6Class(
     #'   datetime (POSIXct, coerced from epoch milliseconds), the mark price, and
     #'   the underlying index price:
     #' - symbol (character) the trading pair symbol.
-    #' - granularity (integer) the granularity.
+    #' - granularity (integer | NA) the granularity.
     #' - time_point (POSIXct) the time point (UTC).
-    #' - value (numeric) the order value.
-    #' - index_price (numeric) the index price.
+    #' - value (numeric | NA) the order value.
+    #' - index_price (numeric | NA) the index price.
     #'
     #' @examples
     #' \dontrun{
@@ -1055,13 +1055,13 @@ KucoinFuturesMarketData <- R6::R6Class(
     #'   funding period, and the next funding settlement datetime (POSIXct, coerced
     #'   from epoch milliseconds):
     #' - symbol (character) the trading pair symbol.
-    #' - granularity (integer) the granularity.
+    #' - granularity (integer | NA) the granularity.
     #' - time_point (POSIXct) the time point (UTC).
-    #' - value (numeric) the order value.
-    #' - daily_interest_rate (numeric) the daily interest rate.
-    #' - funding_rate_cap (numeric) the funding rate cap.
-    #' - funding_rate_floor (numeric) the funding rate floor.
-    #' - period (integer) the period.
+    #' - value (numeric | NA) the order value.
+    #' - daily_interest_rate (numeric | NA) the daily interest rate.
+    #' - funding_rate_cap (numeric | NA) the funding rate cap.
+    #' - funding_rate_floor (numeric | NA) the funding rate floor.
+    #' - period (integer | NA) the period.
     #' - funding_time (POSIXct) the funding time (UTC).
     #'
     #' @examples

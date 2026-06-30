@@ -1043,17 +1043,17 @@ KucoinFuturesTrading <- R6::R6Class(
     #' - symbol (character) the trading pair symbol.
     #' - type (character) the type.
     #' - side (character) the order side.
-    #' - price (character) the price.
-    #' - size (integer) the size.
-    #' - value (character) the order value.
-    #' - deal_value (character) the filled value.
-    #' - deal_size (integer) the filled size.
-    #' - leverage (integer) the leverage.
+    #' - price (character | NA) the price.
+    #' - size (integer | NA) the size.
+    #' - value (character | NA) the order value.
+    #' - deal_value (character | NA) the filled value.
+    #' - deal_size (integer | NA) the filled size.
+    #' - leverage (integer | NA) the leverage.
     #' - margin_mode (character) the margin mode.
     #' - position_side (character) the position side.
     #' - status (character) the status.
     #' - created_at (POSIXct) the created at (UTC).
-    #' - updated_at (POSIXct) the updated at (UTC).
+    #' - updated_at (POSIXct | NA) the updated at (UTC).
     #' - client_oid (character) the client-supplied order identifier.
     #'
     #' @examples
@@ -1178,17 +1178,17 @@ KucoinFuturesTrading <- R6::R6Class(
     #' - symbol (character) the trading pair symbol.
     #' - type (character) the type.
     #' - side (character) the order side.
-    #' - price (character) the price.
-    #' - size (integer) the size.
-    #' - value (character) the order value.
-    #' - deal_value (character) the filled value.
-    #' - deal_size (integer) the filled size.
-    #' - leverage (integer) the leverage.
+    #' - price (character | NA) the price.
+    #' - size (integer | NA) the size.
+    #' - value (character | NA) the order value.
+    #' - deal_value (character | NA) the filled value.
+    #' - deal_size (integer | NA) the filled size.
+    #' - leverage (integer | NA) the leverage.
     #' - margin_mode (character) the margin mode.
     #' - position_side (character) the position side.
     #' - status (character) the status.
     #' - created_at (POSIXct) the created at (UTC).
-    #' - updated_at (POSIXct) the updated at (UTC).
+    #' - updated_at (POSIXct | NA) the updated at (UTC).
     #' - client_oid (character) the client-supplied order identifier.
     #'
     #' @examples
@@ -1320,17 +1320,17 @@ KucoinFuturesTrading <- R6::R6Class(
     #' - symbol (character) the trading pair symbol.
     #' - type (character) the type.
     #' - side (character) the order side.
-    #' - price (character) the price.
-    #' - size (integer) the size.
-    #' - value (character) the order value.
-    #' - deal_value (character) the filled value.
-    #' - deal_size (integer) the filled size.
-    #' - leverage (integer) the leverage.
+    #' - price (character | NA) the price.
+    #' - size (integer | NA) the size.
+    #' - value (character | NA) the order value.
+    #' - deal_value (character | NA) the filled value.
+    #' - deal_size (integer | NA) the filled size.
+    #' - leverage (integer | NA) the leverage.
     #' - margin_mode (character) the margin mode.
     #' - position_side (character) the position side.
     #' - status (character) the status.
     #' - created_at (POSIXct) the created at (UTC).
-    #' - updated_at (POSIXct) the updated at (UTC).
+    #' - updated_at (POSIXct | NA) the updated at (UTC).
     #' - client_oid (character) the client-supplied order identifier.
     #'
     #' @examples
@@ -1465,17 +1465,17 @@ KucoinFuturesTrading <- R6::R6Class(
     #' - symbol (character) the trading pair symbol.
     #' - type (character) the type.
     #' - side (character) the order side.
-    #' - price (character) the price.
-    #' - size (integer) the size.
-    #' - value (character) the order value.
-    #' - deal_value (character) the filled value.
-    #' - deal_size (integer) the filled size.
-    #' - leverage (integer) the leverage.
+    #' - price (character | NA) the price.
+    #' - size (integer | NA) the size.
+    #' - value (character | NA) the order value.
+    #' - deal_value (character | NA) the filled value.
+    #' - deal_size (integer | NA) the filled size.
+    #' - leverage (integer | NA) the leverage.
     #' - margin_mode (character) the margin mode.
     #' - position_side (character) the position side.
     #' - status (character) the status.
     #' - created_at (POSIXct) the created at (UTC).
-    #' - updated_at (POSIXct) the updated at (UTC).
+    #' - updated_at (POSIXct | NA) the updated at (UTC).
     #' - client_oid (character) the client-supplied order identifier.
     #'
     #' @examples
@@ -1837,13 +1837,13 @@ KucoinFuturesTrading <- R6::R6Class(
     #' - side (character) the order side.
     #' - liquidity (character) the liquidity role.
     #' - force_taker (logical) the force taker.
-    #' - price (character) the price.
-    #' - size (integer) the size.
-    #' - value (character) the order value.
-    #' - fee_rate (character) the fee rate.
-    #' - fix_fee (character) the fix fee.
+    #' - price (character | NA) the price.
+    #' - size (integer | NA) the size.
+    #' - value (character | NA) the order value.
+    #' - fee_rate (character | NA) the fee rate.
+    #' - fix_fee (character | NA) the fix fee.
     #' - fee_currency (character) the fee currency.
-    #' - fee (character) the fee.
+    #' - fee (character | NA) the fee.
     #' - order_type (character) the order type.
     #' - trade_type (character) the trade type.
     #' - trade_time (POSIXct) the trade time (UTC).
@@ -1934,10 +1934,10 @@ KucoinFuturesTrading <- R6::R6Class(
     #' @param symbol (scalar<character>) futures symbol (e.g., `"XBTUSDTM"`).
     #' @return (data.table | promise<data.table>) one row giving the total buy order size, total sell order
     #'   size, total buy order cost, total sell order cost, and the settlement currency:
-    #' - open_order_buy_size (integer) the open order buy size.
-    #' - open_order_sell_size (integer) the open order sell size.
-    #' - open_order_buy_cost (character) the open order buy cost.
-    #' - open_order_sell_cost (character) the open order sell cost.
+    #' - open_order_buy_size (integer | NA) the open order buy size.
+    #' - open_order_sell_size (integer | NA) the open order sell size.
+    #' - open_order_buy_cost (character | NA) the open order buy cost.
+    #' - open_order_sell_cost (character | NA) the open order sell cost.
     #' - settle_currency (character) the settle currency.
     #'
     #' @examples
@@ -2038,7 +2038,7 @@ KucoinFuturesTrading <- R6::R6Class(
     #'   When NULL, DCP applies to all symbols.
     #' @return (data.table | promise<data.table>) one row giving the configured timeout in seconds, the applicable
     #'   symbols (empty for all), and the server time when DCP was set:
-    #' - timeout (integer) the timeout.
+    #' - timeout (integer | NA) the timeout.
     #' - symbols (character) the symbols.
     #' - current_time (numeric) the current time.
     #'
@@ -2131,7 +2131,7 @@ KucoinFuturesTrading <- R6::R6Class(
     #'   When NULL, returns the global DCP configuration.
     #' @return (data.table | promise<data.table>) one row giving the configured timeout in seconds, the applicable
     #'   symbols, and the server time of the query:
-    #' - timeout (integer) the timeout.
+    #' - timeout (integer | NA) the timeout.
     #' - symbols (character) the symbols.
     #' - current_time (numeric) the current time.
     #'

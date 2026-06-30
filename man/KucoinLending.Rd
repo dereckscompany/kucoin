@@ -482,11 +482,11 @@ Verified: 2026-05-23
 \itemize{
 \item currency (character) the lending currency.
 \item purchase_order_no (character) the modified order number.
-\item interest_rate (numeric) the new interest rate.
+\item interest_rate (numeric | NA) the new interest rate.
 \item status (character) the local outcome marker, always \code{"success"}:
 \item currency (character) the currency code.
 \item purchase_order_no (character) the purchase order no.
-\item interest_rate (numeric) the interest rate.
+\item interest_rate (numeric | NA) the interest rate.
 \item status (character) the status.
 }
 }

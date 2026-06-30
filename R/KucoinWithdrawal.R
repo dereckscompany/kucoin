@@ -397,19 +397,19 @@ KucoinWithdrawal <- R6::R6Class(
     #'   locked_amount, ...):
     #' - currency (character) the currency code.
     #' - chain (character) the chain code.
-    #' - is_withdraw_enabled (logical) the is withdraw enabled.
-    #' - available_amount (character) the available amount.
-    #' - remain_amount (character) the remain amount.
-    #' - withdraw_min_fee (character) the withdraw min fee.
-    #' - inner_withdraw_min_fee (character) the inner withdraw min fee.
-    #' - withdraw_min_size (character) the withdraw min size.
-    #' - precision (integer) the decimal precision.
-    #' - limit_btc_amount (character) the limit btc amount.
-    #' - used_btc_amount (character) the used btc amount.
-    #' - locked_amount (character) the locked amount.
+    #' - is_withdraw_enabled (logical | NA) the is withdraw enabled.
+    #' - available_amount (character | NA) the available amount.
+    #' - remain_amount (character | NA) the remain amount.
+    #' - withdraw_min_fee (character | NA) the withdraw min fee.
+    #' - inner_withdraw_min_fee (character | NA) the inner withdraw min fee.
+    #' - withdraw_min_size (character | NA) the withdraw min size.
+    #' - precision (integer | NA) the decimal precision.
+    #' - limit_btc_amount (character | NA) the limit btc amount.
+    #' - used_btc_amount (character | NA) the used btc amount.
+    #' - locked_amount (character | NA) the locked amount.
     #' - quota_currency (character) the quota currency.
-    #' - limit_quota_currency_amount (character) the limit quota currency amount.
-    #' - used_quota_currency_amount (character) the used quota currency amount.
+    #' - limit_quota_currency_amount (character | NA) the limit quota currency amount.
+    #' - used_quota_currency_amount (character | NA) the used quota currency amount.
     #' - reason (logical | NA) the reason, when present.
     #'
     #' @examples
@@ -704,23 +704,23 @@ KucoinWithdrawal <- R6::R6Class(
     #'   POSIXct:
     #' - id (character) the record identifier.
     #' - currency (character) the currency code.
-    #' - chain_id (character) the chain identifier.
-    #' - chain_name (character) the chain name.
+    #' - chain_id (character | NA) the chain identifier.
+    #' - chain_name (character | NA) the chain name.
     #' - status (character) the status.
     #' - address (character) the address.
     #' - memo (character) the address memo/tag.
     #' - is_inner (logical) the is inner.
-    #' - amount (character) the amount.
-    #' - fee (character) the fee.
+    #' - amount (character | NA) the amount.
+    #' - fee (character | NA) the fee.
     #' - wallet_tx_id (logical | NA) the wallet tx id.
     #' - created_at (POSIXct) the created at (UTC).
     #' - cancel_type (character) the cancel type.
     #' - uid (integer) the user identifier.
     #' - currency_name (character) the currency name.
-    #' - failure_reason (character) the failure reason.
+    #' - failure_reason (character | NA) the failure reason.
     #' - failure_reason_msg (logical | NA) the failure reason msg.
     #' - address_remark (character) the address remark.
-    #' - remark (character) an optional remark.
+    #' - remark (character | NA) an optional remark.
     #' - taxes (logical | NA) the taxes.
     #' - tax_description (logical | NA) the tax description.
     #' - tx_id (logical | NA) the tx id.

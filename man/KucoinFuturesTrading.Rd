@@ -1403,17 +1403,17 @@ datetimes (POSIXct, coerced from epoch milliseconds):
 \item symbol (character) the trading pair symbol.
 \item type (character) the type.
 \item side (character) the order side.
-\item price (character) the price.
-\item size (integer) the size.
-\item value (character) the order value.
-\item deal_value (character) the filled value.
-\item deal_size (integer) the filled size.
-\item leverage (integer) the leverage.
+\item price (character | NA) the price.
+\item size (integer | NA) the size.
+\item value (character | NA) the order value.
+\item deal_value (character | NA) the filled value.
+\item deal_size (integer | NA) the filled size.
+\item leverage (integer | NA) the leverage.
 \item margin_mode (character) the margin mode.
 \item position_side (character) the position side.
 \item status (character) the status.
 \item created_at (POSIXct) the created at (UTC).
-\item updated_at (POSIXct) the updated at (UTC).
+\item updated_at (POSIXct | NA) the updated at (UTC).
 \item client_oid (character) the client-supplied order identifier.
 }
 }
@@ -1549,17 +1549,17 @@ Verified: 2026-05-23
 \item symbol (character) the trading pair symbol.
 \item type (character) the type.
 \item side (character) the order side.
-\item price (character) the price.
-\item size (integer) the size.
-\item value (character) the order value.
-\item deal_value (character) the filled value.
-\item deal_size (integer) the filled size.
-\item leverage (integer) the leverage.
+\item price (character | NA) the price.
+\item size (integer | NA) the size.
+\item value (character | NA) the order value.
+\item deal_value (character | NA) the filled value.
+\item deal_size (integer | NA) the filled size.
+\item leverage (integer | NA) the leverage.
 \item margin_mode (character) the margin mode.
 \item position_side (character) the position side.
 \item status (character) the status.
 \item created_at (POSIXct) the created at (UTC).
-\item updated_at (POSIXct) the updated at (UTC).
+\item updated_at (POSIXct | NA) the updated at (UTC).
 \item client_oid (character) the client-supplied order identifier.
 }
 }
@@ -1701,17 +1701,17 @@ empty data.table if no orders match the filters:
 \item symbol (character) the trading pair symbol.
 \item type (character) the type.
 \item side (character) the order side.
-\item price (character) the price.
-\item size (integer) the size.
-\item value (character) the order value.
-\item deal_value (character) the filled value.
-\item deal_size (integer) the filled size.
-\item leverage (integer) the leverage.
+\item price (character | NA) the price.
+\item size (integer | NA) the size.
+\item value (character | NA) the order value.
+\item deal_value (character | NA) the filled value.
+\item deal_size (integer | NA) the filled size.
+\item leverage (integer | NA) the leverage.
 \item margin_mode (character) the margin mode.
 \item position_side (character) the position side.
 \item status (character) the status.
 \item created_at (POSIXct) the created at (UTC).
-\item updated_at (POSIXct) the updated at (UTC).
+\item updated_at (POSIXct | NA) the updated at (UTC).
 \item client_oid (character) the client-supplied order identifier.
 }
 }
@@ -1857,17 +1857,17 @@ empty data.table if no recently closed orders exist:
 \item symbol (character) the trading pair symbol.
 \item type (character) the type.
 \item side (character) the order side.
-\item price (character) the price.
-\item size (integer) the size.
-\item value (character) the order value.
-\item deal_value (character) the filled value.
-\item deal_size (integer) the filled size.
-\item leverage (integer) the leverage.
+\item price (character | NA) the price.
+\item size (integer | NA) the size.
+\item value (character | NA) the order value.
+\item deal_value (character | NA) the filled value.
+\item deal_size (integer | NA) the filled size.
+\item leverage (integer | NA) the leverage.
 \item margin_mode (character) the margin mode.
 \item position_side (character) the position side.
 \item status (character) the status.
 \item created_at (POSIXct) the created at (UTC).
-\item updated_at (POSIXct) the updated at (UTC).
+\item updated_at (POSIXct | NA) the updated at (UTC).
 \item client_oid (character) the client-supplied order identifier.
 }
 }
@@ -2261,13 +2261,13 @@ if no recent fills exist:
 \item side (character) the order side.
 \item liquidity (character) the liquidity role.
 \item force_taker (logical) the force taker.
-\item price (character) the price.
-\item size (integer) the size.
-\item value (character) the order value.
-\item fee_rate (character) the fee rate.
-\item fix_fee (character) the fix fee.
+\item price (character | NA) the price.
+\item size (integer | NA) the size.
+\item value (character | NA) the order value.
+\item fee_rate (character | NA) the fee rate.
+\item fix_fee (character | NA) the fix fee.
 \item fee_currency (character) the fee currency.
-\item fee (character) the fee.
+\item fee (character | NA) the fee.
 \item order_type (character) the order type.
 \item trade_type (character) the trade type.
 \item trade_time (POSIXct) the trade time (UTC).
@@ -2369,10 +2369,10 @@ Verified: 2026-05-23
 (data.table | promise<data.table>) one row giving the total buy order size, total sell order
 size, total buy order cost, total sell order cost, and the settlement currency:
 \itemize{
-\item open_order_buy_size (integer) the open order buy size.
-\item open_order_sell_size (integer) the open order sell size.
-\item open_order_buy_cost (character) the open order buy cost.
-\item open_order_sell_cost (character) the open order sell cost.
+\item open_order_buy_size (integer | NA) the open order buy size.
+\item open_order_sell_size (integer | NA) the open order sell size.
+\item open_order_buy_cost (character | NA) the open order buy cost.
+\item open_order_sell_cost (character | NA) the open order sell cost.
 \item settle_currency (character) the settle currency.
 }
 }
@@ -2491,7 +2491,7 @@ When NULL, DCP applies to all symbols.}
 (data.table | promise<data.table>) one row giving the configured timeout in seconds, the applicable
 symbols (empty for all), and the server time when DCP was set:
 \itemize{
-\item timeout (integer) the timeout.
+\item timeout (integer | NA) the timeout.
 \item symbols (character) the symbols.
 \item current_time (numeric) the current time.
 }
@@ -2598,7 +2598,7 @@ When NULL, returns the global DCP configuration.}
 (data.table | promise<data.table>) one row giving the configured timeout in seconds, the applicable
 symbols, and the server time of the query:
 \itemize{
-\item timeout (integer) the timeout.
+\item timeout (integer | NA) the timeout.
 \item symbols (character) the symbols.
 \item current_time (numeric) the current time.
 }

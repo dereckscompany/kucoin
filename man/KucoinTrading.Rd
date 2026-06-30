@@ -1073,7 +1073,7 @@ Verified: 2026-05-23
 (data.table | promise<data.table>) one row giving the cancellation result:
 \itemize{
 \item order_id (character) the system order identifier.
-\item cancel_size (character) the cancelled size.
+\item cancel_size (character | NA) the cancelled size.
 }
 }
 \subsection{Examples}{
@@ -1339,8 +1339,8 @@ datetimes (POSIXct) when timestamps are present:
 \item symbol (character) the trading pair symbol.
 \item side (character) the order side.
 \item type (character) the type.
-\item price (character) the price.
-\item size (character) the size.
+\item price (character | NA) the price.
+\item size (character | NA) the size.
 \item created_at (POSIXct) the created at (UTC).
 \item last_updated_at (POSIXct) the last updated at (UTC).
 }
@@ -2296,10 +2296,10 @@ Verified: 2026-05-23
 cancelled sizes, and the fill status:
 \itemize{
 \item order_id (character) the system order identifier.
-\item origin_size (character) the original size.
-\item deal_size (character) the filled size.
-\item remain_size (character) the unfilled size.
-\item canceled_size (character) the cancelled size.
+\item origin_size (character | NA) the original size.
+\item deal_size (character | NA) the filled size.
+\item remain_size (character | NA) the unfilled size.
+\item canceled_size (character | NA) the cancelled size.
 \item status (character) the status.
 }
 }
@@ -2382,10 +2382,10 @@ Verified: 2026-05-23
 and cancelled sizes, and the fill status:
 \itemize{
 \item client_oid (character) the client-supplied order identifier.
-\item origin_size (character) the original size.
-\item deal_size (character) the filled size.
-\item remain_size (character) the unfilled size.
-\item canceled_size (character) the cancelled size.
+\item origin_size (character | NA) the original size.
+\item deal_size (character | NA) the filled size.
+\item remain_size (character | NA) the unfilled size.
+\item canceled_size (character | NA) the cancelled size.
 \item status (character) the status.
 }
 }
