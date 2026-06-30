@@ -188,8 +188,8 @@ KucoinAccount <- R6::R6Class(
     #' ### Automated Trading Usage
     #' - **Permission Verification**: Confirm the key has `Trade` permission before placing orders in a bot startup
     #'   routine.
-    #' - **IP Whitelist Check**: Validate that the bot's server IP is in `is_master`/`ip_whitelist` to avoid auth
-    #'   failures.
+    #' - **IP Whitelist Check**: Confirm the key's IP-whitelist settings on KuCoin allow the bot's server IP to
+    #'   avoid auth failures.
     #' - **Key Rotation Monitoring**: Use `created_at` to track key age and schedule rotation for security.
     #'
     #' ### curl
@@ -220,24 +220,27 @@ KucoinAccount <- R6::R6Class(
     #' ```
     #'
     #' @return (data.table | promise<data.table>) one row describing the active
-    #'   API key: its label, key ID, version, comma-separated permissions and IP
-    #'   whitelist, creation datetime (POSIXct, coerced from epoch milliseconds),
-    #'   user ID, and whether it belongs to the master account:
+    #'   API key: its label, key ID, version, comma-separated permissions,
+    #'   creation datetime (POSIXct, coerced from epoch milliseconds), user ID,
+    #'   whether it belongs to the master account, and the account's region, KYC
+    #'   status and site type:
     #' - remark (character | NA) an optional remark.
     #' - api_key (character | NA) the api key.
     #' - api_version (integer | NA) the api version.
     #' - permission (character) the permission.
-    #' - ip_whitelist (character | NA) the ip whitelist.
     #' - created_at (POSIXct) the created at (UTC).
     #' - uid (integer) the user identifier.
     #' - is_master (logical) the is master.
+    #' - region (character | NA) the account region.
+    #' - kyc_status (character | NA) the KYC verification status.
+    #' - site_type (character | NA) the site type.
     #'
     #' @examples
     #' \dontrun{
     #' account <- KucoinAccount$new()
     #' key_info <- account$get_apikey_info()
     #' cat("Permissions:", key_info$permission, "\\n")
-    #' cat("IP Whitelist:", key_info$ip_whitelist, "\\n")
+    #' cat("Region:", key_info$region, "\\n")
     #' cat("Is Master:", key_info$is_master, "\\n")
     #' }
     get_apikey_info = function() {
@@ -246,6 +249,9 @@ KucoinAccount <- R6::R6Class(
         .parser = function(data) {
           dt <- as_dt_row(data)
           coerce_cols(dt, "created_at", ms_to_datetime)
+          # region/kyc_status/site_type are null for some accounts; coerce so
+          # each column lands as character rather than an all-logical NA vector.
+          coerce_cols(dt, c("region", "kyc_status", "site_type"), as.character)
           return(dt[])
         }
       )

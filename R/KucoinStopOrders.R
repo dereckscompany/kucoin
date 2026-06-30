@@ -503,7 +503,7 @@ KucoinStopOrders <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row giving the KuCoin order
     #'   ID and the client-assigned order ID of the cancelled stop order:
     #' - cancelled_order_id (character) the cancelled order identifier.
-    #' - client_oid (character) the client-supplied order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{

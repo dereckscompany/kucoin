@@ -626,7 +626,7 @@ Required to disambiguate client OIDs across different trading pairs.}
 ID and the client-assigned order ID of the cancelled stop order:
 \itemize{
 \item cancelled_order_id (character) the cancelled order identifier.
-\item client_oid (character) the client-supplied order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
 }
 }
 \subsection{Examples}{

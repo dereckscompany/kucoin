@@ -367,7 +367,7 @@ KucoinFuturesMarketData <- R6::R6Class(
     #'   size, trade identifier and price, the best bid and ask prices with their
     #'   sizes, and the ticker datetime (POSIXct, coerced from the nanosecond
     #'   timestamp):
-    #' - sequence (integer) the sequence.
+    #' - sequence (numeric) the sequence.
     #' - symbol (character) the trading pair symbol.
     #' - side (character) the order side.
     #' - size (integer | NA) the size.

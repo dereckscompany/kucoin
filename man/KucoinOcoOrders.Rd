@@ -760,7 +760,7 @@ status (e.g., \code{"NEW"}, \code{"DONE"}, \code{"TRIGGERED"}):
 \itemize{
 \item order_id (character) the system order identifier.
 \item symbol (character) the trading pair symbol.
-\item client_oid (character) the client-supplied order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
 \item order_time (POSIXct) the order time (UTC).
 \item status (character) the status.
 }
@@ -865,7 +865,7 @@ milliseconds), and order status (e.g., \code{"NEW"}, \code{"DONE"}, \code{"TRIGG
 \itemize{
 \item order_id (character) the system order identifier.
 \item symbol (character) the trading pair symbol.
-\item client_oid (character) the client-supplied order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
 \item order_time (POSIXct) the order time (UTC).
 \item status (character) the status.
 }
@@ -992,7 +992,7 @@ each sub-order's id, symbol, side, price, size, status, and stop price
 \itemize{
 \item order_id (character) the system order identifier.
 \item symbol (character) the trading pair symbol.
-\item client_oid (character) the client-supplied order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
 \item order_time (POSIXct) the order time (UTC).
 \item status (character) the status.
 \item sub_order_id (character) the sub order id.

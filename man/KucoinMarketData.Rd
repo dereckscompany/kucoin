@@ -784,12 +784,12 @@ the maker and taker fee coefficients:
 \item taker_fee_coefficient (character | NA) the taker fee coefficient.
 \item st (logical) whether the symbol is in special treatment.
 \item callauction_is_enabled (logical) the callauction is enabled.
-\item callauction_price_floor (logical | NA) the callauction price floor.
-\item callauction_price_ceiling (logical | NA) the callauction price ceiling.
-\item callauction_first_stage_start_time (logical | NA) the callauction first stage start time.
-\item callauction_second_stage_start_time (logical | NA) the callauction second stage start time.
-\item callauction_third_stage_start_time (logical | NA) the callauction third stage start time.
-\item trading_start_time (logical | NA) the trading start time.
+\item callauction_price_floor (character | NA) the callauction price floor.
+\item callauction_price_ceiling (character | NA) the callauction price ceiling.
+\item callauction_first_stage_start_time (numeric | NA) the callauction first stage start time (epoch ms).
+\item callauction_second_stage_start_time (numeric | NA) the callauction second stage start time (epoch ms).
+\item callauction_third_stage_start_time (numeric | NA) the callauction third stage start time (epoch ms).
+\item trading_start_time (numeric | NA) the trading start time (epoch ms).
 }
 }
 \subsection{Examples}{
@@ -991,12 +991,12 @@ carrying the same symbol metadata as \code{get_symbol()}:
 \item taker_fee_coefficient (character | NA) the taker fee coefficient.
 \item st (logical) whether the symbol is in special treatment.
 \item callauction_is_enabled (logical) the callauction is enabled.
-\item callauction_price_floor (logical | NA) the callauction price floor.
-\item callauction_price_ceiling (logical | NA) the callauction price ceiling.
-\item callauction_first_stage_start_time (logical | NA) the callauction first stage start time.
-\item callauction_second_stage_start_time (logical | NA) the callauction second stage start time.
-\item callauction_third_stage_start_time (logical | NA) the callauction third stage start time.
-\item trading_start_time (logical | NA) the trading start time.
+\item callauction_price_floor (character | NA) the callauction price floor.
+\item callauction_price_ceiling (character | NA) the callauction price ceiling.
+\item callauction_first_stage_start_time (numeric | NA) the callauction first stage start time (epoch ms).
+\item callauction_second_stage_start_time (numeric | NA) the callauction second stage start time (epoch ms).
+\item callauction_third_stage_start_time (numeric | NA) the callauction third stage start time (epoch ms).
+\item trading_start_time (numeric | NA) the trading start time (epoch ms).
 }
 }
 \subsection{Examples}{

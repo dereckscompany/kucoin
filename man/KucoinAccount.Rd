@@ -103,7 +103,7 @@ cat("Sub-accounts:", summary$sub_quantity, "/", summary$max_sub_quantity, "\\\\n
 account <- KucoinAccount$new()
 key_info <- account$get_apikey_info()
 cat("Permissions:", key_info$permission, "\\\\n")
-cat("IP Whitelist:", key_info$ip_whitelist, "\\\\n")
+cat("Region:", key_info$region, "\\\\n")
 cat("Is Master:", key_info$is_master, "\\\\n")
 }
 
@@ -392,8 +392,8 @@ Verified: 2026-05-23
 \itemize{
 \item \strong{Permission Verification}: Confirm the key has \code{Trade} permission before placing orders in a bot startup
 routine.
-\item \strong{IP Whitelist Check}: Validate that the bot's server IP is in \code{is_master}/\code{ip_whitelist} to avoid auth
-failures.
+\item \strong{IP Whitelist Check}: Confirm the key's IP-whitelist settings on KuCoin allow the bot's server IP to
+avoid auth failures.
 \item \strong{Key Rotation Monitoring}: Use \code{created_at} to track key age and schedule rotation for security.
 }
 }
@@ -432,18 +432,21 @@ failures.
 
 \subsection{Returns}{
 (data.table | promise<data.table>) one row describing the active
-API key: its label, key ID, version, comma-separated permissions and IP
-whitelist, creation datetime (POSIXct, coerced from epoch milliseconds),
-user ID, and whether it belongs to the master account:
+API key: its label, key ID, version, comma-separated permissions,
+creation datetime (POSIXct, coerced from epoch milliseconds), user ID,
+whether it belongs to the master account, and the account's region, KYC
+status and site type:
 \itemize{
 \item remark (character | NA) an optional remark.
 \item api_key (character | NA) the api key.
 \item api_version (integer | NA) the api version.
 \item permission (character) the permission.
-\item ip_whitelist (character | NA) the ip whitelist.
 \item created_at (POSIXct) the created at (UTC).
 \item uid (integer) the user identifier.
 \item is_master (logical) the is master.
+\item region (character | NA) the account region.
+\item kyc_status (character | NA) the KYC verification status.
+\item site_type (character | NA) the site type.
 }
 }
 \subsection{Examples}{
@@ -452,7 +455,7 @@ user ID, and whether it belongs to the master account:
 account <- KucoinAccount$new()
 key_info <- account$get_apikey_info()
 cat("Permissions:", key_info$permission, "\\\\n")
-cat("IP Whitelist:", key_info$ip_whitelist, "\\\\n")
+cat("Region:", key_info$region, "\\\\n")
 cat("Is Master:", key_info$is_master, "\\\\n")
 }
 }

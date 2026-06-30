@@ -553,7 +553,7 @@ accidental position increases.
 order ID:
 \itemize{
 \item order_id (character) the system order identifier.
-\item client_oid (character) the client-supplied order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
 }
 }
 \subsection{Examples}{
@@ -733,7 +733,7 @@ permissions and symbols are correct.
 ID:
 \itemize{
 \item order_id (character) the system order identifier.
-\item client_oid (character) the client-supplied order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
 }
 }
 \subsection{Examples}{
@@ -895,7 +895,7 @@ Verified: 2026-05-23
 client-provided order ID, the futures symbol, the per-order status code, and the per-order status message:
 \itemize{
 \item order_id (character) the system order identifier.
-\item client_oid (character) the client-supplied order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
 }
 }
 \subsection{Examples}{
@@ -1414,7 +1414,7 @@ datetimes (POSIXct, coerced from epoch milliseconds):
 \item status (character) the status.
 \item created_at (POSIXct) the created at (UTC).
 \item updated_at (POSIXct | NA) the updated at (UTC).
-\item client_oid (character) the client-supplied order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
 }
 }
 \subsection{Examples}{
@@ -1560,7 +1560,7 @@ Verified: 2026-05-23
 \item status (character) the status.
 \item created_at (POSIXct) the created at (UTC).
 \item updated_at (POSIXct | NA) the updated at (UTC).
-\item client_oid (character) the client-supplied order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
 }
 }
 \subsection{Examples}{
@@ -1712,7 +1712,7 @@ empty data.table if no orders match the filters:
 \item status (character) the status.
 \item created_at (POSIXct) the created at (UTC).
 \item updated_at (POSIXct | NA) the updated at (UTC).
-\item client_oid (character) the client-supplied order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
 }
 }
 \subsection{Examples}{
@@ -1868,7 +1868,7 @@ empty data.table if no recently closed orders exist:
 \item status (character) the status.
 \item created_at (POSIXct) the created at (UTC).
 \item updated_at (POSIXct | NA) the updated at (UTC).
-\item client_oid (character) the client-supplied order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
 }
 }
 \subsection{Examples}{

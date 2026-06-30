@@ -703,7 +703,7 @@ Verified: 2026-05-23
 order identifier:
 \itemize{
 \item order_id (character) the system order identifier.
-\item client_oid (character) the client-supplied order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
 }
 }
 \subsection{Examples}{
@@ -989,7 +989,7 @@ Verified: 2026-05-23
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the cancelled client order ID:
 \itemize{
-\item client_oid (character) the client-supplied order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
 }
 }
 \subsection{Examples}{
@@ -1449,7 +1449,7 @@ Verified: 2026-05-23
 (data.table | promise<data.table>) one row of full order details, including the creation and last-updated
 datetimes (POSIXct):
 \itemize{
-\item client_oid (character) the client-supplied order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
 \item symbol (character) the trading pair symbol.
 \item side (character) the order side.
 \item created_at (POSIXct) the created at (UTC).
@@ -2381,7 +2381,7 @@ Verified: 2026-05-23
 (data.table | promise<data.table>) one row giving the client order ID, the original, filled, remaining,
 and cancelled sizes, and the fill status:
 \itemize{
-\item client_oid (character) the client-supplied order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
 \item origin_size (character | NA) the original size.
 \item deal_size (character | NA) the filled size.
 \item remain_size (character | NA) the unfilled size.
@@ -2498,7 +2498,7 @@ Verified: 2026-05-23
 order ID:
 \itemize{
 \item new_order_id (character) the new order identifier.
-\item client_oid (character) the client-supplied order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
 }
 }
 \subsection{Examples}{

@@ -592,7 +592,7 @@ KucoinOcoOrders <- R6::R6Class(
     #'   status (e.g., `"NEW"`, `"DONE"`, `"TRIGGERED"`):
     #' - order_id (character) the system order identifier.
     #' - symbol (character) the trading pair symbol.
-    #' - client_oid (character) the client-supplied order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #' - order_time (POSIXct) the order time (UTC).
     #' - status (character) the status.
     #'
@@ -686,7 +686,7 @@ KucoinOcoOrders <- R6::R6Class(
     #'   milliseconds), and order status (e.g., `"NEW"`, `"DONE"`, `"TRIGGERED"`):
     #' - order_id (character) the system order identifier.
     #' - symbol (character) the trading pair symbol.
-    #' - client_oid (character) the client-supplied order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #' - order_time (POSIXct) the order time (UTC).
     #' - status (character) the status.
     #'
@@ -802,7 +802,7 @@ KucoinOcoOrders <- R6::R6Class(
     #'   (present only on the stop leg) as `sub_order_`-prefixed columns:
     #' - order_id (character) the system order identifier.
     #' - symbol (character) the trading pair symbol.
-    #' - client_oid (character) the client-supplied order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #' - order_time (POSIXct) the order time (UTC).
     #' - status (character) the status.
     #' - sub_order_id (character) the sub order id.

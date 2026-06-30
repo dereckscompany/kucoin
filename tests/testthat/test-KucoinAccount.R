@@ -50,10 +50,12 @@ test_that("get_apikey_info returns data.table with key details", {
       apiKey = "670c42f1a24b1b0001a5c7e0",
       apiVersion = 3,
       permission = "General,Spot",
-      ipWhitelist = "198.51.100.42",
       createdAt = 1728905969000,
       uid = 123456789,
-      isMaster = TRUE
+      isMaster = TRUE,
+      region = "US",
+      kycStatus = "KYC2",
+      siteType = "MAIN"
     )
   )
   httr2::local_mocked_responses(function(req) resp)

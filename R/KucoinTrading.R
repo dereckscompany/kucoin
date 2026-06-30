@@ -352,7 +352,7 @@ KucoinTrading <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row giving the simulated order identifier and the client-provided
     #'   order identifier:
     #' - order_id (character) the system order identifier.
-    #' - client_oid (character) the client-supplied order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -686,7 +686,7 @@ KucoinTrading <- R6::R6Class(
     #' @param clientOid (scalar<character>) client order ID.
     #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
     #' @return (data.table | promise<data.table>) one row giving the cancelled client order ID:
-    #' - client_oid (character) the client-supplied order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -1142,7 +1142,7 @@ KucoinTrading <- R6::R6Class(
     #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
     #' @return (data.table | promise<data.table>) one row of full order details, including the creation and last-updated
     #'   datetimes (POSIXct):
-    #' - client_oid (character) the client-supplied order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #' - symbol (character) the trading pair symbol.
     #' - side (character) the order side.
     #' - created_at (POSIXct) the created at (UTC).
@@ -2170,7 +2170,7 @@ KucoinTrading <- R6::R6Class(
     #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
     #' @return (data.table | promise<data.table>) one row giving the client order ID, the original, filled, remaining,
     #'   and cancelled sizes, and the fill status:
-    #' - client_oid (character) the client-supplied order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #' - origin_size (character | NA) the original size.
     #' - deal_size (character | NA) the filled size.
     #' - remain_size (character | NA) the unfilled size.
@@ -2270,7 +2270,7 @@ KucoinTrading <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row giving the replacement order's ID and the original client
     #'   order ID:
     #' - new_order_id (character) the new order identifier.
-    #' - client_oid (character) the client-supplied order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{

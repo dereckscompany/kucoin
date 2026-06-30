@@ -602,7 +602,7 @@ size, trade identifier and price, the best bid and ask prices with their
 sizes, and the ticker datetime (POSIXct, coerced from the nanosecond
 timestamp):
 \itemize{
-\item sequence (integer) the sequence.
+\item sequence (numeric) the sequence.
 \item symbol (character) the trading pair symbol.
 \item side (character) the order side.
 \item size (integer | NA) the size.

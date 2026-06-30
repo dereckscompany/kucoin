@@ -523,12 +523,12 @@ KucoinMarketData <- R6::R6Class(
     #' - taker_fee_coefficient (character | NA) the taker fee coefficient.
     #' - st (logical) whether the symbol is in special treatment.
     #' - callauction_is_enabled (logical) the callauction is enabled.
-    #' - callauction_price_floor (logical | NA) the callauction price floor.
-    #' - callauction_price_ceiling (logical | NA) the callauction price ceiling.
-    #' - callauction_first_stage_start_time (logical | NA) the callauction first stage start time.
-    #' - callauction_second_stage_start_time (logical | NA) the callauction second stage start time.
-    #' - callauction_third_stage_start_time (logical | NA) the callauction third stage start time.
-    #' - trading_start_time (logical | NA) the trading start time.
+    #' - callauction_price_floor (character | NA) the callauction price floor.
+    #' - callauction_price_ceiling (character | NA) the callauction price ceiling.
+    #' - callauction_first_stage_start_time (numeric | NA) the callauction first stage start time (epoch ms).
+    #' - callauction_second_stage_start_time (numeric | NA) the callauction second stage start time (epoch ms).
+    #' - callauction_third_stage_start_time (numeric | NA) the callauction third stage start time (epoch ms).
+    #' - trading_start_time (numeric | NA) the trading start time (epoch ms).
     #'
     #' @examples
     #' \dontrun{
@@ -542,7 +542,24 @@ KucoinMarketData <- R6::R6Class(
       res <- private$.request(
         endpoint = paste0("/api/v2/symbols/", symbol),
         auth = FALSE,
-        .parser = as_dt_row
+        .parser = function(data) {
+          dt <- as_dt_row(data)
+          # KuCoin returns the call-auction fields as null for non-auction
+          # symbols; coerce so each column lands as its documented type (price
+          # strings / epoch-ms numerics) rather than an all-logical NA vector.
+          coerce_cols(dt, c("callauction_price_floor", "callauction_price_ceiling"), as.character)
+          coerce_cols(
+            dt,
+            c(
+              "callauction_first_stage_start_time",
+              "callauction_second_stage_start_time",
+              "callauction_third_stage_start_time",
+              "trading_start_time"
+            ),
+            as.numeric
+          )
+          return(dt[])
+        }
       )
       return(connectcore::then_or_now(
         res,
@@ -663,12 +680,12 @@ KucoinMarketData <- R6::R6Class(
     #' - taker_fee_coefficient (character | NA) the taker fee coefficient.
     #' - st (logical) whether the symbol is in special treatment.
     #' - callauction_is_enabled (logical) the callauction is enabled.
-    #' - callauction_price_floor (logical | NA) the callauction price floor.
-    #' - callauction_price_ceiling (logical | NA) the callauction price ceiling.
-    #' - callauction_first_stage_start_time (logical | NA) the callauction first stage start time.
-    #' - callauction_second_stage_start_time (logical | NA) the callauction second stage start time.
-    #' - callauction_third_stage_start_time (logical | NA) the callauction third stage start time.
-    #' - trading_start_time (logical | NA) the trading start time.
+    #' - callauction_price_floor (character | NA) the callauction price floor.
+    #' - callauction_price_ceiling (character | NA) the callauction price ceiling.
+    #' - callauction_first_stage_start_time (numeric | NA) the callauction first stage start time (epoch ms).
+    #' - callauction_second_stage_start_time (numeric | NA) the callauction second stage start time (epoch ms).
+    #' - callauction_third_stage_start_time (numeric | NA) the callauction third stage start time (epoch ms).
+    #' - trading_start_time (numeric | NA) the trading start time (epoch ms).
     #'
     #' @examples
     #' \dontrun{
@@ -688,10 +705,21 @@ KucoinMarketData <- R6::R6Class(
           if (is.null(data) || length(data) == 0) {
             return(data.table::data.table()[])
           }
-          return(data.table::rbindlist(
-            lapply(data, as_dt_row),
-            fill = TRUE
-          )[])
+          dt <- data.table::rbindlist(lapply(data, as_dt_row), fill = TRUE)
+          # As in get_symbol: coerce the call-auction fields (null for
+          # non-auction symbols) to their documented types.
+          coerce_cols(dt, c("callauction_price_floor", "callauction_price_ceiling"), as.character)
+          coerce_cols(
+            dt,
+            c(
+              "callauction_first_stage_start_time",
+              "callauction_second_stage_start_time",
+              "callauction_third_stage_start_time",
+              "trading_start_time"
+            ),
+            as.numeric
+          )
+          return(dt[])
         }
       )
       return(connectcore::then_or_now(

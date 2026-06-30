@@ -193,7 +193,7 @@ KucoinFuturesTrading <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row giving the system-assigned order ID and the client-provided
     #'   order ID:
     #' - order_id (character) the system order identifier.
-    #' - client_oid (character) the client-supplied order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -375,7 +375,7 @@ KucoinFuturesTrading <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row giving the simulated order ID and the client-provided order
     #'   ID:
     #' - order_id (character) the system order identifier.
-    #' - client_oid (character) the client-supplied order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -565,7 +565,7 @@ KucoinFuturesTrading <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row per order result giving the system-assigned order ID, the
     #'   client-provided order ID, the futures symbol, the per-order status code, and the per-order status message:
     #' - order_id (character) the system order identifier.
-    #' - client_oid (character) the client-supplied order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -1054,7 +1054,7 @@ KucoinFuturesTrading <- R6::R6Class(
     #' - status (character) the status.
     #' - created_at (POSIXct) the created at (UTC).
     #' - updated_at (POSIXct | NA) the updated at (UTC).
-    #' - client_oid (character) the client-supplied order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -1189,7 +1189,7 @@ KucoinFuturesTrading <- R6::R6Class(
     #' - status (character) the status.
     #' - created_at (POSIXct) the created at (UTC).
     #' - updated_at (POSIXct | NA) the updated at (UTC).
-    #' - client_oid (character) the client-supplied order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -1331,7 +1331,7 @@ KucoinFuturesTrading <- R6::R6Class(
     #' - status (character) the status.
     #' - created_at (POSIXct) the created at (UTC).
     #' - updated_at (POSIXct | NA) the updated at (UTC).
-    #' - client_oid (character) the client-supplied order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -1476,7 +1476,7 @@ KucoinFuturesTrading <- R6::R6Class(
     #' - status (character) the status.
     #' - created_at (POSIXct) the created at (UTC).
     #' - updated_at (POSIXct | NA) the updated at (UTC).
-    #' - client_oid (character) the client-supplied order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
