@@ -51,6 +51,16 @@ assert_args_KucoinAccount__get_spot_accounts <- function(query) {
 
 assert_return_KucoinAccount__get_spot_accounts <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("id", "currency", "type", "balance", "available", "holds"))
+  assert_character(value[["id"]])
+  assert_no_missing_values(value[["id"]])
+  assert_character(value[["currency"]])
+  assert_no_missing_values(value[["currency"]])
+  assert_character(value[["type"]])
+  assert_no_missing_values(value[["type"]])
+  assert_double(value[["balance"]])
+  assert_double(value[["available"]])
+  assert_double(value[["holds"]])
   return(value)
 }
 
@@ -101,6 +111,23 @@ assert_args_KucoinAccount__get_spot_ledger <- function(query, page_size, max_pag
 
 assert_return_KucoinAccount__get_spot_ledger <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("id", "currency", "amount", "fee", "balance", "account_type", "biz_type", "direction", "context", "created_at"))
+  assert_character(value[["id"]])
+  assert_no_missing_values(value[["id"]])
+  assert_character(value[["currency"]])
+  assert_no_missing_values(value[["currency"]])
+  assert_double(value[["amount"]])
+  assert_double(value[["fee"]])
+  assert_double(value[["balance"]])
+  assert_character(value[["account_type"]])
+  assert_no_missing_values(value[["account_type"]])
+  assert_character(value[["biz_type"]])
+  assert_no_missing_values(value[["biz_type"]])
+  assert_character(value[["direction"]])
+  assert_no_missing_values(value[["direction"]])
+  assert_character(value[["context"]])
+  assert_datetime(value[["created_at"]])
+  assert_no_missing_values(value[["created_at"]])
   return(value)
 }
 
@@ -131,6 +158,24 @@ assert_args_KucoinAccount__get_hf_ledger <- function(currency, direction, bizTyp
 
 assert_return_KucoinAccount__get_hf_ledger <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("id", "currency", "amount", "fee", "tax", "balance", "account_type", "biz_type", "direction", "context", "created_at"))
+  assert_character(value[["id"]])
+  assert_no_missing_values(value[["id"]])
+  assert_character(value[["currency"]])
+  assert_no_missing_values(value[["currency"]])
+  assert_double(value[["amount"]])
+  assert_double(value[["fee"]])
+  assert_double(value[["tax"]])
+  assert_double(value[["balance"]])
+  assert_character(value[["account_type"]])
+  assert_no_missing_values(value[["account_type"]])
+  assert_character(value[["biz_type"]])
+  assert_no_missing_values(value[["biz_type"]])
+  assert_character(value[["direction"]])
+  assert_no_missing_values(value[["direction"]])
+  assert_character(value[["context"]])
+  assert_datetime(value[["created_at"]])
+  assert_no_missing_values(value[["created_at"]])
   return(value)
 }
 
@@ -3189,6 +3234,15 @@ assert_return_flatten_pages <- function(value) {
 assert_args_sign_request <- function(req, keys, method, path, body, .get_timestamp_ms) {
   assert_class(req, "httr2_request")
   assert_list(keys)
+  assert_has_names(keys, c("api_key", "api_secret", "api_passphrase", "key_version"))
+  assert_character(keys[["api_key"]])
+  assert_no_missing_values(keys[["api_key"]])
+  assert_character(keys[["api_secret"]])
+  assert_no_missing_values(keys[["api_secret"]])
+  assert_character(keys[["api_passphrase"]])
+  assert_no_missing_values(keys[["api_passphrase"]])
+  assert_character(keys[["key_version"]])
+  assert_no_missing_values(keys[["key_version"]])
   assert_scalar_character(method)
   assert_scalar_character(path)
   assert_scalar_character(body)
@@ -3220,6 +3274,15 @@ assert_return_kucoin_serialize_body <- function(value) {
 assert_args_kucoin_sign_req <- function(req, keys, ctx) {
   assert_class(req, "httr2_request")
   assert_list(keys)
+  assert_has_names(keys, c("api_key", "api_secret", "api_passphrase", "key_version"))
+  assert_character(keys[["api_key"]])
+  assert_no_missing_values(keys[["api_key"]])
+  assert_character(keys[["api_secret"]])
+  assert_no_missing_values(keys[["api_secret"]])
+  assert_character(keys[["api_passphrase"]])
+  assert_no_missing_values(keys[["api_passphrase"]])
+  assert_character(keys[["key_version"]])
+  assert_no_missing_values(keys[["key_version"]])
   assert_list(ctx)
   return(invisible(NULL))
 }
@@ -3248,6 +3311,15 @@ assert_args_kucoin_paginate <- function(base_url, endpoint, method, query, body,
   }
   if (!is.null(keys)) {
     assert_list(keys)
+    assert_has_names(keys, c("api_key", "api_secret", "api_passphrase", "key_version"))
+    assert_character(keys[["api_key"]])
+    assert_no_missing_values(keys[["api_key"]])
+    assert_character(keys[["api_secret"]])
+    assert_no_missing_values(keys[["api_secret"]])
+    assert_character(keys[["api_passphrase"]])
+    assert_no_missing_values(keys[["api_passphrase"]])
+    assert_character(keys[["key_version"]])
+    assert_no_missing_values(keys[["key_version"]])
   }
   if (!is.null(sign)) {
     assert_function(sign)

@@ -328,6 +328,7 @@ coerce_numeric_quantities <- function(x) {
     "taker_coefficient",
     "taker_fee_coefficient",
     "taker_fee_rate",
+    "tax",
     "taxes",
     "total",
     "total_asset_of_quote_currency",

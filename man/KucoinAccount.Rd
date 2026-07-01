@@ -333,18 +333,18 @@ accordingly.
 level and the sub-account counts (total, spot, margin, futures, option)
 alongside their respective maxima:
 \itemize{
-\item level (integer | NA) the tier level.
-\item sub_quantity (integer | NA) the sub quantity.
-\item max_default_sub_quantity (integer | NA) the max default sub quantity.
-\item max_sub_quantity (integer | NA) the max sub quantity.
-\item spot_sub_quantity (integer | NA) the spot sub quantity.
-\item margin_sub_quantity (integer | NA) the margin sub quantity.
-\item futures_sub_quantity (integer | NA) the futures sub quantity.
-\item option_sub_quantity (integer | NA) the option sub quantity.
-\item max_spot_sub_quantity (integer | NA) the max spot sub quantity.
-\item max_margin_sub_quantity (integer | NA) the max margin sub quantity.
-\item max_futures_sub_quantity (integer | NA) the max futures sub quantity.
-\item max_option_sub_quantity (integer | NA) the max option sub quantity.
+\item level (integer | NA) the VIP tier.
+\item sub_quantity (integer | NA) the total number of sub-accounts.
+\item max_default_sub_quantity (integer | NA) the max default sub-accounts.
+\item max_sub_quantity (integer | NA) the max sub-accounts.
+\item spot_sub_quantity (integer | NA) the current spot sub-accounts.
+\item margin_sub_quantity (integer | NA) the current margin sub-accounts.
+\item futures_sub_quantity (integer | NA) the current futures sub-accounts.
+\item option_sub_quantity (integer | NA) the current option sub-accounts.
+\item max_spot_sub_quantity (integer | NA) the max spot sub-accounts.
+\item max_margin_sub_quantity (integer | NA) the max margin sub-accounts.
+\item max_futures_sub_quantity (integer | NA) the max futures sub-accounts.
+\item max_option_sub_quantity (integer | NA) the max option sub-accounts.
 }
 }
 \subsection{Examples}{
@@ -438,12 +438,12 @@ whether it belongs to the master account, and the account's region, KYC
 status and site type:
 \itemize{
 \item remark (character | NA) an optional remark.
-\item api_key (character | NA) the api key.
-\item api_version (integer | NA) the api version.
-\item permission (character) the permission.
-\item created_at (POSIXct) the created at (UTC).
+\item api_key (character | NA) the API key ID.
+\item api_version (integer | NA) the API key version.
+\item permission (character) the comma-separated permissions, e.g. \code{"General,Spot"} (a single string from KuCoin, not a JSON array; recover the vector with \code{strsplit(dt$permission[1], ",", fixed = TRUE)[[1]]}).
+\item created_at (POSIXct) the key creation time (UTC), coerced from epoch milliseconds.
 \item uid (integer) the user identifier.
-\item is_master (logical) the is master.
+\item is_master (logical) TRUE if this is a master-account key.
 \item region (character | NA) the account region.
 \item kyc_status (character | NA) the KYC verification status.
 \item site_type (character | NA) the site type.
@@ -635,10 +635,16 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row per spot account, each
-giving the account ID, currency code, account type, total balance, the
-amount available for trading, and the amount on hold in open orders.
-Returns an empty data.table if no accounts match.
+(data.table | promise<data.table>) one row per spot account, or an
+empty data.table if no accounts match:
+\itemize{
+\item id (character) the account identifier.
+\item currency (character) the currency code.
+\item type (character) the account type (\code{"main"}, \code{"trade"}, or \code{"margin"}).
+\item balance (numeric | NA) the total balance.
+\item available (numeric | NA) the amount available for trading.
+\item holds (numeric | NA) the amount on hold in open orders.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1141,12 +1147,20 @@ calls.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row per ledger entry, each
-giving the entry ID, currency code, transaction amount, fee charged,
-balance after the transaction, account type (\code{"TRADE"}, \code{"MAIN"}),
-business type, direction (\code{"in"} or \code{"out"}), the JSON context metadata,
-and the creation datetime (POSIXct, coerced from epoch milliseconds).
-Returns an empty data.table if no ledger entries match.
+(data.table | promise<data.table>) one row per ledger entry, or an
+empty data.table if no entries match:
+\itemize{
+\item id (character) the ledger entry id.
+\item currency (character) the currency code.
+\item amount (numeric | NA) the transaction amount.
+\item fee (numeric | NA) the fee charged.
+\item balance (numeric | NA) the balance after the transaction.
+\item account_type (character) the account type (e.g. \code{"TRADE"}, \code{"MAIN"}).
+\item biz_type (character) the business type.
+\item direction (character) the direction, \code{"in"} or \code{"out"}.
+\item context (character | NA) the JSON context metadata.
+\item created_at (POSIXct) the entry creation time (UTC), coerced from epoch milliseconds.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1288,11 +1302,21 @@ previous batches.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row per ledger entry, each
-giving the entry ID, currency code, transaction amount, fee charged, tax
-amount, balance after the transaction, account type, business type,
-direction (\code{"in"} or \code{"out"}), the JSON context metadata, and the
-creation datetime (POSIXct, coerced from epoch milliseconds).
+(data.table | promise<data.table>) one row per ledger entry, or an
+empty data.table if no entries match:
+\itemize{
+\item id (character) the ledger entry id.
+\item currency (character) the currency code.
+\item amount (numeric | NA) the transaction amount.
+\item fee (numeric | NA) the fee charged.
+\item tax (numeric | NA) the tax amount.
+\item balance (numeric | NA) the balance after the transaction.
+\item account_type (character) the account type.
+\item biz_type (character) the business type.
+\item direction (character) the direction, \code{"in"} or \code{"out"}.
+\item context (character | NA) the JSON context metadata.
+\item created_at (POSIXct) the entry creation time (UTC), coerced from epoch milliseconds.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
