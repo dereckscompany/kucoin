@@ -393,7 +393,10 @@ Verified: 2026-05-23
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row with the lending order
-number.
+number:
+\itemize{
+\item order_no (character) the order number.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -479,7 +482,7 @@ Verified: 2026-05-23
 \itemize{
 \item currency (character) the lending currency.
 \item purchase_order_no (character) the modified order number.
-\item interest_rate (numeric) the new interest rate.
+\item interest_rate (numeric | NA) the new interest rate.
 \item status (character) the local outcome marker, always \code{"success"}.
 }
 }
@@ -658,7 +661,10 @@ from.}
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row with the redemption order
-number.
+number:
+\itemize{
+\item order_no (character) the order number.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

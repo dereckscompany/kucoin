@@ -21,8 +21,11 @@
 #' It is the `.sign()` seam [KucoinBase] plugs into [connectcore::RestClient].
 #'
 #' @param req (class<httr2_request>) the request object to sign.
-#' @param keys (list) API credentials containing `api_key`, `api_secret`,
-#'   `api_passphrase`, and `key_version`.
+#' @param keys (list) API credentials from [get_api_keys()]:
+#' - api_key (character) the API key.
+#' - api_secret (character) the API secret.
+#' - api_passphrase (character) the API passphrase.
+#' - key_version (character) the API key version.
 #' @param method (scalar<character>) HTTP method (e.g., `"GET"`, `"POST"`,
 #'   `"DELETE"`).
 #' @param path (scalar<character>) the API path including query string.
@@ -117,8 +120,11 @@ kucoin_serialize_body <- function(body) {
 #'
 #' @param req (class<httr2_request>) the request object, already built by
 #'   connectcore.
-#' @param keys (list) API credentials (`api_key`, `api_secret`,
-#'   `api_passphrase`, `key_version`).
+#' @param keys (list) API credentials from [get_api_keys()]:
+#' - api_key (character) the API key.
+#' - api_secret (character) the API secret.
+#' - api_passphrase (character) the API passphrase.
+#' - key_version (character) the API key version.
 #' @param ctx (list) the signing context. Only `ctx$get_timestamp_ms` is used
 #'   (the clock source); method, path, and body are derived from `req`.
 #' @return (class<httr2_request>) the signed request.
@@ -219,7 +225,11 @@ parse_kucoin_response <- function(resp) {
 #' @param method (scalar<character>) HTTP method. Default `"GET"`.
 #' @param query (list) initial query parameters. Default `list()`.
 #' @param body (list | NULL) request body. Default `NULL`.
-#' @param keys (list | NULL) API credentials. Default `NULL`.
+#' @param keys (list | NULL) API credentials from [get_api_keys()], or `NULL`:
+#' - api_key (character) the API key.
+#' - api_secret (character) the API secret.
+#' - api_passphrase (character) the API passphrase.
+#' - key_version (character) the API key version.
 #' @param sign (function | NULL) the `.sign()` seam forwarded to
 #'   [connectcore::build_request()]. Default `NULL` (use KuCoin's own
 #'   `kucoin_sign_req()` signer).

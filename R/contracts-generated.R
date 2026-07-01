@@ -3,11 +3,39 @@
 
 assert_return_KucoinAccount__get_summary <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("level", "sub_quantity", "max_default_sub_quantity", "max_sub_quantity", "spot_sub_quantity", "margin_sub_quantity", "futures_sub_quantity", "option_sub_quantity", "max_spot_sub_quantity", "max_margin_sub_quantity", "max_futures_sub_quantity", "max_option_sub_quantity"))
+  assert_integer(value[["level"]])
+  assert_integer(value[["sub_quantity"]])
+  assert_integer(value[["max_default_sub_quantity"]])
+  assert_integer(value[["max_sub_quantity"]])
+  assert_integer(value[["spot_sub_quantity"]])
+  assert_integer(value[["margin_sub_quantity"]])
+  assert_integer(value[["futures_sub_quantity"]])
+  assert_integer(value[["option_sub_quantity"]])
+  assert_integer(value[["max_spot_sub_quantity"]])
+  assert_integer(value[["max_margin_sub_quantity"]])
+  assert_integer(value[["max_futures_sub_quantity"]])
+  assert_integer(value[["max_option_sub_quantity"]])
   return(value)
 }
 
 assert_return_KucoinAccount__get_apikey_info <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("remark", "api_key", "api_version", "permission", "created_at", "uid", "is_master", "region", "kyc_status", "site_type"))
+  assert_character(value[["remark"]])
+  assert_character(value[["api_key"]])
+  assert_integer(value[["api_version"]])
+  assert_character(value[["permission"]])
+  assert_no_missing_values(value[["permission"]])
+  assert_datetime(value[["created_at"]])
+  assert_no_missing_values(value[["created_at"]])
+  assert_integer(value[["uid"]])
+  assert_no_missing_values(value[["uid"]])
+  assert_logical(value[["is_master"]])
+  assert_no_missing_values(value[["is_master"]])
+  assert_character(value[["region"]])
+  assert_character(value[["kyc_status"]])
+  assert_character(value[["site_type"]])
   return(value)
 }
 
@@ -23,6 +51,16 @@ assert_args_KucoinAccount__get_spot_accounts <- function(query) {
 
 assert_return_KucoinAccount__get_spot_accounts <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("id", "currency", "type", "balance", "available", "holds"))
+  assert_character(value[["id"]])
+  assert_no_missing_values(value[["id"]])
+  assert_character(value[["currency"]])
+  assert_no_missing_values(value[["currency"]])
+  assert_character(value[["type"]])
+  assert_no_missing_values(value[["type"]])
+  assert_double(value[["balance"]])
+  assert_double(value[["available"]])
+  assert_double(value[["holds"]])
   return(value)
 }
 
@@ -33,6 +71,12 @@ assert_args_KucoinAccount__get_spot_account_detail <- function(accountId) {
 
 assert_return_KucoinAccount__get_spot_account_detail <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("currency", "balance", "available", "holds"))
+  assert_character(value[["currency"]])
+  assert_no_missing_values(value[["currency"]])
+  assert_double(value[["balance"]])
+  assert_double(value[["available"]])
+  assert_double(value[["holds"]])
   return(value)
 }
 
@@ -67,6 +111,23 @@ assert_args_KucoinAccount__get_spot_ledger <- function(query, page_size, max_pag
 
 assert_return_KucoinAccount__get_spot_ledger <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("id", "currency", "amount", "fee", "balance", "account_type", "biz_type", "direction", "context", "created_at"))
+  assert_character(value[["id"]])
+  assert_no_missing_values(value[["id"]])
+  assert_character(value[["currency"]])
+  assert_no_missing_values(value[["currency"]])
+  assert_double(value[["amount"]])
+  assert_double(value[["fee"]])
+  assert_double(value[["balance"]])
+  assert_character(value[["account_type"]])
+  assert_no_missing_values(value[["account_type"]])
+  assert_character(value[["biz_type"]])
+  assert_no_missing_values(value[["biz_type"]])
+  assert_character(value[["direction"]])
+  assert_no_missing_values(value[["direction"]])
+  assert_character(value[["context"]])
+  assert_datetime(value[["created_at"]])
+  assert_no_missing_values(value[["created_at"]])
   return(value)
 }
 
@@ -97,6 +158,24 @@ assert_args_KucoinAccount__get_hf_ledger <- function(currency, direction, bizTyp
 
 assert_return_KucoinAccount__get_hf_ledger <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("id", "currency", "amount", "fee", "tax", "balance", "account_type", "biz_type", "direction", "context", "created_at"))
+  assert_character(value[["id"]])
+  assert_no_missing_values(value[["id"]])
+  assert_character(value[["currency"]])
+  assert_no_missing_values(value[["currency"]])
+  assert_double(value[["amount"]])
+  assert_double(value[["fee"]])
+  assert_double(value[["tax"]])
+  assert_double(value[["balance"]])
+  assert_character(value[["account_type"]])
+  assert_no_missing_values(value[["account_type"]])
+  assert_character(value[["biz_type"]])
+  assert_no_missing_values(value[["biz_type"]])
+  assert_character(value[["direction"]])
+  assert_no_missing_values(value[["direction"]])
+  assert_character(value[["context"]])
+  assert_datetime(value[["created_at"]])
+  assert_no_missing_values(value[["created_at"]])
   return(value)
 }
 
@@ -109,6 +188,9 @@ assert_args_KucoinAccount__get_base_fee_rate <- function(currencyType) {
 
 assert_return_KucoinAccount__get_base_fee_rate <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("taker_fee_rate", "maker_fee_rate"))
+  assert_double(value[["taker_fee_rate"]])
+  assert_double(value[["maker_fee_rate"]])
   return(value)
 }
 
@@ -119,6 +201,11 @@ assert_args_KucoinAccount__get_fee_rate <- function(symbols) {
 
 assert_return_KucoinAccount__get_fee_rate <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("symbol", "taker_fee_rate", "maker_fee_rate"))
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_double(value[["taker_fee_rate"]])
+  assert_double(value[["maker_fee_rate"]])
   return(value)
 }
 
@@ -150,6 +237,19 @@ assert_args_KucoinDeposit__add_deposit_address <- function(currency, chain, to, 
 
 assert_return_KucoinDeposit__add_deposit_address <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("address", "memo", "chain", "chain_id", "to", "currency", "contract_address"))
+  assert_character(value[["address"]])
+  assert_no_missing_values(value[["address"]])
+  assert_character(value[["memo"]])
+  assert_no_missing_values(value[["memo"]])
+  assert_character(value[["chain"]])
+  assert_no_missing_values(value[["chain"]])
+  assert_character(value[["chain_id"]])
+  assert_character(value[["to"]])
+  assert_no_missing_values(value[["to"]])
+  assert_character(value[["currency"]])
+  assert_no_missing_values(value[["currency"]])
+  assert_character(value[["contract_address"]])
   return(value)
 }
 
@@ -213,6 +313,16 @@ assert_args_KucoinFuturesAccount__get_account_overview <- function(currency) {
 
 assert_return_KucoinFuturesAccount__get_account_overview <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("account_equity", "unrealised_pnl", "margin_balance", "available_balance", "available_margin", "currency", "risk_ratio", "max_withdraw_amount"))
+  assert_double(value[["account_equity"]])
+  assert_double(value[["unrealised_pnl"]])
+  assert_double(value[["margin_balance"]])
+  assert_double(value[["available_balance"]])
+  assert_double(value[["available_margin"]])
+  assert_character(value[["currency"]])
+  assert_no_missing_values(value[["currency"]])
+  assert_double(value[["risk_ratio"]])
+  assert_double(value[["max_withdraw_amount"]])
   return(value)
 }
 
@@ -255,6 +365,11 @@ assert_args_KucoinFuturesAccount__get_margin_mode <- function(symbol) {
 
 assert_return_KucoinFuturesAccount__get_margin_mode <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("symbol", "margin_mode"))
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_character(value[["margin_mode"]])
+  assert_no_missing_values(value[["margin_mode"]])
   return(value)
 }
 
@@ -266,6 +381,11 @@ assert_args_KucoinFuturesAccount__set_margin_mode <- function(symbol, marginMode
 
 assert_return_KucoinFuturesAccount__set_margin_mode <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("symbol", "margin_mode"))
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_character(value[["margin_mode"]])
+  assert_no_missing_values(value[["margin_mode"]])
   return(value)
 }
 
@@ -276,6 +396,10 @@ assert_args_KucoinFuturesAccount__get_cross_margin_leverage <- function(symbol) 
 
 assert_return_KucoinFuturesAccount__get_cross_margin_leverage <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("symbol", "leverage"))
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_character(value[["leverage"]])
   return(value)
 }
 
@@ -288,6 +412,10 @@ assert_args_KucoinFuturesAccount__set_cross_margin_leverage <- function(symbol, 
 
 assert_return_KucoinFuturesAccount__set_cross_margin_leverage <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("symbol", "leverage"))
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_character(value[["leverage"]])
   return(value)
 }
 
@@ -302,6 +430,11 @@ assert_args_KucoinFuturesAccount__get_max_open_size <- function(symbol, price, l
 
 assert_return_KucoinFuturesAccount__get_max_open_size <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("symbol", "max_buy_open_size", "max_sell_open_size"))
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_integer(value[["max_buy_open_size"]])
+  assert_integer(value[["max_sell_open_size"]])
   return(value)
 }
 
@@ -324,6 +457,14 @@ assert_args_KucoinFuturesAccount__add_isolated_margin <- function(symbol, margin
 
 assert_return_KucoinFuturesAccount__add_isolated_margin <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("id", "symbol", "margin", "margin_type"))
+  assert_character(value[["id"]])
+  assert_no_missing_values(value[["id"]])
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_double(value[["margin"]])
+  assert_character(value[["margin_type"]])
+  assert_no_missing_values(value[["margin_type"]])
   return(value)
 }
 
@@ -335,6 +476,14 @@ assert_args_KucoinFuturesAccount__remove_isolated_margin <- function(symbol, wit
 
 assert_return_KucoinFuturesAccount__remove_isolated_margin <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("id", "symbol", "margin", "margin_type"))
+  assert_character(value[["id"]])
+  assert_no_missing_values(value[["id"]])
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_double(value[["margin"]])
+  assert_character(value[["margin_type"]])
+  assert_no_missing_values(value[["margin_type"]])
   return(value)
 }
 
@@ -393,6 +542,23 @@ assert_args_KucoinFuturesMarketData__get_ticker <- function(symbol) {
 
 assert_return_KucoinFuturesMarketData__get_ticker <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("sequence", "symbol", "side", "size", "price", "best_bid_size", "best_bid_price", "best_ask_price", "best_ask_size", "trade_id", "ts"))
+  assert_double(value[["sequence"]])
+  assert_no_missing_values(value[["sequence"]])
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_character(value[["side"]])
+  assert_no_missing_values(value[["side"]])
+  assert_double(value[["size"]])
+  assert_double(value[["price"]])
+  assert_double(value[["best_bid_size"]])
+  assert_double(value[["best_bid_price"]])
+  assert_double(value[["best_ask_price"]])
+  assert_double(value[["best_ask_size"]])
+  assert_character(value[["trade_id"]])
+  assert_no_missing_values(value[["trade_id"]])
+  assert_datetime(value[["ts"]])
+  assert_no_missing_values(value[["ts"]])
   return(value)
 }
 
@@ -408,6 +574,18 @@ assert_args_KucoinFuturesMarketData__get_part_orderbook <- function(symbol) {
 
 assert_return_KucoinFuturesMarketData__get_part_orderbook <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("ts", "sequence", "side", "level", "price", "size", "symbol"))
+  assert_datetime(value[["ts"]])
+  assert_no_missing_values(value[["ts"]])
+  assert_character(value[["sequence"]])
+  assert_no_missing_values(value[["sequence"]])
+  assert_character(value[["side"]])
+  assert_no_missing_values(value[["side"]])
+  assert_integer(value[["level"]])
+  assert_double(value[["price"]])
+  assert_double(value[["size"]])
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
   return(value)
 }
 
@@ -418,6 +596,18 @@ assert_args_KucoinFuturesMarketData__get_full_orderbook <- function(symbol) {
 
 assert_return_KucoinFuturesMarketData__get_full_orderbook <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("ts", "sequence", "side", "level", "price", "size", "symbol"))
+  assert_datetime(value[["ts"]])
+  assert_no_missing_values(value[["ts"]])
+  assert_character(value[["sequence"]])
+  assert_no_missing_values(value[["sequence"]])
+  assert_character(value[["side"]])
+  assert_no_missing_values(value[["side"]])
+  assert_integer(value[["level"]])
+  assert_double(value[["price"]])
+  assert_double(value[["size"]])
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
   return(value)
 }
 
@@ -447,17 +637,11 @@ assert_return_KucoinFuturesMarketData__get_klines <- function(value) {
   assert_datetime(value[["datetime"]])
   assert_no_missing_values(value[["datetime"]])
   assert_double(value[["open"]])
-  assert_no_missing_values(value[["open"]])
   assert_double(value[["high"]])
-  assert_no_missing_values(value[["high"]])
   assert_double(value[["low"]])
-  assert_no_missing_values(value[["low"]])
   assert_double(value[["close"]])
-  assert_no_missing_values(value[["close"]])
   assert_double(value[["volume"]])
-  assert_no_missing_values(value[["volume"]])
   assert_double(value[["turnover"]])
-  assert_no_missing_values(value[["turnover"]])
   return(value)
 }
 
@@ -468,6 +652,14 @@ assert_args_KucoinFuturesMarketData__get_mark_price <- function(symbol) {
 
 assert_return_KucoinFuturesMarketData__get_mark_price <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("symbol", "granularity", "time_point", "value", "index_price"))
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_integer(value[["granularity"]])
+  assert_datetime(value[["time_point"]])
+  assert_no_missing_values(value[["time_point"]])
+  assert_double(value[["value"]])
+  assert_double(value[["index_price"]])
   return(value)
 }
 
@@ -478,6 +670,19 @@ assert_args_KucoinFuturesMarketData__get_funding_rate <- function(symbol) {
 
 assert_return_KucoinFuturesMarketData__get_funding_rate <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("symbol", "granularity", "time_point", "value", "daily_interest_rate", "funding_rate_cap", "funding_rate_floor", "period", "funding_time"))
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_integer(value[["granularity"]])
+  assert_datetime(value[["time_point"]])
+  assert_no_missing_values(value[["time_point"]])
+  assert_double(value[["value"]])
+  assert_double(value[["daily_interest_rate"]])
+  assert_double(value[["funding_rate_cap"]])
+  assert_double(value[["funding_rate_floor"]])
+  assert_integer(value[["period"]])
+  assert_datetime(value[["funding_time"]])
+  assert_no_missing_values(value[["funding_time"]])
   return(value)
 }
 
@@ -493,11 +698,19 @@ assert_return_KucoinFuturesMarketData__get_funding_history <- function(value) {
 
 assert_return_KucoinFuturesMarketData__get_server_time <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("server_time"))
+  assert_datetime(value[["server_time"]])
+  assert_no_missing_values(value[["server_time"]])
   return(value)
 }
 
 assert_return_KucoinFuturesMarketData__get_service_status <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("status", "msg"))
+  assert_character(value[["status"]])
+  assert_no_missing_values(value[["status"]])
+  assert_character(value[["msg"]])
+  assert_no_missing_values(value[["msg"]])
   return(value)
 }
 
@@ -524,17 +737,11 @@ assert_return_parse_futures_klines <- function(value) {
   assert_datetime(value[["datetime"]])
   assert_no_missing_values(value[["datetime"]])
   assert_double(value[["open"]])
-  assert_no_missing_values(value[["open"]])
   assert_double(value[["high"]])
-  assert_no_missing_values(value[["high"]])
   assert_double(value[["low"]])
-  assert_no_missing_values(value[["low"]])
   assert_double(value[["close"]])
-  assert_no_missing_values(value[["close"]])
   assert_double(value[["volume"]])
-  assert_no_missing_values(value[["volume"]])
   assert_double(value[["turnover"]])
-  assert_no_missing_values(value[["turnover"]])
   return(value)
 }
 
@@ -578,6 +785,10 @@ assert_args_KucoinFuturesTrading__add_order <- function(clientOid, symbol, side,
 
 assert_return_KucoinFuturesTrading__add_order <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("order_id", "client_oid"))
+  assert_character(value[["order_id"]])
+  assert_no_missing_values(value[["order_id"]])
+  assert_character(value[["client_oid"]])
   return(value)
 }
 
@@ -609,6 +820,10 @@ assert_args_KucoinFuturesTrading__add_order_test <- function(clientOid, symbol, 
 
 assert_return_KucoinFuturesTrading__add_order_test <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("order_id", "client_oid"))
+  assert_character(value[["order_id"]])
+  assert_no_missing_values(value[["order_id"]])
+  assert_character(value[["client_oid"]])
   return(value)
 }
 
@@ -619,6 +834,10 @@ assert_args_KucoinFuturesTrading__add_order_batch <- function(orders) {
 
 assert_return_KucoinFuturesTrading__add_order_batch <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("order_id", "client_oid"))
+  assert_character(value[["order_id"]])
+  assert_no_missing_values(value[["order_id"]])
+  assert_character(value[["client_oid"]])
   return(value)
 }
 
@@ -664,6 +883,9 @@ assert_args_KucoinFuturesTrading__cancel_all_stop_orders <- function(symbol) {
 
 assert_return_KucoinFuturesTrading__cancel_all_stop_orders <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("cancelled_order_id"))
+  assert_character(value[["cancelled_order_id"]])
+  assert_no_missing_values(value[["cancelled_order_id"]])
   return(value)
 }
 
@@ -674,6 +896,31 @@ assert_args_KucoinFuturesTrading__get_order_by_id <- function(orderId) {
 
 assert_return_KucoinFuturesTrading__get_order_by_id <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("id", "symbol", "type", "side", "price", "size", "value", "deal_value", "deal_size", "leverage", "margin_mode", "position_side", "status", "created_at", "updated_at", "client_oid"))
+  assert_character(value[["id"]])
+  assert_no_missing_values(value[["id"]])
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_character(value[["type"]])
+  assert_no_missing_values(value[["type"]])
+  assert_character(value[["side"]])
+  assert_no_missing_values(value[["side"]])
+  assert_double(value[["price"]])
+  assert_double(value[["size"]])
+  assert_double(value[["value"]])
+  assert_double(value[["deal_value"]])
+  assert_double(value[["deal_size"]])
+  assert_integer(value[["leverage"]])
+  assert_character(value[["margin_mode"]])
+  assert_no_missing_values(value[["margin_mode"]])
+  assert_character(value[["position_side"]])
+  assert_no_missing_values(value[["position_side"]])
+  assert_character(value[["status"]])
+  assert_no_missing_values(value[["status"]])
+  assert_datetime(value[["created_at"]])
+  assert_no_missing_values(value[["created_at"]])
+  assert_datetime(value[["updated_at"]])
+  assert_character(value[["client_oid"]])
   return(value)
 }
 
@@ -684,6 +931,31 @@ assert_args_KucoinFuturesTrading__get_order_by_client_oid <- function(clientOid)
 
 assert_return_KucoinFuturesTrading__get_order_by_client_oid <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("id", "symbol", "type", "side", "price", "size", "value", "deal_value", "deal_size", "leverage", "margin_mode", "position_side", "status", "created_at", "updated_at", "client_oid"))
+  assert_character(value[["id"]])
+  assert_no_missing_values(value[["id"]])
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_character(value[["type"]])
+  assert_no_missing_values(value[["type"]])
+  assert_character(value[["side"]])
+  assert_no_missing_values(value[["side"]])
+  assert_double(value[["price"]])
+  assert_double(value[["size"]])
+  assert_double(value[["value"]])
+  assert_double(value[["deal_value"]])
+  assert_double(value[["deal_size"]])
+  assert_integer(value[["leverage"]])
+  assert_character(value[["margin_mode"]])
+  assert_no_missing_values(value[["margin_mode"]])
+  assert_character(value[["position_side"]])
+  assert_no_missing_values(value[["position_side"]])
+  assert_character(value[["status"]])
+  assert_no_missing_values(value[["status"]])
+  assert_datetime(value[["created_at"]])
+  assert_no_missing_values(value[["created_at"]])
+  assert_datetime(value[["updated_at"]])
+  assert_character(value[["client_oid"]])
   return(value)
 }
 
@@ -694,6 +966,31 @@ assert_args_KucoinFuturesTrading__get_order_list <- function(query) {
 
 assert_return_KucoinFuturesTrading__get_order_list <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("id", "symbol", "type", "side", "price", "size", "value", "deal_value", "deal_size", "leverage", "margin_mode", "position_side", "status", "created_at", "updated_at", "client_oid"))
+  assert_character(value[["id"]])
+  assert_no_missing_values(value[["id"]])
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_character(value[["type"]])
+  assert_no_missing_values(value[["type"]])
+  assert_character(value[["side"]])
+  assert_no_missing_values(value[["side"]])
+  assert_double(value[["price"]])
+  assert_double(value[["size"]])
+  assert_double(value[["value"]])
+  assert_double(value[["deal_value"]])
+  assert_double(value[["deal_size"]])
+  assert_integer(value[["leverage"]])
+  assert_character(value[["margin_mode"]])
+  assert_no_missing_values(value[["margin_mode"]])
+  assert_character(value[["position_side"]])
+  assert_no_missing_values(value[["position_side"]])
+  assert_character(value[["status"]])
+  assert_no_missing_values(value[["status"]])
+  assert_datetime(value[["created_at"]])
+  assert_no_missing_values(value[["created_at"]])
+  assert_datetime(value[["updated_at"]])
+  assert_character(value[["client_oid"]])
   return(value)
 }
 
@@ -706,6 +1003,31 @@ assert_args_KucoinFuturesTrading__get_recent_closed_orders <- function(symbol) {
 
 assert_return_KucoinFuturesTrading__get_recent_closed_orders <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("id", "symbol", "type", "side", "price", "size", "value", "deal_value", "deal_size", "leverage", "margin_mode", "position_side", "status", "created_at", "updated_at", "client_oid"))
+  assert_character(value[["id"]])
+  assert_no_missing_values(value[["id"]])
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_character(value[["type"]])
+  assert_no_missing_values(value[["type"]])
+  assert_character(value[["side"]])
+  assert_no_missing_values(value[["side"]])
+  assert_double(value[["price"]])
+  assert_double(value[["size"]])
+  assert_double(value[["value"]])
+  assert_double(value[["deal_value"]])
+  assert_double(value[["deal_size"]])
+  assert_integer(value[["leverage"]])
+  assert_character(value[["margin_mode"]])
+  assert_no_missing_values(value[["margin_mode"]])
+  assert_character(value[["position_side"]])
+  assert_no_missing_values(value[["position_side"]])
+  assert_character(value[["status"]])
+  assert_no_missing_values(value[["status"]])
+  assert_datetime(value[["created_at"]])
+  assert_no_missing_values(value[["created_at"]])
+  assert_datetime(value[["updated_at"]])
+  assert_character(value[["client_oid"]])
   return(value)
 }
 
@@ -738,6 +1060,35 @@ assert_args_KucoinFuturesTrading__get_recent_fills <- function(symbol) {
 
 assert_return_KucoinFuturesTrading__get_recent_fills <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("symbol", "trade_id", "order_id", "side", "liquidity", "force_taker", "price", "size", "value", "fee_rate", "fix_fee", "fee_currency", "fee", "order_type", "trade_type", "trade_time", "created_at"))
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_character(value[["trade_id"]])
+  assert_no_missing_values(value[["trade_id"]])
+  assert_character(value[["order_id"]])
+  assert_no_missing_values(value[["order_id"]])
+  assert_character(value[["side"]])
+  assert_no_missing_values(value[["side"]])
+  assert_character(value[["liquidity"]])
+  assert_no_missing_values(value[["liquidity"]])
+  assert_logical(value[["force_taker"]])
+  assert_no_missing_values(value[["force_taker"]])
+  assert_double(value[["price"]])
+  assert_double(value[["size"]])
+  assert_double(value[["value"]])
+  assert_double(value[["fee_rate"]])
+  assert_double(value[["fix_fee"]])
+  assert_character(value[["fee_currency"]])
+  assert_no_missing_values(value[["fee_currency"]])
+  assert_double(value[["fee"]])
+  assert_character(value[["order_type"]])
+  assert_no_missing_values(value[["order_type"]])
+  assert_character(value[["trade_type"]])
+  assert_no_missing_values(value[["trade_type"]])
+  assert_datetime(value[["trade_time"]])
+  assert_no_missing_values(value[["trade_time"]])
+  assert_datetime(value[["created_at"]])
+  assert_no_missing_values(value[["created_at"]])
   return(value)
 }
 
@@ -748,6 +1099,13 @@ assert_args_KucoinFuturesTrading__get_open_order_value <- function(symbol) {
 
 assert_return_KucoinFuturesTrading__get_open_order_value <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("open_order_buy_size", "open_order_sell_size", "open_order_buy_cost", "open_order_sell_cost", "settle_currency"))
+  assert_integer(value[["open_order_buy_size"]])
+  assert_integer(value[["open_order_sell_size"]])
+  assert_double(value[["open_order_buy_cost"]])
+  assert_double(value[["open_order_sell_cost"]])
+  assert_character(value[["settle_currency"]])
+  assert_no_missing_values(value[["settle_currency"]])
   return(value)
 }
 
@@ -760,6 +1118,14 @@ assert_args_KucoinFuturesTrading__set_dcp <- function(symbol) {
 
 assert_return_KucoinFuturesTrading__set_dcp <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("trade_type", "symbol", "system_time", "trigger_time"))
+  assert_character(value[["trade_type"]])
+  assert_no_missing_values(value[["trade_type"]])
+  assert_character(value[["symbol"]])
+  assert_double(value[["system_time"]])
+  assert_no_missing_values(value[["system_time"]])
+  assert_double(value[["trigger_time"]])
+  assert_no_missing_values(value[["trigger_time"]])
   return(value)
 }
 
@@ -772,6 +1138,12 @@ assert_args_KucoinFuturesTrading__get_dcp <- function(symbol) {
 
 assert_return_KucoinFuturesTrading__get_dcp <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("timeout", "symbols", "current_time"))
+  assert_integer(value[["timeout"]])
+  assert_character(value[["symbols"]])
+  assert_no_missing_values(value[["symbols"]])
+  assert_double(value[["current_time"]])
+  assert_no_missing_values(value[["current_time"]])
   return(value)
 }
 
@@ -804,6 +1176,9 @@ assert_args_KucoinLending__purchase <- function(currency, size, interestRate) {
 
 assert_return_KucoinLending__purchase <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("order_no"))
+  assert_character(value[["order_no"]])
+  assert_no_missing_values(value[["order_no"]])
   return(value)
 }
 
@@ -822,7 +1197,6 @@ assert_return_KucoinLending__modify_purchase <- function(value) {
   assert_character(value[["purchase_order_no"]])
   assert_no_missing_values(value[["purchase_order_no"]])
   assert_double(value[["interest_rate"]])
-  assert_no_missing_values(value[["interest_rate"]])
   assert_character(value[["status"]])
   assert_no_missing_values(value[["status"]])
   return(value)
@@ -847,6 +1221,9 @@ assert_args_KucoinLending__redeem <- function(currency, size, purchaseOrderNo) {
 
 assert_return_KucoinLending__redeem <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("order_no"))
+  assert_character(value[["order_no"]])
+  assert_no_missing_values(value[["order_no"]])
   return(value)
 }
 
@@ -877,6 +1254,12 @@ assert_return_KucoinMarginData__get_isolated_margin_symbols <- function(value) {
 
 assert_return_KucoinMarginData__get_margin_config <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("currency", "max_leverage", "warning_debt_ratio", "liq_debt_ratio"))
+  assert_character(value[["currency"]])
+  assert_no_missing_values(value[["currency"]])
+  assert_integer(value[["max_leverage"]])
+  assert_double(value[["warning_debt_ratio"]])
+  assert_double(value[["liq_debt_ratio"]])
   return(value)
 }
 
@@ -887,6 +1270,12 @@ assert_args_KucoinMarginData__get_collateral_ratio <- function(query) {
 
 assert_return_KucoinMarginData__get_collateral_ratio <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("currency", "lower_limit", "upper_limit", "collateral_ratio"))
+  assert_character(value[["currency"]])
+  assert_no_missing_values(value[["currency"]])
+  assert_double(value[["lower_limit"]])
+  assert_double(value[["upper_limit"]])
+  assert_double(value[["collateral_ratio"]])
   return(value)
 }
 
@@ -996,6 +1385,10 @@ assert_args_KucoinMarginTrading__close_short <- function(symbol, size, funds, ty
 
 assert_return_KucoinMarginTrading__close_short <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("order_id", "client_oid"))
+  assert_character(value[["order_id"]])
+  assert_no_missing_values(value[["order_id"]])
+  assert_character(value[["client_oid"]])
   return(value)
 }
 
@@ -1045,6 +1438,10 @@ assert_args_KucoinMarginTrading__open_long <- function(symbol, size, funds, type
 
 assert_return_KucoinMarginTrading__open_long <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("order_id", "client_oid"))
+  assert_character(value[["order_id"]])
+  assert_no_missing_values(value[["order_id"]])
+  assert_character(value[["client_oid"]])
   return(value)
 }
 
@@ -1094,6 +1491,10 @@ assert_args_KucoinMarginTrading__close_long <- function(symbol, size, funds, typ
 
 assert_return_KucoinMarginTrading__close_long <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("order_id", "client_oid"))
+  assert_character(value[["order_id"]])
+  assert_no_missing_values(value[["order_id"]])
+  assert_character(value[["client_oid"]])
   return(value)
 }
 
@@ -1111,6 +1512,10 @@ assert_args_KucoinMarginTrading__borrow <- function(currency, size, timeInForce,
 
 assert_return_KucoinMarginTrading__borrow <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("order_no", "actual_size"))
+  assert_character(value[["order_no"]])
+  assert_no_missing_values(value[["order_no"]])
+  assert_double(value[["actual_size"]])
   return(value)
 }
 
@@ -1169,7 +1574,6 @@ assert_return_KucoinMarginTrading__modify_leverage <- function(value) {
   assert_data_table(value)
   assert_has_columns(value, c("leverage", "status"))
   assert_double(value[["leverage"]])
-  assert_no_missing_values(value[["leverage"]])
   assert_character(value[["status"]])
   assert_no_missing_values(value[["status"]])
   return(value)
@@ -1186,6 +1590,17 @@ assert_args_KucoinMarketData__get_announcements <- function(query, page_size, ma
 
 assert_return_KucoinMarketData__get_announcements <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("ann_id", "ann_title", "ann_type", "ann_desc", "c_time", "language", "ann_url"))
+  assert_integer(value[["ann_id"]])
+  assert_no_missing_values(value[["ann_id"]])
+  assert_character(value[["ann_title"]])
+  assert_character(value[["ann_type"]])
+  assert_character(value[["ann_desc"]])
+  assert_datetime(value[["c_time"]])
+  assert_no_missing_values(value[["c_time"]])
+  assert_character(value[["language"]])
+  assert_no_missing_values(value[["language"]])
+  assert_character(value[["ann_url"]])
   return(value)
 }
 
@@ -1214,6 +1629,46 @@ assert_args_KucoinMarketData__get_symbol <- function(symbol) {
 
 assert_return_KucoinMarketData__get_symbol <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("symbol", "name", "base_currency", "quote_currency", "fee_currency", "market", "base_min_size", "quote_min_size", "base_max_size", "quote_max_size", "base_increment", "quote_increment", "price_increment", "price_limit_rate", "min_funds", "is_margin_enabled", "enable_trading", "fee_category", "maker_fee_coefficient", "taker_fee_coefficient", "st", "callauction_is_enabled", "callauction_price_floor", "callauction_price_ceiling", "callauction_first_stage_start_time", "callauction_second_stage_start_time", "callauction_third_stage_start_time", "trading_start_time"))
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_character(value[["name"]])
+  assert_no_missing_values(value[["name"]])
+  assert_character(value[["base_currency"]])
+  assert_no_missing_values(value[["base_currency"]])
+  assert_character(value[["quote_currency"]])
+  assert_no_missing_values(value[["quote_currency"]])
+  assert_character(value[["fee_currency"]])
+  assert_no_missing_values(value[["fee_currency"]])
+  assert_character(value[["market"]])
+  assert_no_missing_values(value[["market"]])
+  assert_double(value[["base_min_size"]])
+  assert_double(value[["quote_min_size"]])
+  assert_double(value[["base_max_size"]])
+  assert_double(value[["quote_max_size"]])
+  assert_double(value[["base_increment"]])
+  assert_double(value[["quote_increment"]])
+  assert_double(value[["price_increment"]])
+  assert_double(value[["price_limit_rate"]])
+  assert_double(value[["min_funds"]])
+  assert_logical(value[["is_margin_enabled"]])
+  assert_no_missing_values(value[["is_margin_enabled"]])
+  assert_logical(value[["enable_trading"]])
+  assert_no_missing_values(value[["enable_trading"]])
+  assert_integer(value[["fee_category"]])
+  assert_no_missing_values(value[["fee_category"]])
+  assert_double(value[["maker_fee_coefficient"]])
+  assert_double(value[["taker_fee_coefficient"]])
+  assert_logical(value[["st"]])
+  assert_no_missing_values(value[["st"]])
+  assert_logical(value[["callauction_is_enabled"]])
+  assert_no_missing_values(value[["callauction_is_enabled"]])
+  assert_double(value[["callauction_price_floor"]])
+  assert_double(value[["callauction_price_ceiling"]])
+  assert_double(value[["callauction_first_stage_start_time"]])
+  assert_double(value[["callauction_second_stage_start_time"]])
+  assert_double(value[["callauction_third_stage_start_time"]])
+  assert_double(value[["trading_start_time"]])
   return(value)
 }
 
@@ -1226,6 +1681,46 @@ assert_args_KucoinMarketData__get_all_symbols <- function(market) {
 
 assert_return_KucoinMarketData__get_all_symbols <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("symbol", "name", "base_currency", "quote_currency", "fee_currency", "market", "base_min_size", "quote_min_size", "base_max_size", "quote_max_size", "base_increment", "quote_increment", "price_increment", "price_limit_rate", "min_funds", "is_margin_enabled", "enable_trading", "fee_category", "maker_fee_coefficient", "taker_fee_coefficient", "st", "callauction_is_enabled", "callauction_price_floor", "callauction_price_ceiling", "callauction_first_stage_start_time", "callauction_second_stage_start_time", "callauction_third_stage_start_time", "trading_start_time"))
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_character(value[["name"]])
+  assert_no_missing_values(value[["name"]])
+  assert_character(value[["base_currency"]])
+  assert_no_missing_values(value[["base_currency"]])
+  assert_character(value[["quote_currency"]])
+  assert_no_missing_values(value[["quote_currency"]])
+  assert_character(value[["fee_currency"]])
+  assert_no_missing_values(value[["fee_currency"]])
+  assert_character(value[["market"]])
+  assert_no_missing_values(value[["market"]])
+  assert_double(value[["base_min_size"]])
+  assert_double(value[["quote_min_size"]])
+  assert_double(value[["base_max_size"]])
+  assert_double(value[["quote_max_size"]])
+  assert_double(value[["base_increment"]])
+  assert_double(value[["quote_increment"]])
+  assert_double(value[["price_increment"]])
+  assert_double(value[["price_limit_rate"]])
+  assert_double(value[["min_funds"]])
+  assert_logical(value[["is_margin_enabled"]])
+  assert_no_missing_values(value[["is_margin_enabled"]])
+  assert_logical(value[["enable_trading"]])
+  assert_no_missing_values(value[["enable_trading"]])
+  assert_integer(value[["fee_category"]])
+  assert_no_missing_values(value[["fee_category"]])
+  assert_double(value[["maker_fee_coefficient"]])
+  assert_double(value[["taker_fee_coefficient"]])
+  assert_logical(value[["st"]])
+  assert_no_missing_values(value[["st"]])
+  assert_logical(value[["callauction_is_enabled"]])
+  assert_no_missing_values(value[["callauction_is_enabled"]])
+  assert_double(value[["callauction_price_floor"]])
+  assert_double(value[["callauction_price_ceiling"]])
+  assert_double(value[["callauction_first_stage_start_time"]])
+  assert_double(value[["callauction_second_stage_start_time"]])
+  assert_double(value[["callauction_third_stage_start_time"]])
+  assert_double(value[["trading_start_time"]])
   return(value)
 }
 
@@ -1236,11 +1731,41 @@ assert_args_KucoinMarketData__get_ticker <- function(symbol) {
 
 assert_return_KucoinMarketData__get_ticker <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("time", "sequence", "price", "size", "best_bid", "best_bid_size", "best_ask", "best_ask_size"))
+  assert_datetime(value[["time"]])
+  assert_no_missing_values(value[["time"]])
+  assert_character(value[["sequence"]])
+  assert_no_missing_values(value[["sequence"]])
+  assert_double(value[["price"]])
+  assert_double(value[["size"]])
+  assert_double(value[["best_bid"]])
+  assert_double(value[["best_bid_size"]])
+  assert_double(value[["best_ask"]])
+  assert_double(value[["best_ask_size"]])
   return(value)
 }
 
 assert_return_KucoinMarketData__get_all_tickers <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("symbol", "symbol_name", "buy", "sell", "change_rate", "change_price", "high", "low", "vol", "vol_value", "last", "average_price", "taker_fee_rate", "maker_fee_rate", "time"))
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_character(value[["symbol_name"]])
+  assert_no_missing_values(value[["symbol_name"]])
+  assert_double(value[["buy"]])
+  assert_double(value[["sell"]])
+  assert_double(value[["change_rate"]])
+  assert_double(value[["change_price"]])
+  assert_double(value[["high"]])
+  assert_double(value[["low"]])
+  assert_double(value[["vol"]])
+  assert_double(value[["vol_value"]])
+  assert_double(value[["last"]])
+  assert_double(value[["average_price"]])
+  assert_double(value[["taker_fee_rate"]])
+  assert_double(value[["maker_fee_rate"]])
+  assert_datetime(value[["time"]])
+  assert_no_missing_values(value[["time"]])
   return(value)
 }
 
@@ -1251,6 +1776,17 @@ assert_args_KucoinMarketData__get_trade_history <- function(symbol) {
 
 assert_return_KucoinMarketData__get_trade_history <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("sequence", "side", "price", "size", "time", "trade_id"))
+  assert_character(value[["sequence"]])
+  assert_no_missing_values(value[["sequence"]])
+  assert_character(value[["side"]])
+  assert_no_missing_values(value[["side"]])
+  assert_double(value[["price"]])
+  assert_double(value[["size"]])
+  assert_datetime(value[["time"]])
+  assert_no_missing_values(value[["time"]])
+  assert_character(value[["trade_id"]])
+  assert_no_missing_values(value[["trade_id"]])
   return(value)
 }
 
@@ -1270,9 +1806,7 @@ assert_return_KucoinMarketData__get_part_orderbook <- function(value) {
   assert_no_missing_values(value[["side"]])
   assert_count(value[["level"]])
   assert_double(value[["price"]])
-  assert_no_missing_values(value[["price"]])
   assert_double(value[["size"]])
-  assert_no_missing_values(value[["size"]])
   return(value)
 }
 
@@ -1292,9 +1826,7 @@ assert_return_KucoinMarketData__get_full_orderbook <- function(value) {
   assert_no_missing_values(value[["side"]])
   assert_count(value[["level"]])
   assert_double(value[["price"]])
-  assert_no_missing_values(value[["price"]])
   assert_double(value[["size"]])
-  assert_no_missing_values(value[["size"]])
   return(value)
 }
 
@@ -1305,6 +1837,25 @@ assert_args_KucoinMarketData__get_24hr_stats <- function(symbol) {
 
 assert_return_KucoinMarketData__get_24hr_stats <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("time", "symbol", "buy", "sell", "change_rate", "change_price", "high", "low", "vol", "vol_value", "last", "average_price", "taker_fee_rate", "maker_fee_rate", "taker_coefficient", "maker_coefficient"))
+  assert_datetime(value[["time"]])
+  assert_no_missing_values(value[["time"]])
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_double(value[["buy"]])
+  assert_double(value[["sell"]])
+  assert_double(value[["change_rate"]])
+  assert_double(value[["change_price"]])
+  assert_double(value[["high"]])
+  assert_double(value[["low"]])
+  assert_double(value[["vol"]])
+  assert_double(value[["vol_value"]])
+  assert_double(value[["last"]])
+  assert_double(value[["average_price"]])
+  assert_double(value[["taker_fee_rate"]])
+  assert_double(value[["maker_fee_rate"]])
+  assert_double(value[["taker_coefficient"]])
+  assert_double(value[["maker_coefficient"]])
   return(value)
 }
 
@@ -1328,17 +1879,11 @@ assert_return_KucoinMarketData__get_klines <- function(value) {
   assert_datetime(value[["datetime"]])
   assert_no_missing_values(value[["datetime"]])
   assert_double(value[["open"]])
-  assert_no_missing_values(value[["open"]])
   assert_double(value[["high"]])
-  assert_no_missing_values(value[["high"]])
   assert_double(value[["low"]])
-  assert_no_missing_values(value[["low"]])
   assert_double(value[["close"]])
-  assert_no_missing_values(value[["close"]])
   assert_double(value[["volume"]])
-  assert_no_missing_values(value[["volume"]])
   assert_double(value[["turnover"]])
-  assert_no_missing_values(value[["turnover"]])
   return(value)
 }
 
@@ -1354,6 +1899,11 @@ assert_return_KucoinMarketData__get_server_time <- function(value) {
 
 assert_return_KucoinMarketData__get_service_status <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("status", "msg"))
+  assert_character(value[["status"]])
+  assert_no_missing_values(value[["status"]])
+  assert_character(value[["msg"]])
+  assert_no_missing_values(value[["msg"]])
   return(value)
 }
 
@@ -1423,6 +1973,10 @@ assert_args_KucoinOcoOrders__add_order <- function(symbol, side, price, size, st
 
 assert_return_KucoinOcoOrders__add_order <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("order_id", "client_oid"))
+  assert_character(value[["order_id"]])
+  assert_no_missing_values(value[["order_id"]])
+  assert_character(value[["client_oid"]])
   return(value)
 }
 
@@ -1463,6 +2017,16 @@ assert_args_KucoinOcoOrders__get_order_by_id <- function(orderId) {
 
 assert_return_KucoinOcoOrders__get_order_by_id <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("order_id", "symbol", "client_oid", "order_time", "status"))
+  assert_character(value[["order_id"]])
+  assert_no_missing_values(value[["order_id"]])
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_character(value[["client_oid"]])
+  assert_datetime(value[["order_time"]])
+  assert_no_missing_values(value[["order_time"]])
+  assert_character(value[["status"]])
+  assert_no_missing_values(value[["status"]])
   return(value)
 }
 
@@ -1473,6 +2037,16 @@ assert_args_KucoinOcoOrders__get_order_by_client_oid <- function(clientOid) {
 
 assert_return_KucoinOcoOrders__get_order_by_client_oid <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("order_id", "symbol", "client_oid", "order_time", "status"))
+  assert_character(value[["order_id"]])
+  assert_no_missing_values(value[["order_id"]])
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_character(value[["client_oid"]])
+  assert_datetime(value[["order_time"]])
+  assert_no_missing_values(value[["order_time"]])
+  assert_character(value[["status"]])
+  assert_no_missing_values(value[["status"]])
   return(value)
 }
 
@@ -1483,6 +2057,27 @@ assert_args_KucoinOcoOrders__get_order_detail_by_id <- function(orderId) {
 
 assert_return_KucoinOcoOrders__get_order_detail_by_id <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("order_id", "symbol", "client_oid", "order_time", "status", "sub_order_id", "sub_order_symbol", "sub_order_side", "sub_order_price", "sub_order_size", "sub_order_status", "sub_order_stop_price"))
+  assert_character(value[["order_id"]])
+  assert_no_missing_values(value[["order_id"]])
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_character(value[["client_oid"]])
+  assert_datetime(value[["order_time"]])
+  assert_no_missing_values(value[["order_time"]])
+  assert_character(value[["status"]])
+  assert_no_missing_values(value[["status"]])
+  assert_character(value[["sub_order_id"]])
+  assert_no_missing_values(value[["sub_order_id"]])
+  assert_character(value[["sub_order_symbol"]])
+  assert_no_missing_values(value[["sub_order_symbol"]])
+  assert_character(value[["sub_order_side"]])
+  assert_no_missing_values(value[["sub_order_side"]])
+  assert_double(value[["sub_order_price"]])
+  assert_double(value[["sub_order_size"]])
+  assert_character(value[["sub_order_status"]])
+  assert_no_missing_values(value[["sub_order_status"]])
+  assert_double(value[["sub_order_stop_price"]])
   return(value)
 }
 
@@ -1583,6 +2178,9 @@ assert_args_KucoinStopOrders__add_order <- function(type, symbol, side, stopPric
 
 assert_return_KucoinStopOrders__add_order <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("order_id"))
+  assert_character(value[["order_id"]])
+  assert_no_missing_values(value[["order_id"]])
   return(value)
 }
 
@@ -1604,6 +2202,10 @@ assert_args_KucoinStopOrders__cancel_order_by_client_oid <- function(clientOid, 
 
 assert_return_KucoinStopOrders__cancel_order_by_client_oid <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("cancelled_order_id", "client_oid"))
+  assert_character(value[["cancelled_order_id"]])
+  assert_no_missing_values(value[["cancelled_order_id"]])
+  assert_character(value[["client_oid"]])
   return(value)
 }
 
@@ -1660,6 +2262,14 @@ assert_args_KucoinSubAccount__add_sub_account <- function(password, subName, acc
 
 assert_return_KucoinSubAccount__add_sub_account <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("uid", "sub_name", "remarks", "access"))
+  assert_integer(value[["uid"]])
+  assert_no_missing_values(value[["uid"]])
+  assert_character(value[["sub_name"]])
+  assert_no_missing_values(value[["sub_name"]])
+  assert_character(value[["remarks"]])
+  assert_character(value[["access"]])
+  assert_no_missing_values(value[["access"]])
   return(value)
 }
 
@@ -1780,6 +2390,10 @@ assert_args_KucoinTrading__add_order <- function(type, symbol, side, clientOid, 
 
 assert_return_KucoinTrading__add_order <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("order_id", "client_oid"))
+  assert_character(value[["order_id"]])
+  assert_no_missing_values(value[["order_id"]])
+  assert_character(value[["client_oid"]])
   return(value)
 }
 
@@ -1863,6 +2477,10 @@ assert_args_KucoinTrading__add_order_test <- function(type, symbol, side, client
 
 assert_return_KucoinTrading__add_order_test <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("order_id", "client_oid"))
+  assert_character(value[["order_id"]])
+  assert_no_missing_values(value[["order_id"]])
+  assert_character(value[["client_oid"]])
   return(value)
 }
 
@@ -1873,6 +2491,12 @@ assert_args_KucoinTrading__add_order_batch <- function(order_list) {
 
 assert_return_KucoinTrading__add_order_batch <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("order_id", "client_oid", "success", "fail_msg"))
+  assert_character(value[["order_id"]])
+  assert_character(value[["client_oid"]])
+  assert_logical(value[["success"]])
+  assert_no_missing_values(value[["success"]])
+  assert_character(value[["fail_msg"]])
   return(value)
 }
 
@@ -1884,6 +2508,9 @@ assert_args_KucoinTrading__cancel_order_by_id <- function(orderId, symbol) {
 
 assert_return_KucoinTrading__cancel_order_by_id <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("order_id"))
+  assert_character(value[["order_id"]])
+  assert_no_missing_values(value[["order_id"]])
   return(value)
 }
 
@@ -1895,6 +2522,8 @@ assert_args_KucoinTrading__cancel_order_by_client_oid <- function(clientOid, sym
 
 assert_return_KucoinTrading__cancel_order_by_client_oid <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("client_oid"))
+  assert_character(value[["client_oid"]])
   return(value)
 }
 
@@ -1915,6 +2544,10 @@ assert_args_KucoinTrading__cancel_partial_order <- function(orderId, symbol, can
 
 assert_return_KucoinTrading__cancel_partial_order <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("order_id", "cancel_size"))
+  assert_character(value[["order_id"]])
+  assert_no_missing_values(value[["order_id"]])
+  assert_double(value[["cancel_size"]])
   return(value)
 }
 
@@ -1951,6 +2584,21 @@ assert_args_KucoinTrading__get_order_by_id <- function(orderId, symbol) {
 
 assert_return_KucoinTrading__get_order_by_id <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("order_id", "symbol", "side", "type", "price", "size", "created_at", "last_updated_at"))
+  assert_character(value[["order_id"]])
+  assert_no_missing_values(value[["order_id"]])
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_character(value[["side"]])
+  assert_no_missing_values(value[["side"]])
+  assert_character(value[["type"]])
+  assert_no_missing_values(value[["type"]])
+  assert_double(value[["price"]])
+  assert_double(value[["size"]])
+  assert_datetime(value[["created_at"]])
+  assert_no_missing_values(value[["created_at"]])
+  assert_datetime(value[["last_updated_at"]])
+  assert_no_missing_values(value[["last_updated_at"]])
   return(value)
 }
 
@@ -1962,6 +2610,14 @@ assert_args_KucoinTrading__get_order_by_client_oid <- function(clientOid, symbol
 
 assert_return_KucoinTrading__get_order_by_client_oid <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("client_oid", "symbol", "side", "created_at"))
+  assert_character(value[["client_oid"]])
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_character(value[["side"]])
+  assert_no_missing_values(value[["side"]])
+  assert_datetime(value[["created_at"]])
+  assert_no_missing_values(value[["created_at"]])
   return(value)
 }
 
@@ -2045,6 +2701,15 @@ assert_args_KucoinTrading__get_closed_orders <- function(symbol, side, type, sta
 
 assert_return_KucoinTrading__get_closed_orders <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("order_id", "symbol", "side", "created_at"))
+  assert_character(value[["order_id"]])
+  assert_no_missing_values(value[["order_id"]])
+  assert_character(value[["symbol"]])
+  assert_no_missing_values(value[["symbol"]])
+  assert_character(value[["side"]])
+  assert_no_missing_values(value[["side"]])
+  assert_datetime(value[["created_at"]])
+  assert_no_missing_values(value[["created_at"]])
   return(value)
 }
 
@@ -2138,6 +2803,16 @@ assert_args_KucoinTrading__add_order_batch_sync <- function(order_list) {
 
 assert_return_KucoinTrading__add_order_batch_sync <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("order_id", "client_oid", "success", "status", "deal_size", "remain_size", "canceled_size", "fail_msg"))
+  assert_character(value[["order_id"]])
+  assert_character(value[["client_oid"]])
+  assert_logical(value[["success"]])
+  assert_no_missing_values(value[["success"]])
+  assert_character(value[["status"]])
+  assert_double(value[["deal_size"]])
+  assert_double(value[["remain_size"]])
+  assert_double(value[["canceled_size"]])
+  assert_character(value[["fail_msg"]])
   return(value)
 }
 
@@ -2149,6 +2824,15 @@ assert_args_KucoinTrading__cancel_order_by_id_sync <- function(orderId, symbol) 
 
 assert_return_KucoinTrading__cancel_order_by_id_sync <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("order_id", "origin_size", "deal_size", "remain_size", "canceled_size", "status"))
+  assert_character(value[["order_id"]])
+  assert_no_missing_values(value[["order_id"]])
+  assert_double(value[["origin_size"]])
+  assert_double(value[["deal_size"]])
+  assert_double(value[["remain_size"]])
+  assert_double(value[["canceled_size"]])
+  assert_character(value[["status"]])
+  assert_no_missing_values(value[["status"]])
   return(value)
 }
 
@@ -2160,6 +2844,14 @@ assert_args_KucoinTrading__cancel_order_by_client_oid_sync <- function(clientOid
 
 assert_return_KucoinTrading__cancel_order_by_client_oid_sync <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("client_oid", "origin_size", "deal_size", "remain_size", "canceled_size", "status"))
+  assert_character(value[["client_oid"]])
+  assert_double(value[["origin_size"]])
+  assert_double(value[["deal_size"]])
+  assert_double(value[["remain_size"]])
+  assert_double(value[["canceled_size"]])
+  assert_character(value[["status"]])
+  assert_no_missing_values(value[["status"]])
   return(value)
 }
 
@@ -2198,6 +2890,10 @@ assert_args_KucoinTrading__modify_order <- function(symbol, orderId, clientOid, 
 
 assert_return_KucoinTrading__modify_order <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("new_order_id", "client_oid"))
+  assert_character(value[["new_order_id"]])
+  assert_no_missing_values(value[["new_order_id"]])
+  assert_character(value[["client_oid"]])
   return(value)
 }
 
@@ -2210,6 +2906,11 @@ assert_args_KucoinTrading__set_dcp <- function(symbols) {
 
 assert_return_KucoinTrading__set_dcp <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("current_time", "trigger_time"))
+  assert_integer(value[["current_time"]])
+  assert_no_missing_values(value[["current_time"]])
+  assert_integer(value[["trigger_time"]])
+  assert_no_missing_values(value[["trigger_time"]])
   return(value)
 }
 
@@ -2242,6 +2943,9 @@ assert_args_KucoinTransfer__add_transfer <- function(clientOid, currency, amount
 
 assert_return_KucoinTransfer__add_transfer <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("order_id"))
+  assert_character(value[["order_id"]])
+  assert_no_missing_values(value[["order_id"]])
   return(value)
 }
 
@@ -2256,6 +2960,13 @@ assert_args_KucoinTransfer__get_transferable <- function(currency, type, tag) {
 
 assert_return_KucoinTransfer__get_transferable <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("currency", "balance", "available", "holds", "transferable"))
+  assert_character(value[["currency"]])
+  assert_no_missing_values(value[["currency"]])
+  assert_double(value[["balance"]])
+  assert_double(value[["available"]])
+  assert_double(value[["holds"]])
+  assert_double(value[["transferable"]])
   return(value)
 }
 
@@ -2284,6 +2995,9 @@ assert_args_KucoinWithdrawal__add_withdrawal <- function(currency, toAddress, am
 
 assert_return_KucoinWithdrawal__add_withdrawal <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("withdrawal_id"))
+  assert_character(value[["withdrawal_id"]])
+  assert_no_missing_values(value[["withdrawal_id"]])
   return(value)
 }
 
@@ -2310,6 +3024,26 @@ assert_args_KucoinWithdrawal__get_withdrawal_quotas <- function(currency, chain)
 
 assert_return_KucoinWithdrawal__get_withdrawal_quotas <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("currency", "chain", "is_withdraw_enabled", "available_amount", "remain_amount", "withdraw_min_fee", "inner_withdraw_min_fee", "withdraw_min_size", "precision", "limit_btc_amount", "used_btc_amount", "locked_amount", "quota_currency", "limit_quota_currency_amount", "used_quota_currency_amount", "reason"))
+  assert_character(value[["currency"]])
+  assert_no_missing_values(value[["currency"]])
+  assert_character(value[["chain"]])
+  assert_no_missing_values(value[["chain"]])
+  assert_logical(value[["is_withdraw_enabled"]])
+  assert_double(value[["available_amount"]])
+  assert_double(value[["remain_amount"]])
+  assert_double(value[["withdraw_min_fee"]])
+  assert_double(value[["inner_withdraw_min_fee"]])
+  assert_double(value[["withdraw_min_size"]])
+  assert_integer(value[["precision"]])
+  assert_double(value[["limit_btc_amount"]])
+  assert_double(value[["used_btc_amount"]])
+  assert_double(value[["locked_amount"]])
+  assert_character(value[["quota_currency"]])
+  assert_no_missing_values(value[["quota_currency"]])
+  assert_double(value[["limit_quota_currency_amount"]])
+  assert_double(value[["used_quota_currency_amount"]])
+  assert_character(value[["reason"]])
   return(value)
 }
 
@@ -2345,6 +3079,44 @@ assert_args_KucoinWithdrawal__get_withdrawal_by_id <- function(withdrawalId) {
 
 assert_return_KucoinWithdrawal__get_withdrawal_by_id <- function(value) {
   assert_data_table(value)
+  assert_has_columns(value, c("id", "currency", "chain_id", "chain_name", "status", "address", "memo", "is_inner", "amount", "fee", "wallet_tx_id", "created_at", "cancel_type", "uid", "currency_name", "failure_reason", "failure_reason_msg", "address_remark", "remark", "taxes", "tax_description", "tx_id", "return_status", "return_amount", "return_currency"))
+  assert_character(value[["id"]])
+  assert_no_missing_values(value[["id"]])
+  assert_character(value[["currency"]])
+  assert_no_missing_values(value[["currency"]])
+  assert_character(value[["chain_id"]])
+  assert_character(value[["chain_name"]])
+  assert_character(value[["status"]])
+  assert_no_missing_values(value[["status"]])
+  assert_character(value[["address"]])
+  assert_no_missing_values(value[["address"]])
+  assert_character(value[["memo"]])
+  assert_no_missing_values(value[["memo"]])
+  assert_logical(value[["is_inner"]])
+  assert_no_missing_values(value[["is_inner"]])
+  assert_double(value[["amount"]])
+  assert_double(value[["fee"]])
+  assert_character(value[["wallet_tx_id"]])
+  assert_datetime(value[["created_at"]])
+  assert_no_missing_values(value[["created_at"]])
+  assert_character(value[["cancel_type"]])
+  assert_no_missing_values(value[["cancel_type"]])
+  assert_integer(value[["uid"]])
+  assert_no_missing_values(value[["uid"]])
+  assert_character(value[["currency_name"]])
+  assert_no_missing_values(value[["currency_name"]])
+  assert_character(value[["failure_reason"]])
+  assert_character(value[["failure_reason_msg"]])
+  assert_character(value[["address_remark"]])
+  assert_character(value[["remark"]])
+  assert_double(value[["taxes"]])
+  assert_character(value[["tax_description"]])
+  assert_character(value[["tx_id"]])
+  assert_character(value[["return_status"]])
+  assert_no_missing_values(value[["return_status"]])
+  assert_double(value[["return_amount"]])
+  assert_character(value[["return_currency"]])
+  assert_no_missing_values(value[["return_currency"]])
   return(value)
 }
 
@@ -2424,9 +3196,7 @@ assert_return_parse_orderbook <- function(value) {
   assert_no_missing_values(value[["side"]])
   assert_count(value[["level"]])
   assert_double(value[["price"]])
-  assert_no_missing_values(value[["price"]])
   assert_double(value[["size"]])
-  assert_no_missing_values(value[["size"]])
   return(value)
 }
 
@@ -2443,17 +3213,11 @@ assert_return_parse_klines <- function(value) {
   assert_datetime(value[["datetime"]])
   assert_no_missing_values(value[["datetime"]])
   assert_double(value[["open"]])
-  assert_no_missing_values(value[["open"]])
   assert_double(value[["high"]])
-  assert_no_missing_values(value[["high"]])
   assert_double(value[["low"]])
-  assert_no_missing_values(value[["low"]])
   assert_double(value[["close"]])
-  assert_no_missing_values(value[["close"]])
   assert_double(value[["volume"]])
-  assert_no_missing_values(value[["volume"]])
   assert_double(value[["turnover"]])
-  assert_no_missing_values(value[["turnover"]])
   return(value)
 }
 
@@ -2470,6 +3234,15 @@ assert_return_flatten_pages <- function(value) {
 assert_args_sign_request <- function(req, keys, method, path, body, .get_timestamp_ms) {
   assert_class(req, "httr2_request")
   assert_list(keys)
+  assert_has_names(keys, c("api_key", "api_secret", "api_passphrase", "key_version"))
+  assert_character(keys[["api_key"]])
+  assert_no_missing_values(keys[["api_key"]])
+  assert_character(keys[["api_secret"]])
+  assert_no_missing_values(keys[["api_secret"]])
+  assert_character(keys[["api_passphrase"]])
+  assert_no_missing_values(keys[["api_passphrase"]])
+  assert_character(keys[["key_version"]])
+  assert_no_missing_values(keys[["key_version"]])
   assert_scalar_character(method)
   assert_scalar_character(path)
   assert_scalar_character(body)
@@ -2501,6 +3274,15 @@ assert_return_kucoin_serialize_body <- function(value) {
 assert_args_kucoin_sign_req <- function(req, keys, ctx) {
   assert_class(req, "httr2_request")
   assert_list(keys)
+  assert_has_names(keys, c("api_key", "api_secret", "api_passphrase", "key_version"))
+  assert_character(keys[["api_key"]])
+  assert_no_missing_values(keys[["api_key"]])
+  assert_character(keys[["api_secret"]])
+  assert_no_missing_values(keys[["api_secret"]])
+  assert_character(keys[["api_passphrase"]])
+  assert_no_missing_values(keys[["api_passphrase"]])
+  assert_character(keys[["key_version"]])
+  assert_no_missing_values(keys[["key_version"]])
   assert_list(ctx)
   return(invisible(NULL))
 }
@@ -2529,6 +3311,15 @@ assert_args_kucoin_paginate <- function(base_url, endpoint, method, query, body,
   }
   if (!is.null(keys)) {
     assert_list(keys)
+    assert_has_names(keys, c("api_key", "api_secret", "api_passphrase", "key_version"))
+    assert_character(keys[["api_key"]])
+    assert_no_missing_values(keys[["api_key"]])
+    assert_character(keys[["api_secret"]])
+    assert_no_missing_values(keys[["api_secret"]])
+    assert_character(keys[["api_passphrase"]])
+    assert_no_missing_values(keys[["api_passphrase"]])
+    assert_character(keys[["key_version"]])
+    assert_no_missing_values(keys[["key_version"]])
   }
   if (!is.null(sign)) {
     assert_function(sign)

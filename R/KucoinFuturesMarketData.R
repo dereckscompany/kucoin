@@ -366,7 +366,18 @@ KucoinFuturesMarketData <- R6::R6Class(
     #'   ticker snapshot: the sequence number, contract symbol, last trade side,
     #'   size, trade identifier and price, the best bid and ask prices with their
     #'   sizes, and the ticker datetime (POSIXct, coerced from the nanosecond
-    #'   timestamp).
+    #'   timestamp):
+    #' - sequence (numeric) the sequence.
+    #' - symbol (character) the trading pair symbol.
+    #' - side (character) the order side.
+    #' - size (numeric | NA) the size.
+    #' - price (numeric | NA) the price.
+    #' - best_bid_size (numeric | NA) the best bid size.
+    #' - best_bid_price (numeric | NA) the best bid price.
+    #' - best_ask_price (numeric | NA) the best ask price.
+    #' - best_ask_size (numeric | NA) the best ask size.
+    #' - trade_id (character) the trade identifier.
+    #' - ts (POSIXct) the ts (UTC).
     #'
     #' @examples
     #' \dontrun{
@@ -383,7 +394,19 @@ KucoinFuturesMarketData <- R6::R6Class(
         auth = FALSE,
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
-            return(data.table::data.table()[])
+            return(data.table::data.table(
+              sequence = numeric(0),
+              symbol = character(0),
+              side = character(0),
+              size = numeric(0),
+              price = numeric(0),
+              best_bid_size = numeric(0),
+              best_bid_price = numeric(0),
+              best_ask_price = numeric(0),
+              best_ask_size = numeric(0),
+              trade_id = character(0),
+              ts = ms_to_datetime(numeric(0))
+            )[])
           }
           dt <- as_dt_row(data)
           coerce_cols(dt, "ts", ns_to_datetime)
@@ -543,7 +566,14 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' @param size (scalar<count>) number of levels, either `20` or `100`.
     #'   Default `20`.
     #' @return (data.table | promise<data.table>) the level-2 order book in long
-    #'   format (ts, sequence, side, level, price, size, and symbol when present).
+    #'   format (ts, sequence, side, level, price, size, and symbol when present):
+    #' - ts (POSIXct) the ts (UTC).
+    #' - sequence (character) the sequence.
+    #' - side (character) the order side.
+    #' - level (integer | NA) the tier level.
+    #' - price (numeric | NA) the price.
+    #' - size (numeric | NA) the size.
+    #' - symbol (character) the trading pair symbol.
     #'
     #' @examples
     #' \dontrun{
@@ -560,6 +590,10 @@ KucoinFuturesMarketData <- R6::R6Class(
         query = list(symbol = symbol),
         auth = FALSE,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_futures_orderbook())
+          }
+
           return(parse_futures_orderbook(data)[])
         }
       )
@@ -628,7 +662,14 @@ KucoinFuturesMarketData <- R6::R6Class(
     #'
     #' @param symbol (scalar<character>) futures symbol (e.g., `"XBTUSDTM"`).
     #' @return (data.table | promise<data.table>) the level-2 order book in long
-    #'   format (ts, sequence, side, level, price, size, and symbol when present).
+    #'   format (ts, sequence, side, level, price, size, and symbol when present):
+    #' - ts (POSIXct) the ts (UTC).
+    #' - sequence (character) the sequence.
+    #' - side (character) the order side.
+    #' - level (integer | NA) the tier level.
+    #' - price (numeric | NA) the price.
+    #' - size (numeric | NA) the size.
+    #' - symbol (character) the trading pair symbol.
     #'
     #' @examples
     #' \dontrun{
@@ -644,6 +685,10 @@ KucoinFuturesMarketData <- R6::R6Class(
         query = list(symbol = symbol),
         auth = TRUE,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_futures_orderbook())
+          }
+
           return(parse_futures_orderbook(data)[])
         }
       )
@@ -881,6 +926,18 @@ KucoinFuturesMarketData <- R6::R6Class(
         query = list(symbol = symbol, granularity = granularity, from = from, to = to),
         auth = FALSE,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              datetime = ms_to_datetime(numeric(0)),
+              open = numeric(0),
+              high = numeric(0),
+              low = numeric(0),
+              close = numeric(0),
+              volume = numeric(0),
+              turnover = numeric(0)
+            )[])
+          }
+
           return(parse_futures_klines(data)[])
         }
       )
@@ -937,7 +994,12 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row giving the current mark
     #'   price: the contract symbol, price granularity in milliseconds, the rate
     #'   datetime (POSIXct, coerced from epoch milliseconds), the mark price, and
-    #'   the underlying index price.
+    #'   the underlying index price:
+    #' - symbol (character) the trading pair symbol.
+    #' - granularity (integer | NA) the granularity.
+    #' - time_point (POSIXct) the time point (UTC).
+    #' - value (numeric | NA) the order value.
+    #' - index_price (numeric | NA) the index price.
     #'
     #' @examples
     #' \dontrun{
@@ -953,7 +1015,13 @@ KucoinFuturesMarketData <- R6::R6Class(
         auth = FALSE,
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
-            return(data.table::data.table()[])
+            return(data.table::data.table(
+              symbol = character(0),
+              granularity = integer(0),
+              time_point = ms_to_datetime(numeric(0)),
+              value = numeric(0),
+              index_price = numeric(0)
+            )[])
           }
           dt <- as_dt_row(data)
           coerce_cols(dt, "time_point", ms_to_datetime)
@@ -1023,7 +1091,16 @@ KucoinFuturesMarketData <- R6::R6Class(
     #'   rate datetime (POSIXct, coerced from epoch milliseconds), the current
     #'   funding rate, the daily interest rate, the funding-rate cap and floor, the
     #'   funding period, and the next funding settlement datetime (POSIXct, coerced
-    #'   from epoch milliseconds).
+    #'   from epoch milliseconds):
+    #' - symbol (character) the trading pair symbol.
+    #' - granularity (integer | NA) the granularity.
+    #' - time_point (POSIXct) the time point (UTC).
+    #' - value (numeric | NA) the order value.
+    #' - daily_interest_rate (numeric | NA) the daily interest rate.
+    #' - funding_rate_cap (numeric | NA) the funding rate cap.
+    #' - funding_rate_floor (numeric | NA) the funding rate floor.
+    #' - period (integer | NA) the period.
+    #' - funding_time (POSIXct) the funding time (UTC).
     #'
     #' @examples
     #' \dontrun{
@@ -1040,7 +1117,17 @@ KucoinFuturesMarketData <- R6::R6Class(
         auth = FALSE,
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
-            return(data.table::data.table()[])
+            return(data.table::data.table(
+              symbol = character(0),
+              granularity = integer(0),
+              time_point = ms_to_datetime(numeric(0)),
+              value = numeric(0),
+              daily_interest_rate = numeric(0),
+              funding_rate_cap = numeric(0),
+              funding_rate_floor = numeric(0),
+              period = integer(0),
+              funding_time = ms_to_datetime(numeric(0))
+            )[])
           }
           dt <- as_dt_row(data)
           coerce_cols(dt, c("time_point", "funding_time"), ms_to_datetime)
@@ -1199,7 +1286,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' ```
     #'
     #' @return (data.table | promise<data.table>) one row giving the server
-    #'   datetime (POSIXct, coerced from epoch milliseconds).
+    #'   datetime (POSIXct, coerced from epoch milliseconds):
+    #' - server_time (POSIXct) the server time (UTC).
     #'
     #' @examples
     #' \dontrun{
@@ -1213,7 +1301,7 @@ KucoinFuturesMarketData <- R6::R6Class(
         auth = FALSE,
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
-            return(data.table::data.table()[])
+            return(data.table::data.table(server_time = ms_to_datetime(numeric(0)))[])
           }
           return(data.table::data.table(server_time = ms_to_datetime(data))[])
         }
@@ -1267,7 +1355,9 @@ KucoinFuturesMarketData <- R6::R6Class(
     #'
     #' @return (data.table | promise<data.table>) one row giving the operational
     #'   status (`"open"`, `"close"`, or `"cancelonly"`) and an optional
-    #'   remark/message.
+    #'   remark/message:
+    #' - status (character) the status.
+    #' - msg (character) the msg.
     #'
     #' @examples
     #' \dontrun{
@@ -1281,7 +1371,7 @@ KucoinFuturesMarketData <- R6::R6Class(
         auth = FALSE,
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
-            return(data.table::data.table()[])
+            return(empty_dt_service_status())
           }
           return(as_dt_row(data)[])
         }

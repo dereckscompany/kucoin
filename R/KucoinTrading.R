@@ -179,7 +179,9 @@ KucoinTrading <- R6::R6Class(
     #' @param iceberg (scalar<logical> | NULL) if TRUE, only `visibleSize` is shown.
     #' @param visibleSize (scalar<numeric> | scalar<character> | NULL) visible quantity for iceberg orders.
     #' @return (data.table | promise<data.table>) one row giving the KuCoin-assigned order identifier and the
-    #'   client-provided order identifier.
+    #'   client-provided order identifier:
+    #' - order_id (character) the system order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -258,6 +260,10 @@ KucoinTrading <- R6::R6Class(
         method = "POST",
         body = body,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_order_ack())
+          }
+
           dt <- as_dt_row(data)
           if (is.null(dt$client_oid)) {
             dt[, client_oid := NA_character_]
@@ -348,7 +354,9 @@ KucoinTrading <- R6::R6Class(
     #' @param iceberg (scalar<logical> | NULL) if TRUE, only `visibleSize` is shown.
     #' @param visibleSize (scalar<numeric> | scalar<character> | NULL) visible quantity for iceberg orders.
     #' @return (data.table | promise<data.table>) one row giving the simulated order identifier and the client-provided
-    #'   order identifier.
+    #'   order identifier:
+    #' - order_id (character) the system order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -419,6 +427,10 @@ KucoinTrading <- R6::R6Class(
         method = "POST",
         body = body,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_order_ack())
+          }
+
           dt <- as_dt_row(data)
           if (is.null(dt$client_oid)) {
             dt[, client_oid := NA_character_]
@@ -517,7 +529,11 @@ KucoinTrading <- R6::R6Class(
     #' @param order_list (list) list of named lists; each containing order parameters
     #'   (`type`, `symbol`, `side`, plus optional fields). Maximum 20 orders.
     #' @return (data.table | promise<data.table>) one row per order giving the KuCoin order ID, client order ID, the
-    #'   success flag, and any failure message.
+    #'   success flag, and any failure message:
+    #' - order_id (character | NA) the system order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
+    #' - success (logical) whether the order succeeded.
+    #' - fail_msg (character | NA) the failure message.
     #'
     #' @examples
     #' \dontrun{
@@ -546,7 +562,12 @@ KucoinTrading <- R6::R6Class(
         body = body,
         .parser = function(data) {
           if (is.null(data) || length(data) == 0) {
-            return(data.table::data.table()[])
+            return(data.table::data.table(
+              order_id = character(0),
+              client_oid = character(0),
+              success = logical(0),
+              fail_msg = character(0)
+            )[])
           }
           dt <- data.table::rbindlist(
             lapply(data, as_dt_row),
@@ -605,7 +626,8 @@ KucoinTrading <- R6::R6Class(
     #'
     #' @param orderId (scalar<character>) the KuCoin order ID to cancel.
     #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
-    #' @return (data.table | promise<data.table>) one row giving the cancelled order ID.
+    #' @return (data.table | promise<data.table>) one row giving the cancelled order ID:
+    #' - order_id (character) the system order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -676,7 +698,8 @@ KucoinTrading <- R6::R6Class(
     #'
     #' @param clientOid (scalar<character>) client order ID.
     #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
-    #' @return (data.table | promise<data.table>) one row giving the cancelled client order ID.
+    #' @return (data.table | promise<data.table>) one row giving the cancelled client order ID:
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -752,7 +775,9 @@ KucoinTrading <- R6::R6Class(
     #' @param orderId (scalar<character>) order ID.
     #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
     #' @param cancelSize (scalar<numeric> | scalar<character>) quantity to cancel from the order.
-    #' @return (data.table | promise<data.table>) one row giving the cancellation result.
+    #' @return (data.table | promise<data.table>) one row giving the cancellation result:
+    #' - order_id (character) the system order identifier.
+    #' - cancel_size (numeric | NA) the cancelled size.
     #'
     #' @examples
     #' \dontrun{
@@ -774,7 +799,12 @@ KucoinTrading <- R6::R6Class(
         endpoint = paste0("/api/v1/hf/orders/cancel/", orderId),
         method = "DELETE",
         query = list(symbol = symbol, cancelSize = as.character(cancelSize)),
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(order_id = character(0), cancel_size = character(0))[])
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,
@@ -1010,7 +1040,15 @@ KucoinTrading <- R6::R6Class(
     #' @param orderId (scalar<character>) the KuCoin order ID.
     #' @param symbol (scalar<character> | NULL) trading pair (e.g., `"BTC-USDT"`). Defaults to `NULL`.
     #' @return (data.table | promise<data.table>) one row of full order details, including the creation and last-updated
-    #'   datetimes (POSIXct) when timestamps are present.
+    #'   datetimes (POSIXct) when timestamps are present:
+    #' - order_id (character) the system order identifier.
+    #' - symbol (character) the trading pair symbol.
+    #' - side (character) the order side.
+    #' - type (character) the type.
+    #' - price (numeric | NA) the price.
+    #' - size (numeric | NA) the size.
+    #' - created_at (POSIXct) the created at (UTC).
+    #' - last_updated_at (POSIXct) the last updated at (UTC).
     #'
     #' @examples
     #' \dontrun{
@@ -1031,6 +1069,19 @@ KucoinTrading <- R6::R6Class(
         endpoint = paste0("/api/v1/hf/orders/", orderId),
         query = if (!is.null(symbol)) list(symbol = symbol) else list(),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              order_id = character(0),
+              symbol = character(0),
+              side = character(0),
+              type = character(0),
+              price = numeric(0),
+              size = numeric(0),
+              created_at = ms_to_datetime(numeric(0)),
+              last_updated_at = ms_to_datetime(numeric(0))
+            )[])
+          }
+
           dt <- as_dt_row(data)
           if ("created_at" %in% names(dt)) {
             dt[, created_at := ms_to_datetime(created_at)]
@@ -1118,7 +1169,11 @@ KucoinTrading <- R6::R6Class(
     #' @param clientOid (scalar<character>) client order ID.
     #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
     #' @return (data.table | promise<data.table>) one row of full order details, including the creation and last-updated
-    #'   datetimes (POSIXct).
+    #'   datetimes (POSIXct):
+    #' - client_oid (character | NA) the client-supplied order identifier.
+    #' - symbol (character) the trading pair symbol.
+    #' - side (character) the order side.
+    #' - created_at (POSIXct) the created at (UTC).
     #'
     #' @examples
     #' \dontrun{
@@ -1139,6 +1194,15 @@ KucoinTrading <- R6::R6Class(
         endpoint = paste0("/api/v1/hf/orders/client-order/", clientOid),
         query = list(symbol = symbol),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              client_oid = character(0),
+              symbol = character(0),
+              side = character(0),
+              created_at = ms_to_datetime(numeric(0))
+            )[])
+          }
+
           dt <- as_dt_row(data)
           if ("created_at" %in% names(dt)) {
             dt[, created_at := ms_to_datetime(created_at)]
@@ -1601,7 +1665,11 @@ KucoinTrading <- R6::R6Class(
     #' @param endAt (scalar<numeric> | NULL) end timestamp in milliseconds.
     #' @param limit (scalar<count> | NULL) results per page (max 200).
     #' @param lastId (scalar<character> | NULL) pagination cursor.
-    #' @return (data.table | promise<data.table>) one row per closed order, including the creation datetime (POSIXct).
+    #' @return (data.table | promise<data.table>) one row per closed order, including the creation datetime (POSIXct):
+    #' - order_id (character) the system order identifier.
+    #' - symbol (character) the trading pair symbol.
+    #' - side (character) the order side.
+    #' - created_at (POSIXct) the created at (UTC).
     #'
     #' @examples
     #' \dontrun{
@@ -1649,7 +1717,12 @@ KucoinTrading <- R6::R6Class(
             items <- data$items
           }
           if (is.null(items) || length(items) == 0) {
-            return(data.table::data.table()[])
+            return(data.table::data.table(
+              order_id = character(0),
+              symbol = character(0),
+              side = character(0),
+              created_at = ms_to_datetime(numeric(0))
+            )[])
           }
           dt <- data.table::rbindlist(
             lapply(items, as_dt_row),
@@ -1947,7 +2020,15 @@ KucoinTrading <- R6::R6Class(
     #'
     #' @param order_list (list) list of named lists; each containing order parameters. Maximum 20 orders.
     #' @return (data.table | promise<data.table>) one row per order giving the order and client identifiers, the success
-    #'   flag, the fill status, and the filled, remaining, and cancelled quantities.
+    #'   flag, the fill status, and the filled, remaining, and cancelled quantities:
+    #' - order_id (character | NA) the system order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
+    #' - success (logical) whether the order succeeded.
+    #' - status (character | NA) the status.
+    #' - deal_size (numeric | NA) the filled size.
+    #' - remain_size (numeric | NA) the unfilled size.
+    #' - canceled_size (numeric | NA) the cancelled size.
+    #' - fail_msg (character | NA) the failure message.
     #'
     #' @examples
     #' \dontrun{
@@ -1975,7 +2056,16 @@ KucoinTrading <- R6::R6Class(
         body = body,
         .parser = function(data) {
           if (is.null(data) || length(data) == 0) {
-            return(data.table::data.table()[])
+            return(data.table::data.table(
+              order_id = character(0),
+              client_oid = character(0),
+              success = logical(0),
+              status = character(0),
+              deal_size = numeric(0),
+              remain_size = numeric(0),
+              canceled_size = numeric(0),
+              fail_msg = character(0)
+            )[])
           }
           dt <- data.table::rbindlist(
             lapply(data, as_dt_row),
@@ -2049,7 +2139,13 @@ KucoinTrading <- R6::R6Class(
     #' @param orderId (scalar<character>) the KuCoin order ID to cancel.
     #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
     #' @return (data.table | promise<data.table>) one row giving the order ID, the original, filled, remaining, and
-    #'   cancelled sizes, and the fill status.
+    #'   cancelled sizes, and the fill status:
+    #' - order_id (character) the system order identifier.
+    #' - origin_size (numeric | NA) the original size.
+    #' - deal_size (numeric | NA) the filled size.
+    #' - remain_size (numeric | NA) the unfilled size.
+    #' - canceled_size (numeric | NA) the cancelled size.
+    #' - status (character) the status.
     #'
     #' @examples
     #' \dontrun{
@@ -2070,7 +2166,19 @@ KucoinTrading <- R6::R6Class(
         endpoint = paste0("/api/v1/hf/orders/sync/", orderId),
         method = "DELETE",
         query = list(symbol = symbol),
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              order_id = character(0),
+              origin_size = numeric(0),
+              deal_size = numeric(0),
+              remain_size = numeric(0),
+              canceled_size = numeric(0),
+              status = character(0)
+            )[])
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,
@@ -2123,7 +2231,13 @@ KucoinTrading <- R6::R6Class(
     #' @param clientOid (scalar<character>) client order ID.
     #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
     #' @return (data.table | promise<data.table>) one row giving the client order ID, the original, filled, remaining,
-    #'   and cancelled sizes, and the fill status.
+    #'   and cancelled sizes, and the fill status:
+    #' - client_oid (character | NA) the client-supplied order identifier.
+    #' - origin_size (numeric | NA) the original size.
+    #' - deal_size (numeric | NA) the filled size.
+    #' - remain_size (numeric | NA) the unfilled size.
+    #' - canceled_size (numeric | NA) the cancelled size.
+    #' - status (character) the status.
     #'
     #' @examples
     #' \dontrun{
@@ -2144,7 +2258,19 @@ KucoinTrading <- R6::R6Class(
         endpoint = paste0("/api/v1/hf/orders/sync/client-order/", clientOid),
         method = "DELETE",
         query = list(symbol = symbol),
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              client_oid = character(0),
+              origin_size = numeric(0),
+              deal_size = numeric(0),
+              remain_size = numeric(0),
+              canceled_size = numeric(0),
+              status = character(0)
+            )[])
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,
@@ -2216,7 +2342,9 @@ KucoinTrading <- R6::R6Class(
     #' @param newSize (scalar<numeric> | scalar<character> | NULL) new order size. At least one of `newPrice` or
     #'   `newSize` required.
     #' @return (data.table | promise<data.table>) one row giving the replacement order's ID and the original client
-    #'   order ID.
+    #'   order ID:
+    #' - new_order_id (character) the new order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -2258,7 +2386,12 @@ KucoinTrading <- R6::R6Class(
         endpoint = "/api/v1/hf/orders/alter",
         method = "POST",
         body = body,
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(new_order_id = character(0), client_oid = character(0))[])
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,
@@ -2325,7 +2458,9 @@ KucoinTrading <- R6::R6Class(
     #' @param symbols (scalar<character> | NULL) comma-separated trading pairs (max 50).
     #'   Empty or NULL applies to all pairs.
     #' @return (data.table | promise<data.table>) one row giving the current server time and the time at which
-    #'   cancellation will trigger, both in seconds.
+    #'   cancellation will trigger, both in seconds:
+    #' - current_time (integer) the current server time, in epoch seconds.
+    #' - trigger_time (integer) the time at which cancellation triggers, in epoch seconds.
     #'
     #' @examples
     #' \dontrun{
@@ -2355,7 +2490,12 @@ KucoinTrading <- R6::R6Class(
         endpoint = "/api/v1/hf/orders/dead-cancel-all",
         method = "POST",
         body = body,
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(current_time = integer(0), trigger_time = integer(0))[])
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,

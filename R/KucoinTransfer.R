@@ -148,7 +148,8 @@ KucoinTransfer <- R6::R6Class(
     #' @param toAccountTag (scalar<character> | NULL) symbol for
     #'   ISOLATED/ISOLATED_V2 destination accounts (e.g., `"BTC-USDT"`).
     #' @return (data.table | promise<data.table>) one row with column `order_id`
-    #'   (character): the transfer order identifier.
+    #'   (character): the transfer order identifier:
+    #' - order_id (character) the system order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -258,7 +259,12 @@ KucoinTransfer <- R6::R6Class(
         endpoint = "/api/v3/accounts/universal-transfer",
         method = "POST",
         body = body,
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_order_id())
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,
@@ -326,7 +332,12 @@ KucoinTransfer <- R6::R6Class(
     #'   breakdown: `currency` (currency code), `balance` (total funds),
     #'   `available` (funds available to withdraw or trade), `holds` (funds
     #'   locked in open orders), and `transferable` (funds available for
-    #'   transfer) -- all character.
+    #'   transfer) -- all character:
+    #' - currency (character) the currency code.
+    #' - balance (numeric | NA) the total balance.
+    #' - available (numeric | NA) the amount available.
+    #' - holds (numeric | NA) the amount on hold.
+    #' - transferable (numeric | NA) the transferable amount.
     #'
     #' @examples
     #' \dontrun{
@@ -358,6 +369,16 @@ KucoinTransfer <- R6::R6Class(
         endpoint = "/api/v1/accounts/transferable",
         query = list(currency = currency, type = type, tag = tag),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              currency = character(0),
+              balance = numeric(0),
+              available = numeric(0),
+              holds = numeric(0),
+              transferable = numeric(0)
+            )[])
+          }
+
           dt <- as_dt_row(data)
           if (nrow(dt) == 0L) {
             return(dt[])

@@ -304,7 +304,10 @@ withdrawal.}
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row with column
-\code{withdrawal_id} (character): the unique withdrawal identifier.
+\code{withdrawal_id} (character): the unique withdrawal identifier:
+\itemize{
+\item withdrawal_id (character) the withdrawal id.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -409,7 +412,7 @@ cancel.}
 withdrawal ID echoed from the input (KuCoin returns \code{null} data on a
 successful cancel):
 \itemize{
-\item withdrawal_id (character) the cancelled withdrawal ID.
+\item withdrawal_id (character) the cancelled withdrawal id.
 }
 }
 \subsection{Examples}{
@@ -524,7 +527,25 @@ quota details (currency, limit_btc_amount, used_btc_amount,
 quota_currency, limit_quota_currency_amount, used_quota_currency_amount,
 remain_amount, available_amount, withdraw_min_fee, inner_withdraw_min_fee,
 withdraw_min_size, is_withdraw_enabled, precision, chain, reason,
-locked_amount, ...).
+locked_amount, ...):
+\itemize{
+\item currency (character) the currency code.
+\item chain (character) the chain code.
+\item is_withdraw_enabled (logical | NA) the is withdraw enabled.
+\item available_amount (numeric | NA) the available amount.
+\item remain_amount (numeric | NA) the remain amount.
+\item withdraw_min_fee (numeric | NA) the withdraw min fee.
+\item inner_withdraw_min_fee (numeric | NA) the inner withdraw min fee.
+\item withdraw_min_size (numeric | NA) the withdraw min size.
+\item precision (integer | NA) the decimal precision.
+\item limit_btc_amount (numeric | NA) the limit btc amount.
+\item used_btc_amount (numeric | NA) the used btc amount.
+\item locked_amount (numeric | NA) the locked amount.
+\item quota_currency (character) the quota currency.
+\item limit_quota_currency_amount (numeric | NA) the limit quota currency amount.
+\item used_quota_currency_amount (numeric | NA) the used quota currency amount.
+\item reason (character | NA) the reason withdrawals are disabled, when present.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -783,7 +804,34 @@ withdrawal can still be cancelled.
 withdrawal detail (id, currency, chain_id, chain_name, status, address,
 memo, is_inner, amount, fee, wallet_tx_id, cancel_type, failure_reason,
 failure_reason_msg, created_at, ...), with \code{created_at} coerced to
-POSIXct.
+POSIXct:
+\itemize{
+\item id (character) the record identifier.
+\item currency (character) the currency code.
+\item chain_id (character | NA) the chain identifier.
+\item chain_name (character | NA) the chain name.
+\item status (character) the status.
+\item address (character) the address.
+\item memo (character) the address memo/tag.
+\item is_inner (logical) the is inner.
+\item amount (numeric | NA) the amount.
+\item fee (numeric | NA) the fee.
+\item wallet_tx_id (character | NA) the on-chain wallet transaction hash; NA for internal transfers.
+\item created_at (POSIXct) the created at (UTC).
+\item cancel_type (character) the cancel type.
+\item uid (integer) the user identifier.
+\item currency_name (character) the currency name.
+\item failure_reason (character | NA) the failure reason.
+\item failure_reason_msg (character | NA) the failure reason message, when the withdrawal failed.
+\item address_remark (character | NA) the address remark.
+\item remark (character | NA) an optional remark.
+\item taxes (numeric | NA) the tax amount, when applicable.
+\item tax_description (character | NA) the tax description, when applicable.
+\item tx_id (character | NA) the transaction id, when present.
+\item return_status (character) the return status.
+\item return_amount (numeric | NA) the returned amount, when the withdrawal was returned.
+\item return_currency (character) the return currency.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

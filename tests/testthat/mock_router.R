@@ -146,7 +146,7 @@ box::use(
   # KuCoin's 2026-05 reorganisation). The legacy patterns are kept second as a
   # fallback for any caller that hasn't migrated yet -- the first match wins.
   list(pattern = "ua/v1/dcp/query", fixture = .fixtures$futures_dcp),
-  list(pattern = "ua/v1/dcp/set", fixture = .fixtures$futures_dcp, method = "POST"),
+  list(pattern = "ua/v1/dcp/set", fixture = .fixtures$futures_dcp_set, method = "POST"),
   list(pattern = "orders/dead-cancel-all/query", fixture = .fixtures$futures_dcp),
   list(pattern = "orders/dead-cancel-all", fixture = .fixtures$futures_dcp, method = "POST"),
   list(pattern = "orders/test", fixture = .fixtures$futures_order_response, method = "POST"),

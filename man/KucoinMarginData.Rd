@@ -362,7 +362,13 @@ Verified: 2026-05-23
 \subsection{Returns}{
 (data.table | promise<data.table>) one row per supported currency, with the \code{currencyList} array exploded
 so each currency carries the replicated config-level fields for maximum leverage, warning debt ratio and
-liquidation debt ratio; an empty \code{currencyList} yields a zero-row data.table with this schema.
+liquidation debt ratio; an empty \code{currencyList} yields a zero-row data.table with this schema:
+\itemize{
+\item currency (character) the currency code.
+\item max_leverage (integer | NA) the max leverage.
+\item warning_debt_ratio (numeric | NA) the warning debt ratio.
+\item liq_debt_ratio (numeric | NA) the liq debt ratio.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -445,7 +451,13 @@ Verified: 2026-05-23
 (data.table | promise<data.table>) one row per (currency, tier) pair, with the nested \code{currencyList} and
 \code{items} arrays cross-joined into a flat long table carrying the currency code, lower and upper bounds of the
 collateral range, and the collateral ratio applied in that range; an empty response yields a zero-row
-data.table with this schema.
+data.table with this schema:
+\itemize{
+\item currency (character) the currency code.
+\item lower_limit (numeric | NA) the lower limit.
+\item upper_limit (numeric | NA) the upper limit.
+\item collateral_ratio (numeric | NA) the collateral ratio.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

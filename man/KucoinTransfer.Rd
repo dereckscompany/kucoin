@@ -272,7 +272,10 @@ ISOLATED/ISOLATED_V2 destination accounts (e.g., \code{"BTC-USDT"}).}
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row with column \code{order_id}
-(character): the transfer order identifier.
+(character): the transfer order identifier:
+\itemize{
+\item order_id (character) the system order identifier.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -392,7 +395,14 @@ Verified: 2026-05-23
 breakdown: \code{currency} (currency code), \code{balance} (total funds),
 \code{available} (funds available to withdraw or trade), \code{holds} (funds
 locked in open orders), and \code{transferable} (funds available for
-transfer) -- all character.
+transfer) -- all character:
+\itemize{
+\item currency (character) the currency code.
+\item balance (numeric | NA) the total balance.
+\item available (numeric | NA) the amount available.
+\item holds (numeric | NA) the amount on hold.
+\item transferable (numeric | NA) the transferable amount.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

@@ -149,10 +149,10 @@ test_that("get_transferable returns data.table with balance breakdown", {
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
   expect_equal(dt$currency, "USDT")
-  expect_equal(dt$balance, "10.5")
-  expect_equal(dt$available, "10.5")
-  expect_equal(dt$holds, "0")
-  expect_equal(dt$transferable, "10.5")
+  expect_equal(dt$balance, 10.5)
+  expect_equal(dt$available, 10.5)
+  expect_equal(dt$holds, 0)
+  expect_equal(dt$transferable, 10.5)
   # Check column ordering
   expect_equal(names(dt)[1], "currency")
   # No list columns
@@ -188,5 +188,5 @@ test_that("get_transferable works with TRADE account type", {
   dt <- new_transfer()$get_transferable(currency = "BTC", type = "TRADE")
   expect_s3_class(dt, "data.table")
   expect_equal(dt$currency, "BTC")
-  expect_equal(dt$holds, "0.02")
+  expect_equal(dt$holds, 0.02)
 })
