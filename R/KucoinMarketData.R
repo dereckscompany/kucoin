@@ -1410,8 +1410,7 @@ KucoinMarketData <- R6::R6Class(
     #' ```
     #'
     #' @return (data.table | promise<data.table>) one row per market segment:
-    #' - market (character) the segment identifier, e.g. `"USDS"`, `"DeFi"`:
-    #' - market (character) the market.
+    #' - market (character) the segment identifier, e.g. `"USDS"`, `"DeFi"`.
     #'
     #' @examples
     #' \dontrun{
@@ -1570,9 +1569,7 @@ KucoinMarketData <- R6::R6Class(
     #'
     #' @return (data.table | promise<data.table>) one row:
     #' - server_time (numeric) the server clock in epoch milliseconds.
-    #' - datetime (POSIXct) the same instant as a POSIXct (UTC):
-    #' - server_time (numeric) the server time.
-    #' - datetime (POSIXct) the datetime (UTC).
+    #' - datetime (POSIXct) the same instant as a POSIXct (UTC).
     #'
     #' @examples
     #' \dontrun{

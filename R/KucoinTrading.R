@@ -777,7 +777,7 @@ KucoinTrading <- R6::R6Class(
     #' @param cancelSize (scalar<numeric> | scalar<character>) quantity to cancel from the order.
     #' @return (data.table | promise<data.table>) one row giving the cancellation result:
     #' - order_id (character) the system order identifier.
-    #' - cancel_size (character | NA) the cancelled size.
+    #' - cancel_size (numeric | NA) the cancelled size.
     #'
     #' @examples
     #' \dontrun{
@@ -853,8 +853,7 @@ KucoinTrading <- R6::R6Class(
     #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
     #' @return (data.table | promise<data.table>) one row giving the cancellation
     #'   response:
-    #' - result (character) the KuCoin response string, e.g. `"success"`:
-    #' - result (character) the result.
+    #' - result (character) the KuCoin response string, e.g. `"success"`.
     #'
     #' @examples
     #' \dontrun{
@@ -924,9 +923,7 @@ KucoinTrading <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row per cancelled symbol;
     #'   an empty (but typed) data.table if no orders were open:
     #' - symbol (character) the trading pair, e.g. `"BTC-USDT"`.
-    #' - status (character) per-symbol outcome, `"succeed"` or `"failed"`:
-    #' - symbol (character) the trading pair symbol.
-    #' - status (character) the status.
+    #' - status (character) per-symbol outcome, `"succeed"` or `"failed"`.
     #'
     #' @examples
     #' \dontrun{
@@ -1438,8 +1435,7 @@ KucoinTrading <- R6::R6Class(
     #'
     #' @return (data.table | promise<data.table>) one row per trading pair that
     #'   has at least one open order:
-    #' - symbols (character) the trading pair, e.g. `"BTC-USDT"`:
-    #' - symbols (character) the symbols.
+    #' - symbols (character) the trading pair, e.g. `"BTC-USDT"`.
     #'
     #' @examples
     #' \dontrun{
@@ -2029,9 +2025,9 @@ KucoinTrading <- R6::R6Class(
     #' - client_oid (character | NA) the client-supplied order identifier.
     #' - success (logical) whether the order succeeded.
     #' - status (character | NA) the status.
-    #' - deal_size (character | NA) the filled size.
-    #' - remain_size (character | NA) the unfilled size.
-    #' - canceled_size (character | NA) the cancelled size.
+    #' - deal_size (numeric | NA) the filled size.
+    #' - remain_size (numeric | NA) the unfilled size.
+    #' - canceled_size (numeric | NA) the cancelled size.
     #' - fail_msg (character | NA) the failure message.
     #'
     #' @examples
@@ -2065,9 +2061,9 @@ KucoinTrading <- R6::R6Class(
               client_oid = character(0),
               success = logical(0),
               status = character(0),
-              deal_size = character(0),
-              remain_size = character(0),
-              canceled_size = character(0),
+              deal_size = numeric(0),
+              remain_size = numeric(0),
+              canceled_size = numeric(0),
               fail_msg = character(0)
             )[])
           }
@@ -2145,10 +2141,10 @@ KucoinTrading <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row giving the order ID, the original, filled, remaining, and
     #'   cancelled sizes, and the fill status:
     #' - order_id (character) the system order identifier.
-    #' - origin_size (character | NA) the original size.
-    #' - deal_size (character | NA) the filled size.
-    #' - remain_size (character | NA) the unfilled size.
-    #' - canceled_size (character | NA) the cancelled size.
+    #' - origin_size (numeric | NA) the original size.
+    #' - deal_size (numeric | NA) the filled size.
+    #' - remain_size (numeric | NA) the unfilled size.
+    #' - canceled_size (numeric | NA) the cancelled size.
     #' - status (character) the status.
     #'
     #' @examples
@@ -2174,10 +2170,10 @@ KucoinTrading <- R6::R6Class(
           if (is.null(data) || length(data) == 0L) {
             return(data.table::data.table(
               order_id = character(0),
-              origin_size = character(0),
-              deal_size = character(0),
-              remain_size = character(0),
-              canceled_size = character(0),
+              origin_size = numeric(0),
+              deal_size = numeric(0),
+              remain_size = numeric(0),
+              canceled_size = numeric(0),
               status = character(0)
             )[])
           }
@@ -2237,10 +2233,10 @@ KucoinTrading <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row giving the client order ID, the original, filled, remaining,
     #'   and cancelled sizes, and the fill status:
     #' - client_oid (character | NA) the client-supplied order identifier.
-    #' - origin_size (character | NA) the original size.
-    #' - deal_size (character | NA) the filled size.
-    #' - remain_size (character | NA) the unfilled size.
-    #' - canceled_size (character | NA) the cancelled size.
+    #' - origin_size (numeric | NA) the original size.
+    #' - deal_size (numeric | NA) the filled size.
+    #' - remain_size (numeric | NA) the unfilled size.
+    #' - canceled_size (numeric | NA) the cancelled size.
     #' - status (character) the status.
     #'
     #' @examples
@@ -2266,10 +2262,10 @@ KucoinTrading <- R6::R6Class(
           if (is.null(data) || length(data) == 0L) {
             return(data.table::data.table(
               client_oid = character(0),
-              origin_size = character(0),
-              deal_size = character(0),
-              remain_size = character(0),
-              canceled_size = character(0),
+              origin_size = numeric(0),
+              deal_size = numeric(0),
+              remain_size = numeric(0),
+              canceled_size = numeric(0),
               status = character(0)
             )[])
           }

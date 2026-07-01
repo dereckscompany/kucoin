@@ -483,11 +483,7 @@ Verified: 2026-05-23
 \item currency (character) the lending currency.
 \item purchase_order_no (character) the modified order number.
 \item interest_rate (numeric | NA) the new interest rate.
-\item status (character) the local outcome marker, always \code{"success"}:
-\item currency (character) the currency code.
-\item purchase_order_no (character) the purchase order no.
-\item interest_rate (numeric | NA) the interest rate.
-\item status (character) the status.
+\item status (character) the local outcome marker, always \code{"success"}.
 }
 }
 \subsection{Examples}{

@@ -1689,8 +1689,7 @@ Verified: 2026-05-23
 \subsection{Returns}{
 (data.table | promise<data.table>) one row per market segment:
 \itemize{
-\item market (character) the segment identifier, e.g. \code{"USDS"}, \code{"DeFi"}:
-\item market (character) the market.
+\item market (character) the segment identifier, e.g. \code{"USDS"}, \code{"DeFi"}.
 }
 }
 \subsection{Examples}{
@@ -1872,9 +1871,7 @@ Verified: 2026-05-23
 (data.table | promise<data.table>) one row:
 \itemize{
 \item server_time (numeric) the server clock in epoch milliseconds.
-\item datetime (POSIXct) the same instant as a POSIXct (UTC):
-\item server_time (numeric) the server time.
-\item datetime (POSIXct) the datetime (UTC).
+\item datetime (POSIXct) the same instant as a POSIXct (UTC).
 }
 }
 \subsection{Examples}{

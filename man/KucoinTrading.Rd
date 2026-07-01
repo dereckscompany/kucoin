@@ -1073,7 +1073,7 @@ Verified: 2026-05-23
 (data.table | promise<data.table>) one row giving the cancellation result:
 \itemize{
 \item order_id (character) the system order identifier.
-\item cancel_size (character | NA) the cancelled size.
+\item cancel_size (numeric | NA) the cancelled size.
 }
 }
 \subsection{Examples}{
@@ -1152,8 +1152,7 @@ Verified: 2026-05-23
 (data.table | promise<data.table>) one row giving the cancellation
 response:
 \itemize{
-\item result (character) the KuCoin response string, e.g. \code{"success"}:
-\item result (character) the result.
+\item result (character) the KuCoin response string, e.g. \code{"success"}.
 }
 }
 \subsection{Examples}{
@@ -1226,9 +1225,7 @@ Verified: 2026-05-23
 an empty (but typed) data.table if no orders were open:
 \itemize{
 \item symbol (character) the trading pair, e.g. \code{"BTC-USDT"}.
-\item status (character) per-symbol outcome, \code{"succeed"} or \code{"failed"}:
-\item symbol (character) the trading pair symbol.
-\item status (character) the status.
+\item status (character) per-symbol outcome, \code{"succeed"} or \code{"failed"}.
 }
 }
 \subsection{Examples}{
@@ -1662,8 +1659,7 @@ Verified: 2026-05-23
 (data.table | promise<data.table>) one row per trading pair that
 has at least one open order:
 \itemize{
-\item symbols (character) the trading pair, e.g. \code{"BTC-USDT"}:
-\item symbols (character) the symbols.
+\item symbols (character) the trading pair, e.g. \code{"BTC-USDT"}.
 }
 }
 \subsection{Examples}{
@@ -2199,9 +2195,9 @@ flag, the fill status, and the filled, remaining, and cancelled quantities:
 \item client_oid (character | NA) the client-supplied order identifier.
 \item success (logical) whether the order succeeded.
 \item status (character | NA) the status.
-\item deal_size (character | NA) the filled size.
-\item remain_size (character | NA) the unfilled size.
-\item canceled_size (character | NA) the cancelled size.
+\item deal_size (numeric | NA) the filled size.
+\item remain_size (numeric | NA) the unfilled size.
+\item canceled_size (numeric | NA) the cancelled size.
 \item fail_msg (character | NA) the failure message.
 }
 }
@@ -2296,10 +2292,10 @@ Verified: 2026-05-23
 cancelled sizes, and the fill status:
 \itemize{
 \item order_id (character) the system order identifier.
-\item origin_size (character | NA) the original size.
-\item deal_size (character | NA) the filled size.
-\item remain_size (character | NA) the unfilled size.
-\item canceled_size (character | NA) the cancelled size.
+\item origin_size (numeric | NA) the original size.
+\item deal_size (numeric | NA) the filled size.
+\item remain_size (numeric | NA) the unfilled size.
+\item canceled_size (numeric | NA) the cancelled size.
 \item status (character) the status.
 }
 }
@@ -2382,10 +2378,10 @@ Verified: 2026-05-23
 and cancelled sizes, and the fill status:
 \itemize{
 \item client_oid (character | NA) the client-supplied order identifier.
-\item origin_size (character | NA) the original size.
-\item deal_size (character | NA) the filled size.
-\item remain_size (character | NA) the unfilled size.
-\item canceled_size (character | NA) the cancelled size.
+\item origin_size (numeric | NA) the original size.
+\item deal_size (numeric | NA) the filled size.
+\item remain_size (numeric | NA) the unfilled size.
+\item canceled_size (numeric | NA) the cancelled size.
 \item status (character) the status.
 }
 }

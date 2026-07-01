@@ -412,8 +412,7 @@ cancel.}
 withdrawal ID echoed from the input (KuCoin returns \code{null} data on a
 successful cancel):
 \itemize{
-\item withdrawal_id (character) the cancelled withdrawal ID:
-\item withdrawal_id (character) the withdrawal id.
+\item withdrawal_id (character) the cancelled withdrawal id.
 }
 }
 \subsection{Examples}{
@@ -545,7 +544,7 @@ locked_amount, ...):
 \item quota_currency (character) the quota currency.
 \item limit_quota_currency_amount (numeric | NA) the limit quota currency amount.
 \item used_quota_currency_amount (numeric | NA) the used quota currency amount.
-\item reason (logical | NA) the reason, when present.
+\item reason (character | NA) the reason withdrawals are disabled, when present.
 }
 }
 \subsection{Examples}{
@@ -817,20 +816,20 @@ POSIXct:
 \item is_inner (logical) the is inner.
 \item amount (numeric | NA) the amount.
 \item fee (numeric | NA) the fee.
-\item wallet_tx_id (logical | NA) the wallet tx id.
+\item wallet_tx_id (character | NA) the on-chain wallet transaction hash; NA for internal transfers.
 \item created_at (POSIXct) the created at (UTC).
 \item cancel_type (character) the cancel type.
 \item uid (integer) the user identifier.
 \item currency_name (character) the currency name.
 \item failure_reason (character | NA) the failure reason.
-\item failure_reason_msg (logical | NA) the failure reason msg.
-\item address_remark (character) the address remark.
+\item failure_reason_msg (character | NA) the failure reason message, when the withdrawal failed.
+\item address_remark (character | NA) the address remark.
 \item remark (character | NA) an optional remark.
-\item taxes (logical | NA) the taxes.
-\item tax_description (logical | NA) the tax description.
-\item tx_id (logical | NA) the tx id.
+\item taxes (numeric | NA) the tax amount, when applicable.
+\item tax_description (character | NA) the tax description, when applicable.
+\item tx_id (character | NA) the transaction id, when present.
 \item return_status (character) the return status.
-\item return_amount (logical | NA) the return amount.
+\item return_amount (numeric | NA) the returned amount, when the withdrawal was returned.
 \item return_currency (character) the return currency.
 }
 }

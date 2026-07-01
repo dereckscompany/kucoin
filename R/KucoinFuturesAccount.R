@@ -927,7 +927,7 @@ KucoinFuturesAccount <- R6::R6Class(
     #'   (e.g., `"ADD"`):
     #' - id (character) the record identifier.
     #' - symbol (character) the trading pair symbol.
-    #' - margin (character | NA) the margin amount.
+    #' - margin (numeric | NA) the margin amount.
     #' - margin_type (character) the margin type.
     add_isolated_margin = function(symbol, margin, bizNo) {
       assert_args_KucoinFuturesAccount__add_isolated_margin(symbol, margin, bizNo)
@@ -1009,7 +1009,7 @@ KucoinFuturesAccount <- R6::R6Class(
     #'   operation ID, contract symbol, amount withdrawn, and operation type:
     #' - id (character) the record identifier.
     #' - symbol (character) the trading pair symbol.
-    #' - margin (character | NA) the margin amount.
+    #' - margin (numeric | NA) the margin amount.
     #' - margin_type (character) the margin type.
     remove_isolated_margin = function(symbol, withdrawAmount) {
       assert_args_KucoinFuturesAccount__remove_isolated_margin(symbol, withdrawAmount)

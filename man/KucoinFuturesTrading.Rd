@@ -1405,9 +1405,9 @@ datetimes (POSIXct, coerced from epoch milliseconds):
 \item side (character) the order side.
 \item price (numeric | NA) the price.
 \item size (numeric | NA) the size.
-\item value (character | NA) the order value.
-\item deal_value (character | NA) the filled value.
-\item deal_size (integer | NA) the filled size.
+\item value (numeric | NA) the order value.
+\item deal_value (numeric | NA) the filled value.
+\item deal_size (numeric | NA) the filled size.
 \item leverage (integer | NA) the leverage.
 \item margin_mode (character) the margin mode.
 \item position_side (character) the position side.
@@ -1551,9 +1551,9 @@ Verified: 2026-05-23
 \item side (character) the order side.
 \item price (numeric | NA) the price.
 \item size (numeric | NA) the size.
-\item value (character | NA) the order value.
-\item deal_value (character | NA) the filled value.
-\item deal_size (integer | NA) the filled size.
+\item value (numeric | NA) the order value.
+\item deal_value (numeric | NA) the filled value.
+\item deal_size (numeric | NA) the filled size.
 \item leverage (integer | NA) the leverage.
 \item margin_mode (character) the margin mode.
 \item position_side (character) the position side.
@@ -1703,9 +1703,9 @@ empty data.table if no orders match the filters:
 \item side (character) the order side.
 \item price (numeric | NA) the price.
 \item size (numeric | NA) the size.
-\item value (character | NA) the order value.
-\item deal_value (character | NA) the filled value.
-\item deal_size (integer | NA) the filled size.
+\item value (numeric | NA) the order value.
+\item deal_value (numeric | NA) the filled value.
+\item deal_size (numeric | NA) the filled size.
 \item leverage (integer | NA) the leverage.
 \item margin_mode (character) the margin mode.
 \item position_side (character) the position side.
@@ -1859,9 +1859,9 @@ empty data.table if no recently closed orders exist:
 \item side (character) the order side.
 \item price (numeric | NA) the price.
 \item size (numeric | NA) the size.
-\item value (character | NA) the order value.
-\item deal_value (character | NA) the filled value.
-\item deal_size (integer | NA) the filled size.
+\item value (numeric | NA) the order value.
+\item deal_value (numeric | NA) the filled value.
+\item deal_size (numeric | NA) the filled size.
 \item leverage (integer | NA) the leverage.
 \item margin_mode (character) the margin mode.
 \item position_side (character) the position side.
@@ -2263,9 +2263,9 @@ if no recent fills exist:
 \item force_taker (logical) the force taker.
 \item price (numeric | NA) the price.
 \item size (numeric | NA) the size.
-\item value (character | NA) the order value.
-\item fee_rate (character | NA) the fee rate.
-\item fix_fee (character | NA) the fix fee.
+\item value (numeric | NA) the order value.
+\item fee_rate (numeric | NA) the fee rate.
+\item fix_fee (numeric | NA) the fix fee.
 \item fee_currency (character) the fee currency.
 \item fee (numeric | NA) the fee.
 \item order_type (character) the order type.
@@ -2371,8 +2371,8 @@ size, total buy order cost, total sell order cost, and the settlement currency:
 \itemize{
 \item open_order_buy_size (integer | NA) the open order buy size.
 \item open_order_sell_size (integer | NA) the open order sell size.
-\item open_order_buy_cost (character | NA) the open order buy cost.
-\item open_order_sell_cost (character | NA) the open order sell cost.
+\item open_order_buy_cost (numeric | NA) the open order buy cost.
+\item open_order_sell_cost (numeric | NA) the open order sell cost.
 \item settle_currency (character) the settle currency.
 }
 }

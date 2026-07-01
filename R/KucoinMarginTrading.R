@@ -830,7 +830,7 @@ KucoinMarginTrading <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row giving the borrow order
     #'   number and the amount actually borrowed:
     #' - order_no (character) the order number.
-    #' - actual_size (character | NA) the actual filled size.
+    #' - actual_size (numeric | NA) the actual filled size.
     #'
     #' @examples
     #' \dontrun{
@@ -1393,9 +1393,7 @@ KucoinMarginTrading <- R6::R6Class(
     #'   `3`, `5`, `10`).
     #' @return (data.table | promise<data.table>) one row:
     #' - leverage (numeric | NA) the new leverage multiplier.
-    #' - status (character) the local outcome marker, always `"success"`:
-    #' - leverage (numeric | NA) the leverage.
-    #' - status (character) the status.
+    #' - status (character) the local outcome marker, always `"success"`.
     #' @noassert leverage
     #'
     #' @examples

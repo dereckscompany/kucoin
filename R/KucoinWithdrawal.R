@@ -296,8 +296,7 @@ KucoinWithdrawal <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row, the cancelled
     #'   withdrawal ID echoed from the input (KuCoin returns `null` data on a
     #'   successful cancel):
-    #' - withdrawal_id (character) the cancelled withdrawal ID:
-    #' - withdrawal_id (character) the withdrawal id.
+    #' - withdrawal_id (character) the cancelled withdrawal id.
     #'
     #' @examples
     #' \dontrun{
@@ -415,7 +414,7 @@ KucoinWithdrawal <- R6::R6Class(
     #' - quota_currency (character) the quota currency.
     #' - limit_quota_currency_amount (numeric | NA) the limit quota currency amount.
     #' - used_quota_currency_amount (numeric | NA) the used quota currency amount.
-    #' - reason (logical | NA) the reason, when present.
+    #' - reason (character | NA) the reason withdrawals are disabled, when present.
     #'
     #' @examples
     #' \dontrun{
@@ -456,7 +455,7 @@ KucoinWithdrawal <- R6::R6Class(
               quota_currency = character(0),
               limit_quota_currency_amount = numeric(0),
               used_quota_currency_amount = numeric(0),
-              reason = logical(0)
+              reason = character(0)
             )[])
           }
 
@@ -464,6 +463,7 @@ KucoinWithdrawal <- R6::R6Class(
           if (nrow(dt) == 0L) {
             return(dt[])
           }
+          coerce_cols(dt, "reason", as.character)
           expected <- c(
             "currency",
             "chain",
@@ -738,20 +738,20 @@ KucoinWithdrawal <- R6::R6Class(
     #' - is_inner (logical) the is inner.
     #' - amount (numeric | NA) the amount.
     #' - fee (numeric | NA) the fee.
-    #' - wallet_tx_id (logical | NA) the wallet tx id.
+    #' - wallet_tx_id (character | NA) the on-chain wallet transaction hash; NA for internal transfers.
     #' - created_at (POSIXct) the created at (UTC).
     #' - cancel_type (character) the cancel type.
     #' - uid (integer) the user identifier.
     #' - currency_name (character) the currency name.
     #' - failure_reason (character | NA) the failure reason.
-    #' - failure_reason_msg (logical | NA) the failure reason msg.
-    #' - address_remark (character) the address remark.
+    #' - failure_reason_msg (character | NA) the failure reason message, when the withdrawal failed.
+    #' - address_remark (character | NA) the address remark.
     #' - remark (character | NA) an optional remark.
-    #' - taxes (logical | NA) the taxes.
-    #' - tax_description (logical | NA) the tax description.
-    #' - tx_id (logical | NA) the tx id.
+    #' - taxes (numeric | NA) the tax amount, when applicable.
+    #' - tax_description (character | NA) the tax description, when applicable.
+    #' - tx_id (character | NA) the transaction id, when present.
     #' - return_status (character) the return status.
-    #' - return_amount (logical | NA) the return amount.
+    #' - return_amount (numeric | NA) the returned amount, when the withdrawal was returned.
     #' - return_currency (character) the return currency.
     #'
     #' @examples
@@ -788,20 +788,20 @@ KucoinWithdrawal <- R6::R6Class(
               is_inner = logical(0),
               amount = numeric(0),
               fee = numeric(0),
-              wallet_tx_id = logical(0),
+              wallet_tx_id = character(0),
               created_at = ms_to_datetime(numeric(0)),
               cancel_type = character(0),
               uid = integer(0),
               currency_name = character(0),
               failure_reason = character(0),
-              failure_reason_msg = logical(0),
+              failure_reason_msg = character(0),
               address_remark = character(0),
               remark = character(0),
-              taxes = logical(0),
-              tax_description = logical(0),
-              tx_id = logical(0),
+              taxes = numeric(0),
+              tax_description = character(0),
+              tx_id = character(0),
               return_status = character(0),
-              return_amount = logical(0),
+              return_amount = numeric(0),
               return_currency = character(0)
             )[])
           }
@@ -813,6 +813,11 @@ KucoinWithdrawal <- R6::R6Class(
           if ("created_at" %in% names(dt)) {
             dt[, created_at := ms_to_datetime(created_at)]
           }
+          coerce_cols(
+            dt,
+            c("wallet_tx_id", "tx_id", "failure_reason_msg", "tax_description", "address_remark"),
+            as.character
+          )
           expected <- c(
             "id",
             "currency",

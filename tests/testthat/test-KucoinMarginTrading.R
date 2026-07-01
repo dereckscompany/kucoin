@@ -142,7 +142,7 @@ test_that("borrow returns order_no and actual_size", {
   dt <- new_margin()$borrow(currency = "USDT", size = 100)
   expect_s3_class(dt, "data.table")
   expect_equal(dt$order_no, "borrow-001")
-  expect_equal(dt$actual_size, "100")
+  expect_equal(dt$actual_size, 100)
 })
 
 test_that("borrow validates parameters", {
@@ -312,7 +312,7 @@ test_that("borrow returns no list columns", {
   dt <- new_margin()$borrow(currency = "USDT", size = 100)
   expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
   expect_true(is.character(dt$order_no))
-  expect_true(is.character(dt$actual_size))
+  expect_true(is.numeric(dt$actual_size))
 })
 
 test_that("repay coerces timestamp to POSIXct with no list columns", {
@@ -327,7 +327,7 @@ test_that("repay coerces timestamp to POSIXct with no list columns", {
   expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
   expect_s3_class(dt$timestamp, "POSIXct")
   expect_true(is.character(dt$order_no))
-  expect_true(is.character(dt$actual_size))
+  expect_true(is.numeric(dt$actual_size))
 })
 
 test_that("get_borrow_history schema: no list columns, POSIXct created_time", {

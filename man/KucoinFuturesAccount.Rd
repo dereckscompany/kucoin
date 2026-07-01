@@ -1022,7 +1022,7 @@ operation ID, contract symbol, amount deposited, and operation type
 \itemize{
 \item id (character) the record identifier.
 \item symbol (character) the trading pair symbol.
-\item margin (character | NA) the margin amount.
+\item margin (numeric | NA) the margin amount.
 \item margin_type (character) the margin type.
 }
 }
@@ -1109,7 +1109,7 @@ operation ID, contract symbol, amount withdrawn, and operation type:
 \itemize{
 \item id (character) the record identifier.
 \item symbol (character) the trading pair symbol.
-\item margin (character | NA) the margin amount.
+\item margin (numeric | NA) the margin amount.
 \item margin_type (character) the margin type.
 }
 }

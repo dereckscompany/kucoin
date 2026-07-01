@@ -998,10 +998,10 @@ each sub-order's id, symbol, side, price, size, status, and stop price
 \item sub_order_id (character) the sub order id.
 \item sub_order_symbol (character) the sub order symbol.
 \item sub_order_side (character) the sub order side.
-\item sub_order_price (character | NA) the sub order price.
-\item sub_order_size (character | NA) the sub order size.
+\item sub_order_price (numeric | NA) the sub order price.
+\item sub_order_size (numeric | NA) the sub order size.
 \item sub_order_status (character) the sub order status.
-\item sub_order_stop_price (character | NA) the sub order stop price.
+\item sub_order_stop_price (numeric | NA) the sub order stop price.
 }
 }
 \subsection{Examples}{

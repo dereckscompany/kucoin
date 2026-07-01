@@ -1021,7 +1021,7 @@ Trading pair (e.g., \code{"BTC-USDT"}).}
 number and the amount actually borrowed:
 \itemize{
 \item order_no (character) the order number.
-\item actual_size (character | NA) the actual filled size.
+\item actual_size (numeric | NA) the actual filled size.
 }
 }
 \subsection{Examples}{
@@ -1546,9 +1546,7 @@ Verified: 2026-05-23
 (data.table | promise<data.table>) one row:
 \itemize{
 \item leverage (numeric | NA) the new leverage multiplier.
-\item status (character) the local outcome marker, always \code{"success"}:
-\item leverage (numeric | NA) the leverage.
-\item status (character) the status.
+\item status (character) the local outcome marker, always \code{"success"}.
 }
 }
 \subsection{Examples}{

@@ -820,10 +820,10 @@ KucoinOcoOrders <- R6::R6Class(
     #' - sub_order_id (character) the sub order id.
     #' - sub_order_symbol (character) the sub order symbol.
     #' - sub_order_side (character) the sub order side.
-    #' - sub_order_price (character | NA) the sub order price.
-    #' - sub_order_size (character | NA) the sub order size.
+    #' - sub_order_price (numeric | NA) the sub order price.
+    #' - sub_order_size (numeric | NA) the sub order size.
     #' - sub_order_status (character) the sub order status.
-    #' - sub_order_stop_price (character | NA) the sub order stop price.
+    #' - sub_order_stop_price (numeric | NA) the sub order stop price.
     #'
     #' @examples
     #' \dontrun{
@@ -851,10 +851,10 @@ KucoinOcoOrders <- R6::R6Class(
               sub_order_id = character(0),
               sub_order_symbol = character(0),
               sub_order_side = character(0),
-              sub_order_price = character(0),
-              sub_order_size = character(0),
+              sub_order_price = numeric(0),
+              sub_order_size = numeric(0),
               sub_order_status = character(0),
-              sub_order_stop_price = character(0)
+              sub_order_stop_price = numeric(0)
             )[])
           }
 

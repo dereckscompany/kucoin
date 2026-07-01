@@ -1057,9 +1057,9 @@ KucoinFuturesTrading <- R6::R6Class(
     #' - side (character) the order side.
     #' - price (numeric | NA) the price.
     #' - size (numeric | NA) the size.
-    #' - value (character | NA) the order value.
-    #' - deal_value (character | NA) the filled value.
-    #' - deal_size (integer | NA) the filled size.
+    #' - value (numeric | NA) the order value.
+    #' - deal_value (numeric | NA) the filled value.
+    #' - deal_size (numeric | NA) the filled size.
     #' - leverage (integer | NA) the leverage.
     #' - margin_mode (character) the margin mode.
     #' - position_side (character) the position side.
@@ -1196,9 +1196,9 @@ KucoinFuturesTrading <- R6::R6Class(
     #' - side (character) the order side.
     #' - price (numeric | NA) the price.
     #' - size (numeric | NA) the size.
-    #' - value (character | NA) the order value.
-    #' - deal_value (character | NA) the filled value.
-    #' - deal_size (integer | NA) the filled size.
+    #' - value (numeric | NA) the order value.
+    #' - deal_value (numeric | NA) the filled value.
+    #' - deal_size (numeric | NA) the filled size.
     #' - leverage (integer | NA) the leverage.
     #' - margin_mode (character) the margin mode.
     #' - position_side (character) the position side.
@@ -1342,9 +1342,9 @@ KucoinFuturesTrading <- R6::R6Class(
     #' - side (character) the order side.
     #' - price (numeric | NA) the price.
     #' - size (numeric | NA) the size.
-    #' - value (character | NA) the order value.
-    #' - deal_value (character | NA) the filled value.
-    #' - deal_size (integer | NA) the filled size.
+    #' - value (numeric | NA) the order value.
+    #' - deal_value (numeric | NA) the filled value.
+    #' - deal_size (numeric | NA) the filled size.
     #' - leverage (integer | NA) the leverage.
     #' - margin_mode (character) the margin mode.
     #' - position_side (character) the position side.
@@ -1490,9 +1490,9 @@ KucoinFuturesTrading <- R6::R6Class(
     #' - side (character) the order side.
     #' - price (numeric | NA) the price.
     #' - size (numeric | NA) the size.
-    #' - value (character | NA) the order value.
-    #' - deal_value (character | NA) the filled value.
-    #' - deal_size (integer | NA) the filled size.
+    #' - value (numeric | NA) the order value.
+    #' - deal_value (numeric | NA) the filled value.
+    #' - deal_size (numeric | NA) the filled size.
     #' - leverage (integer | NA) the leverage.
     #' - margin_mode (character) the margin mode.
     #' - position_side (character) the position side.
@@ -1866,9 +1866,9 @@ KucoinFuturesTrading <- R6::R6Class(
     #' - force_taker (logical) the force taker.
     #' - price (numeric | NA) the price.
     #' - size (numeric | NA) the size.
-    #' - value (character | NA) the order value.
-    #' - fee_rate (character | NA) the fee rate.
-    #' - fix_fee (character | NA) the fix fee.
+    #' - value (numeric | NA) the order value.
+    #' - fee_rate (numeric | NA) the fee rate.
+    #' - fix_fee (numeric | NA) the fix fee.
     #' - fee_currency (character) the fee currency.
     #' - fee (numeric | NA) the fee.
     #' - order_type (character) the order type.
@@ -1903,9 +1903,9 @@ KucoinFuturesTrading <- R6::R6Class(
               force_taker = logical(0),
               price = numeric(0),
               size = numeric(0),
-              value = character(0),
-              fee_rate = character(0),
-              fix_fee = character(0),
+              value = numeric(0),
+              fee_rate = numeric(0),
+              fix_fee = numeric(0),
               fee_currency = character(0),
               fee = numeric(0),
               order_type = character(0),
@@ -1985,8 +1985,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #'   size, total buy order cost, total sell order cost, and the settlement currency:
     #' - open_order_buy_size (integer | NA) the open order buy size.
     #' - open_order_sell_size (integer | NA) the open order sell size.
-    #' - open_order_buy_cost (character | NA) the open order buy cost.
-    #' - open_order_sell_cost (character | NA) the open order sell cost.
+    #' - open_order_buy_cost (numeric | NA) the open order buy cost.
+    #' - open_order_sell_cost (numeric | NA) the open order sell cost.
     #' - settle_currency (character) the settle currency.
     #'
     #' @examples
@@ -2006,8 +2006,8 @@ KucoinFuturesTrading <- R6::R6Class(
             return(data.table::data.table(
               open_order_buy_size = integer(0),
               open_order_sell_size = integer(0),
-              open_order_buy_cost = character(0),
-              open_order_sell_cost = character(0),
+              open_order_buy_cost = numeric(0),
+              open_order_sell_cost = numeric(0),
               settle_currency = character(0)
             )[])
           }
