@@ -121,7 +121,9 @@ KucoinMarginTrading <- R6::R6Class(
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
     #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
     #'   --header 'KC-API-KEY-VERSION: 2' \
-    #'   --data-raw '{"clientOid":"my-short-001","side":"sell","symbol":"BTC-USDT","type":"market","size":"0.001","autoBorrow":true,"autoRepay":false}'
+    #'   --data-raw \
+    #'   '{"clientOid":"my-short-001","side":"sell","symbol":"BTC-USDT","type":"market","size":"0.001",
+    #'   "autoBorrow":true,"autoRepay":false}'
     #' ```
     #'
     #' ### JSON Request
@@ -150,33 +152,46 @@ KucoinMarginTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character; trading pair to short (e.g., `"BTC-USDT"`).
-    #'   You will borrow and sell the base currency (BTC in this example).
-    #' @param size Numeric or NULL; quantity of the base asset to short.
-    #'   For market orders, specify either `size` (base qty) or `funds` (quote qty), not both.
-    #' @param funds Numeric or NULL; amount in quote currency to receive from the short sale.
-    #'   Only for market orders; mutually exclusive with `size`.
-    #' @param type Character; `"limit"` or `"market"` (default `"market"`).
-    #' @param price Numeric or NULL; required for limit orders. The price at which to sell.
-    #' @param isIsolated Logical; `TRUE` for isolated margin (risk limited to this pair),
-    #'   `FALSE` (default) for cross margin (shared collateral pool).
-    #' @param clientOid Character or NULL; your own unique order ID (max 40 chars).
-    #'   Auto-generated if not provided (required by KuCoin for margin orders).
-    #' @param stp Character or NULL; self-trade prevention: `"CN"`, `"CO"`, `"CB"`, `"DC"`.
-    #' @param remark Character or NULL; order remark (max 20 ASCII chars).
-    #' @param timeInForce Character or NULL; `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
-    #' @param cancelAfter Numeric or NULL; auto-cancel seconds (requires `timeInForce = "GTT"`).
-    #' @param postOnly Logical or NULL; if TRUE, order rejected if it would match immediately.
-    #' @param hidden Logical or NULL; if TRUE, order hidden from order book.
-    #' @param iceberg Logical or NULL; if TRUE, only `visibleSize` is shown.
-    #' @param visibleSize Numeric or NULL; visible quantity for iceberg orders.
-    #' @param dry_run Logical; if `TRUE`, validates the order without actually placing it.
-    #'   Useful for testing your parameters. Default `FALSE`.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `order_id` (character): KuCoin-assigned order identifier.
-    #'   - `client_oid` (character): Client-provided order identifier.
-    #'   - `borrow_size` (character): Amount borrowed.
-    #'   - `loan_apply_id` (character): Loan application ID.
+    #' @param symbol (scalar<character>) trading pair to short (e.g.,
+    #'   `"BTC-USDT"`). You will borrow and sell the base currency (BTC in this
+    #'   example).
+    #' @param size (scalar<numeric> | NULL) quantity of the base asset to short.
+    #'   For market orders, specify either `size` (base qty) or `funds` (quote
+    #'   qty), not both.
+    #' @param funds (scalar<numeric> | NULL) amount in quote currency to receive
+    #'   from the short sale. Only for market orders; mutually exclusive with
+    #'   `size`.
+    #' @param type (scalar<character>) `"limit"` or `"market"` (default
+    #'   `"market"`).
+    #' @param price (scalar<numeric> | NULL) required for limit orders. The price
+    #'   at which to sell.
+    #' @param isIsolated (scalar<logical>) `TRUE` for isolated margin (risk
+    #'   limited to this pair), `FALSE` (default) for cross margin (shared
+    #'   collateral pool).
+    #' @param clientOid (scalar<character> | NULL) your own unique order ID (max
+    #'   40 chars). Auto-generated if not provided (required by KuCoin for margin
+    #'   orders).
+    #' @param stp (scalar<character> | NULL) self-trade prevention: `"CN"`,
+    #'   `"CO"`, `"CB"`, `"DC"`.
+    #' @param remark (scalar<character> | NULL) order remark (max 20 ASCII chars).
+    #' @param timeInForce (scalar<character> | NULL) `"GTC"`, `"GTT"`, `"IOC"`,
+    #'   `"FOK"`.
+    #' @param cancelAfter (scalar<numeric> | NULL) auto-cancel seconds (requires
+    #'   `timeInForce = "GTT"`).
+    #' @param postOnly (scalar<logical> | NULL) if TRUE, order rejected if it
+    #'   would match immediately.
+    #' @param hidden (scalar<logical> | NULL) if TRUE, order hidden from order
+    #'   book.
+    #' @param iceberg (scalar<logical> | NULL) if TRUE, only `visibleSize` is
+    #'   shown.
+    #' @param visibleSize (scalar<numeric> | NULL) visible quantity for iceberg
+    #'   orders.
+    #' @param dry_run (scalar<logical>) if `TRUE`, validates the order without
+    #'   actually placing it. Useful for testing your parameters. Default
+    #'   `FALSE`.
+    #' @return (data.table | promise<data.table>) one row giving the
+    #'   KuCoin-assigned order identifier, the client-provided order identifier,
+    #'   the amount borrowed, and the loan application ID.
     #'
     #' @examples
     #' \dontrun{
@@ -212,7 +227,26 @@ KucoinMarginTrading <- R6::R6Class(
       visibleSize = NULL,
       dry_run = FALSE
     ) {
-      return(private$.add_order(
+      assert_args_KucoinMarginTrading__open_short(
+        symbol,
+        size,
+        funds,
+        type,
+        price,
+        isIsolated,
+        clientOid,
+        stp,
+        remark,
+        timeInForce,
+        cancelAfter,
+        postOnly,
+        hidden,
+        iceberg,
+        visibleSize,
+        dry_run
+      )
+      assert::assert_nonempty_strings(symbol)
+      res <- private$.add_order(
         side = "sell",
         auto_borrow = TRUE,
         auto_repay = FALSE,
@@ -232,6 +266,11 @@ KucoinMarginTrading <- R6::R6Class(
         iceberg = iceberg,
         visibleSize = visibleSize,
         dry_run = dry_run
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarginTrading__open_short,
+        is_async = private$.is_async
       ))
     },
 
@@ -263,7 +302,9 @@ KucoinMarginTrading <- R6::R6Class(
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
     #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
     #'   --header 'KC-API-KEY-VERSION: 2' \
-    #'   --data-raw '{"clientOid":"my-close-short-001","side":"buy","symbol":"BTC-USDT","type":"market","size":"0.001","autoBorrow":false,"autoRepay":true}'
+    #'   --data-raw \
+    #'   '{"clientOid":"my-close-short-001","side":"buy","symbol":"BTC-USDT","type":"market","size":"0.001",
+    #'   "autoBorrow":false,"autoRepay":true}'
     #' ```
     #'
     #' ### JSON Request
@@ -290,28 +331,33 @@ KucoinMarginTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character; trading pair to close (must match the pair you shorted).
-    #' @param size Numeric or NULL; quantity of the base asset to buy back.
-    #'   Should match the size you shorted. For market orders, specify either
-    #'   `size` or `funds`, not both.
-    #' @param funds Numeric or NULL; amount in quote currency to spend buying back.
-    #'   Only for market orders; mutually exclusive with `size`.
-    #' @param type Character; `"limit"` or `"market"` (default `"market"`).
-    #' @param price Numeric or NULL; required for limit orders.
-    #' @param isIsolated Logical; must match the margin mode used in `open_short()`.
-    #' @param clientOid Character or NULL; your own unique order ID.
-    #' @param stp Character or NULL; self-trade prevention.
-    #' @param remark Character or NULL; order remark.
-    #' @param timeInForce Character or NULL; `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
-    #' @param cancelAfter Numeric or NULL; auto-cancel seconds.
-    #' @param postOnly Logical or NULL; passive order flag.
-    #' @param hidden Logical or NULL; hidden order flag.
-    #' @param iceberg Logical or NULL; iceberg order flag.
-    #' @param visibleSize Numeric or NULL; visible quantity for iceberg.
-    #' @param dry_run Logical; if `TRUE`, validates without placing. Default `FALSE`.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `order_id` (character): KuCoin-assigned order identifier.
-    #'   - `client_oid` (character): Client-provided order identifier (NA if not supplied).
+    #' @param symbol (scalar<character>) trading pair to close (must match the
+    #'   pair you shorted).
+    #' @param size (scalar<numeric> | NULL) quantity of the base asset to buy
+    #'   back. Should match the size you shorted. For market orders, specify
+    #'   either `size` or `funds`, not both.
+    #' @param funds (scalar<numeric> | NULL) amount in quote currency to spend
+    #'   buying back. Only for market orders; mutually exclusive with `size`.
+    #' @param type (scalar<character>) `"limit"` or `"market"` (default
+    #'   `"market"`).
+    #' @param price (scalar<numeric> | NULL) required for limit orders.
+    #' @param isIsolated (scalar<logical>) must match the margin mode used in
+    #'   `open_short()`.
+    #' @param clientOid (scalar<character> | NULL) your own unique order ID.
+    #' @param stp (scalar<character> | NULL) self-trade prevention.
+    #' @param remark (scalar<character> | NULL) order remark.
+    #' @param timeInForce (scalar<character> | NULL) `"GTC"`, `"GTT"`, `"IOC"`,
+    #'   `"FOK"`.
+    #' @param cancelAfter (scalar<numeric> | NULL) auto-cancel seconds.
+    #' @param postOnly (scalar<logical> | NULL) passive order flag.
+    #' @param hidden (scalar<logical> | NULL) hidden order flag.
+    #' @param iceberg (scalar<logical> | NULL) iceberg order flag.
+    #' @param visibleSize (scalar<numeric> | NULL) visible quantity for iceberg.
+    #' @param dry_run (scalar<logical>) if `TRUE`, validates without placing.
+    #'   Default `FALSE`.
+    #' @return (data.table | promise<data.table>) one row giving the
+    #'   KuCoin-assigned order identifier and the client-provided order
+    #'   identifier (NA if not supplied).
     #'
     #' @examples
     #' \dontrun{
@@ -337,7 +383,26 @@ KucoinMarginTrading <- R6::R6Class(
       visibleSize = NULL,
       dry_run = FALSE
     ) {
-      return(private$.add_order(
+      assert_args_KucoinMarginTrading__close_short(
+        symbol,
+        size,
+        funds,
+        type,
+        price,
+        isIsolated,
+        clientOid,
+        stp,
+        remark,
+        timeInForce,
+        cancelAfter,
+        postOnly,
+        hidden,
+        iceberg,
+        visibleSize,
+        dry_run
+      )
+      assert::assert_nonempty_strings(symbol)
+      res <- private$.add_order(
         side = "buy",
         auto_borrow = FALSE,
         auto_repay = TRUE,
@@ -357,6 +422,11 @@ KucoinMarginTrading <- R6::R6Class(
         iceberg = iceberg,
         visibleSize = visibleSize,
         dry_run = dry_run
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarginTrading__close_short,
+        is_async = private$.is_async
       ))
     },
 
@@ -391,7 +461,9 @@ KucoinMarginTrading <- R6::R6Class(
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
     #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
     #'   --header 'KC-API-KEY-VERSION: 2' \
-    #'   --data-raw '{"clientOid":"my-long-001","side":"buy","symbol":"BTC-USDT","type":"market","size":"0.001","autoBorrow":true,"autoRepay":false}'
+    #'   --data-raw \
+    #'   '{"clientOid":"my-long-001","side":"buy","symbol":"BTC-USDT","type":"market","size":"0.001","autoBorrow":true,
+    #'   "autoRepay":false}'
     #' ```
     #'
     #' ### JSON Request
@@ -420,29 +492,32 @@ KucoinMarginTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character; trading pair to go long on (e.g., `"BTC-USDT"`).
-    #'   You will borrow quote currency (USDT) and buy the base (BTC).
-    #' @param size Numeric or NULL; quantity of the base asset to buy.
-    #' @param funds Numeric or NULL; amount in quote currency to spend.
+    #' @param symbol (scalar<character>) trading pair to go long on (e.g.,
+    #'   `"BTC-USDT"`). You will borrow quote currency (USDT) and buy the base
+    #'   (BTC).
+    #' @param size (scalar<numeric> | NULL) quantity of the base asset to buy.
+    #' @param funds (scalar<numeric> | NULL) amount in quote currency to spend.
     #'   Only for market orders; mutually exclusive with `size`.
-    #' @param type Character; `"limit"` or `"market"` (default `"market"`).
-    #' @param price Numeric or NULL; required for limit orders.
-    #' @param isIsolated Logical; `TRUE` for isolated margin, `FALSE` (default) for cross.
-    #' @param clientOid Character or NULL; your own unique order ID.
-    #' @param stp Character or NULL; self-trade prevention.
-    #' @param remark Character or NULL; order remark.
-    #' @param timeInForce Character or NULL; `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
-    #' @param cancelAfter Numeric or NULL; auto-cancel seconds.
-    #' @param postOnly Logical or NULL; passive order flag.
-    #' @param hidden Logical or NULL; hidden order flag.
-    #' @param iceberg Logical or NULL; iceberg order flag.
-    #' @param visibleSize Numeric or NULL; visible quantity for iceberg.
-    #' @param dry_run Logical; if `TRUE`, validates without placing. Default `FALSE`.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `order_id` (character): KuCoin-assigned order identifier.
-    #'   - `client_oid` (character): Client-provided order identifier.
-    #'   - `borrow_size` (character): Amount borrowed.
-    #'   - `loan_apply_id` (character): Loan application ID.
+    #' @param type (scalar<character>) `"limit"` or `"market"` (default
+    #'   `"market"`).
+    #' @param price (scalar<numeric> | NULL) required for limit orders.
+    #' @param isIsolated (scalar<logical>) `TRUE` for isolated margin, `FALSE`
+    #'   (default) for cross.
+    #' @param clientOid (scalar<character> | NULL) your own unique order ID.
+    #' @param stp (scalar<character> | NULL) self-trade prevention.
+    #' @param remark (scalar<character> | NULL) order remark.
+    #' @param timeInForce (scalar<character> | NULL) `"GTC"`, `"GTT"`, `"IOC"`,
+    #'   `"FOK"`.
+    #' @param cancelAfter (scalar<numeric> | NULL) auto-cancel seconds.
+    #' @param postOnly (scalar<logical> | NULL) passive order flag.
+    #' @param hidden (scalar<logical> | NULL) hidden order flag.
+    #' @param iceberg (scalar<logical> | NULL) iceberg order flag.
+    #' @param visibleSize (scalar<numeric> | NULL) visible quantity for iceberg.
+    #' @param dry_run (scalar<logical>) if `TRUE`, validates without placing.
+    #'   Default `FALSE`.
+    #' @return (data.table | promise<data.table>) one row giving the
+    #'   KuCoin-assigned order identifier, the client-provided order identifier,
+    #'   the amount borrowed, and the loan application ID.
     #'
     #' @examples
     #' \dontrun{
@@ -475,7 +550,26 @@ KucoinMarginTrading <- R6::R6Class(
       visibleSize = NULL,
       dry_run = FALSE
     ) {
-      return(private$.add_order(
+      assert_args_KucoinMarginTrading__open_long(
+        symbol,
+        size,
+        funds,
+        type,
+        price,
+        isIsolated,
+        clientOid,
+        stp,
+        remark,
+        timeInForce,
+        cancelAfter,
+        postOnly,
+        hidden,
+        iceberg,
+        visibleSize,
+        dry_run
+      )
+      assert::assert_nonempty_strings(symbol)
+      res <- private$.add_order(
         side = "buy",
         auto_borrow = TRUE,
         auto_repay = FALSE,
@@ -495,6 +589,11 @@ KucoinMarginTrading <- R6::R6Class(
         iceberg = iceberg,
         visibleSize = visibleSize,
         dry_run = dry_run
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarginTrading__open_long,
+        is_async = private$.is_async
       ))
     },
 
@@ -526,7 +625,9 @@ KucoinMarginTrading <- R6::R6Class(
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
     #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
     #'   --header 'KC-API-KEY-VERSION: 2' \
-    #'   --data-raw '{"clientOid":"my-close-long-001","side":"sell","symbol":"BTC-USDT","type":"market","size":"0.001","autoBorrow":false,"autoRepay":true}'
+    #'   --data-raw \
+    #'   '{"clientOid":"my-close-long-001","side":"sell","symbol":"BTC-USDT","type":"market","size":"0.001",
+    #'   "autoBorrow":false,"autoRepay":true}'
     #' ```
     #'
     #' ### JSON Request
@@ -553,26 +654,31 @@ KucoinMarginTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character; trading pair to close (must match the pair you longed).
-    #' @param size Numeric or NULL; quantity of the base asset to sell.
-    #' @param funds Numeric or NULL; amount in quote currency.
-    #'   Only for market orders; mutually exclusive with `size`.
-    #' @param type Character; `"limit"` or `"market"` (default `"market"`).
-    #' @param price Numeric or NULL; required for limit orders.
-    #' @param isIsolated Logical; must match the margin mode used in `open_long()`.
-    #' @param clientOid Character or NULL; your own unique order ID.
-    #' @param stp Character or NULL; self-trade prevention.
-    #' @param remark Character or NULL; order remark.
-    #' @param timeInForce Character or NULL; `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
-    #' @param cancelAfter Numeric or NULL; auto-cancel seconds.
-    #' @param postOnly Logical or NULL; passive order flag.
-    #' @param hidden Logical or NULL; hidden order flag.
-    #' @param iceberg Logical or NULL; iceberg order flag.
-    #' @param visibleSize Numeric or NULL; visible quantity for iceberg.
-    #' @param dry_run Logical; if `TRUE`, validates without placing. Default `FALSE`.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `order_id` (character): KuCoin-assigned order identifier.
-    #'   - `client_oid` (character): Client-provided order identifier (NA if not supplied).
+    #' @param symbol (scalar<character>) trading pair to close (must match the
+    #'   pair you longed).
+    #' @param size (scalar<numeric> | NULL) quantity of the base asset to sell.
+    #' @param funds (scalar<numeric> | NULL) amount in quote currency. Only for
+    #'   market orders; mutually exclusive with `size`.
+    #' @param type (scalar<character>) `"limit"` or `"market"` (default
+    #'   `"market"`).
+    #' @param price (scalar<numeric> | NULL) required for limit orders.
+    #' @param isIsolated (scalar<logical>) must match the margin mode used in
+    #'   `open_long()`.
+    #' @param clientOid (scalar<character> | NULL) your own unique order ID.
+    #' @param stp (scalar<character> | NULL) self-trade prevention.
+    #' @param remark (scalar<character> | NULL) order remark.
+    #' @param timeInForce (scalar<character> | NULL) `"GTC"`, `"GTT"`, `"IOC"`,
+    #'   `"FOK"`.
+    #' @param cancelAfter (scalar<numeric> | NULL) auto-cancel seconds.
+    #' @param postOnly (scalar<logical> | NULL) passive order flag.
+    #' @param hidden (scalar<logical> | NULL) hidden order flag.
+    #' @param iceberg (scalar<logical> | NULL) iceberg order flag.
+    #' @param visibleSize (scalar<numeric> | NULL) visible quantity for iceberg.
+    #' @param dry_run (scalar<logical>) if `TRUE`, validates without placing.
+    #'   Default `FALSE`.
+    #' @return (data.table | promise<data.table>) one row giving the
+    #'   KuCoin-assigned order identifier and the client-provided order
+    #'   identifier (NA if not supplied).
     #'
     #' @examples
     #' \dontrun{
@@ -598,7 +704,26 @@ KucoinMarginTrading <- R6::R6Class(
       visibleSize = NULL,
       dry_run = FALSE
     ) {
-      return(private$.add_order(
+      assert_args_KucoinMarginTrading__close_long(
+        symbol,
+        size,
+        funds,
+        type,
+        price,
+        isIsolated,
+        clientOid,
+        stp,
+        remark,
+        timeInForce,
+        cancelAfter,
+        postOnly,
+        hidden,
+        iceberg,
+        visibleSize,
+        dry_run
+      )
+      assert::assert_nonempty_strings(symbol)
+      res <- private$.add_order(
         side = "sell",
         auto_borrow = FALSE,
         auto_repay = TRUE,
@@ -618,6 +743,11 @@ KucoinMarginTrading <- R6::R6Class(
         iceberg = iceberg,
         visibleSize = visibleSize,
         dry_run = dry_run
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarginTrading__close_long,
+        is_async = private$.is_async
       ))
     },
 
@@ -679,16 +809,20 @@ KucoinMarginTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param currency Character; the currency to borrow (e.g., `"USDT"`, `"BTC"`).
-    #' @param size Numeric; the amount to borrow.
-    #' @param timeInForce Character; order time-in-force policy (default `"IOC"`).
-    #'   Valid values: `"IOC"` (immediate-or-cancel), `"FOK"` (fill-or-kill).
-    #' @param isIsolated Logical; `TRUE` for isolated margin, `FALSE` (default) for cross.
-    #' @param symbol Character or NULL; required when `isIsolated = TRUE`. Trading pair (e.g., `"BTC-USDT"`).
-    #' @param isHf Logical; `TRUE` for high-frequency trading mode, `FALSE` (default).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `order_no` (character): Borrow order number.
-    #'   - `actual_size` (character): Amount actually borrowed.
+    #' @param currency (scalar<character>) the currency to borrow (e.g.,
+    #'   `"USDT"`, `"BTC"`).
+    #' @param size (scalar<numeric>) the amount to borrow.
+    #' @param timeInForce (scalar<character>) order time-in-force policy (default
+    #'   `"IOC"`). Valid values: `"IOC"` (immediate-or-cancel), `"FOK"`
+    #'   (fill-or-kill).
+    #' @param isIsolated (scalar<logical>) `TRUE` for isolated margin, `FALSE`
+    #'   (default) for cross.
+    #' @param symbol (scalar<character> | NULL) required when `isIsolated = TRUE`.
+    #'   Trading pair (e.g., `"BTC-USDT"`).
+    #' @param isHf (scalar<logical>) `TRUE` for high-frequency trading mode,
+    #'   `FALSE` (default).
+    #' @return (data.table | promise<data.table>) one row giving the borrow order
+    #'   number and the amount actually borrowed.
     #'
     #' @examples
     #' \dontrun{
@@ -712,6 +846,14 @@ KucoinMarginTrading <- R6::R6Class(
       symbol = NULL,
       isHf = FALSE
     ) {
+      assert_args_KucoinMarginTrading__borrow(
+        currency,
+        size,
+        timeInForce,
+        isIsolated,
+        symbol,
+        isHf
+      )
       if (!is.character(currency) || !nzchar(currency)) {
         rlang::abort("Parameter 'currency' must be a non-empty string.")
       }
@@ -732,11 +874,16 @@ KucoinMarginTrading <- R6::R6Class(
       )
       body <- body[!vapply(body, is.null, logical(1))]
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v3/margin/borrow",
         method = "POST",
         body = body,
         .parser = as_dt_row
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarginTrading__borrow,
+        is_async = private$.is_async
       ))
     },
 
@@ -788,13 +935,12 @@ KucoinMarginTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param currency Character; the currency to repay (e.g., `"USDT"`, `"BTC"`).
-    #' @param size Numeric; the amount to repay.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
-    #'   with a single row and columns:
-    #'   - `timestamp` (POSIXct): Server-side acceptance time of the repay.
-    #'   - `order_no` (character): Repayment order number.
-    #'   - `actual_size` (character): Amount actually repaid.
+    #' @param currency (scalar<character>) the currency to repay (e.g.,
+    #'   `"USDT"`, `"BTC"`).
+    #' @param size (scalar<numeric>) the amount to repay.
+    #' @return (data.table | promise<data.table>) one row giving the server-side
+    #'   acceptance time of the repay (POSIXct), the repayment order number, and
+    #'   the amount actually repaid.
     #'
     #' @examples
     #' \dontrun{
@@ -803,6 +949,7 @@ KucoinMarginTrading <- R6::R6Class(
     #' print(result)
     #' }
     repay = function(currency, size) {
+      assert_args_KucoinMarginTrading__repay(currency, size)
       if (!is.character(currency) || !nzchar(currency)) {
         rlang::abort("Parameter 'currency' must be a non-empty string.")
       }
@@ -815,7 +962,7 @@ KucoinMarginTrading <- R6::R6Class(
         size = as.character(size)
       )
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v3/margin/repay",
         method = "POST",
         body = body,
@@ -824,6 +971,11 @@ KucoinMarginTrading <- R6::R6Class(
           coerce_cols(dt, "timestamp", ms_to_datetime)
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarginTrading__repay,
+        is_async = private$.is_async
       ))
     },
 
@@ -877,26 +1029,17 @@ KucoinMarginTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param query Named list; optional filter parameters. Supported keys:
-    #'   - `currency` (character): Filter by currency.
-    #'   - `isIsolated` (logical): Filter by margin type.
-    #'   - `symbol` (character): Filter by trading pair.
-    #'   - `orderNo` (character): Filter by order number.
-    #'   - `startTime` (integer): Start timestamp in milliseconds.
-    #'   - `endTime` (integer): End timestamp in milliseconds.
-    #'   - `currentPage` (integer): Page number.
-    #'   - `pageSize` (integer): Items per page.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
-    #'   with **one row per borrow record** and columns:
-    #'   - `order_no` (character): Borrow order number.
-    #'   - `symbol` (character): Trading pair (NA on cross-margin records).
-    #'   - `currency` (character): Borrowed currency.
-    #'   - `size` (character): Requested borrow amount.
-    #'   - `actual_size` (character): Amount actually borrowed.
-    #'   - `status` (character): Lifecycle status (e.g. `"DONE"`).
-    #'   - `created_time` (POSIXct): Borrow timestamp (millisecond epoch coerced).
-    #'
-    #'   Empty response yields an empty `data.table`.
+    #' @param query (list) optional filter parameters. Supported keys: `currency`
+    #'   (filter by currency), `isIsolated` (filter by margin type), `symbol`
+    #'   (filter by trading pair), `orderNo` (filter by order number), `startTime`
+    #'   (start timestamp in milliseconds), `endTime` (end timestamp in
+    #'   milliseconds), `currentPage` (page number), and `pageSize` (items per
+    #'   page).
+    #' @return (data.table | promise<data.table>) one row per borrow record,
+    #'   giving the borrow order number, trading pair (NA on cross-margin
+    #'   records), borrowed currency, requested borrow amount, amount actually
+    #'   borrowed, lifecycle status, and borrow timestamp (POSIXct, coerced from
+    #'   epoch milliseconds); an empty data.table if no records match.
     #'
     #' @examples
     #' \dontrun{
@@ -905,7 +1048,8 @@ KucoinMarginTrading <- R6::R6Class(
     #' print(history)
     #' }
     get_borrow_history = function(query = list()) {
-      return(private$.request(
+      assert_args_KucoinMarginTrading__get_borrow_history(query)
+      res <- private$.request(
         endpoint = "/api/v3/margin/borrow",
         query = query,
         .parser = function(data) {
@@ -922,6 +1066,11 @@ KucoinMarginTrading <- R6::R6Class(
           }
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarginTrading__get_borrow_history,
+        is_async = private$.is_async
       ))
     },
 
@@ -973,18 +1122,13 @@ KucoinMarginTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param query Named list; optional filter parameters. Same keys as `get_borrow_history()`.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
-    #'   with **one row per repay record** and columns:
-    #'   - `order_no` (character): Repay order number.
-    #'   - `symbol` (character): Trading pair (NA on cross-margin records).
-    #'   - `currency` (character): Repaid currency.
-    #'   - `size` (character): Requested repay amount.
-    #'   - `actual_size` (character): Amount actually repaid.
-    #'   - `status` (character): Lifecycle status.
-    #'   - `created_time` (POSIXct): Repay timestamp (millisecond epoch coerced).
-    #'
-    #'   Empty response yields an empty `data.table`.
+    #' @param query (list) optional filter parameters. Same keys as
+    #'   `get_borrow_history()`.
+    #' @return (data.table | promise<data.table>) one row per repay record,
+    #'   giving the repay order number, trading pair (NA on cross-margin
+    #'   records), repaid currency, requested repay amount, amount actually
+    #'   repaid, lifecycle status, and repay timestamp (POSIXct, coerced from
+    #'   epoch milliseconds); an empty data.table if no records match.
     #'
     #' @examples
     #' \dontrun{
@@ -993,7 +1137,8 @@ KucoinMarginTrading <- R6::R6Class(
     #' print(history)
     #' }
     get_repay_history = function(query = list()) {
-      return(private$.request(
+      assert_args_KucoinMarginTrading__get_repay_history(query)
+      res <- private$.request(
         endpoint = "/api/v3/margin/repay",
         query = query,
         .parser = function(data) {
@@ -1010,6 +1155,11 @@ KucoinMarginTrading <- R6::R6Class(
           }
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarginTrading__get_repay_history,
+        is_async = private$.is_async
       ))
     },
 
@@ -1058,22 +1208,16 @@ KucoinMarginTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param query Named list; optional filter parameters. Supported keys:
-    #'   - `currency` (character): Filter by currency.
-    #'   - `isIsolated` (logical): Cross vs isolated.
-    #'   - `symbol` (character): Trading pair.
-    #'   - `startTime` (integer): Start timestamp in milliseconds.
-    #'   - `endTime` (integer): End timestamp in milliseconds.
-    #'   - `currentPage` (integer): Page number.
-    #'   - `pageSize` (integer): Items per page.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
-    #'   with **one row per interest record** and columns:
-    #'   - `currency` (character): Currency on which interest accrued.
-    #'   - `day_ratio` (character): Daily rate applied.
-    #'   - `interest_amount` (character): Interest charged in the period.
-    #'   - `created_time` (POSIXct): Accrual timestamp (millisecond epoch coerced).
-    #'
-    #'   Empty response yields an empty `data.table`.
+    #' @param query (list) optional filter parameters. Supported keys: `currency`
+    #'   (filter by currency), `isIsolated` (cross vs isolated), `symbol` (trading
+    #'   pair), `startTime` (start timestamp in milliseconds), `endTime` (end
+    #'   timestamp in milliseconds), `currentPage` (page number), and `pageSize`
+    #'   (items per page).
+    #' @return (data.table | promise<data.table>) one row per interest record,
+    #'   giving the currency on which interest accrued, the daily rate applied,
+    #'   the interest charged in the period, and the accrual timestamp (POSIXct,
+    #'   coerced from epoch milliseconds); an empty data.table if no records
+    #'   match.
     #'
     #' @examples
     #' \dontrun{
@@ -1082,7 +1226,8 @@ KucoinMarginTrading <- R6::R6Class(
     #' print(interest)
     #' }
     get_interest_history = function(query = list()) {
-      return(private$.request(
+      assert_args_KucoinMarginTrading__get_interest_history(query)
+      res <- private$.request(
         endpoint = "/api/v3/margin/interest",
         query = query,
         .parser = function(data) {
@@ -1099,6 +1244,11 @@ KucoinMarginTrading <- R6::R6Class(
           }
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarginTrading__get_interest_history,
+        is_async = private$.is_async
       ))
     },
 
@@ -1111,7 +1261,8 @@ KucoinMarginTrading <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v3/margin/borrowRate`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Borrow Interest Rate](https://www.kucoin.com/docs-new/rest/margin-trading/debit/get-borrow-interest-rate)
+    #' KuCoin Get Borrow Interest Rate:
+    #' <https://www.kucoin.com/docs-new/rest/margin-trading/debit/get-borrow-interest-rate>
     #'
     #' Verified: 2026-05-23
     #'
@@ -1145,13 +1296,12 @@ KucoinMarginTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param query Named list; optional filter parameters. Supported keys:
-    #'   - `currency` (character): Comma-separated currency list (e.g., `"BTC,USDT"`).
-    #'   - `vipLevel` (integer): VIP tier level.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `currency` (character): Currency code.
-    #'   - `hourly_borrow_rate` (character): Hourly interest rate.
-    #'   - `annualized_borrow_rate` (character): Annualized interest rate.
+    #' @param query (list) optional filter parameters. Supported keys: `currency`
+    #'   (comma-separated currency list e.g. `"BTC,USDT"`) and `vipLevel` (VIP
+    #'   tier level).
+    #' @return (data.table | promise<data.table>) one row per currency, giving the
+    #'   currency code, the hourly interest rate, and the annualised interest
+    #'   rate.
     #'
     #' @examples
     #' \dontrun{
@@ -1160,7 +1310,8 @@ KucoinMarginTrading <- R6::R6Class(
     #' print(rates)
     #' }
     get_borrow_rate = function(query = list()) {
-      return(private$.request(
+      assert_args_KucoinMarginTrading__get_borrow_rate(query)
+      res <- private$.request(
         endpoint = "/api/v3/margin/borrowRate",
         query = query,
         .parser = function(data) {
@@ -1173,6 +1324,11 @@ KucoinMarginTrading <- R6::R6Class(
           }
           return(data.table::rbindlist(lapply(items, as_dt_row), fill = TRUE)[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarginTrading__get_borrow_rate,
+        is_async = private$.is_async
       ))
     },
 
@@ -1220,10 +1376,12 @@ KucoinMarginTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param leverage Numeric; the desired leverage multiplier (e.g., `3`, `5`, `10`).
-    #' @return `data.table` (or `promise<data.table>` if `async = TRUE`), single row with columns:
-    #'   - `leverage` (numeric): The new leverage multiplier.
-    #'   - `status` (character): `"success"`.
+    #' @param leverage (scalar<numeric>) the desired leverage multiplier (e.g.,
+    #'   `3`, `5`, `10`).
+    #' @return (data.table | promise<data.table>) one row:
+    #' - leverage (numeric) the new leverage multiplier.
+    #' - status (character) the local outcome marker, always `"success"`.
+    #' @noassert leverage
     #'
     #' @examples
     #' \dontrun{
@@ -1237,7 +1395,7 @@ KucoinMarginTrading <- R6::R6Class(
 
       body <- list(leverage = as.character(leverage))
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v3/position/update-user-leverage",
         method = "POST",
         body = body,
@@ -1247,6 +1405,11 @@ KucoinMarginTrading <- R6::R6Class(
             status = "success"
           )[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarginTrading__modify_leverage,
+        is_async = private$.is_async
       ))
     }
   ),

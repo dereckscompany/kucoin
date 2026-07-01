@@ -12,14 +12,16 @@
 #'
 #' ### Purpose and Scope
 #' - **Announcements**: Fetch paginated KuCoin platform announcements filtered by type, language, and date range.
-#' - **Currencies**: Retrieve metadata for individual or all listed currencies, including chain-specific deposit/withdrawal details.
+#' - **Currencies**: Retrieve metadata for individual or all listed currencies, including chain-specific
+#'   deposit/withdrawal details.
 #' - **Symbols**: Retrieve trading pair metadata including precision, size limits, fee rates, and trading status.
 #' - **Tickers**: Access real-time Level 1 best bid/ask data for individual symbols or all pairs.
 #' - **Order Books**: Get partial (20/100 levels) or full depth order book snapshots.
 #' - **Trade History**: Retrieve the most recent 100 trades for any symbol.
 #' - **24hr Statistics**: Get rolling 24-hour market statistics (OHLCV, change rate, fees).
 #' - **Market List**: Discover all available market segments (e.g., USDS, DeFi, Meme).
-#' - **Klines**: Fetch historical candlestick data with automatic time-range segmentation to bypass the 1500-candle-per-request limit.
+#' - **Klines**: Fetch historical candlestick data with automatic time-range segmentation to bypass the
+#'   1500-candle-per-request limit.
 #'
 #' ### Usage
 #' Most methods are public endpoints requiring no authentication. The one exception
@@ -127,31 +129,19 @@ KucoinMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param query Named list; filter parameters:
-    #'   - `annType` (character): Announcement type filter (e.g., `"latest-announcements"`,
-    #'     `"activities"`, `"new-listings"`, `"product-updates"`).
-    #'   - `lang` (character): Language code (e.g., `"en_US"`, `"zh_CN"`).
-    #'   - `startTime` (integer): Start timestamp in milliseconds.
-    #'   - `endTime` (integer): End timestamp in milliseconds.
-    #' @param page_size Integer; results per page (default 50, max 100).
-    #' @param max_pages Numeric; max pages to fetch (default `Inf` for all).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `ann_id` (integer): Announcement identifier.
-    #'   - `ann_title` (character): Announcement title.
-    #'   - `ann_type` (character): `;`-separated category tags for the
-    #'     announcement. KuCoin returns `annType` as an array; the parser
-    #'     collapses it to a single character column via the shared
-    #'     `collapse_string_array_fields()` helper (Treatment A —
-    #'     matches the cross-package convention used by alpaca/binance
-    #'     for plain-string arrays). Filter with
-    #'     `grepl("latest-announcements", ann_type, fixed = TRUE)`;
-    #'     recover the vector via
-    #'     `strsplit(ann_type, ";", fixed = TRUE)[[1]]`. `NA_character_`
-    #'     if KuCoin returned no tags.
-    #'   - `ann_desc` (character): Short description text.
-    #'   - `c_time` (POSIXct): Creation datetime (coerced from epoch milliseconds).
-    #'   - `language` (character): Language code.
-    #'   - `ann_url` (character): Full URL to the announcement page.
+    #' @param query (list) filter parameters. Supported keys: `annType`
+    #'   (announcement type filter e.g. `"latest-announcements"`, `"activities"`,
+    #'   `"new-listings"`, `"product-updates"`), `lang` (language code e.g.
+    #'   `"en_US"`, `"zh_CN"`), `startTime` (start timestamp in milliseconds), and
+    #'   `endTime` (end timestamp in milliseconds).
+    #' @param page_size (scalar<count in [1, Inf[>) results per page (default 50,
+    #'   max 100).
+    #' @param max_pages (scalar<numeric in [1, Inf]>) maximum number of pages to
+    #'   fetch (default `Inf` for all).
+    #' @return (data.table | promise<data.table>) one row per announcement, each
+    #'   giving the announcement ID, title, `;`-separated category tags, short
+    #'   description, creation datetime (POSIXct, coerced from epoch milliseconds),
+    #'   language code, and the full announcement URL.
     #'
     #' @examples
     #' \dontrun{
@@ -169,7 +159,8 @@ KucoinMarketData <- R6::R6Class(
     #' )
     #' }
     get_announcements = function(query = list(), page_size = 50, max_pages = Inf) {
-      return(private$.paginate(
+      assert_args_KucoinMarketData__get_announcements(query, page_size, max_pages)
+      res <- private$.paginate(
         endpoint = "/api/v3/announcements",
         query = query,
         auth = FALSE,
@@ -195,6 +186,11 @@ KucoinMarketData <- R6::R6Class(
         },
         page_size = page_size,
         max_pages = max_pages
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarketData__get_announcements,
+        is_async = private$.is_async
       ))
     },
 
@@ -265,27 +261,17 @@ KucoinMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param currency Character; currency code (e.g., `"BTC"`, `"ETH"`, `"USDT"`).
-    #' @param chain Character or NULL; specific chain to filter (e.g., `"ERC20"`, `"TRC20"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with currency metadata and chain details:
-    #'   - `currency` (character): Currency code.
-    #'   - `name` (character): Short name.
-    #'   - `full_name` (character): Full currency name.
-    #'   - `precision` (integer): Decimal precision.
-    #'   - `is_margin_enabled` (logical): Whether margin trading is supported.
-    #'   - `is_debit_enabled` (logical): Whether debit is supported.
-    #'   - `chain_name` (character): Blockchain network name.
-    #'   - `withdrawal_min_size` (character): Minimum withdrawal amount.
-    #'   - `deposit_min_size` (character): Minimum deposit amount.
-    #'   - `withdrawal_min_fee` (character): Minimum withdrawal fee.
-    #'   - `is_withdraw_enabled` (logical): Whether withdrawals are active.
-    #'   - `is_deposit_enabled` (logical): Whether deposits are active.
-    #'   - `confirms` (integer): Confirmations required.
-    #'   - `pre_confirms` (integer): Pre-confirmations for early credit.
-    #'   - `contract_address` (character): Token contract address.
-    #'   - `withdraw_precision` (integer): Withdrawal decimal precision.
-    #'   - `need_tag` (logical): Whether a memo/tag is required.
-    #'   - `chain_id` (character): Chain identifier.
+    #' @param currency (scalar<character>) currency code (e.g., `"BTC"`, `"ETH"`,
+    #'   `"USDT"`).
+    #' @param chain (scalar<character> | NULL) specific chain to filter (e.g.,
+    #'   `"ERC20"`, `"TRC20"`).
+    #' @return (data.table | promise<data.table>) one row per chain for the
+    #'   currency, each combining the currency metadata (code, short name, full
+    #'   name, precision, and the margin- and debit-enabled flags) with that
+    #'   chain's details (network name, minimum withdrawal/deposit sizes, minimum
+    #'   withdrawal fee, withdraw- and deposit-enabled flags, required and
+    #'   pre-confirmations, contract address, withdrawal precision, the memo/tag
+    #'   requirement flag, and chain identifier).
     #'
     #' @examples
     #' \dontrun{
@@ -297,7 +283,9 @@ KucoinMarketData <- R6::R6Class(
     #' usdt_erc20 <- market$get_currency("USDT", chain = "ERC20")
     #' }
     get_currency = function(currency, chain = NULL) {
-      return(private$.request(
+      assert_args_KucoinMarketData__get_currency(currency, chain)
+      assert::assert_nonempty_strings(currency)
+      res <- private$.request(
         endpoint = paste0("/api/v3/currencies/", currency),
         query = list(chain = chain),
         auth = FALSE,
@@ -323,6 +311,11 @@ KucoinMarketData <- R6::R6Class(
           }
           return(summary_dt)
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarketData__get_currency,
+        is_async = private$.is_async
       ))
     },
 
@@ -390,8 +383,9 @@ KucoinMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with currency metadata
-    #'   and chain details. Same columns as `get_currency()`, one row per currency-chain combination.
+    #' @return (data.table | promise<data.table>) one row per currency-chain
+    #'   combination, carrying the same currency metadata and chain details as
+    #'   `get_currency()`.
     #'
     #' @examples
     #' \dontrun{
@@ -402,7 +396,7 @@ KucoinMarketData <- R6::R6Class(
     #' print(erc20[, .(currency, withdrawal_min_fee, is_deposit_enabled)])
     #' }
     get_all_currencies = function() {
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v3/currencies",
         auth = FALSE,
         .parser = function(data) {
@@ -424,6 +418,11 @@ KucoinMarketData <- R6::R6Class(
           })
           return(data.table::rbindlist(rows, fill = TRUE)[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarketData__get_all_currencies,
+        is_async = private$.is_async
       ))
     },
 
@@ -488,25 +487,13 @@ KucoinMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character; trading symbol (e.g., `"BTC-USDT"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with symbol metadata:
-    #'   - `symbol` (character): Trading pair identifier.
-    #'   - `base_currency` (character): Base asset code.
-    #'   - `quote_currency` (character): Quote asset code.
-    #'   - `fee_currency` (character): Currency used for fees.
-    #'   - `market` (character): Market segment.
-    #'   - `base_min_size` (character): Minimum base order size.
-    #'   - `quote_min_size` (character): Minimum quote order size.
-    #'   - `base_max_size` (character): Maximum base order size.
-    #'   - `base_increment` (character): Base size precision increment.
-    #'   - `quote_increment` (character): Quote size precision increment.
-    #'   - `price_increment` (character): Price tick size.
-    #'   - `price_limit_rate` (character): Max price deviation rate.
-    #'   - `min_funds` (character): Minimum order value in quote currency.
-    #'   - `is_margin_enabled` (logical): Whether margin is available.
-    #'   - `enable_trading` (logical): Whether trading is active.
-    #'   - `maker_fee_coefficient` (character): Maker fee multiplier.
-    #'   - `taker_fee_coefficient` (character): Taker fee multiplier.
+    #' @param symbol (scalar<character>) trading symbol (e.g., `"BTC-USDT"`).
+    #' @return (data.table | promise<data.table>) one row giving the symbol
+    #'   metadata: the pair identifier, base/quote/fee currencies, market segment,
+    #'   the base and quote minimum and maximum order sizes, the base and quote
+    #'   size increments, the price increment and price-limit rate, the minimum
+    #'   order value in quote currency, the margin- and trading-enabled flags, and
+    #'   the maker and taker fee coefficients.
     #'
     #' @examples
     #' \dontrun{
@@ -515,10 +502,17 @@ KucoinMarketData <- R6::R6Class(
     #' print(btc[, .(price_increment, base_increment, base_min_size, enable_trading)])
     #' }
     get_symbol = function(symbol) {
-      return(private$.request(
+      assert_args_KucoinMarketData__get_symbol(symbol)
+      assert::assert_nonempty_strings(symbol)
+      res <- private$.request(
         endpoint = paste0("/api/v2/symbols/", symbol),
         auth = FALSE,
         .parser = as_dt_row
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarketData__get_symbol,
+        is_async = private$.is_async
       ))
     },
 
@@ -607,9 +601,11 @@ KucoinMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param market Character or NULL; market segment filter (e.g., `"USDS"`, `"BTC"`,
-    #'   `"KCS"`, `"DeFi"`). Use `get_market_list()` for available values.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with symbol metadata for all pairs. Same columns as `get_symbol()`.
+    #' @param market (scalar<character> | NULL) market segment filter (e.g.,
+    #'   `"USDS"`, `"BTC"`, `"KCS"`, `"DeFi"`). Use `get_market_list()` for
+    #'   available values.
+    #' @return (data.table | promise<data.table>) one row per trading pair,
+    #'   carrying the same symbol metadata as `get_symbol()`.
     #'
     #' @examples
     #' \dontrun{
@@ -620,7 +616,8 @@ KucoinMarketData <- R6::R6Class(
     #' print(usdt_pairs[, .(symbol, base_min_size, price_increment)])
     #' }
     get_all_symbols = function(market = NULL) {
-      return(private$.request(
+      assert_args_KucoinMarketData__get_all_symbols(market)
+      res <- private$.request(
         endpoint = "/api/v2/symbols",
         query = list(market = market),
         auth = FALSE,
@@ -633,6 +630,11 @@ KucoinMarketData <- R6::R6Class(
             fill = TRUE
           )[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarketData__get_all_symbols,
+        is_async = private$.is_async
       ))
     },
 
@@ -683,16 +685,11 @@ KucoinMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character; trading symbol (e.g., `"BTC-USDT"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `time` (POSIXct): Server datetime (coerced from epoch milliseconds).
-    #'   - `sequence` (character): Order book sequence number.
-    #'   - `price` (character): Last trade price.
-    #'   - `size` (character): Last trade size.
-    #'   - `best_bid` (character): Best bid price.
-    #'   - `best_bid_size` (character): Size at best bid.
-    #'   - `best_ask` (character): Best ask price.
-    #'   - `best_ask_size` (character): Size at best ask.
+    #' @param symbol (scalar<character>) trading symbol (e.g., `"BTC-USDT"`).
+    #' @return (data.table | promise<data.table>) one row giving the Level 1
+    #'   snapshot: server datetime (POSIXct, coerced from epoch milliseconds), the
+    #'   order book sequence number, the last trade price and size, and the best
+    #'   bid and ask prices with their sizes.
     #'
     #' @examples
     #' \dontrun{
@@ -702,7 +699,9 @@ KucoinMarketData <- R6::R6Class(
     #' print(paste("Spread:", spread))
     #' }
     get_ticker = function(symbol) {
-      return(private$.request(
+      assert_args_KucoinMarketData__get_ticker(symbol)
+      assert::assert_nonempty_strings(symbol)
+      res <- private$.request(
         endpoint = "/api/v1/market/orderbook/level1",
         query = list(symbol = symbol),
         auth = FALSE,
@@ -714,6 +713,11 @@ KucoinMarketData <- R6::R6Class(
           }
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarketData__get_ticker,
+        is_async = private$.is_async
       ))
     },
 
@@ -778,24 +782,12 @@ KucoinMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `symbol` (character): Trading pair.
-    #'   - `symbol_name` (character): Display name.
-    #'   - `buy` (character): Best bid price.
-    #'   - `best_bid_size` (character): Size at best bid.
-    #'   - `sell` (character): Best ask price.
-    #'   - `best_ask_size` (character): Size at best ask.
-    #'   - `change_rate` (character): 24h price change rate.
-    #'   - `change_price` (character): 24h price change amount.
-    #'   - `high` (character): 24h high price.
-    #'   - `low` (character): 24h low price.
-    #'   - `vol` (character): 24h volume in base currency.
-    #'   - `vol_value` (character): 24h volume in quote currency.
-    #'   - `last` (character): Last trade price.
-    #'   - `average_price` (character): 24h average price.
-    #'   - `taker_fee_rate` (character): Taker fee rate.
-    #'   - `maker_fee_rate` (character): Maker fee rate.
-    #'   - `time` (POSIXct): Snapshot datetime (coerced from epoch milliseconds).
+    #' @return (data.table | promise<data.table>) one row per trading pair, each
+    #'   giving the pair symbol and display name, the best bid and ask prices with
+    #'   their sizes, the 24-hour change rate and amount, the 24-hour high, low,
+    #'   base-currency volume and quote-currency volume, the last trade and average
+    #'   prices, the taker and maker fee rates, and the snapshot datetime (POSIXct,
+    #'   coerced from epoch milliseconds).
     #'
     #' @examples
     #' \dontrun{
@@ -807,7 +799,7 @@ KucoinMarketData <- R6::R6Class(
     #' print(top10[, .(symbol, vol_value, change_rate)])
     #' }
     get_all_tickers = function() {
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/market/allTickers",
         auth = FALSE,
         .parser = function(data) {
@@ -824,6 +816,11 @@ KucoinMarketData <- R6::R6Class(
           data.table::setcolorder(dt, c("symbol", "symbol_name"))
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarketData__get_all_tickers,
+        is_async = private$.is_async
       ))
     },
 
@@ -873,13 +870,11 @@ KucoinMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character; trading symbol (e.g., `"BTC-USDT"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `sequence` (character): Trade sequence number.
-    #'   - `price` (character): Trade price.
-    #'   - `size` (character): Trade quantity.
-    #'   - `side` (character): Trade direction (`"buy"` or `"sell"`).
-    #'   - `time` (POSIXct): Trade datetime (coerced from nanosecond timestamp).
+    #' @param symbol (scalar<character>) trading symbol (e.g., `"BTC-USDT"`).
+    #' @return (data.table | promise<data.table>) one row per recent trade, each
+    #'   giving the trade sequence number, price, quantity, direction (`"buy"` or
+    #'   `"sell"`), and the trade datetime (POSIXct, coerced from the nanosecond
+    #'   timestamp).
     #'
     #' @examples
     #' \dontrun{
@@ -891,7 +886,9 @@ KucoinMarketData <- R6::R6Class(
     #' print(paste("Buy/Sell ratio:", round(buys / sells, 3)))
     #' }
     get_trade_history = function(symbol) {
-      return(private$.request(
+      assert_args_KucoinMarketData__get_trade_history(symbol)
+      assert::assert_nonempty_strings(symbol)
+      res <- private$.request(
         endpoint = "/api/v1/market/histories",
         query = list(symbol = symbol),
         auth = FALSE,
@@ -909,6 +906,11 @@ KucoinMarketData <- R6::R6Class(
           data.table::setcolorder(dt, c("sequence", "side", "price", "size", "time"))
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarketData__get_trade_history,
+        is_async = private$.is_async
       ))
     },
 
@@ -956,16 +958,11 @@ KucoinMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character; trading symbol (e.g., `"BTC-USDT"`).
-    #' @param size Integer; depth levels: `20` or `100` (default `20`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) in long format with columns:
-    #'   - `time` (POSIXct): Server timestamp (coerced from epoch milliseconds).
-    #'   - `sequence` (character): Order book sequence number.
-    #'   - `side` (character): `"bid"` or `"ask"`.
-    #'   - `level` (integer): 1-indexed depth from top-of-book within the side
-    #'     (`level == 1` is best bid / best ask).
-    #'   - `price` (numeric): Price level.
-    #'   - `size` (numeric): Size at that price.
+    #' @noassert size
+    #' @param symbol (scalar<character>) trading symbol (e.g., `"BTC-USDT"`).
+    #' @param size (scalar<count>) depth levels: `20` or `100` (default `20`).
+    #' @return (Orderbook | promise<Orderbook>) one row per price level per side,
+    #'   best price first.
     #'
     #' @examples
     #' \dontrun{
@@ -976,15 +973,22 @@ KucoinMarketData <- R6::R6Class(
     #' print(paste("Best bid:", best_bid$price, "Best ask:", best_ask$price))
     #' }
     get_part_orderbook = function(symbol, size = 20) {
+      assert_args_KucoinMarketData__get_part_orderbook(symbol)
+      assert::assert_nonempty_strings(symbol)
       if (!size %in% c(20, 100)) {
         rlang::abort("Parameter 'size' must be 20 or 100.")
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = paste0("/api/v1/market/orderbook/level2_", size),
         query = list(symbol = symbol),
         auth = FALSE,
         .parser = parse_orderbook
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarketData__get_part_orderbook,
+        is_async = private$.is_async
       ))
     },
 
@@ -1035,15 +1039,9 @@ KucoinMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character; trading symbol (e.g., `"BTC-USDT"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) in long format with columns:
-    #'   - `time` (POSIXct): Server timestamp (coerced from epoch milliseconds).
-    #'   - `sequence` (character): Order book sequence number.
-    #'   - `side` (character): `"bid"` or `"ask"`.
-    #'   - `level` (integer): 1-indexed depth from top-of-book within the side
-    #'     (`level == 1` is best bid / best ask).
-    #'   - `price` (numeric): Price level.
-    #'   - `size` (numeric): Size at that price.
+    #' @param symbol (scalar<character>) trading symbol (e.g., `"BTC-USDT"`).
+    #' @return (Orderbook | promise<Orderbook>) one row per price level per side,
+    #'   best price first.
     #'
     #' @examples
     #' \dontrun{
@@ -1054,11 +1052,18 @@ KucoinMarketData <- R6::R6Class(
     #' print(paste("Total bid depth:", total_bid_volume, "BTC"))
     #' }
     get_full_orderbook = function(symbol) {
-      return(private$.request(
+      assert_args_KucoinMarketData__get_full_orderbook(symbol)
+      assert::assert_nonempty_strings(symbol)
+      res <- private$.request(
         endpoint = "/api/v3/market/orderbook/level2",
         query = list(symbol = symbol),
         auth = TRUE,
         .parser = parse_orderbook
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarketData__get_full_orderbook,
+        is_async = private$.is_async
       ))
     },
 
@@ -1117,22 +1122,13 @@ KucoinMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character; trading symbol (e.g., `"BTC-USDT"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `time` (POSIXct): Server datetime (coerced from epoch milliseconds).
-    #'   - `symbol` (character): Trading pair.
-    #'   - `buy` (character): Best bid price.
-    #'   - `sell` (character): Best ask price.
-    #'   - `change_rate` (character): 24h price change rate (decimal, e.g., `"-0.0114"`).
-    #'   - `change_price` (character): 24h price change amount.
-    #'   - `high` (character): 24h high price.
-    #'   - `low` (character): 24h low price.
-    #'   - `vol` (character): 24h volume in base currency.
-    #'   - `vol_value` (character): 24h volume in quote currency.
-    #'   - `last` (character): Last trade price.
-    #'   - `average_price` (character): 24h average price.
-    #'   - `taker_fee_rate` (character): Taker fee rate.
-    #'   - `maker_fee_rate` (character): Maker fee rate.
+    #' @param symbol (scalar<character>) trading symbol (e.g., `"BTC-USDT"`).
+    #' @return (data.table | promise<data.table>) one row giving the rolling
+    #'   24-hour statistics: server datetime (POSIXct, coerced from epoch
+    #'   milliseconds), the trading pair, the best bid and ask prices, the 24-hour
+    #'   change rate and amount, the 24-hour high, low, base-currency volume and
+    #'   quote-currency volume, the last trade and average prices, and the taker
+    #'   and maker fee rates.
     #'
     #' @examples
     #' \dontrun{
@@ -1142,7 +1138,9 @@ KucoinMarketData <- R6::R6Class(
     #' print(paste("24h range:", range, "USDT"))
     #' }
     get_24hr_stats = function(symbol) {
-      return(private$.request(
+      assert_args_KucoinMarketData__get_24hr_stats(symbol)
+      assert::assert_nonempty_strings(symbol)
+      res <- private$.request(
         endpoint = "/api/v1/market/stats",
         query = list(symbol = symbol),
         auth = FALSE,
@@ -1154,6 +1152,11 @@ KucoinMarketData <- R6::R6Class(
           }
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarketData__get_24hr_stats,
+        is_async = private$.is_async
       ))
     },
 
@@ -1194,7 +1197,8 @@ KucoinMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with column `market` containing segment identifiers.
+    #' @return (data.table | promise<data.table>) one row per market segment:
+    #' - market (character) the segment identifier, e.g. `"USDS"`, `"DeFi"`.
     #'
     #' @examples
     #' \dontrun{
@@ -1205,12 +1209,17 @@ KucoinMarketData <- R6::R6Class(
     #' defi_symbols <- market$get_all_symbols(market = "DeFi")
     #' }
     get_market_list = function() {
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/markets",
         auth = FALSE,
         .parser = function(data) {
           return(data.table::data.table(market = as.character(unlist(data)))[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarketData__get_market_list,
+        is_async = private$.is_async
       ))
     },
 
@@ -1261,22 +1270,16 @@ KucoinMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`).
-    #' @param timeframe Character; candle interval. One of:
+    #' @noassert from, to
+    #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
+    #' @param timeframe (scalar<character>) candle interval. One of:
     #'   `"1min"`, `"3min"`, `"5min"`, `"15min"`, `"30min"`,
     #'   `"1hour"`, `"2hour"`, `"4hour"`, `"6hour"`, `"8hour"`, `"12hour"`,
     #'   `"1day"`, `"1week"`, `"1month"`. Default `"15min"`.
-    #' @param from POSIXct or NULL; start time. When both `from` and `to` are
-    #'   `NULL`, the API returns up to 1500 most recent candles.
-    #' @param to POSIXct or NULL; end time.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `datetime` (POSIXct): Candle open datetime.
-    #'   - `open` (numeric): Opening price.
-    #'   - `high` (numeric): Highest price.
-    #'   - `low` (numeric): Lowest price.
-    #'   - `close` (numeric): Closing price.
-    #'   - `volume` (numeric): Volume in base currency.
-    #'   - `turnover` (numeric): Turnover in quote currency.
+    #' @param from (POSIXct | scalar<numeric> | NULL) start time. When both `from`
+    #'   and `to` are `NULL`, the API returns up to 1500 most recent candles.
+    #' @param to (POSIXct | scalar<numeric> | NULL) end time.
+    #' @return (Klines | promise<Klines>) one row per candle ascending by datetime.
     #'
     #' @examples
     #' \dontrun{
@@ -1301,12 +1304,19 @@ KucoinMarketData <- R6::R6Class(
       from = NULL,
       to = NULL
     ) {
-      return(kucoin_fetch_klines(
+      assert_args_KucoinMarketData__get_klines(symbol, timeframe)
+      assert::assert_nonempty_strings(symbol)
+      res <- kucoin_fetch_klines(
         symbol = symbol,
         timeframe = timeframe,
         from = from,
         to = to,
         .req_fn = private$.request,
+        is_async = private$.is_async
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarketData__get_klines,
         is_async = private$.is_async
       ))
     },
@@ -1345,9 +1355,9 @@ KucoinMarketData <- R6::R6Class(
     #' - **Auth Debugging**: KuCoin tolerates +/-5s; verify your timestamps are in range.
     #' - **Heartbeat**: Lightweight endpoint suitable for connectivity health checks.
     #'
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `server_time` (numeric): Server timestamp in milliseconds.
-    #'   - `datetime` (POSIXct): Converted server datetime.
+    #' @return (data.table | promise<data.table>) one row:
+    #' - server_time (numeric) the server clock in epoch milliseconds.
+    #' - datetime (POSIXct) the same instant as a POSIXct (UTC).
     #'
     #' @examples
     #' \dontrun{
@@ -1357,7 +1367,7 @@ KucoinMarketData <- R6::R6Class(
     #' cat("Clock drift:", round(drift), "ms\n")
     #' }
     get_server_time = function() {
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/timestamp",
         auth = FALSE,
         .parser = function(data) {
@@ -1367,6 +1377,11 @@ KucoinMarketData <- R6::R6Class(
             datetime = ms_to_datetime(ts)
           )[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarketData__get_server_time,
+        is_async = private$.is_async
       ))
     },
 
@@ -1406,9 +1421,9 @@ KucoinMarketData <- R6::R6Class(
     #' - **Maintenance Detection**: Detect `"close"` status to pause bot activity.
     #' - **Cancel-Only Mode**: Detect `"cancelonly"` to only run cancellation logic.
     #'
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `status` (character): `"open"`, `"close"`, or `"cancelonly"`.
-    #'   - `msg` (character): Optional remark/message.
+    #' @return (data.table | promise<data.table>) one row giving the operational
+    #'   status (`"open"`, `"close"`, or `"cancelonly"`) and an optional
+    #'   remark/message.
     #'
     #' @examples
     #' \dontrun{
@@ -1419,10 +1434,15 @@ KucoinMarketData <- R6::R6Class(
     #' }
     #' }
     get_service_status = function() {
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/status",
         auth = FALSE,
         .parser = as_dt_row
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarketData__get_service_status,
+        is_async = private$.is_async
       ))
     },
 
@@ -1463,12 +1483,12 @@ KucoinMarketData <- R6::R6Class(
     #' - **Position Sizing**: Size positions in native fiat currency terms.
     #' - **PnL Reporting**: Calculate profit/loss in fiat for accounting.
     #'
-    #' @param base Character or NULL; fiat currency ticker (e.g., `"USD"`, `"EUR"`). Default `"USD"`.
-    #' @param currencies Character or NULL; comma-separated crypto tickers to convert
-    #'   (e.g., `"BTC,ETH,USDT"`). If NULL, returns all available.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `currency` (character): Cryptocurrency ticker.
-    #'   - `price` (character): Fiat price as string.
+    #' @param base (scalar<character> | NULL) fiat currency ticker (e.g.,
+    #'   `"USD"`, `"EUR"`). Default `"USD"`.
+    #' @param currencies (scalar<character> | NULL) comma-separated crypto tickers
+    #'   to convert (e.g., `"BTC,ETH,USDT"`). If NULL, returns all available.
+    #' @return (data.table | promise<data.table>) one row per cryptocurrency,
+    #'   giving its ticker and fiat price as a string.
     #'
     #' @examples
     #' \dontrun{
@@ -1477,7 +1497,8 @@ KucoinMarketData <- R6::R6Class(
     #' print(prices)
     #' }
     get_fiat_prices = function(base = NULL, currencies = NULL) {
-      return(private$.request(
+      assert_args_KucoinMarketData__get_fiat_prices(base, currencies)
+      res <- private$.request(
         endpoint = "/api/v1/prices",
         query = list(base = base, currencies = currencies),
         auth = FALSE,
@@ -1490,6 +1511,11 @@ KucoinMarketData <- R6::R6Class(
             price = as.character(unlist(data))
           )[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarketData__get_fiat_prices,
+        is_async = private$.is_async
       ))
     }
   )

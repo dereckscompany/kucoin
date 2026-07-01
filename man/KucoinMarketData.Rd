@@ -18,14 +18,16 @@ asynchronous execution depending on the \code{async} parameter at construction.
 \subsection{Purpose and Scope}{
 \itemize{
 \item \strong{Announcements}: Fetch paginated KuCoin platform announcements filtered by type, language, and date range.
-\item \strong{Currencies}: Retrieve metadata for individual or all listed currencies, including chain-specific deposit/withdrawal details.
+\item \strong{Currencies}: Retrieve metadata for individual or all listed currencies, including chain-specific
+deposit/withdrawal details.
 \item \strong{Symbols}: Retrieve trading pair metadata including precision, size limits, fee rates, and trading status.
 \item \strong{Tickers}: Access real-time Level 1 best bid/ask data for individual symbols or all pairs.
 \item \strong{Order Books}: Get partial (20/100 levels) or full depth order book snapshots.
 \item \strong{Trade History}: Retrieve the most recent 100 trades for any symbol.
 \item \strong{24hr Statistics}: Get rolling 24-hour market statistics (OHLCV, change rate, fees).
 \item \strong{Market List}: Discover all available market segments (e.g., USDS, DeFi, Meme).
-\item \strong{Klines}: Fetch historical candlestick data with automatic time-range segmentation to bypass the 1500-candle-per-request limit.
+\item \strong{Klines}: Fetch historical candlestick data with automatic time-range segmentation to bypass the
+1500-candle-per-request limit.
 }
 }
 
@@ -395,41 +397,25 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{query}}{Named list; filter parameters:
-\itemize{
-\item \code{annType} (character): Announcement type filter (e.g., \code{"latest-announcements"},
-\code{"activities"}, \code{"new-listings"}, \code{"product-updates"}).
-\item \code{lang} (character): Language code (e.g., \code{"en_US"}, \code{"zh_CN"}).
-\item \code{startTime} (integer): Start timestamp in milliseconds.
-\item \code{endTime} (integer): End timestamp in milliseconds.
-}}
+\item{\code{query}}{(list) filter parameters. Supported keys: \code{annType}
+(announcement type filter e.g. \code{"latest-announcements"}, \code{"activities"},
+\code{"new-listings"}, \code{"product-updates"}), \code{lang} (language code e.g.
+\code{"en_US"}, \code{"zh_CN"}), \code{startTime} (start timestamp in milliseconds), and
+\code{endTime} (end timestamp in milliseconds).}
 
-\item{\code{page_size}}{Integer; results per page (default 50, max 100).}
+\item{\code{page_size}}{(scalar<count in [1, Inf[>) results per page (default 50,
+max 100).}
 
-\item{\code{max_pages}}{Numeric; max pages to fetch (default \code{Inf} for all).}
+\item{\code{max_pages}}{(scalar<numeric in [1, Inf]>) maximum number of pages to
+fetch (default \code{Inf} for all).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{ann_id} (integer): Announcement identifier.
-\item \code{ann_title} (character): Announcement title.
-\item \code{ann_type} (character): \verb{;}-separated category tags for the
-announcement. KuCoin returns \code{annType} as an array; the parser
-collapses it to a single character column via the shared
-\code{collapse_string_array_fields()} helper (Treatment A —
-matches the cross-package convention used by alpaca/binance
-for plain-string arrays). Filter with
-\code{grepl("latest-announcements", ann_type, fixed = TRUE)};
-recover the vector via
-\code{strsplit(ann_type, ";", fixed = TRUE)[[1]]}. \code{NA_character_}
-if KuCoin returned no tags.
-\item \code{ann_desc} (character): Short description text.
-\item \code{c_time} (POSIXct): Creation datetime (coerced from epoch milliseconds).
-\item \code{language} (character): Language code.
-\item \code{ann_url} (character): Full URL to the announcement page.
-}
+(data.table | promise<data.table>) one row per announcement, each
+giving the announcement ID, title, \verb{;}-separated category tags, short
+description, creation datetime (POSIXct, coerced from epoch milliseconds),
+language code, and the full announcement URL.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -540,34 +526,22 @@ and \code{withdraw_precision} before submitting withdrawals.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"ETH"}, \code{"USDT"}).}
+\item{\code{currency}}{(scalar<character>) currency code (e.g., \code{"BTC"}, \code{"ETH"},
+\code{"USDT"}).}
 
-\item{\code{chain}}{Character or NULL; specific chain to filter (e.g., \code{"ERC20"}, \code{"TRC20"}).}
+\item{\code{chain}}{(scalar<character> | NULL) specific chain to filter (e.g.,
+\code{"ERC20"}, \code{"TRC20"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with currency metadata and chain details:
-\itemize{
-\item \code{currency} (character): Currency code.
-\item \code{name} (character): Short name.
-\item \code{full_name} (character): Full currency name.
-\item \code{precision} (integer): Decimal precision.
-\item \code{is_margin_enabled} (logical): Whether margin trading is supported.
-\item \code{is_debit_enabled} (logical): Whether debit is supported.
-\item \code{chain_name} (character): Blockchain network name.
-\item \code{withdrawal_min_size} (character): Minimum withdrawal amount.
-\item \code{deposit_min_size} (character): Minimum deposit amount.
-\item \code{withdrawal_min_fee} (character): Minimum withdrawal fee.
-\item \code{is_withdraw_enabled} (logical): Whether withdrawals are active.
-\item \code{is_deposit_enabled} (logical): Whether deposits are active.
-\item \code{confirms} (integer): Confirmations required.
-\item \code{pre_confirms} (integer): Pre-confirmations for early credit.
-\item \code{contract_address} (character): Token contract address.
-\item \code{withdraw_precision} (integer): Withdrawal decimal precision.
-\item \code{need_tag} (logical): Whether a memo/tag is required.
-\item \code{chain_id} (character): Chain identifier.
-}
+(data.table | promise<data.table>) one row per chain for the
+currency, each combining the currency metadata (code, short name, full
+name, precision, and the margin- and debit-enabled flags) with that
+chain's details (network name, minimum withdrawal/deposit sizes, minimum
+withdrawal fee, withdraw- and deposit-enabled flags, required and
+pre-confirmations, contract address, withdrawal precision, the memo/tag
+requirement flag, and chain identifier).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -667,8 +641,9 @@ Verified: 2026-05-23
 }
 
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with currency metadata
-and chain details. Same columns as \code{get_currency()}, one row per currency-chain combination.
+(data.table | promise<data.table>) one row per currency-chain
+combination, carrying the same currency metadata and chain details as
+\code{get_currency()}.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -766,31 +741,17 @@ accurate P&L estimation.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; trading symbol (e.g., \code{"BTC-USDT"}).}
+\item{\code{symbol}}{(scalar<character>) trading symbol (e.g., \code{"BTC-USDT"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with symbol metadata:
-\itemize{
-\item \code{symbol} (character): Trading pair identifier.
-\item \code{base_currency} (character): Base asset code.
-\item \code{quote_currency} (character): Quote asset code.
-\item \code{fee_currency} (character): Currency used for fees.
-\item \code{market} (character): Market segment.
-\item \code{base_min_size} (character): Minimum base order size.
-\item \code{quote_min_size} (character): Minimum quote order size.
-\item \code{base_max_size} (character): Maximum base order size.
-\item \code{base_increment} (character): Base size precision increment.
-\item \code{quote_increment} (character): Quote size precision increment.
-\item \code{price_increment} (character): Price tick size.
-\item \code{price_limit_rate} (character): Max price deviation rate.
-\item \code{min_funds} (character): Minimum order value in quote currency.
-\item \code{is_margin_enabled} (logical): Whether margin is available.
-\item \code{enable_trading} (logical): Whether trading is active.
-\item \code{maker_fee_coefficient} (character): Maker fee multiplier.
-\item \code{taker_fee_coefficient} (character): Taker fee multiplier.
-}
+(data.table | promise<data.table>) one row giving the symbol
+metadata: the pair identifier, base/quote/fee currencies, market segment,
+the base and quote minimum and maximum order sizes, the base and quote
+size increments, the price increment and price-limit rate, the minimum
+order value in quote currency, the margin- and trading-enabled flags, and
+the maker and taker fee coefficients.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -959,13 +920,15 @@ before placing orders.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{market}}{Character or NULL; market segment filter (e.g., \code{"USDS"}, \code{"BTC"},
-\code{"KCS"}, \code{"DeFi"}). Use \code{get_market_list()} for available values.}
+\item{\code{market}}{(scalar<character> | NULL) market segment filter (e.g.,
+\code{"USDS"}, \code{"BTC"}, \code{"KCS"}, \code{"DeFi"}). Use \code{get_market_list()} for
+available values.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with symbol metadata for all pairs. Same columns as \code{get_symbol()}.
+(data.table | promise<data.table>) one row per trading pair,
+carrying the same symbol metadata as \code{get_symbol()}.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1049,22 +1012,15 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; trading symbol (e.g., \code{"BTC-USDT"}).}
+\item{\code{symbol}}{(scalar<character>) trading symbol (e.g., \code{"BTC-USDT"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{time} (POSIXct): Server datetime (coerced from epoch milliseconds).
-\item \code{sequence} (character): Order book sequence number.
-\item \code{price} (character): Last trade price.
-\item \code{size} (character): Last trade size.
-\item \code{best_bid} (character): Best bid price.
-\item \code{best_bid_size} (character): Size at best bid.
-\item \code{best_ask} (character): Best ask price.
-\item \code{best_ask_size} (character): Size at best ask.
-}
+(data.table | promise<data.table>) one row giving the Level 1
+snapshot: server datetime (POSIXct, coerced from epoch milliseconds), the
+order book sequence number, the last trade price and size, and the best
+bid and ask prices with their sizes.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1159,26 +1115,12 @@ Verified: 2026-05-23
 }
 
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{symbol} (character): Trading pair.
-\item \code{symbol_name} (character): Display name.
-\item \code{buy} (character): Best bid price.
-\item \code{best_bid_size} (character): Size at best bid.
-\item \code{sell} (character): Best ask price.
-\item \code{best_ask_size} (character): Size at best ask.
-\item \code{change_rate} (character): 24h price change rate.
-\item \code{change_price} (character): 24h price change amount.
-\item \code{high} (character): 24h high price.
-\item \code{low} (character): 24h low price.
-\item \code{vol} (character): 24h volume in base currency.
-\item \code{vol_value} (character): 24h volume in quote currency.
-\item \code{last} (character): Last trade price.
-\item \code{average_price} (character): 24h average price.
-\item \code{taker_fee_rate} (character): Taker fee rate.
-\item \code{maker_fee_rate} (character): Maker fee rate.
-\item \code{time} (POSIXct): Snapshot datetime (coerced from epoch milliseconds).
-}
+(data.table | promise<data.table>) one row per trading pair, each
+giving the pair symbol and display name, the best bid and ask prices with
+their sizes, the 24-hour change rate and amount, the 24-hour high, low,
+base-currency volume and quote-currency volume, the last trade and average
+prices, the taker and maker fee rates, and the snapshot datetime (POSIXct,
+coerced from epoch milliseconds).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1262,19 +1204,15 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; trading symbol (e.g., \code{"BTC-USDT"}).}
+\item{\code{symbol}}{(scalar<character>) trading symbol (e.g., \code{"BTC-USDT"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{sequence} (character): Trade sequence number.
-\item \code{price} (character): Trade price.
-\item \code{size} (character): Trade quantity.
-\item \code{side} (character): Trade direction (\code{"buy"} or \code{"sell"}).
-\item \code{time} (POSIXct): Trade datetime (coerced from nanosecond timestamp).
-}
+(data.table | promise<data.table>) one row per recent trade, each
+giving the trade sequence number, price, quantity, direction (\code{"buy"} or
+\code{"sell"}), and the trade datetime (POSIXct, coerced from the nanosecond
+timestamp).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1356,23 +1294,15 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; trading symbol (e.g., \code{"BTC-USDT"}).}
+\item{\code{symbol}}{(scalar<character>) trading symbol (e.g., \code{"BTC-USDT"}).}
 
-\item{\code{size}}{Integer; depth levels: \code{20} or \code{100} (default \code{20}).}
+\item{\code{size}}{(scalar<count>) depth levels: \code{20} or \code{100} (default \code{20}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) in long format with columns:
-\itemize{
-\item \code{time} (POSIXct): Server timestamp (coerced from epoch milliseconds).
-\item \code{sequence} (character): Order book sequence number.
-\item \code{side} (character): \code{"bid"} or \code{"ask"}.
-\item \code{level} (integer): 1-indexed depth from top-of-book within the side
-(\code{level == 1} is best bid / best ask).
-\item \code{price} (numeric): Price level.
-\item \code{size} (numeric): Size at that price.
-}
+(Orderbook | promise<Orderbook>) one row per price level per side,
+best price first.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1456,21 +1386,13 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; trading symbol (e.g., \code{"BTC-USDT"}).}
+\item{\code{symbol}}{(scalar<character>) trading symbol (e.g., \code{"BTC-USDT"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) in long format with columns:
-\itemize{
-\item \code{time} (POSIXct): Server timestamp (coerced from epoch milliseconds).
-\item \code{sequence} (character): Order book sequence number.
-\item \code{side} (character): \code{"bid"} or \code{"ask"}.
-\item \code{level} (integer): 1-indexed depth from top-of-book within the side
-(\code{level == 1} is best bid / best ask).
-\item \code{price} (numeric): Price level.
-\item \code{size} (numeric): Size at that price.
-}
+(Orderbook | promise<Orderbook>) one row per price level per side,
+best price first.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1562,28 +1484,17 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; trading symbol (e.g., \code{"BTC-USDT"}).}
+\item{\code{symbol}}{(scalar<character>) trading symbol (e.g., \code{"BTC-USDT"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{time} (POSIXct): Server datetime (coerced from epoch milliseconds).
-\item \code{symbol} (character): Trading pair.
-\item \code{buy} (character): Best bid price.
-\item \code{sell} (character): Best ask price.
-\item \code{change_rate} (character): 24h price change rate (decimal, e.g., \code{"-0.0114"}).
-\item \code{change_price} (character): 24h price change amount.
-\item \code{high} (character): 24h high price.
-\item \code{low} (character): 24h low price.
-\item \code{vol} (character): 24h volume in base currency.
-\item \code{vol_value} (character): 24h volume in quote currency.
-\item \code{last} (character): Last trade price.
-\item \code{average_price} (character): 24h average price.
-\item \code{taker_fee_rate} (character): Taker fee rate.
-\item \code{maker_fee_rate} (character): Maker fee rate.
-}
+(data.table | promise<data.table>) one row giving the rolling
+24-hour statistics: server datetime (POSIXct, coerced from epoch
+milliseconds), the trading pair, the best bid and ask prices, the 24-hour
+change rate and amount, the 24-hour high, low, base-currency volume and
+quote-currency volume, the last trade and average prices, and the taker
+and maker fee rates.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1654,7 +1565,10 @@ Verified: 2026-05-23
 }
 
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with column \code{market} containing segment identifiers.
+(data.table | promise<data.table>) one row per market segment:
+\itemize{
+\item market (character) the segment identifier, e.g. \code{"USDS"}, \code{"DeFi"}.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1744,31 +1658,22 @@ Each candle is an array: \verb{[timestamp, open, close, high, low, volume, turno
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
+\item{\code{symbol}}{(scalar<character>) trading pair (e.g., \code{"BTC-USDT"}).}
 
-\item{\code{timeframe}}{Character; candle interval. One of:
+\item{\code{timeframe}}{(scalar<character>) candle interval. One of:
 \code{"1min"}, \code{"3min"}, \code{"5min"}, \code{"15min"}, \code{"30min"},
 \code{"1hour"}, \code{"2hour"}, \code{"4hour"}, \code{"6hour"}, \code{"8hour"}, \code{"12hour"},
 \code{"1day"}, \code{"1week"}, \code{"1month"}. Default \code{"15min"}.}
 
-\item{\code{from}}{POSIXct or NULL; start time. When both \code{from} and \code{to} are
-\code{NULL}, the API returns up to 1500 most recent candles.}
+\item{\code{from}}{(POSIXct | scalar<numeric> | NULL) start time. When both \code{from}
+and \code{to} are \code{NULL}, the API returns up to 1500 most recent candles.}
 
-\item{\code{to}}{POSIXct or NULL; end time.}
+\item{\code{to}}{(POSIXct | scalar<numeric> | NULL) end time.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{datetime} (POSIXct): Candle open datetime.
-\item \code{open} (numeric): Opening price.
-\item \code{high} (numeric): Highest price.
-\item \code{low} (numeric): Lowest price.
-\item \code{close} (numeric): Closing price.
-\item \code{volume} (numeric): Volume in base currency.
-\item \code{turnover} (numeric): Turnover in quote currency.
-}
+(Klines | promise<Klines>) one row per candle ascending by datetime.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1841,10 +1746,10 @@ Verified: 2026-05-23
 }
 
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+(data.table | promise<data.table>) one row:
 \itemize{
-\item \code{server_time} (numeric): Server timestamp in milliseconds.
-\item \code{datetime} (POSIXct): Converted server datetime.
+\item server_time (numeric) the server clock in epoch milliseconds.
+\item datetime (POSIXct) the same instant as a POSIXct (UTC).
 }
 }
 \subsection{Examples}{
@@ -1912,11 +1817,9 @@ Verified: 2026-05-23
 }
 
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{status} (character): \code{"open"}, \code{"close"}, or \code{"cancelonly"}.
-\item \code{msg} (character): Optional remark/message.
-}
+(data.table | promise<data.table>) one row giving the operational
+status (\code{"open"}, \code{"close"}, or \code{"cancelonly"}) and an optional
+remark/message.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1987,19 +1890,17 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{base}}{Character or NULL; fiat currency ticker (e.g., \code{"USD"}, \code{"EUR"}). Default \code{"USD"}.}
+\item{\code{base}}{(scalar<character> | NULL) fiat currency ticker (e.g.,
+\code{"USD"}, \code{"EUR"}). Default \code{"USD"}.}
 
-\item{\code{currencies}}{Character or NULL; comma-separated crypto tickers to convert
-(e.g., \code{"BTC,ETH,USDT"}). If NULL, returns all available.}
+\item{\code{currencies}}{(scalar<character> | NULL) comma-separated crypto tickers
+to convert (e.g., \code{"BTC,ETH,USDT"}). If NULL, returns all available.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{currency} (character): Cryptocurrency ticker.
-\item \code{price} (character): Fiat price as string.
-}
+(data.table | promise<data.table>) one row per cryptocurrency,
+giving its ticker and fiat price as a string.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

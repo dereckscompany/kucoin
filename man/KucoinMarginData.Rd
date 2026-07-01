@@ -155,7 +155,8 @@ including increment sizes, min/max order sizes, and fee information.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-symbols-cross-margin}{KuCoin Get Cross Margin Symbols}
+KuCoin Get Cross Margin Symbols:
+\url{https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-symbols-cross-margin}
 
 Verified: 2026-05-23
 }
@@ -209,37 +210,14 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{query}}{Named list; optional. Supported keys:
-\itemize{
-\item \code{symbol} (character): Filter by specific symbol (e.g., \code{"BTC-USDT"}).
-}}
+\item{\code{query}}{(list)}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
-with \strong{one row per cross-margin symbol} and the following columns
-(subset shown — KuCoin may add fields):
-\itemize{
-\item \code{symbol} (character): Trading pair identifier (e.g. \code{"BTC-USDT"}).
-\item \code{name} (character): Display name.
-\item \code{enable_trading} (logical): Whether trading is enabled.
-\item \code{market} (character): Market category (e.g. \code{"USDS"}).
-\item \code{base_currency} (character): Base asset code.
-\item \code{quote_currency} (character): Quote asset code.
-\item \code{base_increment} (character): Minimum base-quantity step.
-\item \code{base_min_size} (character): Minimum order base quantity.
-\item \code{base_max_size} (character): Maximum order base quantity.
-\item \code{quote_increment} (character): Minimum quote-quantity step.
-\item \code{quote_min_size} (character): Minimum order quote quantity.
-\item \code{quote_max_size} (character): Maximum order quote quantity.
-\item \code{price_increment} (character): Minimum price step.
-\item \code{fee_currency} (character): Currency charged for trading fees.
-\item \code{price_limit_rate} (character): Maximum allowed price deviation.
-\item \code{min_funds} (character): Minimum order notional.
-}
-
-Empty response yields an empty \code{data.table}.
+(data.table | promise<data.table>) one row per cross-margin symbol with trading-pair identifiers, base
+and quote currencies, increment and min/max order sizes, fee currency, price-limit rate, and minimum funds; an
+empty response yields an empty data.table.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -269,7 +247,8 @@ leverage limits, debt ratios, and borrowing parameters per pair.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-symbols-isolated-margin}{KuCoin Get Isolated Margin Symbols}
+KuCoin Get Isolated Margin Symbols:
+\url{https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-symbols-isolated-margin}
 
 Verified: 2026-05-23
 }
@@ -313,23 +292,9 @@ Verified: 2026-05-23
 }
 
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
-with \strong{one row per isolated-margin pair} and columns:
-\itemize{
-\item \code{symbol} (character): Trading pair identifier.
-\item \code{symbol_name} (character): Display name.
-\item \code{base_currency} (character): Base asset code.
-\item \code{quote_currency} (character): Quote asset code.
-\item \code{max_leverage} (integer): Maximum leverage available.
-\item \code{fl_debt_ratio} (character): Forced-liquidation debt ratio.
-\item \code{trade_enable} (logical): Whether trading is enabled.
-\item \code{base_borrow_enable} (logical): Base-currency borrow allowed.
-\item \code{quote_borrow_enable} (logical): Quote-currency borrow allowed.
-\item \code{base_transfer_in_enable} (logical): Base-currency transfer-in allowed.
-\item \code{quote_transfer_in_enable} (logical): Quote-currency transfer-in allowed.
-}
-
-Empty response yields an empty \code{data.table}.
+(data.table | promise<data.table>) one row per isolated-margin pair with the trading-pair identifier,
+display name, base and quote currencies, maximum leverage, forced-liquidation debt ratio, and the trade, borrow
+and transfer-in enablement flags; an empty response yields an empty data.table.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -395,18 +360,9 @@ Verified: 2026-05-23
 }
 
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
-with \strong{one row per supported currency} (the \code{currencyList} array is
-exploded so each currency gets its own row with the config-level fields
-replicated). Columns:
-\itemize{
-\item \code{currency} (character): Supported margin currency (e.g. \code{"BTC"}).
-\item \code{max_leverage} (integer): Maximum leverage.
-\item \code{warning_debt_ratio} (character): Warning debt ratio.
-\item \code{liq_debt_ratio} (character): Liquidation debt ratio.
-}
-
-Empty \code{currencyList} yields a zero-row \code{data.table} with this schema.
+(data.table | promise<data.table>) one row per supported currency, with the \code{currencyList} array exploded
+so each currency carries the replicated config-level fields for maximum leverage, warning debt ratio and
+liquidation debt ratio; an empty \code{currencyList} yields a zero-row data.table with this schema.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -437,7 +393,8 @@ has multiple tiers based on collateral amount ranges.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-margin-collateral-ratio}{KuCoin Get Collateral Ratio}
+KuCoin Get Collateral Ratio:
+\url{https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-margin-collateral-ratio}
 
 Verified: 2026-05-23
 }
@@ -480,26 +437,15 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{query}}{Named list; optional. Supported keys:
-\itemize{
-\item \code{currencyList} (character): Comma-separated currencies (e.g., \code{"BTC,ETH"}).
-}}
+\item{\code{query}}{(list)}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
-with \strong{one row per (currency, tier) pair}. The nested
-\code{currencyList}/\code{items} arrays are cross-joined to a flat long table.
-Columns:
-\itemize{
-\item \code{currency} (character): Currency code.
-\item \code{lower_limit} (character): Lower bound of the collateral range.
-\item \code{upper_limit} (character): Upper bound of the collateral range.
-\item \code{collateral_ratio} (character): Ratio applied in that range.
-}
-
-Empty response yields a zero-row \code{data.table} with this schema.
+(data.table | promise<data.table>) one row per (currency, tier) pair, with the nested \code{currencyList} and
+\code{items} arrays cross-joined into a flat long table carrying the currency code, lower and upper bounds of the
+collateral range, and the collateral ratio applied in that range; an empty response yields a zero-row
+data.table with this schema.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -576,35 +522,17 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{isIsolated}}{Logical; \code{TRUE} for isolated margin limits, \code{FALSE} for cross margin.}
+\item{\code{isIsolated}}{(scalar<logical>)}
 
-\item{\code{query}}{Named list; optional additional filters. Supported keys:
-\itemize{
-\item \code{currency} (character): Currency filter (cross margin).
-\item \code{symbol} (character): Symbol filter (isolated margin only).
-}}
+\item{\code{query}}{(list)}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
-with \strong{one row per currency} (cross) or \strong{one row per (symbol, currency)
-pair} (isolated). Common columns:
-\itemize{
-\item \code{currency} (character): Currency code.
-\item \code{borrow_max_amount} (character): Maximum borrowable amount.
-\item \code{buy_max_amount} (character): Maximum buyable amount.
-\item \code{hold_max_amount} (character): Maximum hold amount.
-\item \code{borrow_coefficient} (character): Coefficient applied to borrows.
-\item \code{margin_coefficient} (character): Coefficient applied to margin.
-\item \code{precision} (integer): Decimal precision.
-\item \code{borrow_min_amount} (character): Minimum borrowable amount.
-\item \code{borrow_min_unit} (character): Minimum borrow step.
-\item \code{borrow_enabled} (logical): Whether borrowing is currently enabled.
-}
-
-For isolated margin an extra \code{symbol} (character) column is present.
-Empty response yields an empty \code{data.table}.
+(data.table | promise<data.table>) one row per currency (cross) or per (symbol, currency) pair
+(isolated), carrying the currency code, maximum borrow, buy and hold amounts, borrow and margin coefficients,
+decimal precision, minimum borrow amount and unit, and the borrow-enabled flag, with an extra \code{symbol} column
+for isolated margin; an empty response yields an empty data.table.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

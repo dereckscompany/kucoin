@@ -92,9 +92,12 @@ KucoinOcoOrders <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Take-Profit + Stop-Loss**: Place a sell OCO with `price` as take-profit and `stopPrice`/`limitPrice` as stop-loss to protect positions automatically.
-    #' - **Bracket Entry**: Use a buy OCO to enter a position at a limit price while also setting a stop-entry above resistance.
-    #' - **Client OID Tracking**: Set `clientOid` to a unique strategy identifier for programmatic order tracking and reconciliation.
+    #' - **Take-Profit + Stop-Loss**: Place a sell OCO with `price` as take-profit and `stopPrice`/`limitPrice` as
+    #'   stop-loss to protect positions automatically.
+    #' - **Bracket Entry**: Use a buy OCO to enter a position at a limit price while also setting a stop-entry above
+    #'   resistance.
+    #' - **Client OID Tracking**: Set `clientOid` to a unique strategy identifier for programmatic order tracking and
+    #'   reconciliation.
     #'
     #' ### curl
     #' ```
@@ -105,7 +108,9 @@ KucoinOcoOrders <- R6::R6Class(
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
     #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
     #'   --header 'KC-API-KEY-VERSION: 2' \
-    #'   --data-raw '{"symbol":"BTC-USDT","side":"sell","price":"110000","size":"0.0001","stopPrice":"90000","limitPrice":"89500","tradeType":"TRADE"}'
+    #'   --data-raw \
+    #'   '{"symbol":"BTC-USDT","side":"sell","price":"110000","size":"0.0001","stopPrice":"90000","limitPrice":"89500",
+    #'   "tradeType":"TRADE"}'
     #' ```
     #'
     #' ### JSON Response
@@ -118,24 +123,30 @@ KucoinOcoOrders <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`). Must match the
-    #'   `BASE-QUOTE` format validated by `verify_symbol()`.
-    #' @param side Character; order side, one of `"buy"` or `"sell"`.
-    #' @param price Character; limit order price for the take-profit leg.
-    #'   Must align with the symbol's `priceIncrement`.
-    #' @param size Character; order quantity in base currency (e.g., `"0.0001"` BTC).
-    #'   Must align with the symbol's `baseIncrement`.
-    #' @param stopPrice Character; trigger price for the stop-limit leg. When the
-    #'   market reaches this price, the stop-limit order is activated.
-    #' @param limitPrice Character; limit price for the stop-limit leg after the
-    #'   stop is triggered. This is the price at which the stop-limit order is placed.
-    #' @param clientOid Character or NULL; unique client-assigned order identifier
-    #'   (max 40 characters). Useful for idempotent order placement and tracking.
-    #' @param remark Character or NULL; order remarks or notes (max 20 characters).
-    #' @param tradeType Character; trade type, defaults to `"TRADE"` for spot trading.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `order_id` (character): KuCoin-assigned OCO order identifier.
-    #'   - `client_oid` (character): Client-provided order identifier (NA if not supplied).
+    #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`); must
+    #'   match the `BASE-QUOTE` format validated by `verify_symbol()`.
+    #' @param side (scalar<character>) order side, one of `"buy"` or `"sell"`.
+    #' @param price (scalar<numeric> | scalar<character>) limit order price for
+    #'   the take-profit leg; must align with the symbol's `priceIncrement`.
+    #' @param size (scalar<numeric> | scalar<character>) order quantity in base
+    #'   currency (e.g., `"0.0001"` BTC); must align with the symbol's
+    #'   `baseIncrement`.
+    #' @param stopPrice (scalar<numeric> | scalar<character>) trigger price for
+    #'   the stop-limit leg; when the market reaches this price the stop-limit
+    #'   order is activated.
+    #' @param limitPrice (scalar<numeric> | scalar<character>) limit price for the
+    #'   stop-limit leg after the stop is triggered; this is the price at which the
+    #'   stop-limit order is placed.
+    #' @param clientOid (scalar<character> | NULL) unique client-assigned order
+    #'   identifier (max 40 characters); useful for idempotent order placement and
+    #'   tracking.
+    #' @param remark (scalar<character> | NULL) order remarks or notes (max 20
+    #'   characters).
+    #' @param tradeType (scalar<character>) trade type, defaults to `"TRADE"` for
+    #'   spot trading.
+    #' @return (data.table | promise<data.table>) one row giving the
+    #'   KuCoin-assigned OCO order identifier and the client-provided order
+    #'   identifier (NA if not supplied).
     #'
     #' @examples
     #' \dontrun{
@@ -168,6 +179,17 @@ KucoinOcoOrders <- R6::R6Class(
       remark = NULL,
       tradeType = "TRADE"
     ) {
+      assert_args_KucoinOcoOrders__add_order(
+        symbol,
+        side,
+        price,
+        size,
+        stopPrice,
+        limitPrice,
+        clientOid,
+        remark,
+        tradeType
+      )
       if (!verify_symbol(symbol)) {
         rlang::abort("Parameter 'symbol' must be a valid ticker.")
       }
@@ -189,7 +211,7 @@ KucoinOcoOrders <- R6::R6Class(
         body$remark <- remark
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v3/oco/order",
         method = "POST",
         body = body,
@@ -201,6 +223,11 @@ KucoinOcoOrders <- R6::R6Class(
           data.table::setcolorder(dt, intersect(c("order_id", "client_oid"), names(dt)))
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinOcoOrders__add_order,
+        is_async = private$.is_async
       ))
     },
 
@@ -219,7 +246,8 @@ KucoinOcoOrders <- R6::R6Class(
     #' `DELETE https://api.kucoin.com/api/v3/oco/order/{orderId}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Cancel OCO Order By OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-oco-order-by-orderld)
+    #' KuCoin Cancel OCO Order By OrderId:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-oco-order-by-orderld>
     #'
     #' Verified: 2026-05-23
     #'
@@ -252,13 +280,11 @@ KucoinOcoOrders <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param orderId Character; the KuCoin-assigned OCO order ID to cancel
-    #'   (e.g., `"674c40d38b4b2f00073deef3"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with
-    #'   `async = TRUE`) with one row per cancelled order, and column:
-    #'   - `cancelled_order_id` (character): Cancelled order ID (the parent
-    #'     OCO and each of its sub-orders appear as separate rows). Empty
-    #'     `data.table` if nothing matched.
+    #' @param orderId (scalar<character>) the KuCoin-assigned OCO order ID to
+    #'   cancel (e.g., `"674c40d38b4b2f00073deef3"`).
+    #' @return (data.table | promise<data.table>) one row per cancelled order
+    #'   giving the cancelled order ID (the parent OCO and each of its sub-orders
+    #'   appear as separate rows); an empty data.table if nothing matched.
     #'
     #' @examples
     #' \dontrun{
@@ -269,7 +295,9 @@ KucoinOcoOrders <- R6::R6Class(
     #' print(result$cancelled_order_id)
     #' }
     cancel_order_by_id = function(orderId) {
-      return(private$.request(
+      assert_args_KucoinOcoOrders__cancel_order_by_id(orderId)
+      assert::assert_nonempty_strings(orderId)
+      res <- private$.request(
         endpoint = paste0("/api/v3/oco/order/", orderId),
         method = "DELETE",
         .parser = function(data) {
@@ -291,6 +319,11 @@ KucoinOcoOrders <- R6::R6Class(
           }
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinOcoOrders__cancel_order_by_id,
+        is_async = private$.is_async
       ))
     },
 
@@ -310,14 +343,17 @@ KucoinOcoOrders <- R6::R6Class(
     #' `DELETE https://api.kucoin.com/api/v3/oco/client-order/{clientOid}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Cancel OCO Order By ClientOid](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-oco-order-by-clientoid)
+    #' KuCoin Cancel OCO Order By ClientOid:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-oco-order-by-clientoid>
     #'
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Strategy-Based Cancellation**: Cancel OCO orders by your own strategy IDs without needing to store KuCoin order IDs.
+    #' - **Strategy-Based Cancellation**: Cancel OCO orders by your own strategy IDs without needing to store KuCoin
+    #'   order IDs.
     #' - **Idempotent Operations**: Use deterministic `clientOid` values so re-running cancellation logic is safe.
-    #' - **Multi-Bot Coordination**: Each bot uses a unique `clientOid` prefix to manage its own OCO orders independently.
+    #' - **Multi-Bot Coordination**: Each bot uses a unique `clientOid` prefix to manage its own OCO orders
+    #'   independently.
     #'
     #' ### curl
     #' ```
@@ -343,13 +379,11 @@ KucoinOcoOrders <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param clientOid Character; the client-assigned order ID used when placing
-    #'   the OCO order (e.g., `"my-bot-oco-001"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with
-    #'   `async = TRUE`) with one row per cancelled order, and column:
-    #'   - `cancelled_order_id` (character): Cancelled order ID (the parent
-    #'     OCO and each of its sub-orders appear as separate rows). Empty
-    #'     `data.table` if nothing matched.
+    #' @param clientOid (scalar<character>) the client-assigned order ID used when
+    #'   placing the OCO order (e.g., `"my-bot-oco-001"`).
+    #' @return (data.table | promise<data.table>) one row per cancelled order
+    #'   giving the cancelled order ID (the parent OCO and each of its sub-orders
+    #'   appear as separate rows); an empty data.table if nothing matched.
     #'
     #' @examples
     #' \dontrun{
@@ -360,7 +394,9 @@ KucoinOcoOrders <- R6::R6Class(
     #' print(result$cancelled_order_id)
     #' }
     cancel_order_by_client_oid = function(clientOid) {
-      return(private$.request(
+      assert_args_KucoinOcoOrders__cancel_order_by_client_oid(clientOid)
+      assert::assert_nonempty_strings(clientOid)
+      res <- private$.request(
         endpoint = paste0("/api/v3/oco/client-order/", clientOid),
         method = "DELETE",
         .parser = function(data) {
@@ -382,6 +418,11 @@ KucoinOcoOrders <- R6::R6Class(
           }
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinOcoOrders__cancel_order_by_client_oid,
+        is_async = private$.is_async
       ))
     },
 
@@ -407,9 +448,12 @@ KucoinOcoOrders <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Emergency Kill Switch**: Call with no filters to cancel all OCO orders during market anomalies or system errors.
-    #' - **Symbol Cleanup**: Pass `symbol` to cancel all OCO orders for a specific pair when exiting a position entirely.
-    #' - **Selective Batch Cancel**: Pass specific `orderIds` to cancel a subset of OCO orders during strategy rebalancing.
+    #' - **Emergency Kill Switch**: Call with no filters to cancel all OCO orders during market anomalies or system
+    #'   errors.
+    #' - **Symbol Cleanup**: Pass `symbol` to cancel all OCO orders for a specific pair when exiting a position
+    #'   entirely.
+    #' - **Selective Batch Cancel**: Pass specific `orderIds` to cancel a subset of OCO orders during strategy
+    #'   rebalancing.
     #'
     #' ### curl
     #' ```
@@ -436,14 +480,13 @@ KucoinOcoOrders <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param query Named list; filter parameters for batch cancellation:
-    #'   - `symbol` (character): Optional. Trading pair to filter by (e.g., `"BTC-USDT"`).
-    #'   - `orderIds` (character): Optional. Comma-separated order IDs to cancel specifically.
-    #'   If empty, all active OCO orders are cancelled.
-    #' @return `data.table` (or `promise<data.table>` if constructed with
-    #'   `async = TRUE`) with one row per cancelled order, and column:
-    #'   - `cancelled_order_id` (character): Cancelled order ID. Empty
-    #'     `data.table` if no active OCO orders matched the filter.
+    #' @param query (list) optional filter parameters for batch cancellation.
+    #'   Supported keys: `symbol` (trading pair to filter by e.g. `"BTC-USDT"`)
+    #'   and `orderIds` (comma-separated order IDs to cancel specifically). If
+    #'   empty, all active OCO orders are cancelled.
+    #' @return (data.table | promise<data.table>) one row per cancelled order
+    #'   giving the cancelled order ID; an empty data.table if no active OCO
+    #'   orders matched the filter.
     #'
     #' @examples
     #' \dontrun{
@@ -457,7 +500,8 @@ KucoinOcoOrders <- R6::R6Class(
     #' result <- oco$cancel_all()
     #' }
     cancel_all = function(query = list()) {
-      return(private$.request(
+      assert_args_KucoinOcoOrders__cancel_all(query)
+      res <- private$.request(
         endpoint = "/api/v3/oco/orders",
         method = "DELETE",
         query = query,
@@ -480,6 +524,11 @@ KucoinOcoOrders <- R6::R6Class(
           }
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinOcoOrders__cancel_all,
+        is_async = private$.is_async
       ))
     },
 
@@ -499,7 +548,8 @@ KucoinOcoOrders <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v3/oco/order/{orderId}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get OCO Order By OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-by-orderld)
+    #' KuCoin Get OCO Order By OrderId:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-by-orderld>
     #'
     #' Verified: 2026-05-23
     #'
@@ -532,14 +582,12 @@ KucoinOcoOrders <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param orderId Character; the KuCoin-assigned OCO order ID
+    #' @param orderId (scalar<character>) the KuCoin-assigned OCO order ID
     #'   (e.g., `"674c40d38b4b2f00073deef3"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `order_id` (character): OCO order identifier.
-    #'   - `symbol` (character): Trading pair (e.g., `"BTC-USDT"`).
-    #'   - `client_oid` (character): Client-assigned order identifier.
-    #'   - `order_time` (POSIXct): Order creation datetime (coerced from epoch milliseconds).
-    #'   - `status` (character): Order status (e.g., `"NEW"`, `"DONE"`, `"TRIGGERED"`).
+    #' @return (data.table | promise<data.table>) one row giving the OCO order
+    #'   identifier, trading pair, client-assigned order identifier, order
+    #'   creation datetime (POSIXct, coerced from epoch milliseconds), and order
+    #'   status (e.g., `"NEW"`, `"DONE"`, `"TRIGGERED"`).
     #'
     #' @examples
     #' \dontrun{
@@ -551,7 +599,9 @@ KucoinOcoOrders <- R6::R6Class(
     #' print(order$symbol)
     #' }
     get_order_by_id = function(orderId) {
-      return(private$.request(
+      assert_args_KucoinOcoOrders__get_order_by_id(orderId)
+      assert::assert_nonempty_strings(orderId)
+      res <- private$.request(
         endpoint = paste0("/api/v3/oco/order/", orderId),
         .parser = function(data) {
           dt <- as_dt_row(data)
@@ -562,6 +612,11 @@ KucoinOcoOrders <- R6::R6Class(
           data.table::setcolorder(dt, intersect(expected, names(dt)))
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinOcoOrders__get_order_by_id,
+        is_async = private$.is_async
       ))
     },
 
@@ -581,13 +636,15 @@ KucoinOcoOrders <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v3/oco/client-order/{clientOid}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get OCO Order By ClientOid](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-by-clientoid)
+    #' KuCoin Get OCO Order By ClientOid:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-by-clientoid>
     #'
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Strategy Reconciliation**: Look up OCO orders using your strategy-generated IDs for post-trade analysis.
-    #' - **Duplicate Detection**: Check if an OCO order with a given `clientOid` already exists before placing a new one.
+    #' - **Duplicate Detection**: Check if an OCO order with a given `clientOid` already exists before placing a new
+    #'   one.
     #' - **Bot State Recovery**: On restart, recover OCO order state using stored `clientOid` values.
     #'
     #' ### curl
@@ -614,14 +671,12 @@ KucoinOcoOrders <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param clientOid Character; the client-assigned order ID used when placing
-    #'   the OCO order (e.g., `"my-bot-oco-001"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `order_id` (character): KuCoin-assigned OCO order identifier.
-    #'   - `symbol` (character): Trading pair (e.g., `"BTC-USDT"`).
-    #'   - `client_oid` (character): Client-assigned order identifier.
-    #'   - `order_time` (POSIXct): Order creation datetime (coerced from epoch milliseconds).
-    #'   - `status` (character): Order status (e.g., `"NEW"`, `"DONE"`, `"TRIGGERED"`).
+    #' @param clientOid (scalar<character>) the client-assigned order ID used when
+    #'   placing the OCO order (e.g., `"my-bot-oco-001"`).
+    #' @return (data.table | promise<data.table>) one row giving the
+    #'   KuCoin-assigned OCO order identifier, trading pair, client-assigned order
+    #'   identifier, order creation datetime (POSIXct, coerced from epoch
+    #'   milliseconds), and order status (e.g., `"NEW"`, `"DONE"`, `"TRIGGERED"`).
     #'
     #' @examples
     #' \dontrun{
@@ -633,7 +688,9 @@ KucoinOcoOrders <- R6::R6Class(
     #' print(order$status)
     #' }
     get_order_by_client_oid = function(clientOid) {
-      return(private$.request(
+      assert_args_KucoinOcoOrders__get_order_by_client_oid(clientOid)
+      assert::assert_nonempty_strings(clientOid)
+      res <- private$.request(
         endpoint = paste0("/api/v3/oco/client-order/", clientOid),
         .parser = function(data) {
           dt <- as_dt_row(data)
@@ -644,6 +701,11 @@ KucoinOcoOrders <- R6::R6Class(
           data.table::setcolorder(dt, intersect(expected, names(dt)))
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinOcoOrders__get_order_by_client_oid,
+        is_async = private$.is_async
       ))
     },
 
@@ -663,7 +725,8 @@ KucoinOcoOrders <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v3/oco/order/details/{orderId}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get OCO Order Detail By OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-detail-by-orderld)
+    #' KuCoin Get OCO Order Detail By OrderId:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-detail-by-orderld>
     #'
     #' Verified: 2026-05-23
     #'
@@ -715,26 +778,16 @@ KucoinOcoOrders <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param orderId Character; the KuCoin-assigned OCO order ID
+    #' @param orderId (scalar<character>) the KuCoin-assigned OCO order ID
     #'   (e.g., `"674c40d38b4b2f00073deef3"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `order_id` (character): OCO order identifier.
-    #'   - `symbol` (character): Trading pair (e.g., `"BTC-USDT"`).
-    #'   - `client_oid` (character): Client-assigned order identifier.
-    #'   - `order_time` (POSIXct): Order creation datetime (coerced from epoch milliseconds).
-    #'   - `status` (character): Overall OCO order status.
-    #'
-    #'   The nested `orders` array (one entry per sub-order — typically the
-    #'   limit leg + the stop-limit leg) is exploded to long format: the
-    #'   parent OCO row is replicated once per sub-order, and each sub-order's
-    #'   fields are added with a `sub_order_` prefix. Typical sub-order columns:
-    #'   - `sub_order_id` (character)
-    #'   - `sub_order_symbol` (character)
-    #'   - `sub_order_side` (character)
-    #'   - `sub_order_price` (character)
-    #'   - `sub_order_size` (character)
-    #'   - `sub_order_status` (character)
-    #'   - `sub_order_stop_price` (character; only present on the stop leg)
+    #' @return (data.table | promise<data.table>) one row per sub-order, each
+    #'   giving the OCO order identifier, trading pair, client-assigned order
+    #'   identifier, order creation datetime (POSIXct, coerced from epoch
+    #'   milliseconds), and overall OCO order status, with the nested `orders`
+    #'   array (typically the limit leg plus the stop-limit leg) exploded to long
+    #'   format by replicating the parent OCO row once per sub-order and adding
+    #'   each sub-order's id, symbol, side, price, size, status, and stop price
+    #'   (present only on the stop leg) as `sub_order_`-prefixed columns.
     #'
     #' @examples
     #' \dontrun{
@@ -747,7 +800,9 @@ KucoinOcoOrders <- R6::R6Class(
     #' details[, .(order_id, status, sub_order_id, sub_order_side, sub_order_price)]
     #' }
     get_order_detail_by_id = function(orderId) {
-      return(private$.request(
+      assert_args_KucoinOcoOrders__get_order_detail_by_id(orderId)
+      assert::assert_nonempty_strings(orderId)
+      res <- private$.request(
         endpoint = paste0("/api/v3/oco/order/details/", orderId),
         .parser = function(data) {
           orders <- data$orders
@@ -769,6 +824,11 @@ KucoinOcoOrders <- R6::R6Class(
           data.table::setcolorder(dt, intersect(expected, names(dt)))
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinOcoOrders__get_order_detail_by_id,
+        is_async = private$.is_async
       ))
     },
 
@@ -794,13 +854,16 @@ KucoinOcoOrders <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Portfolio Overview**: List all active OCO orders to display current take-profit/stop-loss levels across positions.
-    #' - **Stale Order Detection**: Filter by `startAt`/`endAt` to find OCO orders that have been open too long and may need adjustment.
+    #' - **Portfolio Overview**: List all active OCO orders to display current take-profit/stop-loss levels across
+    #'   positions.
+    #' - **Stale Order Detection**: Filter by `startAt`/`endAt` to find OCO orders that have been open too long and may
+    #'   need adjustment.
     #' - **Pagination Loop**: Use `currentPage` and `pageSize` to iterate through large result sets in batch processing.
     #'
     #' ### curl
     #' ```
-    #' curl --location --request GET 'https://api.kucoin.com/api/v3/oco/orders?symbol=BTC-USDT&pageSize=20&currentPage=1' \
+    #' curl --location --request GET \
+    #'   'https://api.kucoin.com/api/v3/oco/orders?symbol=BTC-USDT&pageSize=20&currentPage=1' \
     #'   --header 'KC-API-KEY: your-api-key' \
     #'   --header 'KC-API-SIGN: your-signature' \
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
@@ -837,19 +900,16 @@ KucoinOcoOrders <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param query Named list; filter and pagination parameters:
-    #'   - `symbol` (character): Optional. Trading pair to filter by (e.g., `"BTC-USDT"`).
-    #'   - `startAt` (numeric): Optional. Start time in milliseconds (inclusive).
-    #'   - `endAt` (numeric): Optional. End time in milliseconds (inclusive).
-    #'   - `pageSize` (integer): Optional. Number of results per page (default 20, max 100).
-    #'   - `currentPage` (integer): Optional. Page number to retrieve (default 1).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns (one row per OCO order):
-    #'   - `order_id` (character): OCO order identifier.
-    #'   - `symbol` (character): Trading pair (e.g., `"BTC-USDT"`).
-    #'   - `client_oid` (character): Client-assigned order identifier.
-    #'   - `order_time` (POSIXct): Order creation datetime (coerced from epoch milliseconds).
-    #'   - `status` (character): Order status (e.g., `"NEW"`, `"DONE"`, `"TRIGGERED"`).
-    #'   Returns an empty `data.table` if no orders match.
+    #' @param query (list) optional filter and pagination parameters. Supported
+    #'   keys: `symbol` (trading pair to filter by e.g. `"BTC-USDT"`), `startAt`
+    #'   (start time in milliseconds, inclusive), `endAt` (end time in
+    #'   milliseconds, inclusive), `pageSize` (number of results per page, default
+    #'   20, max 100), and `currentPage` (page number to retrieve, default 1).
+    #' @return (data.table | promise<data.table>) one row per OCO order, each
+    #'   giving the OCO order identifier, trading pair, client-assigned order
+    #'   identifier, order creation datetime (POSIXct, coerced from epoch
+    #'   milliseconds), and order status (e.g., `"NEW"`, `"DONE"`, `"TRIGGERED"`);
+    #'   an empty data.table if no orders match.
     #'
     #' @examples
     #' \dontrun{
@@ -874,7 +934,8 @@ KucoinOcoOrders <- R6::R6Class(
     #' ))
     #' }
     get_order_list = function(query = list()) {
-      return(private$.request(
+      assert_args_KucoinOcoOrders__get_order_list(query)
+      res <- private$.request(
         endpoint = "/api/v3/oco/orders",
         query = query,
         .parser = function(data) {
@@ -893,6 +954,11 @@ KucoinOcoOrders <- R6::R6Class(
           data.table::setcolorder(dt, intersect(expected, names(dt)))
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinOcoOrders__get_order_list,
+        is_async = private$.is_async
       ))
     }
   )

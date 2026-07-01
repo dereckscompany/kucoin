@@ -225,7 +225,8 @@ Verified: 2026-05-23
 \item \strong{Profit Extraction}: Withdraw profits to a cold wallet at regular intervals.
 \item \strong{Arbitrage Settlement}: Move funds off-exchange after capturing arbitrage spreads.
 \item \strong{Internal Transfers}: Use \code{isInner = TRUE} for fee-free transfers between KuCoin accounts.
-\item \strong{Multi-Chain Support}: Specify \code{chain} (e.g., \code{"trx"}, \code{"eth"}, \code{"bsc"}) to select the cheapest or fastest network.
+\item \strong{Multi-Chain Support}: Specify \code{chain} (e.g., \code{"trx"}, \code{"eth"}, \code{"bsc"}) to select the cheapest or fastest
+network.
 }
 }
 
@@ -238,7 +239,9 @@ Verified: 2026-05-23
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
   --header 'KC-API-PASSPHRASE: your-passphrase' \\
   --header 'KC-API-KEY-VERSION: 2' \\
-  --data-raw '\{"currency":"USDT","toAddress":"TKFRQXSDcY4kd3QLzw7uK16GmLrjJggwX8","amount":"10","withdrawType":"ADDRESS","chain":"trx"\}'
+  --data-raw \\
+  '\{"currency":"USDT","toAddress":"TKFRQXSDcY4kd3QLzw7uK16GmLrjJggwX8","amount":"10","withdrawType":"ADDRESS",
+  "chain":"trx"\}'
 }\if{html}{\out{</div>}}
 }
 
@@ -269,32 +272,39 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"USDT"}).}
+\item{\code{currency}}{(scalar<character>) currency code (e.g., \code{"BTC"},
+\code{"USDT"}).}
 
-\item{\code{toAddress}}{Character; withdrawal destination address, UID, email, or phone number.}
+\item{\code{toAddress}}{(scalar<character>) withdrawal destination address, UID,
+email, or phone number.}
 
-\item{\code{amount}}{Character; withdrawal amount (must be positive, multiple of currency precision).}
+\item{\code{amount}}{(scalar<character>) withdrawal amount (must be positive,
+multiple of currency precision).}
 
-\item{\code{withdrawType}}{Character; withdrawal type: \code{"ADDRESS"}, \code{"UID"}, \code{"MAIL"}, or \code{"PHONE"}.}
+\item{\code{withdrawType}}{(scalar<character>) withdrawal type: \code{"ADDRESS"},
+\code{"UID"}, \code{"MAIL"}, or \code{"PHONE"}.}
 
-\item{\code{chain}}{Character; blockchain network identifier (e.g., \code{"eth"}, \code{"trx"}, \code{"bsc"}).
-Required by the KuCoin API.}
+\item{\code{chain}}{(scalar<character> | NULL) blockchain network identifier
+(e.g., \code{"eth"}, \code{"trx"}, \code{"bsc"}). Required by the KuCoin API; the method
+raises if \code{NULL}.}
 
-\item{\code{memo}}{Character or NULL; address memo/tag (required for some currencies like XRP, XLM).}
+\item{\code{memo}}{(scalar<character> | NULL) address memo/tag (required for some
+currencies like XRP, XLM).}
 
-\item{\code{isInner}}{Logical or NULL; if \code{TRUE}, this is an internal KuCoin transfer (no on-chain fee).}
+\item{\code{isInner}}{(scalar<logical> | NULL) if \code{TRUE}, this is an internal
+KuCoin transfer (no on-chain fee).}
 
-\item{\code{remark}}{Character or NULL; optional remark for the withdrawal.}
+\item{\code{remark}}{(scalar<character> | NULL) optional remark for the
+withdrawal.}
 
-\item{\code{feeDeductType}}{Character or NULL; fee deduction type: \code{"INTERNAL"} or \code{"EXTERNAL"}.}
+\item{\code{feeDeductType}}{(scalar<character> | NULL) fee deduction type:
+\code{"INTERNAL"} or \code{"EXTERNAL"}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
-\itemize{
-\item \code{withdrawal_id} (character): The unique withdrawal identifier.
-}
+(data.table | promise<data.table>) one row with column
+\code{withdrawal_id} (character): the unique withdrawal identifier.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -389,15 +399,17 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{withdrawalId}}{Character; the unique withdrawal ID to cancel.}
+\item{\code{withdrawalId}}{(scalar<character>) the unique withdrawal ID to
+cancel.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
+(data.table | promise<data.table>) one row, the cancelled
+withdrawal ID echoed from the input (KuCoin returns \code{null} data on a
+successful cancel):
 \itemize{
-\item \code{withdrawal_id} (character): The cancelled withdrawal ID (echoed from the input
-since KuCoin returns \code{null} data on a successful cancel).
+\item withdrawal_id (character) the cancelled withdrawal ID.
 }
 }
 \subsection{Examples}{
@@ -438,7 +450,8 @@ to ensure sufficient balance and valid amount parameters.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-quotas}{KuCoin Get Withdrawal Quotas}
+KuCoin Get Withdrawal Quotas:
+\url{https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-quotas}
 
 Verified: 2026-05-23
 }
@@ -496,33 +509,22 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"USDT"}).}
+\item{\code{currency}}{(scalar<character>) currency code (e.g., \code{"BTC"},
+\code{"USDT"}).}
 
-\item{\code{chain}}{Character or NULL; blockchain network identifier (e.g., \code{"eth"}, \code{"trx"}).
-When NULL, returns quotas for the default chain.}
+\item{\code{chain}}{(scalar<character> | NULL) blockchain network identifier
+(e.g., \code{"eth"}, \code{"trx"}). When NULL, returns quotas for the default
+chain.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
-\itemize{
-\item \code{currency} (character): Currency code.
-\item \code{limit_btc_amount} (character): Daily withdrawal limit in BTC equivalent.
-\item \code{used_btc_amount} (character): BTC equivalent already withdrawn today.
-\item \code{quota_currency} (character): Quota currency (e.g., \code{"USDT"}).
-\item \code{limit_quota_currency_amount} (character): Daily limit in quota currency.
-\item \code{used_quota_currency_amount} (character): Amount used in quota currency.
-\item \code{remain_amount} (character): Remaining withdrawal quota in BTC equivalent.
-\item \code{available_amount} (character): Available balance for withdrawal.
-\item \code{withdraw_min_fee} (character): Minimum withdrawal fee.
-\item \code{inner_withdraw_min_fee} (character): Minimum fee for internal transfers.
-\item \code{withdraw_min_size} (character): Minimum withdrawal amount.
-\item \code{is_withdraw_enabled} (logical): Whether withdrawals are currently enabled.
-\item \code{precision} (integer): Decimal precision for amounts.
-\item \code{chain} (character): Blockchain network name.
-\item \code{reason} (character): Reason if withdrawals are disabled (or NA).
-\item \code{locked_amount} (character): Amount currently locked.
-}
+(data.table | promise<data.table>) one row with the withdrawal
+quota details (currency, limit_btc_amount, used_btc_amount,
+quota_currency, limit_quota_currency_amount, used_quota_currency_amount,
+remain_amount, available_amount, withdraw_min_fee, inner_withdraw_min_fee,
+withdraw_min_size, is_withdraw_enabled, precision, chain, reason,
+locked_amount, ...).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -567,7 +569,8 @@ to POSIXct for convenient analysis.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-history}{KuCoin Get Withdrawal History}
+KuCoin Get Withdrawal History:
+\url{https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-history}
 
 Verified: 2026-05-23
 }
@@ -636,42 +639,33 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{currency}}{Character or NULL; currency code (e.g., \code{"BTC"}, \code{"USDT"}).
-If NULL, returns withdrawals for all currencies.}
+\item{\code{currency}}{(scalar<character> | NULL) currency code (e.g., \code{"BTC"},
+\code{"USDT"}). If NULL, returns withdrawals for all currencies.}
 
-\item{\code{status}}{Character or NULL; filter by withdrawal status. Accepted values:
-\code{"PROCESSING"}, \code{"REVIEW"}, \code{"WALLET_PROCESSING"}, \code{"SUCCESS"}, \code{"FAILURE"}.
-When NULL, returns withdrawals of all statuses.}
+\item{\code{status}}{(scalar<character> | NULL) filter by withdrawal status.
+Accepted values: \code{"PROCESSING"}, \code{"REVIEW"}, \code{"WALLET_PROCESSING"},
+\code{"SUCCESS"}, \code{"FAILURE"}. When NULL, returns withdrawals of all statuses.}
 
-\item{\code{startAt}}{Integer or NULL; start timestamp in milliseconds (inclusive).}
+\item{\code{startAt}}{(scalar<numeric> | NULL) start timestamp in milliseconds
+(inclusive).}
 
-\item{\code{endAt}}{Integer or NULL; end timestamp in milliseconds (inclusive).}
+\item{\code{endAt}}{(scalar<numeric> | NULL) end timestamp in milliseconds
+(inclusive).}
 
-\item{\code{page_size}}{Integer; number of results per page (default 50, max 500).}
+\item{\code{page_size}}{(scalar<count in [1, Inf[>) number of results per page
+(default 50, max 500).}
 
-\item{\code{max_pages}}{Numeric; maximum number of pages to fetch (default \code{Inf} for all pages).}
+\item{\code{max_pages}}{(scalar<numeric in [1, Inf]>) maximum number of pages to
+fetch (default \code{Inf} for all pages).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row per withdrawal and columns:
-\itemize{
-\item \code{currency} (character): Withdrawn currency code.
-\item \code{chain} (character): Blockchain network used.
-\item \code{status} (character): Withdrawal status.
-\item \code{address} (character): Withdrawal destination address.
-\item \code{memo} (character): Memo/tag (empty string if not applicable).
-\item \code{is_inner} (logical): Whether this was an internal KuCoin transfer.
-\item \code{amount} (character): Withdrawal amount.
-\item \code{fee} (character): Withdrawal fee charged.
-\item \code{wallet_tx_id} (character): On-chain transaction hash.
-\item \code{created_at} (POSIXct): Creation datetime (coerced from epoch milliseconds).
-\item \code{updated_at} (POSIXct): Last update datetime (coerced from epoch milliseconds).
-\item \code{remark} (character): Optional remark.
-\item \code{arrears} (logical): Whether the withdrawal is in arrears.
-}
-
-Returns an empty \code{data.table} if no withdrawals match the filters.
+(data.table | promise<data.table>) one row per withdrawal record
+(currency, chain, status, address, memo, is_inner, amount, fee,
+wallet_tx_id, created_at, updated_at, remark, arrears, ...), with
+\code{created_at}/\code{updated_at} coerced to POSIXct, or an empty \code{data.table}
+if no withdrawals match the filters.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -723,16 +717,19 @@ Provides more information than the history endpoint.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-by-id}{KuCoin Get Withdrawal Detail}
+KuCoin Get Withdrawal Detail:
+\url{https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-by-id}
 
 Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Status Tracking}: Monitor withdrawal progress through \code{REVIEW} → \code{PROCESSING} → \code{WALLET_PROCESSING} → \code{SUCCESS}.
+\item \strong{Status Tracking}: Monitor withdrawal progress through \code{REVIEW} → \code{PROCESSING} → \code{WALLET_PROCESSING} →
+\code{SUCCESS}.
 \item \strong{Failure Diagnosis}: Check \code{failure_reason} and \code{failure_reason_msg} to understand why a withdrawal failed.
-\item \strong{Cancel Eligibility}: Use \code{cancel_type} (\code{"CANCELABLE"}, \code{"CANCELING"}, \code{"NON_CANCELABLE"}) to determine if a withdrawal can still be cancelled.
+\item \strong{Cancel Eligibility}: Use \code{cancel_type} (\code{"CANCELABLE"}, \code{"CANCELING"}, \code{"NON_CANCELABLE"}) to determine if a
+withdrawal can still be cancelled.
 }
 }
 
@@ -777,29 +774,16 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{withdrawalId}}{Character; the unique withdrawal ID.}
+\item{\code{withdrawalId}}{(scalar<character>) the unique withdrawal ID.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
-\itemize{
-\item \code{id} (character): Withdrawal ID.
-\item \code{currency} (character): Currency code.
-\item \code{chain_id} (character): Chain identifier (e.g., \code{"trx"}, \code{"eth"}).
-\item \code{chain_name} (character): Chain display name (e.g., \code{"TRC20"}, \code{"ERC20"}).
-\item \code{status} (character): Withdrawal status.
-\item \code{address} (character): Destination address.
-\item \code{memo} (character): Address memo/tag.
-\item \code{is_inner} (logical): Internal transfer flag.
-\item \code{amount} (character): Withdrawal amount.
-\item \code{fee} (character): Fee charged.
-\item \code{wallet_tx_id} (character): On-chain transaction hash (or NA).
-\item \code{cancel_type} (character): \code{"CANCELABLE"}, \code{"CANCELING"}, or \code{"NON_CANCELABLE"}.
-\item \code{failure_reason} (character): Failure reason code (or NA).
-\item \code{failure_reason_msg} (character): Human-readable failure message (or NA).
-\item \code{created_at} (POSIXct): Creation datetime (coerced from epoch milliseconds).
-}
+(data.table | promise<data.table>) one row with the full
+withdrawal detail (id, currency, chain_id, chain_name, status, address,
+memo, is_inner, amount, fee, wallet_tx_id, cancel_type, failure_reason,
+failure_reason_msg, created_at, ...), with \code{created_at} coerced to
+POSIXct.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

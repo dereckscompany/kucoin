@@ -1,7 +1,7 @@
 Package: kucoin
 Type: Package
 Title: API Wrapper to KuCoin Cryptocurrency Exchange
-Version: 4.1.1
+Version: 4.2.2
 URL: https://dereckscompany.github.io/kucoin/
 BugReports: https://github.com/dereckscompany/kucoin/issues
 Authors@R: 
@@ -15,7 +15,7 @@ License: MIT
 Encoding: UTF-8
 LazyData: true
 VignetteBuilder: knitr
-Roxygen: list(markdown = TRUE)
+Roxygen: list(markdown = TRUE, roclets = c("namespace", "rd", "roxyassert::contract_roclet"))
 Depends: R (>= 4.1.0)
 Imports:
     R6,
@@ -26,7 +26,9 @@ Imports:
     base64enc,
     digest,
     lubridate,
-    connectcore
+    uuid,
+    assert,
+    connectcore (>= 0.2.0)
 Suggests:
     promises,
     coro,
@@ -36,9 +38,12 @@ Suggests:
     withr,
     diffviewer,
     knitr,
-    rmarkdown
+    rmarkdown,
+    roxyassert (>= 0.9.1)
 Remotes:
-    dereckscompany/connectcore@v0.1.0
+    dereckscompany/assert,
+    dereckscompany/connectcore,
+    dereckscompany/roxyassert
 Config/testthat/edition: 3
 Config/roxygen2/version: 8.0.0
 RoxygenNote: 7.3.3

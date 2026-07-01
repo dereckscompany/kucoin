@@ -1,3 +1,43 @@
+# kucoin 4.2.2
+
+## Live-capture fixture hardening + bugs the synthetic fixtures hid
+
+This release validates every committed fixture against a read-only capture of the REAL KuCoin API (spot + futures, public + private GET) and fixes the divergences that synthetic, shape-only fixtures could not surface. A new `dev/capture-kucoin.R` drives the package's own read methods through a raw-response interceptor and dumps each verbatim body to the git-ignored `local/raw-data/kucoin/`; `dev/validate-fixtures.R` diffs each fixture's record keys against its capture. All enrichment uses synthetic values — no real account id, balance, or order id is committed.
+
+* **Futures `GET /api/v1/status` returns a `text/plain` Content-Type.** KuCoin sends a valid JSON body for the futures service-status endpoint but labels it `text/plain`, so `httr2::resp_body_json()`'s default content-type guard aborted before parsing and `KucoinFuturesMarketData$get_service_status()` failed against the live API. The synthetic mock (served as `application/json`) hid this. `parse_kucoin_response()` now parses with `check_type = FALSE`.
+
+* **Futures contract `sourceExchanges` produced a forbidden list column.** The live `GET /api/v1/contracts/active` and `/api/v1/contracts/{symbol}` payloads carry a `sourceExchanges` JSON array (the mark-price source venues) that the generic flattener turned into a list column, violating the package's no-list-column invariant on real data. The old array-free fixtures hid it. `KucoinFuturesMarketData$get_contract()` / `$get_all_contracts()` now collapse `sourceExchanges` to a `;`-separated scalar via `collapse_string_array_fields()`, matching the cross-package Treatment-A convention.
+
+* **`get_open_order_value()` field rename `Qty` → `Size`.** The live `GET /api/v1/openOrderStatistics` response returns `openOrderBuySize` / `openOrderSellSize`; the fixture, mock helper, and unit assertion still used the retired `openOrderBuyQty` / `openOrderSellQty` names. The fixture, the `@return` / example docs, and the test now use `open_order_buy_size` / `open_order_sell_size`.
+
+* **`get_funding_rate()` fictional `predictedValue` replaced with the real fields.** The live `GET /api/v1/funding-rate/{symbol}/current` response carries `dailyInterestRate`, `fundingRateCap`, `fundingRateFloor`, and `period` and does NOT return `predictedValue`; the fixture and docs invented a `predictedValue` field. Both now reflect the real payload.
+
+* **`get_max_open_size()` rejected a numeric `price`.** The futures max-open-size endpoint typed its `price` `@param` as `scalar<character>`, so the natural numeric call `get_max_open_size("XBTUSDTM", price = 40000, leverage = 10)` aborted at the input contract — surfaced only by the private read-only live test against the real API (the synthetic unit test happened to pass a string). `price` is now `scalar<numeric in ]0, Inf[>` (httr2 serialises it for the query just like the adjacent numeric `leverage`), and the unit tests pass a numeric price too.
+
+* **Empty kline ranges returned a column-less table.** `combine_klines()` and the zero-width-range early returns in `kucoin_fetch_klines()` (spot and futures) returned a bare `data.table()` for a window with no candles, but `get_klines()`'s `@return` requires the seven OHLCV columns (`assert_has_columns`), so an empty range aborted instead of returning empty. All four sites now return the existing typed `empty_dt_klines()` zero-row schema (the same fix class as binance and hyperliquid).
+
+* **Fixtures enriched to the real superset (synthetic values).** Added the real-but-missing fields: `futures_account_overview` (`availableMargin`, `riskRatio`, `maxWithdrawAmount`); `futures_contract` / `futures_all_contracts` (the full real field set — `displaySymbol`, `marketMaxOrderQty`, `fundingRateCap`/`Floor`, `crossRiskLimit`, `marketType`, `sourceExchanges`, and ~30 more); `futures_trade_history` (`contractId`); `symbol` (the `callauction*` stage fields and `tradingStartTime`, present-but-null); `isolated_margin_symbols` (`autoRenewMaxDebtRatio`, `baseBorrowCoefficient`, `quoteBorrowCoefficient`); `risk_limit` (`timestamp`); `sub_accounts_page` (`tradeTypes`, `openedTradeTypes`); `deposit_addresses` (`remark`); and spot `trade_history` (`tradeId`).
+
+## Type contract corrections (coinbase gold-standard remediation)
+
+* **Epoch-millisecond and page-size parameters retyped off `integer`.** `assert_scalar_integer()` rejects a plain R double (an unsuffixed numeric literal such as `1729176273859` or `100` is a double, not an integer), so every `startAt` / `endAt` / `limit` / `currencyType` argument typed `scalar<integer>` was rejecting legitimate caller input at the contract boundary. Millisecond timestamp windows (`startAt` / `endAt`) — which exceed `2^31` — are now `scalar<numeric>`; the small bounded page-size / currency-type flags (`limit`, `currencyType`) are now `scalar<count>`, which validates by value and accepts a whole double. Affects `KucoinAccount`, `KucoinDeposit`, `KucoinTrading`, `KucoinWithdrawal`.
+
+* **`max_pages` accepts its own `Inf` default again.** The pagination cap was typed half-open `scalar<numeric in [1, Inf[>`, whose generated `assert_between(..., upper_inclusive = FALSE)` rejected `max_pages = Inf` — the parameter's documented default. Retyped to the closed `scalar<numeric in [1, Inf]>` (matching the sibling connectors), so the unbounded default validates.
+
+* **Typed per-column `@return` shapes for the fixed-schema one-row / single-column methods.** `KucoinTrading$cancel_all_by_symbol()` / `$cancel_all()` / `$get_symbols_with_open_orders()`, `KucoinMarketData$get_market_list()` / `$get_server_time()`, `KucoinLending$modify_purchase()`, `KucoinMarginTrading$modify_leverage()`, and `KucoinWithdrawal$cancel_withdrawal()` documented their result as a bare `(data.table)`; each now carries `- name (type)` column bullets, so the contract roclet emits a real `assert_has_columns()` plus per-column type check at the boundary. Payload-dependent returns (the generic flatteners, the dry-run-variable margin order acknowledgements, the optional-`symbol` futures order book) deliberately stay generic per the cross-package convention.
+
+* **`DESCRIPTION` version constraints moved into `Imports` / `Suggests`.** `connectcore (>= 0.1.0)` and `roxyassert (>= 0.9.1)` now carry their minimum-version constraints in the dependency fields; the `Remotes` field is source-only (the `@v…` refs were stripped) as the other tracked packages do.
+
+* **Documentation hygiene.** `NEWS.md` bullets are now one continuous line each (the renderer wraps); the over-long roxygen prose, `### Official Documentation` links (split into a title line plus a bare-URL autolink), and `curl` examples were wrapped so the package lints clean at 120 columns with no `.lintr` exclusion.
+
+# kucoin 4.2.0
+
+## Type contracts (roxyassert)
+
+* **Adopted `roxyassert` for runtime type contracts across the whole package.** Every `@param`/`@return` is now written in the `roxyassert` grammar (zero prose type annotations remain), and the `roxyassert::contract_roclet` generates `assert_args_*()` / `assert_return_*()` helpers into `R/contracts-generated.R` at `document()` time — so each function's documented contract and its runtime validation come from a single source. Every public R6 table method validates its arguments at entry and validates the parsed result (synchronous value or the resolved value of a promise alike) at the boundary via `connectcore::then_or_now(res, assert_return_*, is_async = private$.is_async)`. `assert` is now an import; `uuid` and `roxyassert` are added (the margin client-order-id auto-generator now uses `uuid::UUIDgenerate()` instead of a hand-rolled hex string).
+
+* **Reusable `@type` shapes for the fixed-schema returns.** `R/types_kucoin.R` defines `Klines` (the spot and futures OHLCV candles) and `Orderbook` (the spot level-2 book in long format); the kline and spot-order-book parsers return the fully-typed table and a typed zero-row empty on no data. Every other endpoint returns a payload-dependent schema (built by the generic `as_dt_row`/`as_dt_list`/`flatten_pages` flatteners or a bespoke inline parser), so those returns stay the generic `(data.table | promise<data.table>)` — including the futures order book, whose `symbol` column is optional. No contracts are exported (`kucoin` is a leaf connector): the shapes expand inline into each method's generated `assert_return_*` and nothing downstream validates against them. The public API and the wire bytes are unchanged.
+
 # kucoin 4.1.1
 
 ## REFACTOR

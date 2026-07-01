@@ -1,0 +1,34 @@
+{
+  "code": "200000",
+  "data": {
+    "totalNum": 2,
+    "totalPage": 1,
+    "currentPage": 1,
+    "pageSize": 50,
+    "items": [
+      {
+        "annId": 129045,
+        "annTitle": "KuCoin Will List Token XYZ (XYZ)",
+        "annType": [
+          "latest-announcements",
+          "new-listings"
+        ],
+        "annDesc": "KuCoin is pleased to announce the listing of XYZ.",
+        "cTime": 1729594043000,
+        "language": "en_US",
+        "annUrl": "https://www.kucoin.com/announcement/listing-xyz"
+      },
+      {
+        "annId": 129044,
+        "annTitle": "Scheduled System Maintenance Notice",
+        "annType": [
+          "latest-announcements"
+        ],
+        "annDesc": "KuCoin will undergo scheduled maintenance.",
+        "cTime": 1729507643000,
+        "language": "en_US",
+        "annUrl": "https://www.kucoin.com/announcement/maintenance-2024"
+      }
+    ]
+  }
+}

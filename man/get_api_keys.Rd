@@ -12,16 +12,20 @@ get_api_keys(
 )
 }
 \arguments{
-\item{api_key}{Character string; KuCoin API key. Defaults to \code{Sys.getenv("KUCOIN_API_KEY")}.}
+\item{api_key}{(scalar<character>) KuCoin API key. Defaults to
+\code{Sys.getenv("KUCOIN_API_KEY")}.}
 
-\item{api_secret}{Character string; KuCoin API secret. Defaults to \code{Sys.getenv("KUCOIN_API_SECRET")}.}
+\item{api_secret}{(scalar<character>) KuCoin API secret. Defaults to
+\code{Sys.getenv("KUCOIN_API_SECRET")}.}
 
-\item{api_passphrase}{Character string; KuCoin API passphrase. Defaults to \code{Sys.getenv("KUCOIN_API_PASSPHRASE")}.}
+\item{api_passphrase}{(scalar<character>) KuCoin API passphrase. Defaults to
+\code{Sys.getenv("KUCOIN_API_PASSPHRASE")}.}
 
-\item{key_version}{Character string; API key version. Defaults to \code{"2"}.}
+\item{key_version}{(scalar<character>) API key version. Defaults to \code{"2"}.}
 }
 \value{
-Named list with \code{api_key}, \code{api_secret}, \code{api_passphrase}, \code{key_version}.
+(list) named list with \code{api_key}, \code{api_secret}, \code{api_passphrase},
+\code{key_version}.
 }
 \description{
 Fetches API credentials from environment variables or explicit arguments.

@@ -20,15 +20,19 @@
 #' cannot use [connectcore::hmac_query_sign()], which signs only the query string.
 #' It is the `.sign()` seam [KucoinBase] plugs into [connectcore::RestClient].
 #'
-#' @param req An [httr2::request] object to sign.
-#' @param keys List of API credentials containing `api_key`, `api_secret`,
+#' @param req (class<httr2_request>) the request object to sign.
+#' @param keys (list) API credentials containing `api_key`, `api_secret`,
 #'   `api_passphrase`, and `key_version`.
-#' @param method Character; HTTP method (e.g., `"GET"`, `"POST"`, `"DELETE"`).
-#' @param path Character; the API path including query string.
-#' @param body Character; the JSON request body, or `""` for GET/DELETE requests.
-#' @param .get_timestamp_ms Function or NULL; zero-argument function returning
-#'   epoch milliseconds. When `NULL` (default), falls back to the local UTC clock.
-#' @return The signed [httr2::request] object with authentication headers added.
+#' @param method (scalar<character>) HTTP method (e.g., `"GET"`, `"POST"`,
+#'   `"DELETE"`).
+#' @param path (scalar<character>) the API path including query string.
+#' @param body (scalar<character>) the JSON request body, or `""` for
+#'   GET/DELETE requests.
+#' @param .get_timestamp_ms (function | NULL) zero-argument function returning
+#'   epoch milliseconds. When `NULL` (default), falls back to the local UTC
+#'   clock.
+#' @return (class<httr2_request>) the signed request with authentication
+#'   headers added.
 #'
 #' @importFrom digest hmac
 #' @importFrom base64enc base64encode
@@ -36,6 +40,7 @@
 #' @keywords internal
 #' @noRd
 sign_request <- function(req, keys, method, path, body = "", .get_timestamp_ms = NULL) {
+  assert_args_sign_request(req, keys, method, path, body, .get_timestamp_ms)
   # NOTE: epoch milliseconds exceed R's integer max (2^31-1 ~= 2.1e9) so we
   # must use floor() + format() to get a clean integer string without
   # overflow, decimals, or scientific notation.
@@ -73,7 +78,7 @@ sign_request <- function(req, keys, method, path, body = "", .get_timestamp_ms =
     `Content-Type` = "application/json"
   )
 
-  return(req)
+  return(assert_return_sign_request(req))
 }
 
 #' Serialise a KuCoin Request Body to Compact JSON
@@ -86,17 +91,19 @@ sign_request <- function(req, keys, method, path, body = "", .get_timestamp_ms =
 #' `body_format = "raw"` path — is what keeps the signed bytes and the wire bytes
 #' identical: no NULL-pruning, no pretty-printing, no re-encoding.
 #'
-#' @param body Named list or NULL; the request body.
-#' @return Character scalar of compact JSON, or NULL when `body` is empty.
+#' @param body (list | NULL) the request body.
+#' @return (scalar<character> | NULL) compact JSON, or NULL when `body` is
+#'   empty.
 #'
 #' @importFrom jsonlite toJSON
 #' @keywords internal
 #' @noRd
 kucoin_serialize_body <- function(body) {
+  assert_args_kucoin_serialize_body(body)
   if (is.null(body) || length(body) == 0L) {
-    return(NULL)
+    return(assert_return_kucoin_serialize_body(NULL))
   }
-  return(as.character(jsonlite::toJSON(body, auto_unbox = TRUE)))
+  return(assert_return_kucoin_serialize_body(as.character(jsonlite::toJSON(body, auto_unbox = TRUE))))
 }
 
 #' KuCoin `.sign` Seam: Sign a Built Request from Its Own Bytes
@@ -108,17 +115,19 @@ kucoin_serialize_body <- function(body) {
 #' `body_format = "raw"` placed in `req$body$data`, byte-for-byte — and delegates
 #' to `sign_request()`.
 #'
-#' @param req An [httr2::request] object, already built by connectcore.
-#' @param keys List; API credentials (`api_key`, `api_secret`, `api_passphrase`,
-#'   `key_version`).
-#' @param ctx List; the signing context. Only `ctx$get_timestamp_ms` is used (the
-#'   clock source); method, path, and body are derived from `req`.
-#' @return The signed [httr2::request] object.
+#' @param req (class<httr2_request>) the request object, already built by
+#'   connectcore.
+#' @param keys (list) API credentials (`api_key`, `api_secret`,
+#'   `api_passphrase`, `key_version`).
+#' @param ctx (list) the signing context. Only `ctx$get_timestamp_ms` is used
+#'   (the clock source); method, path, and body are derived from `req`.
+#' @return (class<httr2_request>) the signed request.
 #'
 #' @importFrom httr2 url_parse
 #' @keywords internal
 #' @noRd
 kucoin_sign_req <- function(req, keys, ctx) {
+  assert_args_kucoin_sign_req(req, keys, ctx)
   method <- if (is.null(req$method)) "GET" else req$method
 
   parsed_url <- httr2::url_parse(req$url)
@@ -138,14 +147,14 @@ kucoin_sign_req <- function(req, keys, ctx) {
   # The raw body bytes connectcore set via req_body_raw; "" when there is none.
   body <- if (is.null(req$body)) "" else as.character(req$body$data)
 
-  return(sign_request(
+  return(assert_return_kucoin_sign_req(sign_request(
     req,
     keys,
     method = method,
     path = sign_path,
     body = body,
     .get_timestamp_ms = ctx$get_timestamp_ms
-  ))
+  )))
 }
 
 #' Parse and Validate a KuCoin API Response
@@ -154,14 +163,16 @@ kucoin_sign_req <- function(req, keys, ctx) {
 #' API status code (`"200000"`), and returns the `$data` element. This is the
 #' `.parse_envelope()` seam [KucoinBase] plugs into [connectcore::RestClient].
 #'
-#' @param resp An [httr2::response] object.
-#' @return The `$data` element from the parsed JSON response.
+#' @param resp (class<httr2_response>) the response object.
+#' @return (any | NULL) the `$data` element from the parsed JSON response (its R
+#'   type varies by endpoint: a list, a scalar, or NULL).
 #'
 #' @importFrom httr2 resp_status resp_body_json resp_body_string
 #' @importFrom rlang abort
 #' @keywords internal
 #' @noRd
 parse_kucoin_response <- function(resp) {
+  assert_args_parse_kucoin_response(resp)
   status <- httr2::resp_status(resp)
   if (status != 200L) {
     body_text <- tryCatch(
@@ -175,7 +186,13 @@ parse_kucoin_response <- function(resp) {
   # When TRUE, jsonlite coerces arrays-of-arrays (e.g. orderbook bids/asks,
   # klines) into matrices, breaking downstream vapply-based parsers.
   # See research/json_matrix_behavior.R for details.
-  parsed <- httr2::resp_body_json(resp, simplifyVector = FALSE)
+  #
+  # check_type = FALSE: KuCoin's futures `GET /api/v1/status` returns a JSON
+  # body with a `text/plain` Content-Type (observed live 2026-06), which makes
+  # the default content-type guard in `resp_body_json()` abort before parsing.
+  # The body is still valid JSON, so we parse it regardless of the declared
+  # type. Synthetic mock fixtures (served as `application/json`) hid this.
+  parsed <- httr2::resp_body_json(resp, simplifyVector = FALSE, check_type = FALSE)
 
   if (is.null(parsed$code)) {
     rlang::abort("Invalid KuCoin API response: missing 'code' field.")
@@ -189,7 +206,7 @@ parse_kucoin_response <- function(resp) {
     ))
   }
 
-  return(parsed$data)
+  return(assert_return_parse_kucoin_response(parsed$data))
 }
 
 #' Paginate a KuCoin API Endpoint
@@ -197,28 +214,32 @@ parse_kucoin_response <- function(resp) {
 #' Iteratively fetches pages from a paginated KuCoin endpoint. Aggregates
 #' the items from each page into a list.
 #'
-#' @param base_url Character; the API base URL.
-#' @param endpoint Character; the API path.
-#' @param method Character; HTTP method. Default `"GET"`.
-#' @param query Named list; initial query parameters. Default `list()`.
-#' @param body Named list or NULL; request body. Default `NULL`.
-#' @param keys List or NULL; API credentials. Default `NULL`.
-#' @param sign Function or NULL; the `.sign()` seam forwarded to
+#' @param base_url (scalar<character>) the API base URL.
+#' @param endpoint (scalar<character>) the API path.
+#' @param method (scalar<character>) HTTP method. Default `"GET"`.
+#' @param query (list) initial query parameters. Default `list()`.
+#' @param body (list | NULL) request body. Default `NULL`.
+#' @param keys (list | NULL) API credentials. Default `NULL`.
+#' @param sign (function | NULL) the `.sign()` seam forwarded to
 #'   [connectcore::build_request()]. Default `NULL` (use KuCoin's own
 #'   `kucoin_sign_req()` signer).
-#' @param parse_envelope Function; the `.parse_envelope()` seam forwarded to
+#' @param parse_envelope (function) the `.parse_envelope()` seam forwarded to
 #'   [connectcore::build_request()]. Default `parse_kucoin_response()`.
-#' @param .perform Function; the httr2 perform function.
-#' @param .parser Function; post-processing for the final accumulated result.
+#' @param .perform (function) the httr2 perform function.
+#' @param .parser (function) post-processing for the final accumulated result.
 #'   Default `identity`.
-#' @param is_async Logical; whether in async mode. Default `FALSE`.
-#' @param page_size Integer; results per page. Default `50`.
-#' @param max_pages Numeric; maximum pages to fetch. Default `Inf`.
-#' @param items_field Character; name of the items field. Default `"items"`.
-#' @param timeout Numeric; request timeout in seconds. Default `30`.
-#' @param .get_timestamp_ms Function or NULL; custom timestamp provider for
+#' @param is_async (scalar<logical>) whether in async mode. Default `FALSE`.
+#' @param page_size (scalar<count in [1, Inf[>) results per page. Default `50`.
+#' @param max_pages (scalar<numeric in [1, Inf]>) maximum pages to fetch.
+#'   Default `Inf`.
+#' @param items_field (scalar<character>) name of the items field. Default
+#'   `"items"`.
+#' @param timeout (scalar<numeric in ]0, Inf[>) request timeout in seconds.
+#'   Default `30`.
+#' @param .get_timestamp_ms (function | NULL) custom timestamp provider for
 #'   request signing. If `NULL`, uses the default internal timestamp function.
-#' @return Parsed and post-processed result, or a promise thereof.
+#' @return (any | promise<any>) parsed and post-processed result, or a promise
+#'   thereof.
 #'
 #' @importFrom jsonlite toJSON
 #' @export
@@ -240,6 +261,24 @@ kucoin_paginate <- function(
   timeout = 30,
   .get_timestamp_ms = NULL
 ) {
+  assert_args_kucoin_paginate(
+    base_url,
+    endpoint,
+    method,
+    query,
+    body,
+    keys,
+    sign,
+    parse_envelope,
+    .perform,
+    .parser,
+    is_async,
+    page_size,
+    max_pages,
+    items_field,
+    timeout,
+    .get_timestamp_ms
+  )
   # KuCoin owns no funnel: every page flows through connectcore::build_request.
   # The body (rare for paginated endpoints) is pre-serialised to compact JSON and
   # sent byte-verbatim via body_format = "raw"; the KuCoin signer reads those
@@ -296,5 +335,5 @@ kucoin_paginate <- function(
     ))
   }
 
-  return(fetch_page(1L))
+  return(assert_return_kucoin_paginate(fetch_page(1L)))
 }

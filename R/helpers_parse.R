@@ -10,15 +10,18 @@
 
 #' Convert a KuCoin Millisecond Timestamp to POSIXct
 #'
-#' @param ms Numeric; millisecond Unix timestamp.
-#' @return POSIXct in UTC, or NA if `ms` is NULL/NA.
+#' @param ms (any | NULL) millisecond Unix timestamp(s); the raw JSON value,
+#'   whose R type is unconstrained (numeric, character, or an all-NA logical).
+#' @return (class<POSIXct>) a POSIXct vector in UTC (length matching `ms`), `NA`
+#'   where `ms` is NULL/NA.
 #'
 #' @importFrom lubridate as_datetime
 #' @keywords internal
 #' @noRd
 ms_to_datetime <- function(ms) {
+  assert_args_ms_to_datetime(ms)
   if (is.null(ms)) {
-    return(lubridate::NA_POSIXct_)
+    return(assert_return_ms_to_datetime(lubridate::NA_POSIXct_))
   }
   # Don't short-circuit on `all(is.na(ms))` — returning the length-1
   # `NA_POSIXct_` from there would get recycled by `data.table::set()`
@@ -27,7 +30,7 @@ ms_to_datetime <- function(ms) {
   # length so columns documented as POSIXct actually land as POSIXct,
   # even when every upstream value is missing. Matches binance/alpaca.
   if (is.numeric(ms)) {
-    return(lubridate::as_datetime(ms / 1000))
+    return(assert_return_ms_to_datetime(lubridate::as_datetime(ms / 1000)))
   }
   # Character path. Only feed real (non-NA) values to `as.numeric()` so
   # the documented NA-in -> NA-out contract is silent, but a genuinely
@@ -39,33 +42,36 @@ ms_to_datetime <- function(ms) {
   if (any(not_na)) {
     result[not_na] <- as.numeric(ms[not_na])
   }
-  return(lubridate::as_datetime(result / 1000))
+  return(assert_return_ms_to_datetime(lubridate::as_datetime(result / 1000)))
 }
 
 #' Convert a KuCoin Nanosecond Timestamp to POSIXct
 #'
-#' @param ns Numeric; nanosecond Unix timestamp.
-#' @return POSIXct in UTC, or NA if `ns` is NULL/NA.
+#' @param ns (any | NULL) nanosecond Unix timestamp(s); the raw JSON value,
+#'   whose R type is unconstrained (numeric, character, or an all-NA logical).
+#' @return (class<POSIXct>) a POSIXct vector in UTC (length matching `ns`), `NA`
+#'   where `ns` is NULL/NA.
 #'
 #' @importFrom lubridate as_datetime
 #' @keywords internal
 #' @noRd
 ns_to_datetime <- function(ns) {
+  assert_args_ns_to_datetime(ns)
   if (is.null(ns)) {
-    return(lubridate::NA_POSIXct_)
+    return(assert_return_ns_to_datetime(lubridate::NA_POSIXct_))
   }
   # Same all-NA shape contract as `ms_to_datetime`, and the same
   # only-feed-real-values-to-`as.numeric` strategy so the NA-in ->
   # NA-out contract is silent without hiding genuine bad input.
   if (is.numeric(ns)) {
-    return(lubridate::as_datetime(ns / 1e9))
+    return(assert_return_ns_to_datetime(lubridate::as_datetime(ns / 1e9)))
   }
   result <- rep(NA_real_, length(ns))
   not_na <- !is.na(ns)
   if (any(not_na)) {
     result[not_na] <- as.numeric(ns[not_na])
   }
-  return(lubridate::as_datetime(result / 1e9))
+  return(assert_return_ns_to_datetime(lubridate::as_datetime(result / 1e9)))
 }
 
 #' Collapse a Plain-String Array Field on a Single Record
@@ -89,13 +95,15 @@ ns_to_datetime <- function(ns) {
 #' If any individual value contains a literal `;`, emits a once-per-session
 #' warning so we catch silent corruption.
 #'
-#' @param x A named list representing a single API record.
-#' @param fields Character vector; names of fields to collapse.
-#' @return The same named list with the matching fields collapsed in place.
+#' @param x (list) a named list representing a single API record.
+#' @param fields (vector<character, 0..>) names of fields to collapse.
+#' @return (list) the same named list with the matching fields collapsed in
+#'   place.
 #'
 #' @keywords internal
 #' @noRd
 collapse_string_array_fields <- function(x, fields) {
+  assert_args_collapse_string_array_fields(x, fields)
   for (nm in fields) {
     val <- x[[nm]]
     if (is.null(val) || length(val) == 0L) {
@@ -129,7 +137,7 @@ collapse_string_array_fields <- function(x, fields) {
       x[[nm]] <- paste(val_chr, collapse = ";")
     }
   }
-  return(x)
+  return(assert_return_collapse_string_array_fields(x))
 }
 
 #' Apply a Function to Selected Columns of a data.table by Reference
@@ -145,14 +153,16 @@ collapse_string_array_fields <- function(x, fields) {
 #' `data.table::set()`. Same shape and contract as the same-named helper
 #' in binance/alpaca.
 #'
-#' @param dt A [data.table::data.table].
-#' @param cols Character; candidate column names to convert.
-#' @param fn Function; takes a column vector, returns the coerced vector.
-#' @return `dt`, modified by reference and returned invisibly.
+#' @param dt (class<data.table>) the table to modify.
+#' @param cols (vector<character, 0..>) candidate column names to convert.
+#' @param fn (function) takes a column vector, returns the coerced vector.
+#' @return (class<data.table>) `dt`, modified by reference and returned
+#'   invisibly.
 #'
 #' @keywords internal
 #' @noRd
 coerce_cols <- function(dt, cols, fn) {
+  assert_args_coerce_cols(dt, cols, fn)
   if (nrow(dt) == 0L) {
     return(invisible(dt))
   }
@@ -166,7 +176,7 @@ coerce_cols <- function(dt, cols, fn) {
       data.table::set(dt, j = col, value = fn(dt[[col]]))
     }
   }
-  return(invisible(dt))
+  return(invisible(assert_return_coerce_cols(dt)))
 }
 
 #' Process Orderbook Data into a data.table
@@ -177,14 +187,14 @@ coerce_cols <- function(dt, cols, fn) {
 #' bid / best ask); the position would otherwise be lost after any sort or
 #' filter. Matches the cross-package long-format convention.
 #'
-#' @param data List; the parsed KuCoin orderbook response data containing
+#' @param data (list) the parsed KuCoin orderbook response data containing
 #'   `bids`, `asks`, `time`, and `sequence` fields.
-#' @return A [data.table::data.table] with columns: `time`, `sequence`,
-#'   `side`, `level`, `price`, `size`.
+#' @return (Orderbook) one row per price level per side, best price first.
 #'
 #' @keywords internal
 #' @noRd
 parse_orderbook <- function(data) {
+  assert_args_parse_orderbook(data)
   parse_side <- function(entries, side_label) {
     if (is.null(entries) || length(entries) == 0) {
       return(data.table::data.table(
@@ -215,7 +225,29 @@ parse_orderbook <- function(data) {
   result[, sequence := as.character(data$sequence)]
   data.table::setcolorder(result, c("time", "sequence", "side", "level", "price", "size"))
 
-  return(result[])
+  return(assert_return_parse_orderbook(result[]))
+}
+
+# The fixed-shape kline parsers' empty branches return this fully-typed zero-row
+# table (columns and types EXACTLY matching the `Klines` shape and the non-empty
+# branch) so a method's column contract still holds on an empty result. The
+# `datetime` column is built with `lubridate::as_datetime()` on a zero-length
+# vector so class and tz match the populated case. Mirrors its shape; not
+# asserted.
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_klines <- function() {
+  return(data.table::data.table(
+    datetime = lubridate::as_datetime(numeric(0)),
+    open = numeric(0),
+    high = numeric(0),
+    low = numeric(0),
+    close = numeric(0),
+    volume = numeric(0),
+    turnover = numeric(0)
+  ))
 }
 
 #' Parse Raw KuCoin Kline Data into a data.table
@@ -224,17 +256,17 @@ parse_orderbook <- function(data) {
 #' a typed [data.table::data.table] with standard OHLCV columns.
 #' Each candle is returned as `[timestamp, open, close, high, low, volume, turnover]`.
 #'
-#' @param data List of character vectors; the raw kline response from KuCoin.
-#' @return A [data.table::data.table] with columns: `datetime`, `open`, `high`,
-#'   `low`, `close`, `volume`, `turnover`. Returns empty data.table if input is
-#'   NULL or empty.
+#' @param data (list | NULL) the raw kline response from KuCoin (a list of
+#'   7-element character vectors), or NULL.
+#' @return (Klines) one row per candle. Empty if `data` is NULL or empty.
 #'
 #' @importFrom lubridate as_datetime
 #' @keywords internal
 #' @noRd
 parse_klines <- function(data) {
+  assert_args_parse_klines(data)
   if (is.null(data) || length(data) == 0) {
-    return(data.table::data.table()[])
+    return(assert_return_parse_klines(empty_dt_klines()))
   }
   # KuCoin returns: [timestamp, open, close, high, low, volume, turnover]
   # We reorder to standard OHLCV: datetime, open, high, low, close, volume, turnover
@@ -248,7 +280,7 @@ parse_klines <- function(data) {
     volume = as.numeric(vapply(data, `[[`, character(1), 6L)),
     turnover = as.numeric(vapply(data, `[[`, character(1), 7L))
   )
-  return(dt[])
+  return(assert_return_parse_klines(dt[]))
 }
 
 #' Flatten Paginated Results into a data.table
@@ -256,14 +288,15 @@ parse_klines <- function(data) {
 #' Takes the accumulator list from [kucoin_paginate()] and row-binds all items
 #' into a single [data.table::data.table] with snake_case column names.
 #'
-#' @param pages List of lists; each element is one page's items from the API.
-#' @return A [data.table::data.table].
+#' @param pages (list) each element is one page's items from the API.
+#' @return (class<data.table>) the row-bound table; empty if `pages` is empty.
 #'
 #' @keywords internal
 #' @noRd
 flatten_pages <- function(pages) {
+  assert_args_flatten_pages(pages)
   if (length(pages) == 0) {
-    return(data.table::data.table()[])
+    return(assert_return_flatten_pages(data.table::data.table()[]))
   }
 
   dt <- data.table::rbindlist(
@@ -290,5 +323,5 @@ flatten_pages <- function(pages) {
     fill = TRUE
   )
   data.table::setnames(dt, to_snake_case(names(dt)))
-  return(dt[])
+  return(assert_return_flatten_pages(dt[]))
 }

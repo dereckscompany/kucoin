@@ -1,0 +1,17 @@
+{
+  "code": "200000",
+  "data": [
+    {
+      "time": "202603070000",
+      "marketInterestRate": "0.05"
+    },
+    {
+      "time": "202603060000",
+      "marketInterestRate": "0.048"
+    },
+    {
+      "time": "202603050000",
+      "marketInterestRate": "0.052"
+    }
+  ]
+}

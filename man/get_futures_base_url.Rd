@@ -7,11 +7,11 @@
 get_futures_base_url(url = Sys.getenv("KUCOIN_FUTURES_API_ENDPOINT"))
 }
 \arguments{
-\item{url}{Character string; explicit base URL. Defaults to
+\item{url}{(scalar<character> | NULL) explicit base URL. Defaults to
 \code{Sys.getenv("KUCOIN_FUTURES_API_ENDPOINT")}.}
 }
 \value{
-Character string; the Futures API base URL.
+(scalar<character>) the Futures API base URL.
 }
 \description{
 Returns the base URL for the KuCoin Futures API in the following priority:

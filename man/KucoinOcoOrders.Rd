@@ -263,9 +263,12 @@ Verified: 2026-05-23
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Take-Profit + Stop-Loss}: Place a sell OCO with \code{price} as take-profit and \code{stopPrice}/\code{limitPrice} as stop-loss to protect positions automatically.
-\item \strong{Bracket Entry}: Use a buy OCO to enter a position at a limit price while also setting a stop-entry above resistance.
-\item \strong{Client OID Tracking}: Set \code{clientOid} to a unique strategy identifier for programmatic order tracking and reconciliation.
+\item \strong{Take-Profit + Stop-Loss}: Place a sell OCO with \code{price} as take-profit and \code{stopPrice}/\code{limitPrice} as
+stop-loss to protect positions automatically.
+\item \strong{Bracket Entry}: Use a buy OCO to enter a position at a limit price while also setting a stop-entry above
+resistance.
+\item \strong{Client OID Tracking}: Set \code{clientOid} to a unique strategy identifier for programmatic order tracking and
+reconciliation.
 }
 }
 
@@ -278,7 +281,9 @@ Verified: 2026-05-23
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
   --header 'KC-API-PASSPHRASE: your-passphrase' \\
   --header 'KC-API-KEY-VERSION: 2' \\
-  --data-raw '\{"symbol":"BTC-USDT","side":"sell","price":"110000","size":"0.0001","stopPrice":"90000","limitPrice":"89500","tradeType":"TRADE"\}'
+  --data-raw \\
+  '\{"symbol":"BTC-USDT","side":"sell","price":"110000","size":"0.0001","stopPrice":"90000","limitPrice":"89500",
+  "tradeType":"TRADE"\}'
 }\if{html}{\out{</div>}}
 }
 
@@ -309,38 +314,42 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}). Must match the
-\code{BASE-QUOTE} format validated by \code{verify_symbol()}.}
+\item{\code{symbol}}{(scalar<character>) trading pair (e.g., \code{"BTC-USDT"}); must
+match the \code{BASE-QUOTE} format validated by \code{verify_symbol()}.}
 
-\item{\code{side}}{Character; order side, one of \code{"buy"} or \code{"sell"}.}
+\item{\code{side}}{(scalar<character>) order side, one of \code{"buy"} or \code{"sell"}.}
 
-\item{\code{price}}{Character; limit order price for the take-profit leg.
-Must align with the symbol's \code{priceIncrement}.}
+\item{\code{price}}{(scalar<numeric> | scalar<character>) limit order price for
+the take-profit leg; must align with the symbol's \code{priceIncrement}.}
 
-\item{\code{size}}{Character; order quantity in base currency (e.g., \code{"0.0001"} BTC).
-Must align with the symbol's \code{baseIncrement}.}
+\item{\code{size}}{(scalar<numeric> | scalar<character>) order quantity in base
+currency (e.g., \code{"0.0001"} BTC); must align with the symbol's
+\code{baseIncrement}.}
 
-\item{\code{stopPrice}}{Character; trigger price for the stop-limit leg. When the
-market reaches this price, the stop-limit order is activated.}
+\item{\code{stopPrice}}{(scalar<numeric> | scalar<character>) trigger price for
+the stop-limit leg; when the market reaches this price the stop-limit
+order is activated.}
 
-\item{\code{limitPrice}}{Character; limit price for the stop-limit leg after the
-stop is triggered. This is the price at which the stop-limit order is placed.}
+\item{\code{limitPrice}}{(scalar<numeric> | scalar<character>) limit price for the
+stop-limit leg after the stop is triggered; this is the price at which the
+stop-limit order is placed.}
 
-\item{\code{clientOid}}{Character or NULL; unique client-assigned order identifier
-(max 40 characters). Useful for idempotent order placement and tracking.}
+\item{\code{clientOid}}{(scalar<character> | NULL) unique client-assigned order
+identifier (max 40 characters); useful for idempotent order placement and
+tracking.}
 
-\item{\code{remark}}{Character or NULL; order remarks or notes (max 20 characters).}
+\item{\code{remark}}{(scalar<character> | NULL) order remarks or notes (max 20
+characters).}
 
-\item{\code{tradeType}}{Character; trade type, defaults to \code{"TRADE"} for spot trading.}
+\item{\code{tradeType}}{(scalar<character>) trade type, defaults to \code{"TRADE"} for
+spot trading.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{order_id} (character): KuCoin-assigned OCO order identifier.
-\item \code{client_oid} (character): Client-provided order identifier (NA if not supplied).
-}
+(data.table | promise<data.table>) one row giving the
+KuCoin-assigned OCO order identifier and the client-provided order
+identifier (NA if not supplied).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -392,7 +401,8 @@ limit and stop-limit legs of the OCO order are cancelled.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-oco-order-by-orderld}{KuCoin Cancel OCO Order By OrderId}
+KuCoin Cancel OCO Order By OrderId:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-oco-order-by-orderld}
 
 Verified: 2026-05-23
 }
@@ -437,19 +447,15 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{orderId}}{Character; the KuCoin-assigned OCO order ID to cancel
-(e.g., \code{"674c40d38b4b2f00073deef3"}).}
+\item{\code{orderId}}{(scalar<character>) the KuCoin-assigned OCO order ID to
+cancel (e.g., \code{"674c40d38b4b2f00073deef3"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with
-\code{async = TRUE}) with one row per cancelled order, and column:
-\itemize{
-\item \code{cancelled_order_id} (character): Cancelled order ID (the parent
-OCO and each of its sub-orders appear as separate rows). Empty
-\code{data.table} if nothing matched.
-}
+(data.table | promise<data.table>) one row per cancelled order
+giving the cancelled order ID (the parent OCO and each of its sub-orders
+appear as separate rows); an empty data.table if nothing matched.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -490,16 +496,19 @@ Both the limit and stop-limit legs of the OCO order are cancelled.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-oco-order-by-clientoid}{KuCoin Cancel OCO Order By ClientOid}
+KuCoin Cancel OCO Order By ClientOid:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-oco-order-by-clientoid}
 
 Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Strategy-Based Cancellation}: Cancel OCO orders by your own strategy IDs without needing to store KuCoin order IDs.
+\item \strong{Strategy-Based Cancellation}: Cancel OCO orders by your own strategy IDs without needing to store KuCoin
+order IDs.
 \item \strong{Idempotent Operations}: Use deterministic \code{clientOid} values so re-running cancellation logic is safe.
-\item \strong{Multi-Bot Coordination}: Each bot uses a unique \code{clientOid} prefix to manage its own OCO orders independently.
+\item \strong{Multi-Bot Coordination}: Each bot uses a unique \code{clientOid} prefix to manage its own OCO orders
+independently.
 }
 }
 
@@ -535,19 +544,15 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{clientOid}}{Character; the client-assigned order ID used when placing
-the OCO order (e.g., \code{"my-bot-oco-001"}).}
+\item{\code{clientOid}}{(scalar<character>) the client-assigned order ID used when
+placing the OCO order (e.g., \code{"my-bot-oco-001"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with
-\code{async = TRUE}) with one row per cancelled order, and column:
-\itemize{
-\item \code{cancelled_order_id} (character): Cancelled order ID (the parent
-OCO and each of its sub-orders appear as separate rows). Empty
-\code{data.table} if nothing matched.
-}
+(data.table | promise<data.table>) one row per cancelled order
+giving the cancelled order ID (the parent OCO and each of its sub-orders
+appear as separate rows); an empty data.table if nothing matched.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -596,9 +601,12 @@ Verified: 2026-05-23
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Emergency Kill Switch}: Call with no filters to cancel all OCO orders during market anomalies or system errors.
-\item \strong{Symbol Cleanup}: Pass \code{symbol} to cancel all OCO orders for a specific pair when exiting a position entirely.
-\item \strong{Selective Batch Cancel}: Pass specific \code{orderIds} to cancel a subset of OCO orders during strategy rebalancing.
+\item \strong{Emergency Kill Switch}: Call with no filters to cancel all OCO orders during market anomalies or system
+errors.
+\item \strong{Symbol Cleanup}: Pass \code{symbol} to cancel all OCO orders for a specific pair when exiting a position
+entirely.
+\item \strong{Selective Batch Cancel}: Pass specific \code{orderIds} to cancel a subset of OCO orders during strategy
+rebalancing.
 }
 }
 
@@ -635,22 +643,17 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{query}}{Named list; filter parameters for batch cancellation:
-\itemize{
-\item \code{symbol} (character): Optional. Trading pair to filter by (e.g., \code{"BTC-USDT"}).
-\item \code{orderIds} (character): Optional. Comma-separated order IDs to cancel specifically.
-If empty, all active OCO orders are cancelled.
-}}
+\item{\code{query}}{(list) optional filter parameters for batch cancellation.
+Supported keys: \code{symbol} (trading pair to filter by e.g. \code{"BTC-USDT"})
+and \code{orderIds} (comma-separated order IDs to cancel specifically). If
+empty, all active OCO orders are cancelled.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with
-\code{async = TRUE}) with one row per cancelled order, and column:
-\itemize{
-\item \code{cancelled_order_id} (character): Cancelled order ID. Empty
-\code{data.table} if no active OCO orders matched the filter.
-}
+(data.table | promise<data.table>) one row per cancelled order
+giving the cancelled order ID; an empty data.table if no active OCO
+orders matched the filter.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -694,7 +697,8 @@ detailed sub-order information (use \code{get_order_detail_by_id()} for that).
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-by-orderld}{KuCoin Get OCO Order By OrderId}
+KuCoin Get OCO Order By OrderId:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-by-orderld}
 
 Verified: 2026-05-23
 }
@@ -739,20 +743,16 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{orderId}}{Character; the KuCoin-assigned OCO order ID
+\item{\code{orderId}}{(scalar<character>) the KuCoin-assigned OCO order ID
 (e.g., \code{"674c40d38b4b2f00073deef3"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{order_id} (character): OCO order identifier.
-\item \code{symbol} (character): Trading pair (e.g., \code{"BTC-USDT"}).
-\item \code{client_oid} (character): Client-assigned order identifier.
-\item \code{order_time} (POSIXct): Order creation datetime (coerced from epoch milliseconds).
-\item \code{status} (character): Order status (e.g., \code{"NEW"}, \code{"DONE"}, \code{"TRIGGERED"}).
-}
+(data.table | promise<data.table>) one row giving the OCO order
+identifier, trading pair, client-assigned order identifier, order
+creation datetime (POSIXct, coerced from epoch milliseconds), and order
+status (e.g., \code{"NEW"}, \code{"DONE"}, \code{"TRIGGERED"}).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -794,7 +794,8 @@ by your own identifiers rather than KuCoin-assigned IDs.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-by-clientoid}{KuCoin Get OCO Order By ClientOid}
+KuCoin Get OCO Order By ClientOid:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-by-clientoid}
 
 Verified: 2026-05-23
 }
@@ -802,7 +803,8 @@ Verified: 2026-05-23
 \subsection{Automated Trading Usage}{
 \itemize{
 \item \strong{Strategy Reconciliation}: Look up OCO orders using your strategy-generated IDs for post-trade analysis.
-\item \strong{Duplicate Detection}: Check if an OCO order with a given \code{clientOid} already exists before placing a new one.
+\item \strong{Duplicate Detection}: Check if an OCO order with a given \code{clientOid} already exists before placing a new
+one.
 \item \strong{Bot State Recovery}: On restart, recover OCO order state using stored \code{clientOid} values.
 }
 }
@@ -839,20 +841,16 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{clientOid}}{Character; the client-assigned order ID used when placing
-the OCO order (e.g., \code{"my-bot-oco-001"}).}
+\item{\code{clientOid}}{(scalar<character>) the client-assigned order ID used when
+placing the OCO order (e.g., \code{"my-bot-oco-001"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{order_id} (character): KuCoin-assigned OCO order identifier.
-\item \code{symbol} (character): Trading pair (e.g., \code{"BTC-USDT"}).
-\item \code{client_oid} (character): Client-assigned order identifier.
-\item \code{order_time} (POSIXct): Order creation datetime (coerced from epoch milliseconds).
-\item \code{status} (character): Order status (e.g., \code{"NEW"}, \code{"DONE"}, \code{"TRIGGERED"}).
-}
+(data.table | promise<data.table>) one row giving the
+KuCoin-assigned OCO order identifier, trading pair, client-assigned order
+identifier, order creation datetime (POSIXct, coerced from epoch
+milliseconds), and order status (e.g., \code{"NEW"}, \code{"DONE"}, \code{"TRIGGERED"}).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -894,7 +892,8 @@ statuses. This provides more information than \code{get_order_by_id()}.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-detail-by-orderld}{KuCoin Get OCO Order Detail By OrderId}
+KuCoin Get OCO Order Detail By OrderId:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-detail-by-orderld}
 
 Verified: 2026-05-23
 }
@@ -958,34 +957,20 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{orderId}}{Character; the KuCoin-assigned OCO order ID
+\item{\code{orderId}}{(scalar<character>) the KuCoin-assigned OCO order ID
 (e.g., \code{"674c40d38b4b2f00073deef3"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{order_id} (character): OCO order identifier.
-\item \code{symbol} (character): Trading pair (e.g., \code{"BTC-USDT"}).
-\item \code{client_oid} (character): Client-assigned order identifier.
-\item \code{order_time} (POSIXct): Order creation datetime (coerced from epoch milliseconds).
-\item \code{status} (character): Overall OCO order status.
-}
-
-The nested \code{orders} array (one entry per sub-order — typically the
-limit leg + the stop-limit leg) is exploded to long format: the
-parent OCO row is replicated once per sub-order, and each sub-order's
-fields are added with a \code{sub_order_} prefix. Typical sub-order columns:
-\itemize{
-\item \code{sub_order_id} (character)
-\item \code{sub_order_symbol} (character)
-\item \code{sub_order_side} (character)
-\item \code{sub_order_price} (character)
-\item \code{sub_order_size} (character)
-\item \code{sub_order_status} (character)
-\item \code{sub_order_stop_price} (character; only present on the stop leg)
-}
+(data.table | promise<data.table>) one row per sub-order, each
+giving the OCO order identifier, trading pair, client-assigned order
+identifier, order creation datetime (POSIXct, coerced from epoch
+milliseconds), and overall OCO order status, with the nested \code{orders}
+array (typically the limit leg plus the stop-limit leg) exploded to long
+format by replicating the parent OCO row once per sub-order and adding
+each sub-order's id, symbol, side, price, size, status, and stop price
+(present only on the stop leg) as \code{sub_order_}-prefixed columns.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1036,15 +1021,18 @@ Verified: 2026-05-23
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Portfolio Overview}: List all active OCO orders to display current take-profit/stop-loss levels across positions.
-\item \strong{Stale Order Detection}: Filter by \code{startAt}/\code{endAt} to find OCO orders that have been open too long and may need adjustment.
+\item \strong{Portfolio Overview}: List all active OCO orders to display current take-profit/stop-loss levels across
+positions.
+\item \strong{Stale Order Detection}: Filter by \code{startAt}/\code{endAt} to find OCO orders that have been open too long and may
+need adjustment.
 \item \strong{Pagination Loop}: Use \code{currentPage} and \code{pageSize} to iterate through large result sets in batch processing.
 }
 }
 
 \subsection{curl}{
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET 'https://api.kucoin.com/api/v3/oco/orders?symbol=BTC-USDT&pageSize=20&currentPage=1' \\
+\if{html}{\out{<div class="sourceCode">}}\preformatted{curl --location --request GET \\
+  'https://api.kucoin.com/api/v3/oco/orders?symbol=BTC-USDT&pageSize=20&currentPage=1' \\
   --header 'KC-API-KEY: your-api-key' \\
   --header 'KC-API-SIGN: your-signature' \\
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
@@ -1089,27 +1077,20 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{query}}{Named list; filter and pagination parameters:
-\itemize{
-\item \code{symbol} (character): Optional. Trading pair to filter by (e.g., \code{"BTC-USDT"}).
-\item \code{startAt} (numeric): Optional. Start time in milliseconds (inclusive).
-\item \code{endAt} (numeric): Optional. End time in milliseconds (inclusive).
-\item \code{pageSize} (integer): Optional. Number of results per page (default 20, max 100).
-\item \code{currentPage} (integer): Optional. Page number to retrieve (default 1).
-}}
+\item{\code{query}}{(list) optional filter and pagination parameters. Supported
+keys: \code{symbol} (trading pair to filter by e.g. \code{"BTC-USDT"}), \code{startAt}
+(start time in milliseconds, inclusive), \code{endAt} (end time in
+milliseconds, inclusive), \code{pageSize} (number of results per page, default
+20, max 100), and \code{currentPage} (page number to retrieve, default 1).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns (one row per OCO order):
-\itemize{
-\item \code{order_id} (character): OCO order identifier.
-\item \code{symbol} (character): Trading pair (e.g., \code{"BTC-USDT"}).
-\item \code{client_oid} (character): Client-assigned order identifier.
-\item \code{order_time} (POSIXct): Order creation datetime (coerced from epoch milliseconds).
-\item \code{status} (character): Order status (e.g., \code{"NEW"}, \code{"DONE"}, \code{"TRIGGERED"}).
-Returns an empty \code{data.table} if no orders match.
-}
+(data.table | promise<data.table>) one row per OCO order, each
+giving the OCO order identifier, trading pair, client-assigned order
+identifier, order creation datetime (POSIXct, coerced from epoch
+milliseconds), and order status (e.g., \code{"NEW"}, \code{"DONE"}, \code{"TRIGGERED"});
+an empty data.table if no orders match.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

@@ -498,49 +498,48 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{type}}{Character; \code{"limit"} or \code{"market"}.}
+\item{\code{type}}{(scalar<character>) \code{"limit"} or \code{"market"}.}
 
-\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
+\item{\code{symbol}}{(scalar<character>) trading pair (e.g., \code{"BTC-USDT"}).}
 
-\item{\code{side}}{Character; \code{"buy"} or \code{"sell"}.}
+\item{\code{side}}{(scalar<character>) \code{"buy"} or \code{"sell"}.}
 
-\item{\code{clientOid}}{Character or NULL; unique client order ID (max 40 chars).}
+\item{\code{clientOid}}{(scalar<character> | NULL) unique client order ID (max 40 chars).}
 
-\item{\code{price}}{Numeric or NULL; price for limit orders. Must align with \code{priceIncrement}.
+\item{\code{price}}{(scalar<numeric> | scalar<character> | NULL) price for limit orders. Must align with
+\code{priceIncrement}.
 Required for limit orders; must NOT be set for market orders.}
 
-\item{\code{size}}{Numeric or NULL; quantity in base currency. Must align with \code{baseIncrement}.
+\item{\code{size}}{(scalar<numeric> | scalar<character> | NULL) quantity in base currency. Must align with
+\code{baseIncrement}.
 Required for limit orders; optional for market orders (mutually exclusive with \code{funds}).}
 
-\item{\code{funds}}{Numeric or NULL; amount in quote currency for market orders.
+\item{\code{funds}}{(scalar<numeric> | scalar<character> | NULL) amount in quote currency for market orders.
 Mutually exclusive with \code{size}. Not applicable for limit orders.}
 
-\item{\code{stp}}{Character or NULL; self-trade prevention: \code{"CN"}, \code{"CO"}, \code{"CB"}, \code{"DC"}.}
+\item{\code{stp}}{(scalar<character> | NULL) self-trade prevention: \code{"CN"}, \code{"CO"}, \code{"CB"}, \code{"DC"}.}
 
-\item{\code{tags}}{Character or NULL; order tag (max 20 ASCII chars).}
+\item{\code{tags}}{(scalar<character> | NULL) order tag (max 20 ASCII chars).}
 
-\item{\code{remark}}{Character or NULL; remarks (max 20 ASCII chars).}
+\item{\code{remark}}{(scalar<character> | NULL) remarks (max 20 ASCII chars).}
 
-\item{\code{timeInForce}}{Character or NULL; \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
+\item{\code{timeInForce}}{(scalar<character> | NULL) \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
 
-\item{\code{cancelAfter}}{Numeric or NULL; auto-cancel seconds (requires \code{timeInForce = "GTT"}).}
+\item{\code{cancelAfter}}{(scalar<numeric> | NULL) auto-cancel seconds (requires \code{timeInForce = "GTT"}).}
 
-\item{\code{postOnly}}{Logical or NULL; if TRUE, order rejected if it would match immediately.}
+\item{\code{postOnly}}{(scalar<logical> | NULL) if TRUE, order rejected if it would match immediately.}
 
-\item{\code{hidden}}{Logical or NULL; if TRUE, order hidden from order book.}
+\item{\code{hidden}}{(scalar<logical> | NULL) if TRUE, order hidden from order book.}
 
-\item{\code{iceberg}}{Logical or NULL; if TRUE, only \code{visibleSize} is shown.}
+\item{\code{iceberg}}{(scalar<logical> | NULL) if TRUE, only \code{visibleSize} is shown.}
 
-\item{\code{visibleSize}}{Numeric or NULL; visible quantity for iceberg orders.}
+\item{\code{visibleSize}}{(scalar<numeric> | scalar<character> | NULL) visible quantity for iceberg orders.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{order_id} (character): KuCoin-assigned order identifier.
-\item \code{client_oid} (character): Client-provided order identifier.
-}
+(data.table | promise<data.table>) one row giving the KuCoin-assigned order identifier and the
+client-provided order identifier.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -661,42 +660,43 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{type}}{Character; \code{"limit"} or \code{"market"}.}
+\item{\code{type}}{(scalar<character>) \code{"limit"} or \code{"market"}.}
 
-\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
+\item{\code{symbol}}{(scalar<character>) trading pair (e.g., \code{"BTC-USDT"}).}
 
-\item{\code{side}}{Character; \code{"buy"} or \code{"sell"}.}
+\item{\code{side}}{(scalar<character>) \code{"buy"} or \code{"sell"}.}
 
-\item{\code{clientOid}}{Character or NULL; unique client order ID (max 40 chars).}
+\item{\code{clientOid}}{(scalar<character> | NULL) unique client order ID (max 40 chars).}
 
-\item{\code{price}}{Numeric or NULL; price for limit orders.}
+\item{\code{price}}{(scalar<numeric> | scalar<character> | NULL) price for limit orders.}
 
-\item{\code{size}}{Numeric or NULL; quantity in base currency.}
+\item{\code{size}}{(scalar<numeric> | scalar<character> | NULL) quantity in base currency.}
 
-\item{\code{funds}}{Numeric or NULL; amount in quote currency for market orders.}
+\item{\code{funds}}{(scalar<numeric> | scalar<character> | NULL) amount in quote currency for market orders.}
 
-\item{\code{stp}}{Character or NULL; self-trade prevention: \code{"CN"}, \code{"CO"}, \code{"CB"}, \code{"DC"}.}
+\item{\code{stp}}{(scalar<character> | NULL) self-trade prevention: \code{"CN"}, \code{"CO"}, \code{"CB"}, \code{"DC"}.}
 
-\item{\code{tags}}{Character or NULL; order tag (max 20 ASCII chars).}
+\item{\code{tags}}{(scalar<character> | NULL) order tag (max 20 ASCII chars).}
 
-\item{\code{remark}}{Character or NULL; remarks (max 20 ASCII chars).}
+\item{\code{remark}}{(scalar<character> | NULL) remarks (max 20 ASCII chars).}
 
-\item{\code{timeInForce}}{Character or NULL; \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
+\item{\code{timeInForce}}{(scalar<character> | NULL) \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
 
-\item{\code{cancelAfter}}{Numeric or NULL; auto-cancel seconds (requires \code{timeInForce = "GTT"}).}
+\item{\code{cancelAfter}}{(scalar<numeric> | NULL) auto-cancel seconds (requires \code{timeInForce = "GTT"}).}
 
-\item{\code{postOnly}}{Logical or NULL; if TRUE, order rejected if it would match immediately.}
+\item{\code{postOnly}}{(scalar<logical> | NULL) if TRUE, order rejected if it would match immediately.}
 
-\item{\code{hidden}}{Logical or NULL; if TRUE, order hidden from order book.}
+\item{\code{hidden}}{(scalar<logical> | NULL) if TRUE, order hidden from order book.}
 
-\item{\code{iceberg}}{Logical or NULL; if TRUE, only \code{visibleSize} is shown.}
+\item{\code{iceberg}}{(scalar<logical> | NULL) if TRUE, only \code{visibleSize} is shown.}
 
-\item{\code{visibleSize}}{Numeric or NULL; visible quantity for iceberg orders.}
+\item{\code{visibleSize}}{(scalar<numeric> | scalar<character> | NULL) visible quantity for iceberg orders.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with simulated \code{order_id} and \code{client_oid}.
+(data.table | promise<data.table>) one row giving the simulated order identifier and the client-provided
+order identifier.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -759,7 +759,9 @@ Verified: 2026-05-23
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
   --header 'KC-API-PASSPHRASE: your-passphrase' \\
   --header 'KC-API-KEY-VERSION: 2' \\
-  --data-raw '\{"orderList":[\{"clientOid":"id1","symbol":"BTC-USDT","type":"limit","side":"buy","price":"30000","size":"0.00001"\}]\}'
+  --data-raw \\
+  '\{"orderList":[\{"clientOid":"id1","symbol":"BTC-USDT","type":"limit","side":"buy","price":"30000",
+  "size":"0.00001"\}]\}'
 }\if{html}{\out{</div>}}
 }
 
@@ -813,19 +815,14 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{order_list}}{List of named lists; each containing order parameters
+\item{\code{order_list}}{(list) list of named lists; each containing order parameters
 (\code{type}, \code{symbol}, \code{side}, plus optional fields). Maximum 20 orders.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with per-order results:
-\itemize{
-\item \code{order_id} (character): KuCoin order ID (if successful).
-\item \code{client_oid} (character): Client order ID (if provided).
-\item \code{success} (logical): Whether the order was placed successfully.
-\item \code{fail_msg} (character): Error message (if failed).
-}
+(data.table | promise<data.table>) one row per order giving the KuCoin order ID, client order ID, the
+success flag, and any failure message.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -860,7 +857,8 @@ Cancels a specific spot HF order by its KuCoin-assigned order ID.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld}{KuCoin Cancel Order By OrderId}
+KuCoin Cancel Order By OrderId:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld}
 
 Verified: 2026-05-23
 }
@@ -894,17 +892,14 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{orderId}}{Character; the KuCoin order ID to cancel.}
+\item{\code{orderId}}{(scalar<character>) the KuCoin order ID to cancel.}
 
-\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
+\item{\code{symbol}}{(scalar<character>) trading pair (e.g., \code{"BTC-USDT"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{order_id} (character): Cancelled order ID.
-}
+(data.table | promise<data.table>) one row giving the cancelled order ID.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -933,7 +928,8 @@ Cancels a spot HF order by its client-assigned order ID.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid}{KuCoin Cancel Order By ClientOid}
+KuCoin Cancel Order By ClientOid:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid}
 
 Verified: 2026-05-23
 }
@@ -967,17 +963,14 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{clientOid}}{Character; client order ID.}
+\item{\code{clientOid}}{(scalar<character>) client order ID.}
 
-\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
+\item{\code{symbol}}{(scalar<character>) trading pair (e.g., \code{"BTC-USDT"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{client_oid} (character): Cancelled client order ID.
-}
+(data.table | promise<data.table>) one row giving the cancelled client order ID.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1048,16 +1041,16 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{orderId}}{Character; order ID.}
+\item{\code{orderId}}{(scalar<character>) order ID.}
 
-\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
+\item{\code{symbol}}{(scalar<character>) trading pair (e.g., \code{"BTC-USDT"}).}
 
-\item{\code{cancelSize}}{Numeric; quantity to cancel from the order.}
+\item{\code{cancelSize}}{(scalar<numeric> | scalar<character>) quantity to cancel from the order.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with cancellation result.
+(data.table | promise<data.table>) one row giving the cancellation result.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1087,7 +1080,8 @@ Cancels all open HF orders for a specific trading pair.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-all-orders-by-symbol}{KuCoin Cancel All Orders By Symbol}
+KuCoin Cancel All Orders By Symbol:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-all-orders-by-symbol}
 
 Verified: 2026-05-23
 }
@@ -1126,12 +1120,16 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
+\item{\code{symbol}}{(scalar<character>) trading pair (e.g., \code{"BTC-USDT"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with column \code{result} containing the cancellation response.
+(data.table | promise<data.table>) one row giving the cancellation
+response:
+\itemize{
+\item result (character) the KuCoin response string, e.g. \code{"success"}.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1199,13 +1197,12 @@ Verified: 2026-05-23
 }
 
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
+(data.table | promise<data.table>) one row per cancelled symbol;
+an empty (but typed) data.table if no orders were open:
 \itemize{
-\item \code{symbol} (character): Trading pair symbol.
-\item \code{status} (character): \code{"succeed"} or \code{"failed"}.
+\item symbol (character) the trading pair, e.g. \code{"BTC-USDT"}.
+\item status (character) per-symbol outcome, \code{"succeed"} or \code{"failed"}.
 }
-
-Returns an empty \code{data.table} if no orders were open.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1301,15 +1298,15 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{orderId}}{Character; the KuCoin order ID.}
+\item{\code{orderId}}{(scalar<character>) the KuCoin order ID.}
 
-\item{\code{symbol}}{Character (optional); trading pair (e.g., \code{"BTC-USDT"}). Defaults to \code{NULL}.}
+\item{\code{symbol}}{(scalar<character> | NULL) trading pair (e.g., \code{"BTC-USDT"}). Defaults to \code{NULL}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with full order details
-including \code{created_at} and \code{last_updated_at} (POSIXct) if timestamps are present.
+(data.table | promise<data.table>) one row of full order details, including the creation and last-updated
+datetimes (POSIXct) when timestamps are present.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1405,15 +1402,15 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{clientOid}}{Character; client order ID.}
+\item{\code{clientOid}}{(scalar<character>) client order ID.}
 
-\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
+\item{\code{symbol}}{(scalar<character>) trading pair (e.g., \code{"BTC-USDT"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with full order details
-including \code{created_at} and \code{last_updated_at} (POSIXct) columns.
+(data.table | promise<data.table>) one row of full order details, including the creation and last-updated
+datetimes (POSIXct).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1526,44 +1523,29 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character or NULL; trading pair (e.g., \code{"BTC-USDT"}).
+\item{\code{symbol}}{(scalar<character> | NULL) trading pair (e.g., \code{"BTC-USDT"}).
 If NULL, returns fills across all symbols.}
 
-\item{\code{orderId}}{Character or NULL; filter by specific order ID.}
+\item{\code{orderId}}{(scalar<character> | NULL) filter by specific order ID.}
 
-\item{\code{side}}{Character or NULL; \code{"buy"} or \code{"sell"}.}
+\item{\code{side}}{(scalar<character> | NULL) \code{"buy"} or \code{"sell"}.}
 
-\item{\code{type}}{Character or NULL; \code{"limit"} or \code{"market"}.}
+\item{\code{type}}{(scalar<character> | NULL) \code{"limit"} or \code{"market"}.}
 
-\item{\code{lastId}}{Character or NULL; pagination cursor for fetching next page.}
+\item{\code{lastId}}{(scalar<character> | NULL) pagination cursor for fetching next page.}
 
-\item{\code{limit}}{Integer or NULL; results per page (default 100, max 200).}
+\item{\code{limit}}{(scalar<count> | NULL) results per page (default 100, max 200).}
 
-\item{\code{startAt}}{Integer or NULL; start timestamp in milliseconds.}
+\item{\code{startAt}}{(scalar<numeric> | NULL) start timestamp in milliseconds.}
 
-\item{\code{endAt}}{Integer or NULL; end timestamp in milliseconds.}
+\item{\code{endAt}}{(scalar<numeric> | NULL) end timestamp in milliseconds.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{id} (numeric): Fill identifier.
-\item \code{order_id} (character): Parent order ID.
-\item \code{counter_order_id} (character): Counterparty order ID.
-\item \code{trade_id} (numeric): Trade identifier.
-\item \code{symbol} (character): Trading pair.
-\item \code{side} (character): Trade direction.
-\item \code{liquidity} (character): \code{"maker"} or \code{"taker"}.
-\item \code{type} (character): Order type.
-\item \code{price} (character): Fill price.
-\item \code{size} (character): Fill size.
-\item \code{funds} (character): Fill value in quote currency.
-\item \code{fee} (character): Fee charged.
-\item \code{fee_rate} (character): Fee rate applied.
-\item \code{fee_currency} (character): Currency of fee.
-\item \code{created_at} (POSIXct): Creation datetime (coerced from epoch milliseconds).
-}
+(data.table | promise<data.table>) one row per fill giving the fill and trade identifiers, the parent and
+counterparty order IDs, the trading pair, side, liquidity, type, price, size, funds, fee, fee rate, fee
+currency, and the creation datetime (POSIXct, coerced from epoch milliseconds).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1594,7 +1576,8 @@ Useful for determining which pairs need attention.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-symbols-with-open-order}{KuCoin Get Symbols With Open Order}
+KuCoin Get Symbols With Open Order:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-symbols-with-open-order}
 
 Verified: 2026-05-23
 }
@@ -1633,9 +1616,10 @@ Verified: 2026-05-23
 }
 
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with column:
+(data.table | promise<data.table>) one row per trading pair that
+has at least one open order:
 \itemize{
-\item \code{symbols} (character): Trading pairs with open orders.
+\item symbols (character) the trading pair, e.g. \code{"BTC-USDT"}.
 }
 }
 \subsection{Examples}{
@@ -1742,12 +1726,12 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}). \strong{Required} by the API.}
+\item{\code{symbol}}{(scalar<character> | NULL) trading pair (e.g., \code{"BTC-USDT"}). \strong{Required} by the API.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with open order details including \code{created_at} (POSIXct).
+(data.table | promise<data.table>) one row per open order, including the creation datetime (POSIXct).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1864,25 +1848,25 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character or NULL; trading pair (e.g., \code{"BTC-USDT"}).
+\item{\code{symbol}}{(scalar<character> | NULL) trading pair (e.g., \code{"BTC-USDT"}).
 If NULL, returns closed orders across all symbols.}
 
-\item{\code{side}}{Character or NULL; \code{"buy"} or \code{"sell"}.}
+\item{\code{side}}{(scalar<character> | NULL) \code{"buy"} or \code{"sell"}.}
 
-\item{\code{type}}{Character or NULL; \code{"limit"} or \code{"market"}.}
+\item{\code{type}}{(scalar<character> | NULL) \code{"limit"} or \code{"market"}.}
 
-\item{\code{startAt}}{Integer or NULL; start timestamp in milliseconds.}
+\item{\code{startAt}}{(scalar<numeric> | NULL) start timestamp in milliseconds.}
 
-\item{\code{endAt}}{Integer or NULL; end timestamp in milliseconds.}
+\item{\code{endAt}}{(scalar<numeric> | NULL) end timestamp in milliseconds.}
 
-\item{\code{limit}}{Integer or NULL; results per page (max 200).}
+\item{\code{limit}}{(scalar<count> | NULL) results per page (max 200).}
 
-\item{\code{lastId}}{Character or NULL; pagination cursor.}
+\item{\code{lastId}}{(scalar<character> | NULL) pagination cursor.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with closed order details including \code{created_at} (POSIXct).
+(data.table | promise<data.table>) one row per closed order, including the creation datetime (POSIXct).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1994,52 +1978,43 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{type}}{Character; \code{"limit"} or \code{"market"}.}
+\item{\code{type}}{(scalar<character>) \code{"limit"} or \code{"market"}.}
 
-\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
+\item{\code{symbol}}{(scalar<character>) trading pair (e.g., \code{"BTC-USDT"}).}
 
-\item{\code{side}}{Character; \code{"buy"} or \code{"sell"}.}
+\item{\code{side}}{(scalar<character>) \code{"buy"} or \code{"sell"}.}
 
-\item{\code{clientOid}}{Character or NULL; unique client order ID (max 40 chars).}
+\item{\code{clientOid}}{(scalar<character> | NULL) unique client order ID (max 40 chars).}
 
-\item{\code{price}}{Numeric or NULL; price for limit orders.}
+\item{\code{price}}{(scalar<numeric> | scalar<character> | NULL) price for limit orders.}
 
-\item{\code{size}}{Numeric or NULL; quantity in base currency.}
+\item{\code{size}}{(scalar<numeric> | scalar<character> | NULL) quantity in base currency.}
 
-\item{\code{funds}}{Numeric or NULL; amount in quote currency for market orders.}
+\item{\code{funds}}{(scalar<numeric> | scalar<character> | NULL) amount in quote currency for market orders.}
 
-\item{\code{stp}}{Character or NULL; self-trade prevention: \code{"CN"}, \code{"CO"}, \code{"CB"}, \code{"DC"}.}
+\item{\code{stp}}{(scalar<character> | NULL) self-trade prevention: \code{"CN"}, \code{"CO"}, \code{"CB"}, \code{"DC"}.}
 
-\item{\code{tags}}{Character or NULL; order tag (max 20 ASCII chars).}
+\item{\code{tags}}{(scalar<character> | NULL) order tag (max 20 ASCII chars).}
 
-\item{\code{remark}}{Character or NULL; remarks (max 20 ASCII chars).}
+\item{\code{remark}}{(scalar<character> | NULL) remarks (max 20 ASCII chars).}
 
-\item{\code{timeInForce}}{Character or NULL; \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
+\item{\code{timeInForce}}{(scalar<character> | NULL) \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
 
-\item{\code{cancelAfter}}{Numeric or NULL; auto-cancel seconds (requires \code{timeInForce = "GTT"}).}
+\item{\code{cancelAfter}}{(scalar<numeric> | NULL) auto-cancel seconds (requires \code{timeInForce = "GTT"}).}
 
-\item{\code{postOnly}}{Logical or NULL; if TRUE, order rejected if it would match immediately.}
+\item{\code{postOnly}}{(scalar<logical> | NULL) if TRUE, order rejected if it would match immediately.}
 
-\item{\code{hidden}}{Logical or NULL; if TRUE, order hidden from order book.}
+\item{\code{hidden}}{(scalar<logical> | NULL) if TRUE, order hidden from order book.}
 
-\item{\code{iceberg}}{Logical or NULL; if TRUE, only \code{visibleSize} is shown.}
+\item{\code{iceberg}}{(scalar<logical> | NULL) if TRUE, only \code{visibleSize} is shown.}
 
-\item{\code{visibleSize}}{Numeric or NULL; visible quantity for iceberg orders.}
+\item{\code{visibleSize}}{(scalar<numeric> | scalar<character> | NULL) visible quantity for iceberg orders.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{order_id} (character): KuCoin-assigned order identifier.
-\item \code{client_oid} (character): Client-provided order identifier (NA if not supplied).
-\item \code{order_time} (numeric): Order placement time in milliseconds.
-\item \code{origin_size} (character): Original order size.
-\item \code{deal_size} (character): Filled size.
-\item \code{remain_size} (character): Remaining unfilled size.
-\item \code{canceled_size} (character): Cancelled size.
-\item \code{status} (character): \code{"open"} or \code{"done"}.
-}
+(data.table | promise<data.table>) one row giving the order and client identifiers, the order placement
+datetime, the original, filled, remaining, and cancelled sizes, and the fill status.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2093,7 +2068,9 @@ Verified: 2026-05-23
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
   --header 'KC-API-PASSPHRASE: your-passphrase' \\
   --header 'KC-API-KEY-VERSION: 2' \\
-  --data-raw '\{"orderList":[\{"clientOid":"id1","symbol":"BTC-USDT","type":"limit","side":"buy","price":"30000","size":"0.00001"\}]\}'
+  --data-raw \\
+  '\{"orderList":[\{"clientOid":"id1","symbol":"BTC-USDT","type":"limit","side":"buy","price":"30000",
+  "size":"0.00001"\}]\}'
 }\if{html}{\out{</div>}}
 }
 
@@ -2160,21 +2137,13 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{order_list}}{List of named lists; each containing order parameters. Maximum 20 orders.}
+\item{\code{order_list}}{(list) list of named lists; each containing order parameters. Maximum 20 orders.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with per-order results:
-\itemize{
-\item \code{order_id} (character): KuCoin-assigned order identifier.
-\item \code{client_oid} (character): Client-provided order identifier (NA if not supplied).
-\item \code{success} (logical): Whether the order was accepted.
-\item \code{status} (character): Fill status.
-\item \code{deal_size} (character): Filled quantity.
-\item \code{remain_size} (character): Remaining unfilled quantity.
-\item \code{canceled_size} (character): Cancelled quantity.
-}
+(data.table | promise<data.table>) one row per order giving the order and client identifiers, the success
+flag, the fill status, and the filled, remaining, and cancelled quantities.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2209,7 +2178,8 @@ Returns the final order state including fill and cancellation sizes.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld-sync}{KuCoin Cancel Order By OrderId Sync}
+KuCoin Cancel Order By OrderId Sync:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld-sync}
 
 Verified: 2026-05-23
 }
@@ -2255,22 +2225,15 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{orderId}}{Character; the KuCoin order ID to cancel.}
+\item{\code{orderId}}{(scalar<character>) the KuCoin order ID to cancel.}
 
-\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
+\item{\code{symbol}}{(scalar<character>) trading pair (e.g., \code{"BTC-USDT"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{order_id} (character): Order ID.
-\item \code{origin_size} (character): Original order size.
-\item \code{deal_size} (character): Filled size.
-\item \code{remain_size} (character): Remaining size.
-\item \code{canceled_size} (character): Cancelled size.
-\item \code{status} (character): \code{"open"} or \code{"done"}.
-}
+(data.table | promise<data.table>) one row giving the order ID, the original, filled, remaining, and
+cancelled sizes, and the fill status.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2299,7 +2262,8 @@ Cancels an order by client OID and waits for completion before returning.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid-sync}{KuCoin Cancel Order By ClientOid Sync}
+KuCoin Cancel Order By ClientOid Sync:
+\url{https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid-sync}
 
 Verified: 2026-05-23
 }
@@ -2339,22 +2303,15 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{clientOid}}{Character; client order ID.}
+\item{\code{clientOid}}{(scalar<character>) client order ID.}
 
-\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}).}
+\item{\code{symbol}}{(scalar<character>) trading pair (e.g., \code{"BTC-USDT"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{client_oid} (character): Client order ID.
-\item \code{origin_size} (character): Original order size.
-\item \code{deal_size} (character): Filled size.
-\item \code{remain_size} (character): Remaining size.
-\item \code{canceled_size} (character): Cancelled size.
-\item \code{status} (character): \code{"open"} or \code{"done"}.
-}
+(data.table | promise<data.table>) one row giving the client order ID, the original, filled, remaining,
+and cancelled sizes, and the fill status.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2446,24 +2403,23 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; trading pair (e.g., \code{"BTC-USDT"}). Required.}
+\item{\code{symbol}}{(scalar<character>) trading pair (e.g., \code{"BTC-USDT"}). Required.}
 
-\item{\code{orderId}}{Character or NULL; KuCoin order ID. At least one of \code{orderId} or \code{clientOid} required.}
+\item{\code{orderId}}{(scalar<character> | NULL) KuCoin order ID. At least one of \code{orderId} or \code{clientOid} required.}
 
-\item{\code{clientOid}}{Character or NULL; client order ID. At least one of \code{orderId} or \code{clientOid} required.}
+\item{\code{clientOid}}{(scalar<character> | NULL) client order ID. At least one of \code{orderId} or \code{clientOid} required.}
 
-\item{\code{newPrice}}{Character or NULL; new order price. At least one of \code{newPrice} or \code{newSize} required.}
+\item{\code{newPrice}}{(scalar<numeric> | scalar<character> | NULL) new order price. At least one of \code{newPrice} or
+\code{newSize} required.}
 
-\item{\code{newSize}}{Character or NULL; new order size. At least one of \code{newPrice} or \code{newSize} required.}
+\item{\code{newSize}}{(scalar<numeric> | scalar<character> | NULL) new order size. At least one of \code{newPrice} or
+\code{newSize} required.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{new_order_id} (character): The replacement order's ID.
-\item \code{client_oid} (character): The original client order ID.
-}
+(data.table | promise<data.table>) one row giving the replacement order's ID and the original client
+order ID.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2551,19 +2507,16 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{timeout}}{Integer; trigger duration in seconds. Use \code{-1} to disable, or \code{5} to \code{86400}.}
+\item{\code{timeout}}{(scalar<numeric>) trigger duration in seconds. Use \code{-1} to disable, or \code{5} to \code{86400}.}
 
-\item{\code{symbols}}{Character or NULL; comma-separated trading pairs (max 50).
+\item{\code{symbols}}{(scalar<character> | NULL) comma-separated trading pairs (max 50).
 Empty or NULL applies to all pairs.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{current_time} (integer): Current server time in seconds.
-\item \code{trigger_time} (integer): When cancellation will trigger, in seconds.
-}
+(data.table | promise<data.table>) one row giving the current server time and the time at which
+cancellation will trigger, both in seconds.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2632,13 +2585,9 @@ Verified: 2026-05-23
 }
 
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{timeout} (integer): Auto-cancel trigger time in seconds. \code{-1} if unset.
-\item \code{symbols} (character): Comma-separated trading pairs, or empty for all.
-\item \code{current_time} (integer): Current server time in seconds.
-\item \code{trigger_time} (integer): When cancellation will trigger.
-}
+(data.table | promise<data.table>) one row giving the auto-cancel trigger time, the protected symbols,
+the current server time, and the time at which cancellation will trigger; an empty data.table if DCP is not
+configured.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

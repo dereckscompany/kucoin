@@ -1,0 +1,24 @@
+{
+  "code": "200000",
+  "data": [
+    {
+      "symbol": "XBTUSDTM",
+      "tradeId": "fill-001",
+      "orderId": "futures-order-001",
+      "side": "buy",
+      "liquidity": "taker",
+      "forceTaker": true,
+      "price": "98250.0",
+      "size": 1,
+      "value": "98.25",
+      "feeRate": "0.0006",
+      "fixFee": "0",
+      "feeCurrency": "USDT",
+      "fee": "0.05895",
+      "orderType": "limit",
+      "tradeType": "trade",
+      "tradeTime": 1729159459033000000,
+      "createdAt": 1729159459033
+    }
+  ]
+}

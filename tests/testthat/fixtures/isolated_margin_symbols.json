@@ -1,0 +1,37 @@
+{
+  "code": "200000",
+  "data": [
+    {
+      "symbol": "BTC-USDT",
+      "symbolName": "BTC-USDT",
+      "baseCurrency": "BTC",
+      "quoteCurrency": "USDT",
+      "maxLeverage": 10,
+      "flDebtRatio": "0.97",
+      "tradeEnable": true,
+      "autoRenewMaxDebtRatio": "0.94",
+      "baseBorrowEnable": true,
+      "quoteBorrowEnable": true,
+      "baseTransferInEnable": true,
+      "quoteTransferInEnable": true,
+      "baseBorrowCoefficient": "1",
+      "quoteBorrowCoefficient": "1"
+    },
+    {
+      "symbol": "ETH-USDT",
+      "symbolName": "ETH-USDT",
+      "baseCurrency": "ETH",
+      "quoteCurrency": "USDT",
+      "maxLeverage": 5,
+      "flDebtRatio": "0.97",
+      "tradeEnable": true,
+      "autoRenewMaxDebtRatio": "0.94",
+      "baseBorrowEnable": true,
+      "quoteBorrowEnable": true,
+      "baseTransferInEnable": true,
+      "quoteTransferInEnable": true,
+      "baseBorrowCoefficient": "1",
+      "quoteBorrowCoefficient": "1"
+    }
+  ]
+}

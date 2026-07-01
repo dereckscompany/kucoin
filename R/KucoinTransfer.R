@@ -111,7 +111,9 @@ KucoinTransfer <- R6::R6Class(
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
     #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
     #'   --header 'KC-API-KEY-VERSION: 2' \
-    #'   --data-raw '{"clientOid":"64ccc0f164781800010d8c09","currency":"USDT","amount":"10","type":"INTERNAL","fromAccountType":"MAIN","toAccountType":"TRADE"}'
+    #'   --data-raw \
+    #'   '{"clientOid":"64ccc0f164781800010d8c09","currency":"USDT","amount":"10","type":"INTERNAL",
+    #'   "fromAccountType":"MAIN","toAccountType":"TRADE"}'
     #' ```
     #'
     #' ### JSON Response
@@ -124,19 +126,29 @@ KucoinTransfer <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param clientOid Character; unique client order ID for idempotency (max 128 bits, e.g., UUID).
-    #' @param currency Character; currency code (e.g., `"BTC"`, `"USDT"`).
-    #' @param amount Character; transfer amount (positive, multiple of currency precision).
-    #' @param type Character; transfer type: `"INTERNAL"`, `"PARENT_TO_SUB"`, or `"SUB_TO_PARENT"`.
-    #' @param fromAccountType Character; source account type: `"MAIN"`, `"TRADE"`, `"CONTRACT"`,
-    #'   `"MARGIN"`, `"ISOLATED"`, `"MARGIN_V2"`, `"ISOLATED_V2"`.
-    #' @param toAccountType Character; destination account type (same options as `fromAccountType`).
-    #' @param fromUserId Character or NULL; source user ID (required for `"SUB_TO_PARENT"` transfers).
-    #' @param fromAccountTag Character or NULL; symbol for ISOLATED/ISOLATED_V2 source accounts (e.g., `"BTC-USDT"`).
-    #' @param toUserId Character or NULL; destination user ID (required for `"PARENT_TO_SUB"` transfers).
-    #' @param toAccountTag Character or NULL; symbol for ISOLATED/ISOLATED_V2 destination accounts (e.g., `"BTC-USDT"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row and columns:
-    #'   - `order_id` (character): The transfer order identifier.
+    #' @param clientOid (scalar<character>) unique client order ID for
+    #'   idempotency (max 128 bits, e.g., UUID).
+    #' @param currency (scalar<character>) currency code (e.g., `"BTC"`,
+    #'   `"USDT"`).
+    #' @param amount (scalar<character>) transfer amount (positive, multiple of
+    #'   currency precision).
+    #' @param type (scalar<character>) transfer type: `"INTERNAL"`,
+    #'   `"PARENT_TO_SUB"`, or `"SUB_TO_PARENT"`.
+    #' @param fromAccountType (scalar<character>) source account type: `"MAIN"`,
+    #'   `"TRADE"`, `"CONTRACT"`, `"MARGIN"`, `"ISOLATED"`, `"MARGIN_V2"`,
+    #'   `"ISOLATED_V2"`.
+    #' @param toAccountType (scalar<character>) destination account type (same
+    #'   options as `fromAccountType`).
+    #' @param fromUserId (scalar<character> | NULL) source user ID (required for
+    #'   `"SUB_TO_PARENT"` transfers).
+    #' @param fromAccountTag (scalar<character> | NULL) symbol for
+    #'   ISOLATED/ISOLATED_V2 source accounts (e.g., `"BTC-USDT"`).
+    #' @param toUserId (scalar<character> | NULL) destination user ID (required
+    #'   for `"PARENT_TO_SUB"` transfers).
+    #' @param toAccountTag (scalar<character> | NULL) symbol for
+    #'   ISOLATED/ISOLATED_V2 destination accounts (e.g., `"BTC-USDT"`).
+    #' @return (data.table | promise<data.table>) one row with column `order_id`
+    #'   (character): the transfer order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -176,6 +188,18 @@ KucoinTransfer <- R6::R6Class(
       toUserId = NULL,
       toAccountTag = NULL
     ) {
+      assert_args_KucoinTransfer__add_transfer(
+        clientOid,
+        currency,
+        amount,
+        type,
+        fromAccountType,
+        toAccountType,
+        fromUserId,
+        fromAccountTag,
+        toUserId,
+        toAccountTag
+      )
       if (!is.character(clientOid) || !nzchar(clientOid)) {
         rlang::abort("Parameter 'clientOid' must be a non-empty string.")
       }
@@ -230,11 +254,16 @@ KucoinTransfer <- R6::R6Class(
         body$toAccountTag <- toAccountTag
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v3/accounts/universal-transfer",
         method = "POST",
         body = body,
         .parser = as_dt_row
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinTransfer__add_transfer,
+        is_async = private$.is_async
       ))
     },
 
@@ -287,17 +316,17 @@ KucoinTransfer <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param currency Character; currency code (e.g., `"BTC"`, `"USDT"`).
-    #' @param type Character; account type: `"MAIN"`, `"TRADE"`, `"MARGIN"`,
-    #'   `"ISOLATED"`, `"MARGIN_V2"`, `"ISOLATED_V2"`.
-    #' @param tag Character or NULL; trading pair symbol required for `"ISOLATED"`
-    #'   account type (e.g., `"BTC-USDT"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row and columns:
-    #'   - `currency` (character): Currency code.
-    #'   - `balance` (character): Total funds in the account.
-    #'   - `available` (character): Funds available to withdraw or trade.
-    #'   - `holds` (character): Funds on hold (locked in open orders).
-    #'   - `transferable` (character): Funds available for transfer.
+    #' @param currency (scalar<character>) currency code (e.g., `"BTC"`,
+    #'   `"USDT"`).
+    #' @param type (scalar<character>) account type: `"MAIN"`, `"TRADE"`,
+    #'   `"MARGIN"`, `"ISOLATED"`, `"MARGIN_V2"`, `"ISOLATED_V2"`.
+    #' @param tag (scalar<character> | NULL) trading pair symbol required for
+    #'   `"ISOLATED"` account type (e.g., `"BTC-USDT"`).
+    #' @return (data.table | promise<data.table>) one row with the balance
+    #'   breakdown: `currency` (currency code), `balance` (total funds),
+    #'   `available` (funds available to withdraw or trade), `holds` (funds
+    #'   locked in open orders), and `transferable` (funds available for
+    #'   transfer) -- all character.
     #'
     #' @examples
     #' \dontrun{
@@ -312,6 +341,7 @@ KucoinTransfer <- R6::R6Class(
     #' print(trade_bal$transferable)
     #' }
     get_transferable = function(currency, type, tag = NULL) {
+      assert_args_KucoinTransfer__get_transferable(currency, type, tag)
       if (!is.character(currency) || !nzchar(currency)) {
         rlang::abort("Parameter 'currency' must be a non-empty string.")
       }
@@ -324,7 +354,7 @@ KucoinTransfer <- R6::R6Class(
         ))
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/accounts/transferable",
         query = list(currency = currency, type = type, tag = tag),
         .parser = function(data) {
@@ -336,6 +366,11 @@ KucoinTransfer <- R6::R6Class(
           data.table::setcolorder(dt, intersect(expected, names(dt)))
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinTransfer__get_transferable,
+        is_async = private$.is_async
       ))
     }
   )

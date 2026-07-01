@@ -1,0 +1,14 @@
+{
+  "code": "200000",
+  "data": {
+    "items": [
+      {
+        "orderNo": "repay-order-001",
+        "currency": "USDT",
+        "principal": "1000",
+        "interest": "0.5",
+        "createdTime": 1729655606816
+      }
+    ]
+  }
+}

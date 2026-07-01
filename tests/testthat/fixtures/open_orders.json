@@ -1,0 +1,36 @@
+{
+  "code": "200000",
+  "data": [
+    {
+      "id": "670fd33bf9406e0007ab3945",
+      "symbol": "BTC-USDT",
+      "opType": "DEAL",
+      "type": "limit",
+      "side": "buy",
+      "price": "50000",
+      "size": "0.0001",
+      "funds": "0",
+      "dealSize": "0",
+      "dealFunds": "0",
+      "fee": "0",
+      "feeCurrency": "USDT",
+      "stp": "",
+      "timeInForce": "GTC",
+      "cancelAfter": -1,
+      "postOnly": false,
+      "hidden": false,
+      "iceberg": false,
+      "visibleSize": "0",
+      "cancelledSize": "0",
+      "cancelledFunds": "0",
+      "remainSize": "0.0001",
+      "remainFunds": "0",
+      "active": true,
+      "inOrderBook": true,
+      "clientOid": "5c52e11203aa677f33e493fb",
+      "tags": "",
+      "createdAt": 1729577515473,
+      "lastUpdatedAt": 1729577515500
+    }
+  ]
+}

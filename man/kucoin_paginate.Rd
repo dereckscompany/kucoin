@@ -24,45 +24,49 @@ kucoin_paginate(
 )
 }
 \arguments{
-\item{base_url}{Character; the API base URL.}
+\item{base_url}{(scalar<character>) the API base URL.}
 
-\item{endpoint}{Character; the API path.}
+\item{endpoint}{(scalar<character>) the API path.}
 
-\item{method}{Character; HTTP method. Default \code{"GET"}.}
+\item{method}{(scalar<character>) HTTP method. Default \code{"GET"}.}
 
-\item{query}{Named list; initial query parameters. Default \code{list()}.}
+\item{query}{(list) initial query parameters. Default \code{list()}.}
 
-\item{body}{Named list or NULL; request body. Default \code{NULL}.}
+\item{body}{(list | NULL) request body. Default \code{NULL}.}
 
-\item{keys}{List or NULL; API credentials. Default \code{NULL}.}
+\item{keys}{(list | NULL) API credentials. Default \code{NULL}.}
 
-\item{sign}{Function or NULL; the \code{.sign()} seam forwarded to
+\item{sign}{(function | NULL) the \code{.sign()} seam forwarded to
 \code{\link[connectcore:build_request]{connectcore::build_request()}}. Default \code{NULL} (use KuCoin's own
 \code{kucoin_sign_req()} signer).}
 
-\item{parse_envelope}{Function; the \code{.parse_envelope()} seam forwarded to
+\item{parse_envelope}{(function) the \code{.parse_envelope()} seam forwarded to
 \code{\link[connectcore:build_request]{connectcore::build_request()}}. Default \code{parse_kucoin_response()}.}
 
-\item{.perform}{Function; the httr2 perform function.}
+\item{.perform}{(function) the httr2 perform function.}
 
-\item{.parser}{Function; post-processing for the final accumulated result.
+\item{.parser}{(function) post-processing for the final accumulated result.
 Default \code{identity}.}
 
-\item{is_async}{Logical; whether in async mode. Default \code{FALSE}.}
+\item{is_async}{(scalar<logical>) whether in async mode. Default \code{FALSE}.}
 
-\item{page_size}{Integer; results per page. Default \code{50}.}
+\item{page_size}{(scalar<count in [1, Inf[>) results per page. Default \code{50}.}
 
-\item{max_pages}{Numeric; maximum pages to fetch. Default \code{Inf}.}
+\item{max_pages}{(scalar<numeric in [1, Inf]>) maximum pages to fetch.
+Default \code{Inf}.}
 
-\item{items_field}{Character; name of the items field. Default \code{"items"}.}
+\item{items_field}{(scalar<character>) name of the items field. Default
+\code{"items"}.}
 
-\item{timeout}{Numeric; request timeout in seconds. Default \code{30}.}
+\item{timeout}{(scalar<numeric in ]0, Inf[>) request timeout in seconds.
+Default \code{30}.}
 
-\item{.get_timestamp_ms}{Function or NULL; custom timestamp provider for
+\item{.get_timestamp_ms}{(function | NULL) custom timestamp provider for
 request signing. If \code{NULL}, uses the default internal timestamp function.}
 }
 \value{
-Parsed and post-processed result, or a promise thereof.
+(any | promise<any>) parsed and post-processed result, or a promise
+thereof.
 }
 \description{
 Iteratively fetches pages from a paginated KuCoin endpoint. Aggregates

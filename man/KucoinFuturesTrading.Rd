@@ -14,8 +14,10 @@ KuCoin. Supports limit and market orders, stop orders, batch operations,
 and Dead Connection Protection (DCP). Inherits from \link{KucoinBase}.
 \subsection{Purpose and Scope}{
 \itemize{
-\item \strong{Order Placement}: Place single or batch limit/market futures orders with configurable leverage, margin mode, and position side.
-\item \strong{Order Cancellation}: Cancel individual orders by system ID or client OID, or cancel all open/stop orders at once.
+\item \strong{Order Placement}: Place single or batch limit/market futures orders with configurable leverage, margin mode, and
+position side.
+\item \strong{Order Cancellation}: Cancel individual orders by system ID or client OID, or cancel all open/stop orders at
+once.
 \item \strong{Order Queries}: Retrieve order details, paginated order lists, recent closed orders, and stop orders.
 \item \strong{Trade History}: Query fill records (paginated or recent) with fee and liquidity details.
 \item \strong{Risk Management}: Configure Dead Connection Protection (DCP) to auto-cancel orders on connectivity loss.
@@ -313,7 +315,7 @@ all_recent <- ft$get_recent_fills()
 \dontrun{
 ft <- KucoinFuturesTrading$new()
 stats <- ft$get_open_order_value(symbol = "XBTUSDTM")
-print(stats[, .(open_order_buy_qty, open_order_sell_qty, settle_currency)])
+print(stats[, .(open_order_buy_size, open_order_sell_size, settle_currency)])
 }
 
 ## ------------------------------------------------
@@ -390,18 +392,19 @@ Create a new KucoinFuturesTrading instance.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{keys}}{List; API credentials from \code{\link[=get_api_keys]{get_api_keys()}}.}
+\item{\code{keys}}{(list) API credentials from \code{\link[=get_api_keys]{get_api_keys()}}.}
 
-\item{\code{base_url}}{Character; Futures API base URL. Defaults to \code{\link[=get_futures_base_url]{get_futures_base_url()}}.}
+\item{\code{base_url}}{(scalar<character>) Futures API base URL. Defaults to
+\code{\link[=get_futures_base_url]{get_futures_base_url()}}.}
 
-\item{\code{async}}{Logical; if TRUE, methods return promises.}
+\item{\code{async}}{(scalar<logical>) if TRUE, methods return promises.}
 
-\item{\code{time_source}}{Character; \code{"local"} or \code{"server"}.}
+\item{\code{time_source}}{(scalar<character>) \code{"local"} or \code{"server"}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Invisible self.
+(class<KucoinFuturesTrading>) invisibly, the new instance.
 }
 }
 \if{html}{\out{<hr>}}
@@ -436,8 +439,10 @@ Verified: 2026-05-23
 \subsection{Automated Trading Usage}{
 \itemize{
 \item \strong{Leverage Control}: Set \code{leverage} to manage risk exposure per order.
-\item \strong{Position Modes}: Use \code{positionSide = "LONG"} or \code{"SHORT"} in hedge mode to manage both directions simultaneously.
-\item \strong{Reduce-Only}: Set \code{reduceOnly = TRUE} to ensure the order only closes existing positions, preventing accidental position increases.
+\item \strong{Position Modes}: Use \code{positionSide = "LONG"} or \code{"SHORT"} in hedge mode to manage both directions
+simultaneously.
+\item \strong{Reduce-Only}: Set \code{reduceOnly = TRUE} to ensure the order only closes existing positions, preventing
+accidental position increases.
 }
 }
 
@@ -514,41 +519,38 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{clientOid}}{Character; unique client order ID.}
+\item{\code{clientOid}}{(scalar<character>) unique client order ID.}
 
-\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+\item{\code{symbol}}{(scalar<character>) futures symbol (e.g., \code{"XBTUSDTM"}).}
 
-\item{\code{side}}{Character; \code{"buy"} or \code{"sell"}.}
+\item{\code{side}}{(scalar<character>) \code{"buy"} or \code{"sell"}.}
 
-\item{\code{type}}{Character; \code{"limit"} or \code{"market"}.}
+\item{\code{type}}{(scalar<character>) \code{"limit"} or \code{"market"}.}
 
-\item{\code{leverage}}{Integer; leverage multiplier.}
+\item{\code{leverage}}{(scalar<count in [1, Inf[>) leverage multiplier.}
 
-\item{\code{size}}{Integer; order quantity (number of contracts).}
+\item{\code{size}}{(scalar<count in [1, Inf[>) order quantity (number of contracts).}
 
-\item{\code{price}}{Character or NULL; price (required for limit orders).}
+\item{\code{price}}{(scalar<character> | NULL) price (required for limit orders).}
 
-\item{\code{marginMode}}{Character; \code{"ISOLATED"} or \code{"CROSS"}. Default \code{"ISOLATED"}.}
+\item{\code{marginMode}}{(scalar<character>) \code{"ISOLATED"} or \code{"CROSS"}. Default \code{"ISOLATED"}.}
 
-\item{\code{positionSide}}{Character; \code{"BOTH"} for one-way mode, \code{"LONG"} or
+\item{\code{positionSide}}{(scalar<character>) \code{"BOTH"} for one-way mode, \code{"LONG"} or
 \code{"SHORT"} for hedge mode. Default \code{"BOTH"}.}
 
-\item{\code{timeInForce}}{Character or NULL; e.g., \code{"GTC"}, \code{"IOC"}, \code{"FOK"}.}
+\item{\code{timeInForce}}{(scalar<character> | NULL) e.g., \code{"GTC"}, \code{"IOC"}, \code{"FOK"}.}
 
-\item{\code{reduceOnly}}{Logical or NULL; if TRUE, order only reduces position.}
+\item{\code{reduceOnly}}{(scalar<logical> | NULL) if TRUE, order only reduces position.}
 
-\item{\code{remark}}{Character or NULL; order notes.}
+\item{\code{remark}}{(scalar<character> | NULL) order notes.}
 
 \item{\code{...}}{Additional order parameters.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{order_id} (character): System-assigned order ID.
-\item \code{client_oid} (character): Client-provided order ID.
-}
+(data.table | promise<data.table>) one row giving the system-assigned order ID and the client-provided
+order ID.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -615,7 +617,8 @@ Verified: 2026-05-23
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Pre-Flight Validation}: Validate order parameters at bot startup to confirm API keys have trading permissions and symbols are correct.
+\item \strong{Pre-Flight Validation}: Validate order parameters at bot startup to confirm API keys have trading
+permissions and symbols are correct.
 \item \strong{Parameter Testing}: Test edge-case parameters (extreme leverage, unusual sizes) without risking capital.
 \item \strong{Integration Testing}: Use in CI/CD pipelines to verify order construction logic.
 }
@@ -692,41 +695,38 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{clientOid}}{Character; unique client order ID.}
+\item{\code{clientOid}}{(scalar<character>) unique client order ID.}
 
-\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+\item{\code{symbol}}{(scalar<character>) futures symbol (e.g., \code{"XBTUSDTM"}).}
 
-\item{\code{side}}{Character; \code{"buy"} or \code{"sell"}.}
+\item{\code{side}}{(scalar<character>) \code{"buy"} or \code{"sell"}.}
 
-\item{\code{type}}{Character; \code{"limit"} or \code{"market"}.}
+\item{\code{type}}{(scalar<character>) \code{"limit"} or \code{"market"}.}
 
-\item{\code{leverage}}{Integer; leverage multiplier.}
+\item{\code{leverage}}{(scalar<count in [1, Inf[>) leverage multiplier.}
 
-\item{\code{size}}{Integer; order quantity (number of contracts).}
+\item{\code{size}}{(scalar<count in [1, Inf[>) order quantity (number of contracts).}
 
-\item{\code{price}}{Character or NULL; price (required for limit orders).}
+\item{\code{price}}{(scalar<character> | NULL) price (required for limit orders).}
 
-\item{\code{marginMode}}{Character; \code{"ISOLATED"} or \code{"CROSS"}. Default \code{"ISOLATED"}.}
+\item{\code{marginMode}}{(scalar<character>) \code{"ISOLATED"} or \code{"CROSS"}. Default \code{"ISOLATED"}.}
 
-\item{\code{positionSide}}{Character; \code{"BOTH"} for one-way mode, \code{"LONG"} or
+\item{\code{positionSide}}{(scalar<character>) \code{"BOTH"} for one-way mode, \code{"LONG"} or
 \code{"SHORT"} for hedge mode. Default \code{"BOTH"}.}
 
-\item{\code{timeInForce}}{Character or NULL; e.g., \code{"GTC"}, \code{"IOC"}, \code{"FOK"}.}
+\item{\code{timeInForce}}{(scalar<character> | NULL) e.g., \code{"GTC"}, \code{"IOC"}, \code{"FOK"}.}
 
-\item{\code{reduceOnly}}{Logical or NULL; if TRUE, order only reduces position.}
+\item{\code{reduceOnly}}{(scalar<logical> | NULL) if TRUE, order only reduces position.}
 
-\item{\code{remark}}{Character or NULL; order notes.}
+\item{\code{remark}}{(scalar<character> | NULL) order notes.}
 
 \item{\code{...}}{Additional order parameters.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{order_id} (character): Simulated order ID.
-\item \code{client_oid} (character): Client-provided order ID.
-}
+(data.table | promise<data.table>) one row giving the simulated order ID and the client-provided order
+ID.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -876,21 +876,15 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{orders}}{List of order lists, each with the same fields as \code{add_order()}
+\item{\code{orders}}{(list) list of order lists, each with the same fields as \code{add_order()}
 (i.e., \code{clientOid}, \code{symbol}, \code{side}, \code{type}, \code{leverage}, \code{size}, and optional
 \code{price}, \code{marginMode}, \code{positionSide}, etc.).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row per order result:
-\itemize{
-\item \code{order_id} (character): System-assigned order ID.
-\item \code{client_oid} (character): Client-provided order ID.
-\item \code{symbol} (character): Futures symbol.
-\item \code{code} (character): Per-order status code (\code{"200000"} for success).
-\item \code{msg} (character): Per-order status message.
-}
+(data.table | promise<data.table>) one row per order result giving the system-assigned order ID, the
+client-provided order ID, the futures symbol, the per-order status code, and the per-order status message.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -934,7 +928,8 @@ order has already been filled or cancelled, the API returns an error.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-orderld}{KuCoin Cancel Futures Order By OrderId}
+KuCoin Cancel Futures Order By OrderId:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-orderld}
 
 Verified: 2026-05-23
 }
@@ -977,17 +972,13 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{orderId}}{Character; the system order ID to cancel.}
+\item{\code{orderId}}{(scalar<character>) the system order ID to cancel.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with
-\code{async = TRUE}) with one row per cancelled order, and column:
-\itemize{
-\item \code{cancelled_order_id} (character): Cancelled order ID. Empty
-\code{data.table} (zero rows) if no orders matched.
-}
+(data.table | promise<data.table>) one row per cancelled order giving the cancelled order ID; an empty
+data.table if no orders matched.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1024,7 +1015,8 @@ the symbol to disambiguate in case client OIDs are reused across symbols.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-clientoid}{KuCoin Cancel Futures Order By ClientOid}
+KuCoin Cancel Futures Order By ClientOid:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-clientoid}
 
 Verified: 2026-05-23
 }
@@ -1032,7 +1024,8 @@ Verified: 2026-05-23
 \subsection{Automated Trading Usage}{
 \itemize{
 \item \strong{Idempotent Cancellation}: Use client OIDs to cancel orders without needing to store system order IDs.
-\item \strong{Consistent State}: Cancel by the same ID used to place the order for easier state management in trading bots.
+\item \strong{Consistent State}: Cancel by the same ID used to place the order for easier state management in trading
+bots.
 }
 }
 
@@ -1065,17 +1058,14 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{clientOid}}{Character; the client order ID to cancel.}
+\item{\code{clientOid}}{(scalar<character>) the client order ID to cancel.}
 
-\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+\item{\code{symbol}}{(scalar<character>) futures symbol (e.g., \code{"XBTUSDTM"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{client_oid} (character): Cancelled client order ID.
-}
+(data.table | promise<data.table>) one row giving the cancelled client order ID.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1122,7 +1112,8 @@ Verified: 2026-05-23
 \itemize{
 \item \strong{Emergency Stop}: Cancel all open orders as part of a kill-switch or panic button.
 \item \strong{Strategy Reset}: Clear all pending orders before deploying a new trading strategy.
-\item \strong{Symbol-Scoped Cleanup}: Pass \code{symbol} to cancel only orders for a specific contract without affecting other positions.
+\item \strong{Symbol-Scoped Cleanup}: Pass \code{symbol} to cancel only orders for a specific contract without affecting other
+positions.
 }
 }
 
@@ -1159,18 +1150,14 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character or NULL; filter by futures symbol. When NULL,
+\item{\code{symbol}}{(scalar<character> | NULL) filter by futures symbol. When NULL,
 cancels all open orders across all symbols.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with
-\code{async = TRUE}) with one row per cancelled order, and column:
-\itemize{
-\item \code{cancelled_order_id} (character): Cancelled order ID. Empty
-\code{data.table} (zero rows) if no orders matched.
-}
+(data.table | promise<data.table>) one row per cancelled order giving the cancelled order ID; an empty
+data.table if no orders matched.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1213,7 +1200,8 @@ stop orders become regular orders and must be cancelled via \code{cancel_all()}.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-all-stop-orders}{KuCoin Cancel All Futures Stop Orders}
+KuCoin Cancel All Futures Stop Orders:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-all-stop-orders}
 
 Verified: 2026-05-23
 }
@@ -1257,18 +1245,14 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character or NULL; filter by futures symbol. When NULL,
+\item{\code{symbol}}{(scalar<character> | NULL) filter by futures symbol. When NULL,
 cancels all untriggered stop orders across all symbols.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with
-\code{async = TRUE}) with one row per cancelled order, and column:
-\itemize{
-\item \code{cancelled_order_id} (character): Cancelled order ID. Empty
-\code{data.table} (zero rows) if no orders matched.
-}
+(data.table | promise<data.table>) one row per cancelled order giving the cancelled order ID; an empty
+data.table if no orders matched.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1312,7 +1296,8 @@ configuration parameters.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-by-orderld}{KuCoin Get Futures Order By OrderId}
+KuCoin Get Futures Order By OrderId:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-by-orderld}
 
 Verified: 2026-05-23
 }
@@ -1391,26 +1376,13 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{orderId}}{Character; the system order ID.}
+\item{\code{orderId}}{(scalar<character>) the system order ID.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{id} (character): Order ID.
-\item \code{symbol} (character): Contract symbol.
-\item \code{type} (character): Order type (\code{"limit"} or \code{"market"}).
-\item \code{side} (character): \code{"buy"} or \code{"sell"}.
-\item \code{price} (character): Order price.
-\item \code{size} (integer): Order size in contracts.
-\item \code{leverage} (character): Leverage multiplier.
-\item \code{margin_mode} (character): \code{"ISOLATED"} or \code{"CROSS"}.
-\item \code{status} (character): Order status (e.g., \code{"open"}, \code{"done"}).
-\item \code{created_at} (POSIXct): Order creation time (coerced from milliseconds).
-\item \code{updated_at} (POSIXct): Last update time (coerced from milliseconds).
-\item \code{client_oid} (character): Client-provided order ID.
-}
+(data.table | promise<data.table>) one row of full order details, including the creation and last-updated
+datetimes (POSIXct, coerced from epoch milliseconds).
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1448,7 +1420,8 @@ order ID. Useful when the system order ID was not stored at placement time.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/get-stop-order-by-clientoid}{KuCoin Get Futures Order By ClientOid}
+KuCoin Get Futures Order By ClientOid:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/get-stop-order-by-clientoid}
 
 Note: KuCoin's URL slug here contains \code{get-stop-order-by-clientoid},
 but the page actually documents the regular order endpoint
@@ -1532,12 +1505,12 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{clientOid}}{Character; the client order ID.}
+\item{\code{clientOid}}{(scalar<character>) the client order ID.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}); same columns as \code{get_order_by_id()}.
+(data.table | promise<data.table>) one row of full order details; same columns as \code{get_order_by_id()}.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1663,16 +1636,15 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{query}}{Named list; query parameters. Use \code{status = "active"} for
+\item{\code{query}}{(list) query parameters. Use \code{status = "active"} for
 open orders, \code{status = "done"} for closed orders. Optional: \code{symbol},
 \code{side}, \code{type}, \code{startAt}, \code{endAt}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with order records; same columns as \code{get_order_by_id()}.
-
-Returns an empty \code{data.table} if no orders match the filters.
+(data.table | promise<data.table>) one row per order record (same columns as \code{get_order_by_id()}); an
+empty data.table if no orders match the filters.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1721,14 +1693,16 @@ require pagination -- it returns up to 1000 records in a single response.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-closed-orders}{KuCoin Get Recent Closed Futures Orders}
+KuCoin Get Recent Closed Futures Orders:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-closed-orders}
 
 Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Quick Fill Check}: Rapidly check which orders completed recently without paginating through the full order list.
+\item \strong{Quick Fill Check}: Rapidly check which orders completed recently without paginating through the full order
+list.
 \item \strong{Slippage Analysis}: Compare \code{avg_deal_price} against the original \code{price} for recently filled limit orders.
 \item \strong{Periodic Sync}: Poll this endpoint at intervals to update local order state.
 }
@@ -1802,14 +1776,13 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character or NULL; filter by futures symbol.}
+\item{\code{symbol}}{(scalar<character> | NULL) filter by futures symbol.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with order records; same columns as \code{get_order_by_id()}.
-
-Returns an empty \code{data.table} if no recently closed orders exist.
+(data.table | promise<data.table>) one row per order record (same columns as \code{get_order_by_id()}); an
+empty data.table if no recently closed orders exist.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1853,14 +1826,16 @@ Once triggered, they appear in the regular order list.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-stop-order-list}{KuCoin Get Futures Untriggered Stop Order List}
+KuCoin Get Futures Untriggered Stop Order List:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-stop-order-list}
 
 Verified: 2026-05-23
 }
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Stop-Loss Audit}: Verify that stop-loss orders are correctly placed and have not been accidentally cancelled.
+\item \strong{Stop-Loss Audit}: Verify that stop-loss orders are correctly placed and have not been accidentally
+cancelled.
 \item \strong{Risk Dashboard}: Monitor all pending stop orders to assess worst-case risk exposure.
 \item \strong{Strategy Sync}: Compare existing stop orders against the strategy's intended levels and correct any drift.
 }
@@ -1920,15 +1895,14 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{query}}{Named list; query parameters. Optional: \code{symbol}, \code{side},
+\item{\code{query}}{(list) query parameters. Optional: \code{symbol}, \code{side},
 \code{type}, \code{startAt}, \code{endAt}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with stop order records; same columns as \code{get_order_by_id()}.
-
-Returns an empty \code{data.table} if no untriggered stop orders exist.
+(data.table | promise<data.table>) one row per stop order record (same columns as \code{get_order_by_id()});
+an empty data.table if no untriggered stop orders exist.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2067,30 +2041,16 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{query}}{Named list; query parameters. Optional: \code{orderId}, \code{symbol},
+\item{\code{query}}{(list) query parameters. Optional: \code{orderId}, \code{symbol},
 \code{side}, \code{type}, \code{startAt}, \code{endAt}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{symbol} (character): Contract symbol.
-\item \code{trade_id} (character): Unique trade identifier.
-\item \code{order_id} (character): Associated order ID.
-\item \code{side} (character): \code{"buy"} or \code{"sell"}.
-\item \code{liquidity} (character): \code{"taker"} or \code{"maker"}.
-\item \code{price} (character): Fill price.
-\item \code{size} (integer): Fill size in contracts.
-\item \code{value} (character): Fill value in settlement currency.
-\item \code{fee} (character): Fee charged.
-\item \code{fee_currency} (character): Fee currency.
-\item \code{fee_rate} (character): Fee rate applied.
-\item \code{trade_time} (POSIXct): Trade timestamp (coerced from nanoseconds).
-\item \code{created_at} (POSIXct): Record creation time (coerced from milliseconds).
-}
-
-Returns an empty \code{data.table} if no fills match the filters.
+(data.table | promise<data.table>) one row per fill giving the contract symbol, trade identifier,
+associated order ID, side, liquidity, price, size in contracts, value in settlement currency, fee, fee
+currency, fee rate, the trade datetime (POSIXct, coerced from nanoseconds), and the record creation datetime
+(POSIXct, coerced from epoch milliseconds); an empty data.table if no fills match the filters.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2134,7 +2094,8 @@ trade executions.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-trade-history}{KuCoin Get Recent Futures Filled List}
+KuCoin Get Recent Futures Filled List:
+\url{https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-trade-history}
 
 Verified: 2026-05-23
 }
@@ -2199,14 +2160,13 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character or NULL; filter by futures symbol.}
+\item{\code{symbol}}{(scalar<character> | NULL) filter by futures symbol.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}); same columns as \code{get_fills()}.
-
-Returns an empty \code{data.table} if no recent fills exist.
+(data.table | promise<data.table>) one row per fill (same columns as \code{get_fills()}); an empty data.table
+if no recent fills exist.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2279,8 +2239,8 @@ Verified: 2026-05-23
 \if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
   "code": "200000",
   "data": \{
-    "openOrderBuyQty": 5,
-    "openOrderSellQty": 3,
+    "openOrderBuySize": 5,
+    "openOrderSellSize": 3,
     "openOrderBuyCost": "0.0005",
     "openOrderSellCost": "0.0003",
     "settleCurrency": "USDT"
@@ -2295,26 +2255,20 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character; futures symbol (e.g., \code{"XBTUSDTM"}).}
+\item{\code{symbol}}{(scalar<character>) futures symbol (e.g., \code{"XBTUSDTM"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{open_order_buy_qty} (integer): Total buy order quantity.
-\item \code{open_order_sell_qty} (integer): Total sell order quantity.
-\item \code{open_order_buy_cost} (character): Total buy order cost.
-\item \code{open_order_sell_cost} (character): Total sell order cost.
-\item \code{settle_currency} (character): Settlement currency.
-}
+(data.table | promise<data.table>) one row giving the total buy order size, total sell order
+size, total buy order cost, total sell order cost, and the settlement currency.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{\dontrun{
 ft <- KucoinFuturesTrading$new()
 stats <- ft$get_open_order_value(symbol = "XBTUSDTM")
-print(stats[, .(open_order_buy_qty, open_order_sell_qty, settle_currency)])
+print(stats[, .(open_order_buy_size, open_order_sell_size, settle_currency)])
 }
 }
 \if{html}{\out{</div>}}
@@ -2411,22 +2365,18 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{timeout}}{Integer; timeout in seconds. The DCP will cancel all applicable
+\item{\code{timeout}}{(scalar<numeric>) timeout in seconds. The DCP will cancel all applicable
 orders if no heartbeat (re-call of \code{set_dcp()}) is received within this period.
 Use \code{-1} to disable DCP.}
 
-\item{\code{symbol}}{Character or NULL; restrict DCP to a specific futures symbol.
+\item{\code{symbol}}{(scalar<character> | NULL) restrict DCP to a specific futures symbol.
 When NULL, DCP applies to all symbols.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{timeout} (integer): Configured timeout in seconds.
-\item \code{symbols} (character): Applicable symbols (empty for all).
-\item \code{current_time} (integer): Server time when DCP was set.
-}
+(data.table | promise<data.table>) one row giving the configured timeout in seconds, the applicable
+symbols (empty for all), and the server time when DCP was set.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2521,18 +2471,14 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{symbol}}{Character or NULL; query DCP settings for a specific futures symbol.
+\item{\code{symbol}}{(scalar<character> | NULL) query DCP settings for a specific futures symbol.
 When NULL, returns the global DCP configuration.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A single-row \code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with columns:
-\itemize{
-\item \code{timeout} (integer): Configured timeout in seconds.
-\item \code{symbols} (character): Applicable symbols.
-\item \code{current_time} (integer): Server time of the query.
-}
+(data.table | promise<data.table>) one row giving the configured timeout in seconds, the applicable
+symbols, and the server time of the query.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

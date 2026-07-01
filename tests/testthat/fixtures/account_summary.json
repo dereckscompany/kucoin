@@ -1,0 +1,17 @@
+{
+  "code": "200000",
+  "data": {
+    "level": 1,
+    "subQuantity": 3,
+    "maxDefaultSubQuantity": 5,
+    "maxSubQuantity": 5,
+    "spotSubQuantity": 2,
+    "marginSubQuantity": 1,
+    "futuresSubQuantity": 0,
+    "optionSubQuantity": 0,
+    "maxSpotSubQuantity": 5,
+    "maxMarginSubQuantity": 5,
+    "maxFuturesSubQuantity": 5,
+    "maxOptionSubQuantity": 5
+  }
+}

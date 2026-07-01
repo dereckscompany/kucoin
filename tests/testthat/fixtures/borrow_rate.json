@@ -1,0 +1,22 @@
+{
+  "code": "200000",
+  "data": {
+    "items": [
+      {
+        "currency": "BTC",
+        "hourlyBorrowRate": "0.000021",
+        "annualizedBorrowRate": "0.1839"
+      },
+      {
+        "currency": "USDT",
+        "hourlyBorrowRate": "0.000015",
+        "annualizedBorrowRate": "0.1314"
+      },
+      {
+        "currency": "ETH",
+        "hourlyBorrowRate": "0.000018",
+        "annualizedBorrowRate": "0.1577"
+      }
+    ]
+  }
+}

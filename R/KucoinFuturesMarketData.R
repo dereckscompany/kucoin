@@ -64,18 +64,22 @@ KucoinFuturesMarketData <- R6::R6Class(
   inherit = KucoinBase,
   public = list(
     #' @description Create a new KucoinFuturesMarketData instance.
-    #' @param keys List; API credentials from [get_api_keys()].
-    #' @param base_url Character; Futures API base URL. Defaults to [get_futures_base_url()].
-    #' @param async Logical; if TRUE, methods return promises.
-    #' @param time_source Character; `"local"` or `"server"`.
-    #' @return Invisible self.
+    #' @noassert time_source
+    #' @param keys (list) API credentials from [get_api_keys()].
+    #' @param base_url (scalar<character>) Futures API base URL. Defaults to
+    #'   [get_futures_base_url()].
+    #' @param async (scalar<logical>) if TRUE, methods return promises.
+    #' @param time_source (scalar<character>) `"local"` or `"server"`.
+    #' @return (class<KucoinFuturesMarketData>) invisibly, the new instance.
     initialize = function(
       keys = get_api_keys(),
       base_url = get_futures_base_url(),
       async = FALSE,
       time_source = c("local", "server")
     ) {
-      return(super$initialize(keys = keys, base_url = base_url, async = async, time_source = time_source))
+      assert_args_KucoinFuturesMarketData__initialize(keys, base_url, async)
+      super$initialize(keys = keys, base_url = base_url, async = async, time_source = time_source)
+      return(invisible(self))
     },
 
     #' @description Get Contract Details
@@ -95,7 +99,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Contract Discovery**: Query contract specs to determine lot size, tick size, and leverage limits before placing orders.
+    #' - **Contract Discovery**: Query contract specs to determine lot size, tick size, and leverage limits before
+    #'   placing orders.
     #' - **Margin Calculations**: Use `initial_margin` and `maintain_margin` rates to pre-validate margin requirements.
     #' - **Fee Estimation**: Read `maker_fee_rate` and `taker_fee_rate` to estimate trading costs.
     #'
@@ -162,37 +167,14 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character; futures symbol (e.g., `"XBTUSDTM"`).
-    #' @return A single-row `data.table` (or `promise<data.table>` if
-    #'   constructed with `async = TRUE`) with the contract specification
-    #'   flattened to one row per symbol. Key columns:
-    #'   - `symbol` (character): Contract symbol.
-    #'   - `root_symbol` (character): Root symbol (e.g., `"USDT"`).
-    #'   - `type` (character): Contract type (e.g., `"FFWCSX"` for perpetual).
-    #'   - `base_currency` (character): Base currency code.
-    #'   - `quote_currency` (character): Quote currency code.
-    #'   - `settle_currency` (character): Settlement currency code.
-    #'   - `lot_size` (integer): Minimum order size in contracts.
-    #'   - `tick_size` (numeric): Minimum price increment.
-    #'   - `multiplier` (numeric): Contract value multiplier.
-    #'   - `initial_margin` (numeric): Initial margin rate.
-    #'   - `maintain_margin` (numeric): Maintenance margin rate.
-    #'   - `max_leverage` (integer): Maximum allowed leverage.
-    #'   - `maker_fee_rate` (numeric): Maker fee rate.
-    #'   - `taker_fee_rate` (numeric): Taker fee rate.
-    #'   - `status` (character): Contract status (e.g., `"Open"`).
-    #'   - `mark_price` (numeric): Current mark price.
-    #'   - `index_price` (numeric): Underlying index price.
-    #'   - `last_trade_price` (numeric): Last traded price.
-    #'   - `funding_fee_rate` (numeric): Current funding fee rate.
-    #'   - `predicted_funding_fee_rate` (numeric): Predicted next funding fee rate.
-    #'   - `open_interest` (character): Current open interest.
-    #'   - `turnover_of24h` (numeric): 24h turnover in settlement currency.
-    #'   - `volume_of24h` (numeric): 24h trading volume.
-    #'   - `low_price` (numeric): 24h low price.
-    #'   - `high_price` (numeric): 24h high price.
-    #'   - `price_chg_pct` (numeric): 24h price change percentage.
-    #'   - `price_chg` (numeric): 24h price change.
+    #' @param symbol (scalar<character>) futures symbol (e.g., `"XBTUSDTM"`).
+    #' @return (data.table | promise<data.table>) one row giving the contract
+    #'   specification flattened to a single row, carrying the contract symbol,
+    #'   root symbol, type, base/quote/settlement currencies, lot and tick sizes,
+    #'   value multiplier, initial and maintenance margin rates, maximum leverage,
+    #'   maker and taker fee rates, status, mark/index/last-trade prices, current
+    #'   and predicted funding fee rates, open interest, 24-hour turnover, volume,
+    #'   low and high prices, and the 24-hour price change percentage and amount.
     #'
     #' @examples
     #' \dontrun{
@@ -201,15 +183,26 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' print(contract[, .(symbol, lot_size, tick_size, max_leverage)])
     #' }
     get_contract = function(symbol) {
-      return(private$.request(
+      assert_args_KucoinFuturesMarketData__get_contract(symbol)
+      assert::assert_nonempty_strings(symbol)
+      res <- private$.request(
         endpoint = paste0("/api/v1/contracts/", symbol),
         auth = FALSE,
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
             return(data.table::data.table()[])
           }
+          # `sourceExchanges` arrives as a JSON array (the mark-price source
+          # venues). Collapse it to a `;`-separated scalar so the generic
+          # flattener yields a plain character column, not a list column.
+          data <- collapse_string_array_fields(data, "sourceExchanges")
           return(as_dt_row(data)[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesMarketData__get_contract,
+        is_async = private$.is_async
       ))
     },
 
@@ -289,10 +282,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return A `data.table` (or `promise<data.table>` if constructed with
-    #'   `async = TRUE`) with one row per active contract; columns match
-    #'   `get_contract()`. Returns an empty `data.table` if no active
-    #'   contracts are returned.
+    #' @return (data.table | promise<data.table>) one row per active contract,
+    #'   carrying the same contract metadata as `get_contract()`.
     #'
     #' @examples
     #' \dontrun{
@@ -301,15 +292,24 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' print(contracts[, .(symbol, status, max_leverage, mark_price)])
     #' }
     get_all_contracts = function() {
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/contracts/active",
         auth = FALSE,
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
             return(data.table::data.table()[])
           }
+          # `sourceExchanges` arrives as a JSON array (the mark-price source
+          # venues). Collapse it to a `;`-separated scalar so the generic
+          # flattener yields a plain character column, not a list column.
+          data <- lapply(data, collapse_string_array_fields, fields = "sourceExchanges")
           return(as_dt_list(data)[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesMarketData__get_all_contracts,
+        is_async = private$.is_async
       ))
     },
 
@@ -330,7 +330,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Price Monitoring**: Poll the ticker to track best bid/ask spreads and last trade prices for signal generation.
+    #' - **Price Monitoring**: Poll the ticker to track best bid/ask spreads and last trade prices for signal
+    #'   generation.
     #' - **Execution Timing**: Use `side` of the last trade to gauge short-term directional momentum.
     #' - **Spread Analysis**: Compare `best_bid_price` and `best_ask_price` to measure market liquidity.
     #'
@@ -360,20 +361,12 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character; futures symbol (e.g., `"XBTUSDTM"`).
-    #' @return A single-row `data.table` (or `promise<data.table>` if
-    #'   constructed with `async = TRUE`) with columns:
-    #'   - `sequence` (integer): Sequence number.
-    #'   - `symbol` (character): Contract symbol.
-    #'   - `side` (character): Side of the last trade (`"buy"` or `"sell"`).
-    #'   - `size` (integer): Size of the last trade.
-    #'   - `trade_id` (character): Identifier of the last trade.
-    #'   - `price` (character): Last trade price.
-    #'   - `best_bid_size` (integer): Quantity at best bid.
-    #'   - `best_bid_price` (character): Best bid price.
-    #'   - `best_ask_price` (character): Best ask price.
-    #'   - `best_ask_size` (integer): Quantity at best ask.
-    #'   - `ts` (POSIXct): Ticker timestamp (coerced from nanoseconds).
+    #' @param symbol (scalar<character>) futures symbol (e.g., `"XBTUSDTM"`).
+    #' @return (data.table | promise<data.table>) one row giving the real-time
+    #'   ticker snapshot: the sequence number, contract symbol, last trade side,
+    #'   size, trade identifier and price, the best bid and ask prices with their
+    #'   sizes, and the ticker datetime (POSIXct, coerced from the nanosecond
+    #'   timestamp).
     #'
     #' @examples
     #' \dontrun{
@@ -382,7 +375,9 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' print(ticker[, .(symbol, price, best_bid_price, best_ask_price, ts)])
     #' }
     get_ticker = function(symbol) {
-      return(private$.request(
+      assert_args_KucoinFuturesMarketData__get_ticker(symbol)
+      assert::assert_nonempty_strings(symbol)
+      res <- private$.request(
         endpoint = "/api/v1/ticker",
         query = list(symbol = symbol),
         auth = FALSE,
@@ -394,6 +389,11 @@ KucoinFuturesMarketData <- R6::R6Class(
           coerce_cols(dt, "ts", ns_to_datetime)
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesMarketData__get_ticker,
+        is_async = private$.is_async
       ))
     },
 
@@ -457,10 +457,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return A `data.table` (or `promise<data.table>` if constructed with
-    #'   `async = TRUE`) with one row per contract; columns match
-    #'   `get_ticker()`. Returns an empty `data.table` if no tickers are
-    #'   returned.
+    #' @return (data.table | promise<data.table>) one row per contract, carrying
+    #'   the same ticker fields as `get_ticker()`.
     #'
     #' @examples
     #' \dontrun{
@@ -469,7 +467,7 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' print(all_tickers[, .(symbol, price, best_bid_price, best_ask_price)])
     #' }
     get_all_tickers = function() {
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/allTickers",
         auth = FALSE,
         .parser = function(data) {
@@ -480,6 +478,11 @@ KucoinFuturesMarketData <- R6::R6Class(
           coerce_cols(dt, "ts", ns_to_datetime)
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesMarketData__get_all_tickers,
+        is_async = private$.is_async
       ))
     },
 
@@ -535,16 +538,12 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character; futures symbol (e.g., `"XBTUSDTM"`).
-    #' @param size Integer; number of levels, either `20` or `100`. Default `20`.
-    #' @return A `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `ts` (POSIXct): Snapshot timestamp (coerced from nanoseconds).
-    #'   - `sequence` (character): Sequence number for change detection.
-    #'   - `side` (character): `"bid"` or `"ask"`.
-    #'   - `level` (integer): 1-indexed depth from top-of-book within the side
-    #'     (`level == 1` is best bid / best ask).
-    #'   - `price` (numeric): Price level.
-    #'   - `size` (numeric): Size at this price level.
+    #' @noassert size
+    #' @param symbol (scalar<character>) futures symbol (e.g., `"XBTUSDTM"`).
+    #' @param size (scalar<count>) number of levels, either `20` or `100`.
+    #'   Default `20`.
+    #' @return (data.table | promise<data.table>) the level-2 order book in long
+    #'   format (ts, sequence, side, level, price, size, and symbol when present).
     #'
     #' @examples
     #' \dontrun{
@@ -553,14 +552,21 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' print(ob[side == "bid"][order(level)][1:5])
     #' }
     get_part_orderbook = function(symbol, size = 20) {
+      assert_args_KucoinFuturesMarketData__get_part_orderbook(symbol)
+      assert::assert_nonempty_strings(symbol)
       size <- match.arg(as.character(size), c("20", "100"))
-      return(private$.request(
+      res <- private$.request(
         endpoint = paste0("/api/v1/level2/depth", size),
         query = list(symbol = symbol),
         auth = FALSE,
         .parser = function(data) {
           return(parse_futures_orderbook(data)[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesMarketData__get_part_orderbook,
+        is_async = private$.is_async
       ))
     },
 
@@ -620,15 +626,9 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character; futures symbol (e.g., `"XBTUSDTM"`).
-    #' @return A `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `ts` (POSIXct): Snapshot timestamp (coerced from nanoseconds).
-    #'   - `sequence` (character): Sequence number for change detection.
-    #'   - `side` (character): `"bid"` or `"ask"`.
-    #'   - `level` (integer): 1-indexed depth from top-of-book within the side
-    #'     (`level == 1` is best bid / best ask).
-    #'   - `price` (numeric): Price level.
-    #'   - `size` (numeric): Size at this price level.
+    #' @param symbol (scalar<character>) futures symbol (e.g., `"XBTUSDTM"`).
+    #' @return (data.table | promise<data.table>) the level-2 order book in long
+    #'   format (ts, sequence, side, level, price, size, and symbol when present).
     #'
     #' @examples
     #' \dontrun{
@@ -637,13 +637,20 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' print(full_ob[, .N, by = side])
     #' }
     get_full_orderbook = function(symbol) {
-      return(private$.request(
+      assert_args_KucoinFuturesMarketData__get_full_orderbook(symbol)
+      assert::assert_nonempty_strings(symbol)
+      res <- private$.request(
         endpoint = "/api/v1/level2/snapshot",
         query = list(symbol = symbol),
         auth = TRUE,
         .parser = function(data) {
           return(parse_futures_orderbook(data)[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesMarketData__get_full_orderbook,
+        is_async = private$.is_async
       ))
     },
 
@@ -703,18 +710,11 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character; futures symbol (e.g., `"XBTUSDTM"`).
-    #' @return A `data.table` (or `promise<data.table>` if constructed with
-    #'   `async = TRUE`) with one row per trade. Returns an empty
-    #'   `data.table` when KuCoin reports no recent trades. Columns:
-    #'   - `sequence` (integer): Trade sequence number.
-    #'   - `trade_id` (character): Unique trade identifier.
-    #'   - `taker_order_id` (character): Taker's order ID.
-    #'   - `maker_order_id` (character): Maker's order ID.
-    #'   - `price` (character): Trade price.
-    #'   - `size` (integer): Trade size in contracts.
-    #'   - `side` (character): Taker side (`"buy"` or `"sell"`).
-    #'   - `ts` (POSIXct): Trade timestamp (coerced from nanoseconds).
+    #' @param symbol (scalar<character>) futures symbol (e.g., `"XBTUSDTM"`).
+    #' @return (data.table | promise<data.table>) one row per recent trade, each
+    #'   giving the trade sequence number, trade identifier, taker and maker order
+    #'   identifiers, price, size in contracts, taker side (`"buy"` or `"sell"`),
+    #'   and the trade datetime (POSIXct, coerced from the nanosecond timestamp).
     #'
     #' @examples
     #' \dontrun{
@@ -723,7 +723,9 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' print(trades[, .(price, size, side, ts)])
     #' }
     get_trade_history = function(symbol) {
-      return(private$.request(
+      assert_args_KucoinFuturesMarketData__get_trade_history(symbol)
+      assert::assert_nonempty_strings(symbol)
+      res <- private$.request(
         endpoint = "/api/v1/trade/history",
         query = list(symbol = symbol),
         auth = FALSE,
@@ -735,6 +737,11 @@ KucoinFuturesMarketData <- R6::R6Class(
           coerce_cols(dt, "ts", ns_to_datetime)
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesMarketData__get_trade_history,
+        is_async = private$.is_async
       ))
     },
 
@@ -782,30 +789,24 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character; futures symbol (e.g., `"XBTUSDTM"`).
-    #' @param granularity Integer; candle interval in minutes. Supported values:
-    #'   1, 5, 15, 30, 60, 120, 240, 480, 720, 1440, 10080.
-    #' @param from POSIXct, numeric, or NULL; start time. If POSIXct, converted
-    #'   to milliseconds. If numeric, assumed to be milliseconds.
-    #' @param to POSIXct, numeric, or NULL; end time.
-    #' @param fetch_all Logical; if `TRUE`, automatically segments the time range
-    #'   into multiple API calls of up to 200 candles each, fetches all segments,
-    #'   deduplicates overlapping boundaries, and returns the combined result sorted
-    #'   by `datetime`. Both `from` and `to` are required when enabled.
-    #'   **Warning**: large date ranges will consume multiple API requests and may
-    #'   impact your rate-limit quota. Default `FALSE`.
-    #' @param sleep Numeric; seconds to wait between consecutive API calls when
-    #'   `fetch_all = TRUE`. Use this to avoid hitting KuCoin rate limits. Only
-    #'   applies in synchronous mode; async mode chains requests sequentially via
-    #'   promises. Default `0.2`.
-    #' @return A `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `datetime` (POSIXct): Candle open time (coerced from milliseconds).
-    #'   - `open` (numeric): Opening price.
-    #'   - `high` (numeric): Highest price.
-    #'   - `low` (numeric): Lowest price.
-    #'   - `close` (numeric): Closing price.
-    #'   - `volume` (numeric): Trading volume in contracts.
-    #'   - `turnover` (numeric): Trading turnover in settlement currency.
+    #' @noassert from, to
+    #' @param symbol (scalar<character>) futures symbol (e.g., `"XBTUSDTM"`).
+    #' @param granularity (scalar<count in [1, Inf[>) candle interval in minutes.
+    #'   Supported values: 1, 5, 15, 30, 60, 120, 240, 480, 720, 1440, 10080.
+    #' @param from (POSIXct | scalar<numeric> | NULL) start time. If POSIXct,
+    #'   converted to milliseconds. If numeric, assumed to be milliseconds.
+    #' @param to (POSIXct | scalar<numeric> | NULL) end time.
+    #' @param fetch_all (scalar<logical>) if `TRUE`, automatically segments the
+    #'   time range into multiple API calls of up to 200 candles each, fetches all
+    #'   segments, deduplicates overlapping boundaries, and returns the combined
+    #'   result sorted by `datetime`. Both `from` and `to` are required when
+    #'   enabled. **Warning**: large date ranges will consume multiple API requests
+    #'   and may impact your rate-limit quota. Default `FALSE`.
+    #' @param sleep (scalar<numeric in [0, Inf[>) seconds to wait between
+    #'   consecutive API calls when `fetch_all = TRUE`. Use this to avoid hitting
+    #'   KuCoin rate limits. Only applies in synchronous mode; async mode chains
+    #'   requests sequentially via promises. Default `0.2`.
+    #' @return (Klines | promise<Klines>) one row per candle ascending by datetime.
     #'
     #' @examples
     #' \dontrun{
@@ -832,6 +833,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' print(nrow(all_klines))
     #' }
     get_klines = function(symbol, granularity, from = NULL, to = NULL, fetch_all = FALSE, sleep = 0.2) {
+      assert_args_KucoinFuturesMarketData__get_klines(symbol, granularity, fetch_all, sleep)
+      assert::assert_nonempty_strings(symbol)
       # fetch_all mode: segment the time range into multiple API calls
       if (isTRUE(fetch_all)) {
         if (is.null(from) || is.null(to)) {
@@ -848,7 +851,7 @@ KucoinFuturesMarketData <- R6::R6Class(
         if (!inherits(to, "POSIXct")) {
           to_posix <- as.POSIXct(as.numeric(to) / 1000, origin = "1970-01-01", tz = "UTC")
         }
-        return(kucoin_fetch_futures_klines(
+        res <- kucoin_fetch_futures_klines(
           symbol = symbol,
           granularity = granularity,
           from = from_posix,
@@ -857,6 +860,11 @@ KucoinFuturesMarketData <- R6::R6Class(
           is_async = private$.is_async,
           max_candles = 200L,
           sleep = sleep
+        )
+        return(connectcore::then_or_now(
+          res,
+          assert_return_KucoinFuturesMarketData__get_klines,
+          is_async = private$.is_async
         ))
       }
 
@@ -868,13 +876,18 @@ KucoinFuturesMarketData <- R6::R6Class(
         to <- as.numeric(to) * 1000
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/kline/query",
         query = list(symbol = symbol, granularity = granularity, from = from, to = to),
         auth = FALSE,
         .parser = function(data) {
           return(parse_futures_klines(data)[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesMarketData__get_klines,
+        is_async = private$.is_async
       ))
     },
 
@@ -920,14 +933,11 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character; futures symbol (e.g., `"XBTUSDTM"`).
-    #' @return A single-row `data.table` (or `promise<data.table>` if
-    #'   constructed with `async = TRUE`) with columns:
-    #'   - `symbol` (character): Contract symbol.
-    #'   - `granularity` (integer): Price granularity in milliseconds.
-    #'   - `time_point` (POSIXct): Timestamp (coerced from milliseconds).
-    #'   - `value` (numeric): Current mark price.
-    #'   - `index_price` (numeric): Underlying index price.
+    #' @param symbol (scalar<character>) futures symbol (e.g., `"XBTUSDTM"`).
+    #' @return (data.table | promise<data.table>) one row giving the current mark
+    #'   price: the contract symbol, price granularity in milliseconds, the rate
+    #'   datetime (POSIXct, coerced from epoch milliseconds), the mark price, and
+    #'   the underlying index price.
     #'
     #' @examples
     #' \dontrun{
@@ -936,7 +946,9 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' print(mark[, .(symbol, value, index_price, time_point)])
     #' }
     get_mark_price = function(symbol) {
-      return(private$.request(
+      assert_args_KucoinFuturesMarketData__get_mark_price(symbol)
+      assert::assert_nonempty_strings(symbol)
+      res <- private$.request(
         endpoint = paste0("/api/v1/mark-price/", symbol, "/current"),
         auth = FALSE,
         .parser = function(data) {
@@ -947,9 +959,15 @@ KucoinFuturesMarketData <- R6::R6Class(
           coerce_cols(dt, "time_point", ms_to_datetime)
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesMarketData__get_mark_price,
+        is_async = private$.is_async
       ))
     },
 
+    # nolint start: line_length_linter.
     #' @description Get Current Funding Rate
     #'
     #' Retrieves the current funding rate for a perpetual futures contract.
@@ -957,20 +975,23 @@ KucoinFuturesMarketData <- R6::R6Class(
     #'
     #' ### Workflow
     #' 1. **Request**: Public GET with the symbol in the URL path.
-    #' 2. **Parsing**: Returns a single-row `data.table`; coerces `time_point` and `funding_time` from milliseconds to POSIXct.
+    #' 2. **Parsing**: Returns a single-row `data.table`; coerces `time_point` and `funding_time` from milliseconds to
+    #'    POSIXct.
     #'
     #' ### API Endpoint
     #' `GET https://api.kucoin.com/api/v1/funding-rate/{symbol}/current`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Current Funding Rate](https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-current-funding-rate)
+    #' KuCoin Get Current Funding Rate:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-current-funding-rate>
     #'
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Funding Arbitrage**: Compare funding rates across exchanges to identify cash-and-carry arbitrage opportunities.
+    #' - **Funding Arbitrage**: Compare funding rates across exchanges to identify cash-and-carry arbitrage
+    #'   opportunities.
     #' - **Position Timing**: Avoid entering positions just before a large negative funding rate settlement.
-    #' - **Predicted Rate Monitoring**: Use `predicted_value` to anticipate the next funding cycle and adjust positions.
+    #' - **Rate Bound Monitoring**: Use `funding_rate_cap` / `funding_rate_floor` to bound the next funding cycle and adjust positions.
     #'
     #' ### curl
     #' ```
@@ -987,30 +1008,34 @@ KucoinFuturesMarketData <- R6::R6Class(
     #'     "granularity": 28800000,
     #'     "timePoint": 1698267054000,
     #'     "value": 0.000065,
-    #'     "predictedValue": 0.000035,
+    #'     "dailyInterestRate": 0.0003,
+    #'     "fundingRateCap": 0.003,
+    #'     "fundingRateFloor": -0.003,
+    #'     "period": 1,
     #'     "fundingTime": 1698278400000
     #'   }
     #' }
     #' ```
     #'
-    #' @param symbol Character; futures symbol (e.g., `"XBTUSDTM"`).
-    #' @return A single-row `data.table` (or `promise<data.table>` if
-    #'   constructed with `async = TRUE`) with columns:
-    #'   - `symbol` (character): Contract symbol.
-    #'   - `granularity` (integer): Funding interval in milliseconds.
-    #'   - `time_point` (POSIXct): Current rate timestamp (coerced from milliseconds).
-    #'   - `value` (numeric): Current funding rate.
-    #'   - `predicted_value` (numeric): Predicted next funding rate.
-    #'   - `funding_time` (POSIXct): Next funding settlement time (coerced from milliseconds).
+    #' @param symbol (scalar<character>) futures symbol (e.g., `"XBTUSDTM"`).
+    #' @return (data.table | promise<data.table>) one row giving the current
+    #'   funding rate: the contract symbol, funding interval in milliseconds, the
+    #'   rate datetime (POSIXct, coerced from epoch milliseconds), the current
+    #'   funding rate, the daily interest rate, the funding-rate cap and floor, the
+    #'   funding period, and the next funding settlement datetime (POSIXct, coerced
+    #'   from epoch milliseconds).
     #'
     #' @examples
     #' \dontrun{
     #' futures_market <- KucoinFuturesMarketData$new()
     #' rate <- futures_market$get_funding_rate("XBTUSDTM")
-    #' print(rate[, .(symbol, value, predicted_value, funding_time)])
+    #' print(rate[, .(symbol, value, funding_rate_cap, funding_time)])
     #' }
+    # nolint end
     get_funding_rate = function(symbol) {
-      return(private$.request(
+      assert_args_KucoinFuturesMarketData__get_funding_rate(symbol)
+      assert::assert_nonempty_strings(symbol)
+      res <- private$.request(
         endpoint = paste0("/api/v1/funding-rate/", symbol, "/current"),
         auth = FALSE,
         .parser = function(data) {
@@ -1021,6 +1046,11 @@ KucoinFuturesMarketData <- R6::R6Class(
           coerce_cols(dt, c("time_point", "funding_time"), ms_to_datetime)
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesMarketData__get_funding_rate,
+        is_async = private$.is_async
       ))
     },
 
@@ -1032,20 +1062,25 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' ### Workflow
     #' 1. **Time Conversion**: Converts POSIXct `from`/`to` to milliseconds if needed.
     #' 2. **Request**: Public GET with `symbol`, `from`, and `to` query parameters.
-    #' 3. **Parsing**: Returns a `data.table` with one row per funding settlement; coerces `timepoint` from milliseconds to POSIXct.
+    #' 3. **Parsing**: Returns a `data.table` with one row per funding settlement; coerces `timepoint` from milliseconds
+    #'    to POSIXct.
     #'
     #' ### API Endpoint
     #' `GET https://api.kucoin.com/api/v1/contract/funding-rates?symbol={symbol}&from={from}&to={to}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Public Funding Rate History](https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-public-funding-history)
+    #' KuCoin Get Public Funding Rate History:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-public-funding-history>
     #'
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Funding Rate Analysis**: Analyse historical funding rates to understand market sentiment (positive = longs pay shorts).
-    #' - **Mean Reversion Signals**: Extreme funding rates often precede reversals; use historical data to calibrate thresholds.
-    #' - **Carry Trade Evaluation**: Calculate cumulative funding paid/received over a time period for carry trade analysis.
+    #' - **Funding Rate Analysis**: Analyse historical funding rates to understand market sentiment (positive = longs
+    #'   pay shorts).
+    #' - **Mean Reversion Signals**: Extreme funding rates often precede reversals; use historical data to calibrate
+    #'   thresholds.
+    #' - **Carry Trade Evaluation**: Calculate cumulative funding paid/received over a time period for carry trade
+    #'   analysis.
     #'
     #' ### curl
     #' ```
@@ -1077,17 +1112,15 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character; futures symbol (e.g., `"XBTUSDTM"`).
-    #' @param from POSIXct or numeric; start time. If POSIXct, converted to milliseconds.
-    #'   If numeric, assumed to be milliseconds.
-    #' @param to POSIXct or numeric; end time. If POSIXct, converted to milliseconds.
-    #'   If numeric, assumed to be milliseconds.
-    #' @return A `data.table` (or `promise<data.table>` if constructed with
-    #'   `async = TRUE`) with one row per funding settlement. Returns an
-    #'   empty `data.table` when no records cover the time range. Columns:
-    #'   - `symbol` (character): Contract symbol.
-    #'   - `funding_rate` (numeric): Funding rate for the period.
-    #'   - `timepoint` (POSIXct): Settlement timestamp (coerced from milliseconds).
+    #' @noassert from, to
+    #' @param symbol (scalar<character>) futures symbol (e.g., `"XBTUSDTM"`).
+    #' @param from (POSIXct | scalar<numeric>) start time. If POSIXct, converted to
+    #'   milliseconds. If numeric, assumed to be milliseconds.
+    #' @param to (POSIXct | scalar<numeric>) end time. If POSIXct, converted to
+    #'   milliseconds. If numeric, assumed to be milliseconds.
+    #' @return (data.table | promise<data.table>) one row per funding settlement,
+    #'   each giving the contract symbol, the funding rate for the period, and the
+    #'   settlement datetime (POSIXct, coerced from epoch milliseconds).
     #'
     #' @examples
     #' \dontrun{
@@ -1100,6 +1133,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' print(history[, .(symbol, funding_rate, timepoint)])
     #' }
     get_funding_history = function(symbol, from, to) {
+      assert_args_KucoinFuturesMarketData__get_funding_history(symbol)
+      assert::assert_nonempty_strings(symbol)
       if (inherits(from, "POSIXct")) {
         from <- as.numeric(from) * 1000
       }
@@ -1107,7 +1142,7 @@ KucoinFuturesMarketData <- R6::R6Class(
         to <- as.numeric(to) * 1000
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/contract/funding-rates",
         query = list(symbol = symbol, from = from, to = to),
         auth = FALSE,
@@ -1119,6 +1154,11 @@ KucoinFuturesMarketData <- R6::R6Class(
           coerce_cols(dt, "timepoint", ms_to_datetime)
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesMarketData__get_funding_history,
+        is_async = private$.is_async
       ))
     },
 
@@ -1158,9 +1198,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return A single-row `data.table` (or `promise<data.table>` if
-    #'   constructed with `async = TRUE`) with columns:
-    #'   - `server_time` (POSIXct): Server timestamp (coerced from milliseconds).
+    #' @return (data.table | promise<data.table>) one row giving the server
+    #'   datetime (POSIXct, coerced from epoch milliseconds).
     #'
     #' @examples
     #' \dontrun{
@@ -1169,7 +1208,7 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' print(server_time$server_time)
     #' }
     get_server_time = function() {
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/timestamp",
         auth = FALSE,
         .parser = function(data) {
@@ -1178,6 +1217,11 @@ KucoinFuturesMarketData <- R6::R6Class(
           }
           return(data.table::data.table(server_time = ms_to_datetime(data))[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesMarketData__get_server_time,
+        is_async = private$.is_async
       ))
     },
 
@@ -1199,7 +1243,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Health Check**: Poll service status at bot startup and periodically during operation to detect maintenance windows.
+    #' - **Health Check**: Poll service status at bot startup and periodically during operation to detect maintenance
+    #'   windows.
     #' - **Graceful Degradation**: When status is `"close"`, pause order placement and alert the operator.
     #' - **Maintenance Scheduling**: Use the `msg` field to extract maintenance window details for automated scheduling.
     #'
@@ -1220,10 +1265,9 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return A single-row `data.table` (or `promise<data.table>` if
-    #'   constructed with `async = TRUE`) with columns:
-    #'   - `status` (character): Service status (e.g., `"open"`, `"close"`).
-    #'   - `msg` (character): Status message (empty when operational).
+    #' @return (data.table | promise<data.table>) one row giving the operational
+    #'   status (`"open"`, `"close"`, or `"cancelonly"`) and an optional
+    #'   remark/message.
     #'
     #' @examples
     #' \dontrun{
@@ -1232,7 +1276,7 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' if (status$status == "open") message("Exchange is operational")
     #' }
     get_service_status = function() {
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/status",
         auth = FALSE,
         .parser = function(data) {
@@ -1241,6 +1285,11 @@ KucoinFuturesMarketData <- R6::R6Class(
           }
           return(as_dt_row(data)[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesMarketData__get_service_status,
+        is_async = private$.is_async
       ))
     }
   )
@@ -1255,11 +1304,12 @@ KucoinFuturesMarketData <- R6::R6Class(
 #' Futures orderbook entries are `[price_num, size_int]` (numeric values, not
 #' strings like spot). Timestamps are nanoseconds in `ts` field.
 #'
-#' @param data List; the parsed orderbook response.
-#' @return A `data.table`.
+#' @param data (list) the parsed orderbook response.
+#' @return (class<data.table>) the futures order book in long format.
 #' @keywords internal
 #' @noRd
 parse_futures_orderbook <- function(data) {
+  assert_args_parse_futures_orderbook(data)
   parse_side <- function(entries, side_label) {
     if (is.null(entries) || length(entries) == 0) {
       return(data.table::data.table(
@@ -1291,7 +1341,7 @@ parse_futures_orderbook <- function(data) {
   }
   data.table::setcolorder(result, c("ts", "sequence", "side", "level", "price", "size"))
 
-  return(result[])
+  return(assert_return_parse_futures_orderbook(result[]))
 }
 
 #' Parse Futures Klines into a data.table
@@ -1299,15 +1349,16 @@ parse_futures_orderbook <- function(data) {
 #' Futures klines are `[timestamp_ms, open, high, low, close, volume, turnover]`
 #' with numeric values (not strings like spot).
 #'
-#' @param data List of numeric vectors.
-#' @return A `data.table`.
+#' @param data (list | NULL) list of numeric vectors.
+#' @return (Klines) one row per candle.
 #' @keywords internal
 #' @noRd
 parse_futures_klines <- function(data) {
+  assert_args_parse_futures_klines(data)
   if (is.null(data) || length(data) == 0) {
-    return(data.table::data.table()[])
+    return(assert_return_parse_futures_klines(empty_dt_klines()))
   }
-  return(data.table::data.table(
+  return(assert_return_parse_futures_klines(data.table::data.table(
     datetime = ms_to_datetime(vapply(data, `[[`, numeric(1), 1L)),
     open = vapply(data, `[[`, numeric(1), 2L),
     high = vapply(data, `[[`, numeric(1), 3L),
@@ -1315,5 +1366,5 @@ parse_futures_klines <- function(data) {
     close = vapply(data, `[[`, numeric(1), 5L),
     volume = vapply(data, function(e) as.numeric(e[[6]]), numeric(1)),
     turnover = vapply(data, function(e) as.numeric(e[[7]]), numeric(1))
-  )[])
+  )[]))
 }

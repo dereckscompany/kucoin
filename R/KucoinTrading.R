@@ -157,28 +157,29 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param type Character; `"limit"` or `"market"`.
-    #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`).
-    #' @param side Character; `"buy"` or `"sell"`.
-    #' @param clientOid Character or NULL; unique client order ID (max 40 chars).
-    #' @param price Numeric or NULL; price for limit orders. Must align with `priceIncrement`.
+    #' @param type (scalar<character>) `"limit"` or `"market"`.
+    #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
+    #' @param side (scalar<character>) `"buy"` or `"sell"`.
+    #' @param clientOid (scalar<character> | NULL) unique client order ID (max 40 chars).
+    #' @param price (scalar<numeric> | scalar<character> | NULL) price for limit orders. Must align with
+    #'   `priceIncrement`.
     #'   Required for limit orders; must NOT be set for market orders.
-    #' @param size Numeric or NULL; quantity in base currency. Must align with `baseIncrement`.
+    #' @param size (scalar<numeric> | scalar<character> | NULL) quantity in base currency. Must align with
+    #'   `baseIncrement`.
     #'   Required for limit orders; optional for market orders (mutually exclusive with `funds`).
-    #' @param funds Numeric or NULL; amount in quote currency for market orders.
+    #' @param funds (scalar<numeric> | scalar<character> | NULL) amount in quote currency for market orders.
     #'   Mutually exclusive with `size`. Not applicable for limit orders.
-    #' @param stp Character or NULL; self-trade prevention: `"CN"`, `"CO"`, `"CB"`, `"DC"`.
-    #' @param tags Character or NULL; order tag (max 20 ASCII chars).
-    #' @param remark Character or NULL; remarks (max 20 ASCII chars).
-    #' @param timeInForce Character or NULL; `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
-    #' @param cancelAfter Numeric or NULL; auto-cancel seconds (requires `timeInForce = "GTT"`).
-    #' @param postOnly Logical or NULL; if TRUE, order rejected if it would match immediately.
-    #' @param hidden Logical or NULL; if TRUE, order hidden from order book.
-    #' @param iceberg Logical or NULL; if TRUE, only `visibleSize` is shown.
-    #' @param visibleSize Numeric or NULL; visible quantity for iceberg orders.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `order_id` (character): KuCoin-assigned order identifier.
-    #'   - `client_oid` (character): Client-provided order identifier.
+    #' @param stp (scalar<character> | NULL) self-trade prevention: `"CN"`, `"CO"`, `"CB"`, `"DC"`.
+    #' @param tags (scalar<character> | NULL) order tag (max 20 ASCII chars).
+    #' @param remark (scalar<character> | NULL) remarks (max 20 ASCII chars).
+    #' @param timeInForce (scalar<character> | NULL) `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
+    #' @param cancelAfter (scalar<numeric> | NULL) auto-cancel seconds (requires `timeInForce = "GTT"`).
+    #' @param postOnly (scalar<logical> | NULL) if TRUE, order rejected if it would match immediately.
+    #' @param hidden (scalar<logical> | NULL) if TRUE, order hidden from order book.
+    #' @param iceberg (scalar<logical> | NULL) if TRUE, only `visibleSize` is shown.
+    #' @param visibleSize (scalar<numeric> | scalar<character> | NULL) visible quantity for iceberg orders.
+    #' @return (data.table | promise<data.table>) one row giving the KuCoin-assigned order identifier and the
+    #'   client-provided order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -215,6 +216,24 @@ KucoinTrading <- R6::R6Class(
       iceberg = NULL,
       visibleSize = NULL
     ) {
+      assert_args_KucoinTrading__add_order(
+        type,
+        symbol,
+        side,
+        clientOid,
+        price,
+        size,
+        funds,
+        stp,
+        tags,
+        remark,
+        timeInForce,
+        cancelAfter,
+        postOnly,
+        hidden,
+        iceberg,
+        visibleSize
+      )
       body <- validate_order_params(
         type = type,
         symbol = symbol,
@@ -234,7 +253,7 @@ KucoinTrading <- R6::R6Class(
         visibleSize = visibleSize
       )
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/hf/orders",
         method = "POST",
         body = body,
@@ -246,6 +265,11 @@ KucoinTrading <- R6::R6Class(
           data.table::setcolorder(dt, c("order_id", "client_oid"))
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinTrading__add_order,
+        is_async = private$.is_async
       ))
     },
 
@@ -307,23 +331,24 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param type Character; `"limit"` or `"market"`.
-    #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`).
-    #' @param side Character; `"buy"` or `"sell"`.
-    #' @param clientOid Character or NULL; unique client order ID (max 40 chars).
-    #' @param price Numeric or NULL; price for limit orders.
-    #' @param size Numeric or NULL; quantity in base currency.
-    #' @param funds Numeric or NULL; amount in quote currency for market orders.
-    #' @param stp Character or NULL; self-trade prevention: `"CN"`, `"CO"`, `"CB"`, `"DC"`.
-    #' @param tags Character or NULL; order tag (max 20 ASCII chars).
-    #' @param remark Character or NULL; remarks (max 20 ASCII chars).
-    #' @param timeInForce Character or NULL; `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
-    #' @param cancelAfter Numeric or NULL; auto-cancel seconds (requires `timeInForce = "GTT"`).
-    #' @param postOnly Logical or NULL; if TRUE, order rejected if it would match immediately.
-    #' @param hidden Logical or NULL; if TRUE, order hidden from order book.
-    #' @param iceberg Logical or NULL; if TRUE, only `visibleSize` is shown.
-    #' @param visibleSize Numeric or NULL; visible quantity for iceberg orders.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with simulated `order_id` and `client_oid`.
+    #' @param type (scalar<character>) `"limit"` or `"market"`.
+    #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
+    #' @param side (scalar<character>) `"buy"` or `"sell"`.
+    #' @param clientOid (scalar<character> | NULL) unique client order ID (max 40 chars).
+    #' @param price (scalar<numeric> | scalar<character> | NULL) price for limit orders.
+    #' @param size (scalar<numeric> | scalar<character> | NULL) quantity in base currency.
+    #' @param funds (scalar<numeric> | scalar<character> | NULL) amount in quote currency for market orders.
+    #' @param stp (scalar<character> | NULL) self-trade prevention: `"CN"`, `"CO"`, `"CB"`, `"DC"`.
+    #' @param tags (scalar<character> | NULL) order tag (max 20 ASCII chars).
+    #' @param remark (scalar<character> | NULL) remarks (max 20 ASCII chars).
+    #' @param timeInForce (scalar<character> | NULL) `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
+    #' @param cancelAfter (scalar<numeric> | NULL) auto-cancel seconds (requires `timeInForce = "GTT"`).
+    #' @param postOnly (scalar<logical> | NULL) if TRUE, order rejected if it would match immediately.
+    #' @param hidden (scalar<logical> | NULL) if TRUE, order hidden from order book.
+    #' @param iceberg (scalar<logical> | NULL) if TRUE, only `visibleSize` is shown.
+    #' @param visibleSize (scalar<numeric> | scalar<character> | NULL) visible quantity for iceberg orders.
+    #' @return (data.table | promise<data.table>) one row giving the simulated order identifier and the client-provided
+    #'   order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -352,6 +377,24 @@ KucoinTrading <- R6::R6Class(
       iceberg = NULL,
       visibleSize = NULL
     ) {
+      assert_args_KucoinTrading__add_order_test(
+        type,
+        symbol,
+        side,
+        clientOid,
+        price,
+        size,
+        funds,
+        stp,
+        tags,
+        remark,
+        timeInForce,
+        cancelAfter,
+        postOnly,
+        hidden,
+        iceberg,
+        visibleSize
+      )
       body <- validate_order_params(
         type = type,
         symbol = symbol,
@@ -371,7 +414,7 @@ KucoinTrading <- R6::R6Class(
         visibleSize = visibleSize
       )
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/hf/orders/test",
         method = "POST",
         body = body,
@@ -383,6 +426,11 @@ KucoinTrading <- R6::R6Class(
           data.table::setcolorder(dt, c("order_id", "client_oid"))
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinTrading__add_order_test,
+        is_async = private$.is_async
       ))
     },
 
@@ -419,7 +467,9 @@ KucoinTrading <- R6::R6Class(
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
     #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
     #'   --header 'KC-API-KEY-VERSION: 2' \
-    #'   --data-raw '{"orderList":[{"clientOid":"id1","symbol":"BTC-USDT","type":"limit","side":"buy","price":"30000","size":"0.00001"}]}'
+    #'   --data-raw \
+    #'   '{"orderList":[{"clientOid":"id1","symbol":"BTC-USDT","type":"limit","side":"buy","price":"30000",
+    #'   "size":"0.00001"}]}'
     #' ```
     #'
     #' ### JSON Request
@@ -464,13 +514,10 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param order_list List of named lists; each containing order parameters
+    #' @param order_list (list) list of named lists; each containing order parameters
     #'   (`type`, `symbol`, `side`, plus optional fields). Maximum 20 orders.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with per-order results:
-    #'   - `order_id` (character): KuCoin order ID (if successful).
-    #'   - `client_oid` (character): Client order ID (if provided).
-    #'   - `success` (logical): Whether the order was placed successfully.
-    #'   - `fail_msg` (character): Error message (if failed).
+    #' @return (data.table | promise<data.table>) one row per order giving the KuCoin order ID, client order ID, the
+    #'   success flag, and any failure message.
     #'
     #' @examples
     #' \dontrun{
@@ -485,6 +532,7 @@ KucoinTrading <- R6::R6Class(
     #' print(orders[success == FALSE, .(fail_msg)])
     #' }
     add_order_batch = function(order_list) {
+      assert_args_KucoinTrading__add_order_batch(order_list)
       if (!is.list(order_list) || length(order_list) == 0 || length(order_list) > 20) {
         rlang::abort("Parameter 'order_list' must contain 1 to 20 orders.")
       }
@@ -492,7 +540,7 @@ KucoinTrading <- R6::R6Class(
       validated <- lapply(order_list, validate_batch_order)
       body <- list(orderList = validated)
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/hf/orders/multi",
         method = "POST",
         body = body,
@@ -510,6 +558,11 @@ KucoinTrading <- R6::R6Class(
           data.table::setcolorder(dt, intersect(c("order_id", "client_oid", "success", "fail_msg"), names(dt)))
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinTrading__add_order_batch,
+        is_async = private$.is_async
       ))
     },
 
@@ -524,7 +577,8 @@ KucoinTrading <- R6::R6Class(
     #' `DELETE https://api.kucoin.com/api/v1/hf/orders/{orderId}?symbol={symbol}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Cancel Order By OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld)
+    #' KuCoin Cancel Order By OrderId:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld>
     #'
     #' Verified: 2026-05-23
     #'
@@ -549,10 +603,9 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param orderId Character; the KuCoin order ID to cancel.
-    #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `order_id` (character): Cancelled order ID.
+    #' @param orderId (scalar<character>) the KuCoin order ID to cancel.
+    #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
+    #' @return (data.table | promise<data.table>) one row giving the cancelled order ID.
     #'
     #' @examples
     #' \dontrun{
@@ -561,6 +614,7 @@ KucoinTrading <- R6::R6Class(
     #' print(result$order_id)
     #' }
     cancel_order_by_id = function(orderId, symbol) {
+      assert_args_KucoinTrading__cancel_order_by_id(orderId, symbol)
       if (!is.character(orderId) || !nzchar(orderId)) {
         rlang::abort("Parameter 'orderId' must be a non-empty string.")
       }
@@ -568,7 +622,7 @@ KucoinTrading <- R6::R6Class(
         rlang::abort("Parameter 'symbol' must be a valid ticker (e.g., 'BTC-USDT').")
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = paste0("/api/v1/hf/orders/", orderId),
         method = "DELETE",
         query = list(symbol = symbol),
@@ -577,6 +631,11 @@ KucoinTrading <- R6::R6Class(
             order_id = as.character(if (is.null(data$orderId)) orderId else data$orderId)
           )[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinTrading__cancel_order_by_id,
+        is_async = private$.is_async
       ))
     },
 
@@ -589,7 +648,8 @@ KucoinTrading <- R6::R6Class(
     #' `DELETE https://api.kucoin.com/api/v1/hf/orders/client-order/{clientOid}?symbol={symbol}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Cancel Order By ClientOid](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid)
+    #' KuCoin Cancel Order By ClientOid:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid>
     #'
     #' Verified: 2026-05-23
     #'
@@ -614,10 +674,9 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param clientOid Character; client order ID.
-    #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `client_oid` (character): Cancelled client order ID.
+    #' @param clientOid (scalar<character>) client order ID.
+    #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
+    #' @return (data.table | promise<data.table>) one row giving the cancelled client order ID.
     #'
     #' @examples
     #' \dontrun{
@@ -626,6 +685,7 @@ KucoinTrading <- R6::R6Class(
     #' print(result$client_oid)
     #' }
     cancel_order_by_client_oid = function(clientOid, symbol) {
+      assert_args_KucoinTrading__cancel_order_by_client_oid(clientOid, symbol)
       if (!is.character(clientOid) || !nzchar(clientOid)) {
         rlang::abort("Parameter 'clientOid' must be a non-empty string.")
       }
@@ -633,7 +693,7 @@ KucoinTrading <- R6::R6Class(
         rlang::abort("Parameter 'symbol' must be a valid ticker.")
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = paste0("/api/v1/hf/orders/client-order/", clientOid),
         method = "DELETE",
         query = list(symbol = symbol),
@@ -642,6 +702,11 @@ KucoinTrading <- R6::R6Class(
             client_oid = as.character(if (is.null(data$clientOid)) clientOid else data$clientOid)
           )[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinTrading__cancel_order_by_client_oid,
+        is_async = private$.is_async
       ))
     },
 
@@ -684,10 +749,10 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param orderId Character; order ID.
-    #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`).
-    #' @param cancelSize Numeric; quantity to cancel from the order.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with cancellation result.
+    #' @param orderId (scalar<character>) order ID.
+    #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
+    #' @param cancelSize (scalar<numeric> | scalar<character>) quantity to cancel from the order.
+    #' @return (data.table | promise<data.table>) one row giving the cancellation result.
     #'
     #' @examples
     #' \dontrun{
@@ -697,6 +762,7 @@ KucoinTrading <- R6::R6Class(
     #' )
     #' }
     cancel_partial_order = function(orderId, symbol, cancelSize) {
+      assert_args_KucoinTrading__cancel_partial_order(orderId, symbol, cancelSize)
       if (!is.character(orderId) || !nzchar(orderId)) {
         rlang::abort("Parameter 'orderId' must be a non-empty string.")
       }
@@ -704,11 +770,16 @@ KucoinTrading <- R6::R6Class(
         rlang::abort("Parameter 'symbol' must be a valid ticker.")
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = paste0("/api/v1/hf/orders/cancel/", orderId),
         method = "DELETE",
         query = list(symbol = symbol, cancelSize = as.character(cancelSize)),
         .parser = as_dt_row
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinTrading__cancel_partial_order,
+        is_async = private$.is_async
       ))
     },
 
@@ -721,7 +792,8 @@ KucoinTrading <- R6::R6Class(
     #' `DELETE https://api.kucoin.com/api/v1/hf/orders?symbol={symbol}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Cancel All Orders By Symbol](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-all-orders-by-symbol)
+    #' KuCoin Cancel All Orders By Symbol:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-all-orders-by-symbol>
     #'
     #' Verified: 2026-05-23
     #'
@@ -748,8 +820,10 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with column `result` containing the cancellation response.
+    #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
+    #' @return (data.table | promise<data.table>) one row giving the cancellation
+    #'   response:
+    #' - result (character) the KuCoin response string, e.g. `"success"`.
     #'
     #' @examples
     #' \dontrun{
@@ -757,17 +831,23 @@ KucoinTrading <- R6::R6Class(
     #' trading$cancel_all_by_symbol("BTC-USDT")
     #' }
     cancel_all_by_symbol = function(symbol) {
+      assert_args_KucoinTrading__cancel_all_by_symbol(symbol)
       if (!verify_symbol(symbol)) {
         rlang::abort("Parameter 'symbol' must be a valid ticker.")
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/hf/orders",
         method = "DELETE",
         query = list(symbol = symbol),
         .parser = function(data) {
           return(data.table::data.table(result = as.character(data))[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinTrading__cancel_all_by_symbol,
+        is_async = private$.is_async
       ))
     },
 
@@ -810,11 +890,10 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `symbol` (character): Trading pair symbol.
-    #'   - `status` (character): `"succeed"` or `"failed"`.
-    #'
-    #'   Returns an empty `data.table` if no orders were open.
+    #' @return (data.table | promise<data.table>) one row per cancelled symbol;
+    #'   an empty (but typed) data.table if no orders were open:
+    #' - symbol (character) the trading pair, e.g. `"BTC-USDT"`.
+    #' - status (character) per-symbol outcome, `"succeed"` or `"failed"`.
     #'
     #' @examples
     #' \dontrun{
@@ -823,7 +902,7 @@ KucoinTrading <- R6::R6Class(
     #' print(result[status == "failed"])
     #' }
     cancel_all = function() {
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/hf/orders/cancelAll",
         method = "DELETE",
         .parser = function(data) {
@@ -851,6 +930,11 @@ KucoinTrading <- R6::R6Class(
             if (length(failed) > 0) data.table::data.table(symbol = failed, status = "failed")
           ))[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinTrading__cancel_all,
+        is_async = private$.is_async
       ))
     },
 
@@ -923,10 +1007,10 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param orderId Character; the KuCoin order ID.
-    #' @param symbol Character (optional); trading pair (e.g., `"BTC-USDT"`). Defaults to `NULL`.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with full order details
-    #'   including `created_at` and `last_updated_at` (POSIXct) if timestamps are present.
+    #' @param orderId (scalar<character>) the KuCoin order ID.
+    #' @param symbol (scalar<character> | NULL) trading pair (e.g., `"BTC-USDT"`). Defaults to `NULL`.
+    #' @return (data.table | promise<data.table>) one row of full order details, including the creation and last-updated
+    #'   datetimes (POSIXct) when timestamps are present.
     #'
     #' @examples
     #' \dontrun{
@@ -935,6 +1019,7 @@ KucoinTrading <- R6::R6Class(
     #' print(order)
     #' }
     get_order_by_id = function(orderId, symbol = NULL) {
+      assert_args_KucoinTrading__get_order_by_id(orderId, symbol)
       if (!is.character(orderId) || !nzchar(orderId)) {
         rlang::abort("Parameter 'orderId' must be a non-empty string.")
       }
@@ -942,7 +1027,7 @@ KucoinTrading <- R6::R6Class(
         rlang::abort("Parameter 'symbol' must be a valid ticker.")
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = paste0("/api/v1/hf/orders/", orderId),
         query = if (!is.null(symbol)) list(symbol = symbol) else list(),
         .parser = function(data) {
@@ -955,6 +1040,11 @@ KucoinTrading <- R6::R6Class(
           }
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinTrading__get_order_by_id,
+        is_async = private$.is_async
       ))
     },
 
@@ -1025,10 +1115,10 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param clientOid Character; client order ID.
-    #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with full order details
-    #'   including `created_at` and `last_updated_at` (POSIXct) columns.
+    #' @param clientOid (scalar<character>) client order ID.
+    #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
+    #' @return (data.table | promise<data.table>) one row of full order details, including the creation and last-updated
+    #'   datetimes (POSIXct).
     #'
     #' @examples
     #' \dontrun{
@@ -1037,6 +1127,7 @@ KucoinTrading <- R6::R6Class(
     #' print(order)
     #' }
     get_order_by_client_oid = function(clientOid, symbol) {
+      assert_args_KucoinTrading__get_order_by_client_oid(clientOid, symbol)
       if (!is.character(clientOid) || !nzchar(clientOid)) {
         rlang::abort("Parameter 'clientOid' must be a non-empty string.")
       }
@@ -1044,7 +1135,7 @@ KucoinTrading <- R6::R6Class(
         rlang::abort("Parameter 'symbol' must be a valid ticker.")
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = paste0("/api/v1/hf/orders/client-order/", clientOid),
         query = list(symbol = symbol),
         .parser = function(data) {
@@ -1057,6 +1148,11 @@ KucoinTrading <- R6::R6Class(
           }
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinTrading__get_order_by_client_oid,
+        is_async = private$.is_async
       ))
     },
 
@@ -1129,31 +1225,18 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character or NULL; trading pair (e.g., `"BTC-USDT"`).
+    #' @param symbol (scalar<character> | NULL) trading pair (e.g., `"BTC-USDT"`).
     #'   If NULL, returns fills across all symbols.
-    #' @param orderId Character or NULL; filter by specific order ID.
-    #' @param side Character or NULL; `"buy"` or `"sell"`.
-    #' @param type Character or NULL; `"limit"` or `"market"`.
-    #' @param lastId Character or NULL; pagination cursor for fetching next page.
-    #' @param limit Integer or NULL; results per page (default 100, max 200).
-    #' @param startAt Integer or NULL; start timestamp in milliseconds.
-    #' @param endAt Integer or NULL; end timestamp in milliseconds.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `id` (numeric): Fill identifier.
-    #'   - `order_id` (character): Parent order ID.
-    #'   - `counter_order_id` (character): Counterparty order ID.
-    #'   - `trade_id` (numeric): Trade identifier.
-    #'   - `symbol` (character): Trading pair.
-    #'   - `side` (character): Trade direction.
-    #'   - `liquidity` (character): `"maker"` or `"taker"`.
-    #'   - `type` (character): Order type.
-    #'   - `price` (character): Fill price.
-    #'   - `size` (character): Fill size.
-    #'   - `funds` (character): Fill value in quote currency.
-    #'   - `fee` (character): Fee charged.
-    #'   - `fee_rate` (character): Fee rate applied.
-    #'   - `fee_currency` (character): Currency of fee.
-    #'   - `created_at` (POSIXct): Creation datetime (coerced from epoch milliseconds).
+    #' @param orderId (scalar<character> | NULL) filter by specific order ID.
+    #' @param side (scalar<character> | NULL) `"buy"` or `"sell"`.
+    #' @param type (scalar<character> | NULL) `"limit"` or `"market"`.
+    #' @param lastId (scalar<character> | NULL) pagination cursor for fetching next page.
+    #' @param limit (scalar<count> | NULL) results per page (default 100, max 200).
+    #' @param startAt (scalar<numeric> | NULL) start timestamp in milliseconds.
+    #' @param endAt (scalar<numeric> | NULL) end timestamp in milliseconds.
+    #' @return (data.table | promise<data.table>) one row per fill giving the fill and trade identifiers, the parent and
+    #'   counterparty order IDs, the trading pair, side, liquidity, type, price, size, funds, fee, fee rate, fee
+    #'   currency, and the creation datetime (POSIXct, coerced from epoch milliseconds).
     #'
     #' @examples
     #' \dontrun{
@@ -1172,11 +1255,21 @@ KucoinTrading <- R6::R6Class(
       startAt = NULL,
       endAt = NULL
     ) {
+      assert_args_KucoinTrading__get_fills(
+        symbol,
+        orderId,
+        side,
+        type,
+        lastId,
+        limit,
+        startAt,
+        endAt
+      )
       if (!is.null(symbol) && !verify_symbol(symbol)) {
         rlang::abort("Parameter 'symbol' must be a valid ticker.")
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/hf/fills",
         query = list(
           symbol = symbol,
@@ -1228,6 +1321,11 @@ KucoinTrading <- R6::R6Class(
           )
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinTrading__get_fills,
+        is_async = private$.is_async
       ))
     },
 
@@ -1241,7 +1339,8 @@ KucoinTrading <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v1/hf/orders/active/symbols`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Symbols With Open Order](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-symbols-with-open-order)
+    #' KuCoin Get Symbols With Open Order:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-symbols-with-open-order>
     #'
     #' Verified: 2026-05-23
     #'
@@ -1270,8 +1369,9 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with column:
-    #'   - `symbols` (character): Trading pairs with open orders.
+    #' @return (data.table | promise<data.table>) one row per trading pair that
+    #'   has at least one open order:
+    #' - symbols (character) the trading pair, e.g. `"BTC-USDT"`.
     #'
     #' @examples
     #' \dontrun{
@@ -1280,7 +1380,7 @@ KucoinTrading <- R6::R6Class(
     #' print(active$symbols)
     #' }
     get_symbols_with_open_orders = function() {
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/hf/orders/active/symbols",
         .parser = function(data) {
           symbols <- data
@@ -1292,6 +1392,11 @@ KucoinTrading <- R6::R6Class(
           }
           return(data.table::data.table(symbols = as.character(unlist(symbols)))[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinTrading__get_symbols_with_open_orders,
+        is_async = private$.is_async
       ))
     },
 
@@ -1369,8 +1474,8 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`). **Required** by the API.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with open order details including `created_at` (POSIXct).
+    #' @param symbol (scalar<character> | NULL) trading pair (e.g., `"BTC-USDT"`). **Required** by the API.
+    #' @return (data.table | promise<data.table>) one row per open order, including the creation datetime (POSIXct).
     #'
     #' @examples
     #' \dontrun{
@@ -1378,11 +1483,12 @@ KucoinTrading <- R6::R6Class(
     #' open_orders <- trading$get_open_orders("BTC-USDT")
     #' }
     get_open_orders = function(symbol = NULL) {
+      assert_args_KucoinTrading__get_open_orders(symbol)
       if (!is.null(symbol) && !verify_symbol(symbol)) {
         rlang::abort("Parameter 'symbol' must be a valid ticker.")
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/hf/orders/active",
         query = list(symbol = symbol),
         .parser = function(data) {
@@ -1401,6 +1507,11 @@ KucoinTrading <- R6::R6Class(
           }
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinTrading__get_open_orders,
+        is_async = private$.is_async
       ))
     },
 
@@ -1482,15 +1593,15 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character or NULL; trading pair (e.g., `"BTC-USDT"`).
+    #' @param symbol (scalar<character> | NULL) trading pair (e.g., `"BTC-USDT"`).
     #'   If NULL, returns closed orders across all symbols.
-    #' @param side Character or NULL; `"buy"` or `"sell"`.
-    #' @param type Character or NULL; `"limit"` or `"market"`.
-    #' @param startAt Integer or NULL; start timestamp in milliseconds.
-    #' @param endAt Integer or NULL; end timestamp in milliseconds.
-    #' @param limit Integer or NULL; results per page (max 200).
-    #' @param lastId Character or NULL; pagination cursor.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with closed order details including `created_at` (POSIXct).
+    #' @param side (scalar<character> | NULL) `"buy"` or `"sell"`.
+    #' @param type (scalar<character> | NULL) `"limit"` or `"market"`.
+    #' @param startAt (scalar<numeric> | NULL) start timestamp in milliseconds.
+    #' @param endAt (scalar<numeric> | NULL) end timestamp in milliseconds.
+    #' @param limit (scalar<count> | NULL) results per page (max 200).
+    #' @param lastId (scalar<character> | NULL) pagination cursor.
+    #' @return (data.table | promise<data.table>) one row per closed order, including the creation datetime (POSIXct).
     #'
     #' @examples
     #' \dontrun{
@@ -1508,11 +1619,20 @@ KucoinTrading <- R6::R6Class(
       limit = NULL,
       lastId = NULL
     ) {
+      assert_args_KucoinTrading__get_closed_orders(
+        symbol,
+        side,
+        type,
+        startAt,
+        endAt,
+        limit,
+        lastId
+      )
       if (!is.null(symbol) && !verify_symbol(symbol)) {
         rlang::abort("Parameter 'symbol' must be a valid ticker.")
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/hf/orders/done",
         query = list(
           symbol = symbol,
@@ -1543,6 +1663,11 @@ KucoinTrading <- R6::R6Class(
           }
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinTrading__get_closed_orders,
+        is_async = private$.is_async
       ))
     },
 
@@ -1609,31 +1734,24 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param type Character; `"limit"` or `"market"`.
-    #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`).
-    #' @param side Character; `"buy"` or `"sell"`.
-    #' @param clientOid Character or NULL; unique client order ID (max 40 chars).
-    #' @param price Numeric or NULL; price for limit orders.
-    #' @param size Numeric or NULL; quantity in base currency.
-    #' @param funds Numeric or NULL; amount in quote currency for market orders.
-    #' @param stp Character or NULL; self-trade prevention: `"CN"`, `"CO"`, `"CB"`, `"DC"`.
-    #' @param tags Character or NULL; order tag (max 20 ASCII chars).
-    #' @param remark Character or NULL; remarks (max 20 ASCII chars).
-    #' @param timeInForce Character or NULL; `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
-    #' @param cancelAfter Numeric or NULL; auto-cancel seconds (requires `timeInForce = "GTT"`).
-    #' @param postOnly Logical or NULL; if TRUE, order rejected if it would match immediately.
-    #' @param hidden Logical or NULL; if TRUE, order hidden from order book.
-    #' @param iceberg Logical or NULL; if TRUE, only `visibleSize` is shown.
-    #' @param visibleSize Numeric or NULL; visible quantity for iceberg orders.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `order_id` (character): KuCoin-assigned order identifier.
-    #'   - `client_oid` (character): Client-provided order identifier (NA if not supplied).
-    #'   - `order_time` (numeric): Order placement time in milliseconds.
-    #'   - `origin_size` (character): Original order size.
-    #'   - `deal_size` (character): Filled size.
-    #'   - `remain_size` (character): Remaining unfilled size.
-    #'   - `canceled_size` (character): Cancelled size.
-    #'   - `status` (character): `"open"` or `"done"`.
+    #' @param type (scalar<character>) `"limit"` or `"market"`.
+    #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
+    #' @param side (scalar<character>) `"buy"` or `"sell"`.
+    #' @param clientOid (scalar<character> | NULL) unique client order ID (max 40 chars).
+    #' @param price (scalar<numeric> | scalar<character> | NULL) price for limit orders.
+    #' @param size (scalar<numeric> | scalar<character> | NULL) quantity in base currency.
+    #' @param funds (scalar<numeric> | scalar<character> | NULL) amount in quote currency for market orders.
+    #' @param stp (scalar<character> | NULL) self-trade prevention: `"CN"`, `"CO"`, `"CB"`, `"DC"`.
+    #' @param tags (scalar<character> | NULL) order tag (max 20 ASCII chars).
+    #' @param remark (scalar<character> | NULL) remarks (max 20 ASCII chars).
+    #' @param timeInForce (scalar<character> | NULL) `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
+    #' @param cancelAfter (scalar<numeric> | NULL) auto-cancel seconds (requires `timeInForce = "GTT"`).
+    #' @param postOnly (scalar<logical> | NULL) if TRUE, order rejected if it would match immediately.
+    #' @param hidden (scalar<logical> | NULL) if TRUE, order hidden from order book.
+    #' @param iceberg (scalar<logical> | NULL) if TRUE, only `visibleSize` is shown.
+    #' @param visibleSize (scalar<numeric> | scalar<character> | NULL) visible quantity for iceberg orders.
+    #' @return (data.table | promise<data.table>) one row giving the order and client identifiers, the order placement
+    #'   datetime, the original, filled, remaining, and cancelled sizes, and the fill status.
     #'
     #' @examples
     #' \dontrun{
@@ -1662,6 +1780,24 @@ KucoinTrading <- R6::R6Class(
       iceberg = NULL,
       visibleSize = NULL
     ) {
+      assert_args_KucoinTrading__add_order_sync(
+        type,
+        symbol,
+        side,
+        clientOid,
+        price,
+        size,
+        funds,
+        stp,
+        tags,
+        remark,
+        timeInForce,
+        cancelAfter,
+        postOnly,
+        hidden,
+        iceberg,
+        visibleSize
+      )
       body <- validate_order_params(
         type = type,
         symbol = symbol,
@@ -1681,7 +1817,7 @@ KucoinTrading <- R6::R6Class(
         visibleSize = visibleSize
       )
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/hf/orders/sync",
         method = "POST",
         body = body,
@@ -1714,6 +1850,11 @@ KucoinTrading <- R6::R6Class(
           )
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinTrading__add_order_sync,
+        is_async = private$.is_async
       ))
     },
 
@@ -1744,7 +1885,9 @@ KucoinTrading <- R6::R6Class(
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
     #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
     #'   --header 'KC-API-KEY-VERSION: 2' \
-    #'   --data-raw '{"orderList":[{"clientOid":"id1","symbol":"BTC-USDT","type":"limit","side":"buy","price":"30000","size":"0.00001"}]}'
+    #'   --data-raw \
+    #'   '{"orderList":[{"clientOid":"id1","symbol":"BTC-USDT","type":"limit","side":"buy","price":"30000",
+    #'   "size":"0.00001"}]}'
     #' ```
     #'
     #' ### JSON Request
@@ -1802,15 +1945,9 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param order_list List of named lists; each containing order parameters. Maximum 20 orders.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with per-order results:
-    #'   - `order_id` (character): KuCoin-assigned order identifier.
-    #'   - `client_oid` (character): Client-provided order identifier (NA if not supplied).
-    #'   - `success` (logical): Whether the order was accepted.
-    #'   - `status` (character): Fill status.
-    #'   - `deal_size` (character): Filled quantity.
-    #'   - `remain_size` (character): Remaining unfilled quantity.
-    #'   - `canceled_size` (character): Cancelled quantity.
+    #' @param order_list (list) list of named lists; each containing order parameters. Maximum 20 orders.
+    #' @return (data.table | promise<data.table>) one row per order giving the order and client identifiers, the success
+    #'   flag, the fill status, and the filled, remaining, and cancelled quantities.
     #'
     #' @examples
     #' \dontrun{
@@ -1824,6 +1961,7 @@ KucoinTrading <- R6::R6Class(
     #' print(orders[success == TRUE, .(order_id, status, deal_size)])
     #' }
     add_order_batch_sync = function(order_list) {
+      assert_args_KucoinTrading__add_order_batch_sync(order_list)
       if (!is.list(order_list) || length(order_list) == 0 || length(order_list) > 20) {
         rlang::abort("Parameter 'order_list' must contain 1 to 20 orders.")
       }
@@ -1831,7 +1969,7 @@ KucoinTrading <- R6::R6Class(
       validated <- lapply(order_list, validate_batch_order)
       body <- list(orderList = validated)
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/hf/orders/multi/sync",
         method = "POST",
         body = body,
@@ -1855,6 +1993,11 @@ KucoinTrading <- R6::R6Class(
           )
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinTrading__add_order_batch_sync,
+        is_async = private$.is_async
       ))
     },
 
@@ -1868,7 +2011,8 @@ KucoinTrading <- R6::R6Class(
     #' `DELETE https://api.kucoin.com/api/v1/hf/orders/sync/{orderId}?symbol={symbol}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Cancel Order By OrderId Sync](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld-sync)
+    #' KuCoin Cancel Order By OrderId Sync:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld-sync>
     #'
     #' Verified: 2026-05-23
     #'
@@ -1902,15 +2046,10 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param orderId Character; the KuCoin order ID to cancel.
-    #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `order_id` (character): Order ID.
-    #'   - `origin_size` (character): Original order size.
-    #'   - `deal_size` (character): Filled size.
-    #'   - `remain_size` (character): Remaining size.
-    #'   - `canceled_size` (character): Cancelled size.
-    #'   - `status` (character): `"open"` or `"done"`.
+    #' @param orderId (scalar<character>) the KuCoin order ID to cancel.
+    #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
+    #' @return (data.table | promise<data.table>) one row giving the order ID, the original, filled, remaining, and
+    #'   cancelled sizes, and the fill status.
     #'
     #' @examples
     #' \dontrun{
@@ -1919,6 +2058,7 @@ KucoinTrading <- R6::R6Class(
     #' cat("Status:", result$status, "Cancelled:", result$canceled_size, "\n")
     #' }
     cancel_order_by_id_sync = function(orderId, symbol) {
+      assert_args_KucoinTrading__cancel_order_by_id_sync(orderId, symbol)
       if (!is.character(orderId) || !nzchar(orderId)) {
         rlang::abort("Parameter 'orderId' must be a non-empty string.")
       }
@@ -1926,11 +2066,16 @@ KucoinTrading <- R6::R6Class(
         rlang::abort("Parameter 'symbol' must be a valid ticker (e.g., 'BTC-USDT').")
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = paste0("/api/v1/hf/orders/sync/", orderId),
         method = "DELETE",
         query = list(symbol = symbol),
         .parser = as_dt_row
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinTrading__cancel_order_by_id_sync,
+        is_async = private$.is_async
       ))
     },
 
@@ -1943,7 +2088,8 @@ KucoinTrading <- R6::R6Class(
     #' `DELETE https://api.kucoin.com/api/v1/hf/orders/sync/client-order/{clientOid}?symbol={symbol}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Cancel Order By ClientOid Sync](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid-sync)
+    #' KuCoin Cancel Order By ClientOid Sync:
+    #' <https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid-sync>
     #'
     #' Verified: 2026-05-23
     #'
@@ -1974,15 +2120,10 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param clientOid Character; client order ID.
-    #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `client_oid` (character): Client order ID.
-    #'   - `origin_size` (character): Original order size.
-    #'   - `deal_size` (character): Filled size.
-    #'   - `remain_size` (character): Remaining size.
-    #'   - `canceled_size` (character): Cancelled size.
-    #'   - `status` (character): `"open"` or `"done"`.
+    #' @param clientOid (scalar<character>) client order ID.
+    #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`).
+    #' @return (data.table | promise<data.table>) one row giving the client order ID, the original, filled, remaining,
+    #'   and cancelled sizes, and the fill status.
     #'
     #' @examples
     #' \dontrun{
@@ -1991,6 +2132,7 @@ KucoinTrading <- R6::R6Class(
     #' cat("Status:", result$status, "\n")
     #' }
     cancel_order_by_client_oid_sync = function(clientOid, symbol) {
+      assert_args_KucoinTrading__cancel_order_by_client_oid_sync(clientOid, symbol)
       if (!is.character(clientOid) || !nzchar(clientOid)) {
         rlang::abort("Parameter 'clientOid' must be a non-empty string.")
       }
@@ -1998,11 +2140,16 @@ KucoinTrading <- R6::R6Class(
         rlang::abort("Parameter 'symbol' must be a valid ticker.")
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = paste0("/api/v1/hf/orders/sync/client-order/", clientOid),
         method = "DELETE",
         query = list(symbol = symbol),
         .parser = as_dt_row
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinTrading__cancel_order_by_client_oid_sync,
+        is_async = private$.is_async
       ))
     },
 
@@ -2061,14 +2208,15 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character; trading pair (e.g., `"BTC-USDT"`). Required.
-    #' @param orderId Character or NULL; KuCoin order ID. At least one of `orderId` or `clientOid` required.
-    #' @param clientOid Character or NULL; client order ID. At least one of `orderId` or `clientOid` required.
-    #' @param newPrice Character or NULL; new order price. At least one of `newPrice` or `newSize` required.
-    #' @param newSize Character or NULL; new order size. At least one of `newPrice` or `newSize` required.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `new_order_id` (character): The replacement order's ID.
-    #'   - `client_oid` (character): The original client order ID.
+    #' @param symbol (scalar<character>) trading pair (e.g., `"BTC-USDT"`). Required.
+    #' @param orderId (scalar<character> | NULL) KuCoin order ID. At least one of `orderId` or `clientOid` required.
+    #' @param clientOid (scalar<character> | NULL) client order ID. At least one of `orderId` or `clientOid` required.
+    #' @param newPrice (scalar<numeric> | scalar<character> | NULL) new order price. At least one of `newPrice` or
+    #'   `newSize` required.
+    #' @param newSize (scalar<numeric> | scalar<character> | NULL) new order size. At least one of `newPrice` or
+    #'   `newSize` required.
+    #' @return (data.table | promise<data.table>) one row giving the replacement order's ID and the original client
+    #'   order ID.
     #'
     #' @examples
     #' \dontrun{
@@ -2081,6 +2229,7 @@ KucoinTrading <- R6::R6Class(
     #' cat("New order ID:", result$new_order_id, "\n")
     #' }
     modify_order = function(symbol, orderId = NULL, clientOid = NULL, newPrice = NULL, newSize = NULL) {
+      assert_args_KucoinTrading__modify_order(symbol, orderId, clientOid, newPrice, newSize)
       if (!verify_symbol(symbol)) {
         rlang::abort("Parameter 'symbol' must be a valid ticker (e.g., 'BTC-USDT').")
       }
@@ -2105,11 +2254,16 @@ KucoinTrading <- R6::R6Class(
         body$newSize <- as.character(newSize)
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/hf/orders/alter",
         method = "POST",
         body = body,
         .parser = as_dt_row
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinTrading__modify_order,
+        is_async = private$.is_async
       ))
     },
 
@@ -2166,12 +2320,12 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param timeout Integer; trigger duration in seconds. Use `-1` to disable, or `5` to `86400`.
-    #' @param symbols Character or NULL; comma-separated trading pairs (max 50).
+    #' @noassert timeout
+    #' @param timeout (scalar<numeric>) trigger duration in seconds. Use `-1` to disable, or `5` to `86400`.
+    #' @param symbols (scalar<character> | NULL) comma-separated trading pairs (max 50).
     #'   Empty or NULL applies to all pairs.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `current_time` (integer): Current server time in seconds.
-    #'   - `trigger_time` (integer): When cancellation will trigger, in seconds.
+    #' @return (data.table | promise<data.table>) one row giving the current server time and the time at which
+    #'   cancellation will trigger, both in seconds.
     #'
     #' @examples
     #' \dontrun{
@@ -2184,6 +2338,7 @@ KucoinTrading <- R6::R6Class(
     #' trading$set_dcp(timeout = -1)
     #' }
     set_dcp = function(timeout, symbols = NULL) {
+      assert_args_KucoinTrading__set_dcp(symbols)
       if (!is.numeric(timeout) || length(timeout) != 1) {
         rlang::abort("Parameter 'timeout' must be a single integer.")
       }
@@ -2196,11 +2351,16 @@ KucoinTrading <- R6::R6Class(
         body$symbols <- as.character(symbols)
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/hf/orders/dead-cancel-all",
         method = "POST",
         body = body,
         .parser = as_dt_row
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinTrading__set_dcp,
+        is_async = private$.is_async
       ))
     },
 
@@ -2242,11 +2402,9 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `timeout` (integer): Auto-cancel trigger time in seconds. `-1` if unset.
-    #'   - `symbols` (character): Comma-separated trading pairs, or empty for all.
-    #'   - `current_time` (integer): Current server time in seconds.
-    #'   - `trigger_time` (integer): When cancellation will trigger.
+    #' @return (data.table | promise<data.table>) one row giving the auto-cancel trigger time, the protected symbols,
+    #'   the current server time, and the time at which cancellation will trigger; an empty data.table if DCP is not
+    #'   configured.
     #'
     #' @examples
     #' \dontrun{
@@ -2258,7 +2416,7 @@ KucoinTrading <- R6::R6Class(
     #' }
     #' }
     get_dcp = function() {
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/hf/orders/dead-cancel-all/query",
         .parser = function(data) {
           if (is.null(data) || length(data) == 0) {
@@ -2266,6 +2424,11 @@ KucoinTrading <- R6::R6Class(
           }
           return(as_dt_row(data))
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinTrading__get_dcp,
+        is_async = private$.is_async
       ))
     }
   )

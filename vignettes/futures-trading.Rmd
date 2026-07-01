@@ -21,7 +21,10 @@ box::use(
   ]
 )
 
-box::use(../tests/testthat/mock_router[mock_router])
+box::use(
+  connectcore[local_mock_api],
+  ../tests/testthat/mock_router[.mock_routes]
+)
 
 KEYS <- get_api_keys(
   api_key = "fake-key",
@@ -30,7 +33,7 @@ KEYS <- get_api_keys(
 )
 BASE <- "https://api-futures.kucoin.com"
 
-options(httr2_mock = mock_router)
+local_mock_api(.mock_routes)
 ```
 
 This vignette covers KuCoin Futures trading using the `kucoin` package.

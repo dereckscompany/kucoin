@@ -1,0 +1,21 @@
+{
+  "code": "200000",
+  "data": {
+    "time": 1729159459033,
+    "symbol": "BTC-USDT",
+    "buy": "67232.8",
+    "sell": "67232.9",
+    "changeRate": "-0.0114",
+    "changePrice": "-772.1",
+    "high": "68100.0",
+    "low": "66800.0",
+    "vol": "3456.78901234",
+    "volValue": "232456789.12",
+    "last": "67232.9",
+    "averagePrice": "67450.5",
+    "takerFeeRate": "0.001",
+    "makerFeeRate": "0.001",
+    "takerCoefficient": "1",
+    "makerCoefficient": "1"
+  }
+}

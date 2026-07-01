@@ -59,7 +59,8 @@ KucoinMarginData <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v3/margin/symbols`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Cross Margin Symbols](https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-symbols-cross-margin)
+    #' KuCoin Get Cross Margin Symbols:
+    #' <https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-symbols-cross-margin>
     #'
     #' Verified: 2026-05-23
     #'
@@ -104,29 +105,10 @@ KucoinMarginData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param query Named list; optional. Supported keys:
-    #'   - `symbol` (character): Filter by specific symbol (e.g., `"BTC-USDT"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
-    #'   with **one row per cross-margin symbol** and the following columns
-    #'   (subset shown — KuCoin may add fields):
-    #'   - `symbol` (character): Trading pair identifier (e.g. `"BTC-USDT"`).
-    #'   - `name` (character): Display name.
-    #'   - `enable_trading` (logical): Whether trading is enabled.
-    #'   - `market` (character): Market category (e.g. `"USDS"`).
-    #'   - `base_currency` (character): Base asset code.
-    #'   - `quote_currency` (character): Quote asset code.
-    #'   - `base_increment` (character): Minimum base-quantity step.
-    #'   - `base_min_size` (character): Minimum order base quantity.
-    #'   - `base_max_size` (character): Maximum order base quantity.
-    #'   - `quote_increment` (character): Minimum quote-quantity step.
-    #'   - `quote_min_size` (character): Minimum order quote quantity.
-    #'   - `quote_max_size` (character): Maximum order quote quantity.
-    #'   - `price_increment` (character): Minimum price step.
-    #'   - `fee_currency` (character): Currency charged for trading fees.
-    #'   - `price_limit_rate` (character): Maximum allowed price deviation.
-    #'   - `min_funds` (character): Minimum order notional.
-    #'
-    #'   Empty response yields an empty `data.table`.
+    #' @param query (list)
+    #' @return (data.table | promise<data.table>) one row per cross-margin symbol with trading-pair identifiers, base
+    #'   and quote currencies, increment and min/max order sizes, fee currency, price-limit rate, and minimum funds; an
+    #'   empty response yields an empty data.table.
     #'
     #' @examples
     #' \dontrun{
@@ -135,7 +117,8 @@ KucoinMarginData <- R6::R6Class(
     #' print(symbols)
     #' }
     get_cross_margin_symbols = function(query = list()) {
-      return(private$.request(
+      assert_args_KucoinMarginData__get_cross_margin_symbols(query)
+      res <- private$.request(
         endpoint = "/api/v3/margin/symbols",
         query = query,
         auth = FALSE,
@@ -150,6 +133,11 @@ KucoinMarginData <- R6::R6Class(
           }
           return(data.table::rbindlist(lapply(items, as_dt_row), fill = TRUE)[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarginData__get_cross_margin_symbols,
+        is_async = private$.is_async
       ))
     },
 
@@ -163,7 +151,8 @@ KucoinMarginData <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v1/isolated/symbols`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Isolated Margin Symbols](https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-symbols-isolated-margin)
+    #' KuCoin Get Isolated Margin Symbols:
+    #' <https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-symbols-isolated-margin>
     #'
     #' Verified: 2026-05-23
     #'
@@ -200,21 +189,9 @@ KucoinMarginData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
-    #'   with **one row per isolated-margin pair** and columns:
-    #'   - `symbol` (character): Trading pair identifier.
-    #'   - `symbol_name` (character): Display name.
-    #'   - `base_currency` (character): Base asset code.
-    #'   - `quote_currency` (character): Quote asset code.
-    #'   - `max_leverage` (integer): Maximum leverage available.
-    #'   - `fl_debt_ratio` (character): Forced-liquidation debt ratio.
-    #'   - `trade_enable` (logical): Whether trading is enabled.
-    #'   - `base_borrow_enable` (logical): Base-currency borrow allowed.
-    #'   - `quote_borrow_enable` (logical): Quote-currency borrow allowed.
-    #'   - `base_transfer_in_enable` (logical): Base-currency transfer-in allowed.
-    #'   - `quote_transfer_in_enable` (logical): Quote-currency transfer-in allowed.
-    #'
-    #'   Empty response yields an empty `data.table`.
+    #' @return (data.table | promise<data.table>) one row per isolated-margin pair with the trading-pair identifier,
+    #'   display name, base and quote currencies, maximum leverage, forced-liquidation debt ratio, and the trade, borrow
+    #'   and transfer-in enablement flags; an empty response yields an empty data.table.
     #'
     #' @examples
     #' \dontrun{
@@ -223,7 +200,7 @@ KucoinMarginData <- R6::R6Class(
     #' print(symbols[trade_enable == TRUE])
     #' }
     get_isolated_margin_symbols = function() {
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/isolated/symbols",
         auth = FALSE,
         .parser = function(data) {
@@ -232,6 +209,11 @@ KucoinMarginData <- R6::R6Class(
           }
           return(data.table::rbindlist(lapply(data, as_dt_row), fill = TRUE)[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarginData__get_isolated_margin_symbols,
+        is_async = private$.is_async
       ))
     },
 
@@ -274,16 +256,9 @@ KucoinMarginData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
-    #'   with **one row per supported currency** (the `currencyList` array is
-    #'   exploded so each currency gets its own row with the config-level fields
-    #'   replicated). Columns:
-    #'   - `currency` (character): Supported margin currency (e.g. `"BTC"`).
-    #'   - `max_leverage` (integer): Maximum leverage.
-    #'   - `warning_debt_ratio` (character): Warning debt ratio.
-    #'   - `liq_debt_ratio` (character): Liquidation debt ratio.
-    #'
-    #'   Empty `currencyList` yields a zero-row `data.table` with this schema.
+    #' @return (data.table | promise<data.table>) one row per supported currency, with the `currencyList` array exploded
+    #'   so each currency carries the replicated config-level fields for maximum leverage, warning debt ratio and
+    #'   liquidation debt ratio; an empty `currencyList` yields a zero-row data.table with this schema.
     #'
     #' @examples
     #' \dontrun{
@@ -293,7 +268,7 @@ KucoinMarginData <- R6::R6Class(
     #' cat("Supported currencies:", paste(config$currency, collapse = ", "), "\n")
     #' }
     get_margin_config = function() {
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/margin/config",
         auth = FALSE,
         .parser = function(data) {
@@ -322,6 +297,11 @@ KucoinMarginData <- R6::R6Class(
           data.table::setcolorder(dt, c("currency", setdiff(names(dt), "currency")))
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarginData__get_margin_config,
+        is_async = private$.is_async
       ))
     },
 
@@ -335,7 +315,8 @@ KucoinMarginData <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v3/margin/collateralRatio`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Collateral Ratio](https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-margin-collateral-ratio)
+    #' KuCoin Get Collateral Ratio:
+    #' <https://www.kucoin.com/docs-new/rest/margin-trading/market-data/get-margin-collateral-ratio>
     #'
     #' Verified: 2026-05-23
     #'
@@ -369,18 +350,11 @@ KucoinMarginData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param query Named list; optional. Supported keys:
-    #'   - `currencyList` (character): Comma-separated currencies (e.g., `"BTC,ETH"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
-    #'   with **one row per (currency, tier) pair**. The nested
-    #'   `currencyList`/`items` arrays are cross-joined to a flat long table.
-    #'   Columns:
-    #'   - `currency` (character): Currency code.
-    #'   - `lower_limit` (character): Lower bound of the collateral range.
-    #'   - `upper_limit` (character): Upper bound of the collateral range.
-    #'   - `collateral_ratio` (character): Ratio applied in that range.
-    #'
-    #'   Empty response yields a zero-row `data.table` with this schema.
+    #' @param query (list)
+    #' @return (data.table | promise<data.table>) one row per (currency, tier) pair, with the nested `currencyList` and
+    #'   `items` arrays cross-joined into a flat long table carrying the currency code, lower and upper bounds of the
+    #'   collateral range, and the collateral ratio applied in that range; an empty response yields a zero-row
+    #'   data.table with this schema.
     #'
     #' @examples
     #' \dontrun{
@@ -391,7 +365,8 @@ KucoinMarginData <- R6::R6Class(
     #' ratios[as.numeric(collateral_ratio) >= 0.9]
     #' }
     get_collateral_ratio = function(query = list()) {
-      return(private$.request(
+      assert_args_KucoinMarginData__get_collateral_ratio(query)
+      res <- private$.request(
         endpoint = "/api/v3/margin/collateralRatio",
         query = query,
         auth = FALSE,
@@ -420,6 +395,11 @@ KucoinMarginData <- R6::R6Class(
           }
           return(data.table::rbindlist(rows)[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarginData__get_collateral_ratio,
+        is_async = private$.is_async
       ))
     },
 
@@ -469,26 +449,12 @@ KucoinMarginData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param isIsolated Logical; `TRUE` for isolated margin limits, `FALSE` for cross margin.
-    #' @param query Named list; optional additional filters. Supported keys:
-    #'   - `currency` (character): Currency filter (cross margin).
-    #'   - `symbol` (character): Symbol filter (isolated margin only).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
-    #'   with **one row per currency** (cross) or **one row per (symbol, currency)
-    #'   pair** (isolated). Common columns:
-    #'   - `currency` (character): Currency code.
-    #'   - `borrow_max_amount` (character): Maximum borrowable amount.
-    #'   - `buy_max_amount` (character): Maximum buyable amount.
-    #'   - `hold_max_amount` (character): Maximum hold amount.
-    #'   - `borrow_coefficient` (character): Coefficient applied to borrows.
-    #'   - `margin_coefficient` (character): Coefficient applied to margin.
-    #'   - `precision` (integer): Decimal precision.
-    #'   - `borrow_min_amount` (character): Minimum borrowable amount.
-    #'   - `borrow_min_unit` (character): Minimum borrow step.
-    #'   - `borrow_enabled` (logical): Whether borrowing is currently enabled.
-    #'
-    #'   For isolated margin an extra `symbol` (character) column is present.
-    #'   Empty response yields an empty `data.table`.
+    #' @param isIsolated (scalar<logical>)
+    #' @param query (list)
+    #' @return (data.table | promise<data.table>) one row per currency (cross) or per (symbol, currency) pair
+    #'   (isolated), carrying the currency code, maximum borrow, buy and hold amounts, borrow and margin coefficients,
+    #'   decimal precision, minimum borrow amount and unit, and the borrow-enabled flag, with an extra `symbol` column
+    #'   for isolated margin; an empty response yields an empty data.table.
     #'
     #' @examples
     #' \dontrun{
@@ -505,13 +471,14 @@ KucoinMarginData <- R6::R6Class(
     #' )
     #' }
     get_risk_limit = function(isIsolated, query = list()) {
+      assert_args_KucoinMarginData__get_risk_limit(isIsolated, query)
       if (!is.logical(isIsolated)) {
         rlang::abort("Parameter 'isIsolated' must be logical (TRUE or FALSE).")
       }
 
       query$isIsolated <- isIsolated
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v3/margin/currencies",
         query = query,
         auth = TRUE,
@@ -521,6 +488,11 @@ KucoinMarginData <- R6::R6Class(
           }
           return(data.table::rbindlist(lapply(data, as_dt_row), fill = TRUE)[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinMarginData__get_risk_limit,
+        is_async = private$.is_async
       ))
     }
   )

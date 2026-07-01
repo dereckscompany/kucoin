@@ -7,10 +7,10 @@
 verify_symbol(ticker)
 }
 \arguments{
-\item{ticker}{Character string; the ticker symbol to verify.}
+\item{ticker}{(scalar<character>) the ticker symbol to verify.}
 }
 \value{
-Logical; \code{TRUE} if valid, \code{FALSE} otherwise.
+(scalar<logical>) \code{TRUE} if valid, \code{FALSE} otherwise.
 }
 \description{
 Checks whether a ticker symbol matches the \code{"BASE-QUOTE"} format
