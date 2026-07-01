@@ -2095,11 +2095,11 @@ KucoinFuturesTrading <- R6::R6Class(
     #'   Use `-1` to disable DCP.
     #' @param symbol (scalar<character> | NULL) restrict DCP to a specific futures symbol.
     #'   When NULL, DCP applies to all symbols.
-    #' @return (data.table | promise<data.table>) one row giving the configured timeout in seconds, the applicable
-    #'   symbols (empty for all), and the server time when DCP was set:
-    #' - timeout (integer | NA) the timeout.
-    #' - symbols (character) the symbols.
-    #' - current_time (numeric) the current time.
+    #' @return (data.table | promise<data.table>) one row acknowledging the DCP configuration change:
+    #' - trade_type (character) the trading account the setting applies to (always "FUTURES").
+    #' - symbol (character | NA) the futures symbol the setting is scoped to; NA when it applies to all symbols.
+    #' - system_time (numeric) the server time when the setting was applied, epoch.
+    #' - trigger_time (numeric) the epoch time at which armed DCP would fire; 0 when DCP is disabled.
     #'
     #' @examples
     #' \dontrun{
@@ -2123,10 +2123,19 @@ KucoinFuturesTrading <- R6::R6Class(
         base_url = get_base_url(),
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
-            return(empty_dt_dcp())
+            return(data.table::data.table(
+              trade_type = character(0),
+              symbol = character(0),
+              system_time = numeric(0),
+              trigger_time = numeric(0)
+            )[])
           }
 
-          return(as_dt_row(data))
+          dt <- as_dt_row(data)
+          dt[, symbol := as.character(symbol)]
+          dt[, system_time := as.numeric(system_time)]
+          dt[, trigger_time := as.numeric(trigger_time)]
+          return(dt[])
         }
       )
       return(connectcore::then_or_now(
@@ -2219,7 +2228,11 @@ KucoinFuturesTrading <- R6::R6Class(
         base_url = get_base_url(),
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
-            return(empty_dt_dcp())
+            return(data.table::data.table(
+              timeout = integer(0),
+              symbols = character(0),
+              current_time = numeric(0)
+            )[])
           }
 
           return(as_dt_row(data))

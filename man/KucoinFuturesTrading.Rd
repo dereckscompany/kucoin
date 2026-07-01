@@ -2488,12 +2488,12 @@ When NULL, DCP applies to all symbols.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row giving the configured timeout in seconds, the applicable
-symbols (empty for all), and the server time when DCP was set:
+(data.table | promise<data.table>) one row acknowledging the DCP configuration change:
 \itemize{
-\item timeout (integer | NA) the timeout.
-\item symbols (character) the symbols.
-\item current_time (numeric) the current time.
+\item trade_type (character) the trading account the setting applies to (always "FUTURES").
+\item symbol (character | NA) the futures symbol the setting is scoped to; NA when it applies to all symbols.
+\item system_time (numeric) the server time when the setting was applied, epoch.
+\item trigger_time (numeric) the epoch time at which armed DCP would fire; 0 when DCP is disabled.
 }
 }
 \subsection{Examples}{

@@ -423,6 +423,11 @@ mock_futures_dcp_data <- function() {
   return(.data("futures_dcp"))
 }
 
+#' @export
+mock_futures_dcp_set_data <- function() {
+  return(.data("futures_dcp_set"))
+}
+
 # ---------------------------------------------------------------------------
 # Futures Account fixtures
 # ---------------------------------------------------------------------------

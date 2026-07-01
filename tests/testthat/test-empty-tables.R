@@ -6,7 +6,6 @@
 
 test_that("empty_dt_* helpers satisfy their methods' return contracts", {
   cases <- list(
-    list(empty_dt_dcp(), assert_return_KucoinFuturesTrading__get_dcp),
     list(empty_dt_futures_order(), assert_return_KucoinFuturesTrading__get_order_by_id),
     list(empty_dt_futures_orderbook(), assert_return_KucoinFuturesMarketData__get_part_orderbook),
     list(empty_dt_isolated_margin(), assert_return_KucoinFuturesAccount__add_isolated_margin),

@@ -486,13 +486,6 @@ flatten_pages <- function(pages) {
 #' @keywords internal
 #' @noRd
 #' @noassert
-empty_dt_dcp <- function() {
-  return(data.table::data.table(timeout = integer(0), symbols = character(0), current_time = numeric(0))[])
-}
-
-#' @keywords internal
-#' @noRd
-#' @noassert
 empty_dt_futures_order <- function() {
   return(data.table::data.table(
     id = character(0),

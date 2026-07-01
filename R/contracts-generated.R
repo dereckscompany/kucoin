@@ -1073,12 +1073,14 @@ assert_args_KucoinFuturesTrading__set_dcp <- function(symbol) {
 
 assert_return_KucoinFuturesTrading__set_dcp <- function(value) {
   assert_data_table(value)
-  assert_has_columns(value, c("timeout", "symbols", "current_time"))
-  assert_integer(value[["timeout"]])
-  assert_character(value[["symbols"]])
-  assert_no_missing_values(value[["symbols"]])
-  assert_double(value[["current_time"]])
-  assert_no_missing_values(value[["current_time"]])
+  assert_has_columns(value, c("trade_type", "symbol", "system_time", "trigger_time"))
+  assert_character(value[["trade_type"]])
+  assert_no_missing_values(value[["trade_type"]])
+  assert_character(value[["symbol"]])
+  assert_double(value[["system_time"]])
+  assert_no_missing_values(value[["system_time"]])
+  assert_double(value[["trigger_time"]])
+  assert_no_missing_values(value[["trigger_time"]])
   return(value)
 }
 
