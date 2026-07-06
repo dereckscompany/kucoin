@@ -837,8 +837,9 @@
     },
     "uuid": {
       "Package": "uuid",
-      "Version": "1.2.2",
-      "Source": "Repository"
+      "Version": "1.2-2",
+      "Source": "Repository",
+      "Repository": "CRAN"
     },
     "vctrs": {
       "Package": "vctrs",
