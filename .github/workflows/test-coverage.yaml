@@ -4,9 +4,6 @@
 # renv is the package manager everywhere: dependencies come from
 # renv.lock via setup-renv (covr + DT included as dev dependencies).
 on:
-  push:
-    branches: [master, main]
-  pull_request:
   workflow_dispatch:
 
 name: test-coverage
@@ -29,8 +26,6 @@ jobs:
 
       - uses: r-lib/actions/setup-r@v2
         with:
-          # pinned to the renv.lock R version - see R-CMD-check.yaml note
-          r-version: '4.5.1'
           use-public-rspm: true
 
       - uses: r-lib/actions/setup-renv@v2
@@ -64,7 +59,6 @@ jobs:
         shell: Rscript {0}
 
       - name: Deploy coverage to GitHub Pages
-        if: github.event_name != 'pull_request'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
