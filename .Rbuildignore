@@ -53,3 +53,5 @@ log.txt
 ^LICENSE$
 ^\.clang-format$
 ^README\.Rmd$
+^\.formatignore$
+^scratch$
