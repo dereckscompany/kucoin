@@ -176,18 +176,18 @@ KucoinFuturesTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param clientOid (scalar<character>) unique client order ID.
+    #' @param client_order_id (scalar<character>) unique client order ID.
     #' @param symbol (scalar<character>) futures symbol (e.g., `"XBTUSDTM"`).
     #' @param side (scalar<character>) `"buy"` or `"sell"`.
     #' @param type (scalar<character>) `"limit"` or `"market"`.
     #' @param leverage (scalar<count in [1, Inf[>) leverage multiplier.
     #' @param size (scalar<count in [1, Inf[>) order quantity (number of contracts).
     #' @param price (scalar<character> | NULL) price (required for limit orders).
-    #' @param marginMode (scalar<character>) `"ISOLATED"` or `"CROSS"`. Default `"ISOLATED"`.
-    #' @param positionSide (scalar<character>) `"BOTH"` for one-way mode, `"LONG"` or
+    #' @param margin_mode (scalar<character>) `"ISOLATED"` or `"CROSS"`. Default `"ISOLATED"`.
+    #' @param position_side (scalar<character>) `"BOTH"` for one-way mode, `"LONG"` or
     #'   `"SHORT"` for hedge mode. Default `"BOTH"`.
-    #' @param timeInForce (scalar<character> | NULL) e.g., `"GTC"`, `"IOC"`, `"FOK"`.
-    #' @param reduceOnly (scalar<logical> | NULL) if TRUE, order only reduces position.
+    #' @param time_in_force (scalar<character> | NULL) e.g., `"GTC"`, `"IOC"`, `"FOK"`.
+    #' @param reduce_only (scalar<logical> | NULL) if TRUE, order only reduces position.
     #' @param remark (scalar<character> | NULL) order notes.
     #' @param ... Additional order parameters.
     #' @return (data.table | promise<data.table>) one row giving the system-assigned order ID and the client-provided
@@ -223,48 +223,48 @@ KucoinFuturesTrading <- R6::R6Class(
     #' )
     #' }
     add_order = function(
-      clientOid,
+      client_order_id,
       symbol,
       side,
       type,
       leverage,
       size,
       price = NULL,
-      marginMode = "ISOLATED",
-      positionSide = "BOTH",
-      timeInForce = NULL,
-      reduceOnly = NULL,
+      margin_mode = "ISOLATED",
+      position_side = "BOTH",
+      time_in_force = NULL,
+      reduce_only = NULL,
       remark = NULL,
       ...
     ) {
       assert_args_KucoinFuturesTrading__add_order(
-        clientOid,
+        client_order_id,
         symbol,
         side,
         type,
         leverage,
         size,
         price,
-        marginMode,
-        positionSide,
-        timeInForce,
-        reduceOnly,
+        margin_mode,
+        position_side,
+        time_in_force,
+        reduce_only,
         remark
       )
-      assert::assert_nonempty_strings(clientOid)
+      assert::assert_nonempty_strings(client_order_id)
       assert::assert_nonempty_strings(symbol)
       body <- list(
-        clientOid = clientOid,
+        clientOid = client_order_id,
         symbol = symbol,
         side = side,
         type = type,
         leverage = leverage,
         size = size,
         price = price,
-        marginMode = marginMode,
-        positionSide = positionSide,
-        timeInForce = timeInForce,
-        reduceOnly = reduceOnly,
+        marginMode = margin_mode,
+        positionSide = position_side,
+        timeInForce = time_in_force,
+        reduceOnly = reduce_only,
         remark = remark,
         ...
       )
@@ -362,18 +362,18 @@ KucoinFuturesTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param clientOid (scalar<character>) unique client order ID.
+    #' @param client_order_id (scalar<character>) unique client order ID.
     #' @param symbol (scalar<character>) futures symbol (e.g., `"XBTUSDTM"`).
     #' @param side (scalar<character>) `"buy"` or `"sell"`.
     #' @param type (scalar<character>) `"limit"` or `"market"`.
     #' @param leverage (scalar<count in [1, Inf[>) leverage multiplier.
     #' @param size (scalar<count in [1, Inf[>) order quantity (number of contracts).
     #' @param price (scalar<character> | NULL) price (required for limit orders).
-    #' @param marginMode (scalar<character>) `"ISOLATED"` or `"CROSS"`. Default `"ISOLATED"`.
-    #' @param positionSide (scalar<character>) `"BOTH"` for one-way mode, `"LONG"` or
+    #' @param margin_mode (scalar<character>) `"ISOLATED"` or `"CROSS"`. Default `"ISOLATED"`.
+    #' @param position_side (scalar<character>) `"BOTH"` for one-way mode, `"LONG"` or
     #'   `"SHORT"` for hedge mode. Default `"BOTH"`.
-    #' @param timeInForce (scalar<character> | NULL) e.g., `"GTC"`, `"IOC"`, `"FOK"`.
-    #' @param reduceOnly (scalar<logical> | NULL) if TRUE, order only reduces position.
+    #' @param time_in_force (scalar<character> | NULL) e.g., `"GTC"`, `"IOC"`, `"FOK"`.
+    #' @param reduce_only (scalar<logical> | NULL) if TRUE, order only reduces position.
     #' @param remark (scalar<character> | NULL) order notes.
     #' @param ... Additional order parameters.
     #' @return (data.table | promise<data.table>) one row giving the simulated order ID and the client-provided order
@@ -398,48 +398,48 @@ KucoinFuturesTrading <- R6::R6Class(
     #' print(result)
     #' }
     add_order_test = function(
-      clientOid,
+      client_order_id,
       symbol,
       side,
       type,
       leverage,
       size,
       price = NULL,
-      marginMode = "ISOLATED",
-      positionSide = "BOTH",
-      timeInForce = NULL,
-      reduceOnly = NULL,
+      margin_mode = "ISOLATED",
+      position_side = "BOTH",
+      time_in_force = NULL,
+      reduce_only = NULL,
       remark = NULL,
       ...
     ) {
       assert_args_KucoinFuturesTrading__add_order_test(
-        clientOid,
+        client_order_id,
         symbol,
         side,
         type,
         leverage,
         size,
         price,
-        marginMode,
-        positionSide,
-        timeInForce,
-        reduceOnly,
+        margin_mode,
+        position_side,
+        time_in_force,
+        reduce_only,
         remark
       )
-      assert::assert_nonempty_strings(clientOid)
+      assert::assert_nonempty_strings(client_order_id)
       assert::assert_nonempty_strings(symbol)
       body <- list(
-        clientOid = clientOid,
+        clientOid = client_order_id,
         symbol = symbol,
         side = side,
         type = type,
         leverage = leverage,
         size = size,
         price = price,
-        marginMode = marginMode,
-        positionSide = positionSide,
-        timeInForce = timeInForce,
-        reduceOnly = reduceOnly,
+        marginMode = margin_mode,
+        positionSide = position_side,
+        timeInForce = time_in_force,
+        reduceOnly = reduce_only,
         remark = remark,
         ...
       )
@@ -654,7 +654,7 @@ KucoinFuturesTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param orderId (scalar<character>) the system order ID to cancel.
+    #' @param order_id (scalar<character>) the system order ID to cancel.
     #' @return (data.table | promise<data.table>) one row per cancelled order giving the cancelled order ID; an empty
     #'   data.table if no orders matched.
     #'
@@ -664,11 +664,11 @@ KucoinFuturesTrading <- R6::R6Class(
     #' result <- ft$cancel_order_by_id("234125150956625920")
     #' print(result$cancelled_order_id)
     #' }
-    cancel_order_by_id = function(orderId) {
-      assert_args_KucoinFuturesTrading__cancel_order_by_id(orderId)
-      assert::assert_nonempty_strings(orderId)
+    cancel_order_by_id = function(order_id) {
+      assert_args_KucoinFuturesTrading__cancel_order_by_id(order_id)
+      assert::assert_nonempty_strings(order_id)
       res <- private$.request(
-        endpoint = paste0("/api/v1/orders/", orderId),
+        endpoint = paste0("/api/v1/orders/", order_id),
         method = "DELETE",
         .parser = function(data) {
           ids <- NULL
@@ -741,7 +741,7 @@ KucoinFuturesTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param clientOid (scalar<character>) the client order ID to cancel.
+    #' @param client_order_id (scalar<character>) the client order ID to cancel.
     #' @param symbol (scalar<character>) futures symbol (e.g., `"XBTUSDTM"`).
     #' @return (data.table | promise<data.table>) one row giving the cancelled client order ID.
     #'
@@ -751,12 +751,12 @@ KucoinFuturesTrading <- R6::R6Class(
     #' result <- ft$cancel_order_by_client_oid("my-order-001", symbol = "XBTUSDTM")
     #' print(result$client_oid)
     #' }
-    cancel_order_by_client_oid = function(clientOid, symbol) {
-      assert_args_KucoinFuturesTrading__cancel_order_by_client_oid(clientOid, symbol)
-      assert::assert_nonempty_strings(clientOid)
+    cancel_order_by_client_oid = function(client_order_id, symbol) {
+      assert_args_KucoinFuturesTrading__cancel_order_by_client_oid(client_order_id, symbol)
+      assert::assert_nonempty_strings(client_order_id)
       assert::assert_nonempty_strings(symbol)
       res <- private$.request(
-        endpoint = paste0("/api/v1/orders/client-order/", clientOid),
+        endpoint = paste0("/api/v1/orders/client-order/", client_order_id),
         method = "DELETE",
         query = list(symbol = symbol),
         .parser = function(data) {
@@ -1048,7 +1048,7 @@ KucoinFuturesTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param orderId (scalar<character>) the system order ID.
+    #' @param order_id (scalar<character>) the system order ID.
     #' @return (data.table | promise<data.table>) one row of full order details, including the creation and last-updated
     #'   datetimes (POSIXct, coerced from epoch milliseconds):
     #' - id (character) the record identifier.
@@ -1074,11 +1074,11 @@ KucoinFuturesTrading <- R6::R6Class(
     #' order <- ft$get_order_by_id("234125150956625920")
     #' print(order[, .(id, symbol, side, price, size, status)])
     #' }
-    get_order_by_id = function(orderId) {
-      assert_args_KucoinFuturesTrading__get_order_by_id(orderId)
-      assert::assert_nonempty_strings(orderId)
+    get_order_by_id = function(order_id) {
+      assert_args_KucoinFuturesTrading__get_order_by_id(order_id)
+      assert::assert_nonempty_strings(order_id)
       res <- private$.request(
-        endpoint = paste0("/api/v1/orders/", orderId),
+        endpoint = paste0("/api/v1/orders/", order_id),
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
             return(empty_dt_futures_order())
@@ -1188,7 +1188,7 @@ KucoinFuturesTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param clientOid (scalar<character>) the client order ID.
+    #' @param client_order_id (scalar<character>) the client order ID.
     #' @return (data.table | promise<data.table>) one row of full order details; same columns as `get_order_by_id()`:
     #' - id (character) the record identifier.
     #' - symbol (character) the trading pair symbol.
@@ -1213,12 +1213,12 @@ KucoinFuturesTrading <- R6::R6Class(
     #' order <- ft$get_order_by_client_oid("my-order-001")
     #' print(order[, .(id, symbol, side, price, size, status)])
     #' }
-    get_order_by_client_oid = function(clientOid) {
-      assert_args_KucoinFuturesTrading__get_order_by_client_oid(clientOid)
-      assert::assert_nonempty_strings(clientOid)
+    get_order_by_client_oid = function(client_order_id) {
+      assert_args_KucoinFuturesTrading__get_order_by_client_oid(client_order_id)
+      assert::assert_nonempty_strings(client_order_id)
       res <- private$.request(
         endpoint = "/api/v1/orders/byClientOid",
-        query = list(clientOid = clientOid),
+        query = list(clientOid = client_order_id),
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
             return(empty_dt_futures_order())
@@ -1362,7 +1362,7 @@ KucoinFuturesTrading <- R6::R6Class(
     #' print(active[, .(id, side, price, size, status)])
     #'
     #' # Get completed orders from the last 7 days
-    #' now_ms <- as.integer(as.numeric(Sys.time()) * 1000)
+    #' now_ms <- as.integer(as.numeric(lubridate::now("UTC")) * 1000)
     #' done <- ft$get_order_list(query = list(
     #'   status = "done",
     #'   startAt = now_ms - 7 * 86400000L,

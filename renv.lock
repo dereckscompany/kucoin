@@ -171,14 +171,14 @@
     },
     "connectcore": {
       "Package": "connectcore",
-      "Version": "0.2.0",
+      "Version": "0.3.0",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
       "RemoteUsername": "dereckscompany",
       "RemoteRepo": "connectcore",
-      "RemoteRef": "v0.2.0",
-      "RemoteSha": "90bcee88e44b0d402a4a3ec62c0872f428823393"
+      "RemoteRef": "HEAD",
+      "RemoteSha": "a0410fd349aa924f431f4df9fcbf3c4fc91612af"
     },
     "cpp11": {
       "Package": "cpp11",

@@ -129,7 +129,7 @@ test_that("isIsolated flag is passed when TRUE", {
     return(resp)
   })
 
-  new_margin()$open_short(symbol = TEST_SYMBOL_SPOT, size = 0.001, isIsolated = TRUE)
+  new_margin()$open_short(symbol = TEST_SYMBOL_SPOT, size = 0.001, is_isolated = TRUE)
   expect_true(captured_body$isIsolated)
 })
 
@@ -149,7 +149,7 @@ test_that("borrow validates parameters", {
   expect_error(new_margin()$borrow(currency = "", size = 100), "non-empty")
   expect_error(new_margin()$borrow(currency = "USDT", size = -1), "positive")
   expect_error(
-    new_margin()$borrow(currency = "BTC", size = 0.01, isIsolated = TRUE, symbol = "INVALID"),
+    new_margin()$borrow(currency = "BTC", size = 0.01, is_isolated = TRUE, symbol = "INVALID"),
     "valid ticker"
   )
 })

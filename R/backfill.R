@@ -29,10 +29,13 @@
 #' @param verbose (scalar<logical>) if `TRUE`, prints progress messages via
 #'   [rlang::inform()].
 #'
-#' @return (scalar<character>) the file path (invisibly). If any
-#'   symbol-timeframe combinations failed, a `"failures"` attribute is attached
-#'   containing a [data.table::data.table] with columns `symbol`, `timeframe`,
-#'   and `error`.
+#' @return (scalar<character>) the file path (invisibly).
+#'
+#'   Per-combo failures are surfaced as warnings during the run (one
+#'   [rlang::warn()] per failed `(symbol, timeframe)` pair, with the underlying
+#'   error message). After the loop, if any combinations failed, a final summary
+#'   warning lists the count and the affected pairs. No failure data is hidden on
+#'   the return value.
 #'
 #' @importFrom httr2 req_perform
 #' @importFrom lubridate as_datetime now
@@ -206,9 +209,19 @@ kucoin_backfill_klines <- function(
     }
   }
 
-  # --- Attach failures attribute ---
+  # --- Final summary warning if anything failed ---
   if (length(failures) > 0L) {
-    attr(file, "failures") <- data.table::rbindlist(failures)
+    failed_dt <- data.table::rbindlist(failures)
+    pairs <- paste(
+      sprintf("%s/%s", failed_dt$symbol, failed_dt$timeframe),
+      collapse = ", "
+    )
+    rlang::warn(sprintf(
+      "kucoin_backfill_klines: %d of %d (symbol, timeframe) combinations failed: %s",
+      nrow(failed_dt),
+      total,
+      pairs
+    ))
   }
 
   return(invisible(assert_return_kucoin_backfill_klines(file)))

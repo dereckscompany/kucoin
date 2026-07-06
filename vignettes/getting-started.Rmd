@@ -172,7 +172,7 @@ result
 ### Cancel an Order
 
 ```{r trading-cancel}
-cancelled <- trading$cancel_order_by_id(orderId = "670fd33bf9406e0007ab3945", symbol = "BTC-USDT")
+cancelled <- trading$cancel_order_by_id(order_id = "670fd33bf9406e0007ab3945", symbol = "BTC-USDT")
 cancelled
 ```
 
@@ -202,7 +202,7 @@ result <- stop$add_order(
   side = "sell",
   price = "60000",
   size = "0.0001",
-  stopPrice = "59000"
+  stop_price = "59000"
 )
 result
 ```
@@ -228,8 +228,8 @@ result <- oco$add_order(
   side = "sell",
   price = "110000",
   size = "0.0001",
-  stopPrice = "90000",
-  limitPrice = "89500"
+  stop_price = "90000",
+  limit_price = "89500"
 )
 result
 ```
@@ -294,8 +294,8 @@ cat("Status:", order$status, "Filled:", order$deal_size, "\n")
 # Modify an existing order's price
 modified <- trading$modify_order(
   symbol = "BTC-USDT",
-  orderId = order$order_id,
-  newPrice = "51000"
+  order_id = order$order_id,
+  new_price = "51000"
 )
 cat("New order ID:", modified$new_order_id, "\n")
 ```
@@ -335,7 +335,7 @@ actual_fees
 The HF ledger contains fills, fees, and settlements from HF orders (7-day window):
 
 ```{r, eval = FALSE}
-hf_ledger <- account$get_hf_ledger(currency = "USDT", bizType = "TRADE_EXCHANGE")
+hf_ledger <- account$get_hf_ledger(currency = "USDT", biz_type = "TRADE_EXCHANGE")
 hf_ledger
 ```
 
@@ -377,12 +377,12 @@ balance
 
 # Transfer USDT from main to trade account
 result <- transfer$add_transfer(
-  clientOid = "unique-id-here",
+  client_order_id = "unique-id-here",
   currency = "USDT",
   amount = "100",
   type = "INTERNAL",
-  fromAccountType = "MAIN",
-  toAccountType = "TRADE"
+  from_account_type = "MAIN",
+  to_account_type = "TRADE"
 )
 result
 ```
@@ -406,9 +406,9 @@ quotas
 # Withdraw USDT via TRC20
 result <- withdrawal$add_withdrawal(
   currency = "USDT",
-  toAddress = "your-trc20-address",
+  to_address = "your-trc20-address",
   amount = "10",
-  withdrawType = "ADDRESS",
+  withdraw_type = "ADDRESS",
   chain = "trx"
 )
 result

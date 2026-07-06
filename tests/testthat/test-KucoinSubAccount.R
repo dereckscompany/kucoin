@@ -24,7 +24,7 @@ test_that("add_sub_account returns data.table with uid and sub_name", {
 
   dt <- new_sub()$add_sub_account(
     password = "MyPass123",
-    subName = "mysubacct1",
+    sub_name = "mysubacct1",
     access = "Spot",
     remarks = "bot-alpha"
   )
@@ -37,7 +37,7 @@ test_that("add_sub_account returns data.table with uid and sub_name", {
 
 test_that("add_sub_account validates access parameter", {
   expect_error(
-    new_sub()$add_sub_account(password = "p", subName = "s", access = "Invalid"),
+    new_sub()$add_sub_account(password = "p", sub_name = "s", access = "Invalid"),
     "must be one of"
   )
 })

@@ -240,7 +240,7 @@ active <- ft$get_order_list(query = list(status = "active", symbol = "XBTUSDTM")
 print(active[, .(id, side, price, size, status)])
 
 # Get completed orders from the last 7 days
-now_ms <- as.integer(as.numeric(Sys.time()) * 1000)
+now_ms <- as.integer(as.numeric(lubridate::now("UTC")) * 1000)
 done <- ft$get_order_list(query = list(
   status = "done",
   startAt = now_ms - 7 * 86400000L,
@@ -500,17 +500,17 @@ accidental position increases.
 }
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$add_order(
-  clientOid,
+  client_order_id,
   symbol,
   side,
   type,
   leverage,
   size,
   price = NULL,
-  marginMode = "ISOLATED",
-  positionSide = "BOTH",
-  timeInForce = NULL,
-  reduceOnly = NULL,
+  margin_mode = "ISOLATED",
+  position_side = "BOTH",
+  time_in_force = NULL,
+  reduce_only = NULL,
   remark = NULL,
   ...
 )}\if{html}{\out{</div>}}
@@ -519,7 +519,7 @@ accidental position increases.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{clientOid}}{(scalar<character>) unique client order ID.}
+\item{\code{client_order_id}}{(scalar<character>) unique client order ID.}
 
 \item{\code{symbol}}{(scalar<character>) futures symbol (e.g., \code{"XBTUSDTM"}).}
 
@@ -533,14 +533,14 @@ accidental position increases.
 
 \item{\code{price}}{(scalar<character> | NULL) price (required for limit orders).}
 
-\item{\code{marginMode}}{(scalar<character>) \code{"ISOLATED"} or \code{"CROSS"}. Default \code{"ISOLATED"}.}
+\item{\code{margin_mode}}{(scalar<character>) \code{"ISOLATED"} or \code{"CROSS"}. Default \code{"ISOLATED"}.}
 
-\item{\code{positionSide}}{(scalar<character>) \code{"BOTH"} for one-way mode, \code{"LONG"} or
+\item{\code{position_side}}{(scalar<character>) \code{"BOTH"} for one-way mode, \code{"LONG"} or
 \code{"SHORT"} for hedge mode. Default \code{"BOTH"}.}
 
-\item{\code{timeInForce}}{(scalar<character> | NULL) e.g., \code{"GTC"}, \code{"IOC"}, \code{"FOK"}.}
+\item{\code{time_in_force}}{(scalar<character> | NULL) e.g., \code{"GTC"}, \code{"IOC"}, \code{"FOK"}.}
 
-\item{\code{reduceOnly}}{(scalar<logical> | NULL) if TRUE, order only reduces position.}
+\item{\code{reduce_only}}{(scalar<logical> | NULL) if TRUE, order only reduces position.}
 
 \item{\code{remark}}{(scalar<character> | NULL) order notes.}
 
@@ -680,17 +680,17 @@ permissions and symbols are correct.
 }
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$add_order_test(
-  clientOid,
+  client_order_id,
   symbol,
   side,
   type,
   leverage,
   size,
   price = NULL,
-  marginMode = "ISOLATED",
-  positionSide = "BOTH",
-  timeInForce = NULL,
-  reduceOnly = NULL,
+  margin_mode = "ISOLATED",
+  position_side = "BOTH",
+  time_in_force = NULL,
+  reduce_only = NULL,
   remark = NULL,
   ...
 )}\if{html}{\out{</div>}}
@@ -699,7 +699,7 @@ permissions and symbols are correct.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{clientOid}}{(scalar<character>) unique client order ID.}
+\item{\code{client_order_id}}{(scalar<character>) unique client order ID.}
 
 \item{\code{symbol}}{(scalar<character>) futures symbol (e.g., \code{"XBTUSDTM"}).}
 
@@ -713,14 +713,14 @@ permissions and symbols are correct.
 
 \item{\code{price}}{(scalar<character> | NULL) price (required for limit orders).}
 
-\item{\code{marginMode}}{(scalar<character>) \code{"ISOLATED"} or \code{"CROSS"}. Default \code{"ISOLATED"}.}
+\item{\code{margin_mode}}{(scalar<character>) \code{"ISOLATED"} or \code{"CROSS"}. Default \code{"ISOLATED"}.}
 
-\item{\code{positionSide}}{(scalar<character>) \code{"BOTH"} for one-way mode, \code{"LONG"} or
+\item{\code{position_side}}{(scalar<character>) \code{"BOTH"} for one-way mode, \code{"LONG"} or
 \code{"SHORT"} for hedge mode. Default \code{"BOTH"}.}
 
-\item{\code{timeInForce}}{(scalar<character> | NULL) e.g., \code{"GTC"}, \code{"IOC"}, \code{"FOK"}.}
+\item{\code{time_in_force}}{(scalar<character> | NULL) e.g., \code{"GTC"}, \code{"IOC"}, \code{"FOK"}.}
 
-\item{\code{reduceOnly}}{(scalar<logical> | NULL) if TRUE, order only reduces position.}
+\item{\code{reduce_only}}{(scalar<logical> | NULL) if TRUE, order only reduces position.}
 
 \item{\code{remark}}{(scalar<character> | NULL) order notes.}
 
@@ -978,13 +978,13 @@ Verified: 2026-05-23
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$cancel_order_by_id(orderId)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$cancel_order_by_id(order_id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{orderId}}{(scalar<character>) the system order ID to cancel.}
+\item{\code{order_id}}{(scalar<character>) the system order ID to cancel.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1064,13 +1064,13 @@ bots.
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$cancel_order_by_client_oid(clientOid, symbol)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$cancel_order_by_client_oid(client_order_id, symbol)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{clientOid}}{(scalar<character>) the client order ID to cancel.}
+\item{\code{client_order_id}}{(scalar<character>) the client order ID to cancel.}
 
 \item{\code{symbol}}{(scalar<character>) futures symbol (e.g., \code{"XBTUSDTM"}).}
 }
@@ -1385,13 +1385,13 @@ Verified: 2026-05-23
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$get_order_by_id(orderId)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$get_order_by_id(order_id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{orderId}}{(scalar<character>) the system order ID.}
+\item{\code{order_id}}{(scalar<character>) the system order ID.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1532,13 +1532,13 @@ Verified: 2026-05-23
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$get_order_by_client_oid(clientOid)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesTrading$get_order_by_client_oid(client_order_id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{clientOid}}{(scalar<character>) the client order ID.}
+\item{\code{client_order_id}}{(scalar<character>) the client order ID.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1725,7 +1725,7 @@ active <- ft$get_order_list(query = list(status = "active", symbol = "XBTUSDTM")
 print(active[, .(id, side, price, size, status)])
 
 # Get completed orders from the last 7 days
-now_ms <- as.integer(as.numeric(Sys.time()) * 1000)
+now_ms <- as.integer(as.numeric(lubridate::now("UTC")) * 1000)
 done <- ft$get_order_list(query = list(
   status = "done",
   startAt = now_ms - 7 * 86400000L,

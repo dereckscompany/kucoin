@@ -559,18 +559,18 @@ KucoinFuturesAccount <- R6::R6Class(
     #' ```
     #'
     #' @param symbol (scalar<character>) futures symbol.
-    #' @param marginMode (scalar<character>) `"ISOLATED"` or `"CROSS"`.
+    #' @param margin_mode (scalar<character>) `"ISOLATED"` or `"CROSS"`.
     #' @return (data.table | promise<data.table>) one row giving the contract
     #'   symbol and its updated margin mode:
     #' - symbol (character) the trading pair symbol.
     #' - margin_mode (character) the margin mode.
-    set_margin_mode = function(symbol, marginMode) {
-      assert_args_KucoinFuturesAccount__set_margin_mode(symbol, marginMode)
+    set_margin_mode = function(symbol, margin_mode) {
+      assert_args_KucoinFuturesAccount__set_margin_mode(symbol, margin_mode)
       assert::assert_nonempty_strings(symbol)
       res <- private$.request(
         endpoint = "/api/v2/position/changeMarginMode",
         method = "POST",
-        body = list(symbol = symbol, marginMode = marginMode),
+        body = list(symbol = symbol, marginMode = margin_mode),
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
             return(empty_dt_margin_mode())
@@ -921,7 +921,7 @@ KucoinFuturesAccount <- R6::R6Class(
     #'
     #' @param symbol (scalar<character>) futures symbol.
     #' @param margin (scalar<numeric>) amount of margin to add.
-    #' @param bizNo (scalar<character>) unique business ID for idempotency.
+    #' @param biz_no (scalar<character>) unique business ID for idempotency.
     #' @return (data.table | promise<data.table>) one row giving the margin
     #'   operation ID, contract symbol, amount deposited, and operation type
     #'   (e.g., `"ADD"`):
@@ -929,14 +929,14 @@ KucoinFuturesAccount <- R6::R6Class(
     #' - symbol (character) the trading pair symbol.
     #' - margin (numeric | NA) the margin amount.
     #' - margin_type (character) the margin type.
-    add_isolated_margin = function(symbol, margin, bizNo) {
-      assert_args_KucoinFuturesAccount__add_isolated_margin(symbol, margin, bizNo)
+    add_isolated_margin = function(symbol, margin, biz_no) {
+      assert_args_KucoinFuturesAccount__add_isolated_margin(symbol, margin, biz_no)
       assert::assert_nonempty_strings(symbol)
-      assert::assert_nonempty_strings(bizNo)
+      assert::assert_nonempty_strings(biz_no)
       res <- private$.request(
         endpoint = "/api/v1/position/margin/deposit-margin",
         method = "POST",
-        body = list(symbol = symbol, margin = margin, bizNo = bizNo),
+        body = list(symbol = symbol, margin = margin, bizNo = biz_no),
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
             return(empty_dt_isolated_margin())
@@ -1004,20 +1004,20 @@ KucoinFuturesAccount <- R6::R6Class(
     #' ```
     #'
     #' @param symbol (scalar<character>) futures symbol.
-    #' @param withdrawAmount (scalar<numeric>) amount of margin to withdraw.
+    #' @param withdraw_amount (scalar<numeric>) amount of margin to withdraw.
     #' @return (data.table | promise<data.table>) one row giving the margin
     #'   operation ID, contract symbol, amount withdrawn, and operation type:
     #' - id (character) the record identifier.
     #' - symbol (character) the trading pair symbol.
     #' - margin (numeric | NA) the margin amount.
     #' - margin_type (character) the margin type.
-    remove_isolated_margin = function(symbol, withdrawAmount) {
-      assert_args_KucoinFuturesAccount__remove_isolated_margin(symbol, withdrawAmount)
+    remove_isolated_margin = function(symbol, withdraw_amount) {
+      assert_args_KucoinFuturesAccount__remove_isolated_margin(symbol, withdraw_amount)
       assert::assert_nonempty_strings(symbol)
       res <- private$.request(
         endpoint = "/api/v1/margin/withdrawMargin",
         method = "POST",
-        body = list(symbol = symbol, withdrawAmount = withdrawAmount),
+        body = list(symbol = symbol, withdrawAmount = withdraw_amount),
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
             return(empty_dt_isolated_margin())

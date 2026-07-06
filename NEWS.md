@@ -1,3 +1,15 @@
+# kucoin 4.3.0
+
+## snake_case argument convergence (clean break) + connectcore alignment
+
+This release renames every camelCase R argument to snake_case, so the whole public surface reads in one style and matches the rest of the connector fleet. The KuCoin API's own camelCase field names live on only as wire payload keys built inside each method: you now pass `client_order_id`, `time_in_force`, `order_id` and so on, and the method translates each back to `clientOid` / `timeInForce` / `orderId` at the call site. This is a clean break with no deprecation shims, hence the minor-version bump.
+
+* **snake_case everywhere.** All ~40 camelCase method arguments become snake_case (`clientOid` -> `client_order_id`, `orderId` -> `order_id`, `timeInForce` -> `time_in_force`, `isIsolated` -> `is_isolated`, `stopPrice` -> `stop_price`, `newPrice` / `newSize` -> `new_price` / `new_size`, `marginMode` -> `margin_mode`, and the rest); the venue's camelCase survives only as accepted values and wire payload keys. The blessed `.lintr` drops its camelCase allowance and now enforces pure snake_case.
+* **`ms_to_datetime()` centralised in connectcore.** kucoin's length-preserving, NA-in-NA-out millisecond-to-POSIXct helper was the fleet donor and now lives in `connectcore (>= 0.3.0)`; the local copy is deleted and the function is imported, so every wrapper shares one implementation. The nanosecond variant stays local because connectcore does not centralise it.
+* **Backfill no longer smuggles failures on an attribute.** `kucoin_backfill_klines()` previously attached a `"failures"` attribute to its returned file path, breaking the one-method-one-value rule; per-combo failures are now surfaced as warnings during the run, with a final summary warning listing the failed count and affected `(symbol, timeframe)` pairs, and the return value is just the file path.
+* **lubridate for all date/time.** The remaining base `as.POSIXct()` / `Sys.time()` calls in code and examples are replaced with `lubridate::as_datetime()` / `lubridate::now("UTC")`.
+* **Docs, tests, vignettes.** Documentation is regenerated with roxygen 7.3.3; `test-empty-tables.R` is renamed `test-empty-constructors.R` and proves every `empty_dt_*` constructor is a zero-row, non-zero-column, list-column-free, contract-passing table; the README and vignettes execute against the tests/testthat mock router with the new snake_case arguments and print real synthetic-fixture output.
+
 # kucoin 4.2.3
 
 ## data.table return shapes documented with typed column bullets

@@ -120,22 +120,22 @@ KucoinWithdrawal <- R6::R6Class(
     #'
     #' @param currency (scalar<character>) currency code (e.g., `"BTC"`,
     #'   `"USDT"`).
-    #' @param toAddress (scalar<character>) withdrawal destination address, UID,
+    #' @param to_address (scalar<character>) withdrawal destination address, UID,
     #'   email, or phone number.
     #' @param amount (scalar<character>) withdrawal amount (must be positive,
     #'   multiple of currency precision).
-    #' @param withdrawType (scalar<character>) withdrawal type: `"ADDRESS"`,
+    #' @param withdraw_type (scalar<character>) withdrawal type: `"ADDRESS"`,
     #'   `"UID"`, `"MAIL"`, or `"PHONE"`.
     #' @param chain (scalar<character> | NULL) blockchain network identifier
     #'   (e.g., `"eth"`, `"trx"`, `"bsc"`). Required by the KuCoin API; the method
     #'   raises if `NULL`.
     #' @param memo (scalar<character> | NULL) address memo/tag (required for some
     #'   currencies like XRP, XLM).
-    #' @param isInner (scalar<logical> | NULL) if `TRUE`, this is an internal
+    #' @param is_inner (scalar<logical> | NULL) if `TRUE`, this is an internal
     #'   KuCoin transfer (no on-chain fee).
     #' @param remark (scalar<character> | NULL) optional remark for the
     #'   withdrawal.
-    #' @param feeDeductType (scalar<character> | NULL) fee deduction type:
+    #' @param fee_deduct_type (scalar<character> | NULL) fee deduction type:
     #'   `"INTERNAL"` or `"EXTERNAL"`.
     #' @return (data.table | promise<data.table>) one row with column
     #'   `withdrawal_id` (character): the unique withdrawal identifier:
@@ -166,37 +166,37 @@ KucoinWithdrawal <- R6::R6Class(
     #' }
     add_withdrawal = function(
       currency,
-      toAddress,
+      to_address,
       amount,
-      withdrawType,
+      withdraw_type,
       chain = NULL,
       memo = NULL,
-      isInner = NULL,
+      is_inner = NULL,
       remark = NULL,
-      feeDeductType = NULL
+      fee_deduct_type = NULL
     ) {
       assert_args_KucoinWithdrawal__add_withdrawal(
         currency,
-        toAddress,
+        to_address,
         amount,
-        withdrawType,
+        withdraw_type,
         chain,
         memo,
-        isInner,
+        is_inner,
         remark,
-        feeDeductType
+        fee_deduct_type
       )
       if (!is.character(currency) || !nzchar(currency)) {
         rlang::abort("Parameter 'currency' must be a non-empty string.")
       }
-      if (!is.character(toAddress) || !nzchar(toAddress)) {
+      if (!is.character(to_address) || !nzchar(to_address)) {
         rlang::abort("Parameter 'toAddress' must be a non-empty string.")
       }
       if (!is.character(amount) || !nzchar(amount)) {
         rlang::abort("Parameter 'amount' must be a non-empty string.")
       }
       valid_types <- c("ADDRESS", "UID", "MAIL", "PHONE")
-      if (!is.character(withdrawType) || !(withdrawType %in% valid_types)) {
+      if (!is.character(withdraw_type) || !(withdraw_type %in% valid_types)) {
         rlang::abort(paste0(
           "Parameter 'withdrawType' must be one of: ",
           paste(valid_types, collapse = ", "),
@@ -210,9 +210,9 @@ KucoinWithdrawal <- R6::R6Class(
 
       body <- list(
         currency = currency,
-        toAddress = toAddress,
+        toAddress = to_address,
         amount = amount,
-        withdrawType = withdrawType
+        withdrawType = withdraw_type
       )
       if (!is.null(chain)) {
         body$chain <- chain
@@ -220,14 +220,14 @@ KucoinWithdrawal <- R6::R6Class(
       if (!is.null(memo)) {
         body$memo <- memo
       }
-      if (!is.null(isInner)) {
-        body$isInner <- isInner
+      if (!is.null(is_inner)) {
+        body$isInner <- is_inner
       }
       if (!is.null(remark)) {
         body$remark <- remark
       }
-      if (!is.null(feeDeductType)) {
-        body$feeDeductType <- feeDeductType
+      if (!is.null(fee_deduct_type)) {
+        body$feeDeductType <- fee_deduct_type
       }
 
       res <- private$.request(
@@ -291,7 +291,7 @@ KucoinWithdrawal <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param withdrawalId (scalar<character>) the unique withdrawal ID to
+    #' @param withdrawal_id (scalar<character>) the unique withdrawal ID to
     #'   cancel.
     #' @return (data.table | promise<data.table>) one row, the cancelled
     #'   withdrawal ID echoed from the input (KuCoin returns `null` data on a
@@ -306,17 +306,17 @@ KucoinWithdrawal <- R6::R6Class(
     #' result <- withdrawal$cancel_withdrawal("670deec84d64da0007d7c946")
     #' print(result$withdrawal_id)
     #' }
-    cancel_withdrawal = function(withdrawalId) {
-      assert_args_KucoinWithdrawal__cancel_withdrawal(withdrawalId)
-      if (!is.character(withdrawalId) || !nzchar(withdrawalId)) {
+    cancel_withdrawal = function(withdrawal_id) {
+      assert_args_KucoinWithdrawal__cancel_withdrawal(withdrawal_id)
+      if (!is.character(withdrawal_id) || !nzchar(withdrawal_id)) {
         rlang::abort("Parameter 'withdrawalId' must be a non-empty string.")
       }
 
       res <- private$.request(
-        endpoint = paste0("/api/v1/withdrawals/", withdrawalId),
+        endpoint = paste0("/api/v1/withdrawals/", withdrawal_id),
         method = "DELETE",
         .parser = function(data) {
-          return(data.table::data.table(withdrawal_id = withdrawalId)[])
+          return(data.table::data.table(withdrawal_id = withdrawal_id)[])
         }
       )
       return(connectcore::then_or_now(
@@ -561,11 +561,11 @@ KucoinWithdrawal <- R6::R6Class(
     #' @param status (scalar<character> | NULL) filter by withdrawal status.
     #'   Accepted values: `"PROCESSING"`, `"REVIEW"`, `"WALLET_PROCESSING"`,
     #'   `"SUCCESS"`, `"FAILURE"`. When NULL, returns withdrawals of all statuses.
-    #' @param startAt (scalar<numeric> | NULL) start timestamp in milliseconds
+    #' @param start_at (scalar<numeric> | NULL) start timestamp in milliseconds
     #'   (inclusive).
-    #' @param endAt (scalar<numeric> | NULL) end timestamp in milliseconds
+    #' @param end_at (scalar<numeric> | NULL) end timestamp in milliseconds
     #'   (inclusive).
-    #' @param page_size (scalar<count in [1, Inf[>) number of results per page
+    #' @param page_size (scalar<count in [1, Inf]>) number of results per page
     #'   (default 50, max 500).
     #' @param max_pages (scalar<numeric in [1, Inf]>) maximum number of pages to
     #'   fetch (default `Inf` for all pages).
@@ -597,16 +597,16 @@ KucoinWithdrawal <- R6::R6Class(
     get_withdrawal_history = function(
       currency = NULL,
       status = NULL,
-      startAt = NULL,
-      endAt = NULL,
+      start_at = NULL,
+      end_at = NULL,
       page_size = 50,
       max_pages = Inf
     ) {
       assert_args_KucoinWithdrawal__get_withdrawal_history(
         currency,
         status,
-        startAt,
-        endAt,
+        start_at,
+        end_at,
         page_size,
         max_pages
       )
@@ -619,8 +619,8 @@ KucoinWithdrawal <- R6::R6Class(
         query = list(
           currency = currency,
           status = status,
-          startAt = startAt,
-          endAt = endAt
+          startAt = start_at,
+          endAt = end_at
         ),
         page_size = page_size,
         max_pages = max_pages,
@@ -722,7 +722,7 @@ KucoinWithdrawal <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param withdrawalId (scalar<character>) the unique withdrawal ID.
+    #' @param withdrawal_id (scalar<character>) the unique withdrawal ID.
     #' @return (data.table | promise<data.table>) one row with the full
     #'   withdrawal detail (id, currency, chain_id, chain_name, status, address,
     #'   memo, is_inner, amount, fee, wallet_tx_id, cancel_type, failure_reason,
@@ -767,14 +767,14 @@ KucoinWithdrawal <- R6::R6Class(
     #'   withdrawal$cancel_withdrawal(detail$id)
     #' }
     #' }
-    get_withdrawal_by_id = function(withdrawalId) {
-      assert_args_KucoinWithdrawal__get_withdrawal_by_id(withdrawalId)
-      if (!is.character(withdrawalId) || !nzchar(withdrawalId)) {
+    get_withdrawal_by_id = function(withdrawal_id) {
+      assert_args_KucoinWithdrawal__get_withdrawal_by_id(withdrawal_id)
+      if (!is.character(withdrawal_id) || !nzchar(withdrawal_id)) {
         rlang::abort("Parameter 'withdrawalId' must be a non-empty string.")
       }
 
       res <- private$.request(
-        endpoint = paste0("/api/v1/withdrawals/", withdrawalId),
+        endpoint = paste0("/api/v1/withdrawals/", withdrawal_id),
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
             return(data.table::data.table(

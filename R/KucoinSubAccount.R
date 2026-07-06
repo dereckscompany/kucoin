@@ -117,7 +117,7 @@ KucoinSubAccount <- R6::R6Class(
     #'
     #' @param password (scalar<character>) sub-account password (7-24 chars, must
     #'   contain both letters and numbers, no special characters).
-    #' @param subName (scalar<character>) sub-account name (7-32 chars, must start
+    #' @param sub_name (scalar<character>) sub-account name (7-32 chars, must start
     #'   with a letter, letters and numbers only, no spaces).
     #' @param access (scalar<character>) permission type: `"Spot"`, `"Futures"`,
     #'   or `"Margin"`. Validated via `rlang::arg_match0()`.
@@ -152,15 +152,15 @@ KucoinSubAccount <- R6::R6Class(
     #'   access = "Futures"
     #' )
     #' }
-    add_sub_account = function(password, subName, access, remarks = NULL) {
-      assert_args_KucoinSubAccount__add_sub_account(password, subName, access, remarks)
+    add_sub_account = function(password, sub_name, access, remarks = NULL) {
+      assert_args_KucoinSubAccount__add_sub_account(password, sub_name, access, remarks)
       assert::assert_nonempty_strings(password)
-      assert::assert_nonempty_strings(subName)
+      assert::assert_nonempty_strings(sub_name)
       access <- rlang::arg_match0(access, c("Spot", "Futures", "Margin"))
 
       body <- list(
         password = password,
-        subName = subName,
+        subName = sub_name,
         access = access
       )
       if (!is.null(remarks)) {
@@ -261,7 +261,7 @@ KucoinSubAccount <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param page_size (scalar<count in [1, Inf[>) number of results per page,
+    #' @param page_size (scalar<count in [1, Inf]>) number of results per page,
     #'   between 1 and 100.
     #' @param max_pages (scalar<numeric in [1, Inf]>) maximum number of pages to
     #'   retrieve. Use `Inf` (default) to fetch all available pages.
@@ -405,9 +405,9 @@ KucoinSubAccount <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param subUserId (scalar<character>) the sub-account user ID (numeric UID
+    #' @param sub_user_id (scalar<character>) the sub-account user ID (numeric UID
     #'   as a string, e.g., `"169630809"`).
-    #' @param includeBaseAmount (scalar<logical>) if `TRUE`, includes currencies
+    #' @param include_base_amount (scalar<logical>) if `TRUE`, includes currencies
     #'   with zero balances in the response.
     #' @return (data.table | promise<data.table>) one row per currency and account
     #'   type holding the `currency`, `balance`, `available`, and `holds` amounts,
@@ -433,12 +433,12 @@ KucoinSubAccount <- R6::R6Class(
     #' trade_bal <- balances[account_type == "trade"]
     #' print(trade_bal[, .(currency, available, holds)])
     #' }
-    get_detail_balance = function(subUserId, includeBaseAmount = FALSE) {
-      assert_args_KucoinSubAccount__get_detail_balance(subUserId, includeBaseAmount)
-      assert::assert_nonempty_strings(subUserId)
+    get_detail_balance = function(sub_user_id, include_base_amount = FALSE) {
+      assert_args_KucoinSubAccount__get_detail_balance(sub_user_id, include_base_amount)
+      assert::assert_nonempty_strings(sub_user_id)
       res <- private$.request(
-        endpoint = paste0("/api/v1/sub-accounts/", subUserId),
-        query = list(includeBaseAmount = tolower(as.character(includeBaseAmount))),
+        endpoint = paste0("/api/v1/sub-accounts/", sub_user_id),
+        query = list(includeBaseAmount = tolower(as.character(include_base_amount))),
         .parser = function(data) {
           rows <- list()
           sub_id <- as.character(data$subUserId)
@@ -591,7 +591,7 @@ KucoinSubAccount <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param page_size (scalar<count in [1, Inf[>) number of results per page,
+    #' @param page_size (scalar<count in [1, Inf]>) number of results per page,
     #'   between 10 and 100.
     #' @param max_pages (scalar<numeric in [1, Inf]>) maximum number of pages to
     #'   retrieve. Use `Inf` (default) to fetch all available pages.

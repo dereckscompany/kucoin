@@ -221,23 +221,23 @@ Verified: 2026-05-23
 }
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{KucoinTransfer$add_transfer(
-  clientOid,
+  client_order_id,
   currency,
   amount,
   type,
-  fromAccountType,
-  toAccountType,
-  fromUserId = NULL,
-  fromAccountTag = NULL,
-  toUserId = NULL,
-  toAccountTag = NULL
+  from_account_type,
+  to_account_type,
+  from_user_id = NULL,
+  from_account_tag = NULL,
+  to_user_id = NULL,
+  to_account_tag = NULL
 )}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{clientOid}}{(scalar<character>) unique client order ID for
+\item{\code{client_order_id}}{(scalar<character>) unique client order ID for
 idempotency (max 128 bits, e.g., UUID).}
 
 \item{\code{currency}}{(scalar<character>) currency code (e.g., \code{"BTC"},
@@ -249,23 +249,23 @@ currency precision).}
 \item{\code{type}}{(scalar<character>) transfer type: \code{"INTERNAL"},
 \code{"PARENT_TO_SUB"}, or \code{"SUB_TO_PARENT"}.}
 
-\item{\code{fromAccountType}}{(scalar<character>) source account type: \code{"MAIN"},
+\item{\code{from_account_type}}{(scalar<character>) source account type: \code{"MAIN"},
 \code{"TRADE"}, \code{"CONTRACT"}, \code{"MARGIN"}, \code{"ISOLATED"}, \code{"MARGIN_V2"},
 \code{"ISOLATED_V2"}.}
 
-\item{\code{toAccountType}}{(scalar<character>) destination account type (same
+\item{\code{to_account_type}}{(scalar<character>) destination account type (same
 options as \code{fromAccountType}).}
 
-\item{\code{fromUserId}}{(scalar<character> | NULL) source user ID (required for
+\item{\code{from_user_id}}{(scalar<character> | NULL) source user ID (required for
 \code{"SUB_TO_PARENT"} transfers).}
 
-\item{\code{fromAccountTag}}{(scalar<character> | NULL) symbol for
+\item{\code{from_account_tag}}{(scalar<character> | NULL) symbol for
 ISOLATED/ISOLATED_V2 source accounts (e.g., \code{"BTC-USDT"}).}
 
-\item{\code{toUserId}}{(scalar<character> | NULL) destination user ID (required
+\item{\code{to_user_id}}{(scalar<character> | NULL) destination user ID (required
 for \code{"PARENT_TO_SUB"} transfers).}
 
-\item{\code{toAccountTag}}{(scalar<character> | NULL) symbol for
+\item{\code{to_account_tag}}{(scalar<character> | NULL) symbol for
 ISOLATED/ISOLATED_V2 destination accounts (e.g., \code{"BTC-USDT"}).}
 }
 \if{html}{\out{</div>}}

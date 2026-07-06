@@ -246,7 +246,7 @@ Verified: 2026-05-23
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinSubAccount$add_sub_account(password, subName, access, remarks = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinSubAccount$add_sub_account(password, sub_name, access, remarks = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -255,7 +255,7 @@ Verified: 2026-05-23
 \item{\code{password}}{(scalar<character>) sub-account password (7-24 chars, must
 contain both letters and numbers, no special characters).}
 
-\item{\code{subName}}{(scalar<character>) sub-account name (7-32 chars, must start
+\item{\code{sub_name}}{(scalar<character>) sub-account name (7-32 chars, must start
 with a letter, letters and numbers only, no spaces).}
 
 \item{\code{access}}{(scalar<character>) permission type: \code{"Spot"}, \code{"Futures"},
@@ -396,7 +396,7 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{page_size}}{(scalar<count in [1, Inf[>) number of results per page,
+\item{\code{page_size}}{(scalar<count in [1, Inf]>) number of results per page,
 between 1 and 100.}
 
 \item{\code{max_pages}}{(scalar<numeric in [1, Inf]>) maximum number of pages to
@@ -542,16 +542,16 @@ errors.
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinSubAccount$get_detail_balance(subUserId, includeBaseAmount = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinSubAccount$get_detail_balance(sub_user_id, include_base_amount = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{subUserId}}{(scalar<character>) the sub-account user ID (numeric UID
+\item{\code{sub_user_id}}{(scalar<character>) the sub-account user ID (numeric UID
 as a string, e.g., \code{"169630809"}).}
 
-\item{\code{includeBaseAmount}}{(scalar<logical>) if \code{TRUE}, includes currencies
+\item{\code{include_base_amount}}{(scalar<logical>) if \code{TRUE}, includes currencies
 with zero balances in the response.}
 }
 \if{html}{\out{</div>}}
@@ -711,7 +711,7 @@ thresholds.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{page_size}}{(scalar<count in [1, Inf[>) number of results per page,
+\item{\code{page_size}}{(scalar<count in [1, Inf]>) number of results per page,
 between 10 and 100.}
 
 \item{\code{max_pages}}{(scalar<numeric in [1, Inf]>) maximum number of pages to

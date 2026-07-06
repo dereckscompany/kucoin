@@ -134,7 +134,7 @@ KucoinMarketData <- R6::R6Class(
     #'   `"new-listings"`, `"product-updates"`), `lang` (language code e.g.
     #'   `"en_US"`, `"zh_CN"`), `startTime` (start timestamp in milliseconds), and
     #'   `endTime` (end timestamp in milliseconds).
-    #' @param page_size (scalar<count in [1, Inf[>) results per page (default 50,
+    #' @param page_size (scalar<count in [1, Inf]>) results per page (default 50,
     #'   max 100).
     #' @param max_pages (scalar<numeric in [1, Inf]>) maximum number of pages to
     #'   fetch (default `Inf` for all).

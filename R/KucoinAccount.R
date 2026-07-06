@@ -245,7 +245,9 @@ KucoinAccount <- R6::R6Class(
     #' - remark (character | NA) an optional remark.
     #' - api_key (character | NA) the API key ID.
     #' - api_version (integer | NA) the API key version.
-    #' - permission (character) the comma-separated permissions, e.g. `"General,Spot"` (a single string from KuCoin, not a JSON array; recover the vector with `strsplit(dt$permission[1], ",", fixed = TRUE)[[1]]`).
+    #' - permission (character) the comma-separated permissions, e.g.
+    #'   `"General,Spot"` (a single string from KuCoin, not a JSON array; recover
+    #'   the vector with `strsplit(dt$permission[1], ",", fixed = TRUE)[[1]]`).
     #' - created_at (POSIXct) the key creation time (UTC), coerced from epoch milliseconds.
     #' - uid (integer) the user identifier.
     #' - is_master (logical) TRUE if this is a master-account key.
@@ -532,7 +534,7 @@ KucoinAccount <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param accountId (scalar<character>) the unique account ID (e.g.
+    #' @param account_id (scalar<character>) the unique account ID (e.g.
     #'   `"5bd6e9286d99522a52e458de"`). Obtain account IDs from
     #'   `get_spot_accounts()`.
     #'
@@ -556,11 +558,11 @@ KucoinAccount <- R6::R6Class(
     #' detail <- account$get_spot_account_detail(account_id)
     #' cat("Balance:", detail$balance, "Available:", detail$available, "\\n")
     #' }
-    get_spot_account_detail = function(accountId) {
-      assert_args_KucoinAccount__get_spot_account_detail(accountId)
-      assert::assert_nonempty_strings(accountId)
+    get_spot_account_detail = function(account_id) {
+      assert_args_KucoinAccount__get_spot_account_detail(account_id)
+      assert::assert_nonempty_strings(account_id)
       res <- private$.request(
-        endpoint = paste0("/api/v1/accounts/", accountId),
+        endpoint = paste0("/api/v1/accounts/", account_id),
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
             return(data.table::data.table(
@@ -998,7 +1000,7 @@ KucoinAccount <- R6::R6Class(
     #'   `"Exchange"`, `"Deposit"`, `"Withdrawal"`, `"Transfer"`,
     #'   `"Trade_Exchange"`), `startAt` (start time in milliseconds epoch,
     #'   inclusive), and `endAt` (end time in milliseconds epoch, inclusive).
-    #' @param page_size (scalar<count in [1, Inf[>) number of results per page,
+    #' @param page_size (scalar<count in [1, Inf]>) number of results per page,
     #'   between 10 and 500 (default 50).
     #' @param max_pages (scalar<numeric in [1, Inf]>) maximum number of pages to
     #'   fetch (default `Inf` for all pages). Set to a finite number to limit API
@@ -1162,15 +1164,15 @@ KucoinAccount <- R6::R6Class(
     #' @param currency (scalar<character> | NULL) filter by currency (supports up
     #'   to 10 comma-separated).
     #' @param direction (scalar<character> | NULL) `"in"` or `"out"`.
-    #' @param bizType (scalar<character> | NULL) transaction type:
+    #' @param biz_type (scalar<character> | NULL) transaction type:
     #'   `"TRADE_EXCHANGE"`, `"TRANSFER"`, `"SUB_TRANSFER"`, `"RETURNED_FEES"`,
     #'   `"DEDUCTION_FEES"`, `"OTHER"`.
-    #' @param lastId (scalar<character> | NULL) pagination cursor for fetching
+    #' @param last_id (scalar<character> | NULL) pagination cursor for fetching
     #'   previous batches.
     #' @param limit (scalar<count> | NULL) results per page (default 100, max
     #'   200).
-    #' @param startAt (scalar<numeric> | NULL) start timestamp in milliseconds.
-    #' @param endAt (scalar<numeric> | NULL) end timestamp in milliseconds.
+    #' @param start_at (scalar<numeric> | NULL) start timestamp in milliseconds.
+    #' @param end_at (scalar<numeric> | NULL) end timestamp in milliseconds.
     #' @return (data.table | promise<data.table>) one row per ledger entry, or an
     #'   empty data.table if no entries match:
     #' - id (character) the ledger entry id.
@@ -1194,31 +1196,31 @@ KucoinAccount <- R6::R6Class(
     get_hf_ledger = function(
       currency = NULL,
       direction = NULL,
-      bizType = NULL,
-      lastId = NULL,
+      biz_type = NULL,
+      last_id = NULL,
       limit = NULL,
-      startAt = NULL,
-      endAt = NULL
+      start_at = NULL,
+      end_at = NULL
     ) {
       assert_args_KucoinAccount__get_hf_ledger(
         currency,
         direction,
-        bizType,
-        lastId,
+        biz_type,
+        last_id,
         limit,
-        startAt,
-        endAt
+        start_at,
+        end_at
       )
       res <- private$.request(
         endpoint = "/api/v1/hf/accounts/ledgers",
         query = list(
           currency = currency,
           direction = direction,
-          bizType = bizType,
-          lastId = lastId,
+          bizType = biz_type,
+          lastId = last_id,
           limit = limit,
-          startAt = startAt,
-          endAt = endAt
+          startAt = start_at,
+          endAt = end_at
         ),
         .parser = function(data) {
           items <- data
@@ -1319,7 +1321,7 @@ KucoinAccount <- R6::R6Class(
     #' - **Tier Awareness**: Know your default fee tier for cost estimation.
     #' - **Fee Budgeting**: Use as baseline for worst-case fee calculations.
     #'
-    #' @param currencyType (scalar<count> | NULL) `0` for crypto (default), `1`
+    #' @param currency_type (scalar<count> | NULL) `0` for crypto (default), `1`
     #'   for fiat.
     #' @return (data.table | promise<data.table>) one row giving the base taker
     #'   fee rate and the base maker fee rate:
@@ -1332,11 +1334,11 @@ KucoinAccount <- R6::R6Class(
     #' fees <- account$get_base_fee_rate()
     #' cat("Taker:", fees$taker_fee_rate, "Maker:", fees$maker_fee_rate, "\n")
     #' }
-    get_base_fee_rate = function(currencyType = NULL) {
-      assert_args_KucoinAccount__get_base_fee_rate(currencyType)
+    get_base_fee_rate = function(currency_type = NULL) {
+      assert_args_KucoinAccount__get_base_fee_rate(currency_type)
       res <- private$.request(
         endpoint = "/api/v1/base-fee",
-        query = list(currencyType = currencyType),
+        query = list(currencyType = currency_type),
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
             return(data.table::data.table(taker_fee_rate = numeric(0), maker_fee_rate = numeric(0))[])

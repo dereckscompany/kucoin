@@ -131,18 +131,18 @@ KucoinOcoOrders <- R6::R6Class(
     #' @param size (scalar<numeric> | scalar<character>) order quantity in base
     #'   currency (e.g., `"0.0001"` BTC); must align with the symbol's
     #'   `baseIncrement`.
-    #' @param stopPrice (scalar<numeric> | scalar<character>) trigger price for
+    #' @param stop_price (scalar<numeric> | scalar<character>) trigger price for
     #'   the stop-limit leg; when the market reaches this price the stop-limit
     #'   order is activated.
-    #' @param limitPrice (scalar<numeric> | scalar<character>) limit price for the
+    #' @param limit_price (scalar<numeric> | scalar<character>) limit price for the
     #'   stop-limit leg after the stop is triggered; this is the price at which the
     #'   stop-limit order is placed.
-    #' @param clientOid (scalar<character> | NULL) unique client-assigned order
+    #' @param client_order_id (scalar<character> | NULL) unique client-assigned order
     #'   identifier (max 40 characters); useful for idempotent order placement and
     #'   tracking.
     #' @param remark (scalar<character> | NULL) order remarks or notes (max 20
     #'   characters).
-    #' @param tradeType (scalar<character>) trade type, defaults to `"TRADE"` for
+    #' @param trade_type (scalar<character>) trade type, defaults to `"TRADE"` for
     #'   spot trading.
     #' @return (data.table | promise<data.table>) one row giving the
     #'   KuCoin-assigned OCO order identifier and the client-provided order
@@ -175,22 +175,22 @@ KucoinOcoOrders <- R6::R6Class(
       side,
       price,
       size,
-      stopPrice,
-      limitPrice,
-      clientOid = NULL,
+      stop_price,
+      limit_price,
+      client_order_id = NULL,
       remark = NULL,
-      tradeType = "TRADE"
+      trade_type = "TRADE"
     ) {
       assert_args_KucoinOcoOrders__add_order(
         symbol,
         side,
         price,
         size,
-        stopPrice,
-        limitPrice,
-        clientOid,
+        stop_price,
+        limit_price,
+        client_order_id,
         remark,
-        tradeType
+        trade_type
       )
       if (!verify_symbol(symbol)) {
         rlang::abort("Parameter 'symbol' must be a valid ticker.")
@@ -202,12 +202,12 @@ KucoinOcoOrders <- R6::R6Class(
         side = side,
         price = as.character(price),
         size = as.character(size),
-        stopPrice = as.character(stopPrice),
-        limitPrice = as.character(limitPrice),
-        tradeType = tradeType
+        stopPrice = as.character(stop_price),
+        limitPrice = as.character(limit_price),
+        tradeType = trade_type
       )
-      if (!is.null(clientOid)) {
-        body$clientOid <- clientOid
+      if (!is.null(client_order_id)) {
+        body$clientOid <- client_order_id
       }
       if (!is.null(remark)) {
         body$remark <- remark
@@ -286,7 +286,7 @@ KucoinOcoOrders <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param orderId (scalar<character>) the KuCoin-assigned OCO order ID to
+    #' @param order_id (scalar<character>) the KuCoin-assigned OCO order ID to
     #'   cancel (e.g., `"674c40d38b4b2f00073deef3"`).
     #' @return (data.table | promise<data.table>) one row per cancelled order
     #'   giving the cancelled order ID (the parent OCO and each of its sub-orders
@@ -300,11 +300,11 @@ KucoinOcoOrders <- R6::R6Class(
     #' result <- oco$cancel_order_by_id("674c40d38b4b2f00073deef3")
     #' print(result$cancelled_order_id)
     #' }
-    cancel_order_by_id = function(orderId) {
-      assert_args_KucoinOcoOrders__cancel_order_by_id(orderId)
-      assert::assert_nonempty_strings(orderId)
+    cancel_order_by_id = function(order_id) {
+      assert_args_KucoinOcoOrders__cancel_order_by_id(order_id)
+      assert::assert_nonempty_strings(order_id)
       res <- private$.request(
-        endpoint = paste0("/api/v3/oco/order/", orderId),
+        endpoint = paste0("/api/v3/oco/order/", order_id),
         method = "DELETE",
         .parser = function(data) {
           ids <- NULL
@@ -385,7 +385,7 @@ KucoinOcoOrders <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param clientOid (scalar<character>) the client-assigned order ID used when
+    #' @param client_order_id (scalar<character>) the client-assigned order ID used when
     #'   placing the OCO order (e.g., `"my-bot-oco-001"`).
     #' @return (data.table | promise<data.table>) one row per cancelled order
     #'   giving the cancelled order ID (the parent OCO and each of its sub-orders
@@ -399,11 +399,11 @@ KucoinOcoOrders <- R6::R6Class(
     #' result <- oco$cancel_order_by_client_oid("my-bot-oco-001")
     #' print(result$cancelled_order_id)
     #' }
-    cancel_order_by_client_oid = function(clientOid) {
-      assert_args_KucoinOcoOrders__cancel_order_by_client_oid(clientOid)
-      assert::assert_nonempty_strings(clientOid)
+    cancel_order_by_client_oid = function(client_order_id) {
+      assert_args_KucoinOcoOrders__cancel_order_by_client_oid(client_order_id)
+      assert::assert_nonempty_strings(client_order_id)
       res <- private$.request(
-        endpoint = paste0("/api/v3/oco/client-order/", clientOid),
+        endpoint = paste0("/api/v3/oco/client-order/", client_order_id),
         method = "DELETE",
         .parser = function(data) {
           ids <- NULL
@@ -588,7 +588,7 @@ KucoinOcoOrders <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param orderId (scalar<character>) the KuCoin-assigned OCO order ID
+    #' @param order_id (scalar<character>) the KuCoin-assigned OCO order ID
     #'   (e.g., `"674c40d38b4b2f00073deef3"`).
     #' @return (data.table | promise<data.table>) one row giving the OCO order
     #'   identifier, trading pair, client-assigned order identifier, order
@@ -609,11 +609,11 @@ KucoinOcoOrders <- R6::R6Class(
     #' print(order$status)
     #' print(order$symbol)
     #' }
-    get_order_by_id = function(orderId) {
-      assert_args_KucoinOcoOrders__get_order_by_id(orderId)
-      assert::assert_nonempty_strings(orderId)
+    get_order_by_id = function(order_id) {
+      assert_args_KucoinOcoOrders__get_order_by_id(order_id)
+      assert::assert_nonempty_strings(order_id)
       res <- private$.request(
-        endpoint = paste0("/api/v3/oco/order/", orderId),
+        endpoint = paste0("/api/v3/oco/order/", order_id),
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
             return(empty_dt_oco_order())
@@ -686,7 +686,7 @@ KucoinOcoOrders <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param clientOid (scalar<character>) the client-assigned order ID used when
+    #' @param client_order_id (scalar<character>) the client-assigned order ID used when
     #'   placing the OCO order (e.g., `"my-bot-oco-001"`).
     #' @return (data.table | promise<data.table>) one row giving the
     #'   KuCoin-assigned OCO order identifier, trading pair, client-assigned order
@@ -707,11 +707,11 @@ KucoinOcoOrders <- R6::R6Class(
     #' print(order$order_id)
     #' print(order$status)
     #' }
-    get_order_by_client_oid = function(clientOid) {
-      assert_args_KucoinOcoOrders__get_order_by_client_oid(clientOid)
-      assert::assert_nonempty_strings(clientOid)
+    get_order_by_client_oid = function(client_order_id) {
+      assert_args_KucoinOcoOrders__get_order_by_client_oid(client_order_id)
+      assert::assert_nonempty_strings(client_order_id)
       res <- private$.request(
-        endpoint = paste0("/api/v3/oco/client-order/", clientOid),
+        endpoint = paste0("/api/v3/oco/client-order/", client_order_id),
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
             return(empty_dt_oco_order())
@@ -802,7 +802,7 @@ KucoinOcoOrders <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param orderId (scalar<character>) the KuCoin-assigned OCO order ID
+    #' @param order_id (scalar<character>) the KuCoin-assigned OCO order ID
     #'   (e.g., `"674c40d38b4b2f00073deef3"`).
     #' @return (data.table | promise<data.table>) one row per sub-order, each
     #'   giving the OCO order identifier, trading pair, client-assigned order
@@ -835,11 +835,11 @@ KucoinOcoOrders <- R6::R6Class(
     #' details <- oco$get_order_detail_by_id("674c40d38b4b2f00073deef3")
     #' details[, .(order_id, status, sub_order_id, sub_order_side, sub_order_price)]
     #' }
-    get_order_detail_by_id = function(orderId) {
-      assert_args_KucoinOcoOrders__get_order_detail_by_id(orderId)
-      assert::assert_nonempty_strings(orderId)
+    get_order_detail_by_id = function(order_id) {
+      assert_args_KucoinOcoOrders__get_order_detail_by_id(order_id)
+      assert::assert_nonempty_strings(order_id)
       res <- private$.request(
-        endpoint = paste0("/api/v3/oco/order/details/", orderId),
+        endpoint = paste0("/api/v3/oco/order/details/", order_id),
         .parser = function(data) {
           if (is.null(data) || length(data) == 0L) {
             return(data.table::data.table(

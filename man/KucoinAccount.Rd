@@ -440,7 +440,9 @@ status and site type:
 \item remark (character | NA) an optional remark.
 \item api_key (character | NA) the API key ID.
 \item api_version (integer | NA) the API key version.
-\item permission (character) the comma-separated permissions, e.g. \code{"General,Spot"} (a single string from KuCoin, not a JSON array; recover the vector with \code{strsplit(dt$permission[1], ",", fixed = TRUE)[[1]]}).
+\item permission (character) the comma-separated permissions, e.g.
+\code{"General,Spot"} (a single string from KuCoin, not a JSON array; recover
+the vector with \code{strsplit(dt$permission[1], ",", fixed = TRUE)[[1]]}).
 \item created_at (POSIXct) the key creation time (UTC), coerced from epoch milliseconds.
 \item uid (integer) the user identifier.
 \item is_master (logical) TRUE if this is a master-account key.
@@ -727,13 +729,13 @@ lists.
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinAccount$get_spot_account_detail(accountId)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinAccount$get_spot_account_detail(account_id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{accountId}}{(scalar<character>) the unique account ID (e.g.
+\item{\code{account_id}}{(scalar<character>) the unique account ID (e.g.
 \code{"5bd6e9286d99522a52e458de"}). Obtain account IDs from
 \code{get_spot_accounts()}.}
 }
@@ -1137,7 +1139,7 @@ direction: \code{"in"} or \code{"out"}), \code{bizType} (business type filter e.
 \code{"Trade_Exchange"}), \code{startAt} (start time in milliseconds epoch,
 inclusive), and \code{endAt} (end time in milliseconds epoch, inclusive).}
 
-\item{\code{page_size}}{(scalar<count in [1, Inf[>) number of results per page,
+\item{\code{page_size}}{(scalar<count in [1, Inf]>) number of results per page,
 between 10 and 500 (default 50).}
 
 \item{\code{max_pages}}{(scalar<numeric in [1, Inf]>) maximum number of pages to
@@ -1269,11 +1271,11 @@ Verified: 2026-05-23
 \if{html}{\out{<div class="r">}}\preformatted{KucoinAccount$get_hf_ledger(
   currency = NULL,
   direction = NULL,
-  bizType = NULL,
-  lastId = NULL,
+  biz_type = NULL,
+  last_id = NULL,
   limit = NULL,
-  startAt = NULL,
-  endAt = NULL
+  start_at = NULL,
+  end_at = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -1285,19 +1287,19 @@ to 10 comma-separated).}
 
 \item{\code{direction}}{(scalar<character> | NULL) \code{"in"} or \code{"out"}.}
 
-\item{\code{bizType}}{(scalar<character> | NULL) transaction type:
+\item{\code{biz_type}}{(scalar<character> | NULL) transaction type:
 \code{"TRADE_EXCHANGE"}, \code{"TRANSFER"}, \code{"SUB_TRANSFER"}, \code{"RETURNED_FEES"},
 \code{"DEDUCTION_FEES"}, \code{"OTHER"}.}
 
-\item{\code{lastId}}{(scalar<character> | NULL) pagination cursor for fetching
+\item{\code{last_id}}{(scalar<character> | NULL) pagination cursor for fetching
 previous batches.}
 
 \item{\code{limit}}{(scalar<count> | NULL) results per page (default 100, max
 200).}
 
-\item{\code{startAt}}{(scalar<numeric> | NULL) start timestamp in milliseconds.}
+\item{\code{start_at}}{(scalar<numeric> | NULL) start timestamp in milliseconds.}
 
-\item{\code{endAt}}{(scalar<numeric> | NULL) end timestamp in milliseconds.}
+\item{\code{end_at}}{(scalar<numeric> | NULL) end timestamp in milliseconds.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1383,13 +1385,13 @@ Verified: 2026-05-23
 }
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinAccount$get_base_fee_rate(currencyType = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinAccount$get_base_fee_rate(currency_type = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{currencyType}}{(scalar<count> | NULL) \code{0} for crypto (default), \code{1}
+\item{\code{currency_type}}{(scalar<count> | NULL) \code{0} for crypto (default), \code{1}
 for fiat.}
 }
 \if{html}{\out{</div>}}

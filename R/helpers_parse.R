@@ -1,49 +1,17 @@
 # File: R/helpers_parse.R
 # Response parsing and data.table construction helpers.
 #
-# The generic JSON -> data.table toolkit (to_snake_case, as_dt_row, as_dt_list)
-# is shared across connectors and lives in connectcore; it is imported in
-# imports.R rather than duplicated here. KuCoin-specific parsers (orderbook,
-# klines, paginated flatten) and the timestamp/coercion helpers whose behaviour
-# the test-suite pins (ms/ns conversion shape contracts, coerce_cols dedup, the
-# `;`-collapse warning id) stay here.
+# The generic JSON -> data.table toolkit (to_snake_case, as_dt_row, as_dt_list,
+# ms_to_datetime) is shared across connectors and lives in connectcore; it is
+# imported in imports.R rather than duplicated here. KuCoin-specific parsers
+# (orderbook, klines, paginated flatten) and the coercion helpers whose
+# behaviour the test-suite pins (ns conversion shape contract, coerce_cols
+# dedup, the `;`-collapse warning id) stay here.
 
-#' Convert a KuCoin Millisecond Timestamp to POSIXct
-#'
-#' @param ms (any | NULL) millisecond Unix timestamp(s); the raw JSON value,
-#'   whose R type is unconstrained (numeric, character, or an all-NA logical).
-#' @return (class<POSIXct>) a POSIXct vector in UTC (length matching `ms`), `NA`
-#'   where `ms` is NULL/NA.
-#'
-#' @importFrom lubridate as_datetime
-#' @keywords internal
-#' @noRd
-ms_to_datetime <- function(ms) {
-  assert_args_ms_to_datetime(ms)
-  if (is.null(ms)) {
-    return(assert_return_ms_to_datetime(lubridate::NA_POSIXct_))
-  }
-  # Don't short-circuit on `all(is.na(ms))` — returning the length-1
-  # `NA_POSIXct_` from there would get recycled by `data.table::set()`
-  # into the existing column's storage type rather than replacing the
-  # column with a POSIXct one. Always return a vector matching input
-  # length so columns documented as POSIXct actually land as POSIXct,
-  # even when every upstream value is missing. Matches binance/alpaca.
-  if (is.numeric(ms)) {
-    return(assert_return_ms_to_datetime(lubridate::as_datetime(ms / 1000)))
-  }
-  # Character path. Only feed real (non-NA) values to `as.numeric()` so
-  # the documented NA-in -> NA-out contract is silent, but a genuinely
-  # malformed string (e.g. `"not-a-number"`) still triggers the usual
-  # "NAs introduced by coercion" warning. `suppressWarnings()` here
-  # would silence real bugs too.
-  result <- rep(NA_real_, length(ms))
-  not_na <- !is.na(ms)
-  if (any(not_na)) {
-    result[not_na] <- as.numeric(ms[not_na])
-  }
-  return(assert_return_ms_to_datetime(lubridate::as_datetime(result / 1000)))
-}
+# `ms_to_datetime()` is now the centralised connectcore helper (imported in
+# imports.R); kucoin's length-preserving / NA-in->NA-out implementation was the
+# donor, so behaviour is identical. The nanosecond variant below stays local
+# because connectcore does not (yet) centralise it.
 
 #' Convert a KuCoin Nanosecond Timestamp to POSIXct
 #'

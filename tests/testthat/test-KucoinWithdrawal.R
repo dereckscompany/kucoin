@@ -17,9 +17,9 @@ test_that("add_withdrawal returns data.table with withdrawal_id", {
 
   dt <- new_withdrawal()$add_withdrawal(
     currency = "USDT",
-    toAddress = "TKFRQXSDcY4kd3QLzw7uK16GmLrjJggwX8",
+    to_address = "TKFRQXSDcY4kd3QLzw7uK16GmLrjJggwX8",
     amount = "10",
-    withdrawType = "ADDRESS",
+    withdraw_type = "ADDRESS",
     chain = "trx"
   )
   expect_s3_class(dt, "data.table")
@@ -32,9 +32,9 @@ test_that("add_withdrawal validates currency", {
   expect_error(
     new_withdrawal()$add_withdrawal(
       currency = "",
-      toAddress = "addr",
+      to_address = "addr",
       amount = "10",
-      withdrawType = "ADDRESS"
+      withdraw_type = "ADDRESS"
     ),
     "currency.*non-empty"
   )
@@ -44,9 +44,9 @@ test_that("add_withdrawal validates toAddress", {
   expect_error(
     new_withdrawal()$add_withdrawal(
       currency = "BTC",
-      toAddress = "",
+      to_address = "",
       amount = "10",
-      withdrawType = "ADDRESS"
+      withdraw_type = "ADDRESS"
     ),
     "toAddress.*non-empty"
   )
@@ -56,9 +56,9 @@ test_that("add_withdrawal validates amount", {
   expect_error(
     new_withdrawal()$add_withdrawal(
       currency = "BTC",
-      toAddress = "addr",
+      to_address = "addr",
       amount = "",
-      withdrawType = "ADDRESS"
+      withdraw_type = "ADDRESS"
     ),
     "amount.*non-empty"
   )
@@ -68,9 +68,9 @@ test_that("add_withdrawal validates withdrawType", {
   expect_error(
     new_withdrawal()$add_withdrawal(
       currency = "BTC",
-      toAddress = "addr",
+      to_address = "addr",
       amount = "10",
-      withdrawType = "INVALID"
+      withdraw_type = "INVALID"
     ),
     "withdrawType.*ADDRESS"
   )
@@ -82,14 +82,14 @@ test_that("add_withdrawal includes optional parameters", {
 
   dt <- new_withdrawal()$add_withdrawal(
     currency = "USDT",
-    toAddress = "TKFRQXSDcY4kd3QLzw7uK16GmLrjJggwX8",
+    to_address = "TKFRQXSDcY4kd3QLzw7uK16GmLrjJggwX8",
     amount = "10",
-    withdrawType = "ADDRESS",
+    withdraw_type = "ADDRESS",
     chain = "trx",
     memo = "test-memo",
-    isInner = TRUE,
+    is_inner = TRUE,
     remark = "test-remark",
-    feeDeductType = "INTERNAL"
+    fee_deduct_type = "INTERNAL"
   )
   expect_s3_class(dt, "data.table")
   expect_equal(dt$withdrawal_id, "wd1")

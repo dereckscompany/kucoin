@@ -507,8 +507,8 @@ daily reporting.
 \if{html}{\out{<div class="r">}}\preformatted{KucoinDeposit$get_deposit_history(
   currency = NULL,
   status = NULL,
-  startAt = NULL,
-  endAt = NULL,
+  start_at = NULL,
+  end_at = NULL,
   page_size = 50,
   max_pages = Inf
 )}\if{html}{\out{</div>}}
@@ -524,13 +524,13 @@ daily reporting.
 Accepted values: \code{"PROCESSING"}, \code{"WALLET_PROCESSING"}, \code{"SUCCESS"},
 \code{"FAILURE"}. When NULL, returns deposits of all statuses.}
 
-\item{\code{startAt}}{(scalar<numeric> | NULL) start timestamp in milliseconds
+\item{\code{start_at}}{(scalar<numeric> | NULL) start timestamp in milliseconds
 (inclusive). Used to filter deposits created on or after this time.}
 
-\item{\code{endAt}}{(scalar<numeric> | NULL) end timestamp in milliseconds
+\item{\code{end_at}}{(scalar<numeric> | NULL) end timestamp in milliseconds
 (inclusive). Used to filter deposits created on or before this time.}
 
-\item{\code{page_size}}{(scalar<count in [1, Inf[>) number of results per page
+\item{\code{page_size}}{(scalar<count in [1, Inf]>) number of results per page
 (default 50, max 100).}
 
 \item{\code{max_pages}}{(scalar<numeric in [1, Inf]>) maximum number of pages to

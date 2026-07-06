@@ -28,7 +28,7 @@ test_that("add_order limit returns order_id with client_oid column", {
     type = "limit",
     symbol = "BTC-USDT",
     side = "sell",
-    stopPrice = "90000",
+    stop_price = "90000",
     price = "89500",
     size = "0.00001"
   )
@@ -47,7 +47,7 @@ test_that("add_order injects NA client_oid when API omits it", {
     type = "limit",
     symbol = "BTC-USDT",
     side = "sell",
-    stopPrice = "90000",
+    stop_price = "90000",
     price = "89500",
     size = "0.00001"
   )
@@ -64,7 +64,7 @@ test_that("add_order market by size works", {
     type = "market",
     symbol = "BTC-USDT",
     side = "sell",
-    stopPrice = "90000",
+    stop_price = "90000",
     size = "0.00001"
   )
   expect_equal(dt$order_id, "mkt1")
@@ -79,7 +79,7 @@ test_that("add_order market by funds works", {
     type = "market",
     symbol = "BTC-USDT",
     side = "buy",
-    stopPrice = "105000",
+    stop_price = "105000",
     funds = "100"
   )
   expect_equal(dt$order_id, "mkt2")
@@ -93,7 +93,7 @@ test_that("add_order validates type-specific constraints", {
       type = "limit",
       symbol = "BTC-USDT",
       side = "buy",
-      stopPrice = "90000",
+      stop_price = "90000",
       size = "0.1"
     ),
     "price.*required"
@@ -105,7 +105,7 @@ test_that("add_order validates type-specific constraints", {
       type = "limit",
       symbol = "BTC-USDT",
       side = "buy",
-      stopPrice = "90000",
+      stop_price = "90000",
       price = "89500"
     ),
     "size.*required"
@@ -117,7 +117,7 @@ test_that("add_order validates type-specific constraints", {
       type = "market",
       symbol = "BTC-USDT",
       side = "buy",
-      stopPrice = "90000",
+      stop_price = "90000",
       price = "89500",
       size = "0.1"
     ),
@@ -130,7 +130,7 @@ test_that("add_order validates type-specific constraints", {
       type = "market",
       symbol = "BTC-USDT",
       side = "buy",
-      stopPrice = "90000"
+      stop_price = "90000"
     ),
     "size.*funds"
   )
@@ -141,7 +141,7 @@ test_that("add_order validates type-specific constraints", {
       type = "market",
       symbol = "BTC-USDT",
       side = "buy",
-      stopPrice = "90000",
+      stop_price = "90000",
       size = "0.1",
       funds = "100"
     ),
@@ -154,7 +154,7 @@ test_that("add_order validates type-specific constraints", {
       type = "limit",
       symbol = "INVALID",
       side = "buy",
-      stopPrice = "90000",
+      stop_price = "90000",
       price = "89500",
       size = "0.1"
     ),

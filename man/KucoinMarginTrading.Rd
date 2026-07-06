@@ -341,16 +341,16 @@ Verified: 2026-05-23
   funds = NULL,
   type = "market",
   price = NULL,
-  isIsolated = FALSE,
-  clientOid = NULL,
+  is_isolated = FALSE,
+  client_order_id = NULL,
   stp = NULL,
   remark = NULL,
-  timeInForce = NULL,
-  cancelAfter = NULL,
-  postOnly = NULL,
+  time_in_force = NULL,
+  cancel_after = NULL,
+  post_only = NULL,
   hidden = NULL,
   iceberg = NULL,
-  visibleSize = NULL,
+  visible_size = NULL,
   dry_run = FALSE
 )}\if{html}{\out{</div>}}
 }
@@ -376,11 +376,11 @@ from the short sale. Only for market orders; mutually exclusive with
 \item{\code{price}}{(scalar<numeric> | NULL) required for limit orders. The price
 at which to sell.}
 
-\item{\code{isIsolated}}{(scalar<logical>) \code{TRUE} for isolated margin (risk
+\item{\code{is_isolated}}{(scalar<logical>) \code{TRUE} for isolated margin (risk
 limited to this pair), \code{FALSE} (default) for cross margin (shared
 collateral pool).}
 
-\item{\code{clientOid}}{(scalar<character> | NULL) your own unique order ID (max
+\item{\code{client_order_id}}{(scalar<character> | NULL) your own unique order ID (max
 40 chars). Auto-generated if not provided (required by KuCoin for margin
 orders).}
 
@@ -389,13 +389,13 @@ orders).}
 
 \item{\code{remark}}{(scalar<character> | NULL) order remark (max 20 ASCII chars).}
 
-\item{\code{timeInForce}}{(scalar<character> | NULL) \code{"GTC"}, \code{"GTT"}, \code{"IOC"},
+\item{\code{time_in_force}}{(scalar<character> | NULL) \code{"GTC"}, \code{"GTT"}, \code{"IOC"},
 \code{"FOK"}.}
 
-\item{\code{cancelAfter}}{(scalar<numeric> | NULL) auto-cancel seconds (requires
+\item{\code{cancel_after}}{(scalar<numeric> | NULL) auto-cancel seconds (requires
 \code{timeInForce = "GTT"}).}
 
-\item{\code{postOnly}}{(scalar<logical> | NULL) if TRUE, order rejected if it
+\item{\code{post_only}}{(scalar<logical> | NULL) if TRUE, order rejected if it
 would match immediately.}
 
 \item{\code{hidden}}{(scalar<logical> | NULL) if TRUE, order hidden from order
@@ -404,7 +404,7 @@ book.}
 \item{\code{iceberg}}{(scalar<logical> | NULL) if TRUE, only \code{visibleSize} is
 shown.}
 
-\item{\code{visibleSize}}{(scalar<numeric> | NULL) visible quantity for iceberg
+\item{\code{visible_size}}{(scalar<numeric> | NULL) visible quantity for iceberg
 orders.}
 
 \item{\code{dry_run}}{(scalar<logical>) if \code{TRUE}, validates the order without
@@ -515,16 +515,16 @@ Verified: 2026-05-23
   funds = NULL,
   type = "market",
   price = NULL,
-  isIsolated = FALSE,
-  clientOid = NULL,
+  is_isolated = FALSE,
+  client_order_id = NULL,
   stp = NULL,
   remark = NULL,
-  timeInForce = NULL,
-  cancelAfter = NULL,
-  postOnly = NULL,
+  time_in_force = NULL,
+  cancel_after = NULL,
+  post_only = NULL,
   hidden = NULL,
   iceberg = NULL,
-  visibleSize = NULL,
+  visible_size = NULL,
   dry_run = FALSE
 )}\if{html}{\out{</div>}}
 }
@@ -547,27 +547,27 @@ buying back. Only for market orders; mutually exclusive with \code{size}.}
 
 \item{\code{price}}{(scalar<numeric> | NULL) required for limit orders.}
 
-\item{\code{isIsolated}}{(scalar<logical>) must match the margin mode used in
+\item{\code{is_isolated}}{(scalar<logical>) must match the margin mode used in
 \code{open_short()}.}
 
-\item{\code{clientOid}}{(scalar<character> | NULL) your own unique order ID.}
+\item{\code{client_order_id}}{(scalar<character> | NULL) your own unique order ID.}
 
 \item{\code{stp}}{(scalar<character> | NULL) self-trade prevention.}
 
 \item{\code{remark}}{(scalar<character> | NULL) order remark.}
 
-\item{\code{timeInForce}}{(scalar<character> | NULL) \code{"GTC"}, \code{"GTT"}, \code{"IOC"},
+\item{\code{time_in_force}}{(scalar<character> | NULL) \code{"GTC"}, \code{"GTT"}, \code{"IOC"},
 \code{"FOK"}.}
 
-\item{\code{cancelAfter}}{(scalar<numeric> | NULL) auto-cancel seconds.}
+\item{\code{cancel_after}}{(scalar<numeric> | NULL) auto-cancel seconds.}
 
-\item{\code{postOnly}}{(scalar<logical> | NULL) passive order flag.}
+\item{\code{post_only}}{(scalar<logical> | NULL) passive order flag.}
 
 \item{\code{hidden}}{(scalar<logical> | NULL) hidden order flag.}
 
 \item{\code{iceberg}}{(scalar<logical> | NULL) iceberg order flag.}
 
-\item{\code{visibleSize}}{(scalar<numeric> | NULL) visible quantity for iceberg.}
+\item{\code{visible_size}}{(scalar<numeric> | NULL) visible quantity for iceberg.}
 
 \item{\code{dry_run}}{(scalar<logical>) if \code{TRUE}, validates without placing.
 Default \code{FALSE}.}
@@ -675,16 +675,16 @@ Verified: 2026-05-23
   funds = NULL,
   type = "market",
   price = NULL,
-  isIsolated = FALSE,
-  clientOid = NULL,
+  is_isolated = FALSE,
+  client_order_id = NULL,
   stp = NULL,
   remark = NULL,
-  timeInForce = NULL,
-  cancelAfter = NULL,
-  postOnly = NULL,
+  time_in_force = NULL,
+  cancel_after = NULL,
+  post_only = NULL,
   hidden = NULL,
   iceberg = NULL,
-  visibleSize = NULL,
+  visible_size = NULL,
   dry_run = FALSE
 )}\if{html}{\out{</div>}}
 }
@@ -706,27 +706,27 @@ Only for market orders; mutually exclusive with \code{size}.}
 
 \item{\code{price}}{(scalar<numeric> | NULL) required for limit orders.}
 
-\item{\code{isIsolated}}{(scalar<logical>) \code{TRUE} for isolated margin, \code{FALSE}
+\item{\code{is_isolated}}{(scalar<logical>) \code{TRUE} for isolated margin, \code{FALSE}
 (default) for cross.}
 
-\item{\code{clientOid}}{(scalar<character> | NULL) your own unique order ID.}
+\item{\code{client_order_id}}{(scalar<character> | NULL) your own unique order ID.}
 
 \item{\code{stp}}{(scalar<character> | NULL) self-trade prevention.}
 
 \item{\code{remark}}{(scalar<character> | NULL) order remark.}
 
-\item{\code{timeInForce}}{(scalar<character> | NULL) \code{"GTC"}, \code{"GTT"}, \code{"IOC"},
+\item{\code{time_in_force}}{(scalar<character> | NULL) \code{"GTC"}, \code{"GTT"}, \code{"IOC"},
 \code{"FOK"}.}
 
-\item{\code{cancelAfter}}{(scalar<numeric> | NULL) auto-cancel seconds.}
+\item{\code{cancel_after}}{(scalar<numeric> | NULL) auto-cancel seconds.}
 
-\item{\code{postOnly}}{(scalar<logical> | NULL) passive order flag.}
+\item{\code{post_only}}{(scalar<logical> | NULL) passive order flag.}
 
 \item{\code{hidden}}{(scalar<logical> | NULL) hidden order flag.}
 
 \item{\code{iceberg}}{(scalar<logical> | NULL) iceberg order flag.}
 
-\item{\code{visibleSize}}{(scalar<numeric> | NULL) visible quantity for iceberg.}
+\item{\code{visible_size}}{(scalar<numeric> | NULL) visible quantity for iceberg.}
 
 \item{\code{dry_run}}{(scalar<logical>) if \code{TRUE}, validates without placing.
 Default \code{FALSE}.}
@@ -836,16 +836,16 @@ Verified: 2026-05-23
   funds = NULL,
   type = "market",
   price = NULL,
-  isIsolated = FALSE,
-  clientOid = NULL,
+  is_isolated = FALSE,
+  client_order_id = NULL,
   stp = NULL,
   remark = NULL,
-  timeInForce = NULL,
-  cancelAfter = NULL,
-  postOnly = NULL,
+  time_in_force = NULL,
+  cancel_after = NULL,
+  post_only = NULL,
   hidden = NULL,
   iceberg = NULL,
-  visibleSize = NULL,
+  visible_size = NULL,
   dry_run = FALSE
 )}\if{html}{\out{</div>}}
 }
@@ -866,27 +866,27 @@ market orders; mutually exclusive with \code{size}.}
 
 \item{\code{price}}{(scalar<numeric> | NULL) required for limit orders.}
 
-\item{\code{isIsolated}}{(scalar<logical>) must match the margin mode used in
+\item{\code{is_isolated}}{(scalar<logical>) must match the margin mode used in
 \code{open_long()}.}
 
-\item{\code{clientOid}}{(scalar<character> | NULL) your own unique order ID.}
+\item{\code{client_order_id}}{(scalar<character> | NULL) your own unique order ID.}
 
 \item{\code{stp}}{(scalar<character> | NULL) self-trade prevention.}
 
 \item{\code{remark}}{(scalar<character> | NULL) order remark.}
 
-\item{\code{timeInForce}}{(scalar<character> | NULL) \code{"GTC"}, \code{"GTT"}, \code{"IOC"},
+\item{\code{time_in_force}}{(scalar<character> | NULL) \code{"GTC"}, \code{"GTT"}, \code{"IOC"},
 \code{"FOK"}.}
 
-\item{\code{cancelAfter}}{(scalar<numeric> | NULL) auto-cancel seconds.}
+\item{\code{cancel_after}}{(scalar<numeric> | NULL) auto-cancel seconds.}
 
-\item{\code{postOnly}}{(scalar<logical> | NULL) passive order flag.}
+\item{\code{post_only}}{(scalar<logical> | NULL) passive order flag.}
 
 \item{\code{hidden}}{(scalar<logical> | NULL) hidden order flag.}
 
 \item{\code{iceberg}}{(scalar<logical> | NULL) iceberg order flag.}
 
-\item{\code{visibleSize}}{(scalar<numeric> | NULL) visible quantity for iceberg.}
+\item{\code{visible_size}}{(scalar<numeric> | NULL) visible quantity for iceberg.}
 
 \item{\code{dry_run}}{(scalar<logical>) if \code{TRUE}, validates without placing.
 Default \code{FALSE}.}
@@ -986,10 +986,10 @@ Verified: 2026-05-23
 \if{html}{\out{<div class="r">}}\preformatted{KucoinMarginTrading$borrow(
   currency,
   size,
-  timeInForce = "IOC",
-  isIsolated = FALSE,
+  time_in_force = "IOC",
+  is_isolated = FALSE,
   symbol = NULL,
-  isHf = FALSE
+  is_hf = FALSE
 )}\if{html}{\out{</div>}}
 }
 
@@ -1001,17 +1001,17 @@ Verified: 2026-05-23
 
 \item{\code{size}}{(scalar<numeric>) the amount to borrow.}
 
-\item{\code{timeInForce}}{(scalar<character>) order time-in-force policy (default
+\item{\code{time_in_force}}{(scalar<character>) order time-in-force policy (default
 \code{"IOC"}). Valid values: \code{"IOC"} (immediate-or-cancel), \code{"FOK"}
 (fill-or-kill).}
 
-\item{\code{isIsolated}}{(scalar<logical>) \code{TRUE} for isolated margin, \code{FALSE}
+\item{\code{is_isolated}}{(scalar<logical>) \code{TRUE} for isolated margin, \code{FALSE}
 (default) for cross.}
 
 \item{\code{symbol}}{(scalar<character> | NULL) required when \code{isIsolated = TRUE}.
 Trading pair (e.g., \code{"BTC-USDT"}).}
 
-\item{\code{isHf}}{(scalar<logical>) \code{TRUE} for high-frequency trading mode,
+\item{\code{is_hf}}{(scalar<logical>) \code{TRUE} for high-frequency trading mode,
 \code{FALSE} (default).}
 }
 \if{html}{\out{</div>}}

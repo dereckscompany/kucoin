@@ -20,8 +20,8 @@ test_that("add_order returns order_id", {
     side = "sell",
     price = "110000",
     size = "0.0001",
-    stopPrice = "90000",
-    limitPrice = "89500"
+    stop_price = "90000",
+    limit_price = "89500"
   )
   expect_s3_class(dt, "data.table")
   expect_equal(dt$order_id, "674c40d38b4b2f00073deef3")
@@ -35,8 +35,8 @@ test_that("add_order validates symbol", {
       side = "sell",
       price = "110000",
       size = "0.0001",
-      stopPrice = "90000",
-      limitPrice = "89500"
+      stop_price = "90000",
+      limit_price = "89500"
     ),
     "valid ticker"
   )

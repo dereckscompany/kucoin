@@ -259,7 +259,7 @@ KucoinLending <- R6::R6Class(
     #'
     #' @param currency (scalar<character>) the currency to lend (e.g., `"USDT"`).
     #' @param size (scalar<numeric>) the amount to lend.
-    #' @param interestRate (scalar<numeric>) the interest rate (e.g., `0.05` for
+    #' @param interest_rate (scalar<numeric>) the interest rate (e.g., `0.05` for
     #'   5%).
     #' @return (data.table | promise<data.table>) one row with the lending order
     #'   number:
@@ -271,22 +271,22 @@ KucoinLending <- R6::R6Class(
     #' order <- lending$purchase(currency = "USDT", size = 1000, interestRate = 0.05)
     #' print(order$order_no)
     #' }
-    purchase = function(currency, size, interestRate) {
-      assert_args_KucoinLending__purchase(currency, size, interestRate)
+    purchase = function(currency, size, interest_rate) {
+      assert_args_KucoinLending__purchase(currency, size, interest_rate)
       if (!is.character(currency) || !nzchar(currency)) {
         rlang::abort("Parameter 'currency' must be a non-empty string.")
       }
       if (!is.numeric(size) || size <= 0) {
         rlang::abort("Parameter 'size' must be a positive number.")
       }
-      if (!is.numeric(interestRate) || interestRate <= 0) {
+      if (!is.numeric(interest_rate) || interest_rate <= 0) {
         rlang::abort("Parameter 'interestRate' must be a positive number.")
       }
 
       body <- list(
         currency = currency,
         size = as.character(size),
-        interestRate = as.character(interestRate)
+        interestRate = as.character(interest_rate)
       )
 
       res <- private$.request(
@@ -351,8 +351,8 @@ KucoinLending <- R6::R6Class(
     #' ```
     #'
     #' @param currency (scalar<character>) the currency of the lending order.
-    #' @param purchaseOrderNo (scalar<character>) the order number to modify.
-    #' @param interestRate (scalar<numeric>) the new interest rate.
+    #' @param purchase_order_no (scalar<character>) the order number to modify.
+    #' @param interest_rate (scalar<numeric>) the new interest rate.
     #' @return (data.table | promise<data.table>) one row echoing the request:
     #' - currency (character) the lending currency.
     #' - purchase_order_no (character) the modified order number.
@@ -368,22 +368,22 @@ KucoinLending <- R6::R6Class(
     #'   interestRate = 0.06
     #' )
     #' }
-    modify_purchase = function(currency, purchaseOrderNo, interestRate) {
-      assert_args_KucoinLending__modify_purchase(currency, purchaseOrderNo, interestRate)
+    modify_purchase = function(currency, purchase_order_no, interest_rate) {
+      assert_args_KucoinLending__modify_purchase(currency, purchase_order_no, interest_rate)
       if (!is.character(currency) || !nzchar(currency)) {
         rlang::abort("Parameter 'currency' must be a non-empty string.")
       }
-      if (!is.character(purchaseOrderNo) || !nzchar(purchaseOrderNo)) {
+      if (!is.character(purchase_order_no) || !nzchar(purchase_order_no)) {
         rlang::abort("Parameter 'purchaseOrderNo' must be a non-empty string.")
       }
-      if (!is.numeric(interestRate) || interestRate <= 0) {
+      if (!is.numeric(interest_rate) || interest_rate <= 0) {
         rlang::abort("Parameter 'interestRate' must be a positive number.")
       }
 
       body <- list(
         currency = currency,
-        purchaseOrderNo = purchaseOrderNo,
-        interestRate = as.character(interestRate)
+        purchaseOrderNo = purchase_order_no,
+        interestRate = as.character(interest_rate)
       )
 
       res <- private$.request(
@@ -393,8 +393,8 @@ KucoinLending <- R6::R6Class(
         .parser = function(data) {
           return(data.table::data.table(
             currency = currency,
-            purchase_order_no = purchaseOrderNo,
-            interest_rate = interestRate,
+            purchase_order_no = purchase_order_no,
+            interest_rate = interest_rate,
             status = "success"
           )[])
         }
@@ -559,7 +559,7 @@ KucoinLending <- R6::R6Class(
     #'
     #' @param currency (scalar<character>) the currency to redeem (e.g., `"USDT"`).
     #' @param size (scalar<numeric>) the amount to redeem.
-    #' @param purchaseOrderNo (scalar<character>) the purchase order to redeem
+    #' @param purchase_order_no (scalar<character>) the purchase order to redeem
     #'   from.
     #' @return (data.table | promise<data.table>) one row with the redemption order
     #'   number:
@@ -573,22 +573,22 @@ KucoinLending <- R6::R6Class(
     #' )
     #' print(result$order_no)
     #' }
-    redeem = function(currency, size, purchaseOrderNo) {
-      assert_args_KucoinLending__redeem(currency, size, purchaseOrderNo)
+    redeem = function(currency, size, purchase_order_no) {
+      assert_args_KucoinLending__redeem(currency, size, purchase_order_no)
       if (!is.character(currency) || !nzchar(currency)) {
         rlang::abort("Parameter 'currency' must be a non-empty string.")
       }
       if (!is.numeric(size) || size <= 0) {
         rlang::abort("Parameter 'size' must be a positive number.")
       }
-      if (!is.character(purchaseOrderNo) || !nzchar(purchaseOrderNo)) {
+      if (!is.character(purchase_order_no) || !nzchar(purchase_order_no)) {
         rlang::abort("Parameter 'purchaseOrderNo' must be a non-empty string.")
       }
 
       body <- list(
         currency = currency,
         size = as.character(size),
-        purchaseOrderNo = purchaseOrderNo
+        purchaseOrderNo = purchase_order_no
       )
 
       res <- private$.request(

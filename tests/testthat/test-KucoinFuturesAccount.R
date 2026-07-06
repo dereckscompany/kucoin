@@ -178,7 +178,7 @@ test_that("add_isolated_margin sends POST", {
     return(resp)
   })
 
-  dt <- new_futures_account()$add_isolated_margin("XBTUSDTM", margin = 10, bizNo = "biz-001")
+  dt <- new_futures_account()$add_isolated_margin("XBTUSDTM", margin = 10, biz_no = "biz-001")
   expect_equal(captured_method, "POST")
   expect_s3_class(dt, "data.table")
 })
@@ -193,7 +193,7 @@ test_that("remove_isolated_margin sends POST", {
     return(resp)
   })
 
-  dt <- new_futures_account()$remove_isolated_margin("XBTUSDTM", withdrawAmount = 5)
+  dt <- new_futures_account()$remove_isolated_margin("XBTUSDTM", withdraw_amount = 5)
   expect_equal(captured_method, "POST")
   expect_s3_class(dt, "data.table")
 })
@@ -377,7 +377,7 @@ test_that("add_isolated_margin has no list columns", {
   resp <- mock_kucoin_response(data = mock_futures_margin_response())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_futures_account()$add_isolated_margin("XBTUSDTM", margin = 10, bizNo = "biz-001")
+  dt <- new_futures_account()$add_isolated_margin("XBTUSDTM", margin = 10, biz_no = "biz-001")
   expect_equal(n_list_cols(dt), 0L)
 })
 
@@ -385,7 +385,7 @@ test_that("remove_isolated_margin has no list columns", {
   resp <- mock_kucoin_response(data = mock_futures_margin_response())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_futures_account()$remove_isolated_margin("XBTUSDTM", withdrawAmount = 5)
+  dt <- new_futures_account()$remove_isolated_margin("XBTUSDTM", withdraw_amount = 5)
   expect_equal(n_list_cols(dt), 0L)
 })
 

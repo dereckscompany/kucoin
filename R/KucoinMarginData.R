@@ -457,7 +457,7 @@ KucoinMarginData <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param isIsolated (scalar<logical>)
+    #' @param is_isolated (scalar<logical>)
     #' @param query (list)
     #' @return (data.table | promise<data.table>) one row per currency (cross) or per (symbol, currency) pair
     #'   (isolated), carrying the currency code, maximum borrow, buy and hold amounts, borrow and margin coefficients,
@@ -478,13 +478,13 @@ KucoinMarginData <- R6::R6Class(
     #'   query = list(symbol = "BTC-USDT")
     #' )
     #' }
-    get_risk_limit = function(isIsolated, query = list()) {
-      assert_args_KucoinMarginData__get_risk_limit(isIsolated, query)
-      if (!is.logical(isIsolated)) {
-        rlang::abort("Parameter 'isIsolated' must be logical (TRUE or FALSE).")
+    get_risk_limit = function(is_isolated, query = list()) {
+      assert_args_KucoinMarginData__get_risk_limit(is_isolated, query)
+      if (!is.logical(is_isolated)) {
+        rlang::abort("Parameter 'is_isolated' must be logical (TRUE or FALSE).")
       }
 
-      query$isIsolated <- isIsolated
+      query$isIsolated <- is_isolated
 
       res <- private$.request(
         endpoint = "/api/v3/margin/currencies",
