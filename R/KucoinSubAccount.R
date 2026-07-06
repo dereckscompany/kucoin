@@ -115,15 +115,21 @@ KucoinSubAccount <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param password Character; sub-account password (7-24 chars, must contain both letters and numbers, no special characters).
-    #' @param subName Character; sub-account name (7-32 chars, must start with a letter, letters and numbers only, no spaces).
-    #' @param access Character; permission type: `"Spot"`, `"Futures"`, or `"Margin"`. Validated via `rlang::arg_match0()`.
-    #' @param remarks Character or NULL; optional descriptive remarks for the sub-account (1-24 chars). Default `NULL`.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `uid` (integer): Unique user ID assigned to the new sub-account.
-    #'   - `sub_name` (character): The sub-account login name.
-    #'   - `remarks` (character): The remarks string (if provided).
-    #'   - `access` (character): Permission granted (`"Spot"`, `"Futures"`, or `"Margin"`).
+    #' @param password (scalar<character>) sub-account password (7-24 chars, must
+    #'   contain both letters and numbers, no special characters).
+    #' @param subName (scalar<character>) sub-account name (7-32 chars, must start
+    #'   with a letter, letters and numbers only, no spaces).
+    #' @param access (scalar<character>) permission type: `"Spot"`, `"Futures"`,
+    #'   or `"Margin"`. Validated via `rlang::arg_match0()`.
+    #' @param remarks (scalar<character> | NULL) optional descriptive remarks for
+    #'   the sub-account (1-24 chars).
+    #' @return (data.table | promise<data.table>) one row with the newly created
+    #'   sub-account details: the unique user ID `uid`, the login name `sub_name`,
+    #'   the `remarks` string, and the granted permission `access`:
+    #' - uid (integer) the user identifier.
+    #' - sub_name (character) the sub name.
+    #' - remarks (character | NA) an optional remark.
+    #' - access (character) the access.
     #'
     #' @examples
     #' \dontrun{
@@ -147,6 +153,9 @@ KucoinSubAccount <- R6::R6Class(
     #' )
     #' }
     add_sub_account = function(password, subName, access, remarks = NULL) {
+      assert_args_KucoinSubAccount__add_sub_account(password, subName, access, remarks)
+      assert::assert_nonempty_strings(password)
+      assert::assert_nonempty_strings(subName)
       access <- rlang::arg_match0(access, c("Spot", "Futures", "Margin"))
 
       body <- list(
@@ -158,11 +167,26 @@ KucoinSubAccount <- R6::R6Class(
         body$remarks <- remarks
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v2/sub/user/created",
         method = "POST",
         body = body,
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              uid = integer(0),
+              sub_name = character(0),
+              remarks = character(0),
+              access = character(0)
+            )[])
+          }
+          return(as_dt_row(data))
+        }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinSubAccount__add_sub_account,
+        is_async = private$.is_async
       ))
     },
 
@@ -182,7 +206,8 @@ KucoinSubAccount <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v2/sub/user`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Sub-Account List Summary Info](https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-list-summary-info)
+    #' KuCoin Get Sub-Account List Summary Info:
+    #' <https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-list-summary-info>
     #'
     #' Verified: 2026-05-23
     #'
@@ -236,17 +261,14 @@ KucoinSubAccount <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param page_size Integer; number of results per page, between 1 and 100. Default `100`.
-    #' @param max_pages Numeric; maximum number of pages to retrieve. Use `Inf` (default) to fetch all available pages.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `user_id` (character): Internal user ID string.
-    #'   - `uid` (integer): Numeric user ID for the sub-account.
-    #'   - `sub_name` (character): Sub-account login name.
-    #'   - `status` (integer): Account status code (2 = active).
-    #'   - `type` (integer): Account type code.
-    #'   - `access` (character): Permission type (`"Spot"`, `"Futures"`, `"Margin"`).
-    #'   - `remarks` (character): Optional remarks string.
-    #'   - `created_at` (POSIXct): Creation datetime (coerced from epoch milliseconds).
+    #' @param page_size (scalar<count in [1, Inf[>) number of results per page,
+    #'   between 1 and 100.
+    #' @param max_pages (scalar<numeric in [1, Inf]>) maximum number of pages to
+    #'   retrieve. Use `Inf` (default) to fetch all available pages.
+    #' @return (data.table | promise<data.table>) one row per sub-account with its
+    #'   internal `user_id`, numeric `uid`, login `sub_name`, `status` and `type`
+    #'   codes, `access` permission, `remarks`, and `created_at` creation datetime
+    #'   (coerced from epoch milliseconds).
     #'
     #' @examples
     #' \dontrun{
@@ -264,7 +286,8 @@ KucoinSubAccount <- R6::R6Class(
     #' spot_subs <- all_subs[access == "Spot"]
     #' }
     get_sub_account_list = function(page_size = 100, max_pages = Inf) {
-      return(private$.paginate(
+      assert_args_KucoinSubAccount__get_sub_account_list(page_size, max_pages)
+      res <- private$.paginate(
         endpoint = "/api/v2/sub/user",
         page_size = page_size,
         max_pages = max_pages,
@@ -278,6 +301,11 @@ KucoinSubAccount <- R6::R6Class(
           }
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinSubAccount__get_sub_account_list,
+        is_async = private$.is_async
       ))
     },
 
@@ -292,18 +320,21 @@ KucoinSubAccount <- R6::R6Class(
     #' ### Workflow
     #' 1. **Request**: Authenticated GET to the sub-account detail endpoint with the `subUserId` in the URL path.
     #' 2. **Iteration**: Loops over `mainAccounts`, `tradeAccounts`, and `marginAccounts` arrays in the response.
-    #' 3. **Assembly**: Binds all account entries into a single `data.table` with `account_type`, `sub_user_id`, and `sub_name` columns appended.
+    #' 3. **Assembly**: Binds all account entries into a single `data.table` with `account_type`, `sub_user_id`, and
+    #'    `sub_name` columns appended.
     #'
     #' ### API Endpoint
     #' `GET https://api.kucoin.com/api/v1/sub-accounts/{subUserId}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Sub-Account Detail Balance](https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-detail-balance)
+    #' KuCoin Get Sub-Account Detail Balance:
+    #' <https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-detail-balance>
     #'
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Pre-Trade Check**: Query a sub-account's available balance before placing orders to avoid insufficient-funds errors.
+    #' - **Pre-Trade Check**: Query a sub-account's available balance before placing orders to avoid insufficient-funds
+    #'   errors.
     #' - **Risk Monitoring**: Periodically check `holds` across sub-accounts to track capital locked in open orders.
     #' - **Rebalancing**: Compare `available` balances across sub-accounts to decide on internal transfers.
     #'
@@ -374,20 +405,15 @@ KucoinSubAccount <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param subUserId Character; the sub-account user ID (numeric UID as a string, e.g., `"169630809"`).
-    #' @param includeBaseAmount Logical; if `TRUE`, includes currencies with zero balances in the response. Default `FALSE`.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `currency` (character): Currency code (e.g., `"USDT"`, `"BTC"`).
-    #'   - `balance` (character): Total balance for that currency.
-    #'   - `available` (character): Available (unfrozen) balance.
-    #'   - `holds` (character): Amount held in open orders or pending withdrawals.
-    #'   - `base_currency` (character): Base currency for value conversion.
-    #'   - `base_currency_price` (character): Price of the currency in base currency terms.
-    #'   - `base_amount` (character): Total value in base currency.
-    #'   - `tag` (character): Currency tag (if applicable).
-    #'   - `account_type` (character): One of `"main"`, `"trade"`, `"margin"`.
-    #'   - `sub_user_id` (character): The sub-account user ID.
-    #'   - `sub_name` (character): The sub-account name.
+    #' @param subUserId (scalar<character>) the sub-account user ID (numeric UID
+    #'   as a string, e.g., `"169630809"`).
+    #' @param includeBaseAmount (scalar<logical>) if `TRUE`, includes currencies
+    #'   with zero balances in the response.
+    #' @return (data.table | promise<data.table>) one row per currency and account
+    #'   type holding the `currency`, `balance`, `available`, and `holds` amounts,
+    #'   the `base_currency`, `base_currency_price` and `base_amount` value
+    #'   conversion, the currency `tag`, the `account_type` (`"main"`, `"trade"`,
+    #'   or `"margin"`), and the `sub_user_id` and `sub_name` identifiers.
     #'
     #' @examples
     #' \dontrun{
@@ -408,7 +434,9 @@ KucoinSubAccount <- R6::R6Class(
     #' print(trade_bal[, .(currency, available, holds)])
     #' }
     get_detail_balance = function(subUserId, includeBaseAmount = FALSE) {
-      return(private$.request(
+      assert_args_KucoinSubAccount__get_detail_balance(subUserId, includeBaseAmount)
+      assert::assert_nonempty_strings(subUserId)
+      res <- private$.request(
         endpoint = paste0("/api/v1/sub-accounts/", subUserId),
         query = list(includeBaseAmount = tolower(as.character(includeBaseAmount))),
         .parser = function(data) {
@@ -452,6 +480,11 @@ KucoinSubAccount <- R6::R6Class(
           data.table::setcolorder(dt, intersect(expected, names(dt)))
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinSubAccount__get_detail_balance,
+        is_async = private$.is_async
       ))
     },
 
@@ -464,21 +497,26 @@ KucoinSubAccount <- R6::R6Class(
     #' `data.table` with `sub_user_id` and `sub_name` identifiers.
     #'
     #' ### Workflow
-    #' 1. **Pagination**: Fetches pages of sub-account balance data via the V2 endpoint, `page_size` records per page up to `max_pages`.
-    #' 2. **Nested Iteration**: For each sub-account in each page, iterates over `mainAccounts`, `tradeAccounts`, and `marginAccounts`.
-    #' 3. **Assembly**: Binds all entries into a single `data.table` with `account_type`, `sub_user_id`, and `sub_name` columns appended.
+    #' 1. **Pagination**: Fetches pages of sub-account balance data via the V2 endpoint, `page_size` records per page up
+    #'    to `max_pages`.
+    #' 2. **Nested Iteration**: For each sub-account in each page, iterates over `mainAccounts`, `tradeAccounts`, and
+    #'    `marginAccounts`.
+    #' 3. **Assembly**: Binds all entries into a single `data.table` with `account_type`, `sub_user_id`, and `sub_name`
+    #'    columns appended.
     #'
     #' ### API Endpoint
     #' `GET https://api.kucoin.com/api/v2/sub-accounts`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Sub-Account List Spot Balance V2](https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-list-spot-balance-v2)
+    #' KuCoin Get Sub-Account List Spot Balance V2:
+    #' <https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-list-spot-balance-v2>
     #'
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Portfolio Dashboard**: Aggregate balances across all sub-accounts for a unified portfolio view.
-    #' - **Threshold Alerts**: Check `available` balances across all sub-accounts and trigger alerts when below thresholds.
+    #' - **Threshold Alerts**: Check `available` balances across all sub-accounts and trigger alerts when below
+    #'   thresholds.
     #' - **Capital Allocation**: Compare balances across sub-accounts to identify idle capital for reallocation.
     #'
     #' ### curl
@@ -553,20 +591,16 @@ KucoinSubAccount <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param page_size Integer; number of results per page, between 10 and 100. Default `100`.
-    #' @param max_pages Numeric; maximum number of pages to retrieve. Use `Inf` (default) to fetch all available pages.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `sub_user_id` (character): The sub-account user ID.
-    #'   - `sub_name` (character): The sub-account name.
-    #'   - `account_type` (character): One of `"main"`, `"trade"`, `"margin"`.
-    #'   - `currency` (character): Currency code (e.g., `"USDT"`, `"BTC"`, `"ETH"`).
-    #'   - `balance` (character): Total balance for that currency.
-    #'   - `available` (character): Available (unfrozen) balance.
-    #'   - `holds` (character): Amount held in open orders or pending withdrawals.
-    #'   - `base_currency` (character): Base currency for value conversion.
-    #'   - `base_currency_price` (character): Price of the currency in base currency terms.
-    #'   - `base_amount` (character): Total value in base currency.
-    #'   - `tag` (character): Currency tag (if applicable).
+    #' @param page_size (scalar<count in [1, Inf[>) number of results per page,
+    #'   between 10 and 100.
+    #' @param max_pages (scalar<numeric in [1, Inf]>) maximum number of pages to
+    #'   retrieve. Use `Inf` (default) to fetch all available pages.
+    #' @return (data.table | promise<data.table>) one row per currency, account
+    #'   type and sub-account holding the `sub_user_id` and `sub_name`
+    #'   identifiers, the `account_type` (`"main"`, `"trade"`, or `"margin"`), the
+    #'   `currency`, `balance`, `available` and `holds` amounts, and the
+    #'   `base_currency`, `base_currency_price`, `base_amount` and `tag`
+    #'   value-conversion fields.
     #'
     #' @examples
     #' \dontrun{
@@ -588,7 +622,8 @@ KucoinSubAccount <- R6::R6Class(
     #' all_balances[, .(n_currencies = .N), by = .(sub_name, account_type)]
     #' }
     get_all_spot_balances = function(page_size = 100, max_pages = Inf) {
-      return(private$.paginate(
+      assert_args_KucoinSubAccount__get_all_spot_balances(page_size, max_pages)
+      res <- private$.paginate(
         endpoint = "/api/v2/sub-accounts",
         page_size = page_size,
         max_pages = max_pages,
@@ -642,6 +677,11 @@ KucoinSubAccount <- R6::R6Class(
           data.table::setcolorder(dt, intersect(expected, names(dt)))
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinSubAccount__get_all_spot_balances,
+        is_async = private$.is_async
       ))
     }
   )

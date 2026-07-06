@@ -1,0 +1,23 @@
+{
+  "code": "200000",
+  "data": [
+    {
+      "symbol": "XBTUSDTM",
+      "level": 1,
+      "maxRiskLimit": 100000,
+      "minRiskLimit": 0,
+      "maxLeverage": 125,
+      "initialMargin": 0.008,
+      "maintainMargin": 0.004
+    },
+    {
+      "symbol": "XBTUSDTM",
+      "level": 2,
+      "maxRiskLimit": 200000,
+      "minRiskLimit": 100000,
+      "maxLeverage": 100,
+      "initialMargin": 0.01,
+      "maintainMargin": 0.005
+    }
+  ]
+}

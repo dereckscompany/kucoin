@@ -203,7 +203,9 @@ Verified: 2026-05-23
   --header 'KC-API-TIMESTAMP: 1729176273859' \\
   --header 'KC-API-PASSPHRASE: your-passphrase' \\
   --header 'KC-API-KEY-VERSION: 2' \\
-  --data-raw '\{"clientOid":"64ccc0f164781800010d8c09","currency":"USDT","amount":"10","type":"INTERNAL","fromAccountType":"MAIN","toAccountType":"TRADE"\}'
+  --data-raw \\
+  '\{"clientOid":"64ccc0f164781800010d8c09","currency":"USDT","amount":"10","type":"INTERNAL",
+  "fromAccountType":"MAIN","toAccountType":"TRADE"\}'
 }\if{html}{\out{</div>}}
 }
 
@@ -235,33 +237,44 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{clientOid}}{Character; unique client order ID for idempotency (max 128 bits, e.g., UUID).}
+\item{\code{clientOid}}{(scalar<character>) unique client order ID for
+idempotency (max 128 bits, e.g., UUID).}
 
-\item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"USDT"}).}
+\item{\code{currency}}{(scalar<character>) currency code (e.g., \code{"BTC"},
+\code{"USDT"}).}
 
-\item{\code{amount}}{Character; transfer amount (positive, multiple of currency precision).}
+\item{\code{amount}}{(scalar<character>) transfer amount (positive, multiple of
+currency precision).}
 
-\item{\code{type}}{Character; transfer type: \code{"INTERNAL"}, \code{"PARENT_TO_SUB"}, or \code{"SUB_TO_PARENT"}.}
+\item{\code{type}}{(scalar<character>) transfer type: \code{"INTERNAL"},
+\code{"PARENT_TO_SUB"}, or \code{"SUB_TO_PARENT"}.}
 
-\item{\code{fromAccountType}}{Character; source account type: \code{"MAIN"}, \code{"TRADE"}, \code{"CONTRACT"},
-\code{"MARGIN"}, \code{"ISOLATED"}, \code{"MARGIN_V2"}, \code{"ISOLATED_V2"}.}
+\item{\code{fromAccountType}}{(scalar<character>) source account type: \code{"MAIN"},
+\code{"TRADE"}, \code{"CONTRACT"}, \code{"MARGIN"}, \code{"ISOLATED"}, \code{"MARGIN_V2"},
+\code{"ISOLATED_V2"}.}
 
-\item{\code{toAccountType}}{Character; destination account type (same options as \code{fromAccountType}).}
+\item{\code{toAccountType}}{(scalar<character>) destination account type (same
+options as \code{fromAccountType}).}
 
-\item{\code{fromUserId}}{Character or NULL; source user ID (required for \code{"SUB_TO_PARENT"} transfers).}
+\item{\code{fromUserId}}{(scalar<character> | NULL) source user ID (required for
+\code{"SUB_TO_PARENT"} transfers).}
 
-\item{\code{fromAccountTag}}{Character or NULL; symbol for ISOLATED/ISOLATED_V2 source accounts (e.g., \code{"BTC-USDT"}).}
+\item{\code{fromAccountTag}}{(scalar<character> | NULL) symbol for
+ISOLATED/ISOLATED_V2 source accounts (e.g., \code{"BTC-USDT"}).}
 
-\item{\code{toUserId}}{Character or NULL; destination user ID (required for \code{"PARENT_TO_SUB"} transfers).}
+\item{\code{toUserId}}{(scalar<character> | NULL) destination user ID (required
+for \code{"PARENT_TO_SUB"} transfers).}
 
-\item{\code{toAccountTag}}{Character or NULL; symbol for ISOLATED/ISOLATED_V2 destination accounts (e.g., \code{"BTC-USDT"}).}
+\item{\code{toAccountTag}}{(scalar<character> | NULL) symbol for
+ISOLATED/ISOLATED_V2 destination accounts (e.g., \code{"BTC-USDT"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
+(data.table | promise<data.table>) one row with column \code{order_id}
+(character): the transfer order identifier:
 \itemize{
-\item \code{order_id} (character): The transfer order identifier.
+\item order_id (character) the system order identifier.
 }
 }
 \subsection{Examples}{
@@ -366,24 +379,29 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{currency}}{Character; currency code (e.g., \code{"BTC"}, \code{"USDT"}).}
+\item{\code{currency}}{(scalar<character>) currency code (e.g., \code{"BTC"},
+\code{"USDT"}).}
 
-\item{\code{type}}{Character; account type: \code{"MAIN"}, \code{"TRADE"}, \code{"MARGIN"},
-\code{"ISOLATED"}, \code{"MARGIN_V2"}, \code{"ISOLATED_V2"}.}
+\item{\code{type}}{(scalar<character>) account type: \code{"MAIN"}, \code{"TRADE"},
+\code{"MARGIN"}, \code{"ISOLATED"}, \code{"MARGIN_V2"}, \code{"ISOLATED_V2"}.}
 
-\item{\code{tag}}{Character or NULL; trading pair symbol required for \code{"ISOLATED"}
-account type (e.g., \code{"BTC-USDT"}).}
+\item{\code{tag}}{(scalar<character> | NULL) trading pair symbol required for
+\code{"ISOLATED"} account type (e.g., \code{"BTC-USDT"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with one row and columns:
+(data.table | promise<data.table>) one row with the balance
+breakdown: \code{currency} (currency code), \code{balance} (total funds),
+\code{available} (funds available to withdraw or trade), \code{holds} (funds
+locked in open orders), and \code{transferable} (funds available for
+transfer) -- all character:
 \itemize{
-\item \code{currency} (character): Currency code.
-\item \code{balance} (character): Total funds in the account.
-\item \code{available} (character): Funds available to withdraw or trade.
-\item \code{holds} (character): Funds on hold (locked in open orders).
-\item \code{transferable} (character): Funds available for transfer.
+\item currency (character) the currency code.
+\item balance (numeric | NA) the total balance.
+\item available (numeric | NA) the amount available.
+\item holds (numeric | NA) the amount on hold.
+\item transferable (numeric | NA) the transferable amount.
 }
 }
 \subsection{Examples}{

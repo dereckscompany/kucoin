@@ -65,21 +65,25 @@ KucoinBase <- R6::R6Class(
     #' @description
     #' Initialise a KucoinBase Object
     #'
-    #' @param keys List; API credentials from [get_api_keys()].
-    #'   Defaults to `get_api_keys()`.
-    #' @param base_url Character; API base URL. Defaults to `get_base_url()`.
-    #' @param async Logical; if `TRUE`, methods return promises. Default `FALSE`.
-    #' @param time_source Character; clock source for HMAC request signing.
-    #'   `"local"` (default) uses the local UTC clock. `"server"` fetches the
-    #'   KuCoin server time before each authenticated request, which adds latency
-    #'   but avoids clock-drift issues.
-    #' @return Invisible self.
+    #' @param keys (list) API credentials from [get_api_keys()]. Defaults to
+    #'   `get_api_keys()`.
+    #' @param base_url (scalar<character>) API base URL. Defaults to
+    #'   `get_base_url()`.
+    #' @param async (scalar<logical>) if `TRUE`, methods return promises. Default
+    #'   `FALSE`.
+    #' @param time_source (scalar<character>) clock source for HMAC request
+    #'   signing. `"local"` (default) uses the local UTC clock. `"server"` fetches
+    #'   the KuCoin server time before each authenticated request, which adds
+    #'   latency but avoids clock-drift issues.
+    #' @return (class<KucoinBase>) invisibly, the new instance.
+    #' @noassert time_source
     initialize = function(
       keys = get_api_keys(),
       base_url = get_base_url(),
       async = FALSE,
       time_source = c("local", "server")
     ) {
+      assert_args_KucoinBase__initialize(keys, base_url, async)
       if (isTRUE(async) && !requireNamespace("promises", quietly = TRUE)) {
         rlang::abort(
           "Package 'promises' is required for async mode. Install with: install.packages('promises')"
@@ -149,7 +153,9 @@ KucoinBase <- R6::R6Class(
         query = query,
         body = body_json,
         auth = auth,
-        .parser = .parser,
+        # Coerce KuCoin's number-as-string quantity columns to numeric between
+        # parsing and contract validation (see coerce_numeric_quantities()).
+        .parser = function(parsed) coerce_numeric_quantities(.parser(parsed)),
         timeout = timeout,
         base_url = base_url,
         body_format = body_format
@@ -182,7 +188,9 @@ KucoinBase <- R6::R6Class(
         sign = private$.sign,
         parse_envelope = private$.parse_envelope,
         .perform = private$.perform,
-        .parser = .parser,
+        # Coerce number-as-string quantity columns to numeric on the accumulated
+        # paginated result (see coerce_numeric_quantities()).
+        .parser = function(parsed) coerce_numeric_quantities(.parser(parsed)),
         is_async = private$.is_async,
         page_size = page_size,
         max_pages = max_pages,

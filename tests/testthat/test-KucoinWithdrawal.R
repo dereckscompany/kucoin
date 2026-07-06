@@ -145,7 +145,7 @@ test_that("get_withdrawal_quotas returns data.table with quota details", {
   expect_equal(nrow(dt), 1L)
   expect_equal(dt$currency, "BTC")
   expect_equal(dt$is_withdraw_enabled, TRUE)
-  expect_equal(dt$withdraw_min_fee, "0.0005")
+  expect_equal(dt$withdraw_min_fee, 0.0005)
   expect_equal(dt$precision, 8L)
   # Check column ordering starts with currency
   expect_equal(names(dt)[1], "currency")

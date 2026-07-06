@@ -1,0 +1,39 @@
+{
+  "code": "200000",
+  "data": [
+    {
+      "currencyList": [
+        "BTC"
+      ],
+      "items": [
+        {
+          "lowerLimit": "0",
+          "upperLimit": "10",
+          "collateralRatio": "1.0"
+        },
+        {
+          "lowerLimit": "10",
+          "upperLimit": "100",
+          "collateralRatio": "0.9"
+        }
+      ]
+    },
+    {
+      "currencyList": [
+        "ETH"
+      ],
+      "items": [
+        {
+          "lowerLimit": "0",
+          "upperLimit": "50",
+          "collateralRatio": "0.95"
+        },
+        {
+          "lowerLimit": "50",
+          "upperLimit": "500",
+          "collateralRatio": "0.85"
+        }
+      ]
+    }
+  ]
+}

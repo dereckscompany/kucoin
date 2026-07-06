@@ -8,8 +8,10 @@
 #' and Dead Connection Protection (DCP). Inherits from [KucoinBase].
 #'
 #' ### Purpose and Scope
-#' - **Order Placement**: Place single or batch limit/market futures orders with configurable leverage, margin mode, and position side.
-#' - **Order Cancellation**: Cancel individual orders by system ID or client OID, or cancel all open/stop orders at once.
+#' - **Order Placement**: Place single or batch limit/market futures orders with configurable leverage, margin mode, and
+#'   position side.
+#' - **Order Cancellation**: Cancel individual orders by system ID or client OID, or cancel all open/stop orders at
+#'   once.
 #' - **Order Queries**: Retrieve order details, paginated order lists, recent closed orders, and stop orders.
 #' - **Trade History**: Query fill records (paginated or recent) with fee and liquidity details.
 #' - **Risk Management**: Configure Dead Connection Protection (DCP) to auto-cancel orders on connectivity loss.
@@ -80,18 +82,22 @@ KucoinFuturesTrading <- R6::R6Class(
   inherit = KucoinBase,
   public = list(
     #' @description Create a new KucoinFuturesTrading instance.
-    #' @param keys List; API credentials from [get_api_keys()].
-    #' @param base_url Character; Futures API base URL. Defaults to [get_futures_base_url()].
-    #' @param async Logical; if TRUE, methods return promises.
-    #' @param time_source Character; `"local"` or `"server"`.
-    #' @return Invisible self.
+    #' @noassert time_source
+    #' @param keys (list) API credentials from [get_api_keys()].
+    #' @param base_url (scalar<character>) Futures API base URL. Defaults to
+    #'   [get_futures_base_url()].
+    #' @param async (scalar<logical>) if TRUE, methods return promises.
+    #' @param time_source (scalar<character>) `"local"` or `"server"`.
+    #' @return (class<KucoinFuturesTrading>) invisibly, the new instance.
     initialize = function(
       keys = get_api_keys(),
       base_url = get_futures_base_url(),
       async = FALSE,
       time_source = c("local", "server")
     ) {
-      return(super$initialize(keys = keys, base_url = base_url, async = async, time_source = time_source))
+      assert_args_KucoinFuturesTrading__initialize(keys, base_url, async)
+      super$initialize(keys = keys, base_url = base_url, async = async, time_source = time_source)
+      return(invisible(self))
     },
 
     #' @description Place a Futures Order
@@ -115,8 +121,10 @@ KucoinFuturesTrading <- R6::R6Class(
     #'
     #' ### Automated Trading Usage
     #' - **Leverage Control**: Set `leverage` to manage risk exposure per order.
-    #' - **Position Modes**: Use `positionSide = "LONG"` or `"SHORT"` in hedge mode to manage both directions simultaneously.
-    #' - **Reduce-Only**: Set `reduceOnly = TRUE` to ensure the order only closes existing positions, preventing accidental position increases.
+    #' - **Position Modes**: Use `positionSide = "LONG"` or `"SHORT"` in hedge mode to manage both directions
+    #'   simultaneously.
+    #' - **Reduce-Only**: Set `reduceOnly = TRUE` to ensure the order only closes existing positions, preventing
+    #'   accidental position increases.
     #'
     #' ### curl
     #' ```
@@ -168,23 +176,24 @@ KucoinFuturesTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param clientOid Character; unique client order ID.
-    #' @param symbol Character; futures symbol (e.g., `"XBTUSDTM"`).
-    #' @param side Character; `"buy"` or `"sell"`.
-    #' @param type Character; `"limit"` or `"market"`.
-    #' @param leverage Integer; leverage multiplier.
-    #' @param size Integer; order quantity (number of contracts).
-    #' @param price Character or NULL; price (required for limit orders).
-    #' @param marginMode Character; `"ISOLATED"` or `"CROSS"`. Default `"ISOLATED"`.
-    #' @param positionSide Character; `"BOTH"` for one-way mode, `"LONG"` or
+    #' @param clientOid (scalar<character>) unique client order ID.
+    #' @param symbol (scalar<character>) futures symbol (e.g., `"XBTUSDTM"`).
+    #' @param side (scalar<character>) `"buy"` or `"sell"`.
+    #' @param type (scalar<character>) `"limit"` or `"market"`.
+    #' @param leverage (scalar<count in [1, Inf[>) leverage multiplier.
+    #' @param size (scalar<count in [1, Inf[>) order quantity (number of contracts).
+    #' @param price (scalar<character> | NULL) price (required for limit orders).
+    #' @param marginMode (scalar<character>) `"ISOLATED"` or `"CROSS"`. Default `"ISOLATED"`.
+    #' @param positionSide (scalar<character>) `"BOTH"` for one-way mode, `"LONG"` or
     #'   `"SHORT"` for hedge mode. Default `"BOTH"`.
-    #' @param timeInForce Character or NULL; e.g., `"GTC"`, `"IOC"`, `"FOK"`.
-    #' @param reduceOnly Logical or NULL; if TRUE, order only reduces position.
-    #' @param remark Character or NULL; order notes.
+    #' @param timeInForce (scalar<character> | NULL) e.g., `"GTC"`, `"IOC"`, `"FOK"`.
+    #' @param reduceOnly (scalar<logical> | NULL) if TRUE, order only reduces position.
+    #' @param remark (scalar<character> | NULL) order notes.
     #' @param ... Additional order parameters.
-    #' @return A single-row `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `order_id` (character): System-assigned order ID.
-    #'   - `client_oid` (character): Client-provided order ID.
+    #' @return (data.table | promise<data.table>) one row giving the system-assigned order ID and the client-provided
+    #'   order ID:
+    #' - order_id (character) the system order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -228,6 +237,22 @@ KucoinFuturesTrading <- R6::R6Class(
       remark = NULL,
       ...
     ) {
+      assert_args_KucoinFuturesTrading__add_order(
+        clientOid,
+        symbol,
+        side,
+        type,
+        leverage,
+        size,
+        price,
+        marginMode,
+        positionSide,
+        timeInForce,
+        reduceOnly,
+        remark
+      )
+      assert::assert_nonempty_strings(clientOid)
+      assert::assert_nonempty_strings(symbol)
       body <- list(
         clientOid = clientOid,
         symbol = symbol,
@@ -245,13 +270,22 @@ KucoinFuturesTrading <- R6::R6Class(
       )
       body <- body[!vapply(body, is.null, logical(1))]
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/orders",
         method = "POST",
         body = body,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_order_ack())
+          }
+
           return(as_dt_row(data))
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesTrading__add_order,
+        is_async = private$.is_async
       ))
     },
 
@@ -275,7 +309,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Pre-Flight Validation**: Validate order parameters at bot startup to confirm API keys have trading permissions and symbols are correct.
+    #' - **Pre-Flight Validation**: Validate order parameters at bot startup to confirm API keys have trading
+    #'   permissions and symbols are correct.
     #' - **Parameter Testing**: Test edge-case parameters (extreme leverage, unusual sizes) without risking capital.
     #' - **Integration Testing**: Use in CI/CD pipelines to verify order construction logic.
     #'
@@ -327,23 +362,24 @@ KucoinFuturesTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param clientOid Character; unique client order ID.
-    #' @param symbol Character; futures symbol (e.g., `"XBTUSDTM"`).
-    #' @param side Character; `"buy"` or `"sell"`.
-    #' @param type Character; `"limit"` or `"market"`.
-    #' @param leverage Integer; leverage multiplier.
-    #' @param size Integer; order quantity (number of contracts).
-    #' @param price Character or NULL; price (required for limit orders).
-    #' @param marginMode Character; `"ISOLATED"` or `"CROSS"`. Default `"ISOLATED"`.
-    #' @param positionSide Character; `"BOTH"` for one-way mode, `"LONG"` or
+    #' @param clientOid (scalar<character>) unique client order ID.
+    #' @param symbol (scalar<character>) futures symbol (e.g., `"XBTUSDTM"`).
+    #' @param side (scalar<character>) `"buy"` or `"sell"`.
+    #' @param type (scalar<character>) `"limit"` or `"market"`.
+    #' @param leverage (scalar<count in [1, Inf[>) leverage multiplier.
+    #' @param size (scalar<count in [1, Inf[>) order quantity (number of contracts).
+    #' @param price (scalar<character> | NULL) price (required for limit orders).
+    #' @param marginMode (scalar<character>) `"ISOLATED"` or `"CROSS"`. Default `"ISOLATED"`.
+    #' @param positionSide (scalar<character>) `"BOTH"` for one-way mode, `"LONG"` or
     #'   `"SHORT"` for hedge mode. Default `"BOTH"`.
-    #' @param timeInForce Character or NULL; e.g., `"GTC"`, `"IOC"`, `"FOK"`.
-    #' @param reduceOnly Logical or NULL; if TRUE, order only reduces position.
-    #' @param remark Character or NULL; order notes.
+    #' @param timeInForce (scalar<character> | NULL) e.g., `"GTC"`, `"IOC"`, `"FOK"`.
+    #' @param reduceOnly (scalar<logical> | NULL) if TRUE, order only reduces position.
+    #' @param remark (scalar<character> | NULL) order notes.
     #' @param ... Additional order parameters.
-    #' @return A single-row `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `order_id` (character): Simulated order ID.
-    #'   - `client_oid` (character): Client-provided order ID.
+    #' @return (data.table | promise<data.table>) one row giving the simulated order ID and the client-provided order
+    #'   ID:
+    #' - order_id (character) the system order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -376,6 +412,22 @@ KucoinFuturesTrading <- R6::R6Class(
       remark = NULL,
       ...
     ) {
+      assert_args_KucoinFuturesTrading__add_order_test(
+        clientOid,
+        symbol,
+        side,
+        type,
+        leverage,
+        size,
+        price,
+        marginMode,
+        positionSide,
+        timeInForce,
+        reduceOnly,
+        remark
+      )
+      assert::assert_nonempty_strings(clientOid)
+      assert::assert_nonempty_strings(symbol)
       body <- list(
         clientOid = clientOid,
         symbol = symbol,
@@ -393,13 +445,22 @@ KucoinFuturesTrading <- R6::R6Class(
       )
       body <- body[!vapply(body, is.null, logical(1))]
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/orders/test",
         method = "POST",
         body = body,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_order_ack())
+          }
+
           return(as_dt_row(data))
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesTrading__add_order_test,
+        is_async = private$.is_async
       ))
     },
 
@@ -506,15 +567,13 @@ KucoinFuturesTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param orders List of order lists, each with the same fields as `add_order()`
+    #' @param orders (list) list of order lists, each with the same fields as `add_order()`
     #'   (i.e., `clientOid`, `symbol`, `side`, `type`, `leverage`, `size`, and optional
     #'   `price`, `marginMode`, `positionSide`, etc.).
-    #' @return A `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row per order result:
-    #'   - `order_id` (character): System-assigned order ID.
-    #'   - `client_oid` (character): Client-provided order ID.
-    #'   - `symbol` (character): Futures symbol.
-    #'   - `code` (character): Per-order status code (`"200000"` for success).
-    #'   - `msg` (character): Per-order status message.
+    #' @return (data.table | promise<data.table>) one row per order result giving the system-assigned order ID, the
+    #'   client-provided order ID, the futures symbol, the per-order status code, and the per-order status message:
+    #' - order_id (character) the system order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -530,13 +589,23 @@ KucoinFuturesTrading <- R6::R6Class(
     #' print(results[, .(order_id, client_oid, code)])
     #' }
     add_order_batch = function(orders) {
-      return(private$.request(
+      assert_args_KucoinFuturesTrading__add_order_batch(orders)
+      res <- private$.request(
         endpoint = "/api/v1/orders/multi",
         method = "POST",
         body = orders,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_order_ack())
+          }
+
           return(as_dt_list(data))
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesTrading__add_order_batch,
+        is_async = private$.is_async
       ))
     },
 
@@ -553,7 +622,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `DELETE https://api-futures.kucoin.com/api/v1/orders/{orderId}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Cancel Futures Order By OrderId](https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-orderld)
+    #' KuCoin Cancel Futures Order By OrderId:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-orderld>
     #'
     #' Verified: 2026-05-23
     #'
@@ -584,11 +654,9 @@ KucoinFuturesTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param orderId Character; the system order ID to cancel.
-    #' @return `data.table` (or `promise<data.table>` if constructed with
-    #'   `async = TRUE`) with one row per cancelled order, and column:
-    #'   - `cancelled_order_id` (character): Cancelled order ID. Empty
-    #'     `data.table` (zero rows) if no orders matched.
+    #' @param orderId (scalar<character>) the system order ID to cancel.
+    #' @return (data.table | promise<data.table>) one row per cancelled order giving the cancelled order ID; an empty
+    #'   data.table if no orders matched.
     #'
     #' @examples
     #' \dontrun{
@@ -597,7 +665,9 @@ KucoinFuturesTrading <- R6::R6Class(
     #' print(result$cancelled_order_id)
     #' }
     cancel_order_by_id = function(orderId) {
-      return(private$.request(
+      assert_args_KucoinFuturesTrading__cancel_order_by_id(orderId)
+      assert::assert_nonempty_strings(orderId)
+      res <- private$.request(
         endpoint = paste0("/api/v1/orders/", orderId),
         method = "DELETE",
         .parser = function(data) {
@@ -619,6 +689,11 @@ KucoinFuturesTrading <- R6::R6Class(
           }
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesTrading__cancel_order_by_id,
+        is_async = private$.is_async
       ))
     },
 
@@ -635,13 +710,15 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `DELETE https://api-futures.kucoin.com/api/v1/orders/client-order/{clientOid}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Cancel Futures Order By ClientOid](https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-clientoid)
+    #' KuCoin Cancel Futures Order By ClientOid:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-clientoid>
     #'
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
     #' - **Idempotent Cancellation**: Use client OIDs to cancel orders without needing to store system order IDs.
-    #' - **Consistent State**: Cancel by the same ID used to place the order for easier state management in trading bots.
+    #' - **Consistent State**: Cancel by the same ID used to place the order for easier state management in trading
+    #'   bots.
     #'
     #' ### curl
     #' ```
@@ -664,10 +741,9 @@ KucoinFuturesTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param clientOid Character; the client order ID to cancel.
-    #' @param symbol Character; futures symbol (e.g., `"XBTUSDTM"`).
-    #' @return A single-row `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `client_oid` (character): Cancelled client order ID.
+    #' @param clientOid (scalar<character>) the client order ID to cancel.
+    #' @param symbol (scalar<character>) futures symbol (e.g., `"XBTUSDTM"`).
+    #' @return (data.table | promise<data.table>) one row giving the cancelled client order ID.
     #'
     #' @examples
     #' \dontrun{
@@ -676,13 +752,21 @@ KucoinFuturesTrading <- R6::R6Class(
     #' print(result$client_oid)
     #' }
     cancel_order_by_client_oid = function(clientOid, symbol) {
-      return(private$.request(
+      assert_args_KucoinFuturesTrading__cancel_order_by_client_oid(clientOid, symbol)
+      assert::assert_nonempty_strings(clientOid)
+      assert::assert_nonempty_strings(symbol)
+      res <- private$.request(
         endpoint = paste0("/api/v1/orders/client-order/", clientOid),
         method = "DELETE",
         query = list(symbol = symbol),
         .parser = function(data) {
           return(as_dt_row(data))
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesTrading__cancel_order_by_client_oid,
+        is_async = private$.is_async
       ))
     },
 
@@ -707,7 +791,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' ### Automated Trading Usage
     #' - **Emergency Stop**: Cancel all open orders as part of a kill-switch or panic button.
     #' - **Strategy Reset**: Clear all pending orders before deploying a new trading strategy.
-    #' - **Symbol-Scoped Cleanup**: Pass `symbol` to cancel only orders for a specific contract without affecting other positions.
+    #' - **Symbol-Scoped Cleanup**: Pass `symbol` to cancel only orders for a specific contract without affecting other
+    #'   positions.
     #'
     #' ### curl
     #' ```
@@ -734,12 +819,10 @@ KucoinFuturesTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character or NULL; filter by futures symbol. When NULL,
+    #' @param symbol (scalar<character> | NULL) filter by futures symbol. When NULL,
     #'   cancels all open orders across all symbols.
-    #' @return `data.table` (or `promise<data.table>` if constructed with
-    #'   `async = TRUE`) with one row per cancelled order, and column:
-    #'   - `cancelled_order_id` (character): Cancelled order ID. Empty
-    #'     `data.table` (zero rows) if no orders matched.
+    #' @return (data.table | promise<data.table>) one row per cancelled order giving the cancelled order ID; an empty
+    #'   data.table if no orders matched.
     #'
     #' @examples
     #' \dontrun{
@@ -753,7 +836,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' result <- ft$cancel_all()
     #' }
     cancel_all = function(symbol = NULL) {
-      return(private$.request(
+      assert_args_KucoinFuturesTrading__cancel_all(symbol)
+      res <- private$.request(
         endpoint = "/api/v1/orders",
         method = "DELETE",
         query = list(symbol = symbol),
@@ -776,6 +860,11 @@ KucoinFuturesTrading <- R6::R6Class(
           }
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesTrading__cancel_all,
+        is_async = private$.is_async
       ))
     },
 
@@ -793,7 +882,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `DELETE https://api-futures.kucoin.com/api/v1/stopOrders`
     #'
     #' ### Official Documentation
-    #' [KuCoin Cancel All Futures Stop Orders](https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-all-stop-orders)
+    #' KuCoin Cancel All Futures Stop Orders:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-all-stop-orders>
     #'
     #' Verified: 2026-05-23
     #'
@@ -825,12 +915,11 @@ KucoinFuturesTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character or NULL; filter by futures symbol. When NULL,
+    #' @param symbol (scalar<character> | NULL) filter by futures symbol. When NULL,
     #'   cancels all untriggered stop orders across all symbols.
-    #' @return `data.table` (or `promise<data.table>` if constructed with
-    #'   `async = TRUE`) with one row per cancelled order, and column:
-    #'   - `cancelled_order_id` (character): Cancelled order ID. Empty
-    #'     `data.table` (zero rows) if no orders matched.
+    #' @return (data.table | promise<data.table>) one row per cancelled order giving the cancelled order ID; an empty
+    #'   data.table if no orders matched:
+    #' - cancelled_order_id (character) the cancelled order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -844,7 +933,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' result <- ft$cancel_all_stop_orders()
     #' }
     cancel_all_stop_orders = function(symbol = NULL) {
-      return(private$.request(
+      assert_args_KucoinFuturesTrading__cancel_all_stop_orders(symbol)
+      res <- private$.request(
         endpoint = "/api/v1/stopOrders",
         method = "DELETE",
         query = list(symbol = symbol),
@@ -855,7 +945,7 @@ KucoinFuturesTrading <- R6::R6Class(
             data$cancelledOrderIds <- NULL
           }
           if (is.null(ids) || length(ids) == 0) {
-            return(data.table::data.table()[])
+            return(data.table::data.table(cancelled_order_id = character(0))[])
           }
           dt <- as_dt_row(data)
           id_vals <- as.character(unlist(ids, use.names = FALSE))
@@ -867,6 +957,11 @@ KucoinFuturesTrading <- R6::R6Class(
           }
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesTrading__cancel_all_stop_orders,
+        is_async = private$.is_async
       ))
     },
 
@@ -885,7 +980,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `GET https://api-futures.kucoin.com/api/v1/orders/{orderId}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Futures Order By OrderId](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-by-orderld)
+    #' KuCoin Get Futures Order By OrderId:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-by-orderld>
     #'
     #' Verified: 2026-05-23
     #'
@@ -952,20 +1048,25 @@ KucoinFuturesTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param orderId Character; the system order ID.
-    #' @return A single-row `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `id` (character): Order ID.
-    #'   - `symbol` (character): Contract symbol.
-    #'   - `type` (character): Order type (`"limit"` or `"market"`).
-    #'   - `side` (character): `"buy"` or `"sell"`.
-    #'   - `price` (character): Order price.
-    #'   - `size` (integer): Order size in contracts.
-    #'   - `leverage` (character): Leverage multiplier.
-    #'   - `margin_mode` (character): `"ISOLATED"` or `"CROSS"`.
-    #'   - `status` (character): Order status (e.g., `"open"`, `"done"`).
-    #'   - `created_at` (POSIXct): Order creation time (coerced from milliseconds).
-    #'   - `updated_at` (POSIXct): Last update time (coerced from milliseconds).
-    #'   - `client_oid` (character): Client-provided order ID.
+    #' @param orderId (scalar<character>) the system order ID.
+    #' @return (data.table | promise<data.table>) one row of full order details, including the creation and last-updated
+    #'   datetimes (POSIXct, coerced from epoch milliseconds):
+    #' - id (character) the record identifier.
+    #' - symbol (character) the trading pair symbol.
+    #' - type (character) the type.
+    #' - side (character) the order side.
+    #' - price (numeric | NA) the price.
+    #' - size (numeric | NA) the size.
+    #' - value (numeric | NA) the order value.
+    #' - deal_value (numeric | NA) the filled value.
+    #' - deal_size (numeric | NA) the filled size.
+    #' - leverage (integer | NA) the leverage.
+    #' - margin_mode (character) the margin mode.
+    #' - position_side (character) the position side.
+    #' - status (character) the status.
+    #' - created_at (POSIXct) the created at (UTC).
+    #' - updated_at (POSIXct | NA) the updated at (UTC).
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -974,9 +1075,15 @@ KucoinFuturesTrading <- R6::R6Class(
     #' print(order[, .(id, symbol, side, price, size, status)])
     #' }
     get_order_by_id = function(orderId) {
-      return(private$.request(
+      assert_args_KucoinFuturesTrading__get_order_by_id(orderId)
+      assert::assert_nonempty_strings(orderId)
+      res <- private$.request(
         endpoint = paste0("/api/v1/orders/", orderId),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_futures_order())
+          }
+
           dt <- as_dt_row(data)
           if (nrow(dt) > 0 && "created_at" %in% names(dt)) {
             dt[, created_at := ms_to_datetime(created_at)]
@@ -986,6 +1093,11 @@ KucoinFuturesTrading <- R6::R6Class(
           }
           return(dt)
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesTrading__get_order_by_id,
+        is_async = private$.is_async
       ))
     },
 
@@ -1003,7 +1115,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `GET https://api-futures.kucoin.com/api/v1/orders/byClientOid`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Futures Order By ClientOid](https://www.kucoin.com/docs-new/rest/futures-trading/get-stop-order-by-clientoid)
+    #' KuCoin Get Futures Order By ClientOid:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/get-stop-order-by-clientoid>
     #'
     #' Note: KuCoin's URL slug here contains `get-stop-order-by-clientoid`,
     #' but the page actually documents the regular order endpoint
@@ -1075,8 +1188,24 @@ KucoinFuturesTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param clientOid Character; the client order ID.
-    #' @return A single-row `data.table` (or `promise<data.table>` if constructed with `async = TRUE`); same columns as `get_order_by_id()`.
+    #' @param clientOid (scalar<character>) the client order ID.
+    #' @return (data.table | promise<data.table>) one row of full order details; same columns as `get_order_by_id()`:
+    #' - id (character) the record identifier.
+    #' - symbol (character) the trading pair symbol.
+    #' - type (character) the type.
+    #' - side (character) the order side.
+    #' - price (numeric | NA) the price.
+    #' - size (numeric | NA) the size.
+    #' - value (numeric | NA) the order value.
+    #' - deal_value (numeric | NA) the filled value.
+    #' - deal_size (numeric | NA) the filled size.
+    #' - leverage (integer | NA) the leverage.
+    #' - margin_mode (character) the margin mode.
+    #' - position_side (character) the position side.
+    #' - status (character) the status.
+    #' - created_at (POSIXct) the created at (UTC).
+    #' - updated_at (POSIXct | NA) the updated at (UTC).
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -1085,10 +1214,16 @@ KucoinFuturesTrading <- R6::R6Class(
     #' print(order[, .(id, symbol, side, price, size, status)])
     #' }
     get_order_by_client_oid = function(clientOid) {
-      return(private$.request(
+      assert_args_KucoinFuturesTrading__get_order_by_client_oid(clientOid)
+      assert::assert_nonempty_strings(clientOid)
+      res <- private$.request(
         endpoint = "/api/v1/orders/byClientOid",
         query = list(clientOid = clientOid),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_futures_order())
+          }
+
           dt <- as_dt_row(data)
           if (nrow(dt) > 0 && "created_at" %in% names(dt)) {
             dt[, created_at := ms_to_datetime(created_at)]
@@ -1098,6 +1233,11 @@ KucoinFuturesTrading <- R6::R6Class(
           }
           return(dt)
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesTrading__get_order_by_client_oid,
+        is_async = private$.is_async
       ))
     },
 
@@ -1191,12 +1331,27 @@ KucoinFuturesTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param query Named list; query parameters. Use `status = "active"` for
+    #' @param query (list) query parameters. Use `status = "active"` for
     #'   open orders, `status = "done"` for closed orders. Optional: `symbol`,
     #'   `side`, `type`, `startAt`, `endAt`.
-    #' @return A `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with order records; same columns as `get_order_by_id()`.
-    #'
-    #'   Returns an empty `data.table` if no orders match the filters.
+    #' @return (data.table | promise<data.table>) one row per order record (same columns as `get_order_by_id()`); an
+    #'   empty data.table if no orders match the filters:
+    #' - id (character) the record identifier.
+    #' - symbol (character) the trading pair symbol.
+    #' - type (character) the type.
+    #' - side (character) the order side.
+    #' - price (numeric | NA) the price.
+    #' - size (numeric | NA) the size.
+    #' - value (numeric | NA) the order value.
+    #' - deal_value (numeric | NA) the filled value.
+    #' - deal_size (numeric | NA) the filled size.
+    #' - leverage (integer | NA) the leverage.
+    #' - margin_mode (character) the margin mode.
+    #' - position_side (character) the position side.
+    #' - status (character) the status.
+    #' - created_at (POSIXct) the created at (UTC).
+    #' - updated_at (POSIXct | NA) the updated at (UTC).
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -1215,11 +1370,15 @@ KucoinFuturesTrading <- R6::R6Class(
     #' ))
     #' }
     get_order_list = function(query = list()) {
-      return(private$.paginate(
+      assert_args_KucoinFuturesTrading__get_order_list(query)
+      res <- private$.paginate(
         endpoint = "/api/v1/orders",
         query = query,
         .parser = function(pages) {
           dt <- flatten_pages(pages)
+          if (nrow(dt) == 0L) {
+            return(empty_dt_futures_order())
+          }
           if (nrow(dt) > 0 && "created_at" %in% names(dt)) {
             dt[, created_at := ms_to_datetime(created_at)]
           }
@@ -1228,6 +1387,11 @@ KucoinFuturesTrading <- R6::R6Class(
           }
           return(dt)
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesTrading__get_order_list,
+        is_async = private$.is_async
       ))
     },
 
@@ -1246,12 +1410,14 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `GET https://api-futures.kucoin.com/api/v1/recentDoneOrders`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Recent Closed Futures Orders](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-closed-orders)
+    #' KuCoin Get Recent Closed Futures Orders:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-closed-orders>
     #'
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Quick Fill Check**: Rapidly check which orders completed recently without paginating through the full order list.
+    #' - **Quick Fill Check**: Rapidly check which orders completed recently without paginating through the full order
+    #'   list.
     #' - **Slippage Analysis**: Compare `avg_deal_price` against the original `price` for recently filled limit orders.
     #' - **Periodic Sync**: Poll this endpoint at intervals to update local order state.
     #'
@@ -1315,10 +1481,25 @@ KucoinFuturesTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character or NULL; filter by futures symbol.
-    #' @return A `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with order records; same columns as `get_order_by_id()`.
-    #'
-    #'   Returns an empty `data.table` if no recently closed orders exist.
+    #' @param symbol (scalar<character> | NULL) filter by futures symbol.
+    #' @return (data.table | promise<data.table>) one row per order record (same columns as `get_order_by_id()`); an
+    #'   empty data.table if no recently closed orders exist:
+    #' - id (character) the record identifier.
+    #' - symbol (character) the trading pair symbol.
+    #' - type (character) the type.
+    #' - side (character) the order side.
+    #' - price (numeric | NA) the price.
+    #' - size (numeric | NA) the size.
+    #' - value (numeric | NA) the order value.
+    #' - deal_value (numeric | NA) the filled value.
+    #' - deal_size (numeric | NA) the filled size.
+    #' - leverage (integer | NA) the leverage.
+    #' - margin_mode (character) the margin mode.
+    #' - position_side (character) the position side.
+    #' - status (character) the status.
+    #' - created_at (POSIXct) the created at (UTC).
+    #' - updated_at (POSIXct | NA) the updated at (UTC).
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -1332,10 +1513,15 @@ KucoinFuturesTrading <- R6::R6Class(
     #' all_recent <- ft$get_recent_closed_orders()
     #' }
     get_recent_closed_orders = function(symbol = NULL) {
-      return(private$.request(
+      assert_args_KucoinFuturesTrading__get_recent_closed_orders(symbol)
+      res <- private$.request(
         endpoint = "/api/v1/recentDoneOrders",
         query = list(symbol = symbol),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_futures_order())
+          }
+
           dt <- as_dt_list(data)
           if (nrow(dt) > 0 && "created_at" %in% names(dt)) {
             dt[, created_at := ms_to_datetime(created_at)]
@@ -1345,6 +1531,11 @@ KucoinFuturesTrading <- R6::R6Class(
           }
           return(dt)
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesTrading__get_recent_closed_orders,
+        is_async = private$.is_async
       ))
     },
 
@@ -1363,12 +1554,14 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `GET https://api-futures.kucoin.com/api/v1/stopOrders`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Futures Untriggered Stop Order List](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-stop-order-list)
+    #' KuCoin Get Futures Untriggered Stop Order List:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-stop-order-list>
     #'
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Stop-Loss Audit**: Verify that stop-loss orders are correctly placed and have not been accidentally cancelled.
+    #' - **Stop-Loss Audit**: Verify that stop-loss orders are correctly placed and have not been accidentally
+    #'   cancelled.
     #' - **Risk Dashboard**: Monitor all pending stop orders to assess worst-case risk exposure.
     #' - **Strategy Sync**: Compare existing stop orders against the strategy's intended levels and correct any drift.
     #'
@@ -1418,11 +1611,10 @@ KucoinFuturesTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param query Named list; query parameters. Optional: `symbol`, `side`,
+    #' @param query (list) query parameters. Optional: `symbol`, `side`,
     #'   `type`, `startAt`, `endAt`.
-    #' @return A `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with stop order records; same columns as `get_order_by_id()`.
-    #'
-    #'   Returns an empty `data.table` if no untriggered stop orders exist.
+    #' @return (data.table | promise<data.table>) one row per stop order record (same columns as `get_order_by_id()`);
+    #'   an empty data.table if no untriggered stop orders exist.
     #'
     #' @examples
     #' \dontrun{
@@ -1436,7 +1628,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' all_stops <- ft$get_stop_orders()
     #' }
     get_stop_orders = function(query = list()) {
-      return(private$.paginate(
+      assert_args_KucoinFuturesTrading__get_stop_orders(query)
+      res <- private$.paginate(
         endpoint = "/api/v1/stopOrders",
         query = query,
         .parser = function(pages) {
@@ -1446,6 +1639,11 @@ KucoinFuturesTrading <- R6::R6Class(
           }
           return(dt)
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesTrading__get_stop_orders,
+        is_async = private$.is_async
       ))
     },
 
@@ -1547,24 +1745,12 @@ KucoinFuturesTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param query Named list; query parameters. Optional: `orderId`, `symbol`,
+    #' @param query (list) query parameters. Optional: `orderId`, `symbol`,
     #'   `side`, `type`, `startAt`, `endAt`.
-    #' @return A `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `symbol` (character): Contract symbol.
-    #'   - `trade_id` (character): Unique trade identifier.
-    #'   - `order_id` (character): Associated order ID.
-    #'   - `side` (character): `"buy"` or `"sell"`.
-    #'   - `liquidity` (character): `"taker"` or `"maker"`.
-    #'   - `price` (character): Fill price.
-    #'   - `size` (integer): Fill size in contracts.
-    #'   - `value` (character): Fill value in settlement currency.
-    #'   - `fee` (character): Fee charged.
-    #'   - `fee_currency` (character): Fee currency.
-    #'   - `fee_rate` (character): Fee rate applied.
-    #'   - `trade_time` (POSIXct): Trade timestamp (coerced from nanoseconds).
-    #'   - `created_at` (POSIXct): Record creation time (coerced from milliseconds).
-    #'
-    #'   Returns an empty `data.table` if no fills match the filters.
+    #' @return (data.table | promise<data.table>) one row per fill giving the contract symbol, trade identifier,
+    #'   associated order ID, side, liquidity, price, size in contracts, value in settlement currency, fee, fee
+    #'   currency, fee rate, the trade datetime (POSIXct, coerced from nanoseconds), and the record creation datetime
+    #'   (POSIXct, coerced from epoch milliseconds); an empty data.table if no fills match the filters.
     #'
     #' @examples
     #' \dontrun{
@@ -1578,7 +1764,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' order_fills <- ft$get_fills(query = list(orderId = "234125150956625920"))
     #' }
     get_fills = function(query = list()) {
-      return(private$.paginate(
+      assert_args_KucoinFuturesTrading__get_fills(query)
+      res <- private$.paginate(
         endpoint = "/api/v1/fills",
         query = query,
         .parser = function(pages) {
@@ -1591,6 +1778,11 @@ KucoinFuturesTrading <- R6::R6Class(
           }
           return(dt)
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesTrading__get_fills,
+        is_async = private$.is_async
       ))
     },
 
@@ -1609,7 +1801,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' `GET https://api-futures.kucoin.com/api/v1/recentFills`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Recent Futures Filled List](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-trade-history)
+    #' KuCoin Get Recent Futures Filled List:
+    #' <https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-trade-history>
     #'
     #' Verified: 2026-05-23
     #'
@@ -1662,10 +1855,26 @@ KucoinFuturesTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character or NULL; filter by futures symbol.
-    #' @return A `data.table` (or `promise<data.table>` if constructed with `async = TRUE`); same columns as `get_fills()`.
-    #'
-    #'   Returns an empty `data.table` if no recent fills exist.
+    #' @param symbol (scalar<character> | NULL) filter by futures symbol.
+    #' @return (data.table | promise<data.table>) one row per fill (same columns as `get_fills()`); an empty data.table
+    #'   if no recent fills exist:
+    #' - symbol (character) the trading pair symbol.
+    #' - trade_id (character) the trade identifier.
+    #' - order_id (character) the system order identifier.
+    #' - side (character) the order side.
+    #' - liquidity (character) the liquidity role.
+    #' - force_taker (logical) the force taker.
+    #' - price (numeric | NA) the price.
+    #' - size (numeric | NA) the size.
+    #' - value (numeric | NA) the order value.
+    #' - fee_rate (numeric | NA) the fee rate.
+    #' - fix_fee (numeric | NA) the fix fee.
+    #' - fee_currency (character) the fee currency.
+    #' - fee (numeric | NA) the fee.
+    #' - order_type (character) the order type.
+    #' - trade_type (character) the trade type.
+    #' - trade_time (POSIXct) the trade time (UTC).
+    #' - created_at (POSIXct) the created at (UTC).
     #'
     #' @examples
     #' \dontrun{
@@ -1679,10 +1888,33 @@ KucoinFuturesTrading <- R6::R6Class(
     #' all_recent <- ft$get_recent_fills()
     #' }
     get_recent_fills = function(symbol = NULL) {
-      return(private$.request(
+      assert_args_KucoinFuturesTrading__get_recent_fills(symbol)
+      res <- private$.request(
         endpoint = "/api/v1/recentFills",
         query = list(symbol = symbol),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              symbol = character(0),
+              trade_id = character(0),
+              order_id = character(0),
+              side = character(0),
+              liquidity = character(0),
+              force_taker = logical(0),
+              price = numeric(0),
+              size = numeric(0),
+              value = numeric(0),
+              fee_rate = numeric(0),
+              fix_fee = numeric(0),
+              fee_currency = character(0),
+              fee = numeric(0),
+              order_type = character(0),
+              trade_type = character(0),
+              trade_time = ms_to_datetime(numeric(0)),
+              created_at = ms_to_datetime(numeric(0))
+            )[])
+          }
+
           dt <- as_dt_list(data)
           if (nrow(dt) > 0 && "trade_time" %in% names(dt)) {
             dt[, trade_time := ns_to_datetime(trade_time)]
@@ -1692,6 +1924,11 @@ KucoinFuturesTrading <- R6::R6Class(
           }
           return(dt)
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesTrading__get_recent_fills,
+        is_async = private$.is_async
       ))
     },
 
@@ -1734,8 +1971,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' {
     #'   "code": "200000",
     #'   "data": {
-    #'     "openOrderBuyQty": 5,
-    #'     "openOrderSellQty": 3,
+    #'     "openOrderBuySize": 5,
+    #'     "openOrderSellSize": 3,
     #'     "openOrderBuyCost": "0.0005",
     #'     "openOrderSellCost": "0.0003",
     #'     "settleCurrency": "USDT"
@@ -1743,27 +1980,45 @@ KucoinFuturesTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character; futures symbol (e.g., `"XBTUSDTM"`).
-    #' @return A single-row `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `open_order_buy_qty` (integer): Total buy order quantity.
-    #'   - `open_order_sell_qty` (integer): Total sell order quantity.
-    #'   - `open_order_buy_cost` (character): Total buy order cost.
-    #'   - `open_order_sell_cost` (character): Total sell order cost.
-    #'   - `settle_currency` (character): Settlement currency.
+    #' @param symbol (scalar<character>) futures symbol (e.g., `"XBTUSDTM"`).
+    #' @return (data.table | promise<data.table>) one row giving the total buy order size, total sell order
+    #'   size, total buy order cost, total sell order cost, and the settlement currency:
+    #' - open_order_buy_size (integer | NA) the open order buy size.
+    #' - open_order_sell_size (integer | NA) the open order sell size.
+    #' - open_order_buy_cost (numeric | NA) the open order buy cost.
+    #' - open_order_sell_cost (numeric | NA) the open order sell cost.
+    #' - settle_currency (character) the settle currency.
     #'
     #' @examples
     #' \dontrun{
     #' ft <- KucoinFuturesTrading$new()
     #' stats <- ft$get_open_order_value(symbol = "XBTUSDTM")
-    #' print(stats[, .(open_order_buy_qty, open_order_sell_qty, settle_currency)])
+    #' print(stats[, .(open_order_buy_size, open_order_sell_size, settle_currency)])
     #' }
     get_open_order_value = function(symbol) {
-      return(private$.request(
+      assert_args_KucoinFuturesTrading__get_open_order_value(symbol)
+      assert::assert_nonempty_strings(symbol)
+      res <- private$.request(
         endpoint = "/api/v1/openOrderStatistics",
         query = list(symbol = symbol),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              open_order_buy_size = integer(0),
+              open_order_sell_size = integer(0),
+              open_order_buy_cost = numeric(0),
+              open_order_sell_cost = numeric(0),
+              settle_currency = character(0)
+            )[])
+          }
+
           return(as_dt_row(data))
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesTrading__get_open_order_value,
+        is_async = private$.is_async
       ))
     },
 
@@ -1834,15 +2089,17 @@ KucoinFuturesTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param timeout Integer; timeout in seconds. The DCP will cancel all applicable
+    #' @noassert timeout
+    #' @param timeout (scalar<numeric>) timeout in seconds. The DCP will cancel all applicable
     #'   orders if no heartbeat (re-call of `set_dcp()`) is received within this period.
     #'   Use `-1` to disable DCP.
-    #' @param symbol Character or NULL; restrict DCP to a specific futures symbol.
+    #' @param symbol (scalar<character> | NULL) restrict DCP to a specific futures symbol.
     #'   When NULL, DCP applies to all symbols.
-    #' @return A single-row `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `timeout` (integer): Configured timeout in seconds.
-    #'   - `symbols` (character): Applicable symbols (empty for all).
-    #'   - `current_time` (integer): Server time when DCP was set.
+    #' @return (data.table | promise<data.table>) one row acknowledging the DCP configuration change:
+    #' - trade_type (character) the trading account the setting applies to (always "FUTURES").
+    #' - symbol (character | NA) the futures symbol the setting is scoped to; NA when it applies to all symbols.
+    #' - system_time (numeric) the server time when the setting was applied, epoch.
+    #' - trigger_time (numeric) the epoch time at which armed DCP would fire; 0 when DCP is disabled.
     #'
     #' @examples
     #' \dontrun{
@@ -1856,16 +2113,35 @@ KucoinFuturesTrading <- R6::R6Class(
     #' ft$set_dcp(timeout = -1)
     #' }
     set_dcp = function(timeout, symbol = NULL) {
+      assert_args_KucoinFuturesTrading__set_dcp(symbol)
       body <- list(timeout = timeout, symbol = symbol, tradeType = "FUTURES")
       body <- body[!vapply(body, is.null, logical(1))]
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/ua/v1/dcp/set",
         method = "POST",
         body = body,
         base_url = get_base_url(),
         .parser = function(data) {
-          return(as_dt_row(data))
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              trade_type = character(0),
+              symbol = character(0),
+              system_time = numeric(0),
+              trigger_time = numeric(0)
+            )[])
+          }
+
+          dt <- as_dt_row(data)
+          dt[, symbol := as.character(symbol)]
+          dt[, system_time := as.numeric(system_time)]
+          dt[, trigger_time := as.numeric(trigger_time)]
+          return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesTrading__set_dcp,
+        is_async = private$.is_async
       ))
     },
 
@@ -1923,12 +2199,13 @@ KucoinFuturesTrading <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param symbol Character or NULL; query DCP settings for a specific futures symbol.
+    #' @param symbol (scalar<character> | NULL) query DCP settings for a specific futures symbol.
     #'   When NULL, returns the global DCP configuration.
-    #' @return A single-row `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with columns:
-    #'   - `timeout` (integer): Configured timeout in seconds.
-    #'   - `symbols` (character): Applicable symbols.
-    #'   - `current_time` (integer): Server time of the query.
+    #' @return (data.table | promise<data.table>) one row giving the configured timeout in seconds, the applicable
+    #'   symbols, and the server time of the query:
+    #' - timeout (integer | NA) the timeout.
+    #' - symbols (character) the symbols.
+    #' - current_time (numeric) the current time.
     #'
     #' @examples
     #' \dontrun{
@@ -1942,15 +2219,29 @@ KucoinFuturesTrading <- R6::R6Class(
     #' dcp_global <- ft$get_dcp()
     #' }
     get_dcp = function(symbol = NULL) {
+      assert_args_KucoinFuturesTrading__get_dcp(symbol)
       query <- list(tradeType = "FUTURES", symbol = symbol)
       query <- query[!vapply(query, is.null, logical(1))]
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/ua/v1/dcp/query",
         query = query,
         base_url = get_base_url(),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              timeout = integer(0),
+              symbols = character(0),
+              current_time = numeric(0)
+            )[])
+          }
+
           return(as_dt_row(data))
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinFuturesTrading__get_dcp,
+        is_async = private$.is_async
       ))
     }
   )

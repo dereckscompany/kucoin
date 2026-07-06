@@ -269,7 +269,7 @@ test_that("get_open_order_value returns data.table", {
   dt <- new_futures_trading()$get_open_order_value("XBTUSDTM")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
-  expect_true("open_order_buy_qty" %in% names(dt))
+  expect_true("open_order_buy_size" %in% names(dt))
   expect_true("settle_currency" %in% names(dt))
 })
 
@@ -277,7 +277,7 @@ test_that("get_open_order_value returns data.table", {
 
 test_that("set_dcp sends POST with timeout", {
   captured_method <- NULL
-  resp <- mock_kucoin_response(data = mock_futures_dcp_data())
+  resp <- mock_kucoin_response(data = mock_futures_dcp_set_data())
   httr2::local_mocked_responses(function(req) {
     captured_method <<- req$method
     return(resp)
@@ -286,7 +286,8 @@ test_that("set_dcp sends POST with timeout", {
   dt <- new_futures_trading()$set_dcp(timeout = 5)
   expect_equal(captured_method, "POST")
   expect_s3_class(dt, "data.table")
-  expect_true("timeout" %in% names(dt))
+  expect_equal(nrow(dt), 1L)
+  expect_true(all(c("trade_type", "symbol", "system_time", "trigger_time") %in% names(dt)))
 })
 
 test_that("get_dcp returns data.table", {

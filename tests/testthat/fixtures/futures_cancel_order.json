@@ -1,0 +1,8 @@
+{
+  "code": "200000",
+  "data": {
+    "cancelledOrderIds": [
+      "futures-order-001"
+    ]
+  }
+}

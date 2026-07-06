@@ -104,23 +104,12 @@ KucoinLending <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param query Named list; optional filter. Supported keys:
-    #'   - `currency` (character): Filter by currency (e.g., `"USDT"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
-    #'   with **one row per lending currency** and columns:
-    #'   - `currency` (character): Currency code (e.g. `"USDT"`).
-    #'   - `purchase_enable` (logical): Whether new purchases are accepted.
-    #'   - `redeem_enable` (logical): Whether redemptions are accepted.
-    #'   - `increment` (character): Smallest purchase-size step.
-    #'   - `min_purchase_size` (character): Minimum purchase amount.
-    #'   - `max_purchase_size` (character): Maximum purchase amount.
-    #'   - `interest_increment` (character): Smallest interest-rate step.
-    #'   - `min_interest_rate` (character): Minimum permitted interest rate.
-    #'   - `market_interest_rate` (character): Current market rate.
-    #'   - `max_interest_rate` (character): Maximum permitted interest rate.
-    #'   - `auto_purchase_enable` (logical): Whether auto-purchase is available.
-    #'
-    #'   Empty response yields an empty `data.table`.
+    #' @param query (list) optional filter; supported key `currency`
+    #'   (scalar<character>) filters by currency (e.g., `"USDT"`).
+    #' @return (data.table | promise<data.table>) one row per lending currency
+    #'   with currency code, purchase/redeem enablement flags, size increments and
+    #'   bounds, and the minimum, market, and maximum interest rates; an empty
+    #'   response yields an empty data.table.
     #'
     #' @examples
     #' \dontrun{
@@ -129,7 +118,8 @@ KucoinLending <- R6::R6Class(
     #' print(market)
     #' }
     get_loan_market = function(query = list()) {
-      return(private$.request(
+      assert_args_KucoinLending__get_loan_market(query)
+      res <- private$.request(
         endpoint = "/api/v3/project/list",
         query = query,
         .parser = function(data) {
@@ -138,6 +128,11 @@ KucoinLending <- R6::R6Class(
           }
           return(data.table::rbindlist(lapply(data, as_dt_row), fill = TRUE)[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinLending__get_loan_market,
+        is_async = private$.is_async
       ))
     },
 
@@ -151,7 +146,8 @@ KucoinLending <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v3/project/marketInterestRate`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Market Interest Rate](https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-loan-market-interest-rate)
+    #' KuCoin Get Market Interest Rate:
+    #' <https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-loan-market-interest-rate>
     #'
     #' Verified: 2026-05-23
     #'
@@ -179,13 +175,10 @@ KucoinLending <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param currency Character; the currency to query (e.g., `"USDT"`).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
-    #'   with **one row per observation** and columns:
-    #'   - `time` (character): Timestamp string (YYYYMMDDHHmm format).
-    #'   - `market_interest_rate` (character): Market interest rate at that time.
-    #'
-    #'   Empty response yields an empty `data.table`.
+    #' @param currency (scalar<character>) the currency to query (e.g., `"USDT"`).
+    #' @return (data.table | promise<data.table>) one row per observation with the
+    #'   timestamp string (YYYYMMDDHHmm format) and the market interest rate at that
+    #'   time; an empty response yields an empty data.table.
     #'
     #' @examples
     #' \dontrun{
@@ -194,11 +187,12 @@ KucoinLending <- R6::R6Class(
     #' print(rates)
     #' }
     get_loan_market_rate = function(currency) {
+      assert_args_KucoinLending__get_loan_market_rate(currency)
       if (!is.character(currency) || !nzchar(currency)) {
         rlang::abort("Parameter 'currency' must be a non-empty string.")
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v3/project/marketInterestRate",
         query = list(currency = currency),
         auth = FALSE,
@@ -208,6 +202,11 @@ KucoinLending <- R6::R6Class(
           }
           return(data.table::rbindlist(lapply(data, as_dt_row), fill = TRUE)[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinLending__get_loan_market_rate,
+        is_async = private$.is_async
       ))
     },
 
@@ -258,11 +257,13 @@ KucoinLending <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param currency Character; the currency to lend (e.g., `"USDT"`).
-    #' @param size Numeric; the amount to lend.
-    #' @param interestRate Numeric; the interest rate (e.g., `0.05` for 5%).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with column:
-    #'   - `order_no` (character): Lending order number.
+    #' @param currency (scalar<character>) the currency to lend (e.g., `"USDT"`).
+    #' @param size (scalar<numeric>) the amount to lend.
+    #' @param interestRate (scalar<numeric>) the interest rate (e.g., `0.05` for
+    #'   5%).
+    #' @return (data.table | promise<data.table>) one row with the lending order
+    #'   number:
+    #' - order_no (character) the order number.
     #'
     #' @examples
     #' \dontrun{
@@ -271,6 +272,7 @@ KucoinLending <- R6::R6Class(
     #' print(order$order_no)
     #' }
     purchase = function(currency, size, interestRate) {
+      assert_args_KucoinLending__purchase(currency, size, interestRate)
       if (!is.character(currency) || !nzchar(currency)) {
         rlang::abort("Parameter 'currency' must be a non-empty string.")
       }
@@ -287,11 +289,21 @@ KucoinLending <- R6::R6Class(
         interestRate = as.character(interestRate)
       )
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v3/purchase",
         method = "POST",
         body = body,
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_order_no())
+          }
+          return(as_dt_row(data))
+        }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinLending__purchase,
+        is_async = private$.is_async
       ))
     },
 
@@ -338,14 +350,14 @@ KucoinLending <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param currency Character; the currency of the lending order.
-    #' @param purchaseOrderNo Character; the order number to modify.
-    #' @param interestRate Numeric; the new interest rate.
-    #' @return `data.table` (or `promise<data.table>` if `async = TRUE`), single row with columns:
-    #'   - `currency` (character): The lending currency.
-    #'   - `purchase_order_no` (character): The modified order number.
-    #'   - `interest_rate` (numeric): The new interest rate.
-    #'   - `status` (character): `"success"`.
+    #' @param currency (scalar<character>) the currency of the lending order.
+    #' @param purchaseOrderNo (scalar<character>) the order number to modify.
+    #' @param interestRate (scalar<numeric>) the new interest rate.
+    #' @return (data.table | promise<data.table>) one row echoing the request:
+    #' - currency (character) the lending currency.
+    #' - purchase_order_no (character) the modified order number.
+    #' - interest_rate (numeric | NA) the new interest rate.
+    #' - status (character) the local outcome marker, always `"success"`.
     #'
     #' @examples
     #' \dontrun{
@@ -357,6 +369,7 @@ KucoinLending <- R6::R6Class(
     #' )
     #' }
     modify_purchase = function(currency, purchaseOrderNo, interestRate) {
+      assert_args_KucoinLending__modify_purchase(currency, purchaseOrderNo, interestRate)
       if (!is.character(currency) || !nzchar(currency)) {
         rlang::abort("Parameter 'currency' must be a non-empty string.")
       }
@@ -373,7 +386,7 @@ KucoinLending <- R6::R6Class(
         interestRate = as.character(interestRate)
       )
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v3/lend/purchase/update",
         method = "POST",
         body = body,
@@ -385,6 +398,11 @@ KucoinLending <- R6::R6Class(
             status = "success"
           )[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinLending__modify_purchase,
+        is_async = private$.is_async
       ))
     },
 
@@ -437,24 +455,13 @@ KucoinLending <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param query Named list; filters. Supported keys:
-    #'   - `status` (character): **Required.** Order status (e.g., `"DONE"`, `"PENDING"`).
-    #'   - `currency` (character): Currency filter (e.g., `"USDT"`).
-    #'   - `purchaseOrderNo` (character): Specific order number.
-    #'   - `currentPage` (integer): Page number.
-    #'   - `pageSize` (integer): Items per page.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
-    #'   with **one row per purchase order** and columns:
-    #'   - `currency` (character): Lent currency.
-    #'   - `purchase_order_no` (character): Purchase order number.
-    #'   - `purchase_size` (character): Amount lent.
-    #'   - `match_size` (character): Amount that has been matched.
-    #'   - `interest_rate` (character): Rate of the lending order.
-    #'   - `income_size` (character): Accrued income so far.
-    #'   - `apply_time` (POSIXct): Order creation time (millisecond epoch coerced).
-    #'   - `status` (character): Order status (e.g. `"DONE"`).
-    #'
-    #'   Empty response yields an empty `data.table`.
+    #' @param query (list) filters; supported keys `status` (required, e.g.
+    #'   `"DONE"`, `"PENDING"`), `currency`, `purchaseOrderNo`, `currentPage`, and
+    #'   `pageSize`.
+    #' @return (data.table | promise<data.table>) one row per purchase order with
+    #'   the currency, purchase order number, amount lent, matched amount, interest
+    #'   rate, accrued income, order creation time, and status; an empty response
+    #'   yields an empty data.table.
     #'
     #' @examples
     #' \dontrun{
@@ -463,7 +470,8 @@ KucoinLending <- R6::R6Class(
     #' print(orders)
     #' }
     get_purchase_orders = function(query = list()) {
-      return(private$.request(
+      assert_args_KucoinLending__get_purchase_orders(query)
+      res <- private$.request(
         endpoint = "/api/v3/purchase/orders",
         query = query,
         .parser = function(data) {
@@ -496,6 +504,11 @@ KucoinLending <- R6::R6Class(
           )
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinLending__get_purchase_orders,
+        is_async = private$.is_async
       ))
     },
 
@@ -544,11 +557,13 @@ KucoinLending <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param currency Character; the currency to redeem (e.g., `"USDT"`).
-    #' @param size Numeric; the amount to redeem.
-    #' @param purchaseOrderNo Character; the purchase order to redeem from.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with column:
-    #'   - `order_no` (character): Redemption order number.
+    #' @param currency (scalar<character>) the currency to redeem (e.g., `"USDT"`).
+    #' @param size (scalar<numeric>) the amount to redeem.
+    #' @param purchaseOrderNo (scalar<character>) the purchase order to redeem
+    #'   from.
+    #' @return (data.table | promise<data.table>) one row with the redemption order
+    #'   number:
+    #' - order_no (character) the order number.
     #'
     #' @examples
     #' \dontrun{
@@ -559,6 +574,7 @@ KucoinLending <- R6::R6Class(
     #' print(result$order_no)
     #' }
     redeem = function(currency, size, purchaseOrderNo) {
+      assert_args_KucoinLending__redeem(currency, size, purchaseOrderNo)
       if (!is.character(currency) || !nzchar(currency)) {
         rlang::abort("Parameter 'currency' must be a non-empty string.")
       }
@@ -575,11 +591,21 @@ KucoinLending <- R6::R6Class(
         purchaseOrderNo = purchaseOrderNo
       )
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v3/redeem",
         method = "POST",
         body = body,
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_order_no())
+          }
+          return(as_dt_row(data))
+        }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinLending__redeem,
+        is_async = private$.is_async
       ))
     },
 
@@ -631,23 +657,13 @@ KucoinLending <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param query Named list; filters. Supported keys:
-    #'   - `status` (character): **Required.** Order status (e.g., `"DONE"`, `"PENDING"`).
-    #'   - `currency` (character): Currency filter (e.g., `"USDT"`).
-    #'   - `redeemOrderNo` (character): Specific redemption order number.
-    #'   - `currentPage` (integer): Page number.
-    #'   - `pageSize` (integer): Items per page.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`)
-    #'   with **one row per redemption order** and columns:
-    #'   - `currency` (character): Redeemed currency.
-    #'   - `purchase_order_no` (character): Source purchase order.
-    #'   - `redeem_order_no` (character): Redemption order number.
-    #'   - `redeem_size` (character): Requested redeem amount.
-    #'   - `receipt_size` (character): Amount actually received.
-    #'   - `apply_time` (POSIXct): Order creation time (millisecond epoch coerced).
-    #'   - `status` (character): Order status (e.g. `"DONE"`).
-    #'
-    #'   Empty response yields an empty `data.table`.
+    #' @param query (list) filters; supported keys `status` (required, e.g.
+    #'   `"DONE"`, `"PENDING"`), `currency`, `redeemOrderNo`, `currentPage`, and
+    #'   `pageSize`.
+    #' @return (data.table | promise<data.table>) one row per redemption order with
+    #'   the currency, source purchase order, redemption order number, requested
+    #'   redeem amount, amount actually received, order creation time, and status;
+    #'   an empty response yields an empty data.table.
     #'
     #' @examples
     #' \dontrun{
@@ -656,7 +672,8 @@ KucoinLending <- R6::R6Class(
     #' print(orders)
     #' }
     get_redeem_orders = function(query = list()) {
-      return(private$.request(
+      assert_args_KucoinLending__get_redeem_orders(query)
+      res <- private$.request(
         endpoint = "/api/v3/redeem/orders",
         query = query,
         .parser = function(data) {
@@ -688,6 +705,11 @@ KucoinLending <- R6::R6Class(
           )
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinLending__get_redeem_orders,
+        is_async = private$.is_async
       ))
     }
   )

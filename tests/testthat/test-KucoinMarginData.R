@@ -95,7 +95,7 @@ test_that("get_margin_config returns data.table", {
   expect_equal(nrow(config), 3L)
   expect_equal(config$currency, c("BTC", "ETH", "USDT"))
   expect_true(all(config$max_leverage == 10L))
-  expect_true(all(config$warning_debt_ratio == "0.95"))
+  expect_true(all(config$warning_debt_ratio == 0.95))
 })
 
 # -- get_collateral_ratio --
@@ -117,9 +117,9 @@ test_that("get_collateral_ratio returns data.table", {
   expect_s3_class(result, "data.table")
   expect_equal(nrow(result), 1L)
   expect_equal(result$currency, "BTC")
-  expect_equal(result$lower_limit, "0")
-  expect_equal(result$upper_limit, "10")
-  expect_equal(result$collateral_ratio, "1.0")
+  expect_equal(result$lower_limit, 0)
+  expect_equal(result$upper_limit, 10)
+  expect_equal(result$collateral_ratio, 1.0)
 })
 
 test_that("get_collateral_ratio flattens multi-currency multi-tier", {
@@ -282,8 +282,8 @@ test_that("get_margin_config produces no list columns and integer max_leverage",
   expect_equal(length(names(config)[vapply(config, is.list, logical(1))]), 0L)
   expect_true(is.character(config$currency))
   expect_true(is.integer(config$max_leverage))
-  expect_true(is.character(config$warning_debt_ratio))
-  expect_true(is.character(config$liq_debt_ratio))
+  expect_true(is.numeric(config$warning_debt_ratio))
+  expect_true(is.numeric(config$liq_debt_ratio))
   expect_equal(names(config)[1], "currency")
 })
 
@@ -330,9 +330,9 @@ test_that("get_collateral_ratio produces no list columns", {
   result <- new_margin_data()$get_collateral_ratio()
   expect_equal(length(names(result)[vapply(result, is.list, logical(1))]), 0L)
   expect_true(is.character(result$currency))
-  expect_true(is.character(result$lower_limit))
-  expect_true(is.character(result$upper_limit))
-  expect_true(is.character(result$collateral_ratio))
+  expect_true(is.numeric(result$lower_limit))
+  expect_true(is.numeric(result$upper_limit))
+  expect_true(is.numeric(result$collateral_ratio))
   expect_equal(nrow(result), 2L)
 })
 

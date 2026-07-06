@@ -1,0 +1,42 @@
+{
+  "code": "200000",
+  "data": [
+    {
+      "id": "pos-001",
+      "symbol": "XBTUSDTM",
+      "autoDeposit": false,
+      "realLeverage": 5,
+      "crossMode": false,
+      "delevPercentage": 0.5,
+      "openingTimestamp": 1729159459033,
+      "currentTimestamp": 1729162000000,
+      "currentQty": 1,
+      "currentCost": "98.25",
+      "currentComm": "0.05895",
+      "unrealisedCost": "98.25",
+      "realisedGrossCost": "0",
+      "realisedCost": "0.05895",
+      "isOpen": true,
+      "markPrice": 98350,
+      "markValue": "98.35",
+      "posCost": "98.25",
+      "posCross": "0",
+      "posInit": "19.65",
+      "posComm": "0.07861",
+      "posLoss": "0",
+      "posMargin": "19.72861",
+      "posMaint": "0.4423",
+      "maintMargin": "19.82861",
+      "realisedGrossPnl": "0",
+      "realisedPnl": "-0.05895",
+      "unrealisedPnl": "0.1",
+      "unrealisedPnlPcnt": 0.001,
+      "avgEntryPrice": "98250.0",
+      "liquidationPrice": "79000.0",
+      "bankruptPrice": "78500.0",
+      "settleCurrency": "USDT",
+      "marginMode": "ISOLATED",
+      "positionSide": "BOTH"
+    }
+  ]
+}

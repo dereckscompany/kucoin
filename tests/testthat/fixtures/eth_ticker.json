@@ -1,0 +1,13 @@
+{
+  "code": "200000",
+  "data": {
+    "sequence": "200001",
+    "price": "2530.6",
+    "size": "0.5",
+    "bestBid": "2530.5",
+    "bestBidSize": "12.0",
+    "bestAsk": "2530.8",
+    "bestAskSize": "8.5",
+    "time": 1729159459033
+  }
+}

@@ -232,7 +232,7 @@ test_that("get_loan_market produces no list columns and correct types", {
   expect_true(is.character(dt$currency))
   expect_true(is.logical(dt$purchase_enable))
   expect_true(is.logical(dt$redeem_enable))
-  expect_true(is.character(dt$increment))
+  expect_true(is.numeric(dt$increment))
   expect_true(is.logical(dt$auto_purchase_enable))
 })
 
@@ -248,7 +248,7 @@ test_that("get_loan_market_rate produces no list columns", {
   dt <- new_lending()$get_loan_market_rate(currency = "USDT")
   expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
   expect_true(is.character(dt$time))
-  expect_true(is.character(dt$market_interest_rate))
+  expect_true(is.numeric(dt$market_interest_rate))
 })
 
 test_that("get_loan_market_rate returns empty data.table for empty response", {

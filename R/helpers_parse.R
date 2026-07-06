@@ -10,15 +10,18 @@
 
 #' Convert a KuCoin Millisecond Timestamp to POSIXct
 #'
-#' @param ms Numeric; millisecond Unix timestamp.
-#' @return POSIXct in UTC, or NA if `ms` is NULL/NA.
+#' @param ms (any | NULL) millisecond Unix timestamp(s); the raw JSON value,
+#'   whose R type is unconstrained (numeric, character, or an all-NA logical).
+#' @return (class<POSIXct>) a POSIXct vector in UTC (length matching `ms`), `NA`
+#'   where `ms` is NULL/NA.
 #'
 #' @importFrom lubridate as_datetime
 #' @keywords internal
 #' @noRd
 ms_to_datetime <- function(ms) {
+  assert_args_ms_to_datetime(ms)
   if (is.null(ms)) {
-    return(lubridate::NA_POSIXct_)
+    return(assert_return_ms_to_datetime(lubridate::NA_POSIXct_))
   }
   # Don't short-circuit on `all(is.na(ms))` — returning the length-1
   # `NA_POSIXct_` from there would get recycled by `data.table::set()`
@@ -27,7 +30,7 @@ ms_to_datetime <- function(ms) {
   # length so columns documented as POSIXct actually land as POSIXct,
   # even when every upstream value is missing. Matches binance/alpaca.
   if (is.numeric(ms)) {
-    return(lubridate::as_datetime(ms / 1000))
+    return(assert_return_ms_to_datetime(lubridate::as_datetime(ms / 1000)))
   }
   # Character path. Only feed real (non-NA) values to `as.numeric()` so
   # the documented NA-in -> NA-out contract is silent, but a genuinely
@@ -39,33 +42,36 @@ ms_to_datetime <- function(ms) {
   if (any(not_na)) {
     result[not_na] <- as.numeric(ms[not_na])
   }
-  return(lubridate::as_datetime(result / 1000))
+  return(assert_return_ms_to_datetime(lubridate::as_datetime(result / 1000)))
 }
 
 #' Convert a KuCoin Nanosecond Timestamp to POSIXct
 #'
-#' @param ns Numeric; nanosecond Unix timestamp.
-#' @return POSIXct in UTC, or NA if `ns` is NULL/NA.
+#' @param ns (any | NULL) nanosecond Unix timestamp(s); the raw JSON value,
+#'   whose R type is unconstrained (numeric, character, or an all-NA logical).
+#' @return (class<POSIXct>) a POSIXct vector in UTC (length matching `ns`), `NA`
+#'   where `ns` is NULL/NA.
 #'
 #' @importFrom lubridate as_datetime
 #' @keywords internal
 #' @noRd
 ns_to_datetime <- function(ns) {
+  assert_args_ns_to_datetime(ns)
   if (is.null(ns)) {
-    return(lubridate::NA_POSIXct_)
+    return(assert_return_ns_to_datetime(lubridate::NA_POSIXct_))
   }
   # Same all-NA shape contract as `ms_to_datetime`, and the same
   # only-feed-real-values-to-`as.numeric` strategy so the NA-in ->
   # NA-out contract is silent without hiding genuine bad input.
   if (is.numeric(ns)) {
-    return(lubridate::as_datetime(ns / 1e9))
+    return(assert_return_ns_to_datetime(lubridate::as_datetime(ns / 1e9)))
   }
   result <- rep(NA_real_, length(ns))
   not_na <- !is.na(ns)
   if (any(not_na)) {
     result[not_na] <- as.numeric(ns[not_na])
   }
-  return(lubridate::as_datetime(result / 1e9))
+  return(assert_return_ns_to_datetime(lubridate::as_datetime(result / 1e9)))
 }
 
 #' Collapse a Plain-String Array Field on a Single Record
@@ -89,13 +95,15 @@ ns_to_datetime <- function(ns) {
 #' If any individual value contains a literal `;`, emits a once-per-session
 #' warning so we catch silent corruption.
 #'
-#' @param x A named list representing a single API record.
-#' @param fields Character vector; names of fields to collapse.
-#' @return The same named list with the matching fields collapsed in place.
+#' @param x (list) a named list representing a single API record.
+#' @param fields (vector<character, 0..>) names of fields to collapse.
+#' @return (list) the same named list with the matching fields collapsed in
+#'   place.
 #'
 #' @keywords internal
 #' @noRd
 collapse_string_array_fields <- function(x, fields) {
+  assert_args_collapse_string_array_fields(x, fields)
   for (nm in fields) {
     val <- x[[nm]]
     if (is.null(val) || length(val) == 0L) {
@@ -129,7 +137,7 @@ collapse_string_array_fields <- function(x, fields) {
       x[[nm]] <- paste(val_chr, collapse = ";")
     }
   }
-  return(x)
+  return(assert_return_collapse_string_array_fields(x))
 }
 
 #' Apply a Function to Selected Columns of a data.table by Reference
@@ -145,14 +153,16 @@ collapse_string_array_fields <- function(x, fields) {
 #' `data.table::set()`. Same shape and contract as the same-named helper
 #' in binance/alpaca.
 #'
-#' @param dt A [data.table::data.table].
-#' @param cols Character; candidate column names to convert.
-#' @param fn Function; takes a column vector, returns the coerced vector.
-#' @return `dt`, modified by reference and returned invisibly.
+#' @param dt (class<data.table>) the table to modify.
+#' @param cols (vector<character, 0..>) candidate column names to convert.
+#' @param fn (function) takes a column vector, returns the coerced vector.
+#' @return (class<data.table>) `dt`, modified by reference and returned
+#'   invisibly.
 #'
 #' @keywords internal
 #' @noRd
 coerce_cols <- function(dt, cols, fn) {
+  assert_args_coerce_cols(dt, cols, fn)
   if (nrow(dt) == 0L) {
     return(invisible(dt))
   }
@@ -166,8 +176,182 @@ coerce_cols <- function(dt, cols, fn) {
       data.table::set(dt, j = col, value = fn(dt[[col]]))
     }
   }
-  return(invisible(dt))
+  return(invisible(assert_return_coerce_cols(dt)))
 }
+
+#' Coerce KuCoin Number-as-String Columns to Numeric
+#'
+#' KuCoin transports numeric quantities (prices, sizes, amounts, fees, rates,
+#' balances, ...) as JSON strings to avoid float rounding in transit. This
+#' coerces every such column that is present to `numeric`, so the client
+#' receives a usable number rather than a verbatim string. The set was derived
+#' from a live sweep of the API: a column qualifies only where every real value
+#' it returns is numeric-coercible and it is not an identifier. Identifiers,
+#' symbols, currencies, statuses, enums and flags are left as-is; timestamps are
+#' handled separately. Applied centrally between parse and contract validation
+#' (see [KucoinBase]'s request funnel), so it runs once per endpoint over
+#' whichever of these columns that endpoint returns. Order *input* prices/sizes
+#' are unaffected — they are validated as strings before the request is sent.
+#'
+#' @param x (any) a parser result; coerced only when it is a `data.table`.
+#' @return (any) `x`, with its numeric-quantity columns coerced to numeric.
+#'
+#' @keywords internal
+#' @noRd
+#' @noassert
+coerce_numeric_quantities <- function(x) {
+  if (!data.table::is.data.table(x)) {
+    return(x)
+  }
+  quantities <- c(
+    "actual_size",
+    "amount",
+    "annualized_borrow_rate",
+    "auto_renew_max_debt_ratio",
+    "available",
+    "available_amount",
+    "average_price",
+    "balance",
+    "base_amount",
+    "base_asset_available",
+    "base_asset_hold",
+    "base_asset_liability",
+    "base_asset_liability_interest",
+    "base_asset_liability_principal",
+    "base_asset_max_borrow_size",
+    "base_asset_total",
+    "base_borrow_coefficient",
+    "base_borrow_min_amount",
+    "base_borrow_min_unit",
+    "base_currency_price",
+    "base_increment",
+    "base_margin_coefficient",
+    "base_max_borrow_amount",
+    "base_max_buy_amount",
+    "base_max_hold_amount",
+    "base_max_size",
+    "base_min_size",
+    "best_ask",
+    "best_ask_price",
+    "best_ask_size",
+    "best_bid",
+    "best_bid_price",
+    "best_bid_size",
+    "borrow_coefficient",
+    "borrow_max_amount",
+    "borrow_min_amount",
+    "borrow_min_unit",
+    "buy",
+    "buy_max_amount",
+    "callauction_price_ceiling",
+    "callauction_price_floor",
+    "cancel_size",
+    "canceled_size",
+    "change_price",
+    "change_rate",
+    "collateral_ratio",
+    "deal_size",
+    "deal_value",
+    "debt_ratio",
+    "deposit_min_size",
+    "fee",
+    "fee_rate",
+    "fix_fee",
+    "fl_debt_ratio",
+    "high",
+    "hold",
+    "hold_max_amount",
+    "holds",
+    "hourly_borrow_rate",
+    "increment",
+    "inner_withdraw_min_fee",
+    "interest_increment",
+    "last",
+    "last_size",
+    "liability",
+    "liability_interest",
+    "liability_principal",
+    "limit_btc_amount",
+    "limit_quota_currency_amount",
+    "liq_debt_ratio",
+    "locked_amount",
+    "low",
+    "lower_limit",
+    "maker_coefficient",
+    "maker_fee_coefficient",
+    "maker_fee_rate",
+    "margin",
+    "margin_coefficient",
+    "market_interest_rate",
+    "max_borrow_size",
+    "max_deposit",
+    "max_interest_rate",
+    "max_purchase_size",
+    "min_funds",
+    "min_interest_rate",
+    "min_purchase_size",
+    "open",
+    "open_interest",
+    "open_order_buy_cost",
+    "open_order_sell_cost",
+    "origin_size",
+    "price",
+    "price_change",
+    "price_change_percent",
+    "price_increment",
+    "price_limit_rate",
+    "quote_asset_available",
+    "quote_asset_hold",
+    "quote_asset_liability",
+    "quote_asset_liability_interest",
+    "quote_asset_liability_principal",
+    "quote_asset_max_borrow_size",
+    "quote_asset_total",
+    "quote_borrow_coefficient",
+    "quote_borrow_min_amount",
+    "quote_borrow_min_unit",
+    "quote_increment",
+    "quote_margin_coefficient",
+    "quote_max_borrow_amount",
+    "quote_max_buy_amount",
+    "quote_max_hold_amount",
+    "quote_max_size",
+    "quote_min_size",
+    "remain_amount",
+    "remain_size",
+    "return_amount",
+    "sell",
+    "size",
+    "sub_order_price",
+    "sub_order_size",
+    "sub_order_stop_price",
+    "taker_coefficient",
+    "taker_fee_coefficient",
+    "taker_fee_rate",
+    "tax",
+    "taxes",
+    "total",
+    "total_asset_of_quote_currency",
+    "total_liability_of_quote_currency",
+    "transferable",
+    "upper_limit",
+    "used_btc_amount",
+    "used_quota_currency_amount",
+    "value",
+    "vol",
+    "vol_value",
+    "warning_debt_ratio",
+    "withdraw_fee_rate",
+    "withdraw_max_fee",
+    "withdraw_min_fee",
+    "withdraw_min_size",
+    "withdrawal_min_fee",
+    "withdrawal_min_size"
+  )
+  coerce_cols(x, quantities, as.numeric)
+  return(x[])
+}
+
 
 #' Process Orderbook Data into a data.table
 #'
@@ -177,14 +361,14 @@ coerce_cols <- function(dt, cols, fn) {
 #' bid / best ask); the position would otherwise be lost after any sort or
 #' filter. Matches the cross-package long-format convention.
 #'
-#' @param data List; the parsed KuCoin orderbook response data containing
+#' @param data (list) the parsed KuCoin orderbook response data containing
 #'   `bids`, `asks`, `time`, and `sequence` fields.
-#' @return A [data.table::data.table] with columns: `time`, `sequence`,
-#'   `side`, `level`, `price`, `size`.
+#' @return (Orderbook) one row per price level per side, best price first.
 #'
 #' @keywords internal
 #' @noRd
 parse_orderbook <- function(data) {
+  assert_args_parse_orderbook(data)
   parse_side <- function(entries, side_label) {
     if (is.null(entries) || length(entries) == 0) {
       return(data.table::data.table(
@@ -215,7 +399,29 @@ parse_orderbook <- function(data) {
   result[, sequence := as.character(data$sequence)]
   data.table::setcolorder(result, c("time", "sequence", "side", "level", "price", "size"))
 
-  return(result[])
+  return(assert_return_parse_orderbook(result[]))
+}
+
+# The fixed-shape kline parsers' empty branches return this fully-typed zero-row
+# table (columns and types EXACTLY matching the `Klines` shape and the non-empty
+# branch) so a method's column contract still holds on an empty result. The
+# `datetime` column is built with `lubridate::as_datetime()` on a zero-length
+# vector so class and tz match the populated case. Mirrors its shape; not
+# asserted.
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_klines <- function() {
+  return(data.table::data.table(
+    datetime = lubridate::as_datetime(numeric(0)),
+    open = numeric(0),
+    high = numeric(0),
+    low = numeric(0),
+    close = numeric(0),
+    volume = numeric(0),
+    turnover = numeric(0)
+  ))
 }
 
 #' Parse Raw KuCoin Kline Data into a data.table
@@ -224,17 +430,17 @@ parse_orderbook <- function(data) {
 #' a typed [data.table::data.table] with standard OHLCV columns.
 #' Each candle is returned as `[timestamp, open, close, high, low, volume, turnover]`.
 #'
-#' @param data List of character vectors; the raw kline response from KuCoin.
-#' @return A [data.table::data.table] with columns: `datetime`, `open`, `high`,
-#'   `low`, `close`, `volume`, `turnover`. Returns empty data.table if input is
-#'   NULL or empty.
+#' @param data (list | NULL) the raw kline response from KuCoin (a list of
+#'   7-element character vectors), or NULL.
+#' @return (Klines) one row per candle. Empty if `data` is NULL or empty.
 #'
 #' @importFrom lubridate as_datetime
 #' @keywords internal
 #' @noRd
 parse_klines <- function(data) {
+  assert_args_parse_klines(data)
   if (is.null(data) || length(data) == 0) {
-    return(data.table::data.table()[])
+    return(assert_return_parse_klines(empty_dt_klines()))
   }
   # KuCoin returns: [timestamp, open, close, high, low, volume, turnover]
   # We reorder to standard OHLCV: datetime, open, high, low, close, volume, turnover
@@ -248,7 +454,7 @@ parse_klines <- function(data) {
     volume = as.numeric(vapply(data, `[[`, character(1), 6L)),
     turnover = as.numeric(vapply(data, `[[`, character(1), 7L))
   )
-  return(dt[])
+  return(assert_return_parse_klines(dt[]))
 }
 
 #' Flatten Paginated Results into a data.table
@@ -256,14 +462,15 @@ parse_klines <- function(data) {
 #' Takes the accumulator list from [kucoin_paginate()] and row-binds all items
 #' into a single [data.table::data.table] with snake_case column names.
 #'
-#' @param pages List of lists; each element is one page's items from the API.
-#' @return A [data.table::data.table].
+#' @param pages (list) each element is one page's items from the API.
+#' @return (class<data.table>) the row-bound table; empty if `pages` is empty.
 #'
 #' @keywords internal
 #' @noRd
 flatten_pages <- function(pages) {
+  assert_args_flatten_pages(pages)
   if (length(pages) == 0) {
-    return(data.table::data.table()[])
+    return(assert_return_flatten_pages(data.table::data.table()[]))
   }
 
   dt <- data.table::rbindlist(
@@ -290,5 +497,163 @@ flatten_pages <- function(pages) {
     fill = TRUE
   )
   data.table::setnames(dt, to_snake_case(names(dt)))
-  return(dt[])
+  return(assert_return_flatten_pages(dt[]))
+}
+
+# ---- Typed zero-row empties for shapes returned by more than one method ----
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_futures_order <- function() {
+  return(data.table::data.table(
+    id = character(0),
+    symbol = character(0),
+    type = character(0),
+    side = character(0),
+    price = numeric(0),
+    size = numeric(0),
+    value = numeric(0),
+    deal_value = numeric(0),
+    deal_size = numeric(0),
+    leverage = integer(0),
+    margin_mode = character(0),
+    position_side = character(0),
+    status = character(0),
+    created_at = ms_to_datetime(numeric(0)),
+    updated_at = ms_to_datetime(numeric(0)),
+    client_oid = character(0)
+  )[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_futures_orderbook <- function() {
+  return(data.table::data.table(
+    ts = ms_to_datetime(numeric(0)),
+    sequence = character(0),
+    side = character(0),
+    level = integer(0),
+    price = numeric(0),
+    size = numeric(0),
+    symbol = character(0)
+  )[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_isolated_margin <- function() {
+  return(data.table::data.table(
+    id = character(0),
+    symbol = character(0),
+    margin = numeric(0),
+    margin_type = character(0)
+  )[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_leverage <- function() {
+  return(data.table::data.table(symbol = character(0), leverage = character(0))[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_margin_mode <- function() {
+  return(data.table::data.table(symbol = character(0), margin_mode = character(0))[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_oco_order <- function() {
+  return(data.table::data.table(
+    order_id = character(0),
+    symbol = character(0),
+    client_oid = character(0),
+    order_time = ms_to_datetime(numeric(0)),
+    status = character(0)
+  )[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_order_ack <- function() {
+  return(data.table::data.table(order_id = character(0), client_oid = character(0))[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_order_id <- function() {
+  return(data.table::data.table(order_id = character(0))[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_order_no <- function() {
+  return(data.table::data.table(order_no = character(0))[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_orderbook <- function() {
+  return(data.table::data.table(
+    time = ms_to_datetime(numeric(0)),
+    sequence = character(0),
+    side = character(0),
+    level = integer(0),
+    price = numeric(0),
+    size = numeric(0)
+  )[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_service_status <- function() {
+  return(data.table::data.table(status = character(0), msg = character(0))[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_symbol <- function() {
+  return(data.table::data.table(
+    symbol = character(0),
+    name = character(0),
+    base_currency = character(0),
+    quote_currency = character(0),
+    fee_currency = character(0),
+    market = character(0),
+    base_min_size = numeric(0),
+    quote_min_size = numeric(0),
+    base_max_size = numeric(0),
+    quote_max_size = numeric(0),
+    base_increment = numeric(0),
+    quote_increment = numeric(0),
+    price_increment = numeric(0),
+    price_limit_rate = numeric(0),
+    min_funds = numeric(0),
+    is_margin_enabled = logical(0),
+    enable_trading = logical(0),
+    fee_category = integer(0),
+    maker_fee_coefficient = numeric(0),
+    taker_fee_coefficient = numeric(0),
+    st = logical(0),
+    callauction_is_enabled = logical(0),
+    callauction_price_floor = numeric(0),
+    callauction_price_ceiling = numeric(0),
+    callauction_first_stage_start_time = numeric(0),
+    callauction_second_stage_start_time = numeric(0),
+    callauction_third_stage_start_time = numeric(0),
+    trading_start_time = numeric(0)
+  )[])
 }

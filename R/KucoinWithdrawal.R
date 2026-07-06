@@ -91,7 +91,8 @@ KucoinWithdrawal <- R6::R6Class(
     #' - **Profit Extraction**: Withdraw profits to a cold wallet at regular intervals.
     #' - **Arbitrage Settlement**: Move funds off-exchange after capturing arbitrage spreads.
     #' - **Internal Transfers**: Use `isInner = TRUE` for fee-free transfers between KuCoin accounts.
-    #' - **Multi-Chain Support**: Specify `chain` (e.g., `"trx"`, `"eth"`, `"bsc"`) to select the cheapest or fastest network.
+    #' - **Multi-Chain Support**: Specify `chain` (e.g., `"trx"`, `"eth"`, `"bsc"`) to select the cheapest or fastest
+    #'   network.
     #'
     #' ### curl
     #' ```
@@ -102,7 +103,9 @@ KucoinWithdrawal <- R6::R6Class(
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
     #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
     #'   --header 'KC-API-KEY-VERSION: 2' \
-    #'   --data-raw '{"currency":"USDT","toAddress":"TKFRQXSDcY4kd3QLzw7uK16GmLrjJggwX8","amount":"10","withdrawType":"ADDRESS","chain":"trx"}'
+    #'   --data-raw \
+    #'   '{"currency":"USDT","toAddress":"TKFRQXSDcY4kd3QLzw7uK16GmLrjJggwX8","amount":"10","withdrawType":"ADDRESS",
+    #'   "chain":"trx"}'
     #' ```
     #'
     #' ### JSON Response
@@ -115,18 +118,28 @@ KucoinWithdrawal <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param currency Character; currency code (e.g., `"BTC"`, `"USDT"`).
-    #' @param toAddress Character; withdrawal destination address, UID, email, or phone number.
-    #' @param amount Character; withdrawal amount (must be positive, multiple of currency precision).
-    #' @param withdrawType Character; withdrawal type: `"ADDRESS"`, `"UID"`, `"MAIL"`, or `"PHONE"`.
-    #' @param chain Character; blockchain network identifier (e.g., `"eth"`, `"trx"`, `"bsc"`).
-    #'   Required by the KuCoin API.
-    #' @param memo Character or NULL; address memo/tag (required for some currencies like XRP, XLM).
-    #' @param isInner Logical or NULL; if `TRUE`, this is an internal KuCoin transfer (no on-chain fee).
-    #' @param remark Character or NULL; optional remark for the withdrawal.
-    #' @param feeDeductType Character or NULL; fee deduction type: `"INTERNAL"` or `"EXTERNAL"`.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row and columns:
-    #'   - `withdrawal_id` (character): The unique withdrawal identifier.
+    #' @param currency (scalar<character>) currency code (e.g., `"BTC"`,
+    #'   `"USDT"`).
+    #' @param toAddress (scalar<character>) withdrawal destination address, UID,
+    #'   email, or phone number.
+    #' @param amount (scalar<character>) withdrawal amount (must be positive,
+    #'   multiple of currency precision).
+    #' @param withdrawType (scalar<character>) withdrawal type: `"ADDRESS"`,
+    #'   `"UID"`, `"MAIL"`, or `"PHONE"`.
+    #' @param chain (scalar<character> | NULL) blockchain network identifier
+    #'   (e.g., `"eth"`, `"trx"`, `"bsc"`). Required by the KuCoin API; the method
+    #'   raises if `NULL`.
+    #' @param memo (scalar<character> | NULL) address memo/tag (required for some
+    #'   currencies like XRP, XLM).
+    #' @param isInner (scalar<logical> | NULL) if `TRUE`, this is an internal
+    #'   KuCoin transfer (no on-chain fee).
+    #' @param remark (scalar<character> | NULL) optional remark for the
+    #'   withdrawal.
+    #' @param feeDeductType (scalar<character> | NULL) fee deduction type:
+    #'   `"INTERNAL"` or `"EXTERNAL"`.
+    #' @return (data.table | promise<data.table>) one row with column
+    #'   `withdrawal_id` (character): the unique withdrawal identifier:
+    #' - withdrawal_id (character) the withdrawal id.
     #'
     #' @examples
     #' \dontrun{
@@ -162,6 +175,17 @@ KucoinWithdrawal <- R6::R6Class(
       remark = NULL,
       feeDeductType = NULL
     ) {
+      assert_args_KucoinWithdrawal__add_withdrawal(
+        currency,
+        toAddress,
+        amount,
+        withdrawType,
+        chain,
+        memo,
+        isInner,
+        remark,
+        feeDeductType
+      )
       if (!is.character(currency) || !nzchar(currency)) {
         rlang::abort("Parameter 'currency' must be a non-empty string.")
       }
@@ -206,11 +230,21 @@ KucoinWithdrawal <- R6::R6Class(
         body$feeDeductType <- feeDeductType
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v3/withdrawals",
         method = "POST",
         body = body,
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(withdrawal_id = character(0))[])
+          }
+          return(as_dt_row(data))
+        }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinWithdrawal__add_withdrawal,
+        is_async = private$.is_async
       ))
     },
 
@@ -257,10 +291,12 @@ KucoinWithdrawal <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param withdrawalId Character; the unique withdrawal ID to cancel.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row and columns:
-    #'   - `withdrawal_id` (character): The cancelled withdrawal ID (echoed from the input
-    #'     since KuCoin returns `null` data on a successful cancel).
+    #' @param withdrawalId (scalar<character>) the unique withdrawal ID to
+    #'   cancel.
+    #' @return (data.table | promise<data.table>) one row, the cancelled
+    #'   withdrawal ID echoed from the input (KuCoin returns `null` data on a
+    #'   successful cancel):
+    #' - withdrawal_id (character) the cancelled withdrawal id.
     #'
     #' @examples
     #' \dontrun{
@@ -271,16 +307,22 @@ KucoinWithdrawal <- R6::R6Class(
     #' print(result$withdrawal_id)
     #' }
     cancel_withdrawal = function(withdrawalId) {
+      assert_args_KucoinWithdrawal__cancel_withdrawal(withdrawalId)
       if (!is.character(withdrawalId) || !nzchar(withdrawalId)) {
         rlang::abort("Parameter 'withdrawalId' must be a non-empty string.")
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = paste0("/api/v1/withdrawals/", withdrawalId),
         method = "DELETE",
         .parser = function(data) {
           return(data.table::data.table(withdrawal_id = withdrawalId)[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinWithdrawal__cancel_withdrawal,
+        is_async = private$.is_async
       ))
     },
 
@@ -299,7 +341,8 @@ KucoinWithdrawal <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v1/withdrawals/quotas`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Withdrawal Quotas](https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-quotas)
+    #' KuCoin Get Withdrawal Quotas:
+    #' <https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-quotas>
     #'
     #' Verified: 2026-05-23
     #'
@@ -345,26 +388,33 @@ KucoinWithdrawal <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param currency Character; currency code (e.g., `"BTC"`, `"USDT"`).
-    #' @param chain Character or NULL; blockchain network identifier (e.g., `"eth"`, `"trx"`).
-    #'   When NULL, returns quotas for the default chain.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row and columns:
-    #'   - `currency` (character): Currency code.
-    #'   - `limit_btc_amount` (character): Daily withdrawal limit in BTC equivalent.
-    #'   - `used_btc_amount` (character): BTC equivalent already withdrawn today.
-    #'   - `quota_currency` (character): Quota currency (e.g., `"USDT"`).
-    #'   - `limit_quota_currency_amount` (character): Daily limit in quota currency.
-    #'   - `used_quota_currency_amount` (character): Amount used in quota currency.
-    #'   - `remain_amount` (character): Remaining withdrawal quota in BTC equivalent.
-    #'   - `available_amount` (character): Available balance for withdrawal.
-    #'   - `withdraw_min_fee` (character): Minimum withdrawal fee.
-    #'   - `inner_withdraw_min_fee` (character): Minimum fee for internal transfers.
-    #'   - `withdraw_min_size` (character): Minimum withdrawal amount.
-    #'   - `is_withdraw_enabled` (logical): Whether withdrawals are currently enabled.
-    #'   - `precision` (integer): Decimal precision for amounts.
-    #'   - `chain` (character): Blockchain network name.
-    #'   - `reason` (character): Reason if withdrawals are disabled (or NA).
-    #'   - `locked_amount` (character): Amount currently locked.
+    #' @param currency (scalar<character>) currency code (e.g., `"BTC"`,
+    #'   `"USDT"`).
+    #' @param chain (scalar<character> | NULL) blockchain network identifier
+    #'   (e.g., `"eth"`, `"trx"`). When NULL, returns quotas for the default
+    #'   chain.
+    #' @return (data.table | promise<data.table>) one row with the withdrawal
+    #'   quota details (currency, limit_btc_amount, used_btc_amount,
+    #'   quota_currency, limit_quota_currency_amount, used_quota_currency_amount,
+    #'   remain_amount, available_amount, withdraw_min_fee, inner_withdraw_min_fee,
+    #'   withdraw_min_size, is_withdraw_enabled, precision, chain, reason,
+    #'   locked_amount, ...):
+    #' - currency (character) the currency code.
+    #' - chain (character) the chain code.
+    #' - is_withdraw_enabled (logical | NA) the is withdraw enabled.
+    #' - available_amount (numeric | NA) the available amount.
+    #' - remain_amount (numeric | NA) the remain amount.
+    #' - withdraw_min_fee (numeric | NA) the withdraw min fee.
+    #' - inner_withdraw_min_fee (numeric | NA) the inner withdraw min fee.
+    #' - withdraw_min_size (numeric | NA) the withdraw min size.
+    #' - precision (integer | NA) the decimal precision.
+    #' - limit_btc_amount (numeric | NA) the limit btc amount.
+    #' - used_btc_amount (numeric | NA) the used btc amount.
+    #' - locked_amount (numeric | NA) the locked amount.
+    #' - quota_currency (character) the quota currency.
+    #' - limit_quota_currency_amount (numeric | NA) the limit quota currency amount.
+    #' - used_quota_currency_amount (numeric | NA) the used quota currency amount.
+    #' - reason (character | NA) the reason withdrawals are disabled, when present.
     #'
     #' @examples
     #' \dontrun{
@@ -379,18 +429,41 @@ KucoinWithdrawal <- R6::R6Class(
     #' print(usdt_quotas$withdraw_min_fee)
     #' }
     get_withdrawal_quotas = function(currency, chain = NULL) {
+      assert_args_KucoinWithdrawal__get_withdrawal_quotas(currency, chain)
       if (!is.character(currency) || !nzchar(currency)) {
         rlang::abort("Parameter 'currency' must be a non-empty string.")
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = "/api/v1/withdrawals/quotas",
         query = list(currency = currency, chain = chain),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              currency = character(0),
+              chain = character(0),
+              is_withdraw_enabled = logical(0),
+              available_amount = numeric(0),
+              remain_amount = numeric(0),
+              withdraw_min_fee = numeric(0),
+              inner_withdraw_min_fee = numeric(0),
+              withdraw_min_size = numeric(0),
+              precision = integer(0),
+              limit_btc_amount = numeric(0),
+              used_btc_amount = numeric(0),
+              locked_amount = numeric(0),
+              quota_currency = character(0),
+              limit_quota_currency_amount = numeric(0),
+              used_quota_currency_amount = numeric(0),
+              reason = character(0)
+            )[])
+          }
+
           dt <- as_dt_row(data)
           if (nrow(dt) == 0L) {
             return(dt[])
           }
+          coerce_cols(dt, "reason", as.character)
           expected <- c(
             "currency",
             "chain",
@@ -408,6 +481,11 @@ KucoinWithdrawal <- R6::R6Class(
           data.table::setcolorder(dt, intersect(expected, names(dt)))
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinWithdrawal__get_withdrawal_quotas,
+        is_async = private$.is_async
       ))
     },
 
@@ -427,7 +505,8 @@ KucoinWithdrawal <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v1/withdrawals`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Withdrawal History](https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-history)
+    #' KuCoin Get Withdrawal History:
+    #' <https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-history>
     #'
     #' Verified: 2026-05-23
     #'
@@ -477,31 +556,24 @@ KucoinWithdrawal <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param currency Character or NULL; currency code (e.g., `"BTC"`, `"USDT"`).
-    #'   If NULL, returns withdrawals for all currencies.
-    #' @param status Character or NULL; filter by withdrawal status. Accepted values:
-    #'   `"PROCESSING"`, `"REVIEW"`, `"WALLET_PROCESSING"`, `"SUCCESS"`, `"FAILURE"`.
-    #'   When NULL, returns withdrawals of all statuses.
-    #' @param startAt Integer or NULL; start timestamp in milliseconds (inclusive).
-    #' @param endAt Integer or NULL; end timestamp in milliseconds (inclusive).
-    #' @param page_size Integer; number of results per page (default 50, max 500).
-    #' @param max_pages Numeric; maximum number of pages to fetch (default `Inf` for all pages).
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row per withdrawal and columns:
-    #'   - `currency` (character): Withdrawn currency code.
-    #'   - `chain` (character): Blockchain network used.
-    #'   - `status` (character): Withdrawal status.
-    #'   - `address` (character): Withdrawal destination address.
-    #'   - `memo` (character): Memo/tag (empty string if not applicable).
-    #'   - `is_inner` (logical): Whether this was an internal KuCoin transfer.
-    #'   - `amount` (character): Withdrawal amount.
-    #'   - `fee` (character): Withdrawal fee charged.
-    #'   - `wallet_tx_id` (character): On-chain transaction hash.
-    #'   - `created_at` (POSIXct): Creation datetime (coerced from epoch milliseconds).
-    #'   - `updated_at` (POSIXct): Last update datetime (coerced from epoch milliseconds).
-    #'   - `remark` (character): Optional remark.
-    #'   - `arrears` (logical): Whether the withdrawal is in arrears.
-    #'
-    #'   Returns an empty `data.table` if no withdrawals match the filters.
+    #' @param currency (scalar<character> | NULL) currency code (e.g., `"BTC"`,
+    #'   `"USDT"`). If NULL, returns withdrawals for all currencies.
+    #' @param status (scalar<character> | NULL) filter by withdrawal status.
+    #'   Accepted values: `"PROCESSING"`, `"REVIEW"`, `"WALLET_PROCESSING"`,
+    #'   `"SUCCESS"`, `"FAILURE"`. When NULL, returns withdrawals of all statuses.
+    #' @param startAt (scalar<numeric> | NULL) start timestamp in milliseconds
+    #'   (inclusive).
+    #' @param endAt (scalar<numeric> | NULL) end timestamp in milliseconds
+    #'   (inclusive).
+    #' @param page_size (scalar<count in [1, Inf[>) number of results per page
+    #'   (default 50, max 500).
+    #' @param max_pages (scalar<numeric in [1, Inf]>) maximum number of pages to
+    #'   fetch (default `Inf` for all pages).
+    #' @return (data.table | promise<data.table>) one row per withdrawal record
+    #'   (currency, chain, status, address, memo, is_inner, amount, fee,
+    #'   wallet_tx_id, created_at, updated_at, remark, arrears, ...), with
+    #'   `created_at`/`updated_at` coerced to POSIXct, or an empty `data.table`
+    #'   if no withdrawals match the filters.
     #'
     #' @examples
     #' \dontrun{
@@ -530,11 +602,19 @@ KucoinWithdrawal <- R6::R6Class(
       page_size = 50,
       max_pages = Inf
     ) {
+      assert_args_KucoinWithdrawal__get_withdrawal_history(
+        currency,
+        status,
+        startAt,
+        endAt,
+        page_size,
+        max_pages
+      )
       if (!is.null(currency) && (!is.character(currency) || !nzchar(currency))) {
         rlang::abort("Parameter 'currency' must be a non-empty string.")
       }
 
-      return(private$.paginate(
+      res <- private$.paginate(
         endpoint = "/api/v1/withdrawals",
         query = list(
           currency = currency,
@@ -573,6 +653,11 @@ KucoinWithdrawal <- R6::R6Class(
           )
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinWithdrawal__get_withdrawal_history,
+        is_async = private$.is_async
       ))
     },
 
@@ -592,14 +677,17 @@ KucoinWithdrawal <- R6::R6Class(
     #' `GET https://api.kucoin.com/api/v1/withdrawals/{withdrawalId}`
     #'
     #' ### Official Documentation
-    #' [KuCoin Get Withdrawal Detail](https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-by-id)
+    #' KuCoin Get Withdrawal Detail:
+    #' <https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-by-id>
     #'
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Status Tracking**: Monitor withdrawal progress through `REVIEW` → `PROCESSING` → `WALLET_PROCESSING` → `SUCCESS`.
+    #' - **Status Tracking**: Monitor withdrawal progress through `REVIEW` → `PROCESSING` → `WALLET_PROCESSING` →
+    #'   `SUCCESS`.
     #' - **Failure Diagnosis**: Check `failure_reason` and `failure_reason_msg` to understand why a withdrawal failed.
-    #' - **Cancel Eligibility**: Use `cancel_type` (`"CANCELABLE"`, `"CANCELING"`, `"NON_CANCELABLE"`) to determine if a withdrawal can still be cancelled.
+    #' - **Cancel Eligibility**: Use `cancel_type` (`"CANCELABLE"`, `"CANCELING"`, `"NON_CANCELABLE"`) to determine if a
+    #'   withdrawal can still be cancelled.
     #'
     #' ### curl
     #' ```
@@ -634,23 +722,37 @@ KucoinWithdrawal <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param withdrawalId Character; the unique withdrawal ID.
-    #' @return `data.table` (or `promise<data.table>` if constructed with `async = TRUE`) with one row and columns:
-    #'   - `id` (character): Withdrawal ID.
-    #'   - `currency` (character): Currency code.
-    #'   - `chain_id` (character): Chain identifier (e.g., `"trx"`, `"eth"`).
-    #'   - `chain_name` (character): Chain display name (e.g., `"TRC20"`, `"ERC20"`).
-    #'   - `status` (character): Withdrawal status.
-    #'   - `address` (character): Destination address.
-    #'   - `memo` (character): Address memo/tag.
-    #'   - `is_inner` (logical): Internal transfer flag.
-    #'   - `amount` (character): Withdrawal amount.
-    #'   - `fee` (character): Fee charged.
-    #'   - `wallet_tx_id` (character): On-chain transaction hash (or NA).
-    #'   - `cancel_type` (character): `"CANCELABLE"`, `"CANCELING"`, or `"NON_CANCELABLE"`.
-    #'   - `failure_reason` (character): Failure reason code (or NA).
-    #'   - `failure_reason_msg` (character): Human-readable failure message (or NA).
-    #'   - `created_at` (POSIXct): Creation datetime (coerced from epoch milliseconds).
+    #' @param withdrawalId (scalar<character>) the unique withdrawal ID.
+    #' @return (data.table | promise<data.table>) one row with the full
+    #'   withdrawal detail (id, currency, chain_id, chain_name, status, address,
+    #'   memo, is_inner, amount, fee, wallet_tx_id, cancel_type, failure_reason,
+    #'   failure_reason_msg, created_at, ...), with `created_at` coerced to
+    #'   POSIXct:
+    #' - id (character) the record identifier.
+    #' - currency (character) the currency code.
+    #' - chain_id (character | NA) the chain identifier.
+    #' - chain_name (character | NA) the chain name.
+    #' - status (character) the status.
+    #' - address (character) the address.
+    #' - memo (character) the address memo/tag.
+    #' - is_inner (logical) the is inner.
+    #' - amount (numeric | NA) the amount.
+    #' - fee (numeric | NA) the fee.
+    #' - wallet_tx_id (character | NA) the on-chain wallet transaction hash; NA for internal transfers.
+    #' - created_at (POSIXct) the created at (UTC).
+    #' - cancel_type (character) the cancel type.
+    #' - uid (integer) the user identifier.
+    #' - currency_name (character) the currency name.
+    #' - failure_reason (character | NA) the failure reason.
+    #' - failure_reason_msg (character | NA) the failure reason message, when the withdrawal failed.
+    #' - address_remark (character | NA) the address remark.
+    #' - remark (character | NA) an optional remark.
+    #' - taxes (numeric | NA) the tax amount, when applicable.
+    #' - tax_description (character | NA) the tax description, when applicable.
+    #' - tx_id (character | NA) the transaction id, when present.
+    #' - return_status (character) the return status.
+    #' - return_amount (numeric | NA) the returned amount, when the withdrawal was returned.
+    #' - return_currency (character) the return currency.
     #'
     #' @examples
     #' \dontrun{
@@ -666,13 +768,44 @@ KucoinWithdrawal <- R6::R6Class(
     #' }
     #' }
     get_withdrawal_by_id = function(withdrawalId) {
+      assert_args_KucoinWithdrawal__get_withdrawal_by_id(withdrawalId)
       if (!is.character(withdrawalId) || !nzchar(withdrawalId)) {
         rlang::abort("Parameter 'withdrawalId' must be a non-empty string.")
       }
 
-      return(private$.request(
+      res <- private$.request(
         endpoint = paste0("/api/v1/withdrawals/", withdrawalId),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              id = character(0),
+              currency = character(0),
+              chain_id = character(0),
+              chain_name = character(0),
+              status = character(0),
+              address = character(0),
+              memo = character(0),
+              is_inner = logical(0),
+              amount = numeric(0),
+              fee = numeric(0),
+              wallet_tx_id = character(0),
+              created_at = ms_to_datetime(numeric(0)),
+              cancel_type = character(0),
+              uid = integer(0),
+              currency_name = character(0),
+              failure_reason = character(0),
+              failure_reason_msg = character(0),
+              address_remark = character(0),
+              remark = character(0),
+              taxes = numeric(0),
+              tax_description = character(0),
+              tx_id = character(0),
+              return_status = character(0),
+              return_amount = numeric(0),
+              return_currency = character(0)
+            )[])
+          }
+
           dt <- as_dt_row(data)
           if (nrow(dt) == 0L) {
             return(dt[])
@@ -680,6 +813,11 @@ KucoinWithdrawal <- R6::R6Class(
           if ("created_at" %in% names(dt)) {
             dt[, created_at := ms_to_datetime(created_at)]
           }
+          coerce_cols(
+            dt,
+            c("wallet_tx_id", "tx_id", "failure_reason_msg", "tax_description", "address_remark"),
+            as.character
+          )
           expected <- c(
             "id",
             "currency",
@@ -698,6 +836,11 @@ KucoinWithdrawal <- R6::R6Class(
           data.table::setcolorder(dt, intersect(expected, names(dt)))
           return(dt[])
         }
+      )
+      return(connectcore::then_or_now(
+        res,
+        assert_return_KucoinWithdrawal__get_withdrawal_by_id,
+        is_async = private$.is_async
       ))
     }
   )

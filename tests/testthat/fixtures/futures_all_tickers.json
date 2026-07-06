@@ -1,0 +1,31 @@
+{
+  "code": "200000",
+  "data": [
+    {
+      "sequence": 1729159460,
+      "symbol": "XBTUSDTM",
+      "side": "sell",
+      "size": 1,
+      "price": "98250.0",
+      "bestBidSize": 50,
+      "bestBidPrice": "98249.9",
+      "bestAskPrice": "98250.1",
+      "bestAskSize": 30,
+      "tradeId": "67fd1234abcd5678",
+      "ts": 1729159459033000000
+    },
+    {
+      "sequence": 1729159461,
+      "symbol": "ETHUSDTM",
+      "side": "buy",
+      "size": 5,
+      "price": "3456.78",
+      "bestBidSize": 100,
+      "bestBidPrice": "3456.50",
+      "bestAskPrice": "3457.00",
+      "bestAskSize": 80,
+      "tradeId": "67fd5678efgh9012",
+      "ts": 1729159459034000000
+    }
+  ]
+}

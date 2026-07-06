@@ -1,0 +1,40 @@
+{
+  "code": "200000",
+  "data": {
+    "time": 1729159459033,
+    "ticker": [
+      {
+        "symbol": "BTC-USDT",
+        "symbolName": "BTC-USDT",
+        "buy": "67232.8",
+        "sell": "67232.9",
+        "changeRate": "-0.0114",
+        "changePrice": "-772.1",
+        "high": "68100.0",
+        "low": "66800.0",
+        "vol": "3456.78901234",
+        "volValue": "232456789.12",
+        "last": "67232.9",
+        "averagePrice": "67450.5",
+        "takerFeeRate": "0.001",
+        "makerFeeRate": "0.001"
+      },
+      {
+        "symbol": "ETH-USDT",
+        "symbolName": "ETH-USDT",
+        "buy": "2530.5",
+        "sell": "2530.8",
+        "changeRate": "0.0235",
+        "changePrice": "58.2",
+        "high": "2560.0",
+        "low": "2470.0",
+        "vol": "45678.123",
+        "volValue": "115432000.00",
+        "last": "2530.6",
+        "averagePrice": "2515.3",
+        "takerFeeRate": "0.001",
+        "makerFeeRate": "0.001"
+      }
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "code": "200000",
+  "data": {
+    "items": [
+      {
+        "orderNo": "borrow-order-001",
+        "currency": "USDT",
+        "principal": "1000",
+        "interest": "0.5",
+        "createdTime": 1729655606816
+      },
+      {
+        "orderNo": "borrow-order-002",
+        "currency": "USDT",
+        "principal": "500",
+        "interest": "0.2",
+        "createdTime": 1729655706816
+      }
+    ]
+  }
+}

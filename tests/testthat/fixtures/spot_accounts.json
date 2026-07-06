@@ -1,0 +1,21 @@
+{
+  "code": "200000",
+  "data": [
+    {
+      "id": "6717422bd51c29000775ea01",
+      "currency": "USDT",
+      "type": "trade",
+      "balance": "10000.50",
+      "available": "9500.25",
+      "holds": "500.25"
+    },
+    {
+      "id": "6717422bd51c29000775ea02",
+      "currency": "BTC",
+      "type": "trade",
+      "balance": "1.23456789",
+      "available": "1.0",
+      "holds": "0.23456789"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "code": "200000",
+  "data": [
+    {
+      "currency": "USDT",
+      "purchaseEnable": true,
+      "redeemEnable": true,
+      "increment": "0.01",
+      "minPurchaseSize": "10",
+      "maxPurchaseSize": "1000000",
+      "interestIncrement": "0.0001",
+      "minInterestRate": "0.004",
+      "marketInterestRate": "0.05",
+      "maxInterestRate": "0.1",
+      "autoPurchaseEnable": true
+    },
+    {
+      "currency": "BTC",
+      "purchaseEnable": true,
+      "redeemEnable": true,
+      "increment": "0.00001",
+      "minPurchaseSize": "0.001",
+      "maxPurchaseSize": "100",
+      "interestIncrement": "0.0001",
+      "minInterestRate": "0.003",
+      "marketInterestRate": "0.04",
+      "maxInterestRate": "0.08",
+      "autoPurchaseEnable": true
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "code": "200000",
+  "data": {
+    "currentPage": 1,
+    "pageSize": 50,
+    "totalNum": 1,
+    "totalPage": 1,
+    "items": [
+      {
+        "id": "futures-order-001",
+        "symbol": "XBTUSDTM",
+        "type": "limit",
+        "side": "buy",
+        "price": "98000",
+        "size": 1,
+        "value": "98",
+        "dealValue": "0",
+        "dealSize": 0,
+        "leverage": 5,
+        "marginMode": "ISOLATED",
+        "positionSide": "BOTH",
+        "status": "open",
+        "createdAt": 1729159459033,
+        "updatedAt": 1729159459033,
+        "clientOid": "futures-client-001"
+      }
+    ]
+  }
+}

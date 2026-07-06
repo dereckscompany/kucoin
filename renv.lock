@@ -60,6 +60,46 @@
       "Maintainer": "Jeroen Ooms <jeroenooms@gmail.com>",
       "Repository": "CRAN"
     },
+    "assert": {
+      "Package": "assert",
+      "Version": "0.0.9",
+      "Source": "GitHub",
+      "Title": "Readable Assertions for Validating Function Inputs and Outputs",
+      "URL": "https://dereckscompany.github.io/assert, https://github.com/dereckscompany/assert",
+      "BugReports": "https://github.com/dereckscompany/assert/issues",
+      "Authors@R": "person(given = \"Dereck\", family = \"Mezquita\", role = c(\"aut\", \"cre\"), email = \"dereck@mezquita.io\", comment = c(ORCID = \"0000-0002-9307-6762\"))",
+      "Description": "A lightweight toolkit of assertion helpers for checking the inputs and outputs of your functions. Each assertion checks a single condition, returns its input invisibly so checks can be stacked, and raises a clear error pointing at the calling function when the condition is not met. Covers scalars, vectors, lists, data frames and data tables, value constraints, comparisons, and relationships between arguments.",
+      "License": "MIT",
+      "Encoding": "UTF-8",
+      "Roxygen": "list(markdown = TRUE)",
+      "RoxygenNote": "7.3.3",
+      "Suggests": [
+        "box",
+        "covr",
+        "data.table",
+        "DT",
+        "knitr",
+        "lintr",
+        "pkgdown",
+        "rcmdcheck",
+        "rmarkdown",
+        "testthat (>= 3.0.0)"
+      ],
+      "VignetteBuilder": "knitr",
+      "Config/testthat/edition": "3",
+      "Imports": [
+        "cli",
+        "rlang"
+      ],
+      "Author": "Dereck Mezquita [aut, cre] (ORCID: <https://orcid.org/0000-0002-9307-6762>)",
+      "Maintainer": "Dereck Mezquita <dereck@mezquita.io>",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "dereckscompany",
+      "RemoteRepo": "assert",
+      "RemoteRef": "master",
+      "RemoteSha": "aa24fb79daa5112648f9d21db4983fc12e19c1a7"
+    },
     "base64enc": {
       "Package": "base64enc",
       "Version": "0.1-6",
@@ -131,14 +171,14 @@
     },
     "connectcore": {
       "Package": "connectcore",
-      "Version": "0.1.0",
+      "Version": "0.2.0",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
       "RemoteUsername": "dereckscompany",
       "RemoteRepo": "connectcore",
-      "RemoteRef": "v0.1.0",
-      "RemoteSha": "2213ad8c7b56ebedf83c82226a37da50168aa2ce"
+      "RemoteRef": "v0.2.0",
+      "RemoteSha": "90bcee88e44b0d402a4a3ec62c0872f428823393"
     },
     "cpp11": {
       "Package": "cpp11",
@@ -732,6 +772,17 @@
       "Maintainer": "Lionel Henry <lionel@posit.co>",
       "Repository": "https://packagemanager.posit.co/cran/latest"
     },
+    "roxyassert": {
+      "Package": "roxyassert",
+      "Version": "0.9.1",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "dereckscompany",
+      "RemoteRepo": "roxyassert",
+      "RemoteRef": "v0.9.1",
+      "RemoteSha": "8fc6101b91f3f33cdfa85ebf155ed268d885977e"
+    },
     "sys": {
       "Package": "sys",
       "Version": "3.4.3",
@@ -783,6 +834,11 @@
       "Author": "Vitalie Spinu [aut, cre], Google Inc. [ctb, cph]",
       "Maintainer": "Vitalie Spinu <spinuvit@gmail.com>",
       "Repository": "CRAN"
+    },
+    "uuid": {
+      "Package": "uuid",
+      "Version": "1.2.2",
+      "Source": "Repository"
     },
     "vctrs": {
       "Package": "vctrs",

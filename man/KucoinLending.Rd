@@ -223,31 +223,16 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{query}}{Named list; optional filter. Supported keys:
-\itemize{
-\item \code{currency} (character): Filter by currency (e.g., \code{"USDT"}).
-}}
+\item{\code{query}}{(list) optional filter; supported key \code{currency}
+(scalar<character>) filters by currency (e.g., \code{"USDT"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
-with \strong{one row per lending currency} and columns:
-\itemize{
-\item \code{currency} (character): Currency code (e.g. \code{"USDT"}).
-\item \code{purchase_enable} (logical): Whether new purchases are accepted.
-\item \code{redeem_enable} (logical): Whether redemptions are accepted.
-\item \code{increment} (character): Smallest purchase-size step.
-\item \code{min_purchase_size} (character): Minimum purchase amount.
-\item \code{max_purchase_size} (character): Maximum purchase amount.
-\item \code{interest_increment} (character): Smallest interest-rate step.
-\item \code{min_interest_rate} (character): Minimum permitted interest rate.
-\item \code{market_interest_rate} (character): Current market rate.
-\item \code{max_interest_rate} (character): Maximum permitted interest rate.
-\item \code{auto_purchase_enable} (logical): Whether auto-purchase is available.
-}
-
-Empty response yields an empty \code{data.table}.
+(data.table | promise<data.table>) one row per lending currency
+with currency code, purchase/redeem enablement flags, size increments and
+bounds, and the minimum, market, and maximum interest rates; an empty
+response yields an empty data.table.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -277,7 +262,8 @@ past 7 days.
 
 \subsection{Official Documentation}{
 
-\href{https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-loan-market-interest-rate}{KuCoin Get Market Interest Rate}
+KuCoin Get Market Interest Rate:
+\url{https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-loan-market-interest-rate}
 
 Verified: 2026-05-23
 }
@@ -314,19 +300,14 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{currency}}{Character; the currency to query (e.g., \code{"USDT"}).}
+\item{\code{currency}}{(scalar<character>) the currency to query (e.g., \code{"USDT"}).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
-with \strong{one row per observation} and columns:
-\itemize{
-\item \code{time} (character): Timestamp string (YYYYMMDDHHmm format).
-\item \code{market_interest_rate} (character): Market interest rate at that time.
-}
-
-Empty response yields an empty \code{data.table}.
+(data.table | promise<data.table>) one row per observation with the
+timestamp string (YYYYMMDDHHmm format) and the market interest rate at that
+time; an empty response yields an empty data.table.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -401,18 +382,20 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{currency}}{Character; the currency to lend (e.g., \code{"USDT"}).}
+\item{\code{currency}}{(scalar<character>) the currency to lend (e.g., \code{"USDT"}).}
 
-\item{\code{size}}{Numeric; the amount to lend.}
+\item{\code{size}}{(scalar<numeric>) the amount to lend.}
 
-\item{\code{interestRate}}{Numeric; the interest rate (e.g., \code{0.05} for 5\%).}
+\item{\code{interestRate}}{(scalar<numeric>) the interest rate (e.g., \code{0.05} for
+5\%).}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with column:
+(data.table | promise<data.table>) one row with the lending order
+number:
 \itemize{
-\item \code{order_no} (character): Lending order number.
+\item order_no (character) the order number.
 }
 }
 \subsection{Examples}{
@@ -486,21 +469,21 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{currency}}{Character; the currency of the lending order.}
+\item{\code{currency}}{(scalar<character>) the currency of the lending order.}
 
-\item{\code{purchaseOrderNo}}{Character; the order number to modify.}
+\item{\code{purchaseOrderNo}}{(scalar<character>) the order number to modify.}
 
-\item{\code{interestRate}}{Numeric; the new interest rate.}
+\item{\code{interestRate}}{(scalar<numeric>) the new interest rate.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if \code{async = TRUE}), single row with columns:
+(data.table | promise<data.table>) one row echoing the request:
 \itemize{
-\item \code{currency} (character): The lending currency.
-\item \code{purchase_order_no} (character): The modified order number.
-\item \code{interest_rate} (numeric): The new interest rate.
-\item \code{status} (character): \code{"success"}.
+\item currency (character) the lending currency.
+\item purchase_order_no (character) the modified order number.
+\item interest_rate (numeric | NA) the new interest rate.
+\item status (character) the local outcome marker, always \code{"success"}.
 }
 }
 \subsection{Examples}{
@@ -582,32 +565,17 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{query}}{Named list; filters. Supported keys:
-\itemize{
-\item \code{status} (character): \strong{Required.} Order status (e.g., \code{"DONE"}, \code{"PENDING"}).
-\item \code{currency} (character): Currency filter (e.g., \code{"USDT"}).
-\item \code{purchaseOrderNo} (character): Specific order number.
-\item \code{currentPage} (integer): Page number.
-\item \code{pageSize} (integer): Items per page.
-}}
+\item{\code{query}}{(list) filters; supported keys \code{status} (required, e.g.
+\code{"DONE"}, \code{"PENDING"}), \code{currency}, \code{purchaseOrderNo}, \code{currentPage}, and
+\code{pageSize}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
-with \strong{one row per purchase order} and columns:
-\itemize{
-\item \code{currency} (character): Lent currency.
-\item \code{purchase_order_no} (character): Purchase order number.
-\item \code{purchase_size} (character): Amount lent.
-\item \code{match_size} (character): Amount that has been matched.
-\item \code{interest_rate} (character): Rate of the lending order.
-\item \code{income_size} (character): Accrued income so far.
-\item \code{apply_time} (POSIXct): Order creation time (millisecond epoch coerced).
-\item \code{status} (character): Order status (e.g. \code{"DONE"}).
-}
-
-Empty response yields an empty \code{data.table}.
+(data.table | promise<data.table>) one row per purchase order with
+the currency, purchase order number, amount lent, matched amount, interest
+rate, accrued income, order creation time, and status; an empty response
+yields an empty data.table.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -682,18 +650,20 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{currency}}{Character; the currency to redeem (e.g., \code{"USDT"}).}
+\item{\code{currency}}{(scalar<character>) the currency to redeem (e.g., \code{"USDT"}).}
 
-\item{\code{size}}{Numeric; the amount to redeem.}
+\item{\code{size}}{(scalar<numeric>) the amount to redeem.}
 
-\item{\code{purchaseOrderNo}}{Character; the purchase order to redeem from.}
+\item{\code{purchaseOrderNo}}{(scalar<character>) the purchase order to redeem
+from.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE}) with column:
+(data.table | promise<data.table>) one row with the redemption order
+number:
 \itemize{
-\item \code{order_no} (character): Redemption order number.
+\item order_no (character) the order number.
 }
 }
 \subsection{Examples}{
@@ -773,31 +743,17 @@ Verified: 2026-05-23
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{query}}{Named list; filters. Supported keys:
-\itemize{
-\item \code{status} (character): \strong{Required.} Order status (e.g., \code{"DONE"}, \code{"PENDING"}).
-\item \code{currency} (character): Currency filter (e.g., \code{"USDT"}).
-\item \code{redeemOrderNo} (character): Specific redemption order number.
-\item \code{currentPage} (integer): Page number.
-\item \code{pageSize} (integer): Items per page.
-}}
+\item{\code{query}}{(list) filters; supported keys \code{status} (required, e.g.
+\code{"DONE"}, \code{"PENDING"}), \code{currency}, \code{redeemOrderNo}, \code{currentPage}, and
+\code{pageSize}.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.table} (or \verb{promise<data.table>} if constructed with \code{async = TRUE})
-with \strong{one row per redemption order} and columns:
-\itemize{
-\item \code{currency} (character): Redeemed currency.
-\item \code{purchase_order_no} (character): Source purchase order.
-\item \code{redeem_order_no} (character): Redemption order number.
-\item \code{redeem_size} (character): Requested redeem amount.
-\item \code{receipt_size} (character): Amount actually received.
-\item \code{apply_time} (POSIXct): Order creation time (millisecond epoch coerced).
-\item \code{status} (character): Order status (e.g. \code{"DONE"}).
-}
-
-Empty response yields an empty \code{data.table}.
+(data.table | promise<data.table>) one row per redemption order with
+the currency, source purchase order, redemption order number, requested
+redeem amount, amount actually received, order creation time, and status;
+an empty response yields an empty data.table.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

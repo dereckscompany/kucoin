@@ -1,0 +1,16 @@
+{
+  "code": "200000",
+  "data": {
+    "sequence": 1744931221320,
+    "symbol": "XBTUSDTM",
+    "side": "sell",
+    "size": 1,
+    "price": "98250.0",
+    "bestBidSize": 50,
+    "bestBidPrice": "98249.9",
+    "bestAskPrice": "98250.1",
+    "bestAskSize": 30,
+    "tradeId": "67fd1234abcd5678",
+    "ts": 1729159459033000000
+  }
+}
