@@ -357,7 +357,9 @@ KucoinMarginTrading <- R6::R6Class(
     #'   Default `FALSE`.
     #' @return (data.table | promise<data.table>) one row giving the
     #'   KuCoin-assigned order identifier and the client-provided order
-    #'   identifier (NA if not supplied).
+    #'   identifier (NA if not supplied):
+    #' - order_id (character) the system order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -517,7 +519,9 @@ KucoinMarginTrading <- R6::R6Class(
     #'   Default `FALSE`.
     #' @return (data.table | promise<data.table>) one row giving the
     #'   KuCoin-assigned order identifier, the client-provided order identifier,
-    #'   the amount borrowed, and the loan application ID.
+    #'   the amount borrowed, and the loan application ID:
+    #' - order_id (character) the system order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -678,7 +682,9 @@ KucoinMarginTrading <- R6::R6Class(
     #'   Default `FALSE`.
     #' @return (data.table | promise<data.table>) one row giving the
     #'   KuCoin-assigned order identifier and the client-provided order
-    #'   identifier (NA if not supplied).
+    #'   identifier (NA if not supplied):
+    #' - order_id (character) the system order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -822,7 +828,9 @@ KucoinMarginTrading <- R6::R6Class(
     #' @param isHf (scalar<logical>) `TRUE` for high-frequency trading mode,
     #'   `FALSE` (default).
     #' @return (data.table | promise<data.table>) one row giving the borrow order
-    #'   number and the amount actually borrowed.
+    #'   number and the amount actually borrowed:
+    #' - order_no (character) the order number.
+    #' - actual_size (numeric | NA) the actual filled size.
     #'
     #' @examples
     #' \dontrun{
@@ -878,7 +886,12 @@ KucoinMarginTrading <- R6::R6Class(
         endpoint = "/api/v3/margin/borrow",
         method = "POST",
         body = body,
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(order_no = character(0), actual_size = character(0))[])
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,
@@ -1379,7 +1392,7 @@ KucoinMarginTrading <- R6::R6Class(
     #' @param leverage (scalar<numeric>) the desired leverage multiplier (e.g.,
     #'   `3`, `5`, `10`).
     #' @return (data.table | promise<data.table>) one row:
-    #' - leverage (numeric) the new leverage multiplier.
+    #' - leverage (numeric | NA) the new leverage multiplier.
     #' - status (character) the local outcome marker, always `"success"`.
     #' @noassert leverage
     #'
@@ -1496,6 +1509,10 @@ KucoinMarginTrading <- R6::R6Class(
         method = "POST",
         body = body,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_order_ack())
+          }
+
           dt <- as_dt_row(data)
           if (is.null(dt$client_oid)) {
             dt[, client_oid := NA_character_]

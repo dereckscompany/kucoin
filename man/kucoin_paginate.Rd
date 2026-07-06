@@ -34,7 +34,13 @@ kucoin_paginate(
 
 \item{body}{(list | NULL) request body. Default \code{NULL}.}
 
-\item{keys}{(list | NULL) API credentials. Default \code{NULL}.}
+\item{keys}{(list | NULL) API credentials from \code{\link[=get_api_keys]{get_api_keys()}}, or \code{NULL}:
+\itemize{
+\item api_key (character) the API key.
+\item api_secret (character) the API secret.
+\item api_passphrase (character) the API passphrase.
+\item key_version (character) the API key version.
+}}
 
 \item{sign}{(function | NULL) the \code{.sign()} seam forwarded to
 \code{\link[connectcore:build_request]{connectcore::build_request()}}. Default \code{NULL} (use KuCoin's own

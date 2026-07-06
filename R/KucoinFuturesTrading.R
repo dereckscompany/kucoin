@@ -191,7 +191,9 @@ KucoinFuturesTrading <- R6::R6Class(
     #' @param remark (scalar<character> | NULL) order notes.
     #' @param ... Additional order parameters.
     #' @return (data.table | promise<data.table>) one row giving the system-assigned order ID and the client-provided
-    #'   order ID.
+    #'   order ID:
+    #' - order_id (character) the system order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -273,6 +275,10 @@ KucoinFuturesTrading <- R6::R6Class(
         method = "POST",
         body = body,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_order_ack())
+          }
+
           return(as_dt_row(data))
         }
       )
@@ -371,7 +377,9 @@ KucoinFuturesTrading <- R6::R6Class(
     #' @param remark (scalar<character> | NULL) order notes.
     #' @param ... Additional order parameters.
     #' @return (data.table | promise<data.table>) one row giving the simulated order ID and the client-provided order
-    #'   ID.
+    #'   ID:
+    #' - order_id (character) the system order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -442,6 +450,10 @@ KucoinFuturesTrading <- R6::R6Class(
         method = "POST",
         body = body,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_order_ack())
+          }
+
           return(as_dt_row(data))
         }
       )
@@ -559,7 +571,9 @@ KucoinFuturesTrading <- R6::R6Class(
     #'   (i.e., `clientOid`, `symbol`, `side`, `type`, `leverage`, `size`, and optional
     #'   `price`, `marginMode`, `positionSide`, etc.).
     #' @return (data.table | promise<data.table>) one row per order result giving the system-assigned order ID, the
-    #'   client-provided order ID, the futures symbol, the per-order status code, and the per-order status message.
+    #'   client-provided order ID, the futures symbol, the per-order status code, and the per-order status message:
+    #' - order_id (character) the system order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -581,6 +595,10 @@ KucoinFuturesTrading <- R6::R6Class(
         method = "POST",
         body = orders,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_order_ack())
+          }
+
           return(as_dt_list(data))
         }
       )
@@ -900,7 +918,8 @@ KucoinFuturesTrading <- R6::R6Class(
     #' @param symbol (scalar<character> | NULL) filter by futures symbol. When NULL,
     #'   cancels all untriggered stop orders across all symbols.
     #' @return (data.table | promise<data.table>) one row per cancelled order giving the cancelled order ID; an empty
-    #'   data.table if no orders matched.
+    #'   data.table if no orders matched:
+    #' - cancelled_order_id (character) the cancelled order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -926,7 +945,7 @@ KucoinFuturesTrading <- R6::R6Class(
             data$cancelledOrderIds <- NULL
           }
           if (is.null(ids) || length(ids) == 0) {
-            return(data.table::data.table()[])
+            return(data.table::data.table(cancelled_order_id = character(0))[])
           }
           dt <- as_dt_row(data)
           id_vals <- as.character(unlist(ids, use.names = FALSE))
@@ -1031,7 +1050,23 @@ KucoinFuturesTrading <- R6::R6Class(
     #'
     #' @param orderId (scalar<character>) the system order ID.
     #' @return (data.table | promise<data.table>) one row of full order details, including the creation and last-updated
-    #'   datetimes (POSIXct, coerced from epoch milliseconds).
+    #'   datetimes (POSIXct, coerced from epoch milliseconds):
+    #' - id (character) the record identifier.
+    #' - symbol (character) the trading pair symbol.
+    #' - type (character) the type.
+    #' - side (character) the order side.
+    #' - price (numeric | NA) the price.
+    #' - size (numeric | NA) the size.
+    #' - value (numeric | NA) the order value.
+    #' - deal_value (numeric | NA) the filled value.
+    #' - deal_size (numeric | NA) the filled size.
+    #' - leverage (integer | NA) the leverage.
+    #' - margin_mode (character) the margin mode.
+    #' - position_side (character) the position side.
+    #' - status (character) the status.
+    #' - created_at (POSIXct) the created at (UTC).
+    #' - updated_at (POSIXct | NA) the updated at (UTC).
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -1045,6 +1080,10 @@ KucoinFuturesTrading <- R6::R6Class(
       res <- private$.request(
         endpoint = paste0("/api/v1/orders/", orderId),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_futures_order())
+          }
+
           dt <- as_dt_row(data)
           if (nrow(dt) > 0 && "created_at" %in% names(dt)) {
             dt[, created_at := ms_to_datetime(created_at)]
@@ -1150,7 +1189,23 @@ KucoinFuturesTrading <- R6::R6Class(
     #' ```
     #'
     #' @param clientOid (scalar<character>) the client order ID.
-    #' @return (data.table | promise<data.table>) one row of full order details; same columns as `get_order_by_id()`.
+    #' @return (data.table | promise<data.table>) one row of full order details; same columns as `get_order_by_id()`:
+    #' - id (character) the record identifier.
+    #' - symbol (character) the trading pair symbol.
+    #' - type (character) the type.
+    #' - side (character) the order side.
+    #' - price (numeric | NA) the price.
+    #' - size (numeric | NA) the size.
+    #' - value (numeric | NA) the order value.
+    #' - deal_value (numeric | NA) the filled value.
+    #' - deal_size (numeric | NA) the filled size.
+    #' - leverage (integer | NA) the leverage.
+    #' - margin_mode (character) the margin mode.
+    #' - position_side (character) the position side.
+    #' - status (character) the status.
+    #' - created_at (POSIXct) the created at (UTC).
+    #' - updated_at (POSIXct | NA) the updated at (UTC).
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -1165,6 +1220,10 @@ KucoinFuturesTrading <- R6::R6Class(
         endpoint = "/api/v1/orders/byClientOid",
         query = list(clientOid = clientOid),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_futures_order())
+          }
+
           dt <- as_dt_row(data)
           if (nrow(dt) > 0 && "created_at" %in% names(dt)) {
             dt[, created_at := ms_to_datetime(created_at)]
@@ -1276,7 +1335,23 @@ KucoinFuturesTrading <- R6::R6Class(
     #'   open orders, `status = "done"` for closed orders. Optional: `symbol`,
     #'   `side`, `type`, `startAt`, `endAt`.
     #' @return (data.table | promise<data.table>) one row per order record (same columns as `get_order_by_id()`); an
-    #'   empty data.table if no orders match the filters.
+    #'   empty data.table if no orders match the filters:
+    #' - id (character) the record identifier.
+    #' - symbol (character) the trading pair symbol.
+    #' - type (character) the type.
+    #' - side (character) the order side.
+    #' - price (numeric | NA) the price.
+    #' - size (numeric | NA) the size.
+    #' - value (numeric | NA) the order value.
+    #' - deal_value (numeric | NA) the filled value.
+    #' - deal_size (numeric | NA) the filled size.
+    #' - leverage (integer | NA) the leverage.
+    #' - margin_mode (character) the margin mode.
+    #' - position_side (character) the position side.
+    #' - status (character) the status.
+    #' - created_at (POSIXct) the created at (UTC).
+    #' - updated_at (POSIXct | NA) the updated at (UTC).
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -1301,6 +1376,9 @@ KucoinFuturesTrading <- R6::R6Class(
         query = query,
         .parser = function(pages) {
           dt <- flatten_pages(pages)
+          if (nrow(dt) == 0L) {
+            return(empty_dt_futures_order())
+          }
           if (nrow(dt) > 0 && "created_at" %in% names(dt)) {
             dt[, created_at := ms_to_datetime(created_at)]
           }
@@ -1405,7 +1483,23 @@ KucoinFuturesTrading <- R6::R6Class(
     #'
     #' @param symbol (scalar<character> | NULL) filter by futures symbol.
     #' @return (data.table | promise<data.table>) one row per order record (same columns as `get_order_by_id()`); an
-    #'   empty data.table if no recently closed orders exist.
+    #'   empty data.table if no recently closed orders exist:
+    #' - id (character) the record identifier.
+    #' - symbol (character) the trading pair symbol.
+    #' - type (character) the type.
+    #' - side (character) the order side.
+    #' - price (numeric | NA) the price.
+    #' - size (numeric | NA) the size.
+    #' - value (numeric | NA) the order value.
+    #' - deal_value (numeric | NA) the filled value.
+    #' - deal_size (numeric | NA) the filled size.
+    #' - leverage (integer | NA) the leverage.
+    #' - margin_mode (character) the margin mode.
+    #' - position_side (character) the position side.
+    #' - status (character) the status.
+    #' - created_at (POSIXct) the created at (UTC).
+    #' - updated_at (POSIXct | NA) the updated at (UTC).
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -1424,6 +1518,10 @@ KucoinFuturesTrading <- R6::R6Class(
         endpoint = "/api/v1/recentDoneOrders",
         query = list(symbol = symbol),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_futures_order())
+          }
+
           dt <- as_dt_list(data)
           if (nrow(dt) > 0 && "created_at" %in% names(dt)) {
             dt[, created_at := ms_to_datetime(created_at)]
@@ -1759,7 +1857,24 @@ KucoinFuturesTrading <- R6::R6Class(
     #'
     #' @param symbol (scalar<character> | NULL) filter by futures symbol.
     #' @return (data.table | promise<data.table>) one row per fill (same columns as `get_fills()`); an empty data.table
-    #'   if no recent fills exist.
+    #'   if no recent fills exist:
+    #' - symbol (character) the trading pair symbol.
+    #' - trade_id (character) the trade identifier.
+    #' - order_id (character) the system order identifier.
+    #' - side (character) the order side.
+    #' - liquidity (character) the liquidity role.
+    #' - force_taker (logical) the force taker.
+    #' - price (numeric | NA) the price.
+    #' - size (numeric | NA) the size.
+    #' - value (numeric | NA) the order value.
+    #' - fee_rate (numeric | NA) the fee rate.
+    #' - fix_fee (numeric | NA) the fix fee.
+    #' - fee_currency (character) the fee currency.
+    #' - fee (numeric | NA) the fee.
+    #' - order_type (character) the order type.
+    #' - trade_type (character) the trade type.
+    #' - trade_time (POSIXct) the trade time (UTC).
+    #' - created_at (POSIXct) the created at (UTC).
     #'
     #' @examples
     #' \dontrun{
@@ -1778,6 +1893,28 @@ KucoinFuturesTrading <- R6::R6Class(
         endpoint = "/api/v1/recentFills",
         query = list(symbol = symbol),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              symbol = character(0),
+              trade_id = character(0),
+              order_id = character(0),
+              side = character(0),
+              liquidity = character(0),
+              force_taker = logical(0),
+              price = numeric(0),
+              size = numeric(0),
+              value = numeric(0),
+              fee_rate = numeric(0),
+              fix_fee = numeric(0),
+              fee_currency = character(0),
+              fee = numeric(0),
+              order_type = character(0),
+              trade_type = character(0),
+              trade_time = ms_to_datetime(numeric(0)),
+              created_at = ms_to_datetime(numeric(0))
+            )[])
+          }
+
           dt <- as_dt_list(data)
           if (nrow(dt) > 0 && "trade_time" %in% names(dt)) {
             dt[, trade_time := ns_to_datetime(trade_time)]
@@ -1845,7 +1982,12 @@ KucoinFuturesTrading <- R6::R6Class(
     #'
     #' @param symbol (scalar<character>) futures symbol (e.g., `"XBTUSDTM"`).
     #' @return (data.table | promise<data.table>) one row giving the total buy order size, total sell order
-    #'   size, total buy order cost, total sell order cost, and the settlement currency.
+    #'   size, total buy order cost, total sell order cost, and the settlement currency:
+    #' - open_order_buy_size (integer | NA) the open order buy size.
+    #' - open_order_sell_size (integer | NA) the open order sell size.
+    #' - open_order_buy_cost (numeric | NA) the open order buy cost.
+    #' - open_order_sell_cost (numeric | NA) the open order sell cost.
+    #' - settle_currency (character) the settle currency.
     #'
     #' @examples
     #' \dontrun{
@@ -1860,6 +2002,16 @@ KucoinFuturesTrading <- R6::R6Class(
         endpoint = "/api/v1/openOrderStatistics",
         query = list(symbol = symbol),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              open_order_buy_size = integer(0),
+              open_order_sell_size = integer(0),
+              open_order_buy_cost = numeric(0),
+              open_order_sell_cost = numeric(0),
+              settle_currency = character(0)
+            )[])
+          }
+
           return(as_dt_row(data))
         }
       )
@@ -1943,8 +2095,11 @@ KucoinFuturesTrading <- R6::R6Class(
     #'   Use `-1` to disable DCP.
     #' @param symbol (scalar<character> | NULL) restrict DCP to a specific futures symbol.
     #'   When NULL, DCP applies to all symbols.
-    #' @return (data.table | promise<data.table>) one row giving the configured timeout in seconds, the applicable
-    #'   symbols (empty for all), and the server time when DCP was set.
+    #' @return (data.table | promise<data.table>) one row acknowledging the DCP configuration change:
+    #' - trade_type (character) the trading account the setting applies to (always "FUTURES").
+    #' - symbol (character | NA) the futures symbol the setting is scoped to; NA when it applies to all symbols.
+    #' - system_time (numeric) the server time when the setting was applied, epoch.
+    #' - trigger_time (numeric) the epoch time at which armed DCP would fire; 0 when DCP is disabled.
     #'
     #' @examples
     #' \dontrun{
@@ -1967,7 +2122,20 @@ KucoinFuturesTrading <- R6::R6Class(
         body = body,
         base_url = get_base_url(),
         .parser = function(data) {
-          return(as_dt_row(data))
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              trade_type = character(0),
+              symbol = character(0),
+              system_time = numeric(0),
+              trigger_time = numeric(0)
+            )[])
+          }
+
+          dt <- as_dt_row(data)
+          dt[, symbol := as.character(symbol)]
+          dt[, system_time := as.numeric(system_time)]
+          dt[, trigger_time := as.numeric(trigger_time)]
+          return(dt[])
         }
       )
       return(connectcore::then_or_now(
@@ -2034,7 +2202,10 @@ KucoinFuturesTrading <- R6::R6Class(
     #' @param symbol (scalar<character> | NULL) query DCP settings for a specific futures symbol.
     #'   When NULL, returns the global DCP configuration.
     #' @return (data.table | promise<data.table>) one row giving the configured timeout in seconds, the applicable
-    #'   symbols, and the server time of the query.
+    #'   symbols, and the server time of the query:
+    #' - timeout (integer | NA) the timeout.
+    #' - symbols (character) the symbols.
+    #' - current_time (numeric) the current time.
     #'
     #' @examples
     #' \dontrun{
@@ -2056,6 +2227,14 @@ KucoinFuturesTrading <- R6::R6Class(
         query = query,
         base_url = get_base_url(),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              timeout = integer(0),
+              symbols = character(0),
+              current_time = numeric(0)
+            )[])
+          }
+
           return(as_dt_row(data))
         }
       )

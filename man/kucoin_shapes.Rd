@@ -5,16 +5,16 @@
 \title{KuCoin return shapes}
 \description{
 Reusable roxyassert \verb{@type} shapes for the parsed KuCoin
-\code{data.table}s with a fixed schema. Column types follow the package
-convention: \code{numeric} is the strict double (every continuous price/size/volume
-value), \code{count} is a non-negative whole number (the 1-indexed order-book
-\code{level}, which the parser builds with \code{seq_along()} so it is never NA), and an
-identifier the parser stringifies (\code{sequence}) is \code{character}. Datetime
-columns are the parser's \code{POSIXct} (UTC). These shapes carry no \verb{| NA}: each
-parser coerces every value to its column type (\code{as.numeric()} /
-\code{lubridate::as_datetime()} / \code{as.character()}) and the fixed-schema parsers
-never coalesce a missing field to \code{NA} within a row, so a present row is
-always fully typed and an empty result is the typed zero-row table.
+\code{data.table}s with a fixed schema. Column types follow the package's
+lean-permissive convention. The continuous measurement columns (prices,
+sizes, volume, turnover) are \code{numeric | NA}: they carry the strict double
+type but tolerate a missing value, since a contract stricter than the live
+feed can guarantee is a latent abort. The structural columns stay strict:
+\code{count} is a non-negative whole number (the 1-indexed order-book \code{level},
+which the parser builds with \code{seq_along()} so it is never NA), the identifier
+the parser stringifies (\code{sequence}) is \code{character}, \code{side} is \code{character}, and
+datetime columns are the parser's \code{POSIXct} (UTC). An empty result is the
+typed zero-row table.
 
 Shapes: \code{Klines} (the spot and futures OHLCV candles -- identical column set
 and types; they differ only upstream, spot values arriving as strings and

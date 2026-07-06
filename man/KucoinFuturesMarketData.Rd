@@ -600,7 +600,20 @@ generation.
 ticker snapshot: the sequence number, contract symbol, last trade side,
 size, trade identifier and price, the best bid and ask prices with their
 sizes, and the ticker datetime (POSIXct, coerced from the nanosecond
-timestamp).
+timestamp):
+\itemize{
+\item sequence (numeric) the sequence.
+\item symbol (character) the trading pair symbol.
+\item side (character) the order side.
+\item size (numeric | NA) the size.
+\item price (numeric | NA) the price.
+\item best_bid_size (numeric | NA) the best bid size.
+\item best_bid_price (numeric | NA) the best bid price.
+\item best_ask_price (numeric | NA) the best ask price.
+\item best_ask_size (numeric | NA) the best ask size.
+\item trade_id (character) the trade identifier.
+\item ts (POSIXct) the ts (UTC).
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -792,7 +805,16 @@ Default \code{20}.}
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) the level-2 order book in long
-format (ts, sequence, side, level, price, size, and symbol when present).
+format (ts, sequence, side, level, price, size, and symbol when present):
+\itemize{
+\item ts (POSIXct) the ts (UTC).
+\item sequence (character) the sequence.
+\item side (character) the order side.
+\item level (integer | NA) the tier level.
+\item price (numeric | NA) the price.
+\item size (numeric | NA) the size.
+\item symbol (character) the trading pair symbol.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -890,7 +912,16 @@ Verified: 2026-05-23
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) the level-2 order book in long
-format (ts, sequence, side, level, price, size, and symbol when present).
+format (ts, sequence, side, level, price, size, and symbol when present):
+\itemize{
+\item ts (POSIXct) the ts (UTC).
+\item sequence (character) the sequence.
+\item side (character) the order side.
+\item level (integer | NA) the tier level.
+\item price (numeric | NA) the price.
+\item size (numeric | NA) the size.
+\item symbol (character) the trading pair symbol.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1206,7 +1237,14 @@ Verified: 2026-05-23
 (data.table | promise<data.table>) one row giving the current mark
 price: the contract symbol, price granularity in milliseconds, the rate
 datetime (POSIXct, coerced from epoch milliseconds), the mark price, and
-the underlying index price.
+the underlying index price:
+\itemize{
+\item symbol (character) the trading pair symbol.
+\item granularity (integer | NA) the granularity.
+\item time_point (POSIXct) the time point (UTC).
+\item value (numeric | NA) the order value.
+\item index_price (numeric | NA) the index price.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1301,7 +1339,18 @@ funding rate: the contract symbol, funding interval in milliseconds, the
 rate datetime (POSIXct, coerced from epoch milliseconds), the current
 funding rate, the daily interest rate, the funding-rate cap and floor, the
 funding period, and the next funding settlement datetime (POSIXct, coerced
-from epoch milliseconds).
+from epoch milliseconds):
+\itemize{
+\item symbol (character) the trading pair symbol.
+\item granularity (integer | NA) the granularity.
+\item time_point (POSIXct) the time point (UTC).
+\item value (numeric | NA) the order value.
+\item daily_interest_rate (numeric | NA) the daily interest rate.
+\item funding_rate_cap (numeric | NA) the funding rate cap.
+\item funding_rate_floor (numeric | NA) the funding rate floor.
+\item period (integer | NA) the period.
+\item funding_time (POSIXct) the funding time (UTC).
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1483,7 +1532,10 @@ Verified: 2026-05-23
 
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the server
-datetime (POSIXct, coerced from epoch milliseconds).
+datetime (POSIXct, coerced from epoch milliseconds):
+\itemize{
+\item server_time (POSIXct) the server time (UTC).
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1559,7 +1611,11 @@ windows.
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the operational
 status (\code{"open"}, \code{"close"}, or \code{"cancelonly"}) and an optional
-remark/message.
+remark/message:
+\itemize{
+\item status (character) the status.
+\item msg (character) the msg.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

@@ -262,7 +262,8 @@ KucoinLending <- R6::R6Class(
     #' @param interestRate (scalar<numeric>) the interest rate (e.g., `0.05` for
     #'   5%).
     #' @return (data.table | promise<data.table>) one row with the lending order
-    #'   number.
+    #'   number:
+    #' - order_no (character) the order number.
     #'
     #' @examples
     #' \dontrun{
@@ -292,7 +293,12 @@ KucoinLending <- R6::R6Class(
         endpoint = "/api/v3/purchase",
         method = "POST",
         body = body,
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_order_no())
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,
@@ -350,7 +356,7 @@ KucoinLending <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row echoing the request:
     #' - currency (character) the lending currency.
     #' - purchase_order_no (character) the modified order number.
-    #' - interest_rate (numeric) the new interest rate.
+    #' - interest_rate (numeric | NA) the new interest rate.
     #' - status (character) the local outcome marker, always `"success"`.
     #'
     #' @examples
@@ -556,7 +562,8 @@ KucoinLending <- R6::R6Class(
     #' @param purchaseOrderNo (scalar<character>) the purchase order to redeem
     #'   from.
     #' @return (data.table | promise<data.table>) one row with the redemption order
-    #'   number.
+    #'   number:
+    #' - order_no (character) the order number.
     #'
     #' @examples
     #' \dontrun{
@@ -588,7 +595,12 @@ KucoinLending <- R6::R6Class(
         endpoint = "/api/v3/redeem",
         method = "POST",
         body = body,
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_order_no())
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,

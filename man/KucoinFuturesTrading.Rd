@@ -550,7 +550,11 @@ accidental position increases.
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the system-assigned order ID and the client-provided
-order ID.
+order ID:
+\itemize{
+\item order_id (character) the system order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -726,7 +730,11 @@ permissions and symbols are correct.
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the simulated order ID and the client-provided order
-ID.
+ID:
+\itemize{
+\item order_id (character) the system order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -884,7 +892,11 @@ Verified: 2026-05-23
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row per order result giving the system-assigned order ID, the
-client-provided order ID, the futures symbol, the per-order status code, and the per-order status message.
+client-provided order ID, the futures symbol, the per-order status code, and the per-order status message:
+\itemize{
+\item order_id (character) the system order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1252,7 +1264,10 @@ cancels all untriggered stop orders across all symbols.}
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row per cancelled order giving the cancelled order ID; an empty
-data.table if no orders matched.
+data.table if no orders matched:
+\itemize{
+\item cancelled_order_id (character) the cancelled order identifier.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1382,7 +1397,25 @@ Verified: 2026-05-23
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row of full order details, including the creation and last-updated
-datetimes (POSIXct, coerced from epoch milliseconds).
+datetimes (POSIXct, coerced from epoch milliseconds):
+\itemize{
+\item id (character) the record identifier.
+\item symbol (character) the trading pair symbol.
+\item type (character) the type.
+\item side (character) the order side.
+\item price (numeric | NA) the price.
+\item size (numeric | NA) the size.
+\item value (numeric | NA) the order value.
+\item deal_value (numeric | NA) the filled value.
+\item deal_size (numeric | NA) the filled size.
+\item leverage (integer | NA) the leverage.
+\item margin_mode (character) the margin mode.
+\item position_side (character) the position side.
+\item status (character) the status.
+\item created_at (POSIXct) the created at (UTC).
+\item updated_at (POSIXct | NA) the updated at (UTC).
+\item client_oid (character | NA) the client-supplied order identifier.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1510,7 +1543,25 @@ Verified: 2026-05-23
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row of full order details; same columns as \code{get_order_by_id()}.
+(data.table | promise<data.table>) one row of full order details; same columns as \code{get_order_by_id()}:
+\itemize{
+\item id (character) the record identifier.
+\item symbol (character) the trading pair symbol.
+\item type (character) the type.
+\item side (character) the order side.
+\item price (numeric | NA) the price.
+\item size (numeric | NA) the size.
+\item value (numeric | NA) the order value.
+\item deal_value (numeric | NA) the filled value.
+\item deal_size (numeric | NA) the filled size.
+\item leverage (integer | NA) the leverage.
+\item margin_mode (character) the margin mode.
+\item position_side (character) the position side.
+\item status (character) the status.
+\item created_at (POSIXct) the created at (UTC).
+\item updated_at (POSIXct | NA) the updated at (UTC).
+\item client_oid (character | NA) the client-supplied order identifier.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1644,7 +1695,25 @@ open orders, \code{status = "done"} for closed orders. Optional: \code{symbol},
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row per order record (same columns as \code{get_order_by_id()}); an
-empty data.table if no orders match the filters.
+empty data.table if no orders match the filters:
+\itemize{
+\item id (character) the record identifier.
+\item symbol (character) the trading pair symbol.
+\item type (character) the type.
+\item side (character) the order side.
+\item price (numeric | NA) the price.
+\item size (numeric | NA) the size.
+\item value (numeric | NA) the order value.
+\item deal_value (numeric | NA) the filled value.
+\item deal_size (numeric | NA) the filled size.
+\item leverage (integer | NA) the leverage.
+\item margin_mode (character) the margin mode.
+\item position_side (character) the position side.
+\item status (character) the status.
+\item created_at (POSIXct) the created at (UTC).
+\item updated_at (POSIXct | NA) the updated at (UTC).
+\item client_oid (character | NA) the client-supplied order identifier.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1782,7 +1851,25 @@ list.
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row per order record (same columns as \code{get_order_by_id()}); an
-empty data.table if no recently closed orders exist.
+empty data.table if no recently closed orders exist:
+\itemize{
+\item id (character) the record identifier.
+\item symbol (character) the trading pair symbol.
+\item type (character) the type.
+\item side (character) the order side.
+\item price (numeric | NA) the price.
+\item size (numeric | NA) the size.
+\item value (numeric | NA) the order value.
+\item deal_value (numeric | NA) the filled value.
+\item deal_size (numeric | NA) the filled size.
+\item leverage (integer | NA) the leverage.
+\item margin_mode (character) the margin mode.
+\item position_side (character) the position side.
+\item status (character) the status.
+\item created_at (POSIXct) the created at (UTC).
+\item updated_at (POSIXct | NA) the updated at (UTC).
+\item client_oid (character | NA) the client-supplied order identifier.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2166,7 +2253,26 @@ Verified: 2026-05-23
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row per fill (same columns as \code{get_fills()}); an empty data.table
-if no recent fills exist.
+if no recent fills exist:
+\itemize{
+\item symbol (character) the trading pair symbol.
+\item trade_id (character) the trade identifier.
+\item order_id (character) the system order identifier.
+\item side (character) the order side.
+\item liquidity (character) the liquidity role.
+\item force_taker (logical) the force taker.
+\item price (numeric | NA) the price.
+\item size (numeric | NA) the size.
+\item value (numeric | NA) the order value.
+\item fee_rate (numeric | NA) the fee rate.
+\item fix_fee (numeric | NA) the fix fee.
+\item fee_currency (character) the fee currency.
+\item fee (numeric | NA) the fee.
+\item order_type (character) the order type.
+\item trade_type (character) the trade type.
+\item trade_time (POSIXct) the trade time (UTC).
+\item created_at (POSIXct) the created at (UTC).
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2261,7 +2367,14 @@ Verified: 2026-05-23
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the total buy order size, total sell order
-size, total buy order cost, total sell order cost, and the settlement currency.
+size, total buy order cost, total sell order cost, and the settlement currency:
+\itemize{
+\item open_order_buy_size (integer | NA) the open order buy size.
+\item open_order_sell_size (integer | NA) the open order sell size.
+\item open_order_buy_cost (numeric | NA) the open order buy cost.
+\item open_order_sell_cost (numeric | NA) the open order sell cost.
+\item settle_currency (character) the settle currency.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2375,8 +2488,13 @@ When NULL, DCP applies to all symbols.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(data.table | promise<data.table>) one row giving the configured timeout in seconds, the applicable
-symbols (empty for all), and the server time when DCP was set.
+(data.table | promise<data.table>) one row acknowledging the DCP configuration change:
+\itemize{
+\item trade_type (character) the trading account the setting applies to (always "FUTURES").
+\item symbol (character | NA) the futures symbol the setting is scoped to; NA when it applies to all symbols.
+\item system_time (numeric) the server time when the setting was applied, epoch.
+\item trigger_time (numeric) the epoch time at which armed DCP would fire; 0 when DCP is disabled.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -2478,7 +2596,12 @@ When NULL, returns the global DCP configuration.}
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the configured timeout in seconds, the applicable
-symbols, and the server time of the query.
+symbols, and the server time of the query:
+\itemize{
+\item timeout (integer | NA) the timeout.
+\item symbols (character) the symbols.
+\item current_time (numeric) the current time.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

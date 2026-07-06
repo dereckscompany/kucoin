@@ -122,7 +122,14 @@ KucoinDeposit <- R6::R6Class(
     #'   created deposit address: the generated address, its memo/tag (empty
     #'   string if not applicable), the blockchain network name, the chain
     #'   identifier, the target account type, the currency code, and the token
-    #'   contract address (empty for native coins) -- all character.
+    #'   contract address (empty for native coins) -- all character:
+    #' - address (character) the address.
+    #' - memo (character) the address memo/tag.
+    #' - chain (character) the chain code.
+    #' - chain_id (character | NA) the chain identifier.
+    #' - to (character) the destination.
+    #' - currency (character) the currency code.
+    #' - contract_address (character | NA) the token contract address.
     #'
     #' @examples
     #' \dontrun{
@@ -165,6 +172,18 @@ KucoinDeposit <- R6::R6Class(
         method = "POST",
         body = body,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              address = character(0),
+              memo = character(0),
+              chain = character(0),
+              chain_id = character(0),
+              to = character(0),
+              currency = character(0),
+              contract_address = character(0)
+            )[])
+          }
+
           dt <- as_dt_row(data)
           if (nrow(dt) == 0L) {
             return(dt[])

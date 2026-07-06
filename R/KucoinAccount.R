@@ -134,7 +134,19 @@ KucoinAccount <- R6::R6Class(
     #'
     #' @return (data.table | promise<data.table>) one row giving the VIP tier
     #'   level and the sub-account counts (total, spot, margin, futures, option)
-    #'   alongside their respective maxima.
+    #'   alongside their respective maxima:
+    #' - level (integer | NA) the VIP tier.
+    #' - sub_quantity (integer | NA) the total number of sub-accounts.
+    #' - max_default_sub_quantity (integer | NA) the max default sub-accounts.
+    #' - max_sub_quantity (integer | NA) the max sub-accounts.
+    #' - spot_sub_quantity (integer | NA) the current spot sub-accounts.
+    #' - margin_sub_quantity (integer | NA) the current margin sub-accounts.
+    #' - futures_sub_quantity (integer | NA) the current futures sub-accounts.
+    #' - option_sub_quantity (integer | NA) the current option sub-accounts.
+    #' - max_spot_sub_quantity (integer | NA) the max spot sub-accounts.
+    #' - max_margin_sub_quantity (integer | NA) the max margin sub-accounts.
+    #' - max_futures_sub_quantity (integer | NA) the max futures sub-accounts.
+    #' - max_option_sub_quantity (integer | NA) the max option sub-accounts.
     #'
     #' @examples
     #' \dontrun{
@@ -146,7 +158,25 @@ KucoinAccount <- R6::R6Class(
     get_summary = function() {
       res <- private$.request(
         endpoint = "/api/v2/user-info",
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              level = integer(0),
+              sub_quantity = integer(0),
+              max_default_sub_quantity = integer(0),
+              max_sub_quantity = integer(0),
+              spot_sub_quantity = integer(0),
+              margin_sub_quantity = integer(0),
+              futures_sub_quantity = integer(0),
+              option_sub_quantity = integer(0),
+              max_spot_sub_quantity = integer(0),
+              max_margin_sub_quantity = integer(0),
+              max_futures_sub_quantity = integer(0),
+              max_option_sub_quantity = integer(0)
+            )[])
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,
@@ -176,8 +206,8 @@ KucoinAccount <- R6::R6Class(
     #' ### Automated Trading Usage
     #' - **Permission Verification**: Confirm the key has `Trade` permission before placing orders in a bot startup
     #'   routine.
-    #' - **IP Whitelist Check**: Validate that the bot's server IP is in `is_master`/`ip_whitelist` to avoid auth
-    #'   failures.
+    #' - **IP Whitelist Check**: Confirm the key's IP-whitelist settings on KuCoin allow the bot's server IP to
+    #'   avoid auth failures.
     #' - **Key Rotation Monitoring**: Use `created_at` to track key age and schedule rotation for security.
     #'
     #' ### curl
@@ -208,24 +238,53 @@ KucoinAccount <- R6::R6Class(
     #' ```
     #'
     #' @return (data.table | promise<data.table>) one row describing the active
-    #'   API key: its label, key ID, version, comma-separated permissions and IP
-    #'   whitelist, creation datetime (POSIXct, coerced from epoch milliseconds),
-    #'   user ID, and whether it belongs to the master account.
+    #'   API key: its label, key ID, version, comma-separated permissions,
+    #'   creation datetime (POSIXct, coerced from epoch milliseconds), user ID,
+    #'   whether it belongs to the master account, and the account's region, KYC
+    #'   status and site type:
+    #' - remark (character | NA) an optional remark.
+    #' - api_key (character | NA) the API key ID.
+    #' - api_version (integer | NA) the API key version.
+    #' - permission (character) the comma-separated permissions, e.g. `"General,Spot"` (a single string from KuCoin, not a JSON array; recover the vector with `strsplit(dt$permission[1], ",", fixed = TRUE)[[1]]`).
+    #' - created_at (POSIXct) the key creation time (UTC), coerced from epoch milliseconds.
+    #' - uid (integer) the user identifier.
+    #' - is_master (logical) TRUE if this is a master-account key.
+    #' - region (character | NA) the account region.
+    #' - kyc_status (character | NA) the KYC verification status.
+    #' - site_type (character | NA) the site type.
     #'
     #' @examples
     #' \dontrun{
     #' account <- KucoinAccount$new()
     #' key_info <- account$get_apikey_info()
     #' cat("Permissions:", key_info$permission, "\\n")
-    #' cat("IP Whitelist:", key_info$ip_whitelist, "\\n")
+    #' cat("Region:", key_info$region, "\\n")
     #' cat("Is Master:", key_info$is_master, "\\n")
     #' }
     get_apikey_info = function() {
       res <- private$.request(
         endpoint = "/api/v1/user/api-key",
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              remark = character(0),
+              api_key = character(0),
+              api_version = integer(0),
+              permission = character(0),
+              created_at = ms_to_datetime(numeric(0)),
+              uid = integer(0),
+              is_master = logical(0),
+              region = character(0),
+              kyc_status = character(0),
+              site_type = character(0)
+            )[])
+          }
+
           dt <- as_dt_row(data)
           coerce_cols(dt, "created_at", ms_to_datetime)
+          # region/kyc_status/site_type are null for some accounts; coerce so
+          # each column lands as character rather than an all-logical NA vector.
+          coerce_cols(dt, c("region", "kyc_status", "site_type"), as.character)
           return(dt[])
         }
       )
@@ -373,10 +432,14 @@ KucoinAccount <- R6::R6Class(
     #'   `currency` (filter by currency code e.g. `"USDT"`, `"BTC"`) and `type`
     #'   (filter by account type: `"main"`, `"trade"`, or `"margin"`).
     #'
-    #' @return (data.table | promise<data.table>) one row per spot account, each
-    #'   giving the account ID, currency code, account type, total balance, the
-    #'   amount available for trading, and the amount on hold in open orders.
-    #'   Returns an empty data.table if no accounts match.
+    #' @return (data.table | promise<data.table>) one row per spot account, or an
+    #'   empty data.table if no accounts match:
+    #' - id (character) the account identifier.
+    #' - currency (character) the currency code.
+    #' - type (character) the account type (`"main"`, `"trade"`, or `"margin"`).
+    #' - balance (numeric | NA) the total balance.
+    #' - available (numeric | NA) the amount available for trading.
+    #' - holds (numeric | NA) the amount on hold in open orders.
     #'
     #' @examples
     #' \dontrun{
@@ -395,7 +458,24 @@ KucoinAccount <- R6::R6Class(
       res <- private$.request(
         endpoint = "/api/v1/accounts",
         query = query,
-        .parser = as_dt_list
+        .parser = function(data) {
+          dt <- as_dt_list(data)
+          if (nrow(dt) == 0L) {
+            return(data.table::data.table(
+              id = character(0),
+              currency = character(0),
+              type = character(0),
+              balance = numeric(0),
+              available = numeric(0),
+              holds = numeric(0)
+            )[])
+          }
+          data.table::setcolorder(
+            dt,
+            intersect(c("id", "currency", "type", "balance", "available", "holds"), names(dt))
+          )
+          return(dt[])
+        }
       )
       return(connectcore::then_or_now(
         res,
@@ -458,7 +538,11 @@ KucoinAccount <- R6::R6Class(
     #'
     #' @return (data.table | promise<data.table>) one row giving the currency
     #'   code, total balance, the amount available for use, and the amount held
-    #'   in open orders for the requested account.
+    #'   in open orders for the requested account:
+    #' - currency (character) the currency code.
+    #' - balance (numeric | NA) the total balance.
+    #' - available (numeric | NA) the amount available.
+    #' - holds (numeric | NA) the amount on hold.
     #'
     #' @examples
     #' \dontrun{
@@ -477,7 +561,17 @@ KucoinAccount <- R6::R6Class(
       assert::assert_nonempty_strings(accountId)
       res <- private$.request(
         endpoint = paste0("/api/v1/accounts/", accountId),
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              currency = character(0),
+              balance = numeric(0),
+              available = numeric(0),
+              holds = numeric(0)
+            )[])
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,
@@ -910,12 +1004,18 @@ KucoinAccount <- R6::R6Class(
     #'   fetch (default `Inf` for all pages). Set to a finite number to limit API
     #'   calls.
     #'
-    #' @return (data.table | promise<data.table>) one row per ledger entry, each
-    #'   giving the entry ID, currency code, transaction amount, fee charged,
-    #'   balance after the transaction, account type (`"TRADE"`, `"MAIN"`),
-    #'   business type, direction (`"in"` or `"out"`), the JSON context metadata,
-    #'   and the creation datetime (POSIXct, coerced from epoch milliseconds).
-    #'   Returns an empty data.table if no ledger entries match.
+    #' @return (data.table | promise<data.table>) one row per ledger entry, or an
+    #'   empty data.table if no entries match:
+    #' - id (character) the ledger entry id.
+    #' - currency (character) the currency code.
+    #' - amount (numeric | NA) the transaction amount.
+    #' - fee (numeric | NA) the fee charged.
+    #' - balance (numeric | NA) the balance after the transaction.
+    #' - account_type (character) the account type (e.g. `"TRADE"`, `"MAIN"`).
+    #' - biz_type (character) the business type.
+    #' - direction (character) the direction, `"in"` or `"out"`.
+    #' - context (character | NA) the JSON context metadata.
+    #' - created_at (POSIXct) the entry creation time (UTC), coerced from epoch milliseconds.
     #'
     #' @examples
     #' \dontrun{
@@ -946,7 +1046,18 @@ KucoinAccount <- R6::R6Class(
         .parser = function(pages) {
           dt <- flatten_pages(pages)
           if (nrow(dt) == 0) {
-            return(dt[])
+            return(data.table::data.table(
+              id = character(0),
+              currency = character(0),
+              amount = numeric(0),
+              fee = numeric(0),
+              balance = numeric(0),
+              account_type = character(0),
+              biz_type = character(0),
+              direction = character(0),
+              context = character(0),
+              created_at = ms_to_datetime(numeric(0))
+            )[])
           }
           if ("created_at" %in% names(dt)) {
             dt[, created_at := ms_to_datetime(created_at)]
@@ -1060,11 +1171,19 @@ KucoinAccount <- R6::R6Class(
     #'   200).
     #' @param startAt (scalar<numeric> | NULL) start timestamp in milliseconds.
     #' @param endAt (scalar<numeric> | NULL) end timestamp in milliseconds.
-    #' @return (data.table | promise<data.table>) one row per ledger entry, each
-    #'   giving the entry ID, currency code, transaction amount, fee charged, tax
-    #'   amount, balance after the transaction, account type, business type,
-    #'   direction (`"in"` or `"out"`), the JSON context metadata, and the
-    #'   creation datetime (POSIXct, coerced from epoch milliseconds).
+    #' @return (data.table | promise<data.table>) one row per ledger entry, or an
+    #'   empty data.table if no entries match:
+    #' - id (character) the ledger entry id.
+    #' - currency (character) the currency code.
+    #' - amount (numeric | NA) the transaction amount.
+    #' - fee (numeric | NA) the fee charged.
+    #' - tax (numeric | NA) the tax amount.
+    #' - balance (numeric | NA) the balance after the transaction.
+    #' - account_type (character) the account type.
+    #' - biz_type (character) the business type.
+    #' - direction (character) the direction, `"in"` or `"out"`.
+    #' - context (character | NA) the JSON context metadata.
+    #' - created_at (POSIXct) the entry creation time (UTC), coerced from epoch milliseconds.
     #'
     #' @examples
     #' \dontrun{
@@ -1107,7 +1226,19 @@ KucoinAccount <- R6::R6Class(
             items <- data$items
           }
           if (is.null(items) || length(items) == 0) {
-            return(data.table::data.table()[])
+            return(data.table::data.table(
+              id = character(0),
+              currency = character(0),
+              amount = numeric(0),
+              fee = numeric(0),
+              tax = numeric(0),
+              balance = numeric(0),
+              account_type = character(0),
+              biz_type = character(0),
+              direction = character(0),
+              context = character(0),
+              created_at = ms_to_datetime(numeric(0))
+            )[])
           }
           dt <- data.table::rbindlist(
             lapply(items, as_dt_row),
@@ -1191,7 +1322,9 @@ KucoinAccount <- R6::R6Class(
     #' @param currencyType (scalar<count> | NULL) `0` for crypto (default), `1`
     #'   for fiat.
     #' @return (data.table | promise<data.table>) one row giving the base taker
-    #'   fee rate and the base maker fee rate.
+    #'   fee rate and the base maker fee rate:
+    #' - taker_fee_rate (numeric | NA) the taker fee rate.
+    #' - maker_fee_rate (numeric | NA) the maker fee rate.
     #'
     #' @examples
     #' \dontrun{
@@ -1204,7 +1337,12 @@ KucoinAccount <- R6::R6Class(
       res <- private$.request(
         endpoint = "/api/v1/base-fee",
         query = list(currencyType = currencyType),
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(taker_fee_rate = numeric(0), maker_fee_rate = numeric(0))[])
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,
@@ -1266,7 +1404,10 @@ KucoinAccount <- R6::R6Class(
     #'   e.g. `"BTC-USDT,ETH-USDT"`.
     #' @return (data.table | promise<data.table>) one row per trading pair, each
     #'   giving the pair symbol, the actual taker fee rate, and the actual maker
-    #'   fee rate.
+    #'   fee rate:
+    #' - symbol (character) the trading pair symbol.
+    #' - taker_fee_rate (numeric | NA) the taker fee rate.
+    #' - maker_fee_rate (numeric | NA) the maker fee rate.
     #'
     #' @examples
     #' \dontrun{
@@ -1285,7 +1426,11 @@ KucoinAccount <- R6::R6Class(
         query = list(symbols = symbols),
         .parser = function(data) {
           if (is.null(data) || length(data) == 0) {
-            return(data.table::data.table()[])
+            return(data.table::data.table(
+              symbol = character(0),
+              taker_fee_rate = numeric(0),
+              maker_fee_rate = numeric(0)
+            )[])
           }
           dt <- data.table::rbindlist(
             lapply(data, as_dt_row),

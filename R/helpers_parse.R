@@ -179,6 +179,180 @@ coerce_cols <- function(dt, cols, fn) {
   return(invisible(assert_return_coerce_cols(dt)))
 }
 
+#' Coerce KuCoin Number-as-String Columns to Numeric
+#'
+#' KuCoin transports numeric quantities (prices, sizes, amounts, fees, rates,
+#' balances, ...) as JSON strings to avoid float rounding in transit. This
+#' coerces every such column that is present to `numeric`, so the client
+#' receives a usable number rather than a verbatim string. The set was derived
+#' from a live sweep of the API: a column qualifies only where every real value
+#' it returns is numeric-coercible and it is not an identifier. Identifiers,
+#' symbols, currencies, statuses, enums and flags are left as-is; timestamps are
+#' handled separately. Applied centrally between parse and contract validation
+#' (see [KucoinBase]'s request funnel), so it runs once per endpoint over
+#' whichever of these columns that endpoint returns. Order *input* prices/sizes
+#' are unaffected — they are validated as strings before the request is sent.
+#'
+#' @param x (any) a parser result; coerced only when it is a `data.table`.
+#' @return (any) `x`, with its numeric-quantity columns coerced to numeric.
+#'
+#' @keywords internal
+#' @noRd
+#' @noassert
+coerce_numeric_quantities <- function(x) {
+  if (!data.table::is.data.table(x)) {
+    return(x)
+  }
+  quantities <- c(
+    "actual_size",
+    "amount",
+    "annualized_borrow_rate",
+    "auto_renew_max_debt_ratio",
+    "available",
+    "available_amount",
+    "average_price",
+    "balance",
+    "base_amount",
+    "base_asset_available",
+    "base_asset_hold",
+    "base_asset_liability",
+    "base_asset_liability_interest",
+    "base_asset_liability_principal",
+    "base_asset_max_borrow_size",
+    "base_asset_total",
+    "base_borrow_coefficient",
+    "base_borrow_min_amount",
+    "base_borrow_min_unit",
+    "base_currency_price",
+    "base_increment",
+    "base_margin_coefficient",
+    "base_max_borrow_amount",
+    "base_max_buy_amount",
+    "base_max_hold_amount",
+    "base_max_size",
+    "base_min_size",
+    "best_ask",
+    "best_ask_price",
+    "best_ask_size",
+    "best_bid",
+    "best_bid_price",
+    "best_bid_size",
+    "borrow_coefficient",
+    "borrow_max_amount",
+    "borrow_min_amount",
+    "borrow_min_unit",
+    "buy",
+    "buy_max_amount",
+    "callauction_price_ceiling",
+    "callauction_price_floor",
+    "cancel_size",
+    "canceled_size",
+    "change_price",
+    "change_rate",
+    "collateral_ratio",
+    "deal_size",
+    "deal_value",
+    "debt_ratio",
+    "deposit_min_size",
+    "fee",
+    "fee_rate",
+    "fix_fee",
+    "fl_debt_ratio",
+    "high",
+    "hold",
+    "hold_max_amount",
+    "holds",
+    "hourly_borrow_rate",
+    "increment",
+    "inner_withdraw_min_fee",
+    "interest_increment",
+    "last",
+    "last_size",
+    "liability",
+    "liability_interest",
+    "liability_principal",
+    "limit_btc_amount",
+    "limit_quota_currency_amount",
+    "liq_debt_ratio",
+    "locked_amount",
+    "low",
+    "lower_limit",
+    "maker_coefficient",
+    "maker_fee_coefficient",
+    "maker_fee_rate",
+    "margin",
+    "margin_coefficient",
+    "market_interest_rate",
+    "max_borrow_size",
+    "max_deposit",
+    "max_interest_rate",
+    "max_purchase_size",
+    "min_funds",
+    "min_interest_rate",
+    "min_purchase_size",
+    "open",
+    "open_interest",
+    "open_order_buy_cost",
+    "open_order_sell_cost",
+    "origin_size",
+    "price",
+    "price_change",
+    "price_change_percent",
+    "price_increment",
+    "price_limit_rate",
+    "quote_asset_available",
+    "quote_asset_hold",
+    "quote_asset_liability",
+    "quote_asset_liability_interest",
+    "quote_asset_liability_principal",
+    "quote_asset_max_borrow_size",
+    "quote_asset_total",
+    "quote_borrow_coefficient",
+    "quote_borrow_min_amount",
+    "quote_borrow_min_unit",
+    "quote_increment",
+    "quote_margin_coefficient",
+    "quote_max_borrow_amount",
+    "quote_max_buy_amount",
+    "quote_max_hold_amount",
+    "quote_max_size",
+    "quote_min_size",
+    "remain_amount",
+    "remain_size",
+    "return_amount",
+    "sell",
+    "size",
+    "sub_order_price",
+    "sub_order_size",
+    "sub_order_stop_price",
+    "taker_coefficient",
+    "taker_fee_coefficient",
+    "taker_fee_rate",
+    "tax",
+    "taxes",
+    "total",
+    "total_asset_of_quote_currency",
+    "total_liability_of_quote_currency",
+    "transferable",
+    "upper_limit",
+    "used_btc_amount",
+    "used_quota_currency_amount",
+    "value",
+    "vol",
+    "vol_value",
+    "warning_debt_ratio",
+    "withdraw_fee_rate",
+    "withdraw_max_fee",
+    "withdraw_min_fee",
+    "withdraw_min_size",
+    "withdrawal_min_fee",
+    "withdrawal_min_size"
+  )
+  coerce_cols(x, quantities, as.numeric)
+  return(x[])
+}
+
+
 #' Process Orderbook Data into a data.table
 #'
 #' Transforms the bids/asks arrays from a KuCoin orderbook response into a
@@ -324,4 +498,162 @@ flatten_pages <- function(pages) {
   )
   data.table::setnames(dt, to_snake_case(names(dt)))
   return(assert_return_flatten_pages(dt[]))
+}
+
+# ---- Typed zero-row empties for shapes returned by more than one method ----
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_futures_order <- function() {
+  return(data.table::data.table(
+    id = character(0),
+    symbol = character(0),
+    type = character(0),
+    side = character(0),
+    price = numeric(0),
+    size = numeric(0),
+    value = numeric(0),
+    deal_value = numeric(0),
+    deal_size = numeric(0),
+    leverage = integer(0),
+    margin_mode = character(0),
+    position_side = character(0),
+    status = character(0),
+    created_at = ms_to_datetime(numeric(0)),
+    updated_at = ms_to_datetime(numeric(0)),
+    client_oid = character(0)
+  )[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_futures_orderbook <- function() {
+  return(data.table::data.table(
+    ts = ms_to_datetime(numeric(0)),
+    sequence = character(0),
+    side = character(0),
+    level = integer(0),
+    price = numeric(0),
+    size = numeric(0),
+    symbol = character(0)
+  )[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_isolated_margin <- function() {
+  return(data.table::data.table(
+    id = character(0),
+    symbol = character(0),
+    margin = numeric(0),
+    margin_type = character(0)
+  )[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_leverage <- function() {
+  return(data.table::data.table(symbol = character(0), leverage = character(0))[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_margin_mode <- function() {
+  return(data.table::data.table(symbol = character(0), margin_mode = character(0))[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_oco_order <- function() {
+  return(data.table::data.table(
+    order_id = character(0),
+    symbol = character(0),
+    client_oid = character(0),
+    order_time = ms_to_datetime(numeric(0)),
+    status = character(0)
+  )[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_order_ack <- function() {
+  return(data.table::data.table(order_id = character(0), client_oid = character(0))[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_order_id <- function() {
+  return(data.table::data.table(order_id = character(0))[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_order_no <- function() {
+  return(data.table::data.table(order_no = character(0))[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_orderbook <- function() {
+  return(data.table::data.table(
+    time = ms_to_datetime(numeric(0)),
+    sequence = character(0),
+    side = character(0),
+    level = integer(0),
+    price = numeric(0),
+    size = numeric(0)
+  )[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_service_status <- function() {
+  return(data.table::data.table(status = character(0), msg = character(0))[])
+}
+
+#' @keywords internal
+#' @noRd
+#' @noassert
+empty_dt_symbol <- function() {
+  return(data.table::data.table(
+    symbol = character(0),
+    name = character(0),
+    base_currency = character(0),
+    quote_currency = character(0),
+    fee_currency = character(0),
+    market = character(0),
+    base_min_size = numeric(0),
+    quote_min_size = numeric(0),
+    base_max_size = numeric(0),
+    quote_max_size = numeric(0),
+    base_increment = numeric(0),
+    quote_increment = numeric(0),
+    price_increment = numeric(0),
+    price_limit_rate = numeric(0),
+    min_funds = numeric(0),
+    is_margin_enabled = logical(0),
+    enable_trading = logical(0),
+    fee_category = integer(0),
+    maker_fee_coefficient = numeric(0),
+    taker_fee_coefficient = numeric(0),
+    st = logical(0),
+    callauction_is_enabled = logical(0),
+    callauction_price_floor = numeric(0),
+    callauction_price_ceiling = numeric(0),
+    callauction_first_stage_start_time = numeric(0),
+    callauction_second_stage_start_time = numeric(0),
+    callauction_third_stage_start_time = numeric(0),
+    trading_start_time = numeric(0)
+  )[])
 }

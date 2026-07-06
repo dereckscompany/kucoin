@@ -125,7 +125,11 @@ KucoinSubAccount <- R6::R6Class(
     #'   the sub-account (1-24 chars).
     #' @return (data.table | promise<data.table>) one row with the newly created
     #'   sub-account details: the unique user ID `uid`, the login name `sub_name`,
-    #'   the `remarks` string, and the granted permission `access`.
+    #'   the `remarks` string, and the granted permission `access`:
+    #' - uid (integer) the user identifier.
+    #' - sub_name (character) the sub name.
+    #' - remarks (character | NA) an optional remark.
+    #' - access (character) the access.
     #'
     #' @examples
     #' \dontrun{
@@ -167,7 +171,17 @@ KucoinSubAccount <- R6::R6Class(
         endpoint = "/api/v2/sub/user/created",
         method = "POST",
         body = body,
-        .parser = as_dt_row
+        .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              uid = integer(0),
+              sub_name = character(0),
+              remarks = character(0),
+              access = character(0)
+            )[])
+          }
+          return(as_dt_row(data))
+        }
       )
       return(connectcore::then_or_now(
         res,

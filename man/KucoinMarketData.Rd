@@ -415,7 +415,16 @@ fetch (default \code{Inf} for all).}
 (data.table | promise<data.table>) one row per announcement, each
 giving the announcement ID, title, \verb{;}-separated category tags, short
 description, creation datetime (POSIXct, coerced from epoch milliseconds),
-language code, and the full announcement URL.
+language code, and the full announcement URL:
+\itemize{
+\item ann_id (integer) the ann id.
+\item ann_title (character | NA) the ann title.
+\item ann_type (character | NA) the ann type.
+\item ann_desc (character | NA) the ann desc.
+\item c_time (POSIXct) the c time (UTC).
+\item language (character) the language.
+\item ann_url (character | NA) the ann url.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -751,7 +760,37 @@ metadata: the pair identifier, base/quote/fee currencies, market segment,
 the base and quote minimum and maximum order sizes, the base and quote
 size increments, the price increment and price-limit rate, the minimum
 order value in quote currency, the margin- and trading-enabled flags, and
-the maker and taker fee coefficients.
+the maker and taker fee coefficients:
+\itemize{
+\item symbol (character) the trading pair symbol.
+\item name (character) the name.
+\item base_currency (character) the base currency.
+\item quote_currency (character) the quote currency.
+\item fee_currency (character) the fee currency.
+\item market (character) the market.
+\item base_min_size (numeric | NA) the base min size.
+\item quote_min_size (numeric | NA) the quote min size.
+\item base_max_size (numeric | NA) the base max size.
+\item quote_max_size (numeric | NA) the quote max size.
+\item base_increment (numeric | NA) the base increment.
+\item quote_increment (numeric | NA) the quote increment.
+\item price_increment (numeric | NA) the price increment.
+\item price_limit_rate (numeric | NA) the price limit rate.
+\item min_funds (numeric | NA) the min funds.
+\item is_margin_enabled (logical) the is margin enabled.
+\item enable_trading (logical) the enable trading.
+\item fee_category (integer) the fee category.
+\item maker_fee_coefficient (numeric | NA) the maker fee coefficient.
+\item taker_fee_coefficient (numeric | NA) the taker fee coefficient.
+\item st (logical) whether the symbol is in special treatment.
+\item callauction_is_enabled (logical) the callauction is enabled.
+\item callauction_price_floor (numeric | NA) the callauction price floor.
+\item callauction_price_ceiling (numeric | NA) the callauction price ceiling.
+\item callauction_first_stage_start_time (numeric | NA) the callauction first stage start time (epoch ms).
+\item callauction_second_stage_start_time (numeric | NA) the callauction second stage start time (epoch ms).
+\item callauction_third_stage_start_time (numeric | NA) the callauction third stage start time (epoch ms).
+\item trading_start_time (numeric | NA) the trading start time (epoch ms).
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -928,7 +967,37 @@ available values.}
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row per trading pair,
-carrying the same symbol metadata as \code{get_symbol()}.
+carrying the same symbol metadata as \code{get_symbol()}:
+\itemize{
+\item symbol (character) the trading pair symbol.
+\item name (character) the name.
+\item base_currency (character) the base currency.
+\item quote_currency (character) the quote currency.
+\item fee_currency (character) the fee currency.
+\item market (character) the market.
+\item base_min_size (numeric | NA) the base min size.
+\item quote_min_size (numeric | NA) the quote min size.
+\item base_max_size (numeric | NA) the base max size.
+\item quote_max_size (numeric | NA) the quote max size.
+\item base_increment (numeric | NA) the base increment.
+\item quote_increment (numeric | NA) the quote increment.
+\item price_increment (numeric | NA) the price increment.
+\item price_limit_rate (numeric | NA) the price limit rate.
+\item min_funds (numeric | NA) the min funds.
+\item is_margin_enabled (logical) the is margin enabled.
+\item enable_trading (logical) the enable trading.
+\item fee_category (integer) the fee category.
+\item maker_fee_coefficient (numeric | NA) the maker fee coefficient.
+\item taker_fee_coefficient (numeric | NA) the taker fee coefficient.
+\item st (logical) whether the symbol is in special treatment.
+\item callauction_is_enabled (logical) the callauction is enabled.
+\item callauction_price_floor (numeric | NA) the callauction price floor.
+\item callauction_price_ceiling (numeric | NA) the callauction price ceiling.
+\item callauction_first_stage_start_time (numeric | NA) the callauction first stage start time (epoch ms).
+\item callauction_second_stage_start_time (numeric | NA) the callauction second stage start time (epoch ms).
+\item callauction_third_stage_start_time (numeric | NA) the callauction third stage start time (epoch ms).
+\item trading_start_time (numeric | NA) the trading start time (epoch ms).
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1020,7 +1089,17 @@ Verified: 2026-05-23
 (data.table | promise<data.table>) one row giving the Level 1
 snapshot: server datetime (POSIXct, coerced from epoch milliseconds), the
 order book sequence number, the last trade price and size, and the best
-bid and ask prices with their sizes.
+bid and ask prices with their sizes:
+\itemize{
+\item time (POSIXct) the time (UTC).
+\item sequence (character) the sequence.
+\item price (numeric | NA) the price.
+\item size (numeric | NA) the size.
+\item best_bid (numeric | NA) the best bid price.
+\item best_bid_size (numeric | NA) the best bid size.
+\item best_ask (numeric | NA) the best ask price.
+\item best_ask_size (numeric | NA) the best ask size.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1120,7 +1199,24 @@ giving the pair symbol and display name, the best bid and ask prices with
 their sizes, the 24-hour change rate and amount, the 24-hour high, low,
 base-currency volume and quote-currency volume, the last trade and average
 prices, the taker and maker fee rates, and the snapshot datetime (POSIXct,
-coerced from epoch milliseconds).
+coerced from epoch milliseconds):
+\itemize{
+\item symbol (character) the trading pair symbol.
+\item symbol_name (character) the symbol name.
+\item buy (numeric | NA) the best bid price.
+\item sell (numeric | NA) the best ask price.
+\item change_rate (numeric | NA) the 24h change rate.
+\item change_price (numeric | NA) the 24h change in price.
+\item high (numeric | NA) the 24h high price.
+\item low (numeric | NA) the 24h low price.
+\item vol (numeric | NA) the 24h traded volume.
+\item vol_value (numeric | NA) the 24h traded turnover.
+\item last (numeric | NA) the last traded price.
+\item average_price (numeric | NA) the average price.
+\item taker_fee_rate (numeric | NA) the taker fee rate.
+\item maker_fee_rate (numeric | NA) the maker fee rate.
+\item time (POSIXct) the time (UTC).
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1212,7 +1308,15 @@ Verified: 2026-05-23
 (data.table | promise<data.table>) one row per recent trade, each
 giving the trade sequence number, price, quantity, direction (\code{"buy"} or
 \code{"sell"}), and the trade datetime (POSIXct, coerced from the nanosecond
-timestamp).
+timestamp):
+\itemize{
+\item sequence (character) the sequence.
+\item side (character) the order side.
+\item price (numeric | NA) the price.
+\item size (numeric | NA) the size.
+\item time (POSIXct) the time (UTC).
+\item trade_id (character) the trade identifier.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1494,7 +1598,25 @@ Verified: 2026-05-23
 milliseconds), the trading pair, the best bid and ask prices, the 24-hour
 change rate and amount, the 24-hour high, low, base-currency volume and
 quote-currency volume, the last trade and average prices, and the taker
-and maker fee rates.
+and maker fee rates:
+\itemize{
+\item time (POSIXct) the time (UTC).
+\item symbol (character) the trading pair symbol.
+\item buy (numeric | NA) the best bid price.
+\item sell (numeric | NA) the best ask price.
+\item change_rate (numeric | NA) the 24h change rate.
+\item change_price (numeric | NA) the 24h change in price.
+\item high (numeric | NA) the 24h high price.
+\item low (numeric | NA) the 24h low price.
+\item vol (numeric | NA) the 24h traded volume.
+\item vol_value (numeric | NA) the 24h traded turnover.
+\item last (numeric | NA) the last traded price.
+\item average_price (numeric | NA) the average price.
+\item taker_fee_rate (numeric | NA) the taker fee rate.
+\item maker_fee_rate (numeric | NA) the maker fee rate.
+\item taker_coefficient (numeric | NA) the taker fee coefficient.
+\item maker_coefficient (numeric | NA) the maker fee coefficient.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1819,7 +1941,11 @@ Verified: 2026-05-23
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the operational
 status (\code{"open"}, \code{"close"}, or \code{"cancelonly"}) and an optional
-remark/message.
+remark/message:
+\itemize{
+\item status (character) the status.
+\item msg (character) the msg.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}

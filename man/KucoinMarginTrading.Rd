@@ -577,7 +577,11 @@ Default \code{FALSE}.}
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the
 KuCoin-assigned order identifier and the client-provided order
-identifier (NA if not supplied).
+identifier (NA if not supplied):
+\itemize{
+\item order_id (character) the system order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -732,7 +736,11 @@ Default \code{FALSE}.}
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the
 KuCoin-assigned order identifier, the client-provided order identifier,
-the amount borrowed, and the loan application ID.
+the amount borrowed, and the loan application ID:
+\itemize{
+\item order_id (character) the system order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -888,7 +896,11 @@ Default \code{FALSE}.}
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the
 KuCoin-assigned order identifier and the client-provided order
-identifier (NA if not supplied).
+identifier (NA if not supplied):
+\itemize{
+\item order_id (character) the system order identifier.
+\item client_oid (character | NA) the client-supplied order identifier.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1006,7 +1018,11 @@ Trading pair (e.g., \code{"BTC-USDT"}).}
 }
 \subsection{Returns}{
 (data.table | promise<data.table>) one row giving the borrow order
-number and the amount actually borrowed.
+number and the amount actually borrowed:
+\itemize{
+\item order_no (character) the order number.
+\item actual_size (numeric | NA) the actual filled size.
+}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -1529,7 +1545,7 @@ Verified: 2026-05-23
 \subsection{Returns}{
 (data.table | promise<data.table>) one row:
 \itemize{
-\item leverage (numeric) the new leverage multiplier.
+\item leverage (numeric | NA) the new leverage multiplier.
 \item status (character) the local outcome marker, always \code{"success"}.
 }
 }

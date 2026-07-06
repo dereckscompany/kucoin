@@ -146,7 +146,9 @@ KucoinOcoOrders <- R6::R6Class(
     #'   spot trading.
     #' @return (data.table | promise<data.table>) one row giving the
     #'   KuCoin-assigned OCO order identifier and the client-provided order
-    #'   identifier (NA if not supplied).
+    #'   identifier (NA if not supplied):
+    #' - order_id (character) the system order identifier.
+    #' - client_oid (character | NA) the client-supplied order identifier.
     #'
     #' @examples
     #' \dontrun{
@@ -216,6 +218,10 @@ KucoinOcoOrders <- R6::R6Class(
         method = "POST",
         body = body,
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_order_ack())
+          }
+
           dt <- as_dt_row(data)
           if (is.null(dt$client_oid)) {
             dt[, client_oid := NA_character_]
@@ -587,7 +593,12 @@ KucoinOcoOrders <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row giving the OCO order
     #'   identifier, trading pair, client-assigned order identifier, order
     #'   creation datetime (POSIXct, coerced from epoch milliseconds), and order
-    #'   status (e.g., `"NEW"`, `"DONE"`, `"TRIGGERED"`).
+    #'   status (e.g., `"NEW"`, `"DONE"`, `"TRIGGERED"`):
+    #' - order_id (character) the system order identifier.
+    #' - symbol (character) the trading pair symbol.
+    #' - client_oid (character | NA) the client-supplied order identifier.
+    #' - order_time (POSIXct) the order time (UTC).
+    #' - status (character) the status.
     #'
     #' @examples
     #' \dontrun{
@@ -604,6 +615,10 @@ KucoinOcoOrders <- R6::R6Class(
       res <- private$.request(
         endpoint = paste0("/api/v3/oco/order/", orderId),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_oco_order())
+          }
+
           dt <- as_dt_row(data)
           if ("order_time" %in% names(dt)) {
             dt[, order_time := ms_to_datetime(order_time)]
@@ -676,7 +691,12 @@ KucoinOcoOrders <- R6::R6Class(
     #' @return (data.table | promise<data.table>) one row giving the
     #'   KuCoin-assigned OCO order identifier, trading pair, client-assigned order
     #'   identifier, order creation datetime (POSIXct, coerced from epoch
-    #'   milliseconds), and order status (e.g., `"NEW"`, `"DONE"`, `"TRIGGERED"`).
+    #'   milliseconds), and order status (e.g., `"NEW"`, `"DONE"`, `"TRIGGERED"`):
+    #' - order_id (character) the system order identifier.
+    #' - symbol (character) the trading pair symbol.
+    #' - client_oid (character | NA) the client-supplied order identifier.
+    #' - order_time (POSIXct) the order time (UTC).
+    #' - status (character) the status.
     #'
     #' @examples
     #' \dontrun{
@@ -693,6 +713,10 @@ KucoinOcoOrders <- R6::R6Class(
       res <- private$.request(
         endpoint = paste0("/api/v3/oco/client-order/", clientOid),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(empty_dt_oco_order())
+          }
+
           dt <- as_dt_row(data)
           if ("order_time" %in% names(dt)) {
             dt[, order_time := ms_to_datetime(order_time)]
@@ -787,7 +811,19 @@ KucoinOcoOrders <- R6::R6Class(
     #'   array (typically the limit leg plus the stop-limit leg) exploded to long
     #'   format by replicating the parent OCO row once per sub-order and adding
     #'   each sub-order's id, symbol, side, price, size, status, and stop price
-    #'   (present only on the stop leg) as `sub_order_`-prefixed columns.
+    #'   (present only on the stop leg) as `sub_order_`-prefixed columns:
+    #' - order_id (character) the system order identifier.
+    #' - symbol (character) the trading pair symbol.
+    #' - client_oid (character | NA) the client-supplied order identifier.
+    #' - order_time (POSIXct) the order time (UTC).
+    #' - status (character) the status.
+    #' - sub_order_id (character) the sub order id.
+    #' - sub_order_symbol (character) the sub order symbol.
+    #' - sub_order_side (character) the sub order side.
+    #' - sub_order_price (numeric | NA) the sub order price.
+    #' - sub_order_size (numeric | NA) the sub order size.
+    #' - sub_order_status (character) the sub order status.
+    #' - sub_order_stop_price (numeric | NA) the sub order stop price.
     #'
     #' @examples
     #' \dontrun{
@@ -805,6 +841,23 @@ KucoinOcoOrders <- R6::R6Class(
       res <- private$.request(
         endpoint = paste0("/api/v3/oco/order/details/", orderId),
         .parser = function(data) {
+          if (is.null(data) || length(data) == 0L) {
+            return(data.table::data.table(
+              order_id = character(0),
+              symbol = character(0),
+              client_oid = character(0),
+              order_time = ms_to_datetime(numeric(0)),
+              status = character(0),
+              sub_order_id = character(0),
+              sub_order_symbol = character(0),
+              sub_order_side = character(0),
+              sub_order_price = numeric(0),
+              sub_order_size = numeric(0),
+              sub_order_status = character(0),
+              sub_order_stop_price = numeric(0)
+            )[])
+          }
+
           orders <- data$orders
           data$orders <- NULL
           dt <- as_dt_row(data)
