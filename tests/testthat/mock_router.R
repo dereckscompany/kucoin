@@ -160,7 +160,6 @@ box::use(
 
   # Futures Account
   list(pattern = "account-overview", fixture = .fixtures$futures_account_overview),
-  list(pattern = "api/v2/position", fixture = .fixtures$futures_position),
   list(pattern = "history-positions", fixture = .fixtures$futures_positions_history),
   list(pattern = "api/v1/positions", fixture = .fixtures$futures_position),
   # Patterns track KuCoin's 2026-05 docs reorganisation: old paths
@@ -169,6 +168,9 @@ box::use(
   # `getCrossUserLeverage` / `changeCrossUserLeverage`, `getMaxOpenSize`,
   # `deposit-margin`, and `withdrawMargin`. Routes below use the shortest
   # stable substring that survives both the GET and POST variants.
+  # NOTE: the `getMarginMode` / `changeMarginMode` paths live under
+  # `/api/v2/position/...`, so these specific routes MUST precede the generic
+  # `api/v2/position` route below, or first-match dispatch would shadow them.
   list(pattern = "MarginMode", fixture = .fixtures$futures_margin_mode),
   list(pattern = "CrossUserLeverage", fixture = .fixtures$futures_cross_leverage),
   list(pattern = "MaxOpenSize", fixture = .fixtures$futures_max_open_size),
@@ -176,6 +178,9 @@ box::use(
   list(pattern = "deposit-margin", fixture = .fixtures$futures_margin_response),
   list(pattern = "withdrawMargin", fixture = .fixtures$futures_margin_response),
   list(pattern = "funding-history", fixture = .fixtures$futures_private_funding),
+  # Generic single-position route last, so the `/api/v2/position/...` subpaths
+  # above win first-match dispatch.
+  list(pattern = "api/v2/position", fixture = .fixtures$futures_position),
 
   # Generic market data (after margin-specific patterns)
   list(pattern = "currencies", fixture = .fixtures$currency),
