@@ -861,8 +861,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' klines <- futures_market$get_klines(
     #'   "XBTUSDTM",
     #'   granularity = 60,
-    #'   from = as.numeric(Sys.time() - 200 * 3600) * 1000,
-    #'   to = as.numeric(Sys.time()) * 1000
+    #'   from = as.numeric(lubridate::now("UTC") - lubridate::dhours(200)) * 1000,
+    #'   to = as.numeric(lubridate::now("UTC")) * 1000
     #' )
     #' print(klines[, .(datetime, open, high, low, close, volume)])
     #'
@@ -870,8 +870,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' all_klines <- futures_market$get_klines(
     #'   "XBTUSDTM",
     #'   granularity = 60,
-    #'   from = as.POSIXct("2024-10-01", tz = "UTC"),
-    #'   to = as.POSIXct("2024-10-31", tz = "UTC"),
+    #'   from = lubridate::as_datetime("2024-10-01"),
+    #'   to = lubridate::as_datetime("2024-10-31"),
     #'   fetch_all = TRUE,
     #'   sleep = 0.3
     #' )
@@ -890,11 +890,11 @@ KucoinFuturesMarketData <- R6::R6Class(
         # input is epoch-ms instead.
         from_posix <- from
         if (!inherits(from, "POSIXct")) {
-          from_posix <- as.POSIXct(as.numeric(from) / 1000, origin = "1970-01-01", tz = "UTC")
+          from_posix <- lubridate::as_datetime(as.numeric(from) / 1000)
         }
         to_posix <- to
         if (!inherits(to, "POSIXct")) {
-          to_posix <- as.POSIXct(as.numeric(to) / 1000, origin = "1970-01-01", tz = "UTC")
+          to_posix <- lubridate::as_datetime(as.numeric(to) / 1000)
         }
         res <- kucoin_fetch_futures_klines(
           symbol = symbol,
@@ -1214,8 +1214,8 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' futures_market <- KucoinFuturesMarketData$new()
     #' history <- futures_market$get_funding_history(
     #'   symbol = "XBTUSDTM",
-    #'   from = as.POSIXct("2024-10-25", tz = "UTC"),
-    #'   to = as.POSIXct("2024-10-26", tz = "UTC")
+    #'   from = lubridate::as_datetime("2024-10-25"),
+    #'   to = lubridate::as_datetime("2024-10-26")
     #' )
     #' print(history[, .(symbol, funding_rate, timepoint)])
     #' }

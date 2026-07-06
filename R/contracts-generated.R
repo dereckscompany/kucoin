@@ -64,8 +64,8 @@ assert_return_KucoinAccount__get_spot_accounts <- function(value) {
   return(value)
 }
 
-assert_args_KucoinAccount__get_spot_account_detail <- function(accountId) {
-  assert_scalar_character(accountId)
+assert_args_KucoinAccount__get_spot_account_detail <- function(account_id) {
+  assert_scalar_character(account_id)
   return(invisible(NULL))
 }
 
@@ -131,27 +131,27 @@ assert_return_KucoinAccount__get_spot_ledger <- function(value) {
   return(value)
 }
 
-assert_args_KucoinAccount__get_hf_ledger <- function(currency, direction, bizType, lastId, limit, startAt, endAt) {
+assert_args_KucoinAccount__get_hf_ledger <- function(currency, direction, biz_type, last_id, limit, start_at, end_at) {
   if (!is.null(currency)) {
     assert_scalar_character(currency)
   }
   if (!is.null(direction)) {
     assert_scalar_character(direction)
   }
-  if (!is.null(bizType)) {
-    assert_scalar_character(bizType)
+  if (!is.null(biz_type)) {
+    assert_scalar_character(biz_type)
   }
-  if (!is.null(lastId)) {
-    assert_scalar_character(lastId)
+  if (!is.null(last_id)) {
+    assert_scalar_character(last_id)
   }
   if (!is.null(limit)) {
     assert_scalar_count(limit)
   }
-  if (!is.null(startAt)) {
-    assert_scalar_double(startAt)
+  if (!is.null(start_at)) {
+    assert_scalar_double(start_at)
   }
-  if (!is.null(endAt)) {
-    assert_scalar_double(endAt)
+  if (!is.null(end_at)) {
+    assert_scalar_double(end_at)
   }
   return(invisible(NULL))
 }
@@ -179,9 +179,9 @@ assert_return_KucoinAccount__get_hf_ledger <- function(value) {
   return(value)
 }
 
-assert_args_KucoinAccount__get_base_fee_rate <- function(currencyType) {
-  if (!is.null(currencyType)) {
-    assert_scalar_count(currencyType)
+assert_args_KucoinAccount__get_base_fee_rate <- function(currency_type) {
+  if (!is.null(currency_type)) {
+    assert_scalar_count(currency_type)
   }
   return(invisible(NULL))
 }
@@ -269,18 +269,18 @@ assert_return_KucoinDeposit__get_deposit_addresses <- function(value) {
   return(value)
 }
 
-assert_args_KucoinDeposit__get_deposit_history <- function(currency, status, startAt, endAt, page_size, max_pages) {
+assert_args_KucoinDeposit__get_deposit_history <- function(currency, status, start_at, end_at, page_size, max_pages) {
   if (!is.null(currency)) {
     assert_scalar_character(currency)
   }
   if (!is.null(status)) {
     assert_scalar_character(status)
   }
-  if (!is.null(startAt)) {
-    assert_scalar_double(startAt)
+  if (!is.null(start_at)) {
+    assert_scalar_double(start_at)
   }
-  if (!is.null(endAt)) {
-    assert_scalar_double(endAt)
+  if (!is.null(end_at)) {
+    assert_scalar_double(end_at)
   }
   assert_scalar_count(page_size)
   assert_between(page_size, lower = 1)
@@ -373,9 +373,9 @@ assert_return_KucoinFuturesAccount__get_margin_mode <- function(value) {
   return(value)
 }
 
-assert_args_KucoinFuturesAccount__set_margin_mode <- function(symbol, marginMode) {
+assert_args_KucoinFuturesAccount__set_margin_mode <- function(symbol, margin_mode) {
   assert_scalar_character(symbol)
-  assert_scalar_character(marginMode)
+  assert_scalar_character(margin_mode)
   return(invisible(NULL))
 }
 
@@ -448,10 +448,10 @@ assert_return_KucoinFuturesAccount__get_max_withdraw_margin <- function(value) {
   return(value)
 }
 
-assert_args_KucoinFuturesAccount__add_isolated_margin <- function(symbol, margin, bizNo) {
+assert_args_KucoinFuturesAccount__add_isolated_margin <- function(symbol, margin, biz_no) {
   assert_scalar_character(symbol)
   assert_scalar_double(margin)
-  assert_scalar_character(bizNo)
+  assert_scalar_character(biz_no)
   return(invisible(NULL))
 }
 
@@ -468,9 +468,9 @@ assert_return_KucoinFuturesAccount__add_isolated_margin <- function(value) {
   return(value)
 }
 
-assert_args_KucoinFuturesAccount__remove_isolated_margin <- function(symbol, withdrawAmount) {
+assert_args_KucoinFuturesAccount__remove_isolated_margin <- function(symbol, withdraw_amount) {
   assert_scalar_character(symbol)
-  assert_scalar_double(withdrawAmount)
+  assert_scalar_double(withdraw_amount)
   return(invisible(NULL))
 }
 
@@ -757,8 +757,8 @@ assert_return_KucoinFuturesTrading__initialize <- function(value) {
   return(value)
 }
 
-assert_args_KucoinFuturesTrading__add_order <- function(clientOid, symbol, side, type, leverage, size, price, marginMode, positionSide, timeInForce, reduceOnly, remark) {
-  assert_scalar_character(clientOid)
+assert_args_KucoinFuturesTrading__add_order <- function(client_order_id, symbol, side, type, leverage, size, price, margin_mode, position_side, time_in_force, reduce_only, remark) {
+  assert_scalar_character(client_order_id)
   assert_scalar_character(symbol)
   assert_scalar_character(side)
   assert_scalar_character(type)
@@ -769,13 +769,13 @@ assert_args_KucoinFuturesTrading__add_order <- function(clientOid, symbol, side,
   if (!is.null(price)) {
     assert_scalar_character(price)
   }
-  assert_scalar_character(marginMode)
-  assert_scalar_character(positionSide)
-  if (!is.null(timeInForce)) {
-    assert_scalar_character(timeInForce)
+  assert_scalar_character(margin_mode)
+  assert_scalar_character(position_side)
+  if (!is.null(time_in_force)) {
+    assert_scalar_character(time_in_force)
   }
-  if (!is.null(reduceOnly)) {
-    assert_scalar_logical(reduceOnly)
+  if (!is.null(reduce_only)) {
+    assert_scalar_logical(reduce_only)
   }
   if (!is.null(remark)) {
     assert_scalar_character(remark)
@@ -792,8 +792,8 @@ assert_return_KucoinFuturesTrading__add_order <- function(value) {
   return(value)
 }
 
-assert_args_KucoinFuturesTrading__add_order_test <- function(clientOid, symbol, side, type, leverage, size, price, marginMode, positionSide, timeInForce, reduceOnly, remark) {
-  assert_scalar_character(clientOid)
+assert_args_KucoinFuturesTrading__add_order_test <- function(client_order_id, symbol, side, type, leverage, size, price, margin_mode, position_side, time_in_force, reduce_only, remark) {
+  assert_scalar_character(client_order_id)
   assert_scalar_character(symbol)
   assert_scalar_character(side)
   assert_scalar_character(type)
@@ -804,13 +804,13 @@ assert_args_KucoinFuturesTrading__add_order_test <- function(clientOid, symbol, 
   if (!is.null(price)) {
     assert_scalar_character(price)
   }
-  assert_scalar_character(marginMode)
-  assert_scalar_character(positionSide)
-  if (!is.null(timeInForce)) {
-    assert_scalar_character(timeInForce)
+  assert_scalar_character(margin_mode)
+  assert_scalar_character(position_side)
+  if (!is.null(time_in_force)) {
+    assert_scalar_character(time_in_force)
   }
-  if (!is.null(reduceOnly)) {
-    assert_scalar_logical(reduceOnly)
+  if (!is.null(reduce_only)) {
+    assert_scalar_logical(reduce_only)
   }
   if (!is.null(remark)) {
     assert_scalar_character(remark)
@@ -841,8 +841,8 @@ assert_return_KucoinFuturesTrading__add_order_batch <- function(value) {
   return(value)
 }
 
-assert_args_KucoinFuturesTrading__cancel_order_by_id <- function(orderId) {
-  assert_scalar_character(orderId)
+assert_args_KucoinFuturesTrading__cancel_order_by_id <- function(order_id) {
+  assert_scalar_character(order_id)
   return(invisible(NULL))
 }
 
@@ -851,8 +851,8 @@ assert_return_KucoinFuturesTrading__cancel_order_by_id <- function(value) {
   return(value)
 }
 
-assert_args_KucoinFuturesTrading__cancel_order_by_client_oid <- function(clientOid, symbol) {
-  assert_scalar_character(clientOid)
+assert_args_KucoinFuturesTrading__cancel_order_by_client_oid <- function(client_order_id, symbol) {
+  assert_scalar_character(client_order_id)
   assert_scalar_character(symbol)
   return(invisible(NULL))
 }
@@ -889,8 +889,8 @@ assert_return_KucoinFuturesTrading__cancel_all_stop_orders <- function(value) {
   return(value)
 }
 
-assert_args_KucoinFuturesTrading__get_order_by_id <- function(orderId) {
-  assert_scalar_character(orderId)
+assert_args_KucoinFuturesTrading__get_order_by_id <- function(order_id) {
+  assert_scalar_character(order_id)
   return(invisible(NULL))
 }
 
@@ -924,8 +924,8 @@ assert_return_KucoinFuturesTrading__get_order_by_id <- function(value) {
   return(value)
 }
 
-assert_args_KucoinFuturesTrading__get_order_by_client_oid <- function(clientOid) {
-  assert_scalar_character(clientOid)
+assert_args_KucoinFuturesTrading__get_order_by_client_oid <- function(client_order_id) {
+  assert_scalar_character(client_order_id)
   return(invisible(NULL))
 }
 
@@ -1167,10 +1167,10 @@ assert_return_KucoinLending__get_loan_market_rate <- function(value) {
   return(value)
 }
 
-assert_args_KucoinLending__purchase <- function(currency, size, interestRate) {
+assert_args_KucoinLending__purchase <- function(currency, size, interest_rate) {
   assert_scalar_character(currency)
   assert_scalar_double(size)
-  assert_scalar_double(interestRate)
+  assert_scalar_double(interest_rate)
   return(invisible(NULL))
 }
 
@@ -1182,10 +1182,10 @@ assert_return_KucoinLending__purchase <- function(value) {
   return(value)
 }
 
-assert_args_KucoinLending__modify_purchase <- function(currency, purchaseOrderNo, interestRate) {
+assert_args_KucoinLending__modify_purchase <- function(currency, purchase_order_no, interest_rate) {
   assert_scalar_character(currency)
-  assert_scalar_character(purchaseOrderNo)
-  assert_scalar_double(interestRate)
+  assert_scalar_character(purchase_order_no)
+  assert_scalar_double(interest_rate)
   return(invisible(NULL))
 }
 
@@ -1212,10 +1212,10 @@ assert_return_KucoinLending__get_purchase_orders <- function(value) {
   return(value)
 }
 
-assert_args_KucoinLending__redeem <- function(currency, size, purchaseOrderNo) {
+assert_args_KucoinLending__redeem <- function(currency, size, purchase_order_no) {
   assert_scalar_character(currency)
   assert_scalar_double(size)
-  assert_scalar_character(purchaseOrderNo)
+  assert_scalar_character(purchase_order_no)
   return(invisible(NULL))
 }
 
@@ -1279,8 +1279,8 @@ assert_return_KucoinMarginData__get_collateral_ratio <- function(value) {
   return(value)
 }
 
-assert_args_KucoinMarginData__get_risk_limit <- function(isIsolated, query) {
-  assert_scalar_logical(isIsolated)
+assert_args_KucoinMarginData__get_risk_limit <- function(is_isolated, query) {
+  assert_scalar_logical(is_isolated)
   assert_list(query)
   return(invisible(NULL))
 }
@@ -1290,7 +1290,7 @@ assert_return_KucoinMarginData__get_risk_limit <- function(value) {
   return(value)
 }
 
-assert_args_KucoinMarginTrading__open_short <- function(symbol, size, funds, type, price, isIsolated, clientOid, stp, remark, timeInForce, cancelAfter, postOnly, hidden, iceberg, visibleSize, dry_run) {
+assert_args_KucoinMarginTrading__open_short <- function(symbol, size, funds, type, price, is_isolated, client_order_id, stp, remark, time_in_force, cancel_after, post_only, hidden, iceberg, visible_size, dry_run) {
   assert_scalar_character(symbol)
   if (!is.null(size)) {
     assert_scalar_double(size)
@@ -1302,9 +1302,9 @@ assert_args_KucoinMarginTrading__open_short <- function(symbol, size, funds, typ
   if (!is.null(price)) {
     assert_scalar_double(price)
   }
-  assert_scalar_logical(isIsolated)
-  if (!is.null(clientOid)) {
-    assert_scalar_character(clientOid)
+  assert_scalar_logical(is_isolated)
+  if (!is.null(client_order_id)) {
+    assert_scalar_character(client_order_id)
   }
   if (!is.null(stp)) {
     assert_scalar_character(stp)
@@ -1312,14 +1312,14 @@ assert_args_KucoinMarginTrading__open_short <- function(symbol, size, funds, typ
   if (!is.null(remark)) {
     assert_scalar_character(remark)
   }
-  if (!is.null(timeInForce)) {
-    assert_scalar_character(timeInForce)
+  if (!is.null(time_in_force)) {
+    assert_scalar_character(time_in_force)
   }
-  if (!is.null(cancelAfter)) {
-    assert_scalar_double(cancelAfter)
+  if (!is.null(cancel_after)) {
+    assert_scalar_double(cancel_after)
   }
-  if (!is.null(postOnly)) {
-    assert_scalar_logical(postOnly)
+  if (!is.null(post_only)) {
+    assert_scalar_logical(post_only)
   }
   if (!is.null(hidden)) {
     assert_scalar_logical(hidden)
@@ -1327,8 +1327,8 @@ assert_args_KucoinMarginTrading__open_short <- function(symbol, size, funds, typ
   if (!is.null(iceberg)) {
     assert_scalar_logical(iceberg)
   }
-  if (!is.null(visibleSize)) {
-    assert_scalar_double(visibleSize)
+  if (!is.null(visible_size)) {
+    assert_scalar_double(visible_size)
   }
   assert_scalar_logical(dry_run)
   return(invisible(NULL))
@@ -1339,7 +1339,7 @@ assert_return_KucoinMarginTrading__open_short <- function(value) {
   return(value)
 }
 
-assert_args_KucoinMarginTrading__close_short <- function(symbol, size, funds, type, price, isIsolated, clientOid, stp, remark, timeInForce, cancelAfter, postOnly, hidden, iceberg, visibleSize, dry_run) {
+assert_args_KucoinMarginTrading__close_short <- function(symbol, size, funds, type, price, is_isolated, client_order_id, stp, remark, time_in_force, cancel_after, post_only, hidden, iceberg, visible_size, dry_run) {
   assert_scalar_character(symbol)
   if (!is.null(size)) {
     assert_scalar_double(size)
@@ -1351,9 +1351,9 @@ assert_args_KucoinMarginTrading__close_short <- function(symbol, size, funds, ty
   if (!is.null(price)) {
     assert_scalar_double(price)
   }
-  assert_scalar_logical(isIsolated)
-  if (!is.null(clientOid)) {
-    assert_scalar_character(clientOid)
+  assert_scalar_logical(is_isolated)
+  if (!is.null(client_order_id)) {
+    assert_scalar_character(client_order_id)
   }
   if (!is.null(stp)) {
     assert_scalar_character(stp)
@@ -1361,14 +1361,14 @@ assert_args_KucoinMarginTrading__close_short <- function(symbol, size, funds, ty
   if (!is.null(remark)) {
     assert_scalar_character(remark)
   }
-  if (!is.null(timeInForce)) {
-    assert_scalar_character(timeInForce)
+  if (!is.null(time_in_force)) {
+    assert_scalar_character(time_in_force)
   }
-  if (!is.null(cancelAfter)) {
-    assert_scalar_double(cancelAfter)
+  if (!is.null(cancel_after)) {
+    assert_scalar_double(cancel_after)
   }
-  if (!is.null(postOnly)) {
-    assert_scalar_logical(postOnly)
+  if (!is.null(post_only)) {
+    assert_scalar_logical(post_only)
   }
   if (!is.null(hidden)) {
     assert_scalar_logical(hidden)
@@ -1376,8 +1376,8 @@ assert_args_KucoinMarginTrading__close_short <- function(symbol, size, funds, ty
   if (!is.null(iceberg)) {
     assert_scalar_logical(iceberg)
   }
-  if (!is.null(visibleSize)) {
-    assert_scalar_double(visibleSize)
+  if (!is.null(visible_size)) {
+    assert_scalar_double(visible_size)
   }
   assert_scalar_logical(dry_run)
   return(invisible(NULL))
@@ -1392,7 +1392,7 @@ assert_return_KucoinMarginTrading__close_short <- function(value) {
   return(value)
 }
 
-assert_args_KucoinMarginTrading__open_long <- function(symbol, size, funds, type, price, isIsolated, clientOid, stp, remark, timeInForce, cancelAfter, postOnly, hidden, iceberg, visibleSize, dry_run) {
+assert_args_KucoinMarginTrading__open_long <- function(symbol, size, funds, type, price, is_isolated, client_order_id, stp, remark, time_in_force, cancel_after, post_only, hidden, iceberg, visible_size, dry_run) {
   assert_scalar_character(symbol)
   if (!is.null(size)) {
     assert_scalar_double(size)
@@ -1404,9 +1404,9 @@ assert_args_KucoinMarginTrading__open_long <- function(symbol, size, funds, type
   if (!is.null(price)) {
     assert_scalar_double(price)
   }
-  assert_scalar_logical(isIsolated)
-  if (!is.null(clientOid)) {
-    assert_scalar_character(clientOid)
+  assert_scalar_logical(is_isolated)
+  if (!is.null(client_order_id)) {
+    assert_scalar_character(client_order_id)
   }
   if (!is.null(stp)) {
     assert_scalar_character(stp)
@@ -1414,14 +1414,14 @@ assert_args_KucoinMarginTrading__open_long <- function(symbol, size, funds, type
   if (!is.null(remark)) {
     assert_scalar_character(remark)
   }
-  if (!is.null(timeInForce)) {
-    assert_scalar_character(timeInForce)
+  if (!is.null(time_in_force)) {
+    assert_scalar_character(time_in_force)
   }
-  if (!is.null(cancelAfter)) {
-    assert_scalar_double(cancelAfter)
+  if (!is.null(cancel_after)) {
+    assert_scalar_double(cancel_after)
   }
-  if (!is.null(postOnly)) {
-    assert_scalar_logical(postOnly)
+  if (!is.null(post_only)) {
+    assert_scalar_logical(post_only)
   }
   if (!is.null(hidden)) {
     assert_scalar_logical(hidden)
@@ -1429,8 +1429,8 @@ assert_args_KucoinMarginTrading__open_long <- function(symbol, size, funds, type
   if (!is.null(iceberg)) {
     assert_scalar_logical(iceberg)
   }
-  if (!is.null(visibleSize)) {
-    assert_scalar_double(visibleSize)
+  if (!is.null(visible_size)) {
+    assert_scalar_double(visible_size)
   }
   assert_scalar_logical(dry_run)
   return(invisible(NULL))
@@ -1445,7 +1445,7 @@ assert_return_KucoinMarginTrading__open_long <- function(value) {
   return(value)
 }
 
-assert_args_KucoinMarginTrading__close_long <- function(symbol, size, funds, type, price, isIsolated, clientOid, stp, remark, timeInForce, cancelAfter, postOnly, hidden, iceberg, visibleSize, dry_run) {
+assert_args_KucoinMarginTrading__close_long <- function(symbol, size, funds, type, price, is_isolated, client_order_id, stp, remark, time_in_force, cancel_after, post_only, hidden, iceberg, visible_size, dry_run) {
   assert_scalar_character(symbol)
   if (!is.null(size)) {
     assert_scalar_double(size)
@@ -1457,9 +1457,9 @@ assert_args_KucoinMarginTrading__close_long <- function(symbol, size, funds, typ
   if (!is.null(price)) {
     assert_scalar_double(price)
   }
-  assert_scalar_logical(isIsolated)
-  if (!is.null(clientOid)) {
-    assert_scalar_character(clientOid)
+  assert_scalar_logical(is_isolated)
+  if (!is.null(client_order_id)) {
+    assert_scalar_character(client_order_id)
   }
   if (!is.null(stp)) {
     assert_scalar_character(stp)
@@ -1467,14 +1467,14 @@ assert_args_KucoinMarginTrading__close_long <- function(symbol, size, funds, typ
   if (!is.null(remark)) {
     assert_scalar_character(remark)
   }
-  if (!is.null(timeInForce)) {
-    assert_scalar_character(timeInForce)
+  if (!is.null(time_in_force)) {
+    assert_scalar_character(time_in_force)
   }
-  if (!is.null(cancelAfter)) {
-    assert_scalar_double(cancelAfter)
+  if (!is.null(cancel_after)) {
+    assert_scalar_double(cancel_after)
   }
-  if (!is.null(postOnly)) {
-    assert_scalar_logical(postOnly)
+  if (!is.null(post_only)) {
+    assert_scalar_logical(post_only)
   }
   if (!is.null(hidden)) {
     assert_scalar_logical(hidden)
@@ -1482,8 +1482,8 @@ assert_args_KucoinMarginTrading__close_long <- function(symbol, size, funds, typ
   if (!is.null(iceberg)) {
     assert_scalar_logical(iceberg)
   }
-  if (!is.null(visibleSize)) {
-    assert_scalar_double(visibleSize)
+  if (!is.null(visible_size)) {
+    assert_scalar_double(visible_size)
   }
   assert_scalar_logical(dry_run)
   return(invisible(NULL))
@@ -1498,15 +1498,15 @@ assert_return_KucoinMarginTrading__close_long <- function(value) {
   return(value)
 }
 
-assert_args_KucoinMarginTrading__borrow <- function(currency, size, timeInForce, isIsolated, symbol, isHf) {
+assert_args_KucoinMarginTrading__borrow <- function(currency, size, time_in_force, is_isolated, symbol, is_hf) {
   assert_scalar_character(currency)
   assert_scalar_double(size)
-  assert_scalar_character(timeInForce)
-  assert_scalar_logical(isIsolated)
+  assert_scalar_character(time_in_force)
+  assert_scalar_logical(is_isolated)
   if (!is.null(symbol)) {
     assert_scalar_character(symbol)
   }
-  assert_scalar_logical(isHf)
+  assert_scalar_logical(is_hf)
   return(invisible(NULL))
 }
 
@@ -1922,7 +1922,7 @@ assert_return_KucoinMarketData__get_fiat_prices <- function(value) {
   return(value)
 }
 
-assert_args_KucoinOcoOrders__add_order <- function(symbol, side, price, size, stopPrice, limitPrice, clientOid, remark, tradeType) {
+assert_args_KucoinOcoOrders__add_order <- function(symbol, side, price, size, stop_price, limit_price, client_order_id, remark, trade_type) {
   assert_scalar_character(symbol)
   assert_scalar_character(side)
   assert_any_of(
@@ -1944,7 +1944,7 @@ assert_args_KucoinOcoOrders__add_order <- function(symbol, side, price, size, st
     }
   )
   assert_any_of(
-    stopPrice,
+    stop_price,
     function(.x) {
       assert_scalar_double(.x)
     },
@@ -1953,7 +1953,7 @@ assert_args_KucoinOcoOrders__add_order <- function(symbol, side, price, size, st
     }
   )
   assert_any_of(
-    limitPrice,
+    limit_price,
     function(.x) {
       assert_scalar_double(.x)
     },
@@ -1961,13 +1961,13 @@ assert_args_KucoinOcoOrders__add_order <- function(symbol, side, price, size, st
       assert_scalar_character(.x)
     }
   )
-  if (!is.null(clientOid)) {
-    assert_scalar_character(clientOid)
+  if (!is.null(client_order_id)) {
+    assert_scalar_character(client_order_id)
   }
   if (!is.null(remark)) {
     assert_scalar_character(remark)
   }
-  assert_scalar_character(tradeType)
+  assert_scalar_character(trade_type)
   return(invisible(NULL))
 }
 
@@ -1980,8 +1980,8 @@ assert_return_KucoinOcoOrders__add_order <- function(value) {
   return(value)
 }
 
-assert_args_KucoinOcoOrders__cancel_order_by_id <- function(orderId) {
-  assert_scalar_character(orderId)
+assert_args_KucoinOcoOrders__cancel_order_by_id <- function(order_id) {
+  assert_scalar_character(order_id)
   return(invisible(NULL))
 }
 
@@ -1990,8 +1990,8 @@ assert_return_KucoinOcoOrders__cancel_order_by_id <- function(value) {
   return(value)
 }
 
-assert_args_KucoinOcoOrders__cancel_order_by_client_oid <- function(clientOid) {
-  assert_scalar_character(clientOid)
+assert_args_KucoinOcoOrders__cancel_order_by_client_oid <- function(client_order_id) {
+  assert_scalar_character(client_order_id)
   return(invisible(NULL))
 }
 
@@ -2010,8 +2010,8 @@ assert_return_KucoinOcoOrders__cancel_all <- function(value) {
   return(value)
 }
 
-assert_args_KucoinOcoOrders__get_order_by_id <- function(orderId) {
-  assert_scalar_character(orderId)
+assert_args_KucoinOcoOrders__get_order_by_id <- function(order_id) {
+  assert_scalar_character(order_id)
   return(invisible(NULL))
 }
 
@@ -2030,8 +2030,8 @@ assert_return_KucoinOcoOrders__get_order_by_id <- function(value) {
   return(value)
 }
 
-assert_args_KucoinOcoOrders__get_order_by_client_oid <- function(clientOid) {
-  assert_scalar_character(clientOid)
+assert_args_KucoinOcoOrders__get_order_by_client_oid <- function(client_order_id) {
+  assert_scalar_character(client_order_id)
   return(invisible(NULL))
 }
 
@@ -2050,8 +2050,8 @@ assert_return_KucoinOcoOrders__get_order_by_client_oid <- function(value) {
   return(value)
 }
 
-assert_args_KucoinOcoOrders__get_order_detail_by_id <- function(orderId) {
-  assert_scalar_character(orderId)
+assert_args_KucoinOcoOrders__get_order_detail_by_id <- function(order_id) {
+  assert_scalar_character(order_id)
   return(invisible(NULL))
 }
 
@@ -2091,12 +2091,12 @@ assert_return_KucoinOcoOrders__get_order_list <- function(value) {
   return(value)
 }
 
-assert_args_KucoinStopOrders__add_order <- function(type, symbol, side, stopPrice, clientOid, price, size, funds, stp, remark, timeInForce, cancelAfter, postOnly, hidden, iceberg, visibleSize, tradeType) {
+assert_args_KucoinStopOrders__add_order <- function(type, symbol, side, stop_price, client_order_id, price, size, funds, stp, remark, time_in_force, cancel_after, post_only, hidden, iceberg, visible_size, trade_type) {
   assert_scalar_character(type)
   assert_scalar_character(symbol)
   assert_scalar_character(side)
   assert_any_of(
-    stopPrice,
+    stop_price,
     function(.x) {
       assert_scalar_double(.x)
     },
@@ -2104,8 +2104,8 @@ assert_args_KucoinStopOrders__add_order <- function(type, symbol, side, stopPric
       assert_scalar_character(.x)
     }
   )
-  if (!is.null(clientOid)) {
-    assert_scalar_character(clientOid)
+  if (!is.null(client_order_id)) {
+    assert_scalar_character(client_order_id)
   }
   if (!is.null(price)) {
     assert_any_of(
@@ -2146,14 +2146,14 @@ assert_args_KucoinStopOrders__add_order <- function(type, symbol, side, stopPric
   if (!is.null(remark)) {
     assert_scalar_character(remark)
   }
-  if (!is.null(timeInForce)) {
-    assert_scalar_character(timeInForce)
+  if (!is.null(time_in_force)) {
+    assert_scalar_character(time_in_force)
   }
-  if (!is.null(cancelAfter)) {
-    assert_scalar_double(cancelAfter)
+  if (!is.null(cancel_after)) {
+    assert_scalar_double(cancel_after)
   }
-  if (!is.null(postOnly)) {
-    assert_scalar_logical(postOnly)
+  if (!is.null(post_only)) {
+    assert_scalar_logical(post_only)
   }
   if (!is.null(hidden)) {
     assert_scalar_logical(hidden)
@@ -2161,9 +2161,9 @@ assert_args_KucoinStopOrders__add_order <- function(type, symbol, side, stopPric
   if (!is.null(iceberg)) {
     assert_scalar_logical(iceberg)
   }
-  if (!is.null(visibleSize)) {
+  if (!is.null(visible_size)) {
     assert_any_of(
-      visibleSize,
+      visible_size,
       function(.x) {
         assert_scalar_double(.x)
       },
@@ -2172,7 +2172,7 @@ assert_args_KucoinStopOrders__add_order <- function(type, symbol, side, stopPric
       }
     )
   }
-  assert_scalar_character(tradeType)
+  assert_scalar_character(trade_type)
   return(invisible(NULL))
 }
 
@@ -2184,8 +2184,8 @@ assert_return_KucoinStopOrders__add_order <- function(value) {
   return(value)
 }
 
-assert_args_KucoinStopOrders__cancel_order_by_id <- function(orderId) {
-  assert_scalar_character(orderId)
+assert_args_KucoinStopOrders__cancel_order_by_id <- function(order_id) {
+  assert_scalar_character(order_id)
   return(invisible(NULL))
 }
 
@@ -2194,8 +2194,8 @@ assert_return_KucoinStopOrders__cancel_order_by_id <- function(value) {
   return(value)
 }
 
-assert_args_KucoinStopOrders__cancel_order_by_client_oid <- function(clientOid, symbol) {
-  assert_scalar_character(clientOid)
+assert_args_KucoinStopOrders__cancel_order_by_client_oid <- function(client_order_id, symbol) {
+  assert_scalar_character(client_order_id)
   assert_scalar_character(symbol)
   return(invisible(NULL))
 }
@@ -2219,8 +2219,8 @@ assert_return_KucoinStopOrders__cancel_all <- function(value) {
   return(value)
 }
 
-assert_args_KucoinStopOrders__get_order_by_id <- function(orderId) {
-  assert_scalar_character(orderId)
+assert_args_KucoinStopOrders__get_order_by_id <- function(order_id) {
+  assert_scalar_character(order_id)
   return(invisible(NULL))
 }
 
@@ -2229,8 +2229,8 @@ assert_return_KucoinStopOrders__get_order_by_id <- function(value) {
   return(value)
 }
 
-assert_args_KucoinStopOrders__get_order_by_client_oid <- function(clientOid, symbol) {
-  assert_scalar_character(clientOid)
+assert_args_KucoinStopOrders__get_order_by_client_oid <- function(client_order_id, symbol) {
+  assert_scalar_character(client_order_id)
   assert_scalar_character(symbol)
   return(invisible(NULL))
 }
@@ -2250,9 +2250,9 @@ assert_return_KucoinStopOrders__get_order_list <- function(value) {
   return(value)
 }
 
-assert_args_KucoinSubAccount__add_sub_account <- function(password, subName, access, remarks) {
+assert_args_KucoinSubAccount__add_sub_account <- function(password, sub_name, access, remarks) {
   assert_scalar_character(password)
-  assert_scalar_character(subName)
+  assert_scalar_character(sub_name)
   assert_scalar_character(access)
   if (!is.null(remarks)) {
     assert_scalar_character(remarks)
@@ -2286,9 +2286,9 @@ assert_return_KucoinSubAccount__get_sub_account_list <- function(value) {
   return(value)
 }
 
-assert_args_KucoinSubAccount__get_detail_balance <- function(subUserId, includeBaseAmount) {
-  assert_scalar_character(subUserId)
-  assert_scalar_logical(includeBaseAmount)
+assert_args_KucoinSubAccount__get_detail_balance <- function(sub_user_id, include_base_amount) {
+  assert_scalar_character(sub_user_id)
+  assert_scalar_logical(include_base_amount)
   return(invisible(NULL))
 }
 
@@ -2310,12 +2310,12 @@ assert_return_KucoinSubAccount__get_all_spot_balances <- function(value) {
   return(value)
 }
 
-assert_args_KucoinTrading__add_order <- function(type, symbol, side, clientOid, price, size, funds, stp, tags, remark, timeInForce, cancelAfter, postOnly, hidden, iceberg, visibleSize) {
+assert_args_KucoinTrading__add_order <- function(type, symbol, side, client_order_id, price, size, funds, stp, tags, remark, time_in_force, cancel_after, post_only, hidden, iceberg, visible_size) {
   assert_scalar_character(type)
   assert_scalar_character(symbol)
   assert_scalar_character(side)
-  if (!is.null(clientOid)) {
-    assert_scalar_character(clientOid)
+  if (!is.null(client_order_id)) {
+    assert_scalar_character(client_order_id)
   }
   if (!is.null(price)) {
     assert_any_of(
@@ -2359,14 +2359,14 @@ assert_args_KucoinTrading__add_order <- function(type, symbol, side, clientOid, 
   if (!is.null(remark)) {
     assert_scalar_character(remark)
   }
-  if (!is.null(timeInForce)) {
-    assert_scalar_character(timeInForce)
+  if (!is.null(time_in_force)) {
+    assert_scalar_character(time_in_force)
   }
-  if (!is.null(cancelAfter)) {
-    assert_scalar_double(cancelAfter)
+  if (!is.null(cancel_after)) {
+    assert_scalar_double(cancel_after)
   }
-  if (!is.null(postOnly)) {
-    assert_scalar_logical(postOnly)
+  if (!is.null(post_only)) {
+    assert_scalar_logical(post_only)
   }
   if (!is.null(hidden)) {
     assert_scalar_logical(hidden)
@@ -2374,9 +2374,9 @@ assert_args_KucoinTrading__add_order <- function(type, symbol, side, clientOid, 
   if (!is.null(iceberg)) {
     assert_scalar_logical(iceberg)
   }
-  if (!is.null(visibleSize)) {
+  if (!is.null(visible_size)) {
     assert_any_of(
-      visibleSize,
+      visible_size,
       function(.x) {
         assert_scalar_double(.x)
       },
@@ -2397,12 +2397,12 @@ assert_return_KucoinTrading__add_order <- function(value) {
   return(value)
 }
 
-assert_args_KucoinTrading__add_order_test <- function(type, symbol, side, clientOid, price, size, funds, stp, tags, remark, timeInForce, cancelAfter, postOnly, hidden, iceberg, visibleSize) {
+assert_args_KucoinTrading__add_order_test <- function(type, symbol, side, client_order_id, price, size, funds, stp, tags, remark, time_in_force, cancel_after, post_only, hidden, iceberg, visible_size) {
   assert_scalar_character(type)
   assert_scalar_character(symbol)
   assert_scalar_character(side)
-  if (!is.null(clientOid)) {
-    assert_scalar_character(clientOid)
+  if (!is.null(client_order_id)) {
+    assert_scalar_character(client_order_id)
   }
   if (!is.null(price)) {
     assert_any_of(
@@ -2446,14 +2446,14 @@ assert_args_KucoinTrading__add_order_test <- function(type, symbol, side, client
   if (!is.null(remark)) {
     assert_scalar_character(remark)
   }
-  if (!is.null(timeInForce)) {
-    assert_scalar_character(timeInForce)
+  if (!is.null(time_in_force)) {
+    assert_scalar_character(time_in_force)
   }
-  if (!is.null(cancelAfter)) {
-    assert_scalar_double(cancelAfter)
+  if (!is.null(cancel_after)) {
+    assert_scalar_double(cancel_after)
   }
-  if (!is.null(postOnly)) {
-    assert_scalar_logical(postOnly)
+  if (!is.null(post_only)) {
+    assert_scalar_logical(post_only)
   }
   if (!is.null(hidden)) {
     assert_scalar_logical(hidden)
@@ -2461,9 +2461,9 @@ assert_args_KucoinTrading__add_order_test <- function(type, symbol, side, client
   if (!is.null(iceberg)) {
     assert_scalar_logical(iceberg)
   }
-  if (!is.null(visibleSize)) {
+  if (!is.null(visible_size)) {
     assert_any_of(
-      visibleSize,
+      visible_size,
       function(.x) {
         assert_scalar_double(.x)
       },
@@ -2500,8 +2500,8 @@ assert_return_KucoinTrading__add_order_batch <- function(value) {
   return(value)
 }
 
-assert_args_KucoinTrading__cancel_order_by_id <- function(orderId, symbol) {
-  assert_scalar_character(orderId)
+assert_args_KucoinTrading__cancel_order_by_id <- function(order_id, symbol) {
+  assert_scalar_character(order_id)
   assert_scalar_character(symbol)
   return(invisible(NULL))
 }
@@ -2514,8 +2514,8 @@ assert_return_KucoinTrading__cancel_order_by_id <- function(value) {
   return(value)
 }
 
-assert_args_KucoinTrading__cancel_order_by_client_oid <- function(clientOid, symbol) {
-  assert_scalar_character(clientOid)
+assert_args_KucoinTrading__cancel_order_by_client_oid <- function(client_order_id, symbol) {
+  assert_scalar_character(client_order_id)
   assert_scalar_character(symbol)
   return(invisible(NULL))
 }
@@ -2527,11 +2527,11 @@ assert_return_KucoinTrading__cancel_order_by_client_oid <- function(value) {
   return(value)
 }
 
-assert_args_KucoinTrading__cancel_partial_order <- function(orderId, symbol, cancelSize) {
-  assert_scalar_character(orderId)
+assert_args_KucoinTrading__cancel_partial_order <- function(order_id, symbol, cancel_size) {
+  assert_scalar_character(order_id)
   assert_scalar_character(symbol)
   assert_any_of(
-    cancelSize,
+    cancel_size,
     function(.x) {
       assert_scalar_double(.x)
     },
@@ -2574,8 +2574,8 @@ assert_return_KucoinTrading__cancel_all <- function(value) {
   return(value)
 }
 
-assert_args_KucoinTrading__get_order_by_id <- function(orderId, symbol) {
-  assert_scalar_character(orderId)
+assert_args_KucoinTrading__get_order_by_id <- function(order_id, symbol) {
+  assert_scalar_character(order_id)
   if (!is.null(symbol)) {
     assert_scalar_character(symbol)
   }
@@ -2602,8 +2602,8 @@ assert_return_KucoinTrading__get_order_by_id <- function(value) {
   return(value)
 }
 
-assert_args_KucoinTrading__get_order_by_client_oid <- function(clientOid, symbol) {
-  assert_scalar_character(clientOid)
+assert_args_KucoinTrading__get_order_by_client_oid <- function(client_order_id, symbol) {
+  assert_scalar_character(client_order_id)
   assert_scalar_character(symbol)
   return(invisible(NULL))
 }
@@ -2621,12 +2621,12 @@ assert_return_KucoinTrading__get_order_by_client_oid <- function(value) {
   return(value)
 }
 
-assert_args_KucoinTrading__get_fills <- function(symbol, orderId, side, type, lastId, limit, startAt, endAt) {
+assert_args_KucoinTrading__get_fills <- function(symbol, order_id, side, type, last_id, limit, start_at, end_at) {
   if (!is.null(symbol)) {
     assert_scalar_character(symbol)
   }
-  if (!is.null(orderId)) {
-    assert_scalar_character(orderId)
+  if (!is.null(order_id)) {
+    assert_scalar_character(order_id)
   }
   if (!is.null(side)) {
     assert_scalar_character(side)
@@ -2634,17 +2634,17 @@ assert_args_KucoinTrading__get_fills <- function(symbol, orderId, side, type, la
   if (!is.null(type)) {
     assert_scalar_character(type)
   }
-  if (!is.null(lastId)) {
-    assert_scalar_character(lastId)
+  if (!is.null(last_id)) {
+    assert_scalar_character(last_id)
   }
   if (!is.null(limit)) {
     assert_scalar_count(limit)
   }
-  if (!is.null(startAt)) {
-    assert_scalar_double(startAt)
+  if (!is.null(start_at)) {
+    assert_scalar_double(start_at)
   }
-  if (!is.null(endAt)) {
-    assert_scalar_double(endAt)
+  if (!is.null(end_at)) {
+    assert_scalar_double(end_at)
   }
   return(invisible(NULL))
 }
@@ -2674,7 +2674,7 @@ assert_return_KucoinTrading__get_open_orders <- function(value) {
   return(value)
 }
 
-assert_args_KucoinTrading__get_closed_orders <- function(symbol, side, type, startAt, endAt, limit, lastId) {
+assert_args_KucoinTrading__get_closed_orders <- function(symbol, side, type, start_at, end_at, limit, last_id) {
   if (!is.null(symbol)) {
     assert_scalar_character(symbol)
   }
@@ -2684,17 +2684,17 @@ assert_args_KucoinTrading__get_closed_orders <- function(symbol, side, type, sta
   if (!is.null(type)) {
     assert_scalar_character(type)
   }
-  if (!is.null(startAt)) {
-    assert_scalar_double(startAt)
+  if (!is.null(start_at)) {
+    assert_scalar_double(start_at)
   }
-  if (!is.null(endAt)) {
-    assert_scalar_double(endAt)
+  if (!is.null(end_at)) {
+    assert_scalar_double(end_at)
   }
   if (!is.null(limit)) {
     assert_scalar_count(limit)
   }
-  if (!is.null(lastId)) {
-    assert_scalar_character(lastId)
+  if (!is.null(last_id)) {
+    assert_scalar_character(last_id)
   }
   return(invisible(NULL))
 }
@@ -2713,12 +2713,12 @@ assert_return_KucoinTrading__get_closed_orders <- function(value) {
   return(value)
 }
 
-assert_args_KucoinTrading__add_order_sync <- function(type, symbol, side, clientOid, price, size, funds, stp, tags, remark, timeInForce, cancelAfter, postOnly, hidden, iceberg, visibleSize) {
+assert_args_KucoinTrading__add_order_sync <- function(type, symbol, side, client_order_id, price, size, funds, stp, tags, remark, time_in_force, cancel_after, post_only, hidden, iceberg, visible_size) {
   assert_scalar_character(type)
   assert_scalar_character(symbol)
   assert_scalar_character(side)
-  if (!is.null(clientOid)) {
-    assert_scalar_character(clientOid)
+  if (!is.null(client_order_id)) {
+    assert_scalar_character(client_order_id)
   }
   if (!is.null(price)) {
     assert_any_of(
@@ -2762,14 +2762,14 @@ assert_args_KucoinTrading__add_order_sync <- function(type, symbol, side, client
   if (!is.null(remark)) {
     assert_scalar_character(remark)
   }
-  if (!is.null(timeInForce)) {
-    assert_scalar_character(timeInForce)
+  if (!is.null(time_in_force)) {
+    assert_scalar_character(time_in_force)
   }
-  if (!is.null(cancelAfter)) {
-    assert_scalar_double(cancelAfter)
+  if (!is.null(cancel_after)) {
+    assert_scalar_double(cancel_after)
   }
-  if (!is.null(postOnly)) {
-    assert_scalar_logical(postOnly)
+  if (!is.null(post_only)) {
+    assert_scalar_logical(post_only)
   }
   if (!is.null(hidden)) {
     assert_scalar_logical(hidden)
@@ -2777,9 +2777,9 @@ assert_args_KucoinTrading__add_order_sync <- function(type, symbol, side, client
   if (!is.null(iceberg)) {
     assert_scalar_logical(iceberg)
   }
-  if (!is.null(visibleSize)) {
+  if (!is.null(visible_size)) {
     assert_any_of(
-      visibleSize,
+      visible_size,
       function(.x) {
         assert_scalar_double(.x)
       },
@@ -2816,8 +2816,8 @@ assert_return_KucoinTrading__add_order_batch_sync <- function(value) {
   return(value)
 }
 
-assert_args_KucoinTrading__cancel_order_by_id_sync <- function(orderId, symbol) {
-  assert_scalar_character(orderId)
+assert_args_KucoinTrading__cancel_order_by_id_sync <- function(order_id, symbol) {
+  assert_scalar_character(order_id)
   assert_scalar_character(symbol)
   return(invisible(NULL))
 }
@@ -2836,8 +2836,8 @@ assert_return_KucoinTrading__cancel_order_by_id_sync <- function(value) {
   return(value)
 }
 
-assert_args_KucoinTrading__cancel_order_by_client_oid_sync <- function(clientOid, symbol) {
-  assert_scalar_character(clientOid)
+assert_args_KucoinTrading__cancel_order_by_client_oid_sync <- function(client_order_id, symbol) {
+  assert_scalar_character(client_order_id)
   assert_scalar_character(symbol)
   return(invisible(NULL))
 }
@@ -2855,17 +2855,17 @@ assert_return_KucoinTrading__cancel_order_by_client_oid_sync <- function(value) 
   return(value)
 }
 
-assert_args_KucoinTrading__modify_order <- function(symbol, orderId, clientOid, newPrice, newSize) {
+assert_args_KucoinTrading__modify_order <- function(symbol, order_id, client_order_id, new_price, new_size) {
   assert_scalar_character(symbol)
-  if (!is.null(orderId)) {
-    assert_scalar_character(orderId)
+  if (!is.null(order_id)) {
+    assert_scalar_character(order_id)
   }
-  if (!is.null(clientOid)) {
-    assert_scalar_character(clientOid)
+  if (!is.null(client_order_id)) {
+    assert_scalar_character(client_order_id)
   }
-  if (!is.null(newPrice)) {
+  if (!is.null(new_price)) {
     assert_any_of(
-      newPrice,
+      new_price,
       function(.x) {
         assert_scalar_double(.x)
       },
@@ -2874,9 +2874,9 @@ assert_args_KucoinTrading__modify_order <- function(symbol, orderId, clientOid, 
       }
     )
   }
-  if (!is.null(newSize)) {
+  if (!is.null(new_size)) {
     assert_any_of(
-      newSize,
+      new_size,
       function(.x) {
         assert_scalar_double(.x)
       },
@@ -2919,24 +2919,24 @@ assert_return_KucoinTrading__get_dcp <- function(value) {
   return(value)
 }
 
-assert_args_KucoinTransfer__add_transfer <- function(clientOid, currency, amount, type, fromAccountType, toAccountType, fromUserId, fromAccountTag, toUserId, toAccountTag) {
-  assert_scalar_character(clientOid)
+assert_args_KucoinTransfer__add_transfer <- function(client_order_id, currency, amount, type, from_account_type, to_account_type, from_user_id, from_account_tag, to_user_id, to_account_tag) {
+  assert_scalar_character(client_order_id)
   assert_scalar_character(currency)
   assert_scalar_character(amount)
   assert_scalar_character(type)
-  assert_scalar_character(fromAccountType)
-  assert_scalar_character(toAccountType)
-  if (!is.null(fromUserId)) {
-    assert_scalar_character(fromUserId)
+  assert_scalar_character(from_account_type)
+  assert_scalar_character(to_account_type)
+  if (!is.null(from_user_id)) {
+    assert_scalar_character(from_user_id)
   }
-  if (!is.null(fromAccountTag)) {
-    assert_scalar_character(fromAccountTag)
+  if (!is.null(from_account_tag)) {
+    assert_scalar_character(from_account_tag)
   }
-  if (!is.null(toUserId)) {
-    assert_scalar_character(toUserId)
+  if (!is.null(to_user_id)) {
+    assert_scalar_character(to_user_id)
   }
-  if (!is.null(toAccountTag)) {
-    assert_scalar_character(toAccountTag)
+  if (!is.null(to_account_tag)) {
+    assert_scalar_character(to_account_tag)
   }
   return(invisible(NULL))
 }
@@ -2970,25 +2970,25 @@ assert_return_KucoinTransfer__get_transferable <- function(value) {
   return(value)
 }
 
-assert_args_KucoinWithdrawal__add_withdrawal <- function(currency, toAddress, amount, withdrawType, chain, memo, isInner, remark, feeDeductType) {
+assert_args_KucoinWithdrawal__add_withdrawal <- function(currency, to_address, amount, withdraw_type, chain, memo, is_inner, remark, fee_deduct_type) {
   assert_scalar_character(currency)
-  assert_scalar_character(toAddress)
+  assert_scalar_character(to_address)
   assert_scalar_character(amount)
-  assert_scalar_character(withdrawType)
+  assert_scalar_character(withdraw_type)
   if (!is.null(chain)) {
     assert_scalar_character(chain)
   }
   if (!is.null(memo)) {
     assert_scalar_character(memo)
   }
-  if (!is.null(isInner)) {
-    assert_scalar_logical(isInner)
+  if (!is.null(is_inner)) {
+    assert_scalar_logical(is_inner)
   }
   if (!is.null(remark)) {
     assert_scalar_character(remark)
   }
-  if (!is.null(feeDeductType)) {
-    assert_scalar_character(feeDeductType)
+  if (!is.null(fee_deduct_type)) {
+    assert_scalar_character(fee_deduct_type)
   }
   return(invisible(NULL))
 }
@@ -3001,8 +3001,8 @@ assert_return_KucoinWithdrawal__add_withdrawal <- function(value) {
   return(value)
 }
 
-assert_args_KucoinWithdrawal__cancel_withdrawal <- function(withdrawalId) {
-  assert_scalar_character(withdrawalId)
+assert_args_KucoinWithdrawal__cancel_withdrawal <- function(withdrawal_id) {
+  assert_scalar_character(withdrawal_id)
   return(invisible(NULL))
 }
 
@@ -3047,18 +3047,18 @@ assert_return_KucoinWithdrawal__get_withdrawal_quotas <- function(value) {
   return(value)
 }
 
-assert_args_KucoinWithdrawal__get_withdrawal_history <- function(currency, status, startAt, endAt, page_size, max_pages) {
+assert_args_KucoinWithdrawal__get_withdrawal_history <- function(currency, status, start_at, end_at, page_size, max_pages) {
   if (!is.null(currency)) {
     assert_scalar_character(currency)
   }
   if (!is.null(status)) {
     assert_scalar_character(status)
   }
-  if (!is.null(startAt)) {
-    assert_scalar_double(startAt)
+  if (!is.null(start_at)) {
+    assert_scalar_double(start_at)
   }
-  if (!is.null(endAt)) {
-    assert_scalar_double(endAt)
+  if (!is.null(end_at)) {
+    assert_scalar_double(end_at)
   }
   assert_scalar_count(page_size)
   assert_between(page_size, lower = 1)
@@ -3072,8 +3072,8 @@ assert_return_KucoinWithdrawal__get_withdrawal_history <- function(value) {
   return(value)
 }
 
-assert_args_KucoinWithdrawal__get_withdrawal_by_id <- function(withdrawalId) {
-  assert_scalar_character(withdrawalId)
+assert_args_KucoinWithdrawal__get_withdrawal_by_id <- function(withdrawal_id) {
+  assert_scalar_character(withdrawal_id)
   return(invisible(NULL))
 }
 
@@ -3134,15 +3134,6 @@ assert_args_kucoin_backfill_klines <- function(timeframes, file, base_url, sleep
 
 assert_return_kucoin_backfill_klines <- function(value) {
   assert_scalar_character(value)
-  return(value)
-}
-
-assert_args_ms_to_datetime <- function(ms) {
-  return(invisible(NULL))
-}
-
-assert_return_ms_to_datetime <- function(value) {
-  assert_class(value, "POSIXct")
   return(value)
 }
 
@@ -3355,14 +3346,14 @@ assert_return_verify_symbol <- function(value) {
   return(value)
 }
 
-assert_args_validate_order_params <- function(type, symbol, side, clientOid, price, size, funds, stp, tags, remark, timeInForce, cancelAfter, postOnly, hidden, iceberg, visibleSize) {
+assert_args_validate_order_params <- function(type, symbol, side, client_order_id, price, size, funds, stp, tags, remark, time_in_force, cancel_after, post_only, hidden, iceberg, visible_size) {
   assert_scalar_character(type)
   assert_value_in_set(type, c("limit", "market"))
   assert_scalar_character(symbol)
   assert_scalar_character(side)
   assert_value_in_set(side, c("buy", "sell"))
-  if (!is.null(clientOid)) {
-    assert_scalar_character(clientOid)
+  if (!is.null(client_order_id)) {
+    assert_scalar_character(client_order_id)
   }
   if (!is.null(price)) {
     assert_any_of(
@@ -3406,14 +3397,14 @@ assert_args_validate_order_params <- function(type, symbol, side, clientOid, pri
   if (!is.null(remark)) {
     assert_scalar_character(remark)
   }
-  if (!is.null(timeInForce)) {
-    assert_scalar_character(timeInForce)
+  if (!is.null(time_in_force)) {
+    assert_scalar_character(time_in_force)
   }
-  if (!is.null(cancelAfter)) {
-    assert_scalar_double(cancelAfter)
+  if (!is.null(cancel_after)) {
+    assert_scalar_double(cancel_after)
   }
-  if (!is.null(postOnly)) {
-    assert_scalar_logical(postOnly)
+  if (!is.null(post_only)) {
+    assert_scalar_logical(post_only)
   }
   if (!is.null(hidden)) {
     assert_scalar_logical(hidden)
@@ -3421,9 +3412,9 @@ assert_args_validate_order_params <- function(type, symbol, side, clientOid, pri
   if (!is.null(iceberg)) {
     assert_scalar_logical(iceberg)
   }
-  if (!is.null(visibleSize)) {
+  if (!is.null(visible_size)) {
     assert_any_of(
-      visibleSize,
+      visible_size,
       function(.x) {
         assert_scalar_double(.x)
       },
@@ -3440,15 +3431,15 @@ assert_return_validate_order_params <- function(value) {
   return(value)
 }
 
-assert_args_validate_margin_order_params <- function(isIsolated, autoBorrow, autoRepay) {
-  if (!is.null(isIsolated)) {
-    assert_scalar_logical(isIsolated)
+assert_args_validate_margin_order_params <- function(is_isolated, auto_borrow, auto_repay) {
+  if (!is.null(is_isolated)) {
+    assert_scalar_logical(is_isolated)
   }
-  if (!is.null(autoBorrow)) {
-    assert_scalar_logical(autoBorrow)
+  if (!is.null(auto_borrow)) {
+    assert_scalar_logical(auto_borrow)
   }
-  if (!is.null(autoRepay)) {
-    assert_scalar_logical(autoRepay)
+  if (!is.null(auto_repay)) {
+    assert_scalar_logical(auto_repay)
   }
   return(invisible(NULL))
 }

@@ -622,7 +622,7 @@ Verified: 2026-05-23
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesAccount$set_margin_mode(symbol, marginMode)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesAccount$set_margin_mode(symbol, margin_mode)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -630,7 +630,7 @@ Verified: 2026-05-23
 \describe{
 \item{\code{symbol}}{(scalar<character>) futures symbol.}
 
-\item{\code{marginMode}}{(scalar<character>) \code{"ISOLATED"} or \code{"CROSS"}.}
+\item{\code{margin_mode}}{(scalar<character>) \code{"ISOLATED"} or \code{"CROSS"}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1001,7 +1001,7 @@ Verified: 2026-05-23
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesAccount$add_isolated_margin(symbol, margin, bizNo)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesAccount$add_isolated_margin(symbol, margin, biz_no)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -1011,7 +1011,7 @@ Verified: 2026-05-23
 
 \item{\code{margin}}{(scalar<numeric>) amount of margin to add.}
 
-\item{\code{bizNo}}{(scalar<character>) unique business ID for idempotency.}
+\item{\code{biz_no}}{(scalar<character>) unique business ID for idempotency.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1091,7 +1091,7 @@ Verified: 2026-05-23
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesAccount$remove_isolated_margin(symbol, withdrawAmount)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinFuturesAccount$remove_isolated_margin(symbol, withdraw_amount)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -1099,7 +1099,7 @@ Verified: 2026-05-23
 \describe{
 \item{\code{symbol}}{(scalar<character>) futures symbol.}
 
-\item{\code{withdrawAmount}}{(scalar<numeric>) amount of margin to withdraw.}
+\item{\code{withdraw_amount}}{(scalar<numeric>) amount of margin to withdraw.}
 }
 \if{html}{\out{</div>}}
 }

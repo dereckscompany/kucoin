@@ -305,7 +305,7 @@ test_that("[LIVE] get_full_orderbook returns data.table for BTC-USDT", {
 margin_data_auth <- KucoinMarginData$new(keys = .keys)
 
 test_that("[LIVE] get_risk_limit returns data.table for cross margin", {
-  dt <- margin_data_auth$get_risk_limit(isIsolated = FALSE)
+  dt <- margin_data_auth$get_risk_limit(is_isolated = FALSE)
   expect_s3_class(dt, "data.table")
   expect_true(nrow(dt) > 0)
   expect_true("currency" %in% names(dt))

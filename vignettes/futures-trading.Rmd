@@ -183,7 +183,7 @@ Use `add_order_test()` to validate parameters without placing a real order:
 
 ```{r order-test}
 result <- trading$add_order_test(
-  clientOid = "my-test-001",
+  client_order_id = "my-test-001",
   symbol = "XBTUSDTM",
   side = "buy",
   type = "limit",
@@ -199,7 +199,7 @@ result
 ```{r order, eval = FALSE}
 # Market order — no price needed
 order <- trading$add_order(
-  clientOid = "my-market-001",
+  client_order_id = "my-market-001",
   symbol = "XBTUSDTM",
   side = "buy",
   type = "market",
@@ -209,14 +209,14 @@ order <- trading$add_order(
 
 # Limit order
 order <- trading$add_order(
-  clientOid = "my-limit-001",
+  client_order_id = "my-limit-001",
   symbol = "XBTUSDTM",
   side = "buy",
   type = "limit",
   leverage = 5,
   size = 1,
   price = "95000",
-  timeInForce = "GTC"
+  time_in_force = "GTC"
 )
 ```
 
@@ -224,10 +224,10 @@ order <- trading$add_order(
 
 ```{r cancel, eval = FALSE}
 # Cancel by system order ID
-trading$cancel_order_by_id(orderId = "order-id-here")
+trading$cancel_order_by_id(order_id = "order-id-here")
 
 # Cancel by client order ID
-trading$cancel_order_by_client_oid(clientOid = "my-limit-001", symbol = "XBTUSDTM")
+trading$cancel_order_by_client_oid(client_order_id = "my-limit-001", symbol = "XBTUSDTM")
 
 # Cancel all orders for a symbol
 trading$cancel_all(symbol = "XBTUSDTM")
@@ -240,7 +240,7 @@ trading$cancel_all_stop_orders(symbol = "XBTUSDTM")
 
 ```{r query-orders, eval = FALSE}
 # Get a specific order
-order <- trading$get_order_by_id(orderId = "order-id")
+order <- trading$get_order_by_id(order_id = "order-id")
 
 # Get open orders
 open <- trading$get_order_list(query = list(status = "active"))
@@ -309,7 +309,7 @@ account$get_margin_mode(symbol = "XBTUSDTM")
 
 ```{r set-margin, eval = FALSE}
 # Switch to cross margin
-account$set_margin_mode(symbol = "XBTUSDTM", marginMode = "CROSS")
+account$set_margin_mode(symbol = "XBTUSDTM", margin_mode = "CROSS")
 ```
 
 ### Leverage

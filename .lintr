@@ -1,8 +1,11 @@
 linters: linters_with_defaults(
     line_length_linter = line_length_linter(120),
     indentation_linter = indentation_linter(2),
-    # camelCase is intentional: KuCoin API params are passed through verbatim.
-    object_name_linter = object_name_linter(styles = c("snake_case", "SNAKE_CASE", "CamelCase", "camelCase")),
+    # Pure snake_case for arguments and objects; CamelCase only for the R6
+    # generator objects, SNAKE_CASE for constants. The KuCoin API's camelCase
+    # field names survive as wire payload keys inside each method, never as R
+    # argument names.
+    object_name_linter = object_name_linter(styles = c("snake_case", "SNAKE_CASE", "CamelCase")),
     # Functions accepted as a valid exit under return_style = "explicit".
     # Add project-specific aborters here (e.g. abort_assertion).
     return_linter = return_linter(return_style = "explicit", return_functions = c("abort", "cli_abort")),

@@ -16,12 +16,12 @@ test_that("add_transfer returns data.table with order_id", {
   httr2::local_mocked_responses(function(req) resp)
 
   dt <- new_transfer()$add_transfer(
-    clientOid = "64ccc0f164781800010d8c09",
+    client_order_id = "64ccc0f164781800010d8c09",
     currency = "USDT",
     amount = "100",
     type = "INTERNAL",
-    fromAccountType = "MAIN",
-    toAccountType = "TRADE"
+    from_account_type = "MAIN",
+    to_account_type = "TRADE"
   )
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
@@ -33,26 +33,26 @@ test_that("add_transfer returns data.table with order_id", {
 test_that("add_transfer validates clientOid", {
   expect_error(
     new_transfer()$add_transfer(
-      clientOid = "",
+      client_order_id = "",
       currency = "USDT",
       amount = "100",
       type = "INTERNAL",
-      fromAccountType = "MAIN",
-      toAccountType = "TRADE"
+      from_account_type = "MAIN",
+      to_account_type = "TRADE"
     ),
-    "clientOid.*non-empty"
+    "client_order_id.*non-empty"
   )
 })
 
 test_that("add_transfer validates currency", {
   expect_error(
     new_transfer()$add_transfer(
-      clientOid = "uuid-1",
+      client_order_id = "uuid-1",
       currency = "",
       amount = "100",
       type = "INTERNAL",
-      fromAccountType = "MAIN",
-      toAccountType = "TRADE"
+      from_account_type = "MAIN",
+      to_account_type = "TRADE"
     ),
     "currency.*non-empty"
   )
@@ -61,12 +61,12 @@ test_that("add_transfer validates currency", {
 test_that("add_transfer validates amount", {
   expect_error(
     new_transfer()$add_transfer(
-      clientOid = "uuid-1",
+      client_order_id = "uuid-1",
       currency = "USDT",
       amount = "",
       type = "INTERNAL",
-      fromAccountType = "MAIN",
-      toAccountType = "TRADE"
+      from_account_type = "MAIN",
+      to_account_type = "TRADE"
     ),
     "amount.*non-empty"
   )
@@ -75,12 +75,12 @@ test_that("add_transfer validates amount", {
 test_that("add_transfer validates type", {
   expect_error(
     new_transfer()$add_transfer(
-      clientOid = "uuid-1",
+      client_order_id = "uuid-1",
       currency = "USDT",
       amount = "100",
       type = "INVALID",
-      fromAccountType = "MAIN",
-      toAccountType = "TRADE"
+      from_account_type = "MAIN",
+      to_account_type = "TRADE"
     ),
     "type.*INTERNAL"
   )
@@ -89,12 +89,12 @@ test_that("add_transfer validates type", {
 test_that("add_transfer validates fromAccountType", {
   expect_error(
     new_transfer()$add_transfer(
-      clientOid = "uuid-1",
+      client_order_id = "uuid-1",
       currency = "USDT",
       amount = "100",
       type = "INTERNAL",
-      fromAccountType = "INVALID",
-      toAccountType = "TRADE"
+      from_account_type = "INVALID",
+      to_account_type = "TRADE"
     ),
     "fromAccountType.*MAIN"
   )
@@ -103,12 +103,12 @@ test_that("add_transfer validates fromAccountType", {
 test_that("add_transfer validates toAccountType", {
   expect_error(
     new_transfer()$add_transfer(
-      clientOid = "uuid-1",
+      client_order_id = "uuid-1",
       currency = "USDT",
       amount = "100",
       type = "INTERNAL",
-      fromAccountType = "MAIN",
-      toAccountType = "INVALID"
+      from_account_type = "MAIN",
+      to_account_type = "INVALID"
     ),
     "toAccountType.*MAIN"
   )
@@ -119,13 +119,13 @@ test_that("add_transfer includes optional sub-account parameters", {
   httr2::local_mocked_responses(function(req) resp)
 
   dt <- new_transfer()$add_transfer(
-    clientOid = "uuid-2",
+    client_order_id = "uuid-2",
     currency = "BTC",
     amount = "0.01",
     type = "PARENT_TO_SUB",
-    fromAccountType = "MAIN",
-    toAccountType = "MAIN",
-    toUserId = "sub-user-id-123"
+    from_account_type = "MAIN",
+    to_account_type = "MAIN",
+    to_user_id = "sub-user-id-123"
   )
   expect_s3_class(dt, "data.table")
   expect_equal(dt$order_id, "transfer-sub-001")

@@ -16,7 +16,7 @@ test_that("add_order returns order_id and client_oid", {
   httr2::local_mocked_responses(function(req) resp)
 
   dt <- new_futures_trading()$add_order(
-    clientOid = "test-001",
+    client_order_id = "test-001",
     symbol = "XBTUSDTM",
     side = "buy",
     type = "limit",
@@ -40,7 +40,7 @@ test_that("add_order strips NULL params from body", {
   })
 
   new_futures_trading()$add_order(
-    clientOid = "test-002",
+    client_order_id = "test-002",
     symbol = "XBTUSDTM",
     side = "buy",
     type = "market",
@@ -62,7 +62,7 @@ test_that("add_order_test hits test endpoint", {
   })
 
   dt <- new_futures_trading()$add_order_test(
-    clientOid = "test-003",
+    client_order_id = "test-003",
     symbol = "XBTUSDTM",
     side = "buy",
     type = "limit",

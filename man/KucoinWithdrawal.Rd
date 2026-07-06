@@ -258,14 +258,14 @@ network.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{KucoinWithdrawal$add_withdrawal(
   currency,
-  toAddress,
+  to_address,
   amount,
-  withdrawType,
+  withdraw_type,
   chain = NULL,
   memo = NULL,
-  isInner = NULL,
+  is_inner = NULL,
   remark = NULL,
-  feeDeductType = NULL
+  fee_deduct_type = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -275,13 +275,13 @@ network.
 \item{\code{currency}}{(scalar<character>) currency code (e.g., \code{"BTC"},
 \code{"USDT"}).}
 
-\item{\code{toAddress}}{(scalar<character>) withdrawal destination address, UID,
+\item{\code{to_address}}{(scalar<character>) withdrawal destination address, UID,
 email, or phone number.}
 
 \item{\code{amount}}{(scalar<character>) withdrawal amount (must be positive,
 multiple of currency precision).}
 
-\item{\code{withdrawType}}{(scalar<character>) withdrawal type: \code{"ADDRESS"},
+\item{\code{withdraw_type}}{(scalar<character>) withdrawal type: \code{"ADDRESS"},
 \code{"UID"}, \code{"MAIL"}, or \code{"PHONE"}.}
 
 \item{\code{chain}}{(scalar<character> | NULL) blockchain network identifier
@@ -291,13 +291,13 @@ raises if \code{NULL}.}
 \item{\code{memo}}{(scalar<character> | NULL) address memo/tag (required for some
 currencies like XRP, XLM).}
 
-\item{\code{isInner}}{(scalar<logical> | NULL) if \code{TRUE}, this is an internal
+\item{\code{is_inner}}{(scalar<logical> | NULL) if \code{TRUE}, this is an internal
 KuCoin transfer (no on-chain fee).}
 
 \item{\code{remark}}{(scalar<character> | NULL) optional remark for the
 withdrawal.}
 
-\item{\code{feeDeductType}}{(scalar<character> | NULL) fee deduction type:
+\item{\code{fee_deduct_type}}{(scalar<character> | NULL) fee deduction type:
 \code{"INTERNAL"} or \code{"EXTERNAL"}.}
 }
 \if{html}{\out{</div>}}
@@ -396,13 +396,13 @@ Verified: 2026-05-23
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinWithdrawal$cancel_withdrawal(withdrawalId)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinWithdrawal$cancel_withdrawal(withdrawal_id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{withdrawalId}}{(scalar<character>) the unique withdrawal ID to
+\item{\code{withdrawal_id}}{(scalar<character>) the unique withdrawal ID to
 cancel.}
 }
 \if{html}{\out{</div>}}
@@ -650,8 +650,8 @@ Verified: 2026-05-23
 \if{html}{\out{<div class="r">}}\preformatted{KucoinWithdrawal$get_withdrawal_history(
   currency = NULL,
   status = NULL,
-  startAt = NULL,
-  endAt = NULL,
+  start_at = NULL,
+  end_at = NULL,
   page_size = 50,
   max_pages = Inf
 )}\if{html}{\out{</div>}}
@@ -667,13 +667,13 @@ Verified: 2026-05-23
 Accepted values: \code{"PROCESSING"}, \code{"REVIEW"}, \code{"WALLET_PROCESSING"},
 \code{"SUCCESS"}, \code{"FAILURE"}. When NULL, returns withdrawals of all statuses.}
 
-\item{\code{startAt}}{(scalar<numeric> | NULL) start timestamp in milliseconds
+\item{\code{start_at}}{(scalar<numeric> | NULL) start timestamp in milliseconds
 (inclusive).}
 
-\item{\code{endAt}}{(scalar<numeric> | NULL) end timestamp in milliseconds
+\item{\code{end_at}}{(scalar<numeric> | NULL) end timestamp in milliseconds
 (inclusive).}
 
-\item{\code{page_size}}{(scalar<count in [1, Inf[>) number of results per page
+\item{\code{page_size}}{(scalar<count in [1, Inf]>) number of results per page
 (default 50, max 500).}
 
 \item{\code{max_pages}}{(scalar<numeric in [1, Inf]>) maximum number of pages to
@@ -789,13 +789,13 @@ withdrawal can still be cancelled.
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinWithdrawal$get_withdrawal_by_id(withdrawalId)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinWithdrawal$get_withdrawal_by_id(withdrawal_id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{withdrawalId}}{(scalar<character>) the unique withdrawal ID.}
+\item{\code{withdrawal_id}}{(scalar<character>) the unique withdrawal ID.}
 }
 \if{html}{\out{</div>}}
 }

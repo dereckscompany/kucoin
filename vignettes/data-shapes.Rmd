@@ -611,7 +611,7 @@ recover with `jsonlite::fromJSON`.
 # raw `context` field as a JSON string because its keys depend on
 # the `bizType` of the entry (Exchange entries carry `orderId` +
 # `symbol`; Transfer entries carry `description`; etc.).
-ledger <- account$get_spot_ledger(query = list(currency = "USDT", bizType = "Exchange"))
+ledger <- account$get_spot_ledger(query = list(currency = "USDT", biz_type = "Exchange"))
 ledger$context[1]
 #> '{"orderId":"670fd33bf9406e0007ab3945","symbol":"BTC-USDT"}'
 

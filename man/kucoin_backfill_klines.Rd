@@ -44,10 +44,13 @@ symbol-timeframe combination to respect rate limits.}
 \code{\link[rlang:abort]{rlang::inform()}}.}
 }
 \value{
-(scalar<character>) the file path (invisibly). If any
-symbol-timeframe combinations failed, a \code{"failures"} attribute is attached
-containing a \link[data.table:data.table]{data.table::data.table} with columns \code{symbol}, \code{timeframe},
-and \code{error}.
+(scalar<character>) the file path (invisibly).
+
+Per-combo failures are surfaced as warnings during the run (one
+\code{\link[rlang:abort]{rlang::warn()}} per failed \verb{(symbol, timeframe)} pair, with the underlying
+error message). After the loop, if any combinations failed, a final summary
+warning lists the count and the affected pairs. No failure data is hidden on
+the return value.
 }
 \description{
 Downloads historical OHLCV candlestick data for one or more trading pairs and

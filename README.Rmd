@@ -231,12 +231,12 @@ print(balance[, .(currency, balance, transferable)])
 
 # Move funds from main to trade account
 result <- transfer$add_transfer(
-  clientOid = "my-unique-id",
+  client_order_id = "my-unique-id",
   currency = "USDT",
   amount = "100",
   type = "INTERNAL",
-  fromAccountType = "MAIN",
-  toAccountType = "TRADE"
+  from_account_type = "MAIN",
+  to_account_type = "TRADE"
 )
 print(result$order_id)
 
@@ -332,7 +332,7 @@ futures_account <- KucoinFuturesAccount$new(keys = KEYS, base_url = FBASE)
 
 ```{r}
 futures_trading$add_order_test(
-  clientOid = "readme-test-001",
+  client_order_id = "readme-test-001",
   symbol = "XBTUSDTM",
   side = "buy",
   type = "limit",

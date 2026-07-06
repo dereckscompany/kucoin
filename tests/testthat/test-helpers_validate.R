@@ -128,9 +128,9 @@ test_that("validate_order_params enforces GTT requires cancelAfter", {
       side = "buy",
       price = 67000,
       size = 0.001,
-      timeInForce = "GTT"
+      time_in_force = "GTT"
     ),
-    "cancelAfter.*required"
+    "cancel_after.*required"
   )
 })
 
@@ -142,10 +142,10 @@ test_that("validate_order_params enforces postOnly with IOC", {
       side = "buy",
       price = 67000,
       size = 0.001,
-      timeInForce = "IOC",
-      postOnly = TRUE
+      time_in_force = "IOC",
+      post_only = TRUE
     ),
-    "postOnly.*cannot"
+    "post_only.*cannot"
   )
 })
 
@@ -183,13 +183,13 @@ test_that("validate_order_params accepts valid optional params", {
     side = "buy",
     price = 67000,
     size = 0.001,
-    clientOid = "order-123",
+    client_order_id = "order-123",
     stp = "CN",
     tags = "bot-v1",
     remark = "test-order",
-    timeInForce = "GTT",
-    cancelAfter = 3600,
-    postOnly = FALSE
+    time_in_force = "GTT",
+    cancel_after = 3600,
+    post_only = FALSE
   )
 
   expect_equal(params$clientOid, "order-123")

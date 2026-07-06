@@ -168,7 +168,7 @@ test_that("get_risk_limit returns data.table", {
   )
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_margin_data()$get_risk_limit(isIsolated = FALSE)
+  dt <- new_margin_data()$get_risk_limit(is_isolated = FALSE)
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 2L)
   expect_true("currency" %in% names(dt))
@@ -176,14 +176,14 @@ test_that("get_risk_limit returns data.table", {
 })
 
 test_that("get_risk_limit validates isIsolated", {
-  expect_error(new_margin_data()$get_risk_limit(isIsolated = "no"), "logical")
+  expect_error(new_margin_data()$get_risk_limit(is_isolated = "no"), "logical")
 })
 
 test_that("get_risk_limit returns empty data.table for empty response", {
   resp <- mock_kucoin_response(data = list())
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_margin_data()$get_risk_limit(isIsolated = FALSE)
+  dt <- new_margin_data()$get_risk_limit(is_isolated = FALSE)
   expect_equal(nrow(dt), 0L)
 })
 
@@ -364,7 +364,7 @@ test_that("get_risk_limit produces no list columns", {
   )
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_margin_data()$get_risk_limit(isIsolated = FALSE)
+  dt <- new_margin_data()$get_risk_limit(is_isolated = FALSE)
   expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
   expect_true(is.character(dt$currency))
   expect_true(is.integer(dt$precision))

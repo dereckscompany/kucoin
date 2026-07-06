@@ -303,11 +303,11 @@ reconciliation.
   side,
   price,
   size,
-  stopPrice,
-  limitPrice,
-  clientOid = NULL,
+  stop_price,
+  limit_price,
+  client_order_id = NULL,
   remark = NULL,
-  tradeType = "TRADE"
+  trade_type = "TRADE"
 )}\if{html}{\out{</div>}}
 }
 
@@ -326,22 +326,22 @@ the take-profit leg; must align with the symbol's \code{priceIncrement}.}
 currency (e.g., \code{"0.0001"} BTC); must align with the symbol's
 \code{baseIncrement}.}
 
-\item{\code{stopPrice}}{(scalar<numeric> | scalar<character>) trigger price for
+\item{\code{stop_price}}{(scalar<numeric> | scalar<character>) trigger price for
 the stop-limit leg; when the market reaches this price the stop-limit
 order is activated.}
 
-\item{\code{limitPrice}}{(scalar<numeric> | scalar<character>) limit price for the
+\item{\code{limit_price}}{(scalar<numeric> | scalar<character>) limit price for the
 stop-limit leg after the stop is triggered; this is the price at which the
 stop-limit order is placed.}
 
-\item{\code{clientOid}}{(scalar<character> | NULL) unique client-assigned order
+\item{\code{client_order_id}}{(scalar<character> | NULL) unique client-assigned order
 identifier (max 40 characters); useful for idempotent order placement and
 tracking.}
 
 \item{\code{remark}}{(scalar<character> | NULL) order remarks or notes (max 20
 characters).}
 
-\item{\code{tradeType}}{(scalar<character>) trade type, defaults to \code{"TRADE"} for
+\item{\code{trade_type}}{(scalar<character>) trade type, defaults to \code{"TRADE"} for
 spot trading.}
 }
 \if{html}{\out{</div>}}
@@ -445,13 +445,13 @@ Verified: 2026-05-23
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinOcoOrders$cancel_order_by_id(orderId)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinOcoOrders$cancel_order_by_id(order_id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{orderId}}{(scalar<character>) the KuCoin-assigned OCO order ID to
+\item{\code{order_id}}{(scalar<character>) the KuCoin-assigned OCO order ID to
 cancel (e.g., \code{"674c40d38b4b2f00073deef3"}).}
 }
 \if{html}{\out{</div>}}
@@ -542,13 +542,13 @@ independently.
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinOcoOrders$cancel_order_by_client_oid(clientOid)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinOcoOrders$cancel_order_by_client_oid(client_order_id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{clientOid}}{(scalar<character>) the client-assigned order ID used when
+\item{\code{client_order_id}}{(scalar<character>) the client-assigned order ID used when
 placing the OCO order (e.g., \code{"my-bot-oco-001"}).}
 }
 \if{html}{\out{</div>}}
@@ -741,13 +741,13 @@ Verified: 2026-05-23
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinOcoOrders$get_order_by_id(orderId)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinOcoOrders$get_order_by_id(order_id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{orderId}}{(scalar<character>) the KuCoin-assigned OCO order ID
+\item{\code{order_id}}{(scalar<character>) the KuCoin-assigned OCO order ID
 (e.g., \code{"674c40d38b4b2f00073deef3"}).}
 }
 \if{html}{\out{</div>}}
@@ -846,13 +846,13 @@ one.
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinOcoOrders$get_order_by_client_oid(clientOid)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinOcoOrders$get_order_by_client_oid(client_order_id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{clientOid}}{(scalar<character>) the client-assigned order ID used when
+\item{\code{client_order_id}}{(scalar<character>) the client-assigned order ID used when
 placing the OCO order (e.g., \code{"my-bot-oco-001"}).}
 }
 \if{html}{\out{</div>}}
@@ -969,13 +969,13 @@ Verified: 2026-05-23
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinOcoOrders$get_order_detail_by_id(orderId)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinOcoOrders$get_order_detail_by_id(order_id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{orderId}}{(scalar<character>) the KuCoin-assigned OCO order ID
+\item{\code{order_id}}{(scalar<character>) the KuCoin-assigned OCO order ID
 (e.g., \code{"674c40d38b4b2f00073deef3"}).}
 }
 \if{html}{\out{</div>}}

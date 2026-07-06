@@ -341,20 +341,20 @@ Verified: 2026-05-23
   type,
   symbol,
   side,
-  stopPrice,
-  clientOid = NULL,
+  stop_price,
+  client_order_id = NULL,
   price = NULL,
   size = NULL,
   funds = NULL,
   stp = NULL,
   remark = NULL,
-  timeInForce = NULL,
-  cancelAfter = NULL,
-  postOnly = NULL,
+  time_in_force = NULL,
+  cancel_after = NULL,
+  post_only = NULL,
   hidden = NULL,
   iceberg = NULL,
-  visibleSize = NULL,
-  tradeType = "TRADE"
+  visible_size = NULL,
+  trade_type = "TRADE"
 )}\if{html}{\out{</div>}}
 }
 
@@ -370,11 +370,11 @@ Verified: 2026-05-23
 
 \item{\code{side}}{(scalar<character>) order side, one of \code{"buy"} or \code{"sell"}.}
 
-\item{\code{stopPrice}}{(scalar<numeric> | scalar<character>) the trigger price at
+\item{\code{stop_price}}{(scalar<numeric> | scalar<character>) the trigger price at
 which the stop order activates. When the last traded price reaches this
 value, the order is placed.}
 
-\item{\code{clientOid}}{(scalar<character> | NULL) optional client-assigned unique
+\item{\code{client_order_id}}{(scalar<character> | NULL) optional client-assigned unique
 identifier for the order (max 40 characters). Useful for tracking orders
 in automated systems.}
 
@@ -397,14 +397,14 @@ Newest), \code{"CB"} (Cancel Both).}
 \item{\code{remark}}{(scalar<character> | NULL) order remarks or notes (max 20
 ASCII characters).}
 
-\item{\code{timeInForce}}{(scalar<character> | NULL) time-in-force policy for the
+\item{\code{time_in_force}}{(scalar<character> | NULL) time-in-force policy for the
 triggered order. One of \code{"GTC"} (Good Till Cancelled), \code{"GTT"} (Good Till
 Time), \code{"IOC"} (Immediate Or Cancel), \code{"FOK"} (Fill Or Kill).}
 
-\item{\code{cancelAfter}}{(scalar<numeric> | NULL) number of seconds after which to
+\item{\code{cancel_after}}{(scalar<numeric> | NULL) number of seconds after which to
 auto-cancel. Only valid when \code{timeInForce = "GTT"}.}
 
-\item{\code{postOnly}}{(scalar<logical> | NULL) if \code{TRUE}, the triggered order is
+\item{\code{post_only}}{(scalar<logical> | NULL) if \code{TRUE}, the triggered order is
 rejected if it would immediately match (guarantees maker fee).}
 
 \item{\code{hidden}}{(scalar<logical> | NULL) if \code{TRUE}, the triggered order is
@@ -413,10 +413,10 @@ hidden from the order book.}
 \item{\code{iceberg}}{(scalar<logical> | NULL) if \code{TRUE}, only \code{visibleSize} of the
 order is displayed.}
 
-\item{\code{visibleSize}}{(scalar<numeric> | scalar<character> | NULL) the visible
+\item{\code{visible_size}}{(scalar<numeric> | scalar<character> | NULL) the visible
 portion of an iceberg order. Only applicable when \code{iceberg = TRUE}.}
 
-\item{\code{tradeType}}{(scalar<character>) trade type, defaults to \code{"TRADE"} for
+\item{\code{trade_type}}{(scalar<character>) trade type, defaults to \code{"TRADE"} for
 spot trading.}
 }
 \if{html}{\out{</div>}}
@@ -517,13 +517,13 @@ Verified: 2026-05-23
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinStopOrders$cancel_order_by_id(orderId)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinStopOrders$cancel_order_by_id(order_id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{orderId}}{(scalar<character>) the KuCoin-assigned stop order ID to
+\item{\code{order_id}}{(scalar<character>) the KuCoin-assigned stop order ID to
 cancel.}
 }
 \if{html}{\out{</div>}}
@@ -607,13 +607,13 @@ Verified: 2026-05-23
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinStopOrders$cancel_order_by_client_oid(clientOid, symbol)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinStopOrders$cancel_order_by_client_oid(client_order_id, symbol)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{clientOid}}{(scalar<character>) the client-assigned order ID used when
+\item{\code{client_order_id}}{(scalar<character>) the client-assigned order ID used when
 placing the stop order.}
 
 \item{\code{symbol}}{(scalar<character>) trading pair symbol (e.g., \code{"BTC-USDT"}).
@@ -827,13 +827,13 @@ Verified: 2026-05-23
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinStopOrders$get_order_by_id(orderId)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinStopOrders$get_order_by_id(order_id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{orderId}}{(scalar<character>) the KuCoin-assigned stop order ID to
+\item{\code{order_id}}{(scalar<character>) the KuCoin-assigned stop order ID to
 retrieve.}
 }
 \if{html}{\out{</div>}}
@@ -947,13 +947,13 @@ Verified: 2026-05-23
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinStopOrders$get_order_by_client_oid(clientOid, symbol)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinStopOrders$get_order_by_client_oid(client_order_id, symbol)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{clientOid}}{(scalar<character>) the client-assigned order ID to search
+\item{\code{client_order_id}}{(scalar<character>) the client-assigned order ID to search
 for.}
 
 \item{\code{symbol}}{(scalar<character>) trading pair symbol (e.g., \code{"BTC-USDT"}).

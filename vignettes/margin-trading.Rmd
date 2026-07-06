@@ -132,7 +132,7 @@ order <- margin$open_short(
   type = "limit",
   price = 100000,
   size = 0.001,
-  timeInForce = "GTC"
+  time_in_force = "GTC"
 )
 order
 ```
@@ -140,13 +140,13 @@ order
 ### Cross vs Isolated Margin
 
 By default, all methods use **cross margin** (shared collateral pool).
-For **isolated margin** (risk limited to one pair), set `isIsolated = TRUE`:
+For **isolated margin** (risk limited to one pair), set `is_isolated = TRUE`:
 
 ```{r isolated}
 order <- margin$open_short(
   symbol = "BTC-USDT",
   size = 0.001,
-  isIsolated = TRUE
+  is_isolated = TRUE
 )
 order
 ```
@@ -172,7 +172,7 @@ Track orders with your own identifiers:
 order <- margin$open_short(
   symbol = "BTC-USDT",
   size = 0.001,
-  clientOid = "my-strategy-short-001"
+  client_order_id = "my-strategy-short-001"
 )
 order$client_oid
 ```
@@ -251,7 +251,7 @@ ratios
 
 ```{r risk-limit}
 # Risk limits (requires auth)
-limits <- margin_data$get_risk_limit(isIsolated = FALSE)
+limits <- margin_data$get_risk_limit(is_isolated = FALSE)
 limits[, .(currency, borrow_max_amount, borrow_enabled)]
 ```
 
@@ -271,14 +271,14 @@ rates <- lending$get_loan_market_rate(currency = "USDT")
 rates
 
 # Lend 1000 USDT at 5% interest
-order <- lending$purchase(currency = "USDT", size = 1000, interestRate = 0.05)
+order <- lending$purchase(currency = "USDT", size = 1000, interest_rate = 0.05)
 order$order_no
 
 # Update the interest rate
 lending$modify_purchase(
   currency = "USDT",
-  purchaseOrderNo = order$order_no,
-  interestRate = 0.06
+  purchase_order_no = order$order_no,
+  interest_rate = 0.06
 )
 
 # Check your lending orders
@@ -289,7 +289,7 @@ orders
 result <- lending$redeem(
   currency = "USDT",
   size = 500,
-  purchaseOrderNo = order$order_no
+  purchase_order_no = order$order_no
 )
 result$order_no
 

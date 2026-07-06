@@ -133,7 +133,7 @@ test_that("cancel_partial_order returns data.table", {
   resp <- mock_kucoin_response(data = list(orderId = "abc", cancelSize = "0.001"))
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_trading()$cancel_partial_order("abc", "BTC-USDT", cancelSize = 0.001)
+  dt <- new_trading()$cancel_partial_order("abc", "BTC-USDT", cancel_size = 0.001)
   expect_s3_class(dt, "data.table")
 })
 
@@ -483,8 +483,8 @@ test_that("modify_order returns new order id", {
 
   dt <- new_trading()$modify_order(
     symbol = "BTC-USDT",
-    orderId = "671124f9365ccb00073debd4",
-    newPrice = "51000"
+    order_id = "671124f9365ccb00073debd4",
+    new_price = "51000"
   )
   expect_s3_class(dt, "data.table")
   expect_equal(dt$new_order_id, "replacement-order-id")
@@ -493,8 +493,8 @@ test_that("modify_order returns new order id", {
 
 test_that("modify_order validates required parameters", {
   expect_error(new_trading()$modify_order("INVALID"), "valid ticker")
-  expect_error(new_trading()$modify_order("BTC-USDT"), "orderId.*clientOid")
-  expect_error(new_trading()$modify_order("BTC-USDT", orderId = "abc"), "newPrice.*newSize")
+  expect_error(new_trading()$modify_order("BTC-USDT"), "order_id.*client_order_id")
+  expect_error(new_trading()$modify_order("BTC-USDT", order_id = "abc"), "new_price.*new_size")
 })
 
 # -- set_dcp --

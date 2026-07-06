@@ -126,7 +126,7 @@ KucoinTransfer <- R6::R6Class(
     #' }
     #' ```
     #'
-    #' @param clientOid (scalar<character>) unique client order ID for
+    #' @param client_order_id (scalar<character>) unique client order ID for
     #'   idempotency (max 128 bits, e.g., UUID).
     #' @param currency (scalar<character>) currency code (e.g., `"BTC"`,
     #'   `"USDT"`).
@@ -134,18 +134,18 @@ KucoinTransfer <- R6::R6Class(
     #'   currency precision).
     #' @param type (scalar<character>) transfer type: `"INTERNAL"`,
     #'   `"PARENT_TO_SUB"`, or `"SUB_TO_PARENT"`.
-    #' @param fromAccountType (scalar<character>) source account type: `"MAIN"`,
+    #' @param from_account_type (scalar<character>) source account type: `"MAIN"`,
     #'   `"TRADE"`, `"CONTRACT"`, `"MARGIN"`, `"ISOLATED"`, `"MARGIN_V2"`,
     #'   `"ISOLATED_V2"`.
-    #' @param toAccountType (scalar<character>) destination account type (same
+    #' @param to_account_type (scalar<character>) destination account type (same
     #'   options as `fromAccountType`).
-    #' @param fromUserId (scalar<character> | NULL) source user ID (required for
+    #' @param from_user_id (scalar<character> | NULL) source user ID (required for
     #'   `"SUB_TO_PARENT"` transfers).
-    #' @param fromAccountTag (scalar<character> | NULL) symbol for
+    #' @param from_account_tag (scalar<character> | NULL) symbol for
     #'   ISOLATED/ISOLATED_V2 source accounts (e.g., `"BTC-USDT"`).
-    #' @param toUserId (scalar<character> | NULL) destination user ID (required
+    #' @param to_user_id (scalar<character> | NULL) destination user ID (required
     #'   for `"PARENT_TO_SUB"` transfers).
-    #' @param toAccountTag (scalar<character> | NULL) symbol for
+    #' @param to_account_tag (scalar<character> | NULL) symbol for
     #'   ISOLATED/ISOLATED_V2 destination accounts (e.g., `"BTC-USDT"`).
     #' @return (data.table | promise<data.table>) one row with column `order_id`
     #'   (character): the transfer order identifier:
@@ -178,31 +178,31 @@ KucoinTransfer <- R6::R6Class(
     #' )
     #' }
     add_transfer = function(
-      clientOid,
+      client_order_id,
       currency,
       amount,
       type,
-      fromAccountType,
-      toAccountType,
-      fromUserId = NULL,
-      fromAccountTag = NULL,
-      toUserId = NULL,
-      toAccountTag = NULL
+      from_account_type,
+      to_account_type,
+      from_user_id = NULL,
+      from_account_tag = NULL,
+      to_user_id = NULL,
+      to_account_tag = NULL
     ) {
       assert_args_KucoinTransfer__add_transfer(
-        clientOid,
+        client_order_id,
         currency,
         amount,
         type,
-        fromAccountType,
-        toAccountType,
-        fromUserId,
-        fromAccountTag,
-        toUserId,
-        toAccountTag
+        from_account_type,
+        to_account_type,
+        from_user_id,
+        from_account_tag,
+        to_user_id,
+        to_account_tag
       )
-      if (!is.character(clientOid) || !nzchar(clientOid)) {
-        rlang::abort("Parameter 'clientOid' must be a non-empty string.")
+      if (!is.character(client_order_id) || !nzchar(client_order_id)) {
+        rlang::abort("Parameter 'client_order_id' must be a non-empty string.")
       }
       if (!is.character(currency) || !nzchar(currency)) {
         rlang::abort("Parameter 'currency' must be a non-empty string.")
@@ -219,14 +219,14 @@ KucoinTransfer <- R6::R6Class(
         ))
       }
       valid_accounts <- c("MAIN", "TRADE", "CONTRACT", "MARGIN", "ISOLATED", "MARGIN_V2", "ISOLATED_V2")
-      if (!is.character(fromAccountType) || !(fromAccountType %in% valid_accounts)) {
+      if (!is.character(from_account_type) || !(from_account_type %in% valid_accounts)) {
         rlang::abort(paste0(
           "Parameter 'fromAccountType' must be one of: ",
           paste(valid_accounts, collapse = ", "),
           "."
         ))
       }
-      if (!is.character(toAccountType) || !(toAccountType %in% valid_accounts)) {
+      if (!is.character(to_account_type) || !(to_account_type %in% valid_accounts)) {
         rlang::abort(paste0(
           "Parameter 'toAccountType' must be one of: ",
           paste(valid_accounts, collapse = ", "),
@@ -235,24 +235,24 @@ KucoinTransfer <- R6::R6Class(
       }
 
       body <- list(
-        clientOid = clientOid,
+        clientOid = client_order_id,
         currency = currency,
         amount = amount,
         type = type,
-        fromAccountType = fromAccountType,
-        toAccountType = toAccountType
+        fromAccountType = from_account_type,
+        toAccountType = to_account_type
       )
-      if (!is.null(fromUserId)) {
-        body$fromUserId <- fromUserId
+      if (!is.null(from_user_id)) {
+        body$fromUserId <- from_user_id
       }
-      if (!is.null(fromAccountTag)) {
-        body$fromAccountTag <- fromAccountTag
+      if (!is.null(from_account_tag)) {
+        body$fromAccountTag <- from_account_tag
       }
-      if (!is.null(toUserId)) {
-        body$toUserId <- toUserId
+      if (!is.null(to_user_id)) {
+        body$toUserId <- to_user_id
       }
-      if (!is.null(toAccountTag)) {
-        body$toAccountTag <- toAccountTag
+      if (!is.null(to_account_tag)) {
+        body$toAccountTag <- to_account_tag
       }
 
       res <- private$.request(

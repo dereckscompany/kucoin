@@ -56,7 +56,7 @@ Default \code{identity}.}
 
 \item{is_async}{(scalar<logical>) whether in async mode. Default \code{FALSE}.}
 
-\item{page_size}{(scalar<count in [1, Inf[>) results per page. Default \code{50}.}
+\item{page_size}{(scalar<count in [1, Inf]>) results per page. Default \code{50}.}
 
 \item{max_pages}{(scalar<numeric in [1, Inf]>) maximum pages to fetch.
 Default \code{Inf}.}

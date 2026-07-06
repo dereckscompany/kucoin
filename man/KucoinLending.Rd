@@ -376,7 +376,7 @@ Verified: 2026-05-23
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinLending$purchase(currency, size, interestRate)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinLending$purchase(currency, size, interest_rate)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -386,7 +386,7 @@ Verified: 2026-05-23
 
 \item{\code{size}}{(scalar<numeric>) the amount to lend.}
 
-\item{\code{interestRate}}{(scalar<numeric>) the interest rate (e.g., \code{0.05} for
+\item{\code{interest_rate}}{(scalar<numeric>) the interest rate (e.g., \code{0.05} for
 5\%).}
 }
 \if{html}{\out{</div>}}
@@ -463,7 +463,7 @@ Verified: 2026-05-23
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinLending$modify_purchase(currency, purchaseOrderNo, interestRate)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinLending$modify_purchase(currency, purchase_order_no, interest_rate)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -471,9 +471,9 @@ Verified: 2026-05-23
 \describe{
 \item{\code{currency}}{(scalar<character>) the currency of the lending order.}
 
-\item{\code{purchaseOrderNo}}{(scalar<character>) the order number to modify.}
+\item{\code{purchase_order_no}}{(scalar<character>) the order number to modify.}
 
-\item{\code{interestRate}}{(scalar<numeric>) the new interest rate.}
+\item{\code{interest_rate}}{(scalar<numeric>) the new interest rate.}
 }
 \if{html}{\out{</div>}}
 }
@@ -644,7 +644,7 @@ Verified: 2026-05-23
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinLending$redeem(currency, size, purchaseOrderNo)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinLending$redeem(currency, size, purchase_order_no)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -654,7 +654,7 @@ Verified: 2026-05-23
 
 \item{\code{size}}{(scalar<numeric>) the amount to redeem.}
 
-\item{\code{purchaseOrderNo}}{(scalar<character>) the purchase order to redeem
+\item{\code{purchase_order_no}}{(scalar<character>) the purchase order to redeem
 from.}
 }
 \if{html}{\out{</div>}}

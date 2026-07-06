@@ -479,19 +479,19 @@ Verified: 2026-05-23
   type,
   symbol,
   side,
-  clientOid = NULL,
+  client_order_id = NULL,
   price = NULL,
   size = NULL,
   funds = NULL,
   stp = NULL,
   tags = NULL,
   remark = NULL,
-  timeInForce = NULL,
-  cancelAfter = NULL,
-  postOnly = NULL,
+  time_in_force = NULL,
+  cancel_after = NULL,
+  post_only = NULL,
   hidden = NULL,
   iceberg = NULL,
-  visibleSize = NULL
+  visible_size = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -504,7 +504,7 @@ Verified: 2026-05-23
 
 \item{\code{side}}{(scalar<character>) \code{"buy"} or \code{"sell"}.}
 
-\item{\code{clientOid}}{(scalar<character> | NULL) unique client order ID (max 40 chars).}
+\item{\code{client_order_id}}{(scalar<character> | NULL) unique client order ID (max 40 chars).}
 
 \item{\code{price}}{(scalar<numeric> | scalar<character> | NULL) price for limit orders. Must align with
 \code{priceIncrement}.
@@ -523,17 +523,17 @@ Mutually exclusive with \code{size}. Not applicable for limit orders.}
 
 \item{\code{remark}}{(scalar<character> | NULL) remarks (max 20 ASCII chars).}
 
-\item{\code{timeInForce}}{(scalar<character> | NULL) \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
+\item{\code{time_in_force}}{(scalar<character> | NULL) \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
 
-\item{\code{cancelAfter}}{(scalar<numeric> | NULL) auto-cancel seconds (requires \code{timeInForce = "GTT"}).}
+\item{\code{cancel_after}}{(scalar<numeric> | NULL) auto-cancel seconds (requires \code{timeInForce = "GTT"}).}
 
-\item{\code{postOnly}}{(scalar<logical> | NULL) if TRUE, order rejected if it would match immediately.}
+\item{\code{post_only}}{(scalar<logical> | NULL) if TRUE, order rejected if it would match immediately.}
 
 \item{\code{hidden}}{(scalar<logical> | NULL) if TRUE, order hidden from order book.}
 
 \item{\code{iceberg}}{(scalar<logical> | NULL) if TRUE, only \code{visibleSize} is shown.}
 
-\item{\code{visibleSize}}{(scalar<numeric> | scalar<character> | NULL) visible quantity for iceberg orders.}
+\item{\code{visible_size}}{(scalar<numeric> | scalar<character> | NULL) visible quantity for iceberg orders.}
 }
 \if{html}{\out{</div>}}
 }
@@ -645,19 +645,19 @@ Verified: 2026-05-23
   type,
   symbol,
   side,
-  clientOid = NULL,
+  client_order_id = NULL,
   price = NULL,
   size = NULL,
   funds = NULL,
   stp = NULL,
   tags = NULL,
   remark = NULL,
-  timeInForce = NULL,
-  cancelAfter = NULL,
-  postOnly = NULL,
+  time_in_force = NULL,
+  cancel_after = NULL,
+  post_only = NULL,
   hidden = NULL,
   iceberg = NULL,
-  visibleSize = NULL
+  visible_size = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -670,7 +670,7 @@ Verified: 2026-05-23
 
 \item{\code{side}}{(scalar<character>) \code{"buy"} or \code{"sell"}.}
 
-\item{\code{clientOid}}{(scalar<character> | NULL) unique client order ID (max 40 chars).}
+\item{\code{client_order_id}}{(scalar<character> | NULL) unique client order ID (max 40 chars).}
 
 \item{\code{price}}{(scalar<numeric> | scalar<character> | NULL) price for limit orders.}
 
@@ -684,17 +684,17 @@ Verified: 2026-05-23
 
 \item{\code{remark}}{(scalar<character> | NULL) remarks (max 20 ASCII chars).}
 
-\item{\code{timeInForce}}{(scalar<character> | NULL) \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
+\item{\code{time_in_force}}{(scalar<character> | NULL) \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
 
-\item{\code{cancelAfter}}{(scalar<numeric> | NULL) auto-cancel seconds (requires \code{timeInForce = "GTT"}).}
+\item{\code{cancel_after}}{(scalar<numeric> | NULL) auto-cancel seconds (requires \code{timeInForce = "GTT"}).}
 
-\item{\code{postOnly}}{(scalar<logical> | NULL) if TRUE, order rejected if it would match immediately.}
+\item{\code{post_only}}{(scalar<logical> | NULL) if TRUE, order rejected if it would match immediately.}
 
 \item{\code{hidden}}{(scalar<logical> | NULL) if TRUE, order hidden from order book.}
 
 \item{\code{iceberg}}{(scalar<logical> | NULL) if TRUE, only \code{visibleSize} is shown.}
 
-\item{\code{visibleSize}}{(scalar<numeric> | scalar<character> | NULL) visible quantity for iceberg orders.}
+\item{\code{visible_size}}{(scalar<numeric> | scalar<character> | NULL) visible quantity for iceberg orders.}
 }
 \if{html}{\out{</div>}}
 }
@@ -900,13 +900,13 @@ Verified: 2026-05-23
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$cancel_order_by_id(orderId, symbol)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$cancel_order_by_id(order_id, symbol)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{orderId}}{(scalar<character>) the KuCoin order ID to cancel.}
+\item{\code{order_id}}{(scalar<character>) the KuCoin order ID to cancel.}
 
 \item{\code{symbol}}{(scalar<character>) trading pair (e.g., \code{"BTC-USDT"}).}
 }
@@ -974,13 +974,13 @@ Verified: 2026-05-23
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$cancel_order_by_client_oid(clientOid, symbol)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$cancel_order_by_client_oid(client_order_id, symbol)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{clientOid}}{(scalar<character>) client order ID.}
+\item{\code{client_order_id}}{(scalar<character>) client order ID.}
 
 \item{\code{symbol}}{(scalar<character>) trading pair (e.g., \code{"BTC-USDT"}).}
 }
@@ -1055,17 +1055,17 @@ Verified: 2026-05-23
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$cancel_partial_order(orderId, symbol, cancelSize)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$cancel_partial_order(order_id, symbol, cancel_size)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{orderId}}{(scalar<character>) order ID.}
+\item{\code{order_id}}{(scalar<character>) order ID.}
 
 \item{\code{symbol}}{(scalar<character>) trading pair (e.g., \code{"BTC-USDT"}).}
 
-\item{\code{cancelSize}}{(scalar<numeric> | scalar<character>) quantity to cancel from the order.}
+\item{\code{cancel_size}}{(scalar<numeric> | scalar<character>) quantity to cancel from the order.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1316,13 +1316,13 @@ Verified: 2026-05-23
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$get_order_by_id(orderId, symbol = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$get_order_by_id(order_id, symbol = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{orderId}}{(scalar<character>) the KuCoin order ID.}
+\item{\code{order_id}}{(scalar<character>) the KuCoin order ID.}
 
 \item{\code{symbol}}{(scalar<character> | NULL) trading pair (e.g., \code{"BTC-USDT"}). Defaults to \code{NULL}.}
 }
@@ -1430,13 +1430,13 @@ Verified: 2026-05-23
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$get_order_by_client_oid(clientOid, symbol)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$get_order_by_client_oid(client_order_id, symbol)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{clientOid}}{(scalar<character>) client order ID.}
+\item{\code{client_order_id}}{(scalar<character>) client order ID.}
 
 \item{\code{symbol}}{(scalar<character>) trading pair (e.g., \code{"BTC-USDT"}).}
 }
@@ -1550,13 +1550,13 @@ Verified: 2026-05-23
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$get_fills(
   symbol = NULL,
-  orderId = NULL,
+  order_id = NULL,
   side = NULL,
   type = NULL,
-  lastId = NULL,
+  last_id = NULL,
   limit = NULL,
-  startAt = NULL,
-  endAt = NULL
+  start_at = NULL,
+  end_at = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -1566,19 +1566,19 @@ Verified: 2026-05-23
 \item{\code{symbol}}{(scalar<character> | NULL) trading pair (e.g., \code{"BTC-USDT"}).
 If NULL, returns fills across all symbols.}
 
-\item{\code{orderId}}{(scalar<character> | NULL) filter by specific order ID.}
+\item{\code{order_id}}{(scalar<character> | NULL) filter by specific order ID.}
 
 \item{\code{side}}{(scalar<character> | NULL) \code{"buy"} or \code{"sell"}.}
 
 \item{\code{type}}{(scalar<character> | NULL) \code{"limit"} or \code{"market"}.}
 
-\item{\code{lastId}}{(scalar<character> | NULL) pagination cursor for fetching next page.}
+\item{\code{last_id}}{(scalar<character> | NULL) pagination cursor for fetching next page.}
 
 \item{\code{limit}}{(scalar<count> | NULL) results per page (default 100, max 200).}
 
-\item{\code{startAt}}{(scalar<numeric> | NULL) start timestamp in milliseconds.}
+\item{\code{start_at}}{(scalar<numeric> | NULL) start timestamp in milliseconds.}
 
-\item{\code{endAt}}{(scalar<numeric> | NULL) end timestamp in milliseconds.}
+\item{\code{end_at}}{(scalar<numeric> | NULL) end timestamp in milliseconds.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1878,10 +1878,10 @@ Verified: 2026-05-23
   symbol = NULL,
   side = NULL,
   type = NULL,
-  startAt = NULL,
-  endAt = NULL,
+  start_at = NULL,
+  end_at = NULL,
   limit = NULL,
-  lastId = NULL
+  last_id = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -1895,13 +1895,13 @@ If NULL, returns closed orders across all symbols.}
 
 \item{\code{type}}{(scalar<character> | NULL) \code{"limit"} or \code{"market"}.}
 
-\item{\code{startAt}}{(scalar<numeric> | NULL) start timestamp in milliseconds.}
+\item{\code{start_at}}{(scalar<numeric> | NULL) start timestamp in milliseconds.}
 
-\item{\code{endAt}}{(scalar<numeric> | NULL) end timestamp in milliseconds.}
+\item{\code{end_at}}{(scalar<numeric> | NULL) end timestamp in milliseconds.}
 
 \item{\code{limit}}{(scalar<count> | NULL) results per page (max 200).}
 
-\item{\code{lastId}}{(scalar<character> | NULL) pagination cursor.}
+\item{\code{last_id}}{(scalar<character> | NULL) pagination cursor.}
 }
 \if{html}{\out{</div>}}
 }
@@ -2005,19 +2005,19 @@ Verified: 2026-05-23
   type,
   symbol,
   side,
-  clientOid = NULL,
+  client_order_id = NULL,
   price = NULL,
   size = NULL,
   funds = NULL,
   stp = NULL,
   tags = NULL,
   remark = NULL,
-  timeInForce = NULL,
-  cancelAfter = NULL,
-  postOnly = NULL,
+  time_in_force = NULL,
+  cancel_after = NULL,
+  post_only = NULL,
   hidden = NULL,
   iceberg = NULL,
-  visibleSize = NULL
+  visible_size = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -2030,7 +2030,7 @@ Verified: 2026-05-23
 
 \item{\code{side}}{(scalar<character>) \code{"buy"} or \code{"sell"}.}
 
-\item{\code{clientOid}}{(scalar<character> | NULL) unique client order ID (max 40 chars).}
+\item{\code{client_order_id}}{(scalar<character> | NULL) unique client order ID (max 40 chars).}
 
 \item{\code{price}}{(scalar<numeric> | scalar<character> | NULL) price for limit orders.}
 
@@ -2044,17 +2044,17 @@ Verified: 2026-05-23
 
 \item{\code{remark}}{(scalar<character> | NULL) remarks (max 20 ASCII chars).}
 
-\item{\code{timeInForce}}{(scalar<character> | NULL) \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
+\item{\code{time_in_force}}{(scalar<character> | NULL) \code{"GTC"}, \code{"GTT"}, \code{"IOC"}, \code{"FOK"}.}
 
-\item{\code{cancelAfter}}{(scalar<numeric> | NULL) auto-cancel seconds (requires \code{timeInForce = "GTT"}).}
+\item{\code{cancel_after}}{(scalar<numeric> | NULL) auto-cancel seconds (requires \code{timeInForce = "GTT"}).}
 
-\item{\code{postOnly}}{(scalar<logical> | NULL) if TRUE, order rejected if it would match immediately.}
+\item{\code{post_only}}{(scalar<logical> | NULL) if TRUE, order rejected if it would match immediately.}
 
 \item{\code{hidden}}{(scalar<logical> | NULL) if TRUE, order hidden from order book.}
 
 \item{\code{iceberg}}{(scalar<logical> | NULL) if TRUE, only \code{visibleSize} is shown.}
 
-\item{\code{visibleSize}}{(scalar<numeric> | scalar<character> | NULL) visible quantity for iceberg orders.}
+\item{\code{visible_size}}{(scalar<numeric> | scalar<character> | NULL) visible quantity for iceberg orders.}
 }
 \if{html}{\out{</div>}}
 }
@@ -2275,13 +2275,13 @@ Verified: 2026-05-23
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$cancel_order_by_id_sync(orderId, symbol)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$cancel_order_by_id_sync(order_id, symbol)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{orderId}}{(scalar<character>) the KuCoin order ID to cancel.}
+\item{\code{order_id}}{(scalar<character>) the KuCoin order ID to cancel.}
 
 \item{\code{symbol}}{(scalar<character>) trading pair (e.g., \code{"BTC-USDT"}).}
 }
@@ -2361,13 +2361,13 @@ Verified: 2026-05-23
 }\if{html}{\out{</div>}}
 }
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$cancel_order_by_client_oid_sync(clientOid, symbol)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$cancel_order_by_client_oid_sync(client_order_id, symbol)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{clientOid}}{(scalar<character>) client order ID.}
+\item{\code{client_order_id}}{(scalar<character>) client order ID.}
 
 \item{\code{symbol}}{(scalar<character>) trading pair (e.g., \code{"BTC-USDT"}).}
 }
@@ -2465,10 +2465,10 @@ Verified: 2026-05-23
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{KucoinTrading$modify_order(
   symbol,
-  orderId = NULL,
-  clientOid = NULL,
-  newPrice = NULL,
-  newSize = NULL
+  order_id = NULL,
+  client_order_id = NULL,
+  new_price = NULL,
+  new_size = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -2477,15 +2477,17 @@ Verified: 2026-05-23
 \describe{
 \item{\code{symbol}}{(scalar<character>) trading pair (e.g., \code{"BTC-USDT"}). Required.}
 
-\item{\code{orderId}}{(scalar<character> | NULL) KuCoin order ID. At least one of \code{orderId} or \code{clientOid} required.}
+\item{\code{order_id}}{(scalar<character> | NULL) KuCoin order ID. At least one of
+\code{order_id} or \code{client_order_id} is required.}
 
-\item{\code{clientOid}}{(scalar<character> | NULL) client order ID. At least one of \code{orderId} or \code{clientOid} required.}
+\item{\code{client_order_id}}{(scalar<character> | NULL) client order ID. At least
+one of \code{order_id} or \code{client_order_id} is required.}
 
-\item{\code{newPrice}}{(scalar<numeric> | scalar<character> | NULL) new order price. At least one of \code{newPrice} or
-\code{newSize} required.}
+\item{\code{new_price}}{(scalar<numeric> | scalar<character> | NULL) new order price. At least one of \code{new_price} or
+\code{new_size} required.}
 
-\item{\code{newSize}}{(scalar<numeric> | scalar<character> | NULL) new order size. At least one of \code{newPrice} or
-\code{newSize} required.}
+\item{\code{new_size}}{(scalar<numeric> | scalar<character> | NULL) new order size. At least one of \code{new_price} or
+\code{new_size} required.}
 }
 \if{html}{\out{</div>}}
 }

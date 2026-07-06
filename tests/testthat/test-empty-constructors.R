@@ -1,10 +1,12 @@
-# tests/testthat/test-empty-tables.R
-# Every shared empty_dt_*() helper must be a zero-row data.table whose columns
-# and types satisfy the column contract of a method that returns it. This is the
-# guard that would have caught empty_dt_orderbook() typing `level` as character
-# when the contract requires assert_count (integer).
+# tests/testthat/test-empty-constructors.R
+# Guards the typed-empty invariant: every shared empty_dt_*() constructor must be
+# a zero-row data.table that still carries its full typed column set (non-zero
+# columns, no list column) and satisfies the @return column contract of a method
+# that returns it. That is the guard that would have caught empty_dt_orderbook()
+# typing `level` as character when the contract requires assert_count (integer),
+# or a column-less `data.table()` slipping through an empty response.
 
-test_that("empty_dt_* helpers satisfy their methods' return contracts", {
+test_that("every empty_dt_* constructor is a zero-row, typed, contract-passing table", {
   cases <- list(
     list(empty_dt_futures_order(), assert_return_KucoinFuturesTrading__get_order_by_id),
     list(empty_dt_futures_orderbook(), assert_return_KucoinFuturesMarketData__get_part_orderbook),
@@ -21,12 +23,17 @@ test_that("empty_dt_* helpers satisfy their methods' return contracts", {
     list(empty_dt_symbol(), assert_return_KucoinMarketData__get_symbol)
   )
   for (case in cases) {
-    empty <- case[[1]]
-    contract <- case[[2]]
+    empty <- case[[1L]]
+    contract <- case[[2L]]
     expect_s3_class(empty, "data.table")
+    # Zero rows: an empty response has to be genuinely empty.
     expect_identical(nrow(empty), 0L)
+    # Non-zero columns: never a column-less `data.table()`.
+    expect_true(ncol(empty) > 0L)
+    # No list column: every column is an atomic typed vector.
+    expect_false(any(vapply(empty, is.list, logical(1L))))
     # The contract (assert_has_columns + per-column type asserts) must accept the
-    # typed empty without aborting — an empty response has to pass cleanly.
+    # typed empty without aborting -- an empty response has to pass cleanly.
     expect_no_error(contract(empty))
   }
 })

@@ -76,15 +76,15 @@ test_that("purchase returns order_no", {
   resp <- mock_kucoin_response(data = list(orderNo = "purchase-001"))
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_lending()$purchase(currency = "USDT", size = 1000, interestRate = 0.05)
+  dt <- new_lending()$purchase(currency = "USDT", size = 1000, interest_rate = 0.05)
   expect_s3_class(dt, "data.table")
   expect_equal(dt$order_no, "purchase-001")
 })
 
 test_that("purchase validates parameters", {
-  expect_error(new_lending()$purchase(currency = "", size = 100, interestRate = 0.05), "non-empty")
-  expect_error(new_lending()$purchase(currency = "USDT", size = -1, interestRate = 0.05), "positive")
-  expect_error(new_lending()$purchase(currency = "USDT", size = 100, interestRate = 0), "positive")
+  expect_error(new_lending()$purchase(currency = "", size = 100, interest_rate = 0.05), "non-empty")
+  expect_error(new_lending()$purchase(currency = "USDT", size = -1, interest_rate = 0.05), "positive")
+  expect_error(new_lending()$purchase(currency = "USDT", size = 100, interest_rate = 0), "positive")
 })
 
 # -- modify_purchase --
@@ -95,8 +95,8 @@ test_that("modify_purchase returns confirmation data.table on success", {
 
   dt <- new_lending()$modify_purchase(
     currency = "USDT",
-    purchaseOrderNo = "abc123",
-    interestRate = 0.06
+    purchase_order_no = "abc123",
+    interest_rate = 0.06
   )
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
@@ -107,9 +107,15 @@ test_that("modify_purchase returns confirmation data.table on success", {
 })
 
 test_that("modify_purchase validates parameters", {
-  expect_error(new_lending()$modify_purchase(currency = "", purchaseOrderNo = "a", interestRate = 0.05), "non-empty")
-  expect_error(new_lending()$modify_purchase(currency = "USDT", purchaseOrderNo = "", interestRate = 0.05), "non-empty")
-  expect_error(new_lending()$modify_purchase(currency = "USDT", purchaseOrderNo = "a", interestRate = -1), "positive")
+  expect_error(new_lending()$modify_purchase(currency = "", purchase_order_no = "a", interest_rate = 0.05), "non-empty")
+  expect_error(
+    new_lending()$modify_purchase(currency = "USDT", purchase_order_no = "", interest_rate = 0.05),
+    "non-empty"
+  )
+  expect_error(
+    new_lending()$modify_purchase(currency = "USDT", purchase_order_no = "a", interest_rate = -1),
+    "positive"
+  )
 })
 
 # -- get_purchase_orders --
@@ -155,15 +161,15 @@ test_that("redeem returns order_no", {
   resp <- mock_kucoin_response(data = list(orderNo = "redeem-001"))
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_lending()$redeem(currency = "USDT", size = 500, purchaseOrderNo = "abc123")
+  dt <- new_lending()$redeem(currency = "USDT", size = 500, purchase_order_no = "abc123")
   expect_s3_class(dt, "data.table")
   expect_equal(dt$order_no, "redeem-001")
 })
 
 test_that("redeem validates parameters", {
-  expect_error(new_lending()$redeem(currency = "", size = 100, purchaseOrderNo = "a"), "non-empty")
-  expect_error(new_lending()$redeem(currency = "USDT", size = 0, purchaseOrderNo = "a"), "positive")
-  expect_error(new_lending()$redeem(currency = "USDT", size = 100, purchaseOrderNo = ""), "non-empty")
+  expect_error(new_lending()$redeem(currency = "", size = 100, purchase_order_no = "a"), "non-empty")
+  expect_error(new_lending()$redeem(currency = "USDT", size = 0, purchase_order_no = "a"), "positive")
+  expect_error(new_lending()$redeem(currency = "USDT", size = 100, purchase_order_no = ""), "non-empty")
 })
 
 # -- get_redeem_orders --
@@ -264,7 +270,7 @@ test_that("purchase returns no list columns", {
   resp <- mock_kucoin_response(data = list(orderNo = "p-1"))
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_lending()$purchase(currency = "USDT", size = 1000, interestRate = 0.05)
+  dt <- new_lending()$purchase(currency = "USDT", size = 1000, interest_rate = 0.05)
   expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
   expect_true(is.character(dt$order_no))
 })
@@ -273,7 +279,7 @@ test_that("redeem returns no list columns", {
   resp <- mock_kucoin_response(data = list(orderNo = "r-1"))
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_lending()$redeem(currency = "USDT", size = 500, purchaseOrderNo = "abc123")
+  dt <- new_lending()$redeem(currency = "USDT", size = 500, purchase_order_no = "abc123")
   expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
   expect_true(is.character(dt$order_no))
 })
@@ -284,8 +290,8 @@ test_that("modify_purchase returns no list columns", {
 
   dt <- new_lending()$modify_purchase(
     currency = "USDT",
-    purchaseOrderNo = "abc",
-    interestRate = 0.06
+    purchase_order_no = "abc",
+    interest_rate = 0.06
   )
   expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })

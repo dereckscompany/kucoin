@@ -165,26 +165,26 @@ KucoinMarginTrading <- R6::R6Class(
     #'   `"market"`).
     #' @param price (scalar<numeric> | NULL) required for limit orders. The price
     #'   at which to sell.
-    #' @param isIsolated (scalar<logical>) `TRUE` for isolated margin (risk
+    #' @param is_isolated (scalar<logical>) `TRUE` for isolated margin (risk
     #'   limited to this pair), `FALSE` (default) for cross margin (shared
     #'   collateral pool).
-    #' @param clientOid (scalar<character> | NULL) your own unique order ID (max
+    #' @param client_order_id (scalar<character> | NULL) your own unique order ID (max
     #'   40 chars). Auto-generated if not provided (required by KuCoin for margin
     #'   orders).
     #' @param stp (scalar<character> | NULL) self-trade prevention: `"CN"`,
     #'   `"CO"`, `"CB"`, `"DC"`.
     #' @param remark (scalar<character> | NULL) order remark (max 20 ASCII chars).
-    #' @param timeInForce (scalar<character> | NULL) `"GTC"`, `"GTT"`, `"IOC"`,
+    #' @param time_in_force (scalar<character> | NULL) `"GTC"`, `"GTT"`, `"IOC"`,
     #'   `"FOK"`.
-    #' @param cancelAfter (scalar<numeric> | NULL) auto-cancel seconds (requires
+    #' @param cancel_after (scalar<numeric> | NULL) auto-cancel seconds (requires
     #'   `timeInForce = "GTT"`).
-    #' @param postOnly (scalar<logical> | NULL) if TRUE, order rejected if it
+    #' @param post_only (scalar<logical> | NULL) if TRUE, order rejected if it
     #'   would match immediately.
     #' @param hidden (scalar<logical> | NULL) if TRUE, order hidden from order
     #'   book.
     #' @param iceberg (scalar<logical> | NULL) if TRUE, only `visibleSize` is
     #'   shown.
-    #' @param visibleSize (scalar<numeric> | NULL) visible quantity for iceberg
+    #' @param visible_size (scalar<numeric> | NULL) visible quantity for iceberg
     #'   orders.
     #' @param dry_run (scalar<logical>) if `TRUE`, validates the order without
     #'   actually placing it. Useful for testing your parameters. Default
@@ -215,16 +215,16 @@ KucoinMarginTrading <- R6::R6Class(
       funds = NULL,
       type = "market",
       price = NULL,
-      isIsolated = FALSE,
-      clientOid = NULL,
+      is_isolated = FALSE,
+      client_order_id = NULL,
       stp = NULL,
       remark = NULL,
-      timeInForce = NULL,
-      cancelAfter = NULL,
-      postOnly = NULL,
+      time_in_force = NULL,
+      cancel_after = NULL,
+      post_only = NULL,
       hidden = NULL,
       iceberg = NULL,
-      visibleSize = NULL,
+      visible_size = NULL,
       dry_run = FALSE
     ) {
       assert_args_KucoinMarginTrading__open_short(
@@ -233,16 +233,16 @@ KucoinMarginTrading <- R6::R6Class(
         funds,
         type,
         price,
-        isIsolated,
-        clientOid,
+        is_isolated,
+        client_order_id,
         stp,
         remark,
-        timeInForce,
-        cancelAfter,
-        postOnly,
+        time_in_force,
+        cancel_after,
+        post_only,
         hidden,
         iceberg,
-        visibleSize,
+        visible_size,
         dry_run
       )
       assert::assert_nonempty_strings(symbol)
@@ -255,16 +255,16 @@ KucoinMarginTrading <- R6::R6Class(
         funds = funds,
         type = type,
         price = price,
-        isIsolated = isIsolated,
-        clientOid = clientOid,
+        is_isolated = is_isolated,
+        client_order_id = client_order_id,
         stp = stp,
         remark = remark,
-        timeInForce = timeInForce,
-        cancelAfter = cancelAfter,
-        postOnly = postOnly,
+        time_in_force = time_in_force,
+        cancel_after = cancel_after,
+        post_only = post_only,
         hidden = hidden,
         iceberg = iceberg,
-        visibleSize = visibleSize,
+        visible_size = visible_size,
         dry_run = dry_run
       )
       return(connectcore::then_or_now(
@@ -341,18 +341,18 @@ KucoinMarginTrading <- R6::R6Class(
     #' @param type (scalar<character>) `"limit"` or `"market"` (default
     #'   `"market"`).
     #' @param price (scalar<numeric> | NULL) required for limit orders.
-    #' @param isIsolated (scalar<logical>) must match the margin mode used in
+    #' @param is_isolated (scalar<logical>) must match the margin mode used in
     #'   `open_short()`.
-    #' @param clientOid (scalar<character> | NULL) your own unique order ID.
+    #' @param client_order_id (scalar<character> | NULL) your own unique order ID.
     #' @param stp (scalar<character> | NULL) self-trade prevention.
     #' @param remark (scalar<character> | NULL) order remark.
-    #' @param timeInForce (scalar<character> | NULL) `"GTC"`, `"GTT"`, `"IOC"`,
+    #' @param time_in_force (scalar<character> | NULL) `"GTC"`, `"GTT"`, `"IOC"`,
     #'   `"FOK"`.
-    #' @param cancelAfter (scalar<numeric> | NULL) auto-cancel seconds.
-    #' @param postOnly (scalar<logical> | NULL) passive order flag.
+    #' @param cancel_after (scalar<numeric> | NULL) auto-cancel seconds.
+    #' @param post_only (scalar<logical> | NULL) passive order flag.
     #' @param hidden (scalar<logical> | NULL) hidden order flag.
     #' @param iceberg (scalar<logical> | NULL) iceberg order flag.
-    #' @param visibleSize (scalar<numeric> | NULL) visible quantity for iceberg.
+    #' @param visible_size (scalar<numeric> | NULL) visible quantity for iceberg.
     #' @param dry_run (scalar<logical>) if `TRUE`, validates without placing.
     #'   Default `FALSE`.
     #' @return (data.table | promise<data.table>) one row giving the
@@ -373,16 +373,16 @@ KucoinMarginTrading <- R6::R6Class(
       funds = NULL,
       type = "market",
       price = NULL,
-      isIsolated = FALSE,
-      clientOid = NULL,
+      is_isolated = FALSE,
+      client_order_id = NULL,
       stp = NULL,
       remark = NULL,
-      timeInForce = NULL,
-      cancelAfter = NULL,
-      postOnly = NULL,
+      time_in_force = NULL,
+      cancel_after = NULL,
+      post_only = NULL,
       hidden = NULL,
       iceberg = NULL,
-      visibleSize = NULL,
+      visible_size = NULL,
       dry_run = FALSE
     ) {
       assert_args_KucoinMarginTrading__close_short(
@@ -391,16 +391,16 @@ KucoinMarginTrading <- R6::R6Class(
         funds,
         type,
         price,
-        isIsolated,
-        clientOid,
+        is_isolated,
+        client_order_id,
         stp,
         remark,
-        timeInForce,
-        cancelAfter,
-        postOnly,
+        time_in_force,
+        cancel_after,
+        post_only,
         hidden,
         iceberg,
-        visibleSize,
+        visible_size,
         dry_run
       )
       assert::assert_nonempty_strings(symbol)
@@ -413,16 +413,16 @@ KucoinMarginTrading <- R6::R6Class(
         funds = funds,
         type = type,
         price = price,
-        isIsolated = isIsolated,
-        clientOid = clientOid,
+        is_isolated = is_isolated,
+        client_order_id = client_order_id,
         stp = stp,
         remark = remark,
-        timeInForce = timeInForce,
-        cancelAfter = cancelAfter,
-        postOnly = postOnly,
+        time_in_force = time_in_force,
+        cancel_after = cancel_after,
+        post_only = post_only,
         hidden = hidden,
         iceberg = iceberg,
-        visibleSize = visibleSize,
+        visible_size = visible_size,
         dry_run = dry_run
       )
       return(connectcore::then_or_now(
@@ -503,18 +503,18 @@ KucoinMarginTrading <- R6::R6Class(
     #' @param type (scalar<character>) `"limit"` or `"market"` (default
     #'   `"market"`).
     #' @param price (scalar<numeric> | NULL) required for limit orders.
-    #' @param isIsolated (scalar<logical>) `TRUE` for isolated margin, `FALSE`
+    #' @param is_isolated (scalar<logical>) `TRUE` for isolated margin, `FALSE`
     #'   (default) for cross.
-    #' @param clientOid (scalar<character> | NULL) your own unique order ID.
+    #' @param client_order_id (scalar<character> | NULL) your own unique order ID.
     #' @param stp (scalar<character> | NULL) self-trade prevention.
     #' @param remark (scalar<character> | NULL) order remark.
-    #' @param timeInForce (scalar<character> | NULL) `"GTC"`, `"GTT"`, `"IOC"`,
+    #' @param time_in_force (scalar<character> | NULL) `"GTC"`, `"GTT"`, `"IOC"`,
     #'   `"FOK"`.
-    #' @param cancelAfter (scalar<numeric> | NULL) auto-cancel seconds.
-    #' @param postOnly (scalar<logical> | NULL) passive order flag.
+    #' @param cancel_after (scalar<numeric> | NULL) auto-cancel seconds.
+    #' @param post_only (scalar<logical> | NULL) passive order flag.
     #' @param hidden (scalar<logical> | NULL) hidden order flag.
     #' @param iceberg (scalar<logical> | NULL) iceberg order flag.
-    #' @param visibleSize (scalar<numeric> | NULL) visible quantity for iceberg.
+    #' @param visible_size (scalar<numeric> | NULL) visible quantity for iceberg.
     #' @param dry_run (scalar<logical>) if `TRUE`, validates without placing.
     #'   Default `FALSE`.
     #' @return (data.table | promise<data.table>) one row giving the
@@ -542,16 +542,16 @@ KucoinMarginTrading <- R6::R6Class(
       funds = NULL,
       type = "market",
       price = NULL,
-      isIsolated = FALSE,
-      clientOid = NULL,
+      is_isolated = FALSE,
+      client_order_id = NULL,
       stp = NULL,
       remark = NULL,
-      timeInForce = NULL,
-      cancelAfter = NULL,
-      postOnly = NULL,
+      time_in_force = NULL,
+      cancel_after = NULL,
+      post_only = NULL,
       hidden = NULL,
       iceberg = NULL,
-      visibleSize = NULL,
+      visible_size = NULL,
       dry_run = FALSE
     ) {
       assert_args_KucoinMarginTrading__open_long(
@@ -560,16 +560,16 @@ KucoinMarginTrading <- R6::R6Class(
         funds,
         type,
         price,
-        isIsolated,
-        clientOid,
+        is_isolated,
+        client_order_id,
         stp,
         remark,
-        timeInForce,
-        cancelAfter,
-        postOnly,
+        time_in_force,
+        cancel_after,
+        post_only,
         hidden,
         iceberg,
-        visibleSize,
+        visible_size,
         dry_run
       )
       assert::assert_nonempty_strings(symbol)
@@ -582,16 +582,16 @@ KucoinMarginTrading <- R6::R6Class(
         funds = funds,
         type = type,
         price = price,
-        isIsolated = isIsolated,
-        clientOid = clientOid,
+        is_isolated = is_isolated,
+        client_order_id = client_order_id,
         stp = stp,
         remark = remark,
-        timeInForce = timeInForce,
-        cancelAfter = cancelAfter,
-        postOnly = postOnly,
+        time_in_force = time_in_force,
+        cancel_after = cancel_after,
+        post_only = post_only,
         hidden = hidden,
         iceberg = iceberg,
-        visibleSize = visibleSize,
+        visible_size = visible_size,
         dry_run = dry_run
       )
       return(connectcore::then_or_now(
@@ -666,18 +666,18 @@ KucoinMarginTrading <- R6::R6Class(
     #' @param type (scalar<character>) `"limit"` or `"market"` (default
     #'   `"market"`).
     #' @param price (scalar<numeric> | NULL) required for limit orders.
-    #' @param isIsolated (scalar<logical>) must match the margin mode used in
+    #' @param is_isolated (scalar<logical>) must match the margin mode used in
     #'   `open_long()`.
-    #' @param clientOid (scalar<character> | NULL) your own unique order ID.
+    #' @param client_order_id (scalar<character> | NULL) your own unique order ID.
     #' @param stp (scalar<character> | NULL) self-trade prevention.
     #' @param remark (scalar<character> | NULL) order remark.
-    #' @param timeInForce (scalar<character> | NULL) `"GTC"`, `"GTT"`, `"IOC"`,
+    #' @param time_in_force (scalar<character> | NULL) `"GTC"`, `"GTT"`, `"IOC"`,
     #'   `"FOK"`.
-    #' @param cancelAfter (scalar<numeric> | NULL) auto-cancel seconds.
-    #' @param postOnly (scalar<logical> | NULL) passive order flag.
+    #' @param cancel_after (scalar<numeric> | NULL) auto-cancel seconds.
+    #' @param post_only (scalar<logical> | NULL) passive order flag.
     #' @param hidden (scalar<logical> | NULL) hidden order flag.
     #' @param iceberg (scalar<logical> | NULL) iceberg order flag.
-    #' @param visibleSize (scalar<numeric> | NULL) visible quantity for iceberg.
+    #' @param visible_size (scalar<numeric> | NULL) visible quantity for iceberg.
     #' @param dry_run (scalar<logical>) if `TRUE`, validates without placing.
     #'   Default `FALSE`.
     #' @return (data.table | promise<data.table>) one row giving the
@@ -698,16 +698,16 @@ KucoinMarginTrading <- R6::R6Class(
       funds = NULL,
       type = "market",
       price = NULL,
-      isIsolated = FALSE,
-      clientOid = NULL,
+      is_isolated = FALSE,
+      client_order_id = NULL,
       stp = NULL,
       remark = NULL,
-      timeInForce = NULL,
-      cancelAfter = NULL,
-      postOnly = NULL,
+      time_in_force = NULL,
+      cancel_after = NULL,
+      post_only = NULL,
       hidden = NULL,
       iceberg = NULL,
-      visibleSize = NULL,
+      visible_size = NULL,
       dry_run = FALSE
     ) {
       assert_args_KucoinMarginTrading__close_long(
@@ -716,16 +716,16 @@ KucoinMarginTrading <- R6::R6Class(
         funds,
         type,
         price,
-        isIsolated,
-        clientOid,
+        is_isolated,
+        client_order_id,
         stp,
         remark,
-        timeInForce,
-        cancelAfter,
-        postOnly,
+        time_in_force,
+        cancel_after,
+        post_only,
         hidden,
         iceberg,
-        visibleSize,
+        visible_size,
         dry_run
       )
       assert::assert_nonempty_strings(symbol)
@@ -738,16 +738,16 @@ KucoinMarginTrading <- R6::R6Class(
         funds = funds,
         type = type,
         price = price,
-        isIsolated = isIsolated,
-        clientOid = clientOid,
+        is_isolated = is_isolated,
+        client_order_id = client_order_id,
         stp = stp,
         remark = remark,
-        timeInForce = timeInForce,
-        cancelAfter = cancelAfter,
-        postOnly = postOnly,
+        time_in_force = time_in_force,
+        cancel_after = cancel_after,
+        post_only = post_only,
         hidden = hidden,
         iceberg = iceberg,
-        visibleSize = visibleSize,
+        visible_size = visible_size,
         dry_run = dry_run
       )
       return(connectcore::then_or_now(
@@ -818,14 +818,14 @@ KucoinMarginTrading <- R6::R6Class(
     #' @param currency (scalar<character>) the currency to borrow (e.g.,
     #'   `"USDT"`, `"BTC"`).
     #' @param size (scalar<numeric>) the amount to borrow.
-    #' @param timeInForce (scalar<character>) order time-in-force policy (default
+    #' @param time_in_force (scalar<character>) order time-in-force policy (default
     #'   `"IOC"`). Valid values: `"IOC"` (immediate-or-cancel), `"FOK"`
     #'   (fill-or-kill).
-    #' @param isIsolated (scalar<logical>) `TRUE` for isolated margin, `FALSE`
+    #' @param is_isolated (scalar<logical>) `TRUE` for isolated margin, `FALSE`
     #'   (default) for cross.
     #' @param symbol (scalar<character> | NULL) required when `isIsolated = TRUE`.
     #'   Trading pair (e.g., `"BTC-USDT"`).
-    #' @param isHf (scalar<logical>) `TRUE` for high-frequency trading mode,
+    #' @param is_hf (scalar<logical>) `TRUE` for high-frequency trading mode,
     #'   `FALSE` (default).
     #' @return (data.table | promise<data.table>) one row giving the borrow order
     #'   number and the amount actually borrowed:
@@ -849,18 +849,18 @@ KucoinMarginTrading <- R6::R6Class(
     borrow = function(
       currency,
       size,
-      timeInForce = "IOC",
-      isIsolated = FALSE,
+      time_in_force = "IOC",
+      is_isolated = FALSE,
       symbol = NULL,
-      isHf = FALSE
+      is_hf = FALSE
     ) {
       assert_args_KucoinMarginTrading__borrow(
         currency,
         size,
-        timeInForce,
-        isIsolated,
+        time_in_force,
+        is_isolated,
         symbol,
-        isHf
+        is_hf
       )
       if (!is.character(currency) || !nzchar(currency)) {
         rlang::abort("Parameter 'currency' must be a non-empty string.")
@@ -868,17 +868,17 @@ KucoinMarginTrading <- R6::R6Class(
       if (!is.numeric(size) || size <= 0) {
         rlang::abort("Parameter 'size' must be a positive number.")
       }
-      if (isTRUE(isIsolated) && (is.null(symbol) || !verify_symbol(symbol))) {
-        rlang::abort("Parameter 'symbol' is required and must be a valid ticker when 'isIsolated' is TRUE.")
+      if (isTRUE(is_isolated) && (is.null(symbol) || !verify_symbol(symbol))) {
+        rlang::abort("Parameter 'symbol' is required and must be a valid ticker when 'is_isolated' is TRUE.")
       }
 
       body <- list(
         currency = currency,
         size = as.character(size),
-        timeInForce = timeInForce,
-        isIsolated = isIsolated,
+        timeInForce = time_in_force,
+        isIsolated = is_isolated,
         symbol = symbol,
-        isHf = isHf
+        isHf = is_hf
       )
       body <- body[!vapply(body, is.null, logical(1))]
 
@@ -1448,49 +1448,49 @@ KucoinMarginTrading <- R6::R6Class(
       funds = NULL,
       type = "market",
       price = NULL,
-      isIsolated = FALSE,
-      clientOid = NULL,
+      is_isolated = FALSE,
+      client_order_id = NULL,
       stp = NULL,
       remark = NULL,
-      timeInForce = NULL,
-      cancelAfter = NULL,
-      postOnly = NULL,
+      time_in_force = NULL,
+      cancel_after = NULL,
+      post_only = NULL,
       hidden = NULL,
       iceberg = NULL,
-      visibleSize = NULL,
+      visible_size = NULL,
       dry_run = FALSE
     ) {
       body <- validate_margin_order_params(
         type = type,
         symbol = symbol,
         side = side,
-        clientOid = clientOid,
+        client_order_id = client_order_id,
         price = price,
         size = size,
         funds = funds,
         stp = stp,
         remark = remark,
-        timeInForce = timeInForce,
-        cancelAfter = cancelAfter,
-        postOnly = postOnly,
+        time_in_force = time_in_force,
+        cancel_after = cancel_after,
+        post_only = post_only,
         hidden = hidden,
         iceberg = iceberg,
-        visibleSize = visibleSize,
-        isIsolated = {
+        visible_size = visible_size,
+        is_isolated = {
           val <- NULL
-          if (isTRUE(isIsolated)) {
+          if (isTRUE(is_isolated)) {
             val <- TRUE
           }
           val
         },
-        autoBorrow = {
+        auto_borrow = {
           val <- NULL
           if (isTRUE(auto_borrow)) {
             val <- TRUE
           }
           val
         },
-        autoRepay = {
+        auto_repay = {
           val <- NULL
           if (isTRUE(auto_repay)) {
             val <- TRUE

@@ -117,7 +117,7 @@ test_that("backfill clamps -Inf from to 2017-01-01", {
 
 # -- Error Handling --
 
-test_that("backfill attaches failures attribute on error", {
+test_that("backfill warns per failure and emits a final summary warning", {
   outfile <- tempfile(fileext = ".csv")
   on.exit(unlink(outfile), add = TRUE)
 
@@ -126,21 +126,31 @@ test_that("backfill attaches failures attribute on error", {
     return(mock_http_error(status_code = 500L, body_text = "Internal Server Error"))
   })
 
-  result <- suppressWarnings(kucoin_backfill_klines(
-    symbols = "BTC-USDT",
-    timeframes = "1day",
-    from = lubridate::as_datetime("2024-10-16", tz = "UTC"),
-    to = lubridate::as_datetime("2024-10-17", tz = "UTC"),
-    file = outfile,
-    sleep = 0,
-    verbose = FALSE
-  ))
+  warnings_seen <- character(0)
+  result <- withCallingHandlers(
+    kucoin_backfill_klines(
+      symbols = "BTC-USDT",
+      timeframes = "1day",
+      from = lubridate::as_datetime("2024-10-16", tz = "UTC"),
+      to = lubridate::as_datetime("2024-10-17", tz = "UTC"),
+      file = outfile,
+      sleep = 0,
+      verbose = FALSE
+    ),
+    warning = function(w) {
+      warnings_seen <<- c(warnings_seen, conditionMessage(w))
+      invokeRestart("muffleWarning")
+    }
+  )
 
-  failures <- attr(result, "failures")
-  expect_s3_class(failures, "data.table")
-  expect_equal(nrow(failures), 1L)
-  expect_equal(failures$symbol, "BTC-USDT")
-  expect_equal(failures$timeframe, "1day")
+  # Per-combo warning fires inside the tryCatch.
+  expect_true(any(grepl("BTC-USDT", warnings_seen) & grepl("FAILED", warnings_seen)))
+  # Final summary warning lists the failure count + combo identifier.
+  expect_true(any(grepl("1 of 1", warnings_seen) & grepl("BTC-USDT/1day", warnings_seen)))
+
+  # No hidden state on the return value -- it's just the file path.
+  expect_type(result, "character")
+  expect_null(attr(result, "failures"))
 })
 
 # -- Multiple Symbols/Timeframes --

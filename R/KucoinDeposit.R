@@ -423,11 +423,11 @@ KucoinDeposit <- R6::R6Class(
     #' @param status (scalar<character> | NULL) filter by deposit status.
     #'   Accepted values: `"PROCESSING"`, `"WALLET_PROCESSING"`, `"SUCCESS"`,
     #'   `"FAILURE"`. When NULL, returns deposits of all statuses.
-    #' @param startAt (scalar<numeric> | NULL) start timestamp in milliseconds
+    #' @param start_at (scalar<numeric> | NULL) start timestamp in milliseconds
     #'   (inclusive). Used to filter deposits created on or after this time.
-    #' @param endAt (scalar<numeric> | NULL) end timestamp in milliseconds
+    #' @param end_at (scalar<numeric> | NULL) end timestamp in milliseconds
     #'   (inclusive). Used to filter deposits created on or before this time.
-    #' @param page_size (scalar<count in [1, Inf[>) number of results per page
+    #' @param page_size (scalar<count in [1, Inf]>) number of results per page
     #'   (default 50, max 100).
     #' @param max_pages (scalar<numeric in [1, Inf]>) maximum number of pages to
     #'   fetch (default `Inf` for all pages).
@@ -465,16 +465,16 @@ KucoinDeposit <- R6::R6Class(
     get_deposit_history = function(
       currency = NULL,
       status = NULL,
-      startAt = NULL,
-      endAt = NULL,
+      start_at = NULL,
+      end_at = NULL,
       page_size = 50,
       max_pages = Inf
     ) {
       assert_args_KucoinDeposit__get_deposit_history(
         currency,
         status,
-        startAt,
-        endAt,
+        start_at,
+        end_at,
         page_size,
         max_pages
       )
@@ -483,8 +483,8 @@ KucoinDeposit <- R6::R6Class(
         query = list(
           currency = currency,
           status = status,
-          startAt = startAt,
-          endAt = endAt
+          startAt = start_at,
+          endAt = end_at
         ),
         page_size = page_size,
         max_pages = max_pages,

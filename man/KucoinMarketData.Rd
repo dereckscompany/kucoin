@@ -403,7 +403,7 @@ Verified: 2026-05-23
 \code{"en_US"}, \code{"zh_CN"}), \code{startTime} (start timestamp in milliseconds), and
 \code{endTime} (end timestamp in milliseconds).}
 
-\item{\code{page_size}}{(scalar<count in [1, Inf[>) results per page (default 50,
+\item{\code{page_size}}{(scalar<count in [1, Inf]>) results per page (default 50,
 max 100).}
 
 \item{\code{max_pages}}{(scalar<numeric in [1, Inf]>) maximum number of pages to
