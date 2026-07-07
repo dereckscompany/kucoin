@@ -61,11 +61,12 @@ reference:
       - kucoin_btc_usdt_4h_ohlcv
 
   - title: Utilities
-    desc: Time conversion and validation helpers
+    desc: Time conversion, validation, and return-shape helpers
     contents:
       - time_convert_from_kucoin
       - time_convert_to_kucoin
       - verify_symbol
+      - kucoin_shapes
 
 articles:
   - title: Getting Started
