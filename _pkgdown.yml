@@ -52,7 +52,6 @@ reference:
   - title: Low-Level Request Helpers
     desc: Functions for building and executing KuCoin API requests
     contents:
-      - kucoin_build_request
       - kucoin_paginate
 
   - title: Backfill and Data
