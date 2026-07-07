@@ -39,7 +39,11 @@ Suggests:
     diffviewer,
     knitr,
     rmarkdown,
-    roxyassert (>= 0.9.1)
+    roxyassert (>= 0.9.1),
+    covr,
+    DT,
+    pkgdown,
+    rcmdcheck
 Remotes:
     dereckscompany/assert,
     dereckscompany/connectcore,
