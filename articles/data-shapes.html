@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,7 +62,7 @@
       <h1>Package Tour and Data-Shape Conventions</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.1.0/vignettes/data-shapes.Rmd" class="external-link"><code>vignettes/data-shapes.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/master/vignettes/data-shapes.Rmd" class="external-link"><code>vignettes/data-shapes.Rmd</code></a></small>
       <div class="d-none name"><code>data-shapes.Rmd</code></div>
     </div>
 
@@ -188,25 +188,21 @@ leverage</td>
 <td>Read API credentials and base URLs from environment variables</td>
 </tr>
 <tr class="even">
-<td><code><a href="../reference/kucoin_build_request.html">kucoin_build_request()</a></code></td>
-<td>Low-level HTTP / signing primitive — every method goes through
-this</td>
+<td><code><a href="../reference/kucoin_paginate.html">kucoin_paginate()</a></code></td>
+<td>Generic page-walker for paginated endpoints (routes through
+<code><a href="https://rdrr.io/pkg/connectcore/man/build_request.html" class="external-link">connectcore::build_request()</a></code>)</td>
 </tr>
 <tr class="odd">
-<td><code><a href="../reference/kucoin_paginate.html">kucoin_paginate()</a></code></td>
-<td>Generic page-walker for paginated endpoints</td>
-</tr>
-<tr class="even">
 <td><code><a href="../reference/kucoin_backfill_klines.html">kucoin_backfill_klines()</a></code></td>
 <td>Bulk historical klines download for many symbols × timeframes with
 CSV resume</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code><a href="../reference/verify_symbol.html">verify_symbol()</a></code></td>
 <td>Sanity-check a symbol against the cached symbol list before placing
 an order</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>
 <code><a href="../reference/time_convert_to_kucoin.html">time_convert_to_kucoin()</a></code>,
 <code><a href="../reference/time_convert_from_kucoin.html">time_convert_from_kucoin()</a></code>
@@ -1331,12 +1327,16 @@ borrowers)<a class="anchor" aria-label="anchor" href="#kucoinlending-lending-poo
 <div class="section level3">
 <h3 id="low-level-http">Low-level HTTP<a class="anchor" aria-label="anchor" href="#low-level-http"></a>
 </h3>
-<p><code><a href="../reference/kucoin_build_request.html">kucoin_build_request()</a></code> constructs and signs every
-request, and <code><a href="../reference/kucoin_paginate.html">kucoin_paginate()</a></code> walks the
-<code>currentPage</code> / <code>pageSize</code> envelope on paginated
-endpoints. You should rarely call either directly — every method goes
-through them — but both are exported so you can wrap any not-yet-bound
-endpoint without re-implementing HMAC-SHA256 signing.</p>
+<p>Every request flows through <code><a href="https://rdrr.io/pkg/connectcore/man/build_request.html" class="external-link">connectcore::build_request()</a></code>
+(the shared transport funnel) via <code>KucoinBase$.request()</code>,
+which pre-serialises the body to compact JSON and sends it byte-verbatim
+so the HMAC-SHA256 signature matches on the wire.
+<code><a href="../reference/kucoin_paginate.html">kucoin_paginate()</a></code> walks the <code>currentPage</code> /
+<code>pageSize</code> envelope on paginated endpoints through that same
+funnel. You should rarely call <code><a href="../reference/kucoin_paginate.html">kucoin_paginate()</a></code> directly —
+every method goes through it — but it is exported so you can wrap any
+not-yet-bound paginated endpoint without re-implementing the
+signing.</p>
 </div>
 <div class="section level3">
 <h3 id="bulk-klines-download">Bulk klines download<a class="anchor" aria-label="anchor" href="#bulk-klines-download"></a>
@@ -1539,7 +1539,7 @@ string; recover with <code><a href="https://jeroen.r-universe.dev/jsonlite/refer
 <span><span class="co"># raw `context` field as a JSON string because its keys depend on</span></span>
 <span><span class="co"># the `bizType` of the entry (Exchange entries carry `orderId` +</span></span>
 <span><span class="co"># `symbol`; Transfer entries carry `description`; etc.).</span></span>
-<span><span class="va">ledger</span> <span class="op">&lt;-</span> <span class="va">account</span><span class="op">$</span><span class="fu">get_spot_ledger</span><span class="op">(</span>query <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>currency <span class="op">=</span> <span class="st">"USDT"</span>, bizType <span class="op">=</span> <span class="st">"Exchange"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">ledger</span> <span class="op">&lt;-</span> <span class="va">account</span><span class="op">$</span><span class="fu">get_spot_ledger</span><span class="op">(</span>query <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>currency <span class="op">=</span> <span class="st">"USDT"</span>, biz_type <span class="op">=</span> <span class="st">"Exchange"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">ledger</span><span class="op">$</span><span class="va">context</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
 <span><span class="co">#&gt; '{"orderId":"670fd33bf9406e0007ab3945","symbol":"BTC-USDT"}'</span></span>
 <span></span>
@@ -1607,9 +1607,9 @@ KuCoin’s rate-limit error codes but does not back off on its own — that
 is the caller’s job.</li>
 <li>
 <strong>No reconnect / retry on transient network errors.</strong>
-The single call is what you asked for; wrap with
-<code><a href="https://httr2.r-lib.org/reference/req_retry.html" class="external-link">httr2::req_retry()</a></code> (passed through
-<code><a href="../reference/kucoin_build_request.html">kucoin_build_request()</a></code>) if you want retries.</li>
+The single call is what you asked for; configure retries through
+<code><a href="https://rdrr.io/pkg/connectcore/man/RestClient.html" class="external-link">connectcore::RestClient</a></code>’s <code>max_tries</code> (the
+shared transport funnel) if you want them.</li>
 </ul>
 <hr>
 </div>

@@ -1,5 +1,11 @@
 # KucoinOcoOrders: OCO Order Management
 
+KucoinOcoOrders: OCO Order Management
+
+KucoinOcoOrders: OCO Order Management
+
+## Details
+
 Provides methods for managing OCO (One-Cancels-Other) orders on KuCoin
 Spot. Inherits from
 [KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
@@ -58,7 +64,7 @@ Orders](https://www.kucoin.com/docs-new/rest/spot-trading/orders/add-oco-order)
 
 [`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
 -\>
-[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinOcoOrders`
 
 ## Methods
@@ -85,11 +91,11 @@ Orders](https://www.kucoin.com/docs-new/rest/spot-trading/orders/add-oco-order)
 
 Inherited methods
 
-- [`KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 
-### `KucoinOcoOrders$add_order()`
+### Method `add_order()`
 
 Place an OCO Order
 
@@ -141,7 +147,9 @@ Verified: 2026-05-23
       --header 'KC-API-TIMESTAMP: 1729176273859' \
       --header 'KC-API-PASSPHRASE: your-passphrase' \
       --header 'KC-API-KEY-VERSION: 2' \
-      --data-raw '{"symbol":"BTC-USDT","side":"sell","price":"110000","size":"0.0001","stopPrice":"90000","limitPrice":"89500","tradeType":"TRADE"}'
+      --data-raw \
+      '{"symbol":"BTC-USDT","side":"sell","price":"110000","size":"0.0001","stopPrice":"90000","limitPrice":"89500",
+      "tradeType":"TRADE"}'
 
 #### JSON Response
 
@@ -159,70 +167,77 @@ Verified: 2026-05-23
       side,
       price,
       size,
-      stopPrice,
-      limitPrice,
-      clientOid = NULL,
+      stop_price,
+      limit_price,
+      client_order_id = NULL,
       remark = NULL,
-      tradeType = "TRADE"
+      trade_type = "TRADE"
     )
 
 #### Arguments
 
 - `symbol`:
 
-  Character; trading pair (e.g., `"BTC-USDT"`). Must match the
-  `BASE-QUOTE` format validated by
+  (scalar\<character\>) trading pair (e.g., `"BTC-USDT"`); must match
+  the `BASE-QUOTE` format validated by
   [`verify_symbol()`](https://dereckscompany.github.io/kucoin/reference/verify_symbol.md).
 
 - `side`:
 
-  Character; order side, one of `"buy"` or `"sell"`.
+  (scalar\<character\>) order side, one of `"buy"` or `"sell"`.
 
 - `price`:
 
-  Character; limit order price for the take-profit leg. Must align with
-  the symbol's `priceIncrement`.
+  (scalar\<numeric\> \| scalar\<character\>) limit order price for the
+  take-profit leg; must align with the symbol's `priceIncrement`.
 
 - `size`:
 
-  Character; order quantity in base currency (e.g., `"0.0001"` BTC).
-  Must align with the symbol's `baseIncrement`.
+  (scalar\<numeric\> \| scalar\<character\>) order quantity in base
+  currency (e.g., `"0.0001"` BTC); must align with the symbol's
+  `baseIncrement`.
 
-- `stopPrice`:
+- `stop_price`:
 
-  Character; trigger price for the stop-limit leg. When the market
-  reaches this price, the stop-limit order is activated.
+  (scalar\<numeric\> \| scalar\<character\>) trigger price for the
+  stop-limit leg; when the market reaches this price the stop-limit
+  order is activated.
 
-- `limitPrice`:
+- `limit_price`:
 
-  Character; limit price for the stop-limit leg after the stop is
-  triggered. This is the price at which the stop-limit order is placed.
+  (scalar\<numeric\> \| scalar\<character\>) limit price for the
+  stop-limit leg after the stop is triggered; this is the price at which
+  the stop-limit order is placed.
 
-- `clientOid`:
+- `client_order_id`:
 
-  Character or NULL; unique client-assigned order identifier (max 40
-  characters). Useful for idempotent order placement and tracking.
+  (scalar\<character\> \| NULL) unique client-assigned order identifier
+  (max 40 characters); useful for idempotent order placement and
+  tracking.
 
 - `remark`:
 
-  Character or NULL; order remarks or notes (max 20 characters).
+  (scalar\<character\> \| NULL) order remarks or notes (max 20
+  characters).
 
-- `tradeType`:
+- `trade_type`:
 
-  Character; trade type, defaults to `"TRADE"` for spot trading.
+  (scalar\<character\>) trade type, defaults to `"TRADE"` for spot
+  trading.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the KuCoin-assigned
+OCO order identifier and the client-provided order identifier (NA if not
+supplied):
 
-- `order_id` (character): KuCoin-assigned OCO order identifier.
+- order_id (character) the system order identifier.
 
-- `client_oid` (character): Client-provided order identifier (NA if not
-  supplied).
+- client_oid (character \| NA) the client-supplied order identifier.
 
 #### Examples
 
+    \dontrun{
     oco <- KucoinOcoOrders$new()
 
     # Sell OCO: take-profit at 110k, stop-loss at 90k
@@ -240,10 +255,11 @@ Verified: 2026-05-23
       stopPrice = "3500", limitPrice = "3550",
       clientOid = "my-bot-oco-001"
     )
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinOcoOrders$cancel_order_by_id()`
+### Method `cancel_order_by_id()`
 
 Cancel OCO Order by Order ID
 
@@ -264,8 +280,8 @@ limit and stop-limit legs of the OCO order are cancelled.
 
 #### Official Documentation
 
-[KuCoin Cancel OCO Order By
-OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-oco-order-by-orderld)
+KuCoin Cancel OCO Order By OrderId:
+<https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-oco-order-by-orderld>
 
 Verified: 2026-05-23
 
@@ -304,35 +320,34 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinOcoOrders$cancel_order_by_id(orderId)
+    KucoinOcoOrders$cancel_order_by_id(order_id)
 
 #### Arguments
 
-- `orderId`:
+- `order_id`:
 
-  Character; the KuCoin-assigned OCO order ID to cancel (e.g.,
-  `"674c40d38b4b2f00073deef3"`).
+  (scalar\<character\>) the KuCoin-assigned OCO order ID to cancel
+  (e.g., `"674c40d38b4b2f00073deef3"`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per cancelled order, and column:
-
-- `cancelled_order_id` (character): Cancelled order ID (the parent OCO
-  and each of its sub-orders appear as separate rows). Empty
-  `data.table` if nothing matched.
+(data.table \| promise\<data.table\>) one row per cancelled order giving
+the cancelled order ID (the parent OCO and each of its sub-orders appear
+as separate rows); an empty data.table if nothing matched.
 
 #### Examples
 
+    \dontrun{
     oco <- KucoinOcoOrders$new()
 
     # Cancel a specific OCO order
     result <- oco$cancel_order_by_id("674c40d38b4b2f00073deef3")
     print(result$cancelled_order_id)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinOcoOrders$cancel_order_by_client_oid()`
+### Method `cancel_order_by_client_oid()`
 
 Cancel OCO Order by Client OID
 
@@ -357,8 +372,8 @@ cancelled.
 
 #### Official Documentation
 
-[KuCoin Cancel OCO Order By
-ClientOid](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-oco-order-by-clientoid)
+KuCoin Cancel OCO Order By ClientOid:
+<https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-oco-order-by-clientoid>
 
 Verified: 2026-05-23
 
@@ -397,35 +412,34 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinOcoOrders$cancel_order_by_client_oid(clientOid)
+    KucoinOcoOrders$cancel_order_by_client_oid(client_order_id)
 
 #### Arguments
 
-- `clientOid`:
+- `client_order_id`:
 
-  Character; the client-assigned order ID used when placing the OCO
-  order (e.g., `"my-bot-oco-001"`).
+  (scalar\<character\>) the client-assigned order ID used when placing
+  the OCO order (e.g., `"my-bot-oco-001"`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per cancelled order, and column:
-
-- `cancelled_order_id` (character): Cancelled order ID (the parent OCO
-  and each of its sub-orders appear as separate rows). Empty
-  `data.table` if nothing matched.
+(data.table \| promise\<data.table\>) one row per cancelled order giving
+the cancelled order ID (the parent OCO and each of its sub-orders appear
+as separate rows); an empty data.table if nothing matched.
 
 #### Examples
 
+    \dontrun{
     oco <- KucoinOcoOrders$new()
 
     # Cancel by client-assigned ID
     result <- oco$cancel_order_by_client_oid("my-bot-oco-001")
     print(result$cancelled_order_id)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinOcoOrders$cancel_all()`
+### Method `cancel_all()`
 
 Cancel All OCO Orders
 
@@ -498,24 +512,20 @@ Verified: 2026-05-23
 
 - `query`:
 
-  Named list; filter parameters for batch cancellation:
-
-  - `symbol` (character): Optional. Trading pair to filter by (e.g.,
-    `"BTC-USDT"`).
-
-  - `orderIds` (character): Optional. Comma-separated order IDs to
-    cancel specifically. If empty, all active OCO orders are cancelled.
+  (list) optional filter parameters for batch cancellation. Supported
+  keys: `symbol` (trading pair to filter by e.g. `"BTC-USDT"`) and
+  `orderIds` (comma-separated order IDs to cancel specifically). If
+  empty, all active OCO orders are cancelled.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per cancelled order, and column:
-
-- `cancelled_order_id` (character): Cancelled order ID. Empty
-  `data.table` if no active OCO orders matched the filter.
+(data.table \| promise\<data.table\>) one row per cancelled order giving
+the cancelled order ID; an empty data.table if no active OCO orders
+matched the filter.
 
 #### Examples
 
+    \dontrun{
     oco <- KucoinOcoOrders$new()
 
     # Cancel all OCO orders for BTC-USDT
@@ -524,10 +534,11 @@ Verified: 2026-05-23
 
     # Cancel all OCO orders (no filter)
     result <- oco$cancel_all()
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinOcoOrders$get_order_by_id()`
+### Method `get_order_by_id()`
 
 Get OCO Order by Order ID
 
@@ -550,8 +561,8 @@ that).
 
 #### Official Documentation
 
-[KuCoin Get OCO Order By
-OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-by-orderld)
+KuCoin Get OCO Order By OrderId:
+<https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-by-orderld>
 
 Verified: 2026-05-23
 
@@ -590,44 +601,46 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinOcoOrders$get_order_by_id(orderId)
+    KucoinOcoOrders$get_order_by_id(order_id)
 
 #### Arguments
 
-- `orderId`:
+- `order_id`:
 
-  Character; the KuCoin-assigned OCO order ID (e.g.,
+  (scalar\<character\>) the KuCoin-assigned OCO order ID (e.g.,
   `"674c40d38b4b2f00073deef3"`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the OCO order
+identifier, trading pair, client-assigned order identifier, order
+creation datetime (POSIXct, coerced from epoch milliseconds), and order
+status (e.g., `"NEW"`, `"DONE"`, `"TRIGGERED"`):
 
-- `order_id` (character): OCO order identifier.
+- order_id (character) the system order identifier.
 
-- `symbol` (character): Trading pair (e.g., `"BTC-USDT"`).
+- symbol (character) the trading pair symbol.
 
-- `client_oid` (character): Client-assigned order identifier.
+- client_oid (character \| NA) the client-supplied order identifier.
 
-- `order_time` (POSIXct): Order creation datetime (coerced from epoch
-  milliseconds).
+- order_time (POSIXct) the order time (UTC).
 
-- `status` (character): Order status (e.g., `"NEW"`, `"DONE"`,
-  `"TRIGGERED"`).
+- status (character) the status.
 
 #### Examples
 
+    \dontrun{
     oco <- KucoinOcoOrders$new()
 
     # Get OCO order summary
     order <- oco$get_order_by_id("674c40d38b4b2f00073deef3")
     print(order$status)
     print(order$symbol)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinOcoOrders$get_order_by_client_oid()`
+### Method `get_order_by_client_oid()`
 
 Get OCO Order by Client OID
 
@@ -650,8 +663,8 @@ your own identifiers rather than KuCoin-assigned IDs.
 
 #### Official Documentation
 
-[KuCoin Get OCO Order By
-ClientOid](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-by-clientoid)
+KuCoin Get OCO Order By ClientOid:
+<https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-by-clientoid>
 
 Verified: 2026-05-23
 
@@ -690,44 +703,46 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinOcoOrders$get_order_by_client_oid(clientOid)
+    KucoinOcoOrders$get_order_by_client_oid(client_order_id)
 
 #### Arguments
 
-- `clientOid`:
+- `client_order_id`:
 
-  Character; the client-assigned order ID used when placing the OCO
-  order (e.g., `"my-bot-oco-001"`).
+  (scalar\<character\>) the client-assigned order ID used when placing
+  the OCO order (e.g., `"my-bot-oco-001"`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the KuCoin-assigned
+OCO order identifier, trading pair, client-assigned order identifier,
+order creation datetime (POSIXct, coerced from epoch milliseconds), and
+order status (e.g., `"NEW"`, `"DONE"`, `"TRIGGERED"`):
 
-- `order_id` (character): KuCoin-assigned OCO order identifier.
+- order_id (character) the system order identifier.
 
-- `symbol` (character): Trading pair (e.g., `"BTC-USDT"`).
+- symbol (character) the trading pair symbol.
 
-- `client_oid` (character): Client-assigned order identifier.
+- client_oid (character \| NA) the client-supplied order identifier.
 
-- `order_time` (POSIXct): Order creation datetime (coerced from epoch
-  milliseconds).
+- order_time (POSIXct) the order time (UTC).
 
-- `status` (character): Order status (e.g., `"NEW"`, `"DONE"`,
-  `"TRIGGERED"`).
+- status (character) the status.
 
 #### Examples
 
+    \dontrun{
     oco <- KucoinOcoOrders$new()
 
     # Retrieve by client OID
     order <- oco$get_order_by_client_oid("my-bot-oco-001")
     print(order$order_id)
     print(order$status)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinOcoOrders$get_order_detail_by_id()`
+### Method `get_order_detail_by_id()`
 
 Get OCO Order Details by Order ID
 
@@ -751,8 +766,8 @@ respective statuses. This provides more information than
 
 #### Official Documentation
 
-[KuCoin Get OCO Order Detail By
-OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-detail-by-orderld)
+KuCoin Get OCO Order Detail By OrderId:
+<https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-oco-order-detail-by-orderld>
 
 Verified: 2026-05-23
 
@@ -810,52 +825,53 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinOcoOrders$get_order_detail_by_id(orderId)
+    KucoinOcoOrders$get_order_detail_by_id(order_id)
 
 #### Arguments
 
-- `orderId`:
+- `order_id`:
 
-  Character; the KuCoin-assigned OCO order ID (e.g.,
+  (scalar\<character\>) the KuCoin-assigned OCO order ID (e.g.,
   `"674c40d38b4b2f00073deef3"`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row per sub-order, each giving
+the OCO order identifier, trading pair, client-assigned order
+identifier, order creation datetime (POSIXct, coerced from epoch
+milliseconds), and overall OCO order status, with the nested `orders`
+array (typically the limit leg plus the stop-limit leg) exploded to long
+format by replicating the parent OCO row once per sub-order and adding
+each sub-order's id, symbol, side, price, size, status, and stop price
+(present only on the stop leg) as `sub_order_`-prefixed columns:
 
-- `order_id` (character): OCO order identifier.
+- order_id (character) the system order identifier.
 
-- `symbol` (character): Trading pair (e.g., `"BTC-USDT"`).
+- symbol (character) the trading pair symbol.
 
-- `client_oid` (character): Client-assigned order identifier.
+- client_oid (character \| NA) the client-supplied order identifier.
 
-- `order_time` (POSIXct): Order creation datetime (coerced from epoch
-  milliseconds).
+- order_time (POSIXct) the order time (UTC).
 
-- `status` (character): Overall OCO order status.
+- status (character) the status.
 
-The nested `orders` array (one entry per sub-order — typically the limit
-leg + the stop-limit leg) is exploded to long format: the parent OCO row
-is replicated once per sub-order, and each sub-order's fields are added
-with a `sub_order_` prefix. Typical sub-order columns:
+- sub_order_id (character) the sub order id.
 
-- `sub_order_id` (character)
+- sub_order_symbol (character) the sub order symbol.
 
-- `sub_order_symbol` (character)
+- sub_order_side (character) the sub order side.
 
-- `sub_order_side` (character)
+- sub_order_price (numeric \| NA) the sub order price.
 
-- `sub_order_price` (character)
+- sub_order_size (numeric \| NA) the sub order size.
 
-- `sub_order_size` (character)
+- sub_order_status (character) the sub order status.
 
-- `sub_order_status` (character)
-
-- `sub_order_stop_price` (character; only present on the stop leg)
+- sub_order_stop_price (numeric \| NA) the sub order stop price.
 
 #### Examples
 
+    \dontrun{
     oco <- KucoinOcoOrders$new()
 
     # Get full OCO order details with sub-orders. The `orders` array
@@ -863,10 +879,11 @@ with a `sub_order_` prefix. Typical sub-order columns:
     # with `sub_order_*` columns alongside the parent OCO fields.
     details <- oco$get_order_detail_by_id("674c40d38b4b2f00073deef3")
     details[, .(order_id, status, sub_order_id, sub_order_side, sub_order_price)]
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinOcoOrders$get_order_list()`
+### Method `get_order_list()`
 
 Get OCO Order List
 
@@ -911,7 +928,8 @@ Verified: 2026-05-23
 
 #### curl
 
-    curl --location --request GET 'https://api.kucoin.com/api/v3/oco/orders?symbol=BTC-USDT&pageSize=20&currentPage=1' \
+    curl --location --request GET \
+      'https://api.kucoin.com/api/v3/oco/orders?symbol=BTC-USDT&pageSize=20&currentPage=1' \
       --header 'KC-API-KEY: your-api-key' \
       --header 'KC-API-SIGN: your-signature' \
       --header 'KC-API-TIMESTAMP: 1729176273859' \
@@ -954,41 +972,24 @@ Verified: 2026-05-23
 
 - `query`:
 
-  Named list; filter and pagination parameters:
-
-  - `symbol` (character): Optional. Trading pair to filter by (e.g.,
-    `"BTC-USDT"`).
-
-  - `startAt` (numeric): Optional. Start time in milliseconds
-    (inclusive).
-
-  - `endAt` (numeric): Optional. End time in milliseconds (inclusive).
-
-  - `pageSize` (integer): Optional. Number of results per page (default
-    20, max 100).
-
-  - `currentPage` (integer): Optional. Page number to retrieve (default
-    1).
+  (list) optional filter and pagination parameters. Supported keys:
+  `symbol` (trading pair to filter by e.g. `"BTC-USDT"`), `startAt`
+  (start time in milliseconds, inclusive), `endAt` (end time in
+  milliseconds, inclusive), `pageSize` (number of results per page,
+  default 20, max 100), and `currentPage` (page number to retrieve,
+  default 1).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns (one row per OCO order):
-
-- `order_id` (character): OCO order identifier.
-
-- `symbol` (character): Trading pair (e.g., `"BTC-USDT"`).
-
-- `client_oid` (character): Client-assigned order identifier.
-
-- `order_time` (POSIXct): Order creation datetime (coerced from epoch
-  milliseconds).
-
-- `status` (character): Order status (e.g., `"NEW"`, `"DONE"`,
-  `"TRIGGERED"`). Returns an empty `data.table` if no orders match.
+(data.table \| promise\<data.table\>) one row per OCO order, each giving
+the OCO order identifier, trading pair, client-assigned order
+identifier, order creation datetime (POSIXct, coerced from epoch
+milliseconds), and order status (e.g., `"NEW"`, `"DONE"`,
+`"TRIGGERED"`); an empty data.table if no orders match.
 
 #### Examples
 
+    \dontrun{
     oco <- KucoinOcoOrders$new()
 
     # Get all OCO orders
@@ -1008,10 +1009,11 @@ Verified: 2026-05-23
       startAt = as.numeric(lubridate::now() - 86400) * 1000,
       endAt = as.numeric(lubridate::now()) * 1000
     ))
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinOcoOrders$clone()`
+### Method `clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -1046,7 +1048,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinOcoOrders$add_order()`
+## Method `KucoinOcoOrders$add_order`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1070,7 +1072,7 @@ order <- oco$add_order(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinOcoOrders$cancel_order_by_id()`
+## Method `KucoinOcoOrders$cancel_order_by_id`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1082,7 +1084,7 @@ print(result$cancelled_order_id)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinOcoOrders$cancel_order_by_client_oid()`
+## Method `KucoinOcoOrders$cancel_order_by_client_oid`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1094,7 +1096,7 @@ print(result$cancelled_order_id)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinOcoOrders$cancel_all()`
+## Method `KucoinOcoOrders$cancel_all`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1109,7 +1111,7 @@ result <- oco$cancel_all()
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinOcoOrders$get_order_by_id()`
+## Method `KucoinOcoOrders$get_order_by_id`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1122,7 +1124,7 @@ print(order$symbol)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinOcoOrders$get_order_by_client_oid()`
+## Method `KucoinOcoOrders$get_order_by_client_oid`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1135,7 +1137,7 @@ print(order$status)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinOcoOrders$get_order_detail_by_id()`
+## Method `KucoinOcoOrders$get_order_detail_by_id`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1149,7 +1151,7 @@ details[, .(order_id, status, sub_order_id, sub_order_side, sub_order_price)]
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinOcoOrders$get_order_list()`
+## Method `KucoinOcoOrders$get_order_list`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

@@ -1,5 +1,11 @@
 # KucoinFuturesAccount: Futures Account and Position Management
 
+KucoinFuturesAccount: Futures Account and Position Management
+
+KucoinFuturesAccount: Futures Account and Position Management
+
+## Details
+
 Provides methods for querying futures account details, managing
 positions, configuring margin mode and leverage, and tracking funding
 fee history. Inherits from
@@ -34,14 +40,14 @@ Positions](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-po
 
 [`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
 -\>
-[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinFuturesAccount`
 
 ## Methods
 
 ### Public methods
 
-- [`KucoinFuturesAccount$new()`](#method-KucoinFuturesAccount-initialize)
+- [`KucoinFuturesAccount$new()`](#method-KucoinFuturesAccount-new)
 
 - [`KucoinFuturesAccount$get_account_overview()`](#method-KucoinFuturesAccount-get_account_overview)
 
@@ -75,7 +81,7 @@ Positions](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-po
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesAccount$new()`
+### Method `new()`
 
 Create a new KucoinFuturesAccount instance.
 
@@ -92,29 +98,29 @@ Create a new KucoinFuturesAccount instance.
 
 - `keys`:
 
-  List; API credentials from
+  (list) API credentials from
   [`get_api_keys()`](https://dereckscompany.github.io/kucoin/reference/get_api_keys.md).
 
 - `base_url`:
 
-  Character; Futures API base URL. Defaults to
+  (scalar\<character\>) Futures API base URL. Defaults to
   [`get_futures_base_url()`](https://dereckscompany.github.io/kucoin/reference/get_futures_base_url.md).
 
 - `async`:
 
-  Logical; if TRUE, methods return promises.
+  (scalar\<logical\>) if TRUE, methods return promises.
 
 - `time_source`:
 
-  Character; `"local"` or `"server"`.
+  (scalar\<character\>) `"local"` or `"server"`.
 
 #### Returns
 
-Invisible self.
+(class\<KucoinFuturesAccount\>) invisibly, the new instance.
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesAccount$get_account_overview()`
+### Method `get_account_overview()`
 
 Get Account Overview
 
@@ -134,8 +140,8 @@ margin, and P&L.
 
 #### Official Documentation
 
-[KuCoin Get Account -
-Futures](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-futures)
+KuCoin Get Account - Futures:
+<https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-futures>
 
 Verified: 2026-05-23
 
@@ -173,32 +179,35 @@ Verified: 2026-05-23
 
 - `currency`:
 
-  Character; settlement currency (e.g., `"USDT"`). Default `"USDT"`.
+  (scalar\<character\>) settlement currency (e.g., `"USDT"`). Default
+  `"USDT"`.
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the futures account
+overview: total account equity, unrealised profit and loss, margin
+balance, position and order margin, frozen funds, available balance, and
+the settlement currency code:
 
-- `account_equity` (numeric): Total account equity.
+- account_equity (numeric \| NA) the account equity.
 
-- `unrealised_pnl` (numeric): Unrealised profit and loss.
+- unrealised_pnl (numeric \| NA) the unrealised pnl.
 
-- `margin_balance` (numeric): Margin balance (equity + unrealised PNL).
+- margin_balance (numeric \| NA) the margin balance.
 
-- `position_margin` (numeric): Margin held by open positions.
+- available_balance (numeric \| NA) the available balance.
 
-- `order_margin` (numeric): Margin held by open orders.
+- available_margin (numeric \| NA) the available margin.
 
-- `frozen_funds` (numeric): Frozen funds.
+- currency (character) the currency code.
 
-- `available_balance` (numeric): Available balance for trading.
+- risk_ratio (numeric \| NA) the risk ratio.
 
-- `currency` (character): Settlement currency code.
+- max_withdraw_amount (numeric \| NA) the max withdraw amount.
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesAccount$get_position()`
+### Method `get_position()`
 
 Get Position Details
 
@@ -220,8 +229,8 @@ Retrieves position details for a specific symbol.
 
 #### Official Documentation
 
-[KuCoin Get Position
-Details](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-position-details)
+KuCoin Get Position Details:
+<https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-position-details>
 
 Verified: 2026-05-23
 
@@ -279,76 +288,23 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; futures symbol (e.g., `"XBTUSDTM"`).
+  (scalar\<character\>) futures symbol (e.g., `"XBTUSDTM"`).
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
-
-- `id` (character): Position identifier.
-
-- `symbol` (character): Contract symbol.
-
-- `auto_deposit` (logical): Auto-deposit margin flag.
-
-- `real_leverage` (numeric): Effective leverage.
-
-- `cross_mode` (logical): Whether cross margin mode is active.
-
-- `delev_percentage` (numeric): Auto-deleveraging percentage.
-
-- `current_qty` (integer): Current position size in contracts.
-
-- `current_cost` (character): Cost of the current position.
-
-- `current_comm` (character): Current commission paid.
-
-- `unrealised_cost` (character): Unrealised cost.
-
-- `realised_gross_cost` (character): Realised gross cost.
-
-- `realised_cost` (character): Realised cost.
-
-- `is_open` (logical): Whether the position is open.
-
-- `mark_price` (numeric): Current mark price.
-
-- `mark_value` (character): Mark value of the position.
-
-- `pos_cost` (character): Position cost.
-
-- `pos_init` (character): Initial margin.
-
-- `pos_comm` (character): Position commission.
-
-- `pos_margin` (character): Position margin.
-
-- `unrealised_pnl` (character): Unrealised profit and loss.
-
-- `unrealised_pnl_pcnt` (numeric): Unrealised PnL as a percentage.
-
-- `avg_entry_price` (character): Average entry price.
-
-- `liquidation_price` (character): Estimated liquidation price.
-
-- `bankrupt_price` (character): Bankruptcy price.
-
-- `settle_currency` (character): Settlement currency.
-
-- `margin_mode` (character): `"ISOLATED"` or `"CROSS"`.
-
-- `position_side` (character): `"BOTH"`, `"LONG"`, or `"SHORT"`.
-
-- `opening_timestamp` (POSIXct): Position opened time (coerced from
-  milliseconds).
-
-- `current_timestamp` (POSIXct): Current server time (coerced from
-  milliseconds).
+(data.table \| promise\<data.table\>) one row giving the position
+details: identifier, contract symbol, auto-deposit flag, effective
+leverage, cross-mode flag, auto-deleveraging percentage, current
+position size, current and unrealised/realised costs and commissions,
+open flag, mark price and value, position cost/init/commission/margin,
+unrealised PnL and its percentage, average entry, liquidation and
+bankruptcy prices, settlement currency, margin mode, position side, and
+the opening and current datetimes (POSIXct, coerced from epoch
+milliseconds).
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesAccount$get_positions()`
+### Method `get_positions()`
 
 Get All Positions
 
@@ -438,18 +394,17 @@ Verified: 2026-05-23
 
 - `currency`:
 
-  Character or NULL; filter by settlement currency.
+  (scalar\<character\> \| NULL) filter by settlement currency.
 
 #### Returns
 
-A `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per open position; same columns as
-`get_position()`. Returns an empty `data.table` when there are no open
-positions.
+(data.table \| promise\<data.table\>) one row per open position,
+carrying the same columns as `get_position()`; an empty `data.table`
+when there are no open positions.
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesAccount$get_positions_history()`
+### Method `get_positions_history()`
 
 Get Position History
 
@@ -472,8 +427,8 @@ Retrieves historical position records.
 
 #### Official Documentation
 
-[KuCoin Get Position
-History](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-positions-history)
+KuCoin Get Position History:
+<https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-positions-history>
 
 Verified: 2026-05-23
 
@@ -529,56 +484,22 @@ Verified: 2026-05-23
 
 - `query`:
 
-  Named list; query parameters. Optional: `symbol`, `from`, `to`,
-  `limit`, `pageId`.
+  (list) query parameters. Optional keys: symbol, from, to, limit,
+  pageId.
 
 #### Returns
 
-A `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per closed position record. Returns an
-empty `data.table` when no history records match. Columns:
-
-- `close_id` (character): Close-event identifier.
-
-- `position_id` (character): Position identifier.
-
-- `uid` (integer): Numeric user ID.
-
-- `user_id` (character): String user ID.
-
-- `symbol` (character): Contract symbol.
-
-- `settle_currency` (character): Settlement currency.
-
-- `leverage` (character): Leverage used.
-
-- `type` (character): Close type (e.g., `"Close"`).
-
-- `pnl` (character): Realised PnL.
-
-- `realised_gross_cost` (character): Gross realised cost.
-
-- `withdraw_pnl` (character): Withdrawn PnL.
-
-- `trade_fee` (character): Trading fee.
-
-- `funding_fee` (character): Funding fee.
-
-- `open_price` (character): Average open price.
-
-- `close_price` (character): Average close price.
-
-- `margin_mode` (character): `"ISOLATED"` or `"CROSS"`.
-
-- `open_time` (POSIXct): Position opened time (coerced from
-  milliseconds).
-
-- `close_time` (POSIXct): Position closed time (coerced from
-  milliseconds).
+(data.table \| promise\<data.table\>) one row per closed position
+record, each giving the close-event and position identifiers, numeric
+and string user IDs, contract symbol, settlement currency, leverage,
+close type, realised PnL, gross realised cost, withdrawn PnL, trade and
+funding fees, average open and close prices, margin mode, and the
+opening and closing datetimes (POSIXct, coerced from epoch
+milliseconds); an empty `data.table` when no history records match.
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesAccount$get_margin_mode()`
+### Method `get_margin_mode()`
 
 Get Margin Mode
 
@@ -630,20 +551,20 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; futures symbol.
+  (scalar\<character\>) futures symbol.
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the contract symbol
+and its current margin mode (`"ISOLATED"` or `"CROSS"`):
 
-- `symbol` (character): Contract symbol.
+- symbol (character) the trading pair symbol.
 
-- `margin_mode` (character): `"ISOLATED"` or `"CROSS"`.
+- margin_mode (character) the margin mode.
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesAccount$set_margin_mode()`
+### Method `set_margin_mode()`
 
 Set Margin Mode
 
@@ -699,30 +620,30 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinFuturesAccount$set_margin_mode(symbol, marginMode)
+    KucoinFuturesAccount$set_margin_mode(symbol, margin_mode)
 
 #### Arguments
 
 - `symbol`:
 
-  Character; futures symbol.
+  (scalar\<character\>) futures symbol.
 
-- `marginMode`:
+- `margin_mode`:
 
-  Character; `"ISOLATED"` or `"CROSS"`.
+  (scalar\<character\>) `"ISOLATED"` or `"CROSS"`.
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the contract symbol
+and its updated margin mode:
 
-- `symbol` (character): Contract symbol.
+- symbol (character) the trading pair symbol.
 
-- `margin_mode` (character): Updated margin mode.
+- margin_mode (character) the margin mode.
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesAccount$get_cross_margin_leverage()`
+### Method `get_cross_margin_leverage()`
 
 Get Cross Margin Leverage
 
@@ -741,8 +662,8 @@ Retrieves the current cross margin leverage for a symbol.
 
 #### Official Documentation
 
-[KuCoin Get Cross Margin
-Leverage](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-cross-margin-leverage)
+KuCoin Get Cross Margin Leverage:
+<https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-cross-margin-leverage>
 
 Verified: 2026-05-23
 
@@ -774,20 +695,20 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; futures symbol.
+  (scalar\<character\>) futures symbol.
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the contract symbol
+and its current cross-margin leverage multiplier:
 
-- `symbol` (character): Contract symbol.
+- symbol (character) the trading pair symbol.
 
-- `leverage` (character): Current leverage multiplier.
+- leverage (character \| NA) the leverage.
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesAccount$set_cross_margin_leverage()`
+### Method `set_cross_margin_leverage()`
 
 Set Cross Margin Leverage
 
@@ -809,8 +730,8 @@ Modifies the cross margin leverage for a symbol.
 
 #### Official Documentation
 
-[KuCoin Modify Cross Margin
-Leverage](https://www.kucoin.com/docs-new/rest/futures-trading/positions/modify-cross-margin-leverage)
+KuCoin Modify Cross Margin Leverage:
+<https://www.kucoin.com/docs-new/rest/futures-trading/positions/modify-cross-margin-leverage>
 
 Verified: 2026-05-23
 
@@ -850,24 +771,24 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; futures symbol.
+  (scalar\<character\>) futures symbol.
 
 - `leverage`:
 
-  Integer; leverage multiplier.
+  (scalar\<count in \[1, Inf\[\>) leverage multiplier.
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the contract symbol
+and its updated cross-margin leverage multiplier:
 
-- `symbol` (character): Contract symbol.
+- symbol (character) the trading pair symbol.
 
-- `leverage` (character): Updated leverage multiplier.
+- leverage (character \| NA) the leverage.
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesAccount$get_max_open_size()`
+### Method `get_max_open_size()`
 
 Get Maximum Open Size
 
@@ -921,30 +842,31 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; futures symbol.
+  (scalar\<character\>) futures symbol.
 
 - `price`:
 
-  Character; order price.
+  (scalar\<numeric in \]0, Inf\[\>) order price.
 
 - `leverage`:
 
-  Integer; leverage multiplier.
+  (scalar\<count in \[1, Inf\[\>) leverage multiplier.
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the contract symbol
+and the maximum number of contracts that can be opened on the buy and
+sell sides:
 
-- `symbol` (character): Contract symbol.
+- symbol (character) the trading pair symbol.
 
-- `max_buy_open_size` (integer): Maximum buy contracts.
+- max_buy_open_size (integer \| NA) the max buy open size.
 
-- `max_sell_open_size` (integer): Maximum sell contracts.
+- max_sell_open_size (integer \| NA) the max sell open size.
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesAccount$get_max_withdraw_margin()`
+### Method `get_max_withdraw_margin()`
 
 Get Maximum Withdrawable Margin
 
@@ -964,8 +886,8 @@ position.
 
 #### Official Documentation
 
-[KuCoin Get Max Withdraw
-Margin](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-max-withdraw-margin)
+KuCoin Get Max Withdraw Margin:
+<https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-max-withdraw-margin>
 
 Verified: 2026-05-23
 
@@ -994,20 +916,18 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; futures symbol.
+  (scalar\<character\>) futures symbol.
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
-
-- `max_withdraw_margin` (character): Maximum amount of isolated margin
-  that can be withdrawn from the position. Returned by KuCoin as a
-  fixed-precision string so the caller controls numeric coercion.
+(data.table \| promise\<data.table\>) one row giving the maximum amount
+of isolated margin that can be withdrawn from the position, returned by
+KuCoin as a fixed-precision string so the caller controls numeric
+coercion.
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesAccount$add_isolated_margin()`
+### Method `add_isolated_margin()`
 
 Add Isolated Margin
 
@@ -1067,38 +987,39 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinFuturesAccount$add_isolated_margin(symbol, margin, bizNo)
+    KucoinFuturesAccount$add_isolated_margin(symbol, margin, biz_no)
 
 #### Arguments
 
 - `symbol`:
 
-  Character; futures symbol.
+  (scalar\<character\>) futures symbol.
 
 - `margin`:
 
-  Numeric; amount of margin to add.
+  (scalar\<numeric\>) amount of margin to add.
 
-- `bizNo`:
+- `biz_no`:
 
-  Character; unique business ID for idempotency.
+  (scalar\<character\>) unique business ID for idempotency.
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the margin
+operation ID, contract symbol, amount deposited, and operation type
+(e.g., `"ADD"`):
 
-- `id` (character): Margin operation ID.
+- id (character) the record identifier.
 
-- `symbol` (character): Contract symbol.
+- symbol (character) the trading pair symbol.
 
-- `margin` (character): Amount deposited.
+- margin (numeric \| NA) the margin amount.
 
-- `margin_type` (character): Operation type (e.g., `"ADD"`).
+- margin_type (character) the margin type.
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesAccount$remove_isolated_margin()`
+### Method `remove_isolated_margin()`
 
 Remove Isolated Margin
 
@@ -1120,8 +1041,8 @@ Withdraws excess margin from an isolated margin position.
 
 #### Official Documentation
 
-[KuCoin Remove Isolated
-Margin](https://www.kucoin.com/docs-new/rest/futures-trading/positions/remove-isolated-margin)
+KuCoin Remove Isolated Margin:
+<https://www.kucoin.com/docs-new/rest/futures-trading/positions/remove-isolated-margin>
 
 Verified: 2026-05-23
 
@@ -1157,34 +1078,34 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinFuturesAccount$remove_isolated_margin(symbol, withdrawAmount)
+    KucoinFuturesAccount$remove_isolated_margin(symbol, withdraw_amount)
 
 #### Arguments
 
 - `symbol`:
 
-  Character; futures symbol.
+  (scalar\<character\>) futures symbol.
 
-- `withdrawAmount`:
+- `withdraw_amount`:
 
-  Numeric; amount of margin to withdraw.
+  (scalar\<numeric\>) amount of margin to withdraw.
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the margin
+operation ID, contract symbol, amount withdrawn, and operation type:
 
-- `id` (character): Margin operation ID.
+- id (character) the record identifier.
 
-- `symbol` (character): Contract symbol.
+- symbol (character) the trading pair symbol.
 
-- `margin` (character): Amount withdrawn.
+- margin (numeric \| NA) the margin amount.
 
-- `margin_type` (character): Operation type.
+- margin_type (character) the margin type.
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesAccount$get_risk_limit()`
+### Method `get_risk_limit()`
 
 Get Risk Limit Level
 
@@ -1204,8 +1125,8 @@ Retrieves risk limit tiers for a futures contract.
 
 #### Official Documentation
 
-[KuCoin Get Isolated Margin Risk
-Limit](https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-isolated-margin-risk-limit)
+KuCoin Get Isolated Margin Risk Limit:
+<https://www.kucoin.com/docs-new/rest/futures-trading/positions/get-isolated-margin-risk-limit>
 
 Verified: 2026-05-23
 
@@ -1262,31 +1183,18 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; futures symbol.
+  (scalar\<character\>) futures symbol.
 
 #### Returns
 
-A `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per risk-limit tier. Returns an empty
-`data.table` when KuCoin returns no tiers. Columns:
-
-- `symbol` (character): Contract symbol.
-
-- `level` (integer): Risk limit tier level.
-
-- `max_risk_limit` (integer): Maximum position value for this tier.
-
-- `min_risk_limit` (integer): Minimum position value for this tier.
-
-- `max_leverage` (integer): Maximum leverage at this tier.
-
-- `initial_margin` (numeric): Initial margin rate.
-
-- `maintain_margin` (numeric): Maintenance margin rate.
+(data.table \| promise\<data.table\>) one row per risk-limit tier, each
+giving the contract symbol, tier level, maximum and minimum position
+values for the tier, maximum leverage, and the initial and maintenance
+margin rates; an empty `data.table` when KuCoin returns no tiers.
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesAccount$get_funding_history()`
+### Method `get_funding_history()`
 
 Get Private Funding Fee History
 
@@ -1308,8 +1216,8 @@ Retrieves your personal funding fee settlement records.
 
 #### Official Documentation
 
-[KuCoin Get Private Funding
-History](https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-private-funding-history)
+KuCoin Get Private Funding History:
+<https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-private-funding-history>
 
 Verified: 2026-05-23
 
@@ -1364,42 +1272,26 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; futures symbol.
+  (scalar\<character\>) futures symbol.
 
 - `query`:
 
-  Named list; additional query parameters. Optional: `startAt`, `endAt`,
-  `reverse`, `offset`, `forward`, `maxCount`.
+  (list) additional query parameters. Optional keys: startAt, endAt,
+  reverse, offset, forward, maxCount.
 
 #### Returns
 
-A `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per funding settlement. Returns an empty
-`data.table` when no records are returned. Columns:
-
-- `id` (integer): Record identifier.
-
-- `symbol` (character): Contract symbol.
-
-- `time_point` (POSIXct): Funding settlement time (coerced from
-  milliseconds).
-
-- `funding_rate` (numeric): Funding rate applied.
-
-- `mark_price` (numeric): Mark price at settlement.
-
-- `position_qty` (integer): Position size at settlement.
-
-- `position_cost` (character): Position cost at settlement.
-
-- `funding` (character): Funding fee amount (negative = paid, positive =
-  received).
-
-- `settle_currency` (character): Settlement currency.
+(data.table \| promise\<data.table\>) one row per funding settlement,
+each giving the record identifier, contract symbol, the funding
+settlement datetime (POSIXct, coerced from epoch milliseconds), funding
+rate applied, mark price at settlement, position size and cost at
+settlement, the funding fee amount (negative = paid, positive =
+received), and the settlement currency; an empty `data.table` when no
+records are returned.
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesAccount$clone()`
+### Method `clone()`
 
 The objects of this class are cloneable with this method.
 

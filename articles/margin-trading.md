@@ -107,7 +107,7 @@ order <- margin$open_short(
   type = "limit",
   price = 100000,
   size = 0.001,
-  timeInForce = "GTC"
+  time_in_force = "GTC"
 )
 order
 ```
@@ -120,14 +120,14 @@ order
 
 By default, all methods use **cross margin** (shared collateral pool).
 For **isolated margin** (risk limited to one pair), set
-`isIsolated = TRUE`:
+`is_isolated = TRUE`:
 
 ``` r
 
 order <- margin$open_short(
   symbol = "BTC-USDT",
   size = 0.001,
-  isIsolated = TRUE
+  is_isolated = TRUE
 )
 order
 ```
@@ -163,7 +163,7 @@ Track orders with your own identifiers:
 order <- margin$open_short(
   symbol = "BTC-USDT",
   size = 0.001,
-  clientOid = "my-strategy-short-001"
+  client_order_id = "my-strategy-short-001"
 )
 order$client_oid
 ```
@@ -192,10 +192,10 @@ result
 ```
 
     #>            order_no actual_size
-    #>              <char>      <char>
+    #>              <char>       <num>
     #> 1: borrow-order-001        1000
     #>           order_no actual_size           timestamp
-    #>             <char>      <char>              <POSc>
+    #>             <char>       <num>              <POSc>
     #> 1: repay-order-001        1000 2024-10-23 03:53:26
 
 ### Borrow History and Interest
@@ -230,10 +230,10 @@ rates
     #>      <char>                  <char>              <POSc>
     #> 1:     USDT                     0.5 2024-10-23 03:53:26
     #>    currency hourly_borrow_rate annualized_borrow_rate
-    #>      <char>             <char>                 <char>
-    #> 1:      BTC           0.000021                 0.1839
-    #> 2:     USDT           0.000015                 0.1314
-    #> 3:      ETH           0.000018                 0.1577
+    #>      <char>              <num>                  <num>
+    #> 1:      BTC            2.1e-05                 0.1839
+    #> 2:     USDT            1.5e-05                 0.1314
+    #> 3:      ETH            1.8e-05                 0.1577
 
 ### Leverage
 
@@ -284,23 +284,23 @@ ratios
     #> Max leverage: 10 10 10 10 
     #> Liquidation debt ratio: 0.97 0.97 0.97 0.97 
     #>    currency lower_limit upper_limit collateral_ratio
-    #>      <char>      <char>      <char>           <char>
-    #> 1:      BTC           0          10              1.0
-    #> 2:      BTC          10         100              0.9
+    #>      <char>       <num>       <num>            <num>
+    #> 1:      BTC           0          10             1.00
+    #> 2:      BTC          10         100             0.90
     #> 3:      ETH           0          50             0.95
     #> 4:      ETH          50         500             0.85
 
 ``` r
 
 # Risk limits (requires auth)
-limits <- margin_data$get_risk_limit(isIsolated = FALSE)
+limits <- margin_data$get_risk_limit(is_isolated = FALSE)
 limits[, .(currency, borrow_max_amount, borrow_enabled)]
 ```
 
     #>    currency borrow_max_amount borrow_enabled
-    #>      <char>            <char>         <lgcl>
-    #> 1:      BTC               100           TRUE
-    #> 2:     USDT           1000000           TRUE
+    #>      <char>             <num>         <lgcl>
+    #> 1:      BTC             1e+02           TRUE
+    #> 2:     USDT             1e+06           TRUE
 
 ------------------------------------------------------------------------
 
@@ -319,14 +319,14 @@ rates <- lending$get_loan_market_rate(currency = "USDT")
 rates
 
 # Lend 1000 USDT at 5% interest
-order <- lending$purchase(currency = "USDT", size = 1000, interestRate = 0.05)
+order <- lending$purchase(currency = "USDT", size = 1000, interest_rate = 0.05)
 order$order_no
 
 # Update the interest rate
 lending$modify_purchase(
   currency = "USDT",
-  purchaseOrderNo = order$order_no,
-  interestRate = 0.06
+  purchase_order_no = order$order_no,
+  interest_rate = 0.06
 )
 
 # Check your lending orders
@@ -337,7 +337,7 @@ orders
 result <- lending$redeem(
   currency = "USDT",
   size = 500,
-  purchaseOrderNo = order$order_no
+  purchase_order_no = order$order_no
 )
 result$order_no
 
@@ -347,20 +347,20 @@ redeems
 ```
 
     #>    currency purchase_enable redeem_enable increment min_purchase_size
-    #>      <char>          <lgcl>        <lgcl>    <char>            <char>
-    #> 1:     USDT            TRUE          TRUE      0.01                10
-    #> 2:      BTC            TRUE          TRUE   0.00001             0.001
+    #>      <char>          <lgcl>        <lgcl>     <num>             <num>
+    #> 1:     USDT            TRUE          TRUE     1e-02             1e+01
+    #> 2:      BTC            TRUE          TRUE     1e-05             1e-03
     #>    max_purchase_size interest_increment min_interest_rate market_interest_rate
-    #>               <char>             <char>            <char>               <char>
-    #> 1:           1000000             0.0001             0.004                 0.05
-    #> 2:               100             0.0001             0.003                 0.04
+    #>                <num>              <num>             <num>                <num>
+    #> 1:             1e+06              1e-04             0.004                 0.05
+    #> 2:             1e+02              1e-04             0.003                 0.04
     #>    max_interest_rate auto_purchase_enable
-    #>               <char>               <lgcl>
-    #> 1:               0.1                 TRUE
+    #>                <num>               <lgcl>
+    #> 1:              0.10                 TRUE
     #> 2:              0.08                 TRUE
     #>            time market_interest_rate
-    #>          <char>               <char>
-    #> 1: 202603070000                 0.05
+    #>          <char>                <num>
+    #> 1: 202603070000                0.050
     #> 2: 202603060000                0.048
     #> 3: 202603050000                0.052
     #> [1] "lending-purchase-001"

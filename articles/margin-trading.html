@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,7 +64,7 @@
 Mezquita</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.1.0/vignettes/margin-trading.Rmd" class="external-link"><code>vignettes/margin-trading.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/master/vignettes/margin-trading.Rmd" class="external-link"><code>vignettes/margin-trading.Rmd</code></a></small>
       <div class="d-none name"><code>margin-trading.Rmd</code></div>
     </div>
 
@@ -192,7 +192,7 @@ allows:</p>
 <span>  type <span class="op">=</span> <span class="st">"limit"</span>,</span>
 <span>  price <span class="op">=</span> <span class="fl">100000</span>,</span>
 <span>  size <span class="op">=</span> <span class="fl">0.001</span>,</span>
-<span>  timeInForce <span class="op">=</span> <span class="st">"GTC"</span></span>
+<span>  time_in_force <span class="op">=</span> <span class="st">"GTC"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">order</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;                    order_id       client_oid borrow_size  loan_apply_id</span></span>
@@ -204,12 +204,12 @@ allows:</p>
 </h3>
 <p>By default, all methods use <strong>cross margin</strong> (shared
 collateral pool). For <strong>isolated margin</strong> (risk limited to
-one pair), set <code>isIsolated = TRUE</code>:</p>
+one pair), set <code>is_isolated = TRUE</code>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">order</span> <span class="op">&lt;-</span> <span class="va">margin</span><span class="op">$</span><span class="fu">open_short</span><span class="op">(</span></span>
 <span>  symbol <span class="op">=</span> <span class="st">"BTC-USDT"</span>,</span>
 <span>  size <span class="op">=</span> <span class="fl">0.001</span>,</span>
-<span>  isIsolated <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  is_isolated <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">order</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;                    order_id       client_oid borrow_size  loan_apply_id</span></span>
@@ -239,7 +239,7 @@ one pair), set <code>isIsolated = TRUE</code>:</p>
 <code class="sourceCode R"><span><span class="va">order</span> <span class="op">&lt;-</span> <span class="va">margin</span><span class="op">$</span><span class="fu">open_short</span><span class="op">(</span></span>
 <span>  symbol <span class="op">=</span> <span class="st">"BTC-USDT"</span>,</span>
 <span>  size <span class="op">=</span> <span class="fl">0.001</span>,</span>
-<span>  clientOid <span class="op">=</span> <span class="st">"my-strategy-short-001"</span></span>
+<span>  client_order_id <span class="op">=</span> <span class="st">"my-strategy-short-001"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">order</span><span class="op">$</span><span class="va">client_oid</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt; [1] "margin-order-001"</span></span></code></pre>
@@ -264,10 +264,10 @@ control:</p>
 <span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">margin</span><span class="op">$</span><span class="fu">repay</span><span class="op">(</span>currency <span class="op">=</span> <span class="st">"USDT"</span>, size <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span>
 <span><span class="va">result</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;            order_no actual_size</span></span>
-<span><span class="co">#&gt;              &lt;char&gt;      &lt;char&gt;</span></span>
+<span><span class="co">#&gt;              &lt;char&gt;       &lt;num&gt;</span></span>
 <span><span class="co">#&gt; 1: borrow-order-001        1000</span></span>
 <span><span class="co">#&gt;           order_no actual_size           timestamp</span></span>
-<span><span class="co">#&gt;             &lt;char&gt;      &lt;char&gt;              &lt;POSc&gt;</span></span>
+<span><span class="co">#&gt;             &lt;char&gt;       &lt;num&gt;              &lt;POSc&gt;</span></span>
 <span><span class="co">#&gt; 1: repay-order-001        1000 2024-10-23 03:53:26</span></span></code></pre>
 <div class="section level3">
 <h3 id="borrow-history-and-interest">Borrow History and Interest<a class="anchor" aria-label="anchor" href="#borrow-history-and-interest"></a>
@@ -299,10 +299,10 @@ control:</p>
 <span><span class="co">#&gt;      &lt;char&gt;                  &lt;char&gt;              &lt;POSc&gt;</span></span>
 <span><span class="co">#&gt; 1:     USDT                     0.5 2024-10-23 03:53:26</span></span>
 <span><span class="co">#&gt;    currency hourly_borrow_rate annualized_borrow_rate</span></span>
-<span><span class="co">#&gt;      &lt;char&gt;             &lt;char&gt;                 &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1:      BTC           0.000021                 0.1839</span></span>
-<span><span class="co">#&gt; 2:     USDT           0.000015                 0.1314</span></span>
-<span><span class="co">#&gt; 3:      ETH           0.000018                 0.1577</span></span></code></pre>
+<span><span class="co">#&gt;      &lt;char&gt;              &lt;num&gt;                  &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1:      BTC            2.1e-05                 0.1839</span></span>
+<span><span class="co">#&gt; 2:     USDT            1.5e-05                 0.1314</span></span>
+<span><span class="co">#&gt; 3:      ETH            1.8e-05                 0.1577</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="leverage">Leverage<a class="anchor" aria-label="anchor" href="#leverage"></a>
@@ -348,19 +348,19 @@ control:</p>
 <span><span class="co">#&gt; Max leverage: 10 10 10 10 </span></span>
 <span><span class="co">#&gt; Liquidation debt ratio: 0.97 0.97 0.97 0.97 </span></span>
 <span><span class="co">#&gt;    currency lower_limit upper_limit collateral_ratio</span></span>
-<span><span class="co">#&gt;      &lt;char&gt;      &lt;char&gt;      &lt;char&gt;           &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1:      BTC           0          10              1.0</span></span>
-<span><span class="co">#&gt; 2:      BTC          10         100              0.9</span></span>
+<span><span class="co">#&gt;      &lt;char&gt;       &lt;num&gt;       &lt;num&gt;            &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1:      BTC           0          10             1.00</span></span>
+<span><span class="co">#&gt; 2:      BTC          10         100             0.90</span></span>
 <span><span class="co">#&gt; 3:      ETH           0          50             0.95</span></span>
 <span><span class="co">#&gt; 4:      ETH          50         500             0.85</span></span></code></pre>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Risk limits (requires auth)</span></span>
-<span><span class="va">limits</span> <span class="op">&lt;-</span> <span class="va">margin_data</span><span class="op">$</span><span class="fu">get_risk_limit</span><span class="op">(</span>isIsolated <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">limits</span> <span class="op">&lt;-</span> <span class="va">margin_data</span><span class="op">$</span><span class="fu">get_risk_limit</span><span class="op">(</span>is_isolated <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">limits</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span><span class="va">currency</span>, <span class="va">borrow_max_amount</span>, <span class="va">borrow_enabled</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;    currency borrow_max_amount borrow_enabled</span></span>
-<span><span class="co">#&gt;      &lt;char&gt;            &lt;char&gt;         &lt;lgcl&gt;</span></span>
-<span><span class="co">#&gt; 1:      BTC               100           TRUE</span></span>
-<span><span class="co">#&gt; 2:     USDT           1000000           TRUE</span></span></code></pre>
+<span><span class="co">#&gt;      &lt;char&gt;             &lt;num&gt;         &lt;lgcl&gt;</span></span>
+<span><span class="co">#&gt; 1:      BTC             1e+02           TRUE</span></span>
+<span><span class="co">#&gt; 2:     USDT             1e+06           TRUE</span></span></code></pre>
 <hr>
 </div>
 <div class="section level2">
@@ -378,14 +378,14 @@ pool:</p>
 <span><span class="va">rates</span></span>
 <span></span>
 <span><span class="co"># Lend 1000 USDT at 5% interest</span></span>
-<span><span class="va">order</span> <span class="op">&lt;-</span> <span class="va">lending</span><span class="op">$</span><span class="fu">purchase</span><span class="op">(</span>currency <span class="op">=</span> <span class="st">"USDT"</span>, size <span class="op">=</span> <span class="fl">1000</span>, interestRate <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
+<span><span class="va">order</span> <span class="op">&lt;-</span> <span class="va">lending</span><span class="op">$</span><span class="fu">purchase</span><span class="op">(</span>currency <span class="op">=</span> <span class="st">"USDT"</span>, size <span class="op">=</span> <span class="fl">1000</span>, interest_rate <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
 <span><span class="va">order</span><span class="op">$</span><span class="va">order_no</span></span>
 <span></span>
 <span><span class="co"># Update the interest rate</span></span>
 <span><span class="va">lending</span><span class="op">$</span><span class="fu">modify_purchase</span><span class="op">(</span></span>
 <span>  currency <span class="op">=</span> <span class="st">"USDT"</span>,</span>
-<span>  purchaseOrderNo <span class="op">=</span> <span class="va">order</span><span class="op">$</span><span class="va">order_no</span>,</span>
-<span>  interestRate <span class="op">=</span> <span class="fl">0.06</span></span>
+<span>  purchase_order_no <span class="op">=</span> <span class="va">order</span><span class="op">$</span><span class="va">order_no</span>,</span>
+<span>  interest_rate <span class="op">=</span> <span class="fl">0.06</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Check your lending orders</span></span>
@@ -396,7 +396,7 @@ pool:</p>
 <span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">lending</span><span class="op">$</span><span class="fu">redeem</span><span class="op">(</span></span>
 <span>  currency <span class="op">=</span> <span class="st">"USDT"</span>,</span>
 <span>  size <span class="op">=</span> <span class="fl">500</span>,</span>
-<span>  purchaseOrderNo <span class="op">=</span> <span class="va">order</span><span class="op">$</span><span class="va">order_no</span></span>
+<span>  purchase_order_no <span class="op">=</span> <span class="va">order</span><span class="op">$</span><span class="va">order_no</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">result</span><span class="op">$</span><span class="va">order_no</span></span>
 <span></span>
@@ -404,20 +404,20 @@ pool:</p>
 <span><span class="va">redeems</span> <span class="op">&lt;-</span> <span class="va">lending</span><span class="op">$</span><span class="fu">get_redeem_orders</span><span class="op">(</span>query <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>currency <span class="op">=</span> <span class="st">"USDT"</span>, status <span class="op">=</span> <span class="st">"DONE"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">redeems</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;    currency purchase_enable redeem_enable increment min_purchase_size</span></span>
-<span><span class="co">#&gt;      &lt;char&gt;          &lt;lgcl&gt;        &lt;lgcl&gt;    &lt;char&gt;            &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1:     USDT            TRUE          TRUE      0.01                10</span></span>
-<span><span class="co">#&gt; 2:      BTC            TRUE          TRUE   0.00001             0.001</span></span>
+<span><span class="co">#&gt;      &lt;char&gt;          &lt;lgcl&gt;        &lt;lgcl&gt;     &lt;num&gt;             &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1:     USDT            TRUE          TRUE     1e-02             1e+01</span></span>
+<span><span class="co">#&gt; 2:      BTC            TRUE          TRUE     1e-05             1e-03</span></span>
 <span><span class="co">#&gt;    max_purchase_size interest_increment min_interest_rate market_interest_rate</span></span>
-<span><span class="co">#&gt;               &lt;char&gt;             &lt;char&gt;            &lt;char&gt;               &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1:           1000000             0.0001             0.004                 0.05</span></span>
-<span><span class="co">#&gt; 2:               100             0.0001             0.003                 0.04</span></span>
+<span><span class="co">#&gt;                &lt;num&gt;              &lt;num&gt;             &lt;num&gt;                &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1:             1e+06              1e-04             0.004                 0.05</span></span>
+<span><span class="co">#&gt; 2:             1e+02              1e-04             0.003                 0.04</span></span>
 <span><span class="co">#&gt;    max_interest_rate auto_purchase_enable</span></span>
-<span><span class="co">#&gt;               &lt;char&gt;               &lt;lgcl&gt;</span></span>
-<span><span class="co">#&gt; 1:               0.1                 TRUE</span></span>
+<span><span class="co">#&gt;                &lt;num&gt;               &lt;lgcl&gt;</span></span>
+<span><span class="co">#&gt; 1:              0.10                 TRUE</span></span>
 <span><span class="co">#&gt; 2:              0.08                 TRUE</span></span>
 <span><span class="co">#&gt;            time market_interest_rate</span></span>
-<span><span class="co">#&gt;          &lt;char&gt;               &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1: 202603070000                 0.05</span></span>
+<span><span class="co">#&gt;          &lt;char&gt;                &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1: 202603070000                0.050</span></span>
 <span><span class="co">#&gt; 2: 202603060000                0.048</span></span>
 <span><span class="co">#&gt; 3: 202603050000                0.052</span></span>
 <span><span class="co">#&gt; [1] "lending-purchase-001"</span></span>

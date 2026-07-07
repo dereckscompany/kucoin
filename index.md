@@ -85,13 +85,17 @@ remotes::install_github("dereckscompany/kucoin")
 
 ``` r
 
-# special mock for local build
+# special mock for local build: the shared connectcore mock harness installs the
+# route table from ./tests/testthat/mock_router as the httr2 mock hook, so every
+# request below is served from the captured JSON fixtures -- no network, no real
+# credentials, no funds.
 box::use(
   kucoin[
     get_api_keys,
     get_futures_base_url
   ],
-  ./tests/testthat/mock_router[mock_router]
+  connectcore[local_mock_api],
+  ./tests/testthat/mock_router[.mock_routes]
 )
 
 KEYS <- get_api_keys(
@@ -103,7 +107,7 @@ KEYS <- get_api_keys(
 BASE <- "https://api.kucoin.com"
 FBASE <- "https://api-futures.kucoin.com"
 
-options(httr2_mock = mock_router)
+local_mock_api(.mock_routes)
 
 # normal imports
 box::use(
@@ -151,12 +155,12 @@ market$get_ticker(symbol = "BTC-USDT")
 ```
 
 ``` R
-#>                   time      sequence   price       size best_bid best_bid_size
-#>                 <POSc>        <char>  <char>     <char>   <char>        <char>
-#> 1: 2024-10-17 10:04:19 1550467636704 67232.9 0.00007682  67232.8    0.41861839
+#>                   time      sequence   price      size best_bid best_bid_size
+#>                 <POSc>        <char>   <num>     <num>    <num>         <num>
+#> 1: 2024-10-17 10:04:19 1550467636704 67232.9 7.682e-05  67232.8     0.4186184
 #>    best_ask best_ask_size
-#>      <char>        <char>
-#> 1:  67232.9    1.24808993
+#>       <num>         <num>
+#> 1:  67232.9       1.24809
 ```
 
 ### 24hr Statistics
@@ -167,15 +171,15 @@ market$get_24hr_stats(symbol = "BTC-USDT")
 ```
 
 ``` R
-#>                   time   symbol     buy    sell change_rate change_price
-#>                 <POSc>   <char>  <char>  <char>      <char>       <char>
-#> 1: 2024-10-17 10:04:19 BTC-USDT 67232.8 67232.9     -0.0114       -772.1
-#>       high     low           vol    vol_value    last average_price
-#>     <char>  <char>        <char>       <char>  <char>        <char>
-#> 1: 68100.0 66800.0 3456.78901234 232456789.12 67232.9       67450.5
-#>    taker_fee_rate maker_fee_rate taker_coefficient maker_coefficient
-#>            <char>         <char>            <char>            <char>
-#> 1:          0.001          0.001                 1                 1
+#>                   time   symbol     buy    sell change_rate change_price  high
+#>                 <POSc>   <char>   <num>   <num>       <num>        <num> <num>
+#> 1: 2024-10-17 10:04:19 BTC-USDT 67232.8 67232.9     -0.0114       -772.1 68100
+#>      low      vol vol_value    last average_price taker_fee_rate maker_fee_rate
+#>    <num>    <num>     <num>   <num>         <num>          <num>          <num>
+#> 1: 66800 3456.789 232456789 67232.9       67450.5          0.001          0.001
+#>    taker_coefficient maker_coefficient
+#>                <num>             <num>
+#> 1:                 1                 1
 ```
 
 ### Klines (Candlestick Data)
@@ -235,18 +239,18 @@ trading$get_open_orders(symbol = "BTC-USDT")
 ```
 
 ``` R
-#>                          id   symbol op_type   type   side  price   size  funds
-#>                      <char>   <char>  <char> <char> <char> <char> <char> <char>
-#> 1: 670fd33bf9406e0007ab3945 BTC-USDT    DEAL  limit    buy  50000 0.0001      0
-#>    deal_size deal_funds    fee fee_currency    stp time_in_force cancel_after
-#>       <char>     <char> <char>       <char> <char>        <char>        <int>
-#> 1:         0          0      0         USDT                  GTC           -1
+#>                          id   symbol op_type   type   side price  size  funds
+#>                      <char>   <char>  <char> <char> <char> <num> <num> <char>
+#> 1: 670fd33bf9406e0007ab3945 BTC-USDT    DEAL  limit    buy 50000 1e-04      0
+#>    deal_size deal_funds   fee fee_currency    stp time_in_force cancel_after
+#>        <num>     <char> <num>       <char> <char>        <char>        <int>
+#> 1:         0          0     0         USDT                  GTC           -1
 #>    post_only hidden iceberg visible_size cancelled_size cancelled_funds
 #>       <lgcl> <lgcl>  <lgcl>       <char>         <char>          <char>
 #> 1:     FALSE  FALSE   FALSE            0              0               0
 #>    remain_size remain_funds active in_order_book               client_oid
-#>         <char>       <char> <lgcl>        <lgcl>                   <char>
-#> 1:      0.0001            0   TRUE          TRUE 5c52e11203aa677f33e493fb
+#>          <num>       <char> <lgcl>        <lgcl>                   <char>
+#> 1:       1e-04            0   TRUE          TRUE 5c52e11203aa677f33e493fb
 #>      tags          created_at     last_updated_at
 #>    <char>              <POSc>              <POSc>
 #> 1:        2024-10-22 06:11:55 2024-10-22 06:11:55
@@ -287,12 +291,12 @@ print(balance[, .(currency, balance, transferable)])
 
 # Move funds from main to trade account
 result <- transfer$add_transfer(
-  clientOid = "my-unique-id",
+  client_order_id = "my-unique-id",
   currency = "USDT",
   amount = "100",
   type = "INTERNAL",
-  fromAccountType = "MAIN",
-  toAccountType = "TRADE"
+  from_account_type = "MAIN",
+  to_account_type = "TRADE"
 )
 print(result$order_id)
 
@@ -362,10 +366,10 @@ margin$get_borrow_rate(query = list(currency = "BTC,USDT,ETH"))
 
 ``` R
 #>    currency hourly_borrow_rate annualized_borrow_rate
-#>      <char>             <char>                 <char>
-#> 1:      BTC           0.000021                 0.1839
-#> 2:     USDT           0.000015                 0.1314
-#> 3:      ETH           0.000018                 0.1577
+#>      <char>              <num>                  <num>
+#> 1:      BTC            2.1e-05                 0.1839
+#> 2:     USDT            1.5e-05                 0.1314
+#> 3:      ETH            1.8e-05                 0.1577
 ```
 
 ### Cross Margin Pairs
@@ -377,15 +381,15 @@ margin_data$get_cross_margin_symbols()
 
 ``` R
 #>      symbol     name base_currency quote_currency base_increment base_min_size
-#>      <char>   <char>        <char>         <char>         <char>        <char>
-#> 1: BTC-USDT BTC-USDT           BTC           USDT     0.00000001       0.00001
-#> 2: ETH-USDT ETH-USDT           ETH           USDT      0.0000001        0.0001
+#>      <char>   <char>        <char>         <char>          <num>         <num>
+#> 1: BTC-USDT BTC-USDT           BTC           USDT          1e-08         1e-05
+#> 2: ETH-USDT ETH-USDT           ETH           USDT          1e-07         1e-04
 #>    base_max_size quote_increment quote_min_size quote_max_size price_increment
-#>           <char>          <char>         <char>         <char>          <char>
-#> 1:   10000000000        0.000001            0.1       99999999             0.1
-#> 2:   10000000000        0.000001            0.1       99999999            0.01
+#>            <num>           <num>          <num>          <num>           <num>
+#> 1:         1e+10           1e-06            0.1          1e+08            0.10
+#> 2:         1e+10           1e-06            0.1          1e+08            0.01
 #>    fee_currency price_limit_rate min_funds enable_trading market
-#>          <char>           <char>    <char>         <lgcl> <char>
+#>          <char>            <num>     <num>         <lgcl> <char>
 #> 1:         USDT             0.01       0.1           TRUE   USDS
 #> 2:         USDT             0.01       0.1           TRUE   USDS
 ```
@@ -399,16 +403,16 @@ lending$get_loan_market()
 
 ``` R
 #>    currency purchase_enable redeem_enable increment min_purchase_size
-#>      <char>          <lgcl>        <lgcl>    <char>            <char>
-#> 1:     USDT            TRUE          TRUE      0.01                10
-#> 2:      BTC            TRUE          TRUE   0.00001             0.001
+#>      <char>          <lgcl>        <lgcl>     <num>             <num>
+#> 1:     USDT            TRUE          TRUE     1e-02             1e+01
+#> 2:      BTC            TRUE          TRUE     1e-05             1e-03
 #>    max_purchase_size interest_increment min_interest_rate market_interest_rate
-#>               <char>             <char>            <char>               <char>
-#> 1:           1000000             0.0001             0.004                 0.05
-#> 2:               100             0.0001             0.003                 0.04
+#>                <num>              <num>             <num>                <num>
+#> 1:             1e+06              1e-04             0.004                 0.05
+#> 2:             1e+02              1e-04             0.003                 0.04
 #>    max_interest_rate auto_purchase_enable
-#>               <char>               <lgcl>
-#> 1:               0.1                 TRUE
+#>                <num>               <lgcl>
+#> 1:              0.10                 TRUE
 #> 2:              0.08                 TRUE
 ```
 
@@ -436,30 +440,63 @@ futures_market$get_contract(symbol = "XBTUSDTM")
 ```
 
 ``` R
-#>      symbol root_symbol   type first_open_date base_currency quote_currency
-#>      <char>      <char> <char>           <num>        <char>         <char>
-#> 1: XBTUSDTM        USDT FFWCSX    1.585555e+12           XBT           USDT
-#>    settle_currency max_order_qty max_price lot_size tick_size
-#>             <char>         <int>     <int>    <int>     <num>
-#> 1:            USDT       1000000   1000000        1       0.1
-#>    index_price_tick_size multiplier initial_margin maintain_margin
-#>                    <num>      <num>          <num>           <num>
-#> 1:                  0.01      0.001          0.008           0.004
+#>      symbol display_symbol root_symbol   type first_open_date expire_date
+#>      <char>         <char>      <char> <char>           <num>      <lgcl>
+#> 1: XBTUSDTM       XBTUSDTM        USDT FFWCSX    1.585555e+12          NA
+#>    settle_date base_currency display_base_currency quote_currency
+#>         <lgcl>        <char>                <char>         <char>
+#> 1:          NA           XBT                   XBT           USDT
+#>    settle_currency max_order_qty market_max_order_qty max_price lot_size
+#>             <char>         <int>                <int>     <int>    <int>
+#> 1:            USDT       1000000              1000000   1000000        1
+#>    tick_size index_price_tick_size multiplier initial_margin maintain_margin
+#>        <num>                 <num>      <num>          <num>           <num>
+#> 1:       0.1                  0.01      0.001          0.008           0.004
 #>    max_risk_limit min_risk_limit risk_step maker_fee_rate taker_fee_rate
 #>             <int>          <int>     <int>          <num>          <num>
 #> 1:         100000         100000     50000          2e-04          6e-04
-#>    maker_fix_fee taker_fix_fee is_deleverage is_quanto is_inverse mark_method
-#>            <int>         <int>        <lgcl>    <lgcl>     <lgcl>      <char>
-#> 1:             0             0          TRUE     FALSE      FALSE   FairPrice
-#>    fair_method status funding_fee_rate predicted_funding_fee_rate open_interest
-#>         <char> <char>            <num>                      <num>        <char>
-#> 1: FundingRate   Open            1e-04                      1e-04         27228
-#>    turnover_of24h volume_of24h mark_price index_price last_trade_price
-#>             <num>        <int>      <num>       <num>            <int>
-#> 1:       23472918          239    98252.1    98232.45            98260
-#>    next_funding_rate_time max_leverage funding_rate_symbol low_price high_price
-#>                     <int>        <int>              <char>     <int>      <int>
-#> 1:               21467281          125      .XBTUSDTMFPI8H     96891      99133
+#>    maker_fix_fee taker_fix_fee settlement_fee is_deleverage is_quanto
+#>            <int>         <int>         <lgcl>        <lgcl>    <lgcl>
+#> 1:             0             0             NA          TRUE     FALSE
+#>    is_inverse mark_method fair_method funding_base_symbol funding_quote_symbol
+#>        <lgcl>      <char>      <char>              <char>               <char>
+#> 1:      FALSE   FairPrice FundingRate           .XBTINT8H           .USDTINT8H
+#>    funding_rate_symbol index_symbol settlement_symbol status funding_fee_rate
+#>                 <char>       <char>            <char> <char>            <num>
+#> 1:      .XBTUSDTMFPI8H    .KXBTUSDT                     Open            1e-04
+#>    predicted_funding_fee_rate daily_interest_rate funding_rate_granularity
+#>                         <num>               <num>                    <int>
+#> 1:                      1e-04               3e-04                 28800000
+#>    funding_rate_cap funding_rate_floor period
+#>               <num>              <num>  <int>
+#> 1:            0.003             -0.003      1
+#>    effective_funding_rate_cycle_start_time current_funding_rate_granularity
+#>                                      <num>                            <int>
+#> 1:                             1.72913e+12                         28800000
+#>    open_interest turnover_of24h volume_of24h mark_price index_price
+#>            <num>          <num>        <int>      <num>       <num>
+#> 1:         27228       23472918          239    98252.1    98232.45
+#>    last_trade_price next_funding_rate_time next_funding_rate_date_time
+#>               <int>                  <int>                       <num>
+#> 1:            98260               21467281                1.729181e+12
+#>    max_leverage    source_exchanges premiums_symbol1_m premiums_symbol8_h
+#>           <int>              <char>             <char>             <char>
+#> 1:          125 okex;binance;kucoin        .XBTUSDTMPI      .XBTUSDTMPI8H
+#>    funding_base_symbol1_m funding_quote_symbol1_m low_price high_price
+#>                    <char>                  <char>     <int>      <int>
+#> 1:                .XBTINT                .USDTINT     96891      99133
+#>    price_chg_pct price_chg     k     m     f mmr_limit mmr_lev_constant
+#>            <num>     <num> <num> <num> <num>     <num>            <num>
+#> 1:       -0.0028    -169.3   490   300   1.3       0.3              125
+#>    support_cross buy_limit sell_limit adjust_k adjust_m adjust_mmr_lev_constant
+#>           <lgcl>     <num>      <num>   <lgcl>   <lgcl>                  <lgcl>
+#> 1:          TRUE   99232.4    97271.8       NA       NA                      NA
+#>    adjust_active_time cross_risk_limit market_stage pre_market_to_perp_date
+#>                <lgcl>            <int>       <char>                  <lgcl>
+#> 1:                 NA       1500000000       NORMAL                      NA
+#>    order_price_range market_type
+#>                <num>      <char>
+#> 1:              0.05      CRYPTO
 ```
 
 #### Futures Ticker
@@ -470,11 +507,11 @@ futures_market$get_ticker(symbol = "XBTUSDTM")
 ```
 
 ``` R
-#>      sequence   symbol   side  size   price best_bid_size best_bid_price
-#>         <int>   <char> <char> <int>  <char>         <int>         <char>
-#> 1: 1729159460 XBTUSDTM   sell     1 98250.0            50        98249.9
+#>        sequence   symbol   side  size price best_bid_size best_bid_price
+#>           <num>   <char> <char> <num> <num>         <num>          <num>
+#> 1: 1.744931e+12 XBTUSDTM   sell     1 98250            50        98249.9
 #>    best_ask_price best_ask_size         trade_id                  ts
-#>            <char>         <int>           <char>              <POSc>
+#>             <num>         <num>           <char>              <POSc>
 #> 1:        98250.1            30 67fd1234abcd5678 2024-10-17 10:04:19
 ```
 
@@ -491,7 +528,7 @@ futures_account <- KucoinFuturesAccount$new(keys = KEYS, base_url = FBASE)
 ``` r
 
 futures_trading$add_order_test(
-  clientOid = "readme-test-001",
+  client_order_id = "readme-test-001",
   symbol = "XBTUSDTM",
   side = "buy",
   type = "limit",
@@ -578,12 +615,12 @@ while (!later$loop_empty()) {
 ```
 
 ``` R
-#>                   time      sequence   price       size best_bid best_bid_size
-#>                 <POSc>        <char>  <char>     <char>   <char>        <char>
-#> 1: 2024-10-17 10:04:19 1550467636704 67232.9 0.00007682  67232.8    0.41861839
+#>                   time      sequence   price      size best_bid best_bid_size
+#>                 <POSc>        <char>   <num>     <num>    <num>         <num>
+#> 1: 2024-10-17 10:04:19 1550467636704 67232.9 7.682e-05  67232.8     0.4186184
 #>    best_ask best_ask_size
-#>      <char>        <char>
-#> 1:  67232.9    1.24808993
+#>       <num>         <num>
+#> 1:  67232.9       1.24809
 #>               datetime     open     high      low    close   volume turnover
 #>                 <POSc>    <num>    <num>    <num>    <num>    <num>    <num>
 #> 1: 2025-07-26 12:00:00 117775.9 118221.2 117766.4 118128.9 264.6461 31241540

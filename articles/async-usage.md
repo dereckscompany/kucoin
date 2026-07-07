@@ -102,17 +102,17 @@ results$btc
 results$eth
 ```
 
-    #>                   time      sequence   price       size best_bid best_bid_size
-    #>                 <POSc>        <char>  <char>     <char>   <char>        <char>
-    #> 1: 2024-10-17 10:04:19 1550467636704 67232.9 0.00007682  67232.8    0.41861839
+    #>                   time      sequence   price      size best_bid best_bid_size
+    #>                 <POSc>        <char>   <num>     <num>    <num>         <num>
+    #> 1: 2024-10-17 10:04:19 1550467636704 67232.9 7.682e-05  67232.8     0.4186184
     #>    best_ask best_ask_size
-    #>      <char>        <char>
-    #> 1:  67232.9    1.24808993
-    #>                   time sequence  price   size best_bid best_bid_size best_ask
-    #>                 <POSc>   <char> <char> <char>   <char>        <char>   <char>
-    #> 1: 2024-10-17 10:04:19   200001 2530.6    0.5   2530.5          12.0   2530.8
+    #>       <num>         <num>
+    #> 1:  67232.9       1.24809
+    #>                   time sequence  price  size best_bid best_bid_size best_ask
+    #>                 <POSc>   <char>  <num> <num>    <num>         <num>    <num>
+    #> 1: 2024-10-17 10:04:19   200001 2530.6   0.5   2530.5            12   2530.8
     #>    best_ask_size
-    #>           <char>
+    #>            <num>
     #> 1:           8.5
 
 ------------------------------------------------------------------------
@@ -144,17 +144,17 @@ results$btc
 results$eth
 ```
 
-    #>                   time      sequence   price       size best_bid best_bid_size
-    #>                 <POSc>        <char>  <char>     <char>   <char>        <char>
-    #> 1: 2024-10-17 10:04:19 1550467636704 67232.9 0.00007682  67232.8    0.41861839
+    #>                   time      sequence   price      size best_bid best_bid_size
+    #>                 <POSc>        <char>   <num>     <num>    <num>         <num>
+    #> 1: 2024-10-17 10:04:19 1550467636704 67232.9 7.682e-05  67232.8     0.4186184
     #>    best_ask best_ask_size
-    #>      <char>        <char>
-    #> 1:  67232.9    1.24808993
-    #>                   time sequence  price   size best_bid best_bid_size best_ask
-    #>                 <POSc>   <char> <char> <char>   <char>        <char>   <char>
-    #> 1: 2024-10-17 10:04:19   200001 2530.6    0.5   2530.5          12.0   2530.8
+    #>       <num>         <num>
+    #> 1:  67232.9       1.24809
+    #>                   time sequence  price  size best_bid best_bid_size best_ask
+    #>                 <POSc>   <char>  <num> <num>    <num>         <num>    <num>
+    #> 1: 2024-10-17 10:04:19   200001 2530.6   0.5   2530.5            12   2530.8
     #>    best_ask_size
-    #>           <char>
+    #>            <num>
     #> 1:           8.5
 
 ------------------------------------------------------------------------
@@ -254,18 +254,18 @@ results$open
     #>             order_id         client_oid
     #>               <char>             <char>
     #> 1: futures-order-001 futures-client-001
-    #>                          id   symbol op_type   type   side  price   size  funds
-    #>                      <char>   <char>  <char> <char> <char> <char> <char> <char>
-    #> 1: 670fd33bf9406e0007ab3945 BTC-USDT    DEAL  limit    buy  50000 0.0001      0
-    #>    deal_size deal_funds    fee fee_currency    stp time_in_force cancel_after
-    #>       <char>     <char> <char>       <char> <char>        <char>        <int>
-    #> 1:         0          0      0         USDT                  GTC           -1
+    #>                          id   symbol op_type   type   side price  size  funds
+    #>                      <char>   <char>  <char> <char> <char> <num> <num> <char>
+    #> 1: 670fd33bf9406e0007ab3945 BTC-USDT    DEAL  limit    buy 50000 1e-04      0
+    #>    deal_size deal_funds   fee fee_currency    stp time_in_force cancel_after
+    #>        <num>     <char> <num>       <char> <char>        <char>        <int>
+    #> 1:         0          0     0         USDT                  GTC           -1
     #>    post_only hidden iceberg visible_size cancelled_size cancelled_funds
     #>       <lgcl> <lgcl>  <lgcl>       <char>         <char>          <char>
     #> 1:     FALSE  FALSE   FALSE            0              0               0
     #>    remain_size remain_funds active in_order_book               client_oid
-    #>         <char>       <char> <lgcl>        <lgcl>                   <char>
-    #> 1:      0.0001            0   TRUE          TRUE 5c52e11203aa677f33e493fb
+    #>          <num>       <char> <lgcl>        <lgcl>                   <char>
+    #> 1:       1e-04            0   TRUE          TRUE 5c52e11203aa677f33e493fb
     #>      tags          created_at     last_updated_at
     #>    <char>              <POSc>              <POSc>
     #> 1:        2024-10-22 06:11:55 2024-10-22 06:11:55

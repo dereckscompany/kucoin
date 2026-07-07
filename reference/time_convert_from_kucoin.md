@@ -13,16 +13,16 @@ time_convert_from_kucoin(time_value, unit = c("ms", "ns", "s"))
 
 - time_value:
 
-  Numeric; the UNIX timestamp.
+  (vector\<numeric, 1..\>) the UNIX timestamp(s).
 
 - unit:
 
-  Character; input unit: `"ms"` (milliseconds, default), `"ns"`
-  (nanoseconds), or `"s"` (seconds).
+  (scalar\<character in c("ms", "ns", "s")\>) input unit: `"ms"`
+  (milliseconds, default), `"ns"` (nanoseconds), or `"s"` (seconds).
 
 ## Value
 
-POSIXct object in UTC.
+(class\<POSIXct\>) POSIXct in UTC.
 
 ## Examples
 

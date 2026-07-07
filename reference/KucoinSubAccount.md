@@ -1,5 +1,11 @@
 # KucoinSubAccount: Sub-Account Management
 
+KucoinSubAccount: Sub-Account Management
+
+KucoinSubAccount: Sub-Account Management
+
+## Details
+
 Provides methods for managing sub-accounts under a KuCoin master
 account. Inherits from
 [KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
@@ -57,7 +63,7 @@ Management](https://www.kucoin.com/docs-new/rest/account-info/sub-account/add-su
 
 [`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
 -\>
-[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinSubAccount`
 
 ## Methods
@@ -76,11 +82,11 @@ Management](https://www.kucoin.com/docs-new/rest/account-info/sub-account/add-su
 
 Inherited methods
 
-- [`KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 
-### `KucoinSubAccount$add_sub_account()`
+### Method `add_sub_account()`
 
 Add Sub-Account
 
@@ -146,47 +152,48 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinSubAccount$add_sub_account(password, subName, access, remarks = NULL)
+    KucoinSubAccount$add_sub_account(password, sub_name, access, remarks = NULL)
 
 #### Arguments
 
 - `password`:
 
-  Character; sub-account password (7-24 chars, must contain both letters
-  and numbers, no special characters).
+  (scalar\<character\>) sub-account password (7-24 chars, must contain
+  both letters and numbers, no special characters).
 
-- `subName`:
+- `sub_name`:
 
-  Character; sub-account name (7-32 chars, must start with a letter,
-  letters and numbers only, no spaces).
+  (scalar\<character\>) sub-account name (7-32 chars, must start with a
+  letter, letters and numbers only, no spaces).
 
 - `access`:
 
-  Character; permission type: `"Spot"`, `"Futures"`, or `"Margin"`.
-  Validated via
+  (scalar\<character\>) permission type: `"Spot"`, `"Futures"`, or
+  `"Margin"`. Validated via
   [`rlang::arg_match0()`](https://rlang.r-lib.org/reference/arg_match.html).
 
 - `remarks`:
 
-  Character or NULL; optional descriptive remarks for the sub-account
-  (1-24 chars). Default `NULL`.
+  (scalar\<character\> \| NULL) optional descriptive remarks for the
+  sub-account (1-24 chars).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row with the newly created
+sub-account details: the unique user ID `uid`, the login name
+`sub_name`, the `remarks` string, and the granted permission `access`:
 
-- `uid` (integer): Unique user ID assigned to the new sub-account.
+- uid (integer) the user identifier.
 
-- `sub_name` (character): The sub-account login name.
+- sub_name (character) the sub name.
 
-- `remarks` (character): The remarks string (if provided).
+- remarks (character \| NA) an optional remark.
 
-- `access` (character): Permission granted (`"Spot"`, `"Futures"`, or
-  `"Margin"`).
+- access (character) the access.
 
 #### Examples
 
+    \dontrun{
     sub <- KucoinSubAccount$new()
 
     # Create a Spot sub-account
@@ -205,10 +212,11 @@ Verified: 2026-05-23
       subName = "futuresbot1",
       access = "Futures"
     )
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinSubAccount$get_sub_account_list()`
+### Method `get_sub_account_list()`
 
 Get Sub-Account List Summary
 
@@ -234,8 +242,8 @@ milliseconds to POSIXct.
 
 #### Official Documentation
 
-[KuCoin Get Sub-Account List Summary
-Info](https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-list-summary-info)
+KuCoin Get Sub-Account List Summary Info:
+<https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-list-summary-info>
 
 Verified: 2026-05-23
 
@@ -301,38 +309,24 @@ Verified: 2026-05-23
 
 - `page_size`:
 
-  Integer; number of results per page, between 1 and 100. Default `100`.
+  (scalar\<count in \[1, Inf\]\>) number of results per page, between 1
+  and 100.
 
 - `max_pages`:
 
-  Numeric; maximum number of pages to retrieve. Use `Inf` (default) to
-  fetch all available pages.
+  (scalar\<numeric in \[1, Inf\]\>) maximum number of pages to retrieve.
+  Use `Inf` (default) to fetch all available pages.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
-
-- `user_id` (character): Internal user ID string.
-
-- `uid` (integer): Numeric user ID for the sub-account.
-
-- `sub_name` (character): Sub-account login name.
-
-- `status` (integer): Account status code (2 = active).
-
-- `type` (integer): Account type code.
-
-- `access` (character): Permission type (`"Spot"`, `"Futures"`,
-  `"Margin"`).
-
-- `remarks` (character): Optional remarks string.
-
-- `created_at` (POSIXct): Creation datetime (coerced from epoch
-  milliseconds).
+(data.table \| promise\<data.table\>) one row per sub-account with its
+internal `user_id`, numeric `uid`, login `sub_name`, `status` and `type`
+codes, `access` permission, `remarks`, and `created_at` creation
+datetime (coerced from epoch milliseconds).
 
 #### Examples
 
+    \dontrun{
     sub <- KucoinSubAccount$new()
 
     # Fetch all sub-accounts
@@ -345,10 +339,11 @@ Verified: 2026-05-23
 
     # Filter for Spot sub-accounts
     spot_subs <- all_subs[access == "Spot"]
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinSubAccount$get_detail_balance()`
+### Method `get_detail_balance()`
 
 Get Sub-Account Detail Balance
 
@@ -374,8 +369,8 @@ and holds amounts.
 
 #### Official Documentation
 
-[KuCoin Get Sub-Account Detail
-Balance](https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-detail-balance)
+KuCoin Get Sub-Account Detail Balance:
+<https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-detail-balance>
 
 Verified: 2026-05-23
 
@@ -457,51 +452,32 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinSubAccount$get_detail_balance(subUserId, includeBaseAmount = FALSE)
+    KucoinSubAccount$get_detail_balance(sub_user_id, include_base_amount = FALSE)
 
 #### Arguments
 
-- `subUserId`:
+- `sub_user_id`:
 
-  Character; the sub-account user ID (numeric UID as a string, e.g.,
-  `"169630809"`).
+  (scalar\<character\>) the sub-account user ID (numeric UID as a
+  string, e.g., `"169630809"`).
 
-- `includeBaseAmount`:
+- `include_base_amount`:
 
-  Logical; if `TRUE`, includes currencies with zero balances in the
-  response. Default `FALSE`.
+  (scalar\<logical\>) if `TRUE`, includes currencies with zero balances
+  in the response.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
-
-- `currency` (character): Currency code (e.g., `"USDT"`, `"BTC"`).
-
-- `balance` (character): Total balance for that currency.
-
-- `available` (character): Available (unfrozen) balance.
-
-- `holds` (character): Amount held in open orders or pending
-  withdrawals.
-
-- `base_currency` (character): Base currency for value conversion.
-
-- `base_currency_price` (character): Price of the currency in base
-  currency terms.
-
-- `base_amount` (character): Total value in base currency.
-
-- `tag` (character): Currency tag (if applicable).
-
-- `account_type` (character): One of `"main"`, `"trade"`, `"margin"`.
-
-- `sub_user_id` (character): The sub-account user ID.
-
-- `sub_name` (character): The sub-account name.
+(data.table \| promise\<data.table\>) one row per currency and account
+type holding the `currency`, `balance`, `available`, and `holds`
+amounts, the `base_currency`, `base_currency_price` and `base_amount`
+value conversion, the currency `tag`, the `account_type` (`"main"`,
+`"trade"`, or `"margin"`), and the `sub_user_id` and `sub_name`
+identifiers.
 
 #### Examples
 
+    \dontrun{
     sub <- KucoinSubAccount$new()
 
     # Get balances for a specific sub-account
@@ -517,10 +493,11 @@ Verified: 2026-05-23
     # Filter for trade account balances only
     trade_bal <- balances[account_type == "trade"]
     print(trade_bal[, .(currency, available, holds)])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinSubAccount$get_all_spot_balances()`
+### Method `get_all_spot_balances()`
 
 Get Spot Sub-Account List (V2)
 
@@ -546,8 +523,8 @@ a single `data.table` with `sub_user_id` and `sub_name` identifiers.
 
 #### Official Documentation
 
-[KuCoin Get Sub-Account List Spot Balance
-V2](https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-list-spot-balance-v2)
+KuCoin Get Sub-Account List Spot Balance V2:
+<https://www.kucoin.com/docs-new/rest/account-info/sub-account/get-subaccount-list-spot-balance-v2>
 
 Verified: 2026-05-23
 
@@ -640,46 +617,25 @@ Verified: 2026-05-23
 
 - `page_size`:
 
-  Integer; number of results per page, between 10 and 100. Default
-  `100`.
+  (scalar\<count in \[1, Inf\]\>) number of results per page, between 10
+  and 100.
 
 - `max_pages`:
 
-  Numeric; maximum number of pages to retrieve. Use `Inf` (default) to
-  fetch all available pages.
+  (scalar\<numeric in \[1, Inf\]\>) maximum number of pages to retrieve.
+  Use `Inf` (default) to fetch all available pages.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
-
-- `sub_user_id` (character): The sub-account user ID.
-
-- `sub_name` (character): The sub-account name.
-
-- `account_type` (character): One of `"main"`, `"trade"`, `"margin"`.
-
-- `currency` (character): Currency code (e.g., `"USDT"`, `"BTC"`,
-  `"ETH"`).
-
-- `balance` (character): Total balance for that currency.
-
-- `available` (character): Available (unfrozen) balance.
-
-- `holds` (character): Amount held in open orders or pending
-  withdrawals.
-
-- `base_currency` (character): Base currency for value conversion.
-
-- `base_currency_price` (character): Price of the currency in base
-  currency terms.
-
-- `base_amount` (character): Total value in base currency.
-
-- `tag` (character): Currency tag (if applicable).
+(data.table \| promise\<data.table\>) one row per currency, account type
+and sub-account holding the `sub_user_id` and `sub_name` identifiers,
+the `account_type` (`"main"`, `"trade"`, or `"margin"`), the `currency`,
+`balance`, `available` and `holds` amounts, and the `base_currency`,
+`base_currency_price`, `base_amount` and `tag` value-conversion fields.
 
 #### Examples
 
+    \dontrun{
     sub <- KucoinSubAccount$new()
 
     # Fetch all sub-account Spot balances
@@ -696,10 +652,11 @@ Verified: 2026-05-23
 
     # Group by sub-account
     all_balances[, .(n_currencies = .N), by = .(sub_name, account_type)]
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinSubAccount$clone()`
+### Method `clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -734,7 +691,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinSubAccount$add_sub_account()`
+## Method `KucoinSubAccount$add_sub_account`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -759,7 +716,7 @@ result <- sub$add_sub_account(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinSubAccount$get_sub_account_list()`
+## Method `KucoinSubAccount$get_sub_account_list`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -778,7 +735,7 @@ spot_subs <- all_subs[access == "Spot"]
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinSubAccount$get_detail_balance()`
+## Method `KucoinSubAccount$get_detail_balance`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -800,7 +757,7 @@ print(trade_bal[, .(currency, available, holds)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinSubAccount$get_all_spot_balances()`
+## Method `KucoinSubAccount$get_all_spot_balances`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

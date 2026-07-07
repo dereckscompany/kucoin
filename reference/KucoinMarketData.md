@@ -1,5 +1,11 @@
 # KucoinMarketData: Spot Market Data Retrieval
 
+KucoinMarketData: Spot Market Data Retrieval
+
+KucoinMarketData: Spot Market Data Retrieval
+
+## Details
+
 Provides methods for retrieving market data from KuCoin's Spot trading
 API, including announcements, klines, currencies, symbols, tickers,
 orderbooks, trade history, and 24-hour statistics.
@@ -74,7 +80,7 @@ Data](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-announce
 
 [`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
 -\>
-[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinMarketData`
 
 ## Methods
@@ -117,11 +123,11 @@ Data](https://www.kucoin.com/docs-new/rest/spot-trading/market-data/get-announce
 
 Inherited methods
 
-- [`KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 
-### `KucoinMarketData$get_announcements()`
+### Method `get_announcements()`
 
 Get Announcements
 
@@ -202,56 +208,46 @@ Verified: 2026-05-23
 
 - `query`:
 
-  Named list; filter parameters:
-
-  - `annType` (character): Announcement type filter (e.g.,
-    `"latest-announcements"`, `"activities"`, `"new-listings"`,
-    `"product-updates"`).
-
-  - `lang` (character): Language code (e.g., `"en_US"`, `"zh_CN"`).
-
-  - `startTime` (integer): Start timestamp in milliseconds.
-
-  - `endTime` (integer): End timestamp in milliseconds.
+  (list) filter parameters. Supported keys: `annType` (announcement type
+  filter e.g. `"latest-announcements"`, `"activities"`,
+  `"new-listings"`, `"product-updates"`), `lang` (language code e.g.
+  `"en_US"`, `"zh_CN"`), `startTime` (start timestamp in milliseconds),
+  and `endTime` (end timestamp in milliseconds).
 
 - `page_size`:
 
-  Integer; results per page (default 50, max 100).
+  (scalar\<count in \[1, Inf\]\>) results per page (default 50, max
+  100).
 
 - `max_pages`:
 
-  Numeric; max pages to fetch (default `Inf` for all).
+  (scalar\<numeric in \[1, Inf\]\>) maximum number of pages to fetch
+  (default `Inf` for all).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row per announcement, each
+giving the announcement ID, title, `;`-separated category tags, short
+description, creation datetime (POSIXct, coerced from epoch
+milliseconds), language code, and the full announcement URL:
 
-- `ann_id` (integer): Announcement identifier.
+- ann_id (integer) the ann id.
 
-- `ann_title` (character): Announcement title.
+- ann_title (character \| NA) the ann title.
 
-- `ann_type` (character): `;`-separated category tags for the
-  announcement. KuCoin returns `annType` as an array; the parser
-  collapses it to a single character column via the shared
-  `collapse_string_array_fields()` helper (Treatment A — matches the
-  cross-package convention used by alpaca/binance for plain-string
-  arrays). Filter with
-  `grepl("latest-announcements", ann_type, fixed = TRUE)`; recover the
-  vector via `strsplit(ann_type, ";", fixed = TRUE)[[1]]`.
-  `NA_character_` if KuCoin returned no tags.
+- ann_type (character \| NA) the ann type.
 
-- `ann_desc` (character): Short description text.
+- ann_desc (character \| NA) the ann desc.
 
-- `c_time` (POSIXct): Creation datetime (coerced from epoch
-  milliseconds).
+- c_time (POSIXct) the c time (UTC).
 
-- `language` (character): Language code.
+- language (character) the language.
 
-- `ann_url` (character): Full URL to the announcement page.
+- ann_url (character \| NA) the ann url.
 
 #### Examples
 
+    \dontrun{
     market <- KucoinMarketData$new()
 
     # Get latest announcements
@@ -264,10 +260,11 @@ Verified: 2026-05-23
       page_size = 20,
       max_pages = 3
     )
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarketData$get_currency()`
+### Method `get_currency()`
 
 Get Currency Details
 
@@ -357,66 +354,38 @@ Verified: 2026-05-23
 
 - `currency`:
 
-  Character; currency code (e.g., `"BTC"`, `"ETH"`, `"USDT"`).
+  (scalar\<character\>) currency code (e.g., `"BTC"`, `"ETH"`,
+  `"USDT"`).
 
 - `chain`:
 
-  Character or NULL; specific chain to filter (e.g., `"ERC20"`,
-  `"TRC20"`).
+  (scalar\<character\> \| NULL) specific chain to filter (e.g.,
+  `"ERC20"`, `"TRC20"`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with currency metadata and chain details:
-
-- `currency` (character): Currency code.
-
-- `name` (character): Short name.
-
-- `full_name` (character): Full currency name.
-
-- `precision` (integer): Decimal precision.
-
-- `is_margin_enabled` (logical): Whether margin trading is supported.
-
-- `is_debit_enabled` (logical): Whether debit is supported.
-
-- `chain_name` (character): Blockchain network name.
-
-- `withdrawal_min_size` (character): Minimum withdrawal amount.
-
-- `deposit_min_size` (character): Minimum deposit amount.
-
-- `withdrawal_min_fee` (character): Minimum withdrawal fee.
-
-- `is_withdraw_enabled` (logical): Whether withdrawals are active.
-
-- `is_deposit_enabled` (logical): Whether deposits are active.
-
-- `confirms` (integer): Confirmations required.
-
-- `pre_confirms` (integer): Pre-confirmations for early credit.
-
-- `contract_address` (character): Token contract address.
-
-- `withdraw_precision` (integer): Withdrawal decimal precision.
-
-- `need_tag` (logical): Whether a memo/tag is required.
-
-- `chain_id` (character): Chain identifier.
+(data.table \| promise\<data.table\>) one row per chain for the
+currency, each combining the currency metadata (code, short name, full
+name, precision, and the margin- and debit-enabled flags) with that
+chain's details (network name, minimum withdrawal/deposit sizes, minimum
+withdrawal fee, withdraw- and deposit-enabled flags, required and
+pre-confirmations, contract address, withdrawal precision, the memo/tag
+requirement flag, and chain identifier).
 
 #### Examples
 
+    \dontrun{
     market <- KucoinMarketData$new()
     btc <- market$get_currency("BTC")
     print(btc[, .(chain_name, withdrawal_min_fee, is_deposit_enabled, confirms)])
 
     # Specific chain
     usdt_erc20 <- market$get_currency("USDT", chain = "ERC20")
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarketData$get_all_currencies()`
+### Method `get_all_currencies()`
 
 Get All Currencies
 
@@ -499,21 +468,23 @@ Verified: 2026-05-23
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with currency metadata and chain details. Same columns
-as `get_currency()`, one row per currency-chain combination.
+(data.table \| promise\<data.table\>) one row per currency-chain
+combination, carrying the same currency metadata and chain details as
+`get_currency()`.
 
 #### Examples
 
+    \dontrun{
     market <- KucoinMarketData$new()
     all_currencies <- market$get_all_currencies()
     # Find all ERC20 tokens
     erc20 <- all_currencies[chain_name == "ERC20"]
     print(erc20[, .(currency, withdrawal_min_fee, is_deposit_enabled)])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarketData$get_symbol()`
+### Method `get_symbol()`
 
 Get Symbol Details
 
@@ -591,56 +562,88 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; trading symbol (e.g., `"BTC-USDT"`).
+  (scalar\<character\>) trading symbol (e.g., `"BTC-USDT"`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with symbol metadata:
+(data.table \| promise\<data.table\>) one row giving the symbol
+metadata: the pair identifier, base/quote/fee currencies, market
+segment, the base and quote minimum and maximum order sizes, the base
+and quote size increments, the price increment and price-limit rate, the
+minimum order value in quote currency, the margin- and trading-enabled
+flags, and the maker and taker fee coefficients:
 
-- `symbol` (character): Trading pair identifier.
+- symbol (character) the trading pair symbol.
 
-- `base_currency` (character): Base asset code.
+- name (character) the name.
 
-- `quote_currency` (character): Quote asset code.
+- base_currency (character) the base currency.
 
-- `fee_currency` (character): Currency used for fees.
+- quote_currency (character) the quote currency.
 
-- `market` (character): Market segment.
+- fee_currency (character) the fee currency.
 
-- `base_min_size` (character): Minimum base order size.
+- market (character) the market.
 
-- `quote_min_size` (character): Minimum quote order size.
+- base_min_size (numeric \| NA) the base min size.
 
-- `base_max_size` (character): Maximum base order size.
+- quote_min_size (numeric \| NA) the quote min size.
 
-- `base_increment` (character): Base size precision increment.
+- base_max_size (numeric \| NA) the base max size.
 
-- `quote_increment` (character): Quote size precision increment.
+- quote_max_size (numeric \| NA) the quote max size.
 
-- `price_increment` (character): Price tick size.
+- base_increment (numeric \| NA) the base increment.
 
-- `price_limit_rate` (character): Max price deviation rate.
+- quote_increment (numeric \| NA) the quote increment.
 
-- `min_funds` (character): Minimum order value in quote currency.
+- price_increment (numeric \| NA) the price increment.
 
-- `is_margin_enabled` (logical): Whether margin is available.
+- price_limit_rate (numeric \| NA) the price limit rate.
 
-- `enable_trading` (logical): Whether trading is active.
+- min_funds (numeric \| NA) the min funds.
 
-- `maker_fee_coefficient` (character): Maker fee multiplier.
+- is_margin_enabled (logical) the is margin enabled.
 
-- `taker_fee_coefficient` (character): Taker fee multiplier.
+- enable_trading (logical) the enable trading.
+
+- fee_category (integer) the fee category.
+
+- maker_fee_coefficient (numeric \| NA) the maker fee coefficient.
+
+- taker_fee_coefficient (numeric \| NA) the taker fee coefficient.
+
+- st (logical) whether the symbol is in special treatment.
+
+- callauction_is_enabled (logical) the callauction is enabled.
+
+- callauction_price_floor (numeric \| NA) the callauction price floor.
+
+- callauction_price_ceiling (numeric \| NA) the callauction price
+  ceiling.
+
+- callauction_first_stage_start_time (numeric \| NA) the callauction
+  first stage start time (epoch ms).
+
+- callauction_second_stage_start_time (numeric \| NA) the callauction
+  second stage start time (epoch ms).
+
+- callauction_third_stage_start_time (numeric \| NA) the callauction
+  third stage start time (epoch ms).
+
+- trading_start_time (numeric \| NA) the trading start time (epoch ms).
 
 #### Examples
 
+    \dontrun{
     market <- KucoinMarketData$new()
     btc <- market$get_symbol("BTC-USDT")
     print(btc[, .(price_increment, base_increment, base_min_size, enable_trading)])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarketData$get_all_symbols()`
+### Method `get_all_symbols()`
 
 Get All Symbols
 
@@ -759,26 +762,88 @@ R:%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%22symbol%22:%20%22BTC-USDT%22,%0A%20%2
 
 - `market`:
 
-  Character or NULL; market segment filter (e.g., `"USDS"`, `"BTC"`,
-  `"KCS"`, `"DeFi"`). Use `get_market_list()` for available values.
+  (scalar\<character\> \| NULL) market segment filter (e.g., `"USDS"`,
+  `"BTC"`, `"KCS"`, `"DeFi"`). Use `get_market_list()` for available
+  values.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with symbol metadata for all pairs. Same columns as
-`get_symbol()`.
+(data.table \| promise\<data.table\>) one row per trading pair, carrying
+the same symbol metadata as `get_symbol()`:
+
+- symbol (character) the trading pair symbol.
+
+- name (character) the name.
+
+- base_currency (character) the base currency.
+
+- quote_currency (character) the quote currency.
+
+- fee_currency (character) the fee currency.
+
+- market (character) the market.
+
+- base_min_size (numeric \| NA) the base min size.
+
+- quote_min_size (numeric \| NA) the quote min size.
+
+- base_max_size (numeric \| NA) the base max size.
+
+- quote_max_size (numeric \| NA) the quote max size.
+
+- base_increment (numeric \| NA) the base increment.
+
+- quote_increment (numeric \| NA) the quote increment.
+
+- price_increment (numeric \| NA) the price increment.
+
+- price_limit_rate (numeric \| NA) the price limit rate.
+
+- min_funds (numeric \| NA) the min funds.
+
+- is_margin_enabled (logical) the is margin enabled.
+
+- enable_trading (logical) the enable trading.
+
+- fee_category (integer) the fee category.
+
+- maker_fee_coefficient (numeric \| NA) the maker fee coefficient.
+
+- taker_fee_coefficient (numeric \| NA) the taker fee coefficient.
+
+- st (logical) whether the symbol is in special treatment.
+
+- callauction_is_enabled (logical) the callauction is enabled.
+
+- callauction_price_floor (numeric \| NA) the callauction price floor.
+
+- callauction_price_ceiling (numeric \| NA) the callauction price
+  ceiling.
+
+- callauction_first_stage_start_time (numeric \| NA) the callauction
+  first stage start time (epoch ms).
+
+- callauction_second_stage_start_time (numeric \| NA) the callauction
+  second stage start time (epoch ms).
+
+- callauction_third_stage_start_time (numeric \| NA) the callauction
+  third stage start time (epoch ms).
+
+- trading_start_time (numeric \| NA) the trading start time (epoch ms).
 
 #### Examples
 
+    \dontrun{
     market <- KucoinMarketData$new()
     all_symbols <- market$get_all_symbols()
     # Filter to active USDT pairs
     usdt_pairs <- all_symbols[quote_currency == "USDT" & enable_trading == TRUE]
     print(usdt_pairs[, .(symbol, base_min_size, price_increment)])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarketData$get_ticker()`
+### Method `get_ticker()`
 
 Get Ticker (Level 1 Market Data)
 
@@ -843,39 +908,43 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; trading symbol (e.g., `"BTC-USDT"`).
+  (scalar\<character\>) trading symbol (e.g., `"BTC-USDT"`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the Level 1
+snapshot: server datetime (POSIXct, coerced from epoch milliseconds),
+the order book sequence number, the last trade price and size, and the
+best bid and ask prices with their sizes:
 
-- `time` (POSIXct): Server datetime (coerced from epoch milliseconds).
+- time (POSIXct) the time (UTC).
 
-- `sequence` (character): Order book sequence number.
+- sequence (character) the sequence.
 
-- `price` (character): Last trade price.
+- price (numeric \| NA) the price.
 
-- `size` (character): Last trade size.
+- size (numeric \| NA) the size.
 
-- `best_bid` (character): Best bid price.
+- best_bid (numeric \| NA) the best bid price.
 
-- `best_bid_size` (character): Size at best bid.
+- best_bid_size (numeric \| NA) the best bid size.
 
-- `best_ask` (character): Best ask price.
+- best_ask (numeric \| NA) the best ask price.
 
-- `best_ask_size` (character): Size at best ask.
+- best_ask_size (numeric \| NA) the best ask size.
 
 #### Examples
 
+    \dontrun{
     market <- KucoinMarketData$new()
     ticker <- market$get_ticker("BTC-USDT")
     spread <- as.numeric(ticker$best_ask) - as.numeric(ticker$best_bid)
     print(paste("Spread:", spread))
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarketData$get_all_tickers()`
+### Method `get_all_tickers()`
 
 Get All Tickers
 
@@ -953,55 +1022,57 @@ Verified: 2026-05-23
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row per trading pair, each
+giving the pair symbol and display name, the best bid and ask prices
+with their sizes, the 24-hour change rate and amount, the 24-hour high,
+low, base-currency volume and quote-currency volume, the last trade and
+average prices, the taker and maker fee rates, and the snapshot datetime
+(POSIXct, coerced from epoch milliseconds):
 
-- `symbol` (character): Trading pair.
+- symbol (character) the trading pair symbol.
 
-- `symbol_name` (character): Display name.
+- symbol_name (character) the symbol name.
 
-- `buy` (character): Best bid price.
+- buy (numeric \| NA) the best bid price.
 
-- `best_bid_size` (character): Size at best bid.
+- sell (numeric \| NA) the best ask price.
 
-- `sell` (character): Best ask price.
+- change_rate (numeric \| NA) the 24h change rate.
 
-- `best_ask_size` (character): Size at best ask.
+- change_price (numeric \| NA) the 24h change in price.
 
-- `change_rate` (character): 24h price change rate.
+- high (numeric \| NA) the 24h high price.
 
-- `change_price` (character): 24h price change amount.
+- low (numeric \| NA) the 24h low price.
 
-- `high` (character): 24h high price.
+- vol (numeric \| NA) the 24h traded volume.
 
-- `low` (character): 24h low price.
+- vol_value (numeric \| NA) the 24h traded turnover.
 
-- `vol` (character): 24h volume in base currency.
+- last (numeric \| NA) the last traded price.
 
-- `vol_value` (character): 24h volume in quote currency.
+- average_price (numeric \| NA) the average price.
 
-- `last` (character): Last trade price.
+- taker_fee_rate (numeric \| NA) the taker fee rate.
 
-- `average_price` (character): 24h average price.
+- maker_fee_rate (numeric \| NA) the maker fee rate.
 
-- `taker_fee_rate` (character): Taker fee rate.
-
-- `maker_fee_rate` (character): Maker fee rate.
-
-- `time` (POSIXct): Snapshot datetime (coerced from epoch milliseconds).
+- time (POSIXct) the time (UTC).
 
 #### Examples
 
+    \dontrun{
     market <- KucoinMarketData$new()
     all_tickers <- market$get_all_tickers()
     # Top 10 by 24h volume
     all_tickers[, vol_value := as.numeric(vol_value)]
     top10 <- all_tickers[order(-vol_value)][1:10]
     print(top10[, .(symbol, vol_value, change_rate)])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarketData$get_trade_history()`
+### Method `get_trade_history()`
 
 Get Trade History
 
@@ -1067,35 +1138,41 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; trading symbol (e.g., `"BTC-USDT"`).
+  (scalar\<character\>) trading symbol (e.g., `"BTC-USDT"`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row per recent trade, each
+giving the trade sequence number, price, quantity, direction (`"buy"` or
+`"sell"`), and the trade datetime (POSIXct, coerced from the nanosecond
+timestamp):
 
-- `sequence` (character): Trade sequence number.
+- sequence (character) the sequence.
 
-- `price` (character): Trade price.
+- side (character) the order side.
 
-- `size` (character): Trade quantity.
+- price (numeric \| NA) the price.
 
-- `side` (character): Trade direction (`"buy"` or `"sell"`).
+- size (numeric \| NA) the size.
 
-- `time` (POSIXct): Trade datetime (coerced from nanosecond timestamp).
+- time (POSIXct) the time (UTC).
+
+- trade_id (character) the trade identifier.
 
 #### Examples
 
+    \dontrun{
     market <- KucoinMarketData$new()
     trades <- market$get_trade_history("BTC-USDT")
     # Buy/sell ratio
     buys <- trades[side == "buy", sum(as.numeric(size))]
     sells <- trades[side == "sell", sum(as.numeric(size))]
     print(paste("Buy/Sell ratio:", round(buys / sells, 3)))
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarketData$get_part_orderbook()`
+### Method `get_part_orderbook()`
 
 Get Partial Orderbook
 
@@ -1160,41 +1237,30 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; trading symbol (e.g., `"BTC-USDT"`).
+  (scalar\<character\>) trading symbol (e.g., `"BTC-USDT"`).
 
 - `size`:
 
-  Integer; depth levels: `20` or `100` (default `20`).
+  (scalar\<count\>) depth levels: `20` or `100` (default `20`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) in long format with columns:
-
-- `time` (POSIXct): Server timestamp (coerced from epoch milliseconds).
-
-- `sequence` (character): Order book sequence number.
-
-- `side` (character): `"bid"` or `"ask"`.
-
-- `level` (integer): 1-indexed depth from top-of-book within the side
-  (`level == 1` is best bid / best ask).
-
-- `price` (numeric): Price level.
-
-- `size` (numeric): Size at that price.
+(Orderbook \| promise\<Orderbook\>) one row per price level per side,
+best price first.
 
 #### Examples
 
+    \dontrun{
     market <- KucoinMarketData$new()
     ob <- market$get_part_orderbook("BTC-USDT", size = 20)
     best_bid <- ob[side == "bid" & level == 1L]
     best_ask <- ob[side == "ask" & level == 1L]
     print(paste("Best bid:", best_bid$price, "Best ask:", best_ask$price))
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarketData$get_full_orderbook()`
+### Method `get_full_orderbook()`
 
 Get Full Orderbook
 
@@ -1259,37 +1325,26 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; trading symbol (e.g., `"BTC-USDT"`).
+  (scalar\<character\>) trading symbol (e.g., `"BTC-USDT"`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) in long format with columns:
-
-- `time` (POSIXct): Server timestamp (coerced from epoch milliseconds).
-
-- `sequence` (character): Order book sequence number.
-
-- `side` (character): `"bid"` or `"ask"`.
-
-- `level` (integer): 1-indexed depth from top-of-book within the side
-  (`level == 1` is best bid / best ask).
-
-- `price` (numeric): Price level.
-
-- `size` (numeric): Size at that price.
+(Orderbook \| promise\<Orderbook\>) one row per price level per side,
+best price first.
 
 #### Examples
 
+    \dontrun{
     market <- KucoinMarketData$new()
     full_ob <- market$get_full_orderbook("BTC-USDT")
     # Total bid depth
     total_bid_volume <- full_ob[side == "bid", sum(size)]
     print(paste("Total bid depth:", total_bid_volume, "BTC"))
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarketData$get_24hr_stats()`
+### Method `get_24hr_stats()`
 
 Get 24-Hour Statistics
 
@@ -1363,52 +1418,61 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; trading symbol (e.g., `"BTC-USDT"`).
+  (scalar\<character\>) trading symbol (e.g., `"BTC-USDT"`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the rolling 24-hour
+statistics: server datetime (POSIXct, coerced from epoch milliseconds),
+the trading pair, the best bid and ask prices, the 24-hour change rate
+and amount, the 24-hour high, low, base-currency volume and
+quote-currency volume, the last trade and average prices, and the taker
+and maker fee rates:
 
-- `time` (POSIXct): Server datetime (coerced from epoch milliseconds).
+- time (POSIXct) the time (UTC).
 
-- `symbol` (character): Trading pair.
+- symbol (character) the trading pair symbol.
 
-- `buy` (character): Best bid price.
+- buy (numeric \| NA) the best bid price.
 
-- `sell` (character): Best ask price.
+- sell (numeric \| NA) the best ask price.
 
-- `change_rate` (character): 24h price change rate (decimal, e.g.,
-  `"-0.0114"`).
+- change_rate (numeric \| NA) the 24h change rate.
 
-- `change_price` (character): 24h price change amount.
+- change_price (numeric \| NA) the 24h change in price.
 
-- `high` (character): 24h high price.
+- high (numeric \| NA) the 24h high price.
 
-- `low` (character): 24h low price.
+- low (numeric \| NA) the 24h low price.
 
-- `vol` (character): 24h volume in base currency.
+- vol (numeric \| NA) the 24h traded volume.
 
-- `vol_value` (character): 24h volume in quote currency.
+- vol_value (numeric \| NA) the 24h traded turnover.
 
-- `last` (character): Last trade price.
+- last (numeric \| NA) the last traded price.
 
-- `average_price` (character): 24h average price.
+- average_price (numeric \| NA) the average price.
 
-- `taker_fee_rate` (character): Taker fee rate.
+- taker_fee_rate (numeric \| NA) the taker fee rate.
 
-- `maker_fee_rate` (character): Maker fee rate.
+- maker_fee_rate (numeric \| NA) the maker fee rate.
+
+- taker_coefficient (numeric \| NA) the taker fee coefficient.
+
+- maker_coefficient (numeric \| NA) the maker fee coefficient.
 
 #### Examples
 
+    \dontrun{
     market <- KucoinMarketData$new()
     stats <- market$get_24hr_stats("BTC-USDT")
     range <- as.numeric(stats$high) - as.numeric(stats$low)
     print(paste("24h range:", range, "USDT"))
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarketData$get_market_list()`
+### Method `get_market_list()`
 
 Get Market List
 
@@ -1459,20 +1523,23 @@ Verified: 2026-05-23
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with column `market` containing segment identifiers.
+(data.table \| promise\<data.table\>) one row per market segment:
+
+- market (character) the segment identifier, e.g. `"USDS"`, `"DeFi"`.
 
 #### Examples
 
+    \dontrun{
     market <- KucoinMarketData$new()
     markets <- market$get_market_list()
     print(markets)
     # Use to filter symbols by market
     defi_symbols <- market$get_all_symbols(market = "DeFi")
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarketData$get_klines()`
+### Method `get_klines()`
 
 Get Klines (Candlestick Data)
 
@@ -1552,45 +1619,31 @@ Each candle is an array:
 
 - `symbol`:
 
-  Character; trading pair (e.g., `"BTC-USDT"`).
+  (scalar\<character\>) trading pair (e.g., `"BTC-USDT"`).
 
 - `timeframe`:
 
-  Character; candle interval. One of: `"1min"`, `"3min"`, `"5min"`,
-  `"15min"`, `"30min"`, `"1hour"`, `"2hour"`, `"4hour"`, `"6hour"`,
-  `"8hour"`, `"12hour"`, `"1day"`, `"1week"`, `"1month"`. Default
-  `"15min"`.
+  (scalar\<character\>) candle interval. One of: `"1min"`, `"3min"`,
+  `"5min"`, `"15min"`, `"30min"`, `"1hour"`, `"2hour"`, `"4hour"`,
+  `"6hour"`, `"8hour"`, `"12hour"`, `"1day"`, `"1week"`, `"1month"`.
+  Default `"15min"`.
 
 - `from`:
 
-  POSIXct or NULL; start time. When both `from` and `to` are `NULL`, the
-  API returns up to 1500 most recent candles.
+  (POSIXct \| scalar\<numeric\> \| NULL) start time. When both `from`
+  and `to` are `NULL`, the API returns up to 1500 most recent candles.
 
 - `to`:
 
-  POSIXct or NULL; end time.
+  (POSIXct \| scalar\<numeric\> \| NULL) end time.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
-
-- `datetime` (POSIXct): Candle open datetime.
-
-- `open` (numeric): Opening price.
-
-- `high` (numeric): Highest price.
-
-- `low` (numeric): Lowest price.
-
-- `close` (numeric): Closing price.
-
-- `volume` (numeric): Volume in base currency.
-
-- `turnover` (numeric): Turnover in quote currency.
+(Klines \| promise\<Klines\>) one row per candle ascending by datetime.
 
 #### Examples
 
+    \dontrun{
     market <- KucoinMarketData$new()
 
     # Most recent candles (up to 1500)
@@ -1605,10 +1658,11 @@ Each candle is an array:
       to = lubridate::now()
     )
     print(paste("Fetched", nrow(klines_7d), "candles"))
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarketData$get_server_time()`
+### Method `get_server_time()`
 
 Get Server Time
 
@@ -1654,23 +1708,24 @@ Verified: 2026-05-23
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row:
 
-- `server_time` (numeric): Server timestamp in milliseconds.
+- server_time (numeric) the server clock in epoch milliseconds.
 
-- `datetime` (POSIXct): Converted server datetime.
+- datetime (POSIXct) the same instant as a POSIXct (UTC).
 
 #### Examples
 
+    \dontrun{
     market <- KucoinMarketData$new()
     st <- market$get_server_time()
     drift <- as.numeric(lubridate::now()) * 1000 - st$server_time
     cat("Clock drift:", round(drift), "ms\n")
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarketData$get_service_status()`
+### Method `get_service_status()`
 
 Get Service Status
 
@@ -1719,24 +1774,27 @@ Verified: 2026-05-23
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the operational
+status (`"open"`, `"close"`, or `"cancelonly"`) and an optional
+remark/message:
 
-- `status` (character): `"open"`, `"close"`, or `"cancelonly"`.
+- status (character) the status.
 
-- `msg` (character): Optional remark/message.
+- msg (character) the msg.
 
 #### Examples
 
+    \dontrun{
     market <- KucoinMarketData$new()
     status <- market$get_service_status()
     if (status$status != "open") {
       cat("Exchange not operational:", status$msg, "\n")
     }
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarketData$get_fiat_prices()`
+### Method `get_fiat_prices()`
 
 Get Fiat Prices
 
@@ -1787,32 +1845,30 @@ Verified: 2026-05-23
 
 - `base`:
 
-  Character or NULL; fiat currency ticker (e.g., `"USD"`, `"EUR"`).
-  Default `"USD"`.
+  (scalar\<character\> \| NULL) fiat currency ticker (e.g., `"USD"`,
+  `"EUR"`). Default `"USD"`.
 
 - `currencies`:
 
-  Character or NULL; comma-separated crypto tickers to convert (e.g.,
-  `"BTC,ETH,USDT"`). If NULL, returns all available.
+  (scalar\<character\> \| NULL) comma-separated crypto tickers to
+  convert (e.g., `"BTC,ETH,USDT"`). If NULL, returns all available.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
-
-- `currency` (character): Cryptocurrency ticker.
-
-- `price` (character): Fiat price as string.
+(data.table \| promise\<data.table\>) one row per cryptocurrency, giving
+its ticker and fiat price as a string.
 
 #### Examples
 
+    \dontrun{
     market <- KucoinMarketData$new()
     prices <- market$get_fiat_prices(base = "USD", currencies = "BTC,ETH,USDT")
     print(prices)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarketData$clone()`
+### Method `clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -1847,7 +1903,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_announcements()`
+## Method `KucoinMarketData$get_announcements`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1866,7 +1922,7 @@ listings <- market$get_announcements(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_currency()`
+## Method `KucoinMarketData$get_currency`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1879,7 +1935,7 @@ usdt_erc20 <- market$get_currency("USDT", chain = "ERC20")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_all_currencies()`
+## Method `KucoinMarketData$get_all_currencies`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1891,7 +1947,7 @@ print(erc20[, .(currency, withdrawal_min_fee, is_deposit_enabled)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_symbol()`
+## Method `KucoinMarketData$get_symbol`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1901,7 +1957,7 @@ print(btc[, .(price_increment, base_increment, base_min_size, enable_trading)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_all_symbols()`
+## Method `KucoinMarketData$get_all_symbols`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1913,7 +1969,7 @@ print(usdt_pairs[, .(symbol, base_min_size, price_increment)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_ticker()`
+## Method `KucoinMarketData$get_ticker`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1924,7 +1980,7 @@ print(paste("Spread:", spread))
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_all_tickers()`
+## Method `KucoinMarketData$get_all_tickers`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1937,7 +1993,7 @@ print(top10[, .(symbol, vol_value, change_rate)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_trade_history()`
+## Method `KucoinMarketData$get_trade_history`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1950,7 +2006,7 @@ print(paste("Buy/Sell ratio:", round(buys / sells, 3)))
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_part_orderbook()`
+## Method `KucoinMarketData$get_part_orderbook`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1962,7 +2018,7 @@ print(paste("Best bid:", best_bid$price, "Best ask:", best_ask$price))
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_full_orderbook()`
+## Method `KucoinMarketData$get_full_orderbook`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1974,7 +2030,7 @@ print(paste("Total bid depth:", total_bid_volume, "BTC"))
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_24hr_stats()`
+## Method `KucoinMarketData$get_24hr_stats`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1985,7 +2041,7 @@ print(paste("24h range:", range, "USDT"))
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_market_list()`
+## Method `KucoinMarketData$get_market_list`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1997,7 +2053,7 @@ defi_symbols <- market$get_all_symbols(market = "DeFi")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_klines()`
+## Method `KucoinMarketData$get_klines`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2018,7 +2074,7 @@ print(paste("Fetched", nrow(klines_7d), "candles"))
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_server_time()`
+## Method `KucoinMarketData$get_server_time`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2029,7 +2085,7 @@ cat("Clock drift:", round(drift), "ms\n")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_service_status()`
+## Method `KucoinMarketData$get_service_status`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2041,7 +2097,7 @@ if (status$status != "open") {
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarketData$get_fiat_prices()`
+## Method `KucoinMarketData$get_fiat_prices`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

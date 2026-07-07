@@ -1,5 +1,11 @@
 # KucoinStopOrders: Stop Order Management
 
+KucoinStopOrders: Stop Order Management
+
+KucoinStopOrders: Stop Order Management
+
+## Details
+
 Provides methods for managing stop orders on KuCoin Spot. Inherits from
 [KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
 
@@ -109,7 +115,7 @@ match each other:
 
 [`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
 -\>
-[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinStopOrders`
 
 ## Methods
@@ -134,11 +140,11 @@ match each other:
 
 Inherited methods
 
-- [`KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 
-### `KucoinStopOrders$add_order()`
+### Method `add_order()`
 
 Place a Stop Order
 
@@ -193,7 +199,9 @@ Verified: 2026-05-23
       --header 'KC-API-TIMESTAMP: 1729176273859' \
       --header 'KC-API-PASSPHRASE: your-passphrase' \
       --header 'KC-API-KEY-VERSION: 2' \
-      --data-raw '{"type":"limit","symbol":"BTC-USDT","side":"sell","stopPrice":"90000","price":"89500","size":"0.00001","tradeType":"TRADE"}'
+      --data-raw \
+      '{"type":"limit","symbol":"BTC-USDT","side":"sell","stopPrice":"90000","price":"89500","size":"0.00001",
+      "tradeType":"TRADE"}'
 
 #### JSON Response
 
@@ -211,124 +219,127 @@ Verified: 2026-05-23
       type,
       symbol,
       side,
-      stopPrice,
-      clientOid = NULL,
+      stop_price,
+      client_order_id = NULL,
       price = NULL,
       size = NULL,
       funds = NULL,
       stp = NULL,
       remark = NULL,
-      timeInForce = NULL,
-      cancelAfter = NULL,
-      postOnly = NULL,
+      time_in_force = NULL,
+      cancel_after = NULL,
+      post_only = NULL,
       hidden = NULL,
       iceberg = NULL,
-      visibleSize = NULL,
-      tradeType = "TRADE"
+      visible_size = NULL,
+      trade_type = "TRADE"
     )
 
 #### Arguments
 
 - `type`:
 
-  Character; order type, one of `"limit"` or `"market"`. Determines
-  which additional parameters are required.
+  (scalar\<character\>) order type, one of `"limit"` or `"market"`.
+  Determines which additional parameters are required.
 
 - `symbol`:
 
-  Character; trading pair symbol (e.g., `"BTC-USDT"`). Must match the
-  `BASE-QUOTE` format validated by
+  (scalar\<character\>) trading pair symbol (e.g., `"BTC-USDT"`). Must
+  match the `BASE-QUOTE` format validated by
   [`verify_symbol()`](https://dereckscompany.github.io/kucoin/reference/verify_symbol.md).
 
 - `side`:
 
-  Character; order side, one of `"buy"` or `"sell"`.
+  (scalar\<character\>) order side, one of `"buy"` or `"sell"`.
 
-- `stopPrice`:
+- `stop_price`:
 
-  Character; the trigger price at which the stop order activates. When
-  the last traded price reaches this value, the order is placed.
+  (scalar\<numeric\> \| scalar\<character\>) the trigger price at which
+  the stop order activates. When the last traded price reaches this
+  value, the order is placed.
 
-- `clientOid`:
+- `client_order_id`:
 
-  Character or NULL; optional client-assigned unique identifier for the
-  order (max 40 characters). Useful for tracking orders in automated
-  systems.
+  (scalar\<character\> \| NULL) optional client-assigned unique
+  identifier for the order (max 40 characters). Useful for tracking
+  orders in automated systems.
 
 - `price`:
 
-  Character or NULL; limit order price. Required for limit stop orders;
-  must NOT be set for market stop orders. Should align with the symbol's
-  `priceIncrement`.
+  (scalar\<numeric\> \| scalar\<character\> \| NULL) limit order price.
+  Required for limit stop orders; must NOT be set for market stop
+  orders. Should align with the symbol's `priceIncrement`.
 
 - `size`:
 
-  Character or NULL; order quantity in base currency. Required for limit
-  stop orders. For market stop orders, mutually exclusive with `funds`.
+  (scalar\<numeric\> \| scalar\<character\> \| NULL) order quantity in
+  base currency. Required for limit stop orders. For market stop orders,
+  mutually exclusive with `funds`.
 
 - `funds`:
 
-  Character or NULL; order amount in quote currency for market stop
-  orders. Mutually exclusive with `size`. Not applicable for limit stop
-  orders.
+  (scalar\<numeric\> \| scalar\<character\> \| NULL) order amount in
+  quote currency for market stop orders. Mutually exclusive with `size`.
+  Not applicable for limit stop orders.
 
 - `stp`:
 
-  Character or NULL; self-trade prevention strategy. One of `"DC"`
-  (Decrement and Cancel), `"CO"` (Cancel Oldest), `"CN"` (Cancel
+  (scalar\<character\> \| NULL) self-trade prevention strategy. One of
+  `"DC"` (Decrement and Cancel), `"CO"` (Cancel Oldest), `"CN"` (Cancel
   Newest), `"CB"` (Cancel Both).
 
 - `remark`:
 
-  Character or NULL; order remarks or notes (max 20 ASCII characters).
+  (scalar\<character\> \| NULL) order remarks or notes (max 20 ASCII
+  characters).
 
-- `timeInForce`:
+- `time_in_force`:
 
-  Character or NULL; time-in-force policy for the triggered order. One
-  of `"GTC"` (Good Till Cancelled), `"GTT"` (Good Till Time), `"IOC"`
-  (Immediate Or Cancel), `"FOK"` (Fill Or Kill).
+  (scalar\<character\> \| NULL) time-in-force policy for the triggered
+  order. One of `"GTC"` (Good Till Cancelled), `"GTT"` (Good Till Time),
+  `"IOC"` (Immediate Or Cancel), `"FOK"` (Fill Or Kill).
 
-- `cancelAfter`:
+- `cancel_after`:
 
-  Numeric or NULL; number of seconds after which to auto-cancel. Only
-  valid when `timeInForce = "GTT"`.
+  (scalar\<numeric\> \| NULL) number of seconds after which to
+  auto-cancel. Only valid when `timeInForce = "GTT"`.
 
-- `postOnly`:
+- `post_only`:
 
-  Logical or NULL; if `TRUE`, the triggered order is rejected if it
-  would immediately match (guarantees maker fee).
+  (scalar\<logical\> \| NULL) if `TRUE`, the triggered order is rejected
+  if it would immediately match (guarantees maker fee).
 
 - `hidden`:
 
-  Logical or NULL; if `TRUE`, the triggered order is hidden from the
-  order book.
+  (scalar\<logical\> \| NULL) if `TRUE`, the triggered order is hidden
+  from the order book.
 
 - `iceberg`:
 
-  Logical or NULL; if `TRUE`, only `visibleSize` of the order is
-  displayed.
+  (scalar\<logical\> \| NULL) if `TRUE`, only `visibleSize` of the order
+  is displayed.
 
-- `visibleSize`:
+- `visible_size`:
 
-  Character or NULL; the visible portion of an iceberg order. Only
-  applicable when `iceberg = TRUE`.
+  (scalar\<numeric\> \| scalar\<character\> \| NULL) the visible portion
+  of an iceberg order. Only applicable when `iceberg = TRUE`.
 
-- `tradeType`:
+- `trade_type`:
 
-  Character; trade type, defaults to `"TRADE"` for spot trading.
+  (scalar\<character\>) trade type, defaults to `"TRADE"` for spot
+  trading.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the KuCoin-assigned
+stop order identifier and the client-provided order identifier (NA if
+not supplied):
 
-- `order_id` (character): KuCoin-assigned stop order identifier.
-
-- `client_oid` (character or NA): Client-provided order identifier, if
-  supplied.
+- order_id (character) the system order identifier.
 
 #### Examples
 
+    \dontrun{
     stop <- KucoinStopOrders$new()
 
     # Limit stop-loss sell order
@@ -349,10 +360,11 @@ Verified: 2026-05-23
       type = "market", symbol = "BTC-USDT", side = "buy",
       stopPrice = "105000", funds = "100"
     )
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinStopOrders$cancel_order_by_id()`
+### Method `cancel_order_by_id()`
 
 Cancel Stop Order by Order ID
 
@@ -371,8 +383,8 @@ Only stop orders that have not yet been triggered can be cancelled.
 
 #### Official Documentation
 
-[KuCoin Cancel Stop Order By
-OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-stop-order-by-orderld)
+KuCoin Cancel Stop Order By OrderId:
+<https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-stop-order-by-orderld>
 
 Verified: 2026-05-23
 
@@ -407,35 +419,33 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinStopOrders$cancel_order_by_id(orderId)
+    KucoinStopOrders$cancel_order_by_id(order_id)
 
 #### Arguments
 
-- `orderId`:
+- `order_id`:
 
-  Character; the KuCoin-assigned stop order ID to cancel.
+  (scalar\<character\>) the KuCoin-assigned stop order ID to cancel.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per cancelled stop order (Treatment B —
-long format):
-
-- `cancelled_order_id` (character): KuCoin order ID of a cancelled stop
-  order. Returns an empty `data.table` if no stop orders matched (per
-  the "empty response -\> empty data.table" cross-package convention).
+(data.table \| promise\<data.table\>) one row per cancelled stop order
+giving the KuCoin order ID; an empty data.table if no stop orders
+matched.
 
 #### Examples
 
+    \dontrun{
     stop <- KucoinStopOrders$new()
 
     # Cancel a specific stop order
     result <- stop$cancel_order_by_id("vs8hoo8q2ceshiue003b67c0")
     print(result$cancelled_order_id)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinStopOrders$cancel_order_by_client_oid()`
+### Method `cancel_order_by_client_oid()`
 
 Cancel Stop Order by Client OID
 
@@ -455,8 +465,8 @@ symbol. Both `clientOid` and `symbol` are required as query parameters.
 
 #### Official Documentation
 
-[KuCoin Cancel Stop Order By
-ClientOid](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-stop-order-by-clientoid)
+KuCoin Cancel Stop Order By ClientOid:
+<https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-stop-order-by-clientoid>
 
 Verified: 2026-05-23
 
@@ -473,7 +483,8 @@ Verified: 2026-05-23
 
 #### curl
 
-    curl --location --request DELETE 'https://api.kucoin.com/api/v1/stop-order/cancelOrderByClientOid?clientOid=my-stop-001&symbol=BTC-USDT' \
+    curl --location --request DELETE \
+      'https://api.kucoin.com/api/v1/stop-order/cancelOrderByClientOid?clientOid=my-stop-001&symbol=BTC-USDT' \
       --header 'KC-API-KEY: your-api-key' \
       --header 'KC-API-SIGN: your-signature' \
       --header 'KC-API-TIMESTAMP: 1729176273859' \
@@ -492,42 +503,42 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinStopOrders$cancel_order_by_client_oid(clientOid, symbol)
+    KucoinStopOrders$cancel_order_by_client_oid(client_order_id, symbol)
 
 #### Arguments
 
-- `clientOid`:
+- `client_order_id`:
 
-  Character; the client-assigned order ID used when placing the stop
-  order.
+  (scalar\<character\>) the client-assigned order ID used when placing
+  the stop order.
 
 - `symbol`:
 
-  Character; trading pair symbol (e.g., `"BTC-USDT"`). Required to
-  disambiguate client OIDs across different trading pairs.
+  (scalar\<character\>) trading pair symbol (e.g., `"BTC-USDT"`).
+  Required to disambiguate client OIDs across different trading pairs.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with a single row:
+(data.table \| promise\<data.table\>) one row giving the KuCoin order ID
+and the client-assigned order ID of the cancelled stop order:
 
-- `cancelled_order_id` (character): The KuCoin order ID of the cancelled
-  stop order.
+- cancelled_order_id (character) the cancelled order identifier.
 
-- `client_oid` (character): The client-assigned order ID that was
-  cancelled.
+- client_oid (character \| NA) the client-supplied order identifier.
 
 #### Examples
 
+    \dontrun{
     stop <- KucoinStopOrders$new()
 
     # Cancel by client OID
     result <- stop$cancel_order_by_client_oid("my-stop-001", symbol = "BTC-USDT")
     print(result$cancelled_order_id)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinStopOrders$cancel_all()`
+### Method `cancel_all()`
 
 Cancel All Stop Orders
 
@@ -548,8 +559,8 @@ are provided, all pending stop orders are cancelled.
 
 #### Official Documentation
 
-[KuCoin Batch Cancel Stop
-Orders](https://www.kucoin.com/docs-new/rest/spot-trading/orders/batch-cancel-stop-orders)
+KuCoin Batch Cancel Stop Orders:
+<https://www.kucoin.com/docs-new/rest/spot-trading/orders/batch-cancel-stop-orders>
 
 Verified: 2026-05-23
 
@@ -566,7 +577,8 @@ Verified: 2026-05-23
 
 #### curl
 
-    curl --location --request DELETE 'https://api.kucoin.com/api/v1/stop-order/cancel?symbol=BTC-USDT&tradeType=TRADE' \
+    curl --location --request DELETE \
+      'https://api.kucoin.com/api/v1/stop-order/cancel?symbol=BTC-USDT&tradeType=TRADE' \
       --header 'KC-API-KEY: your-api-key' \
       --header 'KC-API-SIGN: your-signature' \
       --header 'KC-API-TIMESTAMP: 1729176273859' \
@@ -594,29 +606,20 @@ Verified: 2026-05-23
 
 - `query`:
 
-  Named list; optional filter parameters:
-
-  - `symbol` (character): Trading pair to filter by (e.g.,
-    `"BTC-USDT"`).
-
-  - `tradeType` (character): Trade type, typically `"TRADE"` for spot.
-
-  - `orderIds` (character): Comma-separated list of specific stop order
-    IDs to cancel.
+  (list) optional filter parameters. Supported keys: `symbol` (trading
+  pair to filter by e.g. `"BTC-USDT"`), `tradeType` (trade type,
+  typically `"TRADE"` for spot), and `orderIds` (comma-separated list of
+  specific stop order IDs to cancel).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per cancelled stop order (Treatment B —
-long format):
-
-- `cancelled_order_id` (character): KuCoin order ID of a cancelled stop
-  order. Returns an empty `data.table` if no stop orders matched the
-  filters (per the "empty response -\> empty data.table" cross-package
-  convention).
+(data.table \| promise\<data.table\>) one row per cancelled stop order
+giving the KuCoin order ID; an empty data.table if no stop orders
+matched the filters.
 
 #### Examples
 
+    \dontrun{
     stop <- KucoinStopOrders$new()
 
     # Cancel all stop orders for BTC-USDT
@@ -626,10 +629,11 @@ long format):
     # Cancel all stop orders (no filter)
     result <- stop$cancel_all()
     print(result$cancelled_order_id)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinStopOrders$get_order_by_id()`
+### Method `get_order_by_id()`
 
 Get Stop Order by Order ID
 
@@ -650,8 +654,8 @@ timestamps.
 
 #### Official Documentation
 
-[KuCoin Get Stop Order By
-OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-stop-order-by-orderld)
+KuCoin Get Stop Order By OrderId:
+<https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-stop-order-by-orderld>
 
 Verified: 2026-05-23
 
@@ -710,57 +714,36 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinStopOrders$get_order_by_id(orderId)
+    KucoinStopOrders$get_order_by_id(order_id)
 
 #### Arguments
 
-- `orderId`:
+- `order_id`:
 
-  Character; the KuCoin-assigned stop order ID to retrieve.
+  (scalar\<character\>) the KuCoin-assigned stop order ID to retrieve.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with a single row containing order details (no list
-columns). Key columns include:
-
-- `id` (character): Stop order identifier.
-
-- `symbol` (character): Trading pair (e.g., `"BTC-USDT"`).
-
-- `type` (character): Order type (`"limit"` or `"market"`).
-
-- `side` (character): Order side (`"buy"` or `"sell"`).
-
-- `price` (character): Limit price (NULL for market orders).
-
-- `size` (character): Order quantity in base currency.
-
-- `stop_price` (character): Trigger price for the stop order.
-
-- `stop` (character): Stop direction (`"loss"` or `"entry"`).
-
-- `created_at` (POSIXct): Creation datetime (coerced from epoch
-  milliseconds).
-
-- `order_time` (POSIXct): Order placement datetime (coerced from epoch
-  nanoseconds).
-
-- `stop_trigger_time` (POSIXct): Trigger datetime if triggered (coerced
-  from epoch milliseconds), `NA` if not yet triggered.
+(data.table \| promise\<data.table\>) one row of order details giving
+the order ID, trading pair symbol, order type and side, limit price and
+size, the stop trigger price and direction, and the creation, order, and
+stop-trigger datetimes (POSIXct, coerced from epoch milliseconds and
+nanoseconds; the trigger time is NA until triggered).
 
 #### Examples
 
+    \dontrun{
     stop <- KucoinStopOrders$new()
 
     # Get stop order details
     order <- stop$get_order_by_id("vs8hoo8q2ceshiue003b67c0")
     print(order$stop_price)
     print(order$side)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinStopOrders$get_order_by_client_oid()`
+### Method `get_order_by_client_oid()`
 
 Get Stop Order by Client OID
 
@@ -782,8 +765,8 @@ across different orders.
 
 #### Official Documentation
 
-[KuCoin Get Stop Order By
-ClientOid](https://www.kucoin.com/docs-new/rest/spot-trading/get-stop-order-by-clientoid)
+KuCoin Get Stop Order By ClientOid:
+<https://www.kucoin.com/docs-new/rest/spot-trading/get-stop-order-by-clientoid>
 
 Verified: 2026-05-23
 
@@ -800,7 +783,8 @@ Verified: 2026-05-23
 
 #### curl
 
-    curl --location --request GET 'https://api.kucoin.com/api/v1/stop-order/queryOrderByClientOid?clientOid=my-stop-001&symbol=BTC-USDT' \
+    curl --location --request GET \
+      'https://api.kucoin.com/api/v1/stop-order/queryOrderByClientOid?clientOid=my-stop-001&symbol=BTC-USDT' \
       --header 'KC-API-KEY: your-api-key' \
       --header 'KC-API-SIGN: your-signature' \
       --header 'KC-API-TIMESTAMP: 1729176273859' \
@@ -844,63 +828,42 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinStopOrders$get_order_by_client_oid(clientOid, symbol)
+    KucoinStopOrders$get_order_by_client_oid(client_order_id, symbol)
 
 #### Arguments
 
-- `clientOid`:
+- `client_order_id`:
 
-  Character; the client-assigned order ID to search for.
+  (scalar\<character\>) the client-assigned order ID to search for.
 
 - `symbol`:
 
-  Character; trading pair symbol (e.g., `"BTC-USDT"`). Required to scope
-  the search to a specific trading pair.
+  (scalar\<character\>) trading pair symbol (e.g., `"BTC-USDT"`).
+  Required to scope the search to a specific trading pair.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per matching stop order (no list columns).
-Key columns include:
-
-- `id` (character): Stop order identifier.
-
-- `symbol` (character): Trading pair (e.g., `"BTC-USDT"`).
-
-- `type` (character): Order type (`"limit"` or `"market"`).
-
-- `side` (character): Order side (`"buy"` or `"sell"`).
-
-- `price` (character): Limit price (NULL for market orders).
-
-- `size` (character): Order quantity in base currency.
-
-- `stop_price` (character): Trigger price for the stop order.
-
-- `client_oid` (character): The client-assigned order ID.
-
-- `created_at` (POSIXct): Creation datetime (coerced from epoch
-  milliseconds).
-
-- `order_time` (POSIXct): Order placement datetime (coerced from epoch
-  nanoseconds).
-
-- `stop_trigger_time` (POSIXct): Trigger datetime if triggered (coerced
-  from epoch milliseconds), `NA` if not yet triggered. Returns an empty
-  `data.table` if no stop orders match.
+(data.table \| promise\<data.table\>) one row per matching stop order
+giving the order ID, trading pair symbol, order type and side, limit
+price and size, the stop trigger price, the client-assigned order ID,
+and the creation, order, and stop-trigger datetimes (POSIXct, coerced
+from epoch milliseconds and nanoseconds; the trigger time is NA until
+triggered); an empty data.table if no stop orders match.
 
 #### Examples
 
+    \dontrun{
     stop <- KucoinStopOrders$new()
 
     # Look up stop order by client OID
     order <- stop$get_order_by_client_oid("my-stop-001", symbol = "BTC-USDT")
     print(order$id)
     print(order$stop_price)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinStopOrders$get_order_list()`
+### Method `get_order_list()`
 
 Get Stop Order List
 
@@ -941,7 +904,8 @@ Verified: 2026-05-23
 
 #### curl
 
-    curl --location --request GET 'https://api.kucoin.com/api/v1/stop-order?symbol=BTC-USDT&side=sell&pageSize=50&currentPage=1' \
+    curl --location --request GET \
+      'https://api.kucoin.com/api/v1/stop-order?symbol=BTC-USDT&side=sell&pageSize=50&currentPage=1' \
       --header 'KC-API-KEY: your-api-key' \
       --header 'KC-API-SIGN: your-signature' \
       --header 'KC-API-TIMESTAMP: 1729176273859' \
@@ -997,65 +961,28 @@ Verified: 2026-05-23
 
 - `query`:
 
-  Named list; optional filter and pagination parameters:
-
-  - `symbol` (character): Trading pair to filter by (e.g.,
-    `"BTC-USDT"`).
-
-  - `side` (character): Order side filter, `"buy"` or `"sell"`.
-
-  - `type` (character): Order type filter, `"limit"` or `"market"`.
-
-  - `startAt` (numeric): Start time in milliseconds (UNIX epoch).
-
-  - `endAt` (numeric): End time in milliseconds (UNIX epoch).
-
-  - `currentPage` (integer): Page number for pagination (default 1).
-
-  - `pageSize` (integer): Number of results per page (default 50, max
-    100).
-
-  - `tradeType` (character): Trade type, typically `"TRADE"` for spot.
-
-  - `orderIds` (character): Comma-separated list of specific stop order
-    IDs.
+  (list) optional filter and pagination parameters. Supported keys:
+  `symbol` (trading pair to filter by e.g. `"BTC-USDT"`), `side` (order
+  side filter, `"buy"` or `"sell"`), `type` (order type filter,
+  `"limit"` or `"market"`), `startAt` (start time in milliseconds, UNIX
+  epoch), `endAt` (end time in milliseconds, UNIX epoch), `currentPage`
+  (page number for pagination, default 1), `pageSize` (number of results
+  per page, default 50, max 100), `tradeType` (trade type, typically
+  `"TRADE"` for spot), and `orderIds` (comma-separated list of specific
+  stop order IDs).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per stop order (no list columns). Returns
-an empty `data.table` if no stop orders match the query. Key columns
-include:
-
-- `id` (character): Stop order identifier.
-
-- `symbol` (character): Trading pair (e.g., `"BTC-USDT"`).
-
-- `type` (character): Order type (`"limit"` or `"market"`).
-
-- `side` (character): Order side (`"buy"` or `"sell"`).
-
-- `price` (character): Limit price (NULL for market orders).
-
-- `size` (character): Order quantity in base currency.
-
-- `stop_price` (character): Trigger price for the stop order.
-
-- `stop` (character): Stop direction (`"loss"` or `"entry"`).
-
-- `time_in_force` (character): Time-in-force policy.
-
-- `created_at` (POSIXct): Creation datetime (coerced from epoch
-  milliseconds).
-
-- `order_time` (POSIXct): Order placement datetime (coerced from epoch
-  nanoseconds).
-
-- `stop_trigger_time` (POSIXct): Trigger datetime if triggered (coerced
-  from epoch milliseconds), `NA` if not yet triggered.
+(data.table \| promise\<data.table\>) one row per stop order giving the
+order ID, trading pair symbol, order type and side, limit price and
+size, the stop trigger price and direction, the time-in-force policy,
+and the creation, order, and stop-trigger datetimes (POSIXct, coerced
+from epoch milliseconds and nanoseconds; the trigger time is NA until
+triggered); an empty data.table if no stop orders match the query.
 
 #### Examples
 
+    \dontrun{
     stop <- KucoinStopOrders$new()
 
     # Get all BTC-USDT stop orders
@@ -1075,10 +1002,11 @@ include:
       startAt = as.numeric(lubridate::now() - 86400) * 1000,
       endAt = as.numeric(lubridate::now()) * 1000
     ))
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinStopOrders$clone()`
+### Method `clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -1113,7 +1041,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinStopOrders$add_order()`
+## Method `KucoinStopOrders$add_order`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1140,7 +1068,7 @@ order <- stop$add_order(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinStopOrders$cancel_order_by_id()`
+## Method `KucoinStopOrders$cancel_order_by_id`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1152,7 +1080,7 @@ print(result$cancelled_order_id)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinStopOrders$cancel_order_by_client_oid()`
+## Method `KucoinStopOrders$cancel_order_by_client_oid`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1164,7 +1092,7 @@ print(result$cancelled_order_id)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinStopOrders$cancel_all()`
+## Method `KucoinStopOrders$cancel_all`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1180,7 +1108,7 @@ print(result$cancelled_order_id)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinStopOrders$get_order_by_id()`
+## Method `KucoinStopOrders$get_order_by_id`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1193,7 +1121,7 @@ print(order$side)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinStopOrders$get_order_by_client_oid()`
+## Method `KucoinStopOrders$get_order_by_client_oid`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1206,7 +1134,7 @@ print(order$stop_price)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinStopOrders$get_order_list()`
+## Method `KucoinStopOrders$get_order_list`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

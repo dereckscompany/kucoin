@@ -14,11 +14,11 @@ verify_symbol(ticker)
 
 - ticker:
 
-  Character string; the ticker symbol to verify.
+  (scalar\<character\>) the ticker symbol to verify.
 
 ## Value
 
-Logical; `TRUE` if valid, `FALSE` otherwise.
+(scalar\<logical\>) `TRUE` if valid, `FALSE` otherwise.
 
 ## Examples
 

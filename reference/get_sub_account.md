@@ -16,14 +16,14 @@ get_sub_account(
 
 - sub_account_name:
 
-  Character string; sub-account name. Defaults to
+  (scalar\<character\>) sub-account name. Defaults to
   `Sys.getenv("KUCOIN_SUBACCOUNT_NAME")`.
 
 - sub_account_password:
 
-  Character string; sub-account password. Defaults to
+  (scalar\<character\>) sub-account password. Defaults to
   `Sys.getenv("KUCOIN_SUBACCOUNT_PASSWORD")`.
 
 ## Value
 
-Named list with `sub_account_name` and `sub_account_password`.
+(list) named list with `sub_account_name` and `sub_account_password`.

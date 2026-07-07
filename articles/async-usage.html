@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,7 +64,7 @@
 Mezquita</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.1.0/vignettes/async-usage.Rmd" class="external-link"><code>vignettes/async-usage.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/master/vignettes/async-usage.Rmd" class="external-link"><code>vignettes/async-usage.Rmd</code></a></small>
       <div class="d-none name"><code>async-usage.Rmd</code></div>
     </div>
 
@@ -160,17 +160,17 @@ the next begins, just like <code>await</code> in TypeScript:</p>
 <span><span class="op">}</span></span>
 <span><span class="va">results</span><span class="op">$</span><span class="va">btc</span></span>
 <span><span class="va">results</span><span class="op">$</span><span class="va">eth</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;                   time      sequence   price       size best_bid best_bid_size</span></span>
-<span><span class="co">#&gt;                 &lt;POSc&gt;        &lt;char&gt;  &lt;char&gt;     &lt;char&gt;   &lt;char&gt;        &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1: 2024-10-17 10:04:19 1550467636704 67232.9 0.00007682  67232.8    0.41861839</span></span>
+<pre><code><span><span class="co">#&gt;                   time      sequence   price      size best_bid best_bid_size</span></span>
+<span><span class="co">#&gt;                 &lt;POSc&gt;        &lt;char&gt;   &lt;num&gt;     &lt;num&gt;    &lt;num&gt;         &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1: 2024-10-17 10:04:19 1550467636704 67232.9 7.682e-05  67232.8     0.4186184</span></span>
 <span><span class="co">#&gt;    best_ask best_ask_size</span></span>
-<span><span class="co">#&gt;      &lt;char&gt;        &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1:  67232.9    1.24808993</span></span>
-<span><span class="co">#&gt;                   time sequence  price   size best_bid best_bid_size best_ask</span></span>
-<span><span class="co">#&gt;                 &lt;POSc&gt;   &lt;char&gt; &lt;char&gt; &lt;char&gt;   &lt;char&gt;        &lt;char&gt;   &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1: 2024-10-17 10:04:19   200001 2530.6    0.5   2530.5          12.0   2530.8</span></span>
+<span><span class="co">#&gt;       &lt;num&gt;         &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1:  67232.9       1.24809</span></span>
+<span><span class="co">#&gt;                   time sequence  price  size best_bid best_bid_size best_ask</span></span>
+<span><span class="co">#&gt;                 &lt;POSc&gt;   &lt;char&gt;  &lt;num&gt; &lt;num&gt;    &lt;num&gt;         &lt;num&gt;    &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1: 2024-10-17 10:04:19   200001 2530.6   0.5   2530.5            12   2530.8</span></span>
 <span><span class="co">#&gt;    best_ask_size</span></span>
-<span><span class="co">#&gt;           &lt;char&gt;</span></span>
+<span><span class="co">#&gt;            &lt;num&gt;</span></span>
 <span><span class="co">#&gt; 1:           8.5</span></span></code></pre>
 <hr>
 </div>
@@ -199,17 +199,17 @@ in TypeScript:</p>
 <span><span class="op">}</span></span>
 <span><span class="va">results</span><span class="op">$</span><span class="va">btc</span></span>
 <span><span class="va">results</span><span class="op">$</span><span class="va">eth</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;                   time      sequence   price       size best_bid best_bid_size</span></span>
-<span><span class="co">#&gt;                 &lt;POSc&gt;        &lt;char&gt;  &lt;char&gt;     &lt;char&gt;   &lt;char&gt;        &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1: 2024-10-17 10:04:19 1550467636704 67232.9 0.00007682  67232.8    0.41861839</span></span>
+<pre><code><span><span class="co">#&gt;                   time      sequence   price      size best_bid best_bid_size</span></span>
+<span><span class="co">#&gt;                 &lt;POSc&gt;        &lt;char&gt;   &lt;num&gt;     &lt;num&gt;    &lt;num&gt;         &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1: 2024-10-17 10:04:19 1550467636704 67232.9 7.682e-05  67232.8     0.4186184</span></span>
 <span><span class="co">#&gt;    best_ask best_ask_size</span></span>
-<span><span class="co">#&gt;      &lt;char&gt;        &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1:  67232.9    1.24808993</span></span>
-<span><span class="co">#&gt;                   time sequence  price   size best_bid best_bid_size best_ask</span></span>
-<span><span class="co">#&gt;                 &lt;POSc&gt;   &lt;char&gt; &lt;char&gt; &lt;char&gt;   &lt;char&gt;        &lt;char&gt;   &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1: 2024-10-17 10:04:19   200001 2530.6    0.5   2530.5          12.0   2530.8</span></span>
+<span><span class="co">#&gt;       &lt;num&gt;         &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1:  67232.9       1.24809</span></span>
+<span><span class="co">#&gt;                   time sequence  price  size best_bid best_bid_size best_ask</span></span>
+<span><span class="co">#&gt;                 &lt;POSc&gt;   &lt;char&gt;  &lt;num&gt; &lt;num&gt;    &lt;num&gt;         &lt;num&gt;    &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1: 2024-10-17 10:04:19   200001 2530.6   0.5   2530.5            12   2530.8</span></span>
 <span><span class="co">#&gt;    best_ask_size</span></span>
-<span><span class="co">#&gt;           &lt;char&gt;</span></span>
+<span><span class="co">#&gt;            &lt;num&gt;</span></span>
 <span><span class="co">#&gt; 1:           8.5</span></span></code></pre>
 <hr>
 </div>
@@ -293,18 +293,18 @@ in TypeScript:</p>
 <pre><code><span><span class="co">#&gt;             order_id         client_oid</span></span>
 <span><span class="co">#&gt;               &lt;char&gt;             &lt;char&gt;</span></span>
 <span><span class="co">#&gt; 1: futures-order-001 futures-client-001</span></span>
-<span><span class="co">#&gt;                          id   symbol op_type   type   side  price   size  funds</span></span>
-<span><span class="co">#&gt;                      &lt;char&gt;   &lt;char&gt;  &lt;char&gt; &lt;char&gt; &lt;char&gt; &lt;char&gt; &lt;char&gt; &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1: 670fd33bf9406e0007ab3945 BTC-USDT    DEAL  limit    buy  50000 0.0001      0</span></span>
-<span><span class="co">#&gt;    deal_size deal_funds    fee fee_currency    stp time_in_force cancel_after</span></span>
-<span><span class="co">#&gt;       &lt;char&gt;     &lt;char&gt; &lt;char&gt;       &lt;char&gt; &lt;char&gt;        &lt;char&gt;        &lt;int&gt;</span></span>
-<span><span class="co">#&gt; 1:         0          0      0         USDT                  GTC           -1</span></span>
+<span><span class="co">#&gt;                          id   symbol op_type   type   side price  size  funds</span></span>
+<span><span class="co">#&gt;                      &lt;char&gt;   &lt;char&gt;  &lt;char&gt; &lt;char&gt; &lt;char&gt; &lt;num&gt; &lt;num&gt; &lt;char&gt;</span></span>
+<span><span class="co">#&gt; 1: 670fd33bf9406e0007ab3945 BTC-USDT    DEAL  limit    buy 50000 1e-04      0</span></span>
+<span><span class="co">#&gt;    deal_size deal_funds   fee fee_currency    stp time_in_force cancel_after</span></span>
+<span><span class="co">#&gt;        &lt;num&gt;     &lt;char&gt; &lt;num&gt;       &lt;char&gt; &lt;char&gt;        &lt;char&gt;        &lt;int&gt;</span></span>
+<span><span class="co">#&gt; 1:         0          0     0         USDT                  GTC           -1</span></span>
 <span><span class="co">#&gt;    post_only hidden iceberg visible_size cancelled_size cancelled_funds</span></span>
 <span><span class="co">#&gt;       &lt;lgcl&gt; &lt;lgcl&gt;  &lt;lgcl&gt;       &lt;char&gt;         &lt;char&gt;          &lt;char&gt;</span></span>
 <span><span class="co">#&gt; 1:     FALSE  FALSE   FALSE            0              0               0</span></span>
 <span><span class="co">#&gt;    remain_size remain_funds active in_order_book               client_oid</span></span>
-<span><span class="co">#&gt;         &lt;char&gt;       &lt;char&gt; &lt;lgcl&gt;        &lt;lgcl&gt;                   &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1:      0.0001            0   TRUE          TRUE 5c52e11203aa677f33e493fb</span></span>
+<span><span class="co">#&gt;          &lt;num&gt;       &lt;char&gt; &lt;lgcl&gt;        &lt;lgcl&gt;                   &lt;char&gt;</span></span>
+<span><span class="co">#&gt; 1:       1e-04            0   TRUE          TRUE 5c52e11203aa677f33e493fb</span></span>
 <span><span class="co">#&gt;      tags          created_at     last_updated_at</span></span>
 <span><span class="co">#&gt;    &lt;char&gt;              &lt;POSc&gt;              &lt;POSc&gt;</span></span>
 <span><span class="co">#&gt; 1:        2024-10-22 06:11:55 2024-10-22 06:11:55</span></span></code></pre>

@@ -83,9 +83,9 @@ ticker <- market$get_ticker(symbol = "XBTUSDTM")
 ticker[, .(symbol, price, best_bid_price, best_ask_price, ts)]
 ```
 
-    #>      symbol   price best_bid_price best_ask_price                  ts
-    #>      <char>  <char>         <char>         <char>              <POSc>
-    #> 1: XBTUSDTM 98250.0        98249.9        98250.1 2024-10-17 10:04:19
+    #>      symbol price best_bid_price best_ask_price                  ts
+    #>      <char> <num>          <num>          <num>              <POSc>
+    #> 1: XBTUSDTM 98250        98249.9        98250.1 2024-10-17 10:04:19
 
 ### All Tickers
 
@@ -95,10 +95,10 @@ tickers <- market$get_all_tickers()
 tickers[, .(symbol, price, ts)]
 ```
 
-    #>      symbol   price                  ts
-    #>      <char>  <char>              <POSc>
-    #> 1: XBTUSDTM 98250.0 2024-10-17 10:04:19
-    #> 2: ETHUSDTM 3456.78 2024-10-17 10:04:19
+    #>      symbol    price                  ts
+    #>      <char>    <num>              <POSc>
+    #> 1: XBTUSDTM 98250.00 2024-10-17 10:04:19
+    #> 2: ETHUSDTM  3456.78 2024-10-17 10:04:19
 
 ### Orderbook
 
@@ -125,10 +125,10 @@ trades <- market$get_trade_history(symbol = "XBTUSDTM")
 trades[, .(side, price, size, ts)]
 ```
 
-    #>      side   price  size                  ts
-    #>    <char>  <char> <int>              <POSc>
-    #> 1:    buy 98250.0     1 2024-10-17 10:04:19
-    #> 2:   sell 98251.0     2 2024-10-17 10:04:19
+    #>      side price  size                  ts
+    #>    <char> <num> <num>              <POSc>
+    #> 1:    buy 98250     1 2024-10-17 10:04:19
+    #> 2:   sell 98251     2 2024-10-17 10:04:19
 
 ### Klines (Candlesticks)
 
@@ -171,12 +171,12 @@ rate <- market$get_funding_rate(symbol = "XBTUSDTM")
 rate
 ```
 
-    #>      symbol granularity          time_point value predicted_value
-    #>      <char>       <int>              <POSc> <num>           <num>
-    #> 1: XBTUSDTM    28800000 2024-10-17 08:00:00 1e-04           1e-04
-    #>           funding_time
-    #>                 <POSc>
-    #> 1: 2024-10-17 16:00:00
+    #>      symbol granularity          time_point value daily_interest_rate
+    #>      <char>       <int>              <POSc> <num>               <num>
+    #> 1: XBTUSDTM    28800000 2024-10-17 08:00:00 1e-04               3e-04
+    #>    funding_rate_cap funding_rate_floor period        funding_time
+    #>               <num>              <num>  <int>              <POSc>
+    #> 1:            0.003             -0.003      1 2024-10-17 16:00:00
 
 ### Server Time and Status
 
@@ -208,7 +208,7 @@ order:
 ``` r
 
 result <- trading$add_order_test(
-  clientOid = "my-test-001",
+  client_order_id = "my-test-001",
   symbol = "XBTUSDTM",
   side = "buy",
   type = "limit",
@@ -229,7 +229,7 @@ result
 
 # Market order — no price needed
 order <- trading$add_order(
-  clientOid = "my-market-001",
+  client_order_id = "my-market-001",
   symbol = "XBTUSDTM",
   side = "buy",
   type = "market",
@@ -239,14 +239,14 @@ order <- trading$add_order(
 
 # Limit order
 order <- trading$add_order(
-  clientOid = "my-limit-001",
+  client_order_id = "my-limit-001",
   symbol = "XBTUSDTM",
   side = "buy",
   type = "limit",
   leverage = 5,
   size = 1,
   price = "95000",
-  timeInForce = "GTC"
+  time_in_force = "GTC"
 )
 ```
 
@@ -255,10 +255,10 @@ order <- trading$add_order(
 ``` r
 
 # Cancel by system order ID
-trading$cancel_order_by_id(orderId = "order-id-here")
+trading$cancel_order_by_id(order_id = "order-id-here")
 
 # Cancel by client order ID
-trading$cancel_order_by_client_oid(clientOid = "my-limit-001", symbol = "XBTUSDTM")
+trading$cancel_order_by_client_oid(client_order_id = "my-limit-001", symbol = "XBTUSDTM")
 
 # Cancel all orders for a symbol
 trading$cancel_all(symbol = "XBTUSDTM")
@@ -272,7 +272,7 @@ trading$cancel_all_stop_orders(symbol = "XBTUSDTM")
 ``` r
 
 # Get a specific order
-order <- trading$get_order_by_id(orderId = "order-id")
+order <- trading$get_order_by_id(order_id = "order-id")
 
 # Get open orders
 open <- trading$get_order_list(query = list(status = "active"))
@@ -306,9 +306,9 @@ trading$set_dcp(timeout = 5)
 trading$get_dcp()
 ```
 
-    #>    timeout symbols current_time
-    #>      <int>  <char>        <num>
-    #> 1:       5         1.729159e+12
+    #>    trade_type symbol system_time trigger_time
+    #>        <char> <char>       <num>        <num>
+    #> 1:    FUTURES   <NA>  1729159459            0
     #>    timeout symbols current_time
     #>      <int>  <char>        <num>
     #> 1:       5         1.729159e+12
@@ -367,14 +367,14 @@ Switch between isolated and cross margin:
 account$get_margin_mode(symbol = "XBTUSDTM")
 ```
 
-    #>            v1
-    #>        <list>
-    #> 1: <list[35]>
+    #>      symbol margin_mode
+    #>      <char>      <char>
+    #> 1: XBTUSDTM    ISOLATED
 
 ``` r
 
 # Switch to cross margin
-account$set_margin_mode(symbol = "XBTUSDTM", marginMode = "CROSS")
+account$set_margin_mode(symbol = "XBTUSDTM", margin_mode = "CROSS")
 ```
 
 ### Leverage

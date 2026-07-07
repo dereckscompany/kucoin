@@ -46,12 +46,12 @@ ticker <- market$get_ticker(symbol = "BTC-USDT")
 ticker
 ```
 
-    #>                   time      sequence   price       size best_bid best_bid_size
-    #>                 <POSc>        <char>  <char>     <char>   <char>        <char>
-    #> 1: 2024-10-17 10:04:19 1550467636704 67232.9 0.00007682  67232.8    0.41861839
+    #>                   time      sequence   price      size best_bid best_bid_size
+    #>                 <POSc>        <char>   <num>     <num>    <num>         <num>
+    #> 1: 2024-10-17 10:04:19 1550467636704 67232.9 7.682e-05  67232.8     0.4186184
     #>    best_ask best_ask_size
-    #>      <char>        <char>
-    #> 1:  67232.9    1.24808993
+    #>       <num>         <num>
+    #> 1:  67232.9       1.24809
 
 ### 24hr Statistics
 
@@ -61,15 +61,15 @@ stats <- market$get_24hr_stats(symbol = "BTC-USDT")
 stats
 ```
 
-    #>                   time   symbol     buy    sell change_rate change_price
-    #>                 <POSc>   <char>  <char>  <char>      <char>       <char>
-    #> 1: 2024-10-17 10:04:19 BTC-USDT 67232.8 67232.9     -0.0114       -772.1
-    #>       high     low           vol    vol_value    last average_price
-    #>     <char>  <char>        <char>       <char>  <char>        <char>
-    #> 1: 68100.0 66800.0 3456.78901234 232456789.12 67232.9       67450.5
-    #>    taker_fee_rate maker_fee_rate taker_coefficient maker_coefficient
-    #>            <char>         <char>            <char>            <char>
-    #> 1:          0.001          0.001                 1                 1
+    #>                   time   symbol     buy    sell change_rate change_price  high
+    #>                 <POSc>   <char>   <num>   <num>       <num>        <num> <num>
+    #> 1: 2024-10-17 10:04:19 BTC-USDT 67232.8 67232.9     -0.0114       -772.1 68100
+    #>      low      vol vol_value    last average_price taker_fee_rate maker_fee_rate
+    #>    <num>    <num>     <num>   <num>         <num>          <num>          <num>
+    #> 1: 66800 3456.789 232456789 67232.9       67450.5          0.001          0.001
+    #>    taker_coefficient maker_coefficient
+    #>                <num>             <num>
+    #> 1:                 1                 1
 
 ### All Tickers
 
@@ -79,18 +79,18 @@ tickers <- market$get_all_tickers()
 tickers
 ```
 
-    #>      symbol symbol_name     buy    sell change_rate change_price    high
-    #>      <char>      <char>  <char>  <char>      <char>       <char>  <char>
-    #> 1: BTC-USDT    BTC-USDT 67232.8 67232.9     -0.0114       -772.1 68100.0
-    #> 2: ETH-USDT    ETH-USDT  2530.5  2530.8      0.0235         58.2  2560.0
-    #>        low           vol    vol_value    last average_price taker_fee_rate
-    #>     <char>        <char>       <char>  <char>        <char>         <char>
-    #> 1: 66800.0 3456.78901234 232456789.12 67232.9       67450.5          0.001
-    #> 2:  2470.0     45678.123 115432000.00  2530.6        2515.3          0.001
-    #>    maker_fee_rate                time
-    #>            <char>              <POSc>
-    #> 1:          0.001 2024-10-17 10:04:19
-    #> 2:          0.001 2024-10-17 10:04:19
+    #>      symbol symbol_name     buy    sell change_rate change_price  high   low
+    #>      <char>      <char>   <num>   <num>       <num>        <num> <num> <num>
+    #> 1: BTC-USDT    BTC-USDT 67232.8 67232.9     -0.0114       -772.1 68100 66800
+    #> 2: ETH-USDT    ETH-USDT  2530.5  2530.8      0.0235         58.2  2560  2470
+    #>          vol vol_value    last average_price taker_fee_rate maker_fee_rate
+    #>        <num>     <num>   <num>         <num>          <num>          <num>
+    #> 1:  3456.789 232456789 67232.9       67450.5          0.001          0.001
+    #> 2: 45678.123 115432000  2530.6        2515.3          0.001          0.001
+    #>                   time
+    #>                 <POSc>
+    #> 1: 2024-10-17 10:04:19
+    #> 2: 2024-10-17 10:04:19
 
 ### Trade History
 
@@ -100,11 +100,11 @@ trades <- market$get_trade_history(symbol = "BTC-USDT")
 trades
 ```
 
-    #>         sequence   side   price       size                time
-    #>           <char> <char>  <char>     <char>              <POSc>
-    #> 1: 1550467636704    buy 67232.9 0.00007682 2024-10-17 10:04:19
-    #> 2: 1550467636705   sell 67231.5    0.01234 2024-10-17 10:04:20
-    #> 3: 1550467636706    buy 67233.0      0.005 2024-10-17 10:04:21
+    #>         sequence   side   price      size                time      trade_id
+    #>           <char> <char>   <num>     <num>              <POSc>        <char>
+    #> 1: 1550467636704    buy 67232.9 7.682e-05 2024-10-17 10:04:19 1550467636704
+    #> 2: 1550467636705   sell 67231.5 1.234e-02 2024-10-17 10:04:20 1550467636705
+    #> 3: 1550467636706    buy 67233.0 5.000e-03 2024-10-17 10:04:21 1550467636706
 
 ### Partial Orderbook
 
@@ -155,15 +155,15 @@ btc
     #> 1:      BTC    BTC   Bitcoin         8              TRUE             TRUE
     #> 2:      BTC    BTC   Bitcoin         8              TRUE             TRUE
     #>    chain_name withdrawal_min_size deposit_min_size withdraw_fee_rate
-    #>        <char>              <char>           <char>            <char>
-    #> 1:        BTC               0.001           0.0002                 0
-    #> 2:        KCC              0.0008          0.00002                 0
+    #>        <char>               <num>            <num>             <num>
+    #> 1:        BTC               1e-03            2e-04                 0
+    #> 2:        KCC               8e-04            2e-05                 0
     #>    withdrawal_min_fee is_withdraw_enabled is_deposit_enabled confirms
-    #>                <char>              <lgcl>             <lgcl>    <int>
-    #> 1:             0.0005                TRUE               TRUE        3
-    #> 2:            0.00002                TRUE               TRUE       20
+    #>                 <num>              <lgcl>             <lgcl>    <int>
+    #> 1:              5e-04                TRUE               TRUE        3
+    #> 2:              2e-05                TRUE               TRUE       20
     #>    pre_confirms   contract_address withdraw_precision max_withdraw max_deposit
-    #>           <int>             <char>              <int>       <lgcl>      <lgcl>
+    #>           <int>             <char>              <int>       <lgcl>       <num>
     #> 1:            1                                     8           NA          NA
     #> 2:           20 0xfa93c12cd345c658                  8           NA          NA
     #>    need_tag chain_id
@@ -183,17 +183,26 @@ sym
     #>      <char>   <char>        <char>         <char>       <char> <char>
     #> 1: BTC-USDT BTC-USDT           BTC           USDT         USDT   USDS
     #>    base_min_size quote_min_size base_max_size quote_max_size base_increment
-    #>           <char>         <char>        <char>         <char>         <char>
-    #> 1:       0.00001            0.1   10000000000       99999999     0.00000001
+    #>            <num>          <num>         <num>          <num>          <num>
+    #> 1:         1e-05            0.1         1e+10          1e+08          1e-08
     #>    quote_increment price_increment price_limit_rate min_funds is_margin_enabled
-    #>             <char>          <char>           <char>    <char>            <lgcl>
-    #> 1:        0.000001             0.1              0.1       0.1              TRUE
+    #>              <num>           <num>            <num>     <num>            <lgcl>
+    #> 1:           1e-06             0.1              0.1       0.1              TRUE
     #>    enable_trading fee_category maker_fee_coefficient taker_fee_coefficient
-    #>            <lgcl>        <int>                <char>                <char>
-    #> 1:           TRUE            1                  1.00                  1.00
-    #>        st
-    #>    <lgcl>
-    #> 1:  FALSE
+    #>            <lgcl>        <int>                 <num>                 <num>
+    #> 1:           TRUE            1                     1                     1
+    #>        st callauction_is_enabled callauction_price_floor
+    #>    <lgcl>                 <lgcl>                   <num>
+    #> 1:  FALSE                  FALSE                      NA
+    #>    callauction_price_ceiling callauction_first_stage_start_time
+    #>                        <num>                              <num>
+    #> 1:                        NA                                 NA
+    #>    callauction_second_stage_start_time callauction_third_stage_start_time
+    #>                                  <num>                              <num>
+    #> 1:                                  NA                                 NA
+    #>    trading_start_time
+    #>                 <num>
+    #> 1:                 NA
 
 ------------------------------------------------------------------------
 
@@ -235,7 +244,7 @@ result
 
 ``` r
 
-cancelled <- trading$cancel_order_by_id(orderId = "670fd33bf9406e0007ab3945", symbol = "BTC-USDT")
+cancelled <- trading$cancel_order_by_id(order_id = "670fd33bf9406e0007ab3945", symbol = "BTC-USDT")
 cancelled
 ```
 
@@ -251,18 +260,18 @@ open_orders <- trading$get_open_orders(symbol = "BTC-USDT")
 open_orders
 ```
 
-    #>                          id   symbol op_type   type   side  price   size  funds
-    #>                      <char>   <char>  <char> <char> <char> <char> <char> <char>
-    #> 1: 670fd33bf9406e0007ab3945 BTC-USDT    DEAL  limit    buy  50000 0.0001      0
-    #>    deal_size deal_funds    fee fee_currency    stp time_in_force cancel_after
-    #>       <char>     <char> <char>       <char> <char>        <char>        <int>
-    #> 1:         0          0      0         USDT                  GTC           -1
+    #>                          id   symbol op_type   type   side price  size  funds
+    #>                      <char>   <char>  <char> <char> <char> <num> <num> <char>
+    #> 1: 670fd33bf9406e0007ab3945 BTC-USDT    DEAL  limit    buy 50000 1e-04      0
+    #>    deal_size deal_funds   fee fee_currency    stp time_in_force cancel_after
+    #>        <num>     <char> <num>       <char> <char>        <char>        <int>
+    #> 1:         0          0     0         USDT                  GTC           -1
     #>    post_only hidden iceberg visible_size cancelled_size cancelled_funds
     #>       <lgcl> <lgcl>  <lgcl>       <char>         <char>          <char>
     #> 1:     FALSE  FALSE   FALSE            0              0               0
     #>    remain_size remain_funds active in_order_book               client_oid
-    #>         <char>       <char> <lgcl>        <lgcl>                   <char>
-    #> 1:      0.0001            0   TRUE          TRUE 5c52e11203aa677f33e493fb
+    #>          <num>       <char> <lgcl>        <lgcl>                   <char>
+    #> 1:       1e-04            0   TRUE          TRUE 5c52e11203aa677f33e493fb
     #>      tags          created_at     last_updated_at
     #>    <char>              <POSc>              <POSc>
     #> 1:        2024-10-22 06:11:55 2024-10-22 06:11:55
@@ -288,7 +297,7 @@ result <- stop$add_order(
   side = "sell",
   price = "60000",
   size = "0.0001",
-  stopPrice = "59000"
+  stop_price = "59000"
 )
 result
 ```
@@ -320,8 +329,8 @@ result <- oco$add_order(
   side = "sell",
   price = "110000",
   size = "0.0001",
-  stopPrice = "90000",
-  limitPrice = "89500"
+  stop_price = "90000",
+  limit_price = "89500"
 )
 result
 ```
@@ -372,10 +381,10 @@ balances <- account$get_spot_accounts()
 balances
 ```
 
-    #>                          id currency   type    balance available      holds
-    #>                      <char>   <char> <char>     <char>    <char>     <char>
-    #> 1: 6717422bd51c29000775ea01     USDT  trade   10000.50   9500.25     500.25
-    #> 2: 6717422bd51c29000775ea02      BTC  trade 1.23456789       1.0 0.23456789
+    #>                          id currency   type      balance available       holds
+    #>                      <char>   <char> <char>        <num>     <num>       <num>
+    #> 1: 6717422bd51c29000775ea01     USDT  trade 10000.500000   9500.25 500.2500000
+    #> 2: 6717422bd51c29000775ea02      BTC  trade     1.234568      1.00   0.2345679
 
 ------------------------------------------------------------------------
 
@@ -402,10 +411,10 @@ addrs
     #>                                        <char> <char> <char>   <char> <char>
     #> 1: 0x1a2b3c4d5e6f7890abcdef1234567890abcdef12         ERC20      eth   main
     #> 2:    TXyz123abcDEF456ghiJKL789mnoPQR012stuVW         TRC20      trx   main
-    #>    currency                           contract_address chain_name
-    #>      <char>                                     <char>     <char>
-    #> 1:     USDT 0xdac17f958d2ee523a2206206994597c13d831ec7      ERC20
-    #> 2:     USDT         TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t      TRC20
+    #>    currency                           contract_address remark chain_name
+    #>      <char>                                     <char> <char>     <char>
+    #> 1:     USDT 0xdac17f958d2ee523a2206206994597c13d831ec7             ERC20
+    #> 2:     USDT         TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t             TRC20
     #>    expiration_date
     #>              <int>
     #> 1:               0
@@ -427,8 +436,8 @@ cat("Status:", order$status, "Filled:", order$deal_size, "\n")
 # Modify an existing order's price
 modified <- trading$modify_order(
   symbol = "BTC-USDT",
-  orderId = order$order_id,
-  newPrice = "51000"
+  order_id = order$order_id,
+  new_price = "51000"
 )
 cat("New order ID:", modified$new_order_id, "\n")
 ```
@@ -473,7 +482,7 @@ The HF ledger contains fills, fees, and settlements from HF orders
 
 ``` r
 
-hf_ledger <- account$get_hf_ledger(currency = "USDT", bizType = "TRADE_EXCHANGE")
+hf_ledger <- account$get_hf_ledger(currency = "USDT", biz_type = "TRADE_EXCHANGE")
 hf_ledger
 ```
 
@@ -519,12 +528,12 @@ balance
 
 # Transfer USDT from main to trade account
 result <- transfer$add_transfer(
-  clientOid = "unique-id-here",
+  client_order_id = "unique-id-here",
   currency = "USDT",
   amount = "100",
   type = "INTERNAL",
-  fromAccountType = "MAIN",
-  toAccountType = "TRADE"
+  from_account_type = "MAIN",
+  to_account_type = "TRADE"
 )
 result
 ```
@@ -549,9 +558,9 @@ quotas
 # Withdraw USDT via TRC20
 result <- withdrawal$add_withdrawal(
   currency = "USDT",
-  toAddress = "your-trc20-address",
+  to_address = "your-trc20-address",
   amount = "10",
-  withdrawType = "ADDRESS",
+  withdraw_type = "ADDRESS",
   chain = "trx"
 )
 result
@@ -586,10 +595,10 @@ subs
     #>                      <char>     <int>    <char>  <int> <int>  <char>
     #> 1: 641e7f09df0db80001f1e5ac 169630809 bot-alpha      2     0    Spot
     #> 2: 641e8027df0db80001f1e6bb 169630810  bot-beta      2     0 Futures
-    #>        remarks          created_at
-    #>         <char>              <POSc>
-    #> 1: Trading bot 2024-10-17 10:04:19
-    #> 2: Futures bot 2024-10-17 10:05:59
+    #>    trade_types opened_trade_types     remarks          created_at
+    #>         <list>             <list>      <char>              <POSc>
+    #> 1:   <list[1]>          <list[1]> Trading bot 2024-10-17 10:04:19
+    #> 2:   <list[2]>          <list[2]> Futures bot 2024-10-17 10:05:59
 
 ------------------------------------------------------------------------
 

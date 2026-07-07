@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -141,13 +141,17 @@
 <h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># special mock for local build</span></span>
+<code class="sourceCode R"><span><span class="co"># special mock for local build: the shared connectcore mock harness installs the</span></span>
+<span><span class="co"># route table from ./tests/testthat/mock_router as the httr2 mock hook, so every</span></span>
+<span><span class="co"># request below is served from the captured JSON fixtures -- no network, no real</span></span>
+<span><span class="co"># credentials, no funds.</span></span>
 <span><span class="fu">box</span><span class="fu">::</span><span class="fu"><a href="https://klmr.me/box/reference/use.html" class="external-link">use</a></span><span class="op">(</span></span>
 <span>  <span class="va">kucoin</span><span class="op">[</span></span>
 <span>    <span class="va">get_api_keys</span>,</span>
 <span>    <span class="va">get_futures_base_url</span></span>
 <span>  <span class="op">]</span>,</span>
-<span>  <span class="va">.</span><span class="op">/</span><span class="va">tests</span><span class="op">/</span><span class="va">testthat</span><span class="op">/</span><span class="va">mock_router</span><span class="op">[</span><span class="va">mock_router</span><span class="op">]</span></span>
+<span>  <span class="va">connectcore</span><span class="op">[</span><span class="va">local_mock_api</span><span class="op">]</span>,</span>
+<span>  <span class="va">.</span><span class="op">/</span><span class="va">tests</span><span class="op">/</span><span class="va">testthat</span><span class="op">/</span><span class="va">mock_router</span><span class="op">[</span><span class="va">.mock_routes</span><span class="op">]</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">KEYS</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_api_keys.html">get_api_keys</a></span><span class="op">(</span></span>
@@ -159,7 +163,7 @@
 <span><span class="va">BASE</span> <span class="op">&lt;-</span> <span class="st">"https://api.kucoin.com"</span></span>
 <span><span class="va">FBASE</span> <span class="op">&lt;-</span> <span class="st">"https://api-futures.kucoin.com"</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>httr2_mock <span class="op">=</span> <span class="va">mock_router</span><span class="op">)</span></span>
+<span><span class="fu">local_mock_api</span><span class="op">(</span><span class="va">.mock_routes</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># normal imports</span></span>
 <span><span class="fu">box</span><span class="fu">::</span><span class="fu"><a href="https://klmr.me/box/reference/use.html" class="external-link">use</a></span><span class="op">(</span></span>
@@ -194,27 +198,27 @@
 </h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">market</span><span class="op">$</span><span class="fu">get_ticker</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"BTC-USDT"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co">#&gt;                   time      sequence   price       size best_bid best_bid_size</span></span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co">#&gt;                 &lt;POSc&gt;        &lt;char&gt;  &lt;char&gt;     &lt;char&gt;   &lt;char&gt;        &lt;char&gt;</span></span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co">#&gt; 1: 2024-10-17 10:04:19 1550467636704 67232.9 0.00007682  67232.8    0.41861839</span></span>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co">#&gt;                   time      sequence   price      size best_bid best_bid_size</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co">#&gt;                 &lt;POSc&gt;        &lt;char&gt;   &lt;num&gt;     &lt;num&gt;    &lt;num&gt;         &lt;num&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co">#&gt; 1: 2024-10-17 10:04:19 1550467636704 67232.9 7.682e-05  67232.8     0.4186184</span></span>
 <span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co">#&gt;    best_ask best_ask_size</span></span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co">#&gt;      &lt;char&gt;        &lt;char&gt;</span></span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co">#&gt; 1:  67232.9    1.24808993</span></span></code></pre></div>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co">#&gt;       &lt;num&gt;         &lt;num&gt;</span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co">#&gt; 1:  67232.9       1.24809</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="id_24hr-statistics">24hr Statistics<a class="anchor" aria-label="anchor" href="#id_24hr-statistics"></a>
 </h3>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">market</span><span class="op">$</span><span class="fu">get_24hr_stats</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"BTC-USDT"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co">#&gt;                   time   symbol     buy    sell change_rate change_price</span></span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#&gt;                 &lt;POSc&gt;   &lt;char&gt;  &lt;char&gt;  &lt;char&gt;      &lt;char&gt;       &lt;char&gt;</span></span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co">#&gt; 1: 2024-10-17 10:04:19 BTC-USDT 67232.8 67232.9     -0.0114       -772.1</span></span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co">#&gt;       high     low           vol    vol_value    last average_price</span></span>
-<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co">#&gt;     &lt;char&gt;  &lt;char&gt;        &lt;char&gt;       &lt;char&gt;  &lt;char&gt;        &lt;char&gt;</span></span>
-<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#&gt; 1: 68100.0 66800.0 3456.78901234 232456789.12 67232.9       67450.5</span></span>
-<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt;    taker_fee_rate maker_fee_rate taker_coefficient maker_coefficient</span></span>
-<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co">#&gt;            &lt;char&gt;         &lt;char&gt;            &lt;char&gt;            &lt;char&gt;</span></span>
-<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co">#&gt; 1:          0.001          0.001                 1                 1</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co">#&gt;                   time   symbol     buy    sell change_rate change_price  high</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#&gt;                 &lt;POSc&gt;   &lt;char&gt;   &lt;num&gt;   &lt;num&gt;       &lt;num&gt;        &lt;num&gt; &lt;num&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co">#&gt; 1: 2024-10-17 10:04:19 BTC-USDT 67232.8 67232.9     -0.0114       -772.1 68100</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co">#&gt;      low      vol vol_value    last average_price taker_fee_rate maker_fee_rate</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co">#&gt;    &lt;num&gt;    &lt;num&gt;     &lt;num&gt;   &lt;num&gt;         &lt;num&gt;          &lt;num&gt;          &lt;num&gt;</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#&gt; 1: 66800 3456.789 232456789 67232.9       67450.5          0.001          0.001</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt;    taker_coefficient maker_coefficient</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co">#&gt;                &lt;num&gt;             &lt;num&gt;</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co">#&gt; 1:                 1                 1</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="klines-candlestick-data">Klines (Candlestick Data)<a class="anchor" aria-label="anchor" href="#klines-candlestick-data"></a>
@@ -259,18 +263,18 @@
 </h3>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">trading</span><span class="op">$</span><span class="fu">get_open_orders</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"BTC-USDT"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb15"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="co">#&gt;                          id   symbol op_type   type   side  price   size  funds</span></span>
-<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="co">#&gt;                      &lt;char&gt;   &lt;char&gt;  &lt;char&gt; &lt;char&gt; &lt;char&gt; &lt;char&gt; &lt;char&gt; &lt;char&gt;</span></span>
-<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="co">#&gt; 1: 670fd33bf9406e0007ab3945 BTC-USDT    DEAL  limit    buy  50000 0.0001      0</span></span>
-<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a><span class="co">#&gt;    deal_size deal_funds    fee fee_currency    stp time_in_force cancel_after</span></span>
-<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a><span class="co">#&gt;       &lt;char&gt;     &lt;char&gt; &lt;char&gt;       &lt;char&gt; &lt;char&gt;        &lt;char&gt;        &lt;int&gt;</span></span>
-<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a><span class="co">#&gt; 1:         0          0      0         USDT                  GTC           -1</span></span>
+<div class="sourceCode" id="cb15"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="co">#&gt;                          id   symbol op_type   type   side price  size  funds</span></span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="co">#&gt;                      &lt;char&gt;   &lt;char&gt;  &lt;char&gt; &lt;char&gt; &lt;char&gt; &lt;num&gt; &lt;num&gt; &lt;char&gt;</span></span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="co">#&gt; 1: 670fd33bf9406e0007ab3945 BTC-USDT    DEAL  limit    buy 50000 1e-04      0</span></span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a><span class="co">#&gt;    deal_size deal_funds   fee fee_currency    stp time_in_force cancel_after</span></span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a><span class="co">#&gt;        &lt;num&gt;     &lt;char&gt; &lt;num&gt;       &lt;char&gt; &lt;char&gt;        &lt;char&gt;        &lt;int&gt;</span></span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a><span class="co">#&gt; 1:         0          0     0         USDT                  GTC           -1</span></span>
 <span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a><span class="co">#&gt;    post_only hidden iceberg visible_size cancelled_size cancelled_funds</span></span>
 <span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a><span class="co">#&gt;       &lt;lgcl&gt; &lt;lgcl&gt;  &lt;lgcl&gt;       &lt;char&gt;         &lt;char&gt;          &lt;char&gt;</span></span>
 <span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a><span class="co">#&gt; 1:     FALSE  FALSE   FALSE            0              0               0</span></span>
 <span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a><span class="co">#&gt;    remain_size remain_funds active in_order_book               client_oid</span></span>
-<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a><span class="co">#&gt;         &lt;char&gt;       &lt;char&gt; &lt;lgcl&gt;        &lt;lgcl&gt;                   &lt;char&gt;</span></span>
-<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a><span class="co">#&gt; 1:      0.0001            0   TRUE          TRUE 5c52e11203aa677f33e493fb</span></span>
+<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a><span class="co">#&gt;          &lt;num&gt;       &lt;char&gt; &lt;lgcl&gt;        &lt;lgcl&gt;                   &lt;char&gt;</span></span>
+<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a><span class="co">#&gt; 1:       1e-04            0   TRUE          TRUE 5c52e11203aa677f33e493fb</span></span>
 <span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a><span class="co">#&gt;      tags          created_at     last_updated_at</span></span>
 <span id="cb15-14"><a href="#cb15-14" tabindex="-1"></a><span class="co">#&gt;    &lt;char&gt;              &lt;POSc&gt;              &lt;POSc&gt;</span></span>
 <span id="cb15-15"><a href="#cb15-15" tabindex="-1"></a><span class="co">#&gt; 1:        2024-10-22 06:11:55 2024-10-22 06:11:55</span></span></code></pre></div>
@@ -365,12 +369,12 @@
 <span></span>
 <span><span class="co"># Move funds from main to trade account</span></span>
 <span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">transfer</span><span class="op">$</span><span class="fu">add_transfer</span><span class="op">(</span></span>
-<span>  clientOid <span class="op">=</span> <span class="st">"my-unique-id"</span>,</span>
+<span>  client_order_id <span class="op">=</span> <span class="st">"my-unique-id"</span>,</span>
 <span>  currency <span class="op">=</span> <span class="st">"USDT"</span>,</span>
 <span>  amount <span class="op">=</span> <span class="st">"100"</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"INTERNAL"</span>,</span>
-<span>  fromAccountType <span class="op">=</span> <span class="st">"MAIN"</span>,</span>
-<span>  toAccountType <span class="op">=</span> <span class="st">"TRADE"</span></span>
+<span>  from_account_type <span class="op">=</span> <span class="st">"MAIN"</span>,</span>
+<span>  to_account_type <span class="op">=</span> <span class="st">"TRADE"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="va">order_id</span><span class="op">)</span></span>
 <span></span>
@@ -420,10 +424,10 @@
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">margin</span><span class="op">$</span><span class="fu">get_borrow_rate</span><span class="op">(</span>query <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>currency <span class="op">=</span> <span class="st">"BTC,USDT,ETH"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb24"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="co">#&gt;    currency hourly_borrow_rate annualized_borrow_rate</span></span>
-<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a><span class="co">#&gt;      &lt;char&gt;             &lt;char&gt;                 &lt;char&gt;</span></span>
-<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a><span class="co">#&gt; 1:      BTC           0.000021                 0.1839</span></span>
-<span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a><span class="co">#&gt; 2:     USDT           0.000015                 0.1314</span></span>
-<span id="cb24-5"><a href="#cb24-5" tabindex="-1"></a><span class="co">#&gt; 3:      ETH           0.000018                 0.1577</span></span></code></pre></div>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a><span class="co">#&gt;      &lt;char&gt;              &lt;num&gt;                  &lt;num&gt;</span></span>
+<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a><span class="co">#&gt; 1:      BTC            2.1e-05                 0.1839</span></span>
+<span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a><span class="co">#&gt; 2:     USDT            1.5e-05                 0.1314</span></span>
+<span id="cb24-5"><a href="#cb24-5" tabindex="-1"></a><span class="co">#&gt; 3:      ETH            1.8e-05                 0.1577</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="cross-margin-pairs">Cross Margin Pairs<a class="anchor" aria-label="anchor" href="#cross-margin-pairs"></a>
@@ -431,15 +435,15 @@
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">margin_data</span><span class="op">$</span><span class="fu">get_cross_margin_symbols</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb26"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="co">#&gt;      symbol     name base_currency quote_currency base_increment base_min_size</span></span>
-<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a><span class="co">#&gt;      &lt;char&gt;   &lt;char&gt;        &lt;char&gt;         &lt;char&gt;         &lt;char&gt;        &lt;char&gt;</span></span>
-<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a><span class="co">#&gt; 1: BTC-USDT BTC-USDT           BTC           USDT     0.00000001       0.00001</span></span>
-<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a><span class="co">#&gt; 2: ETH-USDT ETH-USDT           ETH           USDT      0.0000001        0.0001</span></span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a><span class="co">#&gt;      &lt;char&gt;   &lt;char&gt;        &lt;char&gt;         &lt;char&gt;          &lt;num&gt;         &lt;num&gt;</span></span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a><span class="co">#&gt; 1: BTC-USDT BTC-USDT           BTC           USDT          1e-08         1e-05</span></span>
+<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a><span class="co">#&gt; 2: ETH-USDT ETH-USDT           ETH           USDT          1e-07         1e-04</span></span>
 <span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a><span class="co">#&gt;    base_max_size quote_increment quote_min_size quote_max_size price_increment</span></span>
-<span id="cb26-6"><a href="#cb26-6" tabindex="-1"></a><span class="co">#&gt;           &lt;char&gt;          &lt;char&gt;         &lt;char&gt;         &lt;char&gt;          &lt;char&gt;</span></span>
-<span id="cb26-7"><a href="#cb26-7" tabindex="-1"></a><span class="co">#&gt; 1:   10000000000        0.000001            0.1       99999999             0.1</span></span>
-<span id="cb26-8"><a href="#cb26-8" tabindex="-1"></a><span class="co">#&gt; 2:   10000000000        0.000001            0.1       99999999            0.01</span></span>
+<span id="cb26-6"><a href="#cb26-6" tabindex="-1"></a><span class="co">#&gt;            &lt;num&gt;           &lt;num&gt;          &lt;num&gt;          &lt;num&gt;           &lt;num&gt;</span></span>
+<span id="cb26-7"><a href="#cb26-7" tabindex="-1"></a><span class="co">#&gt; 1:         1e+10           1e-06            0.1          1e+08            0.10</span></span>
+<span id="cb26-8"><a href="#cb26-8" tabindex="-1"></a><span class="co">#&gt; 2:         1e+10           1e-06            0.1          1e+08            0.01</span></span>
 <span id="cb26-9"><a href="#cb26-9" tabindex="-1"></a><span class="co">#&gt;    fee_currency price_limit_rate min_funds enable_trading market</span></span>
-<span id="cb26-10"><a href="#cb26-10" tabindex="-1"></a><span class="co">#&gt;          &lt;char&gt;           &lt;char&gt;    &lt;char&gt;         &lt;lgcl&gt; &lt;char&gt;</span></span>
+<span id="cb26-10"><a href="#cb26-10" tabindex="-1"></a><span class="co">#&gt;          &lt;char&gt;            &lt;num&gt;     &lt;num&gt;         &lt;lgcl&gt; &lt;char&gt;</span></span>
 <span id="cb26-11"><a href="#cb26-11" tabindex="-1"></a><span class="co">#&gt; 1:         USDT             0.01       0.1           TRUE   USDS</span></span>
 <span id="cb26-12"><a href="#cb26-12" tabindex="-1"></a><span class="co">#&gt; 2:         USDT             0.01       0.1           TRUE   USDS</span></span></code></pre></div>
 </div>
@@ -449,16 +453,16 @@
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lending</span><span class="op">$</span><span class="fu">get_loan_market</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb28"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="co">#&gt;    currency purchase_enable redeem_enable increment min_purchase_size</span></span>
-<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a><span class="co">#&gt;      &lt;char&gt;          &lt;lgcl&gt;        &lt;lgcl&gt;    &lt;char&gt;            &lt;char&gt;</span></span>
-<span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a><span class="co">#&gt; 1:     USDT            TRUE          TRUE      0.01                10</span></span>
-<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a><span class="co">#&gt; 2:      BTC            TRUE          TRUE   0.00001             0.001</span></span>
+<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a><span class="co">#&gt;      &lt;char&gt;          &lt;lgcl&gt;        &lt;lgcl&gt;     &lt;num&gt;             &lt;num&gt;</span></span>
+<span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a><span class="co">#&gt; 1:     USDT            TRUE          TRUE     1e-02             1e+01</span></span>
+<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a><span class="co">#&gt; 2:      BTC            TRUE          TRUE     1e-05             1e-03</span></span>
 <span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a><span class="co">#&gt;    max_purchase_size interest_increment min_interest_rate market_interest_rate</span></span>
-<span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a><span class="co">#&gt;               &lt;char&gt;             &lt;char&gt;            &lt;char&gt;               &lt;char&gt;</span></span>
-<span id="cb28-7"><a href="#cb28-7" tabindex="-1"></a><span class="co">#&gt; 1:           1000000             0.0001             0.004                 0.05</span></span>
-<span id="cb28-8"><a href="#cb28-8" tabindex="-1"></a><span class="co">#&gt; 2:               100             0.0001             0.003                 0.04</span></span>
+<span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a><span class="co">#&gt;                &lt;num&gt;              &lt;num&gt;             &lt;num&gt;                &lt;num&gt;</span></span>
+<span id="cb28-7"><a href="#cb28-7" tabindex="-1"></a><span class="co">#&gt; 1:             1e+06              1e-04             0.004                 0.05</span></span>
+<span id="cb28-8"><a href="#cb28-8" tabindex="-1"></a><span class="co">#&gt; 2:             1e+02              1e-04             0.003                 0.04</span></span>
 <span id="cb28-9"><a href="#cb28-9" tabindex="-1"></a><span class="co">#&gt;    max_interest_rate auto_purchase_enable</span></span>
-<span id="cb28-10"><a href="#cb28-10" tabindex="-1"></a><span class="co">#&gt;               &lt;char&gt;               &lt;lgcl&gt;</span></span>
-<span id="cb28-11"><a href="#cb28-11" tabindex="-1"></a><span class="co">#&gt; 1:               0.1                 TRUE</span></span>
+<span id="cb28-10"><a href="#cb28-10" tabindex="-1"></a><span class="co">#&gt;                &lt;num&gt;               &lt;lgcl&gt;</span></span>
+<span id="cb28-11"><a href="#cb28-11" tabindex="-1"></a><span class="co">#&gt; 1:              0.10                 TRUE</span></span>
 <span id="cb28-12"><a href="#cb28-12" tabindex="-1"></a><span class="co">#&gt; 2:              0.08                 TRUE</span></span></code></pre></div>
 <p>For full margin documentation see <code><a href="articles/margin-trading.html">vignette("margin-trading")</a></code>.</p>
 </div>
@@ -477,41 +481,74 @@
 </h4>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">futures_market</span><span class="op">$</span><span class="fu">get_contract</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb31"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="co">#&gt;      symbol root_symbol   type first_open_date base_currency quote_currency</span></span>
-<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a><span class="co">#&gt;      &lt;char&gt;      &lt;char&gt; &lt;char&gt;           &lt;num&gt;        &lt;char&gt;         &lt;char&gt;</span></span>
-<span id="cb31-3"><a href="#cb31-3" tabindex="-1"></a><span class="co">#&gt; 1: XBTUSDTM        USDT FFWCSX    1.585555e+12           XBT           USDT</span></span>
-<span id="cb31-4"><a href="#cb31-4" tabindex="-1"></a><span class="co">#&gt;    settle_currency max_order_qty max_price lot_size tick_size</span></span>
-<span id="cb31-5"><a href="#cb31-5" tabindex="-1"></a><span class="co">#&gt;             &lt;char&gt;         &lt;int&gt;     &lt;int&gt;    &lt;int&gt;     &lt;num&gt;</span></span>
-<span id="cb31-6"><a href="#cb31-6" tabindex="-1"></a><span class="co">#&gt; 1:            USDT       1000000   1000000        1       0.1</span></span>
-<span id="cb31-7"><a href="#cb31-7" tabindex="-1"></a><span class="co">#&gt;    index_price_tick_size multiplier initial_margin maintain_margin</span></span>
-<span id="cb31-8"><a href="#cb31-8" tabindex="-1"></a><span class="co">#&gt;                    &lt;num&gt;      &lt;num&gt;          &lt;num&gt;           &lt;num&gt;</span></span>
-<span id="cb31-9"><a href="#cb31-9" tabindex="-1"></a><span class="co">#&gt; 1:                  0.01      0.001          0.008           0.004</span></span>
-<span id="cb31-10"><a href="#cb31-10" tabindex="-1"></a><span class="co">#&gt;    max_risk_limit min_risk_limit risk_step maker_fee_rate taker_fee_rate</span></span>
-<span id="cb31-11"><a href="#cb31-11" tabindex="-1"></a><span class="co">#&gt;             &lt;int&gt;          &lt;int&gt;     &lt;int&gt;          &lt;num&gt;          &lt;num&gt;</span></span>
-<span id="cb31-12"><a href="#cb31-12" tabindex="-1"></a><span class="co">#&gt; 1:         100000         100000     50000          2e-04          6e-04</span></span>
-<span id="cb31-13"><a href="#cb31-13" tabindex="-1"></a><span class="co">#&gt;    maker_fix_fee taker_fix_fee is_deleverage is_quanto is_inverse mark_method</span></span>
-<span id="cb31-14"><a href="#cb31-14" tabindex="-1"></a><span class="co">#&gt;            &lt;int&gt;         &lt;int&gt;        &lt;lgcl&gt;    &lt;lgcl&gt;     &lt;lgcl&gt;      &lt;char&gt;</span></span>
-<span id="cb31-15"><a href="#cb31-15" tabindex="-1"></a><span class="co">#&gt; 1:             0             0          TRUE     FALSE      FALSE   FairPrice</span></span>
-<span id="cb31-16"><a href="#cb31-16" tabindex="-1"></a><span class="co">#&gt;    fair_method status funding_fee_rate predicted_funding_fee_rate open_interest</span></span>
-<span id="cb31-17"><a href="#cb31-17" tabindex="-1"></a><span class="co">#&gt;         &lt;char&gt; &lt;char&gt;            &lt;num&gt;                      &lt;num&gt;        &lt;char&gt;</span></span>
-<span id="cb31-18"><a href="#cb31-18" tabindex="-1"></a><span class="co">#&gt; 1: FundingRate   Open            1e-04                      1e-04         27228</span></span>
-<span id="cb31-19"><a href="#cb31-19" tabindex="-1"></a><span class="co">#&gt;    turnover_of24h volume_of24h mark_price index_price last_trade_price</span></span>
-<span id="cb31-20"><a href="#cb31-20" tabindex="-1"></a><span class="co">#&gt;             &lt;num&gt;        &lt;int&gt;      &lt;num&gt;       &lt;num&gt;            &lt;int&gt;</span></span>
-<span id="cb31-21"><a href="#cb31-21" tabindex="-1"></a><span class="co">#&gt; 1:       23472918          239    98252.1    98232.45            98260</span></span>
-<span id="cb31-22"><a href="#cb31-22" tabindex="-1"></a><span class="co">#&gt;    next_funding_rate_time max_leverage funding_rate_symbol low_price high_price</span></span>
-<span id="cb31-23"><a href="#cb31-23" tabindex="-1"></a><span class="co">#&gt;                     &lt;int&gt;        &lt;int&gt;              &lt;char&gt;     &lt;int&gt;      &lt;int&gt;</span></span>
-<span id="cb31-24"><a href="#cb31-24" tabindex="-1"></a><span class="co">#&gt; 1:               21467281          125      .XBTUSDTMFPI8H     96891      99133</span></span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="co">#&gt;      symbol display_symbol root_symbol   type first_open_date expire_date</span></span>
+<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a><span class="co">#&gt;      &lt;char&gt;         &lt;char&gt;      &lt;char&gt; &lt;char&gt;           &lt;num&gt;      &lt;lgcl&gt;</span></span>
+<span id="cb31-3"><a href="#cb31-3" tabindex="-1"></a><span class="co">#&gt; 1: XBTUSDTM       XBTUSDTM        USDT FFWCSX    1.585555e+12          NA</span></span>
+<span id="cb31-4"><a href="#cb31-4" tabindex="-1"></a><span class="co">#&gt;    settle_date base_currency display_base_currency quote_currency</span></span>
+<span id="cb31-5"><a href="#cb31-5" tabindex="-1"></a><span class="co">#&gt;         &lt;lgcl&gt;        &lt;char&gt;                &lt;char&gt;         &lt;char&gt;</span></span>
+<span id="cb31-6"><a href="#cb31-6" tabindex="-1"></a><span class="co">#&gt; 1:          NA           XBT                   XBT           USDT</span></span>
+<span id="cb31-7"><a href="#cb31-7" tabindex="-1"></a><span class="co">#&gt;    settle_currency max_order_qty market_max_order_qty max_price lot_size</span></span>
+<span id="cb31-8"><a href="#cb31-8" tabindex="-1"></a><span class="co">#&gt;             &lt;char&gt;         &lt;int&gt;                &lt;int&gt;     &lt;int&gt;    &lt;int&gt;</span></span>
+<span id="cb31-9"><a href="#cb31-9" tabindex="-1"></a><span class="co">#&gt; 1:            USDT       1000000              1000000   1000000        1</span></span>
+<span id="cb31-10"><a href="#cb31-10" tabindex="-1"></a><span class="co">#&gt;    tick_size index_price_tick_size multiplier initial_margin maintain_margin</span></span>
+<span id="cb31-11"><a href="#cb31-11" tabindex="-1"></a><span class="co">#&gt;        &lt;num&gt;                 &lt;num&gt;      &lt;num&gt;          &lt;num&gt;           &lt;num&gt;</span></span>
+<span id="cb31-12"><a href="#cb31-12" tabindex="-1"></a><span class="co">#&gt; 1:       0.1                  0.01      0.001          0.008           0.004</span></span>
+<span id="cb31-13"><a href="#cb31-13" tabindex="-1"></a><span class="co">#&gt;    max_risk_limit min_risk_limit risk_step maker_fee_rate taker_fee_rate</span></span>
+<span id="cb31-14"><a href="#cb31-14" tabindex="-1"></a><span class="co">#&gt;             &lt;int&gt;          &lt;int&gt;     &lt;int&gt;          &lt;num&gt;          &lt;num&gt;</span></span>
+<span id="cb31-15"><a href="#cb31-15" tabindex="-1"></a><span class="co">#&gt; 1:         100000         100000     50000          2e-04          6e-04</span></span>
+<span id="cb31-16"><a href="#cb31-16" tabindex="-1"></a><span class="co">#&gt;    maker_fix_fee taker_fix_fee settlement_fee is_deleverage is_quanto</span></span>
+<span id="cb31-17"><a href="#cb31-17" tabindex="-1"></a><span class="co">#&gt;            &lt;int&gt;         &lt;int&gt;         &lt;lgcl&gt;        &lt;lgcl&gt;    &lt;lgcl&gt;</span></span>
+<span id="cb31-18"><a href="#cb31-18" tabindex="-1"></a><span class="co">#&gt; 1:             0             0             NA          TRUE     FALSE</span></span>
+<span id="cb31-19"><a href="#cb31-19" tabindex="-1"></a><span class="co">#&gt;    is_inverse mark_method fair_method funding_base_symbol funding_quote_symbol</span></span>
+<span id="cb31-20"><a href="#cb31-20" tabindex="-1"></a><span class="co">#&gt;        &lt;lgcl&gt;      &lt;char&gt;      &lt;char&gt;              &lt;char&gt;               &lt;char&gt;</span></span>
+<span id="cb31-21"><a href="#cb31-21" tabindex="-1"></a><span class="co">#&gt; 1:      FALSE   FairPrice FundingRate           .XBTINT8H           .USDTINT8H</span></span>
+<span id="cb31-22"><a href="#cb31-22" tabindex="-1"></a><span class="co">#&gt;    funding_rate_symbol index_symbol settlement_symbol status funding_fee_rate</span></span>
+<span id="cb31-23"><a href="#cb31-23" tabindex="-1"></a><span class="co">#&gt;                 &lt;char&gt;       &lt;char&gt;            &lt;char&gt; &lt;char&gt;            &lt;num&gt;</span></span>
+<span id="cb31-24"><a href="#cb31-24" tabindex="-1"></a><span class="co">#&gt; 1:      .XBTUSDTMFPI8H    .KXBTUSDT                     Open            1e-04</span></span>
+<span id="cb31-25"><a href="#cb31-25" tabindex="-1"></a><span class="co">#&gt;    predicted_funding_fee_rate daily_interest_rate funding_rate_granularity</span></span>
+<span id="cb31-26"><a href="#cb31-26" tabindex="-1"></a><span class="co">#&gt;                         &lt;num&gt;               &lt;num&gt;                    &lt;int&gt;</span></span>
+<span id="cb31-27"><a href="#cb31-27" tabindex="-1"></a><span class="co">#&gt; 1:                      1e-04               3e-04                 28800000</span></span>
+<span id="cb31-28"><a href="#cb31-28" tabindex="-1"></a><span class="co">#&gt;    funding_rate_cap funding_rate_floor period</span></span>
+<span id="cb31-29"><a href="#cb31-29" tabindex="-1"></a><span class="co">#&gt;               &lt;num&gt;              &lt;num&gt;  &lt;int&gt;</span></span>
+<span id="cb31-30"><a href="#cb31-30" tabindex="-1"></a><span class="co">#&gt; 1:            0.003             -0.003      1</span></span>
+<span id="cb31-31"><a href="#cb31-31" tabindex="-1"></a><span class="co">#&gt;    effective_funding_rate_cycle_start_time current_funding_rate_granularity</span></span>
+<span id="cb31-32"><a href="#cb31-32" tabindex="-1"></a><span class="co">#&gt;                                      &lt;num&gt;                            &lt;int&gt;</span></span>
+<span id="cb31-33"><a href="#cb31-33" tabindex="-1"></a><span class="co">#&gt; 1:                             1.72913e+12                         28800000</span></span>
+<span id="cb31-34"><a href="#cb31-34" tabindex="-1"></a><span class="co">#&gt;    open_interest turnover_of24h volume_of24h mark_price index_price</span></span>
+<span id="cb31-35"><a href="#cb31-35" tabindex="-1"></a><span class="co">#&gt;            &lt;num&gt;          &lt;num&gt;        &lt;int&gt;      &lt;num&gt;       &lt;num&gt;</span></span>
+<span id="cb31-36"><a href="#cb31-36" tabindex="-1"></a><span class="co">#&gt; 1:         27228       23472918          239    98252.1    98232.45</span></span>
+<span id="cb31-37"><a href="#cb31-37" tabindex="-1"></a><span class="co">#&gt;    last_trade_price next_funding_rate_time next_funding_rate_date_time</span></span>
+<span id="cb31-38"><a href="#cb31-38" tabindex="-1"></a><span class="co">#&gt;               &lt;int&gt;                  &lt;int&gt;                       &lt;num&gt;</span></span>
+<span id="cb31-39"><a href="#cb31-39" tabindex="-1"></a><span class="co">#&gt; 1:            98260               21467281                1.729181e+12</span></span>
+<span id="cb31-40"><a href="#cb31-40" tabindex="-1"></a><span class="co">#&gt;    max_leverage    source_exchanges premiums_symbol1_m premiums_symbol8_h</span></span>
+<span id="cb31-41"><a href="#cb31-41" tabindex="-1"></a><span class="co">#&gt;           &lt;int&gt;              &lt;char&gt;             &lt;char&gt;             &lt;char&gt;</span></span>
+<span id="cb31-42"><a href="#cb31-42" tabindex="-1"></a><span class="co">#&gt; 1:          125 okex;binance;kucoin        .XBTUSDTMPI      .XBTUSDTMPI8H</span></span>
+<span id="cb31-43"><a href="#cb31-43" tabindex="-1"></a><span class="co">#&gt;    funding_base_symbol1_m funding_quote_symbol1_m low_price high_price</span></span>
+<span id="cb31-44"><a href="#cb31-44" tabindex="-1"></a><span class="co">#&gt;                    &lt;char&gt;                  &lt;char&gt;     &lt;int&gt;      &lt;int&gt;</span></span>
+<span id="cb31-45"><a href="#cb31-45" tabindex="-1"></a><span class="co">#&gt; 1:                .XBTINT                .USDTINT     96891      99133</span></span>
+<span id="cb31-46"><a href="#cb31-46" tabindex="-1"></a><span class="co">#&gt;    price_chg_pct price_chg     k     m     f mmr_limit mmr_lev_constant</span></span>
+<span id="cb31-47"><a href="#cb31-47" tabindex="-1"></a><span class="co">#&gt;            &lt;num&gt;     &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt;     &lt;num&gt;            &lt;num&gt;</span></span>
+<span id="cb31-48"><a href="#cb31-48" tabindex="-1"></a><span class="co">#&gt; 1:       -0.0028    -169.3   490   300   1.3       0.3              125</span></span>
+<span id="cb31-49"><a href="#cb31-49" tabindex="-1"></a><span class="co">#&gt;    support_cross buy_limit sell_limit adjust_k adjust_m adjust_mmr_lev_constant</span></span>
+<span id="cb31-50"><a href="#cb31-50" tabindex="-1"></a><span class="co">#&gt;           &lt;lgcl&gt;     &lt;num&gt;      &lt;num&gt;   &lt;lgcl&gt;   &lt;lgcl&gt;                  &lt;lgcl&gt;</span></span>
+<span id="cb31-51"><a href="#cb31-51" tabindex="-1"></a><span class="co">#&gt; 1:          TRUE   99232.4    97271.8       NA       NA                      NA</span></span>
+<span id="cb31-52"><a href="#cb31-52" tabindex="-1"></a><span class="co">#&gt;    adjust_active_time cross_risk_limit market_stage pre_market_to_perp_date</span></span>
+<span id="cb31-53"><a href="#cb31-53" tabindex="-1"></a><span class="co">#&gt;                &lt;lgcl&gt;            &lt;int&gt;       &lt;char&gt;                  &lt;lgcl&gt;</span></span>
+<span id="cb31-54"><a href="#cb31-54" tabindex="-1"></a><span class="co">#&gt; 1:                 NA       1500000000       NORMAL                      NA</span></span>
+<span id="cb31-55"><a href="#cb31-55" tabindex="-1"></a><span class="co">#&gt;    order_price_range market_type</span></span>
+<span id="cb31-56"><a href="#cb31-56" tabindex="-1"></a><span class="co">#&gt;                &lt;num&gt;      &lt;char&gt;</span></span>
+<span id="cb31-57"><a href="#cb31-57" tabindex="-1"></a><span class="co">#&gt; 1:              0.05      CRYPTO</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="futures-ticker">Futures Ticker<a class="anchor" aria-label="anchor" href="#futures-ticker"></a>
 </h4>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">futures_market</span><span class="op">$</span><span class="fu">get_ticker</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb33"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="co">#&gt;      sequence   symbol   side  size   price best_bid_size best_bid_price</span></span>
-<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a><span class="co">#&gt;         &lt;int&gt;   &lt;char&gt; &lt;char&gt; &lt;int&gt;  &lt;char&gt;         &lt;int&gt;         &lt;char&gt;</span></span>
-<span id="cb33-3"><a href="#cb33-3" tabindex="-1"></a><span class="co">#&gt; 1: 1729159460 XBTUSDTM   sell     1 98250.0            50        98249.9</span></span>
+<div class="sourceCode" id="cb33"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="co">#&gt;        sequence   symbol   side  size price best_bid_size best_bid_price</span></span>
+<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a><span class="co">#&gt;           &lt;num&gt;   &lt;char&gt; &lt;char&gt; &lt;num&gt; &lt;num&gt;         &lt;num&gt;          &lt;num&gt;</span></span>
+<span id="cb33-3"><a href="#cb33-3" tabindex="-1"></a><span class="co">#&gt; 1: 1.744931e+12 XBTUSDTM   sell     1 98250            50        98249.9</span></span>
 <span id="cb33-4"><a href="#cb33-4" tabindex="-1"></a><span class="co">#&gt;    best_ask_price best_ask_size         trade_id                  ts</span></span>
-<span id="cb33-5"><a href="#cb33-5" tabindex="-1"></a><span class="co">#&gt;            &lt;char&gt;         &lt;int&gt;           &lt;char&gt;              &lt;POSc&gt;</span></span>
+<span id="cb33-5"><a href="#cb33-5" tabindex="-1"></a><span class="co">#&gt;             &lt;num&gt;         &lt;num&gt;           &lt;char&gt;              &lt;POSc&gt;</span></span>
 <span id="cb33-6"><a href="#cb33-6" tabindex="-1"></a><span class="co">#&gt; 1:        98250.1            30 67fd1234abcd5678 2024-10-17 10:04:19</span></span></code></pre></div>
 </div>
 </div>
@@ -526,7 +563,7 @@
 </h4>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">futures_trading</span><span class="op">$</span><span class="fu">add_order_test</span><span class="op">(</span></span>
-<span>  clientOid <span class="op">=</span> <span class="st">"readme-test-001"</span>,</span>
+<span>  client_order_id <span class="op">=</span> <span class="st">"readme-test-001"</span>,</span>
 <span>  symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span>,</span>
 <span>  side <span class="op">=</span> <span class="st">"buy"</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"limit"</span>,</span>
@@ -592,12 +629,12 @@
 <span><span class="kw">while</span> <span class="op">(</span><span class="op">!</span><span class="va">later</span><span class="op">$</span><span class="fu">loop_empty</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">later</span><span class="op">$</span><span class="fu">run_now</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<div class="sourceCode" id="cb40"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a><span class="co">#&gt;                   time      sequence   price       size best_bid best_bid_size</span></span>
-<span id="cb40-2"><a href="#cb40-2" tabindex="-1"></a><span class="co">#&gt;                 &lt;POSc&gt;        &lt;char&gt;  &lt;char&gt;     &lt;char&gt;   &lt;char&gt;        &lt;char&gt;</span></span>
-<span id="cb40-3"><a href="#cb40-3" tabindex="-1"></a><span class="co">#&gt; 1: 2024-10-17 10:04:19 1550467636704 67232.9 0.00007682  67232.8    0.41861839</span></span>
+<div class="sourceCode" id="cb40"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a><span class="co">#&gt;                   time      sequence   price      size best_bid best_bid_size</span></span>
+<span id="cb40-2"><a href="#cb40-2" tabindex="-1"></a><span class="co">#&gt;                 &lt;POSc&gt;        &lt;char&gt;   &lt;num&gt;     &lt;num&gt;    &lt;num&gt;         &lt;num&gt;</span></span>
+<span id="cb40-3"><a href="#cb40-3" tabindex="-1"></a><span class="co">#&gt; 1: 2024-10-17 10:04:19 1550467636704 67232.9 7.682e-05  67232.8     0.4186184</span></span>
 <span id="cb40-4"><a href="#cb40-4" tabindex="-1"></a><span class="co">#&gt;    best_ask best_ask_size</span></span>
-<span id="cb40-5"><a href="#cb40-5" tabindex="-1"></a><span class="co">#&gt;      &lt;char&gt;        &lt;char&gt;</span></span>
-<span id="cb40-6"><a href="#cb40-6" tabindex="-1"></a><span class="co">#&gt; 1:  67232.9    1.24808993</span></span>
+<span id="cb40-5"><a href="#cb40-5" tabindex="-1"></a><span class="co">#&gt;       &lt;num&gt;         &lt;num&gt;</span></span>
+<span id="cb40-6"><a href="#cb40-6" tabindex="-1"></a><span class="co">#&gt; 1:  67232.9       1.24809</span></span>
 <span id="cb40-7"><a href="#cb40-7" tabindex="-1"></a><span class="co">#&gt;               datetime     open     high      low    close   volume turnover</span></span>
 <span id="cb40-8"><a href="#cb40-8" tabindex="-1"></a><span class="co">#&gt;                 &lt;POSc&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;</span></span>
 <span id="cb40-9"><a href="#cb40-9" tabindex="-1"></a><span class="co">#&gt; 1: 2025-07-26 12:00:00 117775.9 118221.2 117766.4 118128.9 264.6461 31241540</span></span>

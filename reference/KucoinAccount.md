@@ -1,5 +1,11 @@
 # KucoinAccount: Account and Funding Management
 
+KucoinAccount: Account and Funding Management
+
+KucoinAccount: Account and Funding Management
+
+## Details
+
 Provides methods for querying account information, balances, and ledger
 history on KuCoin. Inherits from
 [KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
@@ -69,7 +75,7 @@ Funding](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-a
 
 [`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
 -\>
-[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinAccount`
 
 ## Methods
@@ -102,11 +108,11 @@ Funding](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-a
 
 Inherited methods
 
-- [`KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 
-### `KucoinAccount$get_summary()`
+### Method `get_summary()`
 
 Get Account Summary
 
@@ -125,8 +131,8 @@ count, and general account metadata for the authenticated user.
 
 #### Official Documentation
 
-[KuCoin Get Account
-Summary](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-summary-info)
+KuCoin Get Account Summary:
+<https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-summary-info>
 
 Verified: 2026-05-23
 
@@ -176,43 +182,46 @@ Verified: 2026-05-23
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row and columns:
+(data.table \| promise\<data.table\>) one row giving the VIP tier level
+and the sub-account counts (total, spot, margin, futures, option)
+alongside their respective maxima:
 
-- `level` (integer): VIP tier.
+- level (integer \| NA) the VIP tier.
 
-- `sub_quantity` (integer): Total sub-accounts.
+- sub_quantity (integer \| NA) the total number of sub-accounts.
 
-- `max_default_sub_quantity` (integer): Max default sub-accounts.
+- max_default_sub_quantity (integer \| NA) the max default sub-accounts.
 
-- `max_sub_quantity` (integer): Max sub-accounts.
+- max_sub_quantity (integer \| NA) the max sub-accounts.
 
-- `spot_sub_quantity` (integer): Spot sub-accounts.
+- spot_sub_quantity (integer \| NA) the current spot sub-accounts.
 
-- `margin_sub_quantity` (integer): Margin sub-accounts.
+- margin_sub_quantity (integer \| NA) the current margin sub-accounts.
 
-- `futures_sub_quantity` (integer): Futures sub-accounts.
+- futures_sub_quantity (integer \| NA) the current futures sub-accounts.
 
-- `option_sub_quantity` (integer): Option sub-accounts.
+- option_sub_quantity (integer \| NA) the current option sub-accounts.
 
-- `max_spot_sub_quantity` (integer): Max spot sub-accounts.
+- max_spot_sub_quantity (integer \| NA) the max spot sub-accounts.
 
-- `max_margin_sub_quantity` (integer): Max margin sub-accounts.
+- max_margin_sub_quantity (integer \| NA) the max margin sub-accounts.
 
-- `max_futures_sub_quantity` (integer): Max futures sub-accounts.
+- max_futures_sub_quantity (integer \| NA) the max futures sub-accounts.
 
-- `max_option_sub_quantity` (integer): Max option sub-accounts.
+- max_option_sub_quantity (integer \| NA) the max option sub-accounts.
 
 #### Examples
 
+    \dontrun{
     account <- KucoinAccount$new()
     summary <- account$get_summary()
     cat("VIP Level:", summary$level, "\\n")
     cat("Sub-accounts:", summary$sub_quantity, "/", summary$max_sub_quantity, "\\n")
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinAccount$get_apikey_info()`
+### Method `get_apikey_info()`
 
 Get API Key Info
 
@@ -242,8 +251,8 @@ Verified: 2026-05-23
 - **Permission Verification**: Confirm the key has `Trade` permission
   before placing orders in a bot startup routine.
 
-- **IP Whitelist Check**: Validate that the bot's server IP is in
-  `is_master`/`ip_whitelist` to avoid auth failures.
+- **IP Whitelist Check**: Confirm the key's IP-whitelist settings on
+  KuCoin allow the bot's server IP to avoid auth failures.
 
 - **Key Rotation Monitoring**: Use `created_at` to track key age and
   schedule rotation for security.
@@ -279,40 +288,49 @@ Verified: 2026-05-23
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row and columns:
+(data.table \| promise\<data.table\>) one row describing the active API
+key: its label, key ID, version, comma-separated permissions, creation
+datetime (POSIXct, coerced from epoch milliseconds), user ID, whether it
+belongs to the master account, and the account's region, KYC status and
+site type:
 
-- `remark` (character): Key label.
+- remark (character \| NA) an optional remark.
 
-- `api_key` (character): API key ID.
+- api_key (character \| NA) the API key ID.
 
-- `api_version` (integer): Key version.
+- api_version (integer \| NA) the API key version.
 
-- `permission` (character): Comma-separated permissions e.g.
-  `"General,Spot"` (already a single string from KuCoin, not a JSON
-  array; recover the vector with
+- permission (character) the comma-separated permissions, e.g.
+  `"General,Spot"` (a single string from KuCoin, not a JSON array;
+  recover the vector with
   `strsplit(dt$permission[1], ",", fixed = TRUE)[[1]]`).
 
-- `ip_whitelist` (character): Allowed IPs (comma-separated string).
+- created_at (POSIXct) the key creation time (UTC), coerced from epoch
+  milliseconds.
 
-- `created_at` (POSIXct): Key creation datetime (coerced from epoch
-  milliseconds).
+- uid (integer) the user identifier.
 
-- `uid` (numeric): User ID.
+- is_master (logical) TRUE if this is a master-account key.
 
-- `is_master` (logical): TRUE if master account key.
+- region (character \| NA) the account region.
+
+- kyc_status (character \| NA) the KYC verification status.
+
+- site_type (character \| NA) the site type.
 
 #### Examples
 
+    \dontrun{
     account <- KucoinAccount$new()
     key_info <- account$get_apikey_info()
     cat("Permissions:", key_info$permission, "\\n")
-    cat("IP Whitelist:", key_info$ip_whitelist, "\\n")
+    cat("Region:", key_info$region, "\\n")
     cat("Is Master:", key_info$is_master, "\\n")
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinAccount$get_spot_account_type()`
+### Method `get_spot_account_type()`
 
 Get Spot Account Types
 
@@ -335,8 +353,8 @@ are active.
 
 #### Official Documentation
 
-[KuCoin Get Spot Account
-Type](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-type-spot)
+KuCoin Get Spot Account Type:
+<https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-type-spot>
 
 Verified: 2026-05-23
 
@@ -373,22 +391,24 @@ Verified: 2026-05-23
 
 #### Returns
 
-Logical scalar: `TRUE` if the user is a spot high-frequency user (use
-`trade_hf` for transfers/queries), `FALSE` for low-frequency (use
-`trade`). This is a compatibility interface for users who enabled HF
-trading before 2024.
+(scalar\<logical\> \| promise\<scalar\<logical\>\>) TRUE if the user is
+a spot HF user (use `trade_hf` for transfers/queries), FALSE for
+low-frequency (use `trade`). This is a compatibility interface for users
+who enabled HF trading before 2024.
 
 #### Examples
 
+    \dontrun{
     account <- KucoinAccount$new()
     is_hf <- account$get_spot_account_type()
     if (is_hf) {
       cat("HF trading account is active.\n")
     }
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinAccount$get_spot_accounts()`
+### Method `get_spot_accounts()`
 
 Get Spot Account List
 
@@ -410,8 +430,8 @@ account with its current balance, available funds, and holds.
 
 #### Official Documentation
 
-[KuCoin Get Spot Account
-List](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-list-spot)
+KuCoin Get Spot Account List:
+<https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-list-spot>
 
 Verified: 2026-05-23
 
@@ -467,35 +487,31 @@ Verified: 2026-05-23
 
 - `query`:
 
-  Named list; optional filter parameters. Supported keys:
-
-  - `currency` (character): Filter by currency code e.g. `"USDT"`,
-    `"BTC"`.
-
-  - `type` (character): Filter by account type: `"main"`, `"trade"`, or
-    `"margin"`.
+  (list) optional filter parameters. Supported keys: `currency` (filter
+  by currency code e.g. `"USDT"`, `"BTC"`) and `type` (filter by account
+  type: `"main"`, `"trade"`, or `"margin"`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row per spot account, or an
+empty data.table if no accounts match:
 
-- `id` (character): Account ID.
+- id (character) the account identifier.
 
-- `currency` (character): Currency code.
+- currency (character) the currency code.
 
-- `type` (character): Account type.
+- type (character) the account type (`"main"`, `"trade"`, or
+  `"margin"`).
 
-- `balance` (character): Total balance.
+- balance (numeric \| NA) the total balance.
 
-- `available` (character): Available for trading.
+- available (numeric \| NA) the amount available for trading.
 
-- `holds` (character): Amount on hold in open orders.
-
-  Returns an empty `data.table` if no accounts match.
+- holds (numeric \| NA) the amount on hold in open orders.
 
 #### Examples
 
+    \dontrun{
     account <- KucoinAccount$new()
 
     # Get all accounts
@@ -505,10 +521,11 @@ Verified: 2026-05-23
     # Get only USDT trade accounts
     usdt <- account$get_spot_accounts(query = list(currency = "USDT", type = "trade"))
     cat("USDT available:", usdt$available, "\\n")
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinAccount$get_spot_account_detail()`
+### Method `get_spot_account_detail()`
 
 Get Spot Account Detail
 
@@ -529,8 +546,8 @@ holds.
 
 #### Official Documentation
 
-[KuCoin Get Spot Account
-Detail](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-detail-spot)
+KuCoin Get Spot Account Detail:
+<https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-detail-spot>
 
 Verified: 2026-05-23
 
@@ -568,30 +585,33 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinAccount$get_spot_account_detail(accountId)
+    KucoinAccount$get_spot_account_detail(account_id)
 
 #### Arguments
 
-- `accountId`:
+- `account_id`:
 
-  Character; the unique account ID (e.g. `"5bd6e9286d99522a52e458de"`).
-  Obtain account IDs from `get_spot_accounts()`.
+  (scalar\<character\>) the unique account ID (e.g.
+  `"5bd6e9286d99522a52e458de"`). Obtain account IDs from
+  `get_spot_accounts()`.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the currency code,
+total balance, the amount available for use, and the amount held in open
+orders for the requested account:
 
-- `currency` (character): Currency code.
+- currency (character) the currency code.
 
-- `balance` (character): Total balance.
+- balance (numeric \| NA) the total balance.
 
-- `available` (character): Available for use.
+- available (numeric \| NA) the amount available.
 
-- `holds` (character): Amount held in open orders.
+- holds (numeric \| NA) the amount on hold.
 
 #### Examples
 
+    \dontrun{
     account <- KucoinAccount$new()
 
     # First get all accounts to find the ID
@@ -601,10 +621,11 @@ Verified: 2026-05-23
     # Then query the specific account
     detail <- account$get_spot_account_detail(account_id)
     cat("Balance:", detail$balance, "Available:", detail$available, "\\n")
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinAccount$get_cross_margin_account()`
+### Method `get_cross_margin_account()`
 
 Get Cross Margin Account
 
@@ -626,8 +647,8 @@ margin account.
 
 #### Official Documentation
 
-[KuCoin Get Cross Margin
-Account](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-cross-margin)
+KuCoin Get Cross Margin Account:
+<https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-cross-margin>
 
 Verified: 2026-05-23
 
@@ -644,7 +665,8 @@ Verified: 2026-05-23
 
 #### curl
 
-    curl --location --request GET 'https://api.kucoin.com/api/v3/margin/accounts?quoteCurrency=USDT&queryType=MARGIN' \
+    curl --location --request GET \
+      'https://api.kucoin.com/api/v3/margin/accounts?quoteCurrency=USDT&queryType=MARGIN' \
       --header 'KC-API-KEY: your-api-key' \
       --header 'KC-API-SIGN: your-signature' \
       --header 'KC-API-TIMESTAMP: 1729176273859' \
@@ -697,65 +719,33 @@ Verified: 2026-05-23
 
 - `query`:
 
-  Named list; optional filter parameters. Supported keys:
-
-  - `quoteCurrency` (character): Quote currency for valuation e.g.
-    `"USDT"`, `"BTC"`.
-
-  - `queryType` (character): Query type e.g. `"MARGIN"`, `"MARGIN_V2"`.
+  (list) optional filter parameters. Supported keys: `quoteCurrency`
+  (quote currency for valuation e.g. `"USDT"`, `"BTC"`) and `queryType`
+  (query type e.g. `"MARGIN"`, `"MARGIN_V2"`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per currency (Treatment B). The
-account-level summary fields (`total_asset_of_quote_currency`,
-`total_liability_of_quote_currency`, `debt_ratio`, `status`) are
-replicated on every row so the caller never needs a sibling method.
-Columns (subset; the exact set depends on the KuCoin payload):
-
-- `currency` (character): Currency code (e.g. `"USDT"`, `"BTC"`).
-
-- `total` (character): Total balance.
-
-- `available` (character): Available balance.
-
-- `hold` (character): Amount on hold.
-
-- `liability` (character): Total liability.
-
-- `liability_principal` (character): Liability principal.
-
-- `liability_interest` (character): Liability interest.
-
-- `max_borrow_size` (character): Maximum borrowable amount.
-
-- `borrow_enabled` (logical): Whether borrowing is enabled.
-
-- `transfer_in_enabled` (logical): Whether transfer-in is enabled.
-
-- `total_asset_of_quote_currency` (character): Account-level total asset
-  (repeated).
-
-- `total_liability_of_quote_currency` (character): Account-level total
-  liability (repeated).
-
-- `debt_ratio` (character): Account-level debt ratio (repeated).
-
-- `status` (character): Account-level status (repeated).
-
-Returns an empty `data.table` if no margin accounts exist.
+(data.table \| promise\<data.table\>) one row per currency in the
+cross-margin account, each giving the currency code,
+total/available/hold balances, total liability with its principal and
+interest, the maximum borrowable size, and the borrow- and
+transfer-in-enabled flags; the account-level total asset, total
+liability, debt ratio, and status are replicated on every row. Returns
+an empty data.table if no margin accounts exist.
 
 #### Examples
 
+    \dontrun{
     account <- KucoinAccount$new()
     margin <- account$get_cross_margin_account(query = list(quoteCurrency = "USDT"))
     print(margin)
     # Check debt ratio
     cat("Liabilities:", margin[currency == "USDT", liability], "\\n")
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinAccount$get_isolated_margin_account()`
+### Method `get_isolated_margin_account()`
 
 Get Isolated Margin Account
 
@@ -777,8 +767,8 @@ independent balances, liabilities, and risk parameters.
 
 #### Official Documentation
 
-[KuCoin Get Isolated Margin
-Account](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-isolated-margin)
+KuCoin Get Isolated Margin Account:
+<https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-isolated-margin>
 
 Verified: 2026-05-23
 
@@ -795,7 +785,8 @@ Verified: 2026-05-23
 
 #### curl
 
-    curl --location --request GET 'https://api.kucoin.com/api/v3/isolated/accounts?symbol=BTC-USDT&quoteCurrency=USDT&queryType=ISOLATED' \
+    curl --location --request GET \
+      'https://api.kucoin.com/api/v3/isolated/accounts?symbol=BTC-USDT&quoteCurrency=USDT&queryType=ISOLATED' \
       --header 'KC-API-KEY: your-api-key' \
       --header 'KC-API-SIGN: your-signature' \
       --header 'KC-API-TIMESTAMP: 1729176273859' \
@@ -852,103 +843,36 @@ Verified: 2026-05-23
 
 - `query`:
 
-  Named list; optional filter parameters. Supported keys:
-
-  - `symbol` (character): Trading pair e.g. `"BTC-USDT"`. Filter to a
-    specific pair.
-
-  - `quoteCurrency` (character): Quote currency for valuation e.g.
-    `"USDT"`.
-
-  - `queryType` (character): Query type e.g. `"ISOLATED"`,
-    `"ISOLATED_V2"`.
+  (list) optional filter parameters. Supported keys: `symbol` (trading
+  pair e.g. `"BTC-USDT"`, to filter to a specific pair), `quoteCurrency`
+  (quote currency for valuation e.g. `"USDT"`), and `queryType` (query
+  type e.g. `"ISOLATED"`, `"ISOLATED_V2"`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per isolated-margin pair (Treatment B) and
-the nested `baseAsset` / `quoteAsset` objects flattened wide-prefix
-(Treatment C). The account-level fields `total_asset_of_quote_currency`,
-`total_liability_of_quote_currency`, and `timestamp` are replicated on
-every row. Columns:
-
-- `symbol` (character): Isolated pair symbol (e.g. `"BTC-USDT"`).
-
-- `status` (character): Account status (e.g. `"EFFECTIVE"`).
-
-- `debt_ratio` (character): Liability-to-asset ratio.
-
-- `base_asset_currency` (character): Base asset code.
-
-- `base_asset_borrow_enabled` (logical): Whether borrowing the base
-  asset is allowed.
-
-- `base_asset_transfer_in_enabled` (logical): Whether transferring the
-  base asset in is allowed.
-
-- `base_asset_liability` (character): Total base-asset liability.
-
-- `base_asset_liability_principal` (character): Base-asset liability
-  principal.
-
-- `base_asset_liability_interest` (character): Base-asset liability
-  interest.
-
-- `base_asset_total` (character): Base-asset total balance.
-
-- `base_asset_available` (character): Base-asset available balance.
-
-- `base_asset_hold` (character): Base-asset amount on hold.
-
-- `base_asset_max_borrow_size` (character): Base-asset maximum
-  borrowable.
-
-- `quote_asset_currency` (character): Quote asset code.
-
-- `quote_asset_borrow_enabled` (logical): Whether borrowing the quote
-  asset is allowed.
-
-- `quote_asset_transfer_in_enabled` (logical): Whether transferring the
-  quote asset in is allowed.
-
-- `quote_asset_liability` (character): Total quote-asset liability.
-
-- `quote_asset_liability_principal` (character): Quote-asset liability
-  principal.
-
-- `quote_asset_liability_interest` (character): Quote-asset liability
-  interest.
-
-- `quote_asset_total` (character): Quote-asset total balance.
-
-- `quote_asset_available` (character): Quote-asset available balance.
-
-- `quote_asset_hold` (character): Quote-asset amount on hold.
-
-- `quote_asset_max_borrow_size` (character): Quote-asset maximum
-  borrowable.
-
-- `total_asset_of_quote_currency` (character): Account-level total asset
-  (repeated).
-
-- `total_liability_of_quote_currency` (character): Account-level total
-  liability (repeated).
-
-- `timestamp` (POSIXct): Snapshot timestamp (repeated).
-
-Returns an empty `data.table` if no isolated-margin pairs exist.
+(data.table \| promise\<data.table\>) one row per isolated-margin pair,
+each giving the pair symbol, account status, and debt ratio, with the
+nested base-asset and quote-asset objects flattened to wide-prefix
+columns (currency, borrow- and transfer-in-enabled flags, liability with
+principal and interest, total/available/hold balances, and maximum
+borrowable size); the account-level total asset, total liability, and
+snapshot timestamp (POSIXct, coerced from epoch milliseconds) are
+replicated on every row. Returns an empty data.table if no
+isolated-margin pairs exist.
 
 #### Examples
 
+    \dontrun{
     account <- KucoinAccount$new()
     isolated <- account$get_isolated_margin_account(
       query = list(symbol = "BTC-USDT", quoteCurrency = "USDT")
     )
     print(isolated)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinAccount$get_spot_ledger()`
+### Method `get_spot_ledger()`
 
 Get Spot Account Ledger
 
@@ -975,8 +899,8 @@ coerces the `created_at` millisecond timestamp to POSIXct.
 
 #### Official Documentation
 
-[KuCoin Get Account Ledger
-Spot/Margin](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-ledgers-spot-margin)
+KuCoin Get Account Ledger Spot/Margin:
+<https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-ledgers-spot-margin>
 
 Verified: 2026-05-23
 
@@ -993,7 +917,8 @@ Verified: 2026-05-23
 
 #### curl
 
-    curl --location --request GET 'https://api.kucoin.com/api/v1/accounts/ledgers?currency=USDT&direction=in&bizType=Exchange&pageSize=50&currentPage=1' \
+    curl --location --request GET \
+      'https://api.kucoin.com/api/v1/accounts/ledgers?currency=USDT&direction=in&bizType=Exchange' \
       --header 'KC-API-KEY: your-api-key' \
       --header 'KC-API-SIGN: your-signature' \
       --header 'KC-API-TIMESTAMP: 1729176273859' \
@@ -1046,58 +971,53 @@ Verified: 2026-05-23
 
 - `query`:
 
-  Named list; optional filter parameters. Supported keys:
-
-  - `currency` (character): Filter by currency code e.g. `"USDT"`,
-    `"BTC"`.
-
-  - `direction` (character): Filter by direction: `"in"` or `"out"`.
-
-  - `bizType` (character): Business type filter e.g. `"Exchange"`,
-    `"Deposit"`, `"Withdrawal"`, `"Transfer"`, `"Trade_Exchange"`.
-
-  - `startAt` (numeric): Start time in milliseconds (epoch). Inclusive.
-
-  - `endAt` (numeric): End time in milliseconds (epoch). Inclusive.
+  (list) optional filter parameters. Supported keys: `currency` (filter
+  by currency code e.g. `"USDT"`, `"BTC"`), `direction` (filter by
+  direction: `"in"` or `"out"`), `bizType` (business type filter e.g.
+  `"Exchange"`, `"Deposit"`, `"Withdrawal"`, `"Transfer"`,
+  `"Trade_Exchange"`), `startAt` (start time in milliseconds epoch,
+  inclusive), and `endAt` (end time in milliseconds epoch, inclusive).
 
 - `page_size`:
 
-  Integer; number of results per page, between 10 and 500. Default `50`.
+  (scalar\<count in \[1, Inf\]\>) number of results per page, between 10
+  and 500 (default 50).
 
 - `max_pages`:
 
-  Numeric; maximum number of pages to fetch. Default `Inf` (fetch all
-  pages). Set to a finite number to limit API calls.
+  (scalar\<numeric in \[1, Inf\]\>) maximum number of pages to fetch
+  (default `Inf` for all pages). Set to a finite number to limit API
+  calls.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row per ledger entry, or an
+empty data.table if no entries match:
 
-- `id` (character): Ledger entry ID.
+- id (character) the ledger entry id.
 
-- `currency` (character): Currency code.
+- currency (character) the currency code.
 
-- `amount` (character): Transaction amount.
+- amount (numeric \| NA) the transaction amount.
 
-- `fee` (character): Fee charged.
+- fee (numeric \| NA) the fee charged.
 
-- `balance` (character): Balance after transaction.
+- balance (numeric \| NA) the balance after the transaction.
 
-- `account_type` (character): Account type e.g. `"TRADE"`, `"MAIN"`.
+- account_type (character) the account type (e.g. `"TRADE"`, `"MAIN"`).
 
-- `biz_type` (character): Business type.
+- biz_type (character) the business type.
 
-- `direction` (character): `"in"` or `"out"`.
+- direction (character) the direction, `"in"` or `"out"`.
 
-- `context` (character): JSON metadata.
+- context (character \| NA) the JSON context metadata.
 
-- `created_at` (POSIXct): Coerced from epoch milliseconds.
-
-  Returns an empty `data.table` if no ledger entries match.
+- created_at (POSIXct) the entry creation time (UTC), coerced from epoch
+  milliseconds.
 
 #### Examples
 
+    \dontrun{
     account <- KucoinAccount$new()
 
     # Get recent USDT trade ledger entries
@@ -1114,10 +1034,11 @@ Verified: 2026-05-23
       query = list(startAt = now_ms - 86400000, endAt = now_ms)
     )
     print(ledger_24h[, .(currency, amount, direction, created_at)])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinAccount$get_hf_ledger()`
+### Method `get_hf_ledger()`
 
 Get HF Trading Account Ledger
 
@@ -1131,8 +1052,8 @@ a rolling 7-day window.
 
 #### Official Documentation
 
-[KuCoin Get Account Ledgers
-Trade_hf](https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-ledgers-tradehf)
+KuCoin Get Account Ledgers Trade_hf:
+<https://www.kucoin.com/docs-new/rest/account-info/account-funding/get-account-ledgers-tradehf>
 
 Verified: 2026-05-23
 
@@ -1196,81 +1117,86 @@ Verified: 2026-05-23
     KucoinAccount$get_hf_ledger(
       currency = NULL,
       direction = NULL,
-      bizType = NULL,
-      lastId = NULL,
+      biz_type = NULL,
+      last_id = NULL,
       limit = NULL,
-      startAt = NULL,
-      endAt = NULL
+      start_at = NULL,
+      end_at = NULL
     )
 
 #### Arguments
 
 - `currency`:
 
-  Character or NULL; filter by currency (supports up to 10
+  (scalar\<character\> \| NULL) filter by currency (supports up to 10
   comma-separated).
 
 - `direction`:
 
-  Character or NULL; `"in"` or `"out"`.
+  (scalar\<character\> \| NULL) `"in"` or `"out"`.
 
-- `bizType`:
+- `biz_type`:
 
-  Character or NULL; transaction type: `"TRADE_EXCHANGE"`, `"TRANSFER"`,
-  `"SUB_TRANSFER"`, `"RETURNED_FEES"`, `"DEDUCTION_FEES"`, `"OTHER"`.
+  (scalar\<character\> \| NULL) transaction type: `"TRADE_EXCHANGE"`,
+  `"TRANSFER"`, `"SUB_TRANSFER"`, `"RETURNED_FEES"`, `"DEDUCTION_FEES"`,
+  `"OTHER"`.
 
-- `lastId`:
+- `last_id`:
 
-  Character or NULL; pagination cursor for fetching previous batches.
+  (scalar\<character\> \| NULL) pagination cursor for fetching previous
+  batches.
 
 - `limit`:
 
-  Integer or NULL; results per page (default 100, max 200).
+  (scalar\<count\> \| NULL) results per page (default 100, max 200).
 
-- `startAt`:
+- `start_at`:
 
-  Integer or NULL; start timestamp in milliseconds.
+  (scalar\<numeric\> \| NULL) start timestamp in milliseconds.
 
-- `endAt`:
+- `end_at`:
 
-  Integer or NULL; end timestamp in milliseconds.
+  (scalar\<numeric\> \| NULL) end timestamp in milliseconds.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row per ledger entry, or an
+empty data.table if no entries match:
 
-- `id` (character): Ledger entry ID.
+- id (character) the ledger entry id.
 
-- `currency` (character): Currency code.
+- currency (character) the currency code.
 
-- `amount` (character): Transaction amount.
+- amount (numeric \| NA) the transaction amount.
 
-- `fee` (character): Fee charged.
+- fee (numeric \| NA) the fee charged.
 
-- `tax` (character): Tax amount.
+- tax (numeric \| NA) the tax amount.
 
-- `balance` (character): Balance after transaction.
+- balance (numeric \| NA) the balance after the transaction.
 
-- `account_type` (character): Account type.
+- account_type (character) the account type.
 
-- `biz_type` (character): Business type.
+- biz_type (character) the business type.
 
-- `direction` (character): `"in"` or `"out"`.
+- direction (character) the direction, `"in"` or `"out"`.
 
-- `context` (character): JSON metadata.
+- context (character \| NA) the JSON context metadata.
 
-- `created_at` (POSIXct): Coerced from epoch milliseconds.
+- created_at (POSIXct) the entry creation time (UTC), coerced from epoch
+  milliseconds.
 
 #### Examples
 
+    \dontrun{
     account <- KucoinAccount$new()
     hf <- account$get_hf_ledger(currency = "USDT", bizType = "TRADE_EXCHANGE")
     print(hf[, .(currency, amount, fee, direction, created_at)])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinAccount$get_base_fee_rate()`
+### Method `get_base_fee_rate()`
 
 Get Base Fee Rate
 
@@ -1317,32 +1243,34 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinAccount$get_base_fee_rate(currencyType = NULL)
+    KucoinAccount$get_base_fee_rate(currency_type = NULL)
 
 #### Arguments
 
-- `currencyType`:
+- `currency_type`:
 
-  Integer or NULL; `0` for crypto (default), `1` for fiat.
+  (scalar\<count\> \| NULL) `0` for crypto (default), `1` for fiat.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the base taker fee
+rate and the base maker fee rate:
 
-- `taker_fee_rate` (character): Base taker fee rate.
+- taker_fee_rate (numeric \| NA) the taker fee rate.
 
-- `maker_fee_rate` (character): Base maker fee rate.
+- maker_fee_rate (numeric \| NA) the maker fee rate.
 
 #### Examples
 
+    \dontrun{
     account <- KucoinAccount$new()
     fees <- account$get_base_fee_rate()
     cat("Taker:", fees$taker_fee_rate, "Maker:", fees$maker_fee_rate, "\n")
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinAccount$get_fee_rate()`
+### Method `get_fee_rate()`
 
 Get Actual Fee Rate
 
@@ -1406,29 +1334,32 @@ Verified: 2026-05-23
 
 - `symbols`:
 
-  Character; comma-separated trading pairs (max 10), e.g.
+  (scalar\<character\>) comma-separated trading pairs (max 10), e.g.
   `"BTC-USDT,ETH-USDT"`.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row per trading pair, each
+giving the pair symbol, the actual taker fee rate, and the actual maker
+fee rate:
 
-- `symbol` (character): Trading pair.
+- symbol (character) the trading pair symbol.
 
-- `taker_fee_rate` (character): Actual taker fee rate.
+- taker_fee_rate (numeric \| NA) the taker fee rate.
 
-- `maker_fee_rate` (character): Actual maker fee rate.
+- maker_fee_rate (numeric \| NA) the maker fee rate.
 
 #### Examples
 
+    \dontrun{
     account <- KucoinAccount$new()
     fees <- account$get_fee_rate("BTC-USDT,ETH-USDT")
     print(fees[, .(symbol, taker_fee_rate, maker_fee_rate)])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinAccount$clone()`
+### Method `clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -1463,7 +1394,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_summary()`
+## Method `KucoinAccount$get_summary`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1474,19 +1405,19 @@ cat("Sub-accounts:", summary$sub_quantity, "/", summary$max_sub_quantity, "\\n")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_apikey_info()`
+## Method `KucoinAccount$get_apikey_info`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
 account <- KucoinAccount$new()
 key_info <- account$get_apikey_info()
 cat("Permissions:", key_info$permission, "\\n")
-cat("IP Whitelist:", key_info$ip_whitelist, "\\n")
+cat("Region:", key_info$region, "\\n")
 cat("Is Master:", key_info$is_master, "\\n")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_spot_account_type()`
+## Method `KucoinAccount$get_spot_account_type`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1498,7 +1429,7 @@ if (is_hf) {
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_spot_accounts()`
+## Method `KucoinAccount$get_spot_accounts`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1514,7 +1445,7 @@ cat("USDT available:", usdt$available, "\\n")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_spot_account_detail()`
+## Method `KucoinAccount$get_spot_account_detail`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1530,7 +1461,7 @@ cat("Balance:", detail$balance, "Available:", detail$available, "\\n")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_cross_margin_account()`
+## Method `KucoinAccount$get_cross_margin_account`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1542,7 +1473,7 @@ cat("Liabilities:", margin[currency == "USDT", liability], "\\n")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_isolated_margin_account()`
+## Method `KucoinAccount$get_isolated_margin_account`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1554,7 +1485,7 @@ print(isolated)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_spot_ledger()`
+## Method `KucoinAccount$get_spot_ledger`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1577,7 +1508,7 @@ print(ledger_24h[, .(currency, amount, direction, created_at)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_hf_ledger()`
+## Method `KucoinAccount$get_hf_ledger`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1587,7 +1518,7 @@ print(hf[, .(currency, amount, fee, direction, created_at)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_base_fee_rate()`
+## Method `KucoinAccount$get_base_fee_rate`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1597,7 +1528,7 @@ cat("Taker:", fees$taker_fee_rate, "Maker:", fees$maker_fee_rate, "\n")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinAccount$get_fee_rate()`
+## Method `KucoinAccount$get_fee_rate`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

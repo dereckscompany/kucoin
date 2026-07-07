@@ -1,5 +1,11 @@
 # KucoinMarginTrading: Margin Order and Debit Management
 
+KucoinMarginTrading: Margin Order and Debit Management
+
+KucoinMarginTrading: Margin Order and Debit Management
+
+## Details
+
 Provides intent-based methods for margin trading on KuCoin. Instead of
 raw `side = "buy"` / `side = "sell"` parameters (which are ambiguous in
 a margin context), this class exposes four clear actions:
@@ -69,7 +75,7 @@ Trading](https://www.kucoin.com/docs-new/rest/margin-trading/orders/add-order)
 
 [`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
 -\>
-[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinMarginTrading`
 
 ## Methods
@@ -102,11 +108,11 @@ Trading](https://www.kucoin.com/docs-new/rest/margin-trading/orders/add-order)
 
 Inherited methods
 
-- [`KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 
-### `KucoinMarginTrading$open_short()`
+### Method `open_short()`
 
 Open a Short Position (Borrow and Sell)
 
@@ -145,7 +151,9 @@ Verified: 2026-05-23
       --header 'KC-API-TIMESTAMP: 1729176273859' \
       --header 'KC-API-PASSPHRASE: your-passphrase' \
       --header 'KC-API-KEY-VERSION: 2' \
-      --data-raw '{"clientOid":"my-short-001","side":"sell","symbol":"BTC-USDT","type":"market","size":"0.001","autoBorrow":true,"autoRepay":false}'
+      --data-raw \
+      '{"clientOid":"my-short-001","side":"sell","symbol":"BTC-USDT","type":"market","size":"0.001",
+      "autoBorrow":true,"autoRepay":false}'
 
 #### JSON Request
 
@@ -179,16 +187,16 @@ Verified: 2026-05-23
       funds = NULL,
       type = "market",
       price = NULL,
-      isIsolated = FALSE,
-      clientOid = NULL,
+      is_isolated = FALSE,
+      client_order_id = NULL,
       stp = NULL,
       remark = NULL,
-      timeInForce = NULL,
-      cancelAfter = NULL,
-      postOnly = NULL,
+      time_in_force = NULL,
+      cancel_after = NULL,
+      post_only = NULL,
       hidden = NULL,
       iceberg = NULL,
-      visibleSize = NULL,
+      visible_size = NULL,
       dry_run = FALSE
     )
 
@@ -196,93 +204,89 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; trading pair to short (e.g., `"BTC-USDT"`). You will borrow
-  and sell the base currency (BTC in this example).
+  (scalar\<character\>) trading pair to short (e.g., `"BTC-USDT"`). You
+  will borrow and sell the base currency (BTC in this example).
 
 - `size`:
 
-  Numeric or NULL; quantity of the base asset to short. For market
-  orders, specify either `size` (base qty) or `funds` (quote qty), not
-  both.
+  (scalar\<numeric\> \| NULL) quantity of the base asset to short. For
+  market orders, specify either `size` (base qty) or `funds` (quote
+  qty), not both.
 
 - `funds`:
 
-  Numeric or NULL; amount in quote currency to receive from the short
-  sale. Only for market orders; mutually exclusive with `size`.
+  (scalar\<numeric\> \| NULL) amount in quote currency to receive from
+  the short sale. Only for market orders; mutually exclusive with
+  `size`.
 
 - `type`:
 
-  Character; `"limit"` or `"market"` (default `"market"`).
+  (scalar\<character\>) `"limit"` or `"market"` (default `"market"`).
 
 - `price`:
 
-  Numeric or NULL; required for limit orders. The price at which to
-  sell.
+  (scalar\<numeric\> \| NULL) required for limit orders. The price at
+  which to sell.
 
-- `isIsolated`:
+- `is_isolated`:
 
-  Logical; `TRUE` for isolated margin (risk limited to this pair),
-  `FALSE` (default) for cross margin (shared collateral pool).
+  (scalar\<logical\>) `TRUE` for isolated margin (risk limited to this
+  pair), `FALSE` (default) for cross margin (shared collateral pool).
 
-- `clientOid`:
+- `client_order_id`:
 
-  Character or NULL; your own unique order ID (max 40 chars).
+  (scalar\<character\> \| NULL) your own unique order ID (max 40 chars).
   Auto-generated if not provided (required by KuCoin for margin orders).
 
 - `stp`:
 
-  Character or NULL; self-trade prevention: `"CN"`, `"CO"`, `"CB"`,
-  `"DC"`.
+  (scalar\<character\> \| NULL) self-trade prevention: `"CN"`, `"CO"`,
+  `"CB"`, `"DC"`.
 
 - `remark`:
 
-  Character or NULL; order remark (max 20 ASCII chars).
+  (scalar\<character\> \| NULL) order remark (max 20 ASCII chars).
 
-- `timeInForce`:
+- `time_in_force`:
 
-  Character or NULL; `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
+  (scalar\<character\> \| NULL) `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
 
-- `cancelAfter`:
+- `cancel_after`:
 
-  Numeric or NULL; auto-cancel seconds (requires `timeInForce = "GTT"`).
+  (scalar\<numeric\> \| NULL) auto-cancel seconds (requires
+  `timeInForce = "GTT"`).
 
-- `postOnly`:
+- `post_only`:
 
-  Logical or NULL; if TRUE, order rejected if it would match
+  (scalar\<logical\> \| NULL) if TRUE, order rejected if it would match
   immediately.
 
 - `hidden`:
 
-  Logical or NULL; if TRUE, order hidden from order book.
+  (scalar\<logical\> \| NULL) if TRUE, order hidden from order book.
 
 - `iceberg`:
 
-  Logical or NULL; if TRUE, only `visibleSize` is shown.
+  (scalar\<logical\> \| NULL) if TRUE, only `visibleSize` is shown.
 
-- `visibleSize`:
+- `visible_size`:
 
-  Numeric or NULL; visible quantity for iceberg orders.
+  (scalar\<numeric\> \| NULL) visible quantity for iceberg orders.
 
 - `dry_run`:
 
-  Logical; if `TRUE`, validates the order without actually placing it.
-  Useful for testing your parameters. Default `FALSE`.
+  (scalar\<logical\>) if `TRUE`, validates the order without actually
+  placing it. Useful for testing your parameters. Default `FALSE`.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
-
-- `order_id` (character): KuCoin-assigned order identifier.
-
-- `client_oid` (character): Client-provided order identifier.
-
-- `borrow_size` (character): Amount borrowed.
-
-- `loan_apply_id` (character): Loan application ID.
+(data.table \| promise\<data.table\>) one row giving the KuCoin-assigned
+order identifier, the client-provided order identifier, the amount
+borrowed, and the loan application ID.
 
 #### Examples
 
+    \dontrun{
     margin <- KucoinMarginTrading$new()
 
     # Market short: sell 0.001 BTC you don't own
@@ -296,10 +300,11 @@ Verified: 2026-05-23
 
     # Dry run (test without placing)
     margin$open_short(symbol = "BTC-USDT", size = 0.001, dry_run = TRUE)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarginTrading$close_short()`
+### Method `close_short()`
 
 Close a Short Position (Buy Back and Repay)
 
@@ -334,7 +339,9 @@ Verified: 2026-05-23
       --header 'KC-API-TIMESTAMP: 1729176273859' \
       --header 'KC-API-PASSPHRASE: your-passphrase' \
       --header 'KC-API-KEY-VERSION: 2' \
-      --data-raw '{"clientOid":"my-close-short-001","side":"buy","symbol":"BTC-USDT","type":"market","size":"0.001","autoBorrow":false,"autoRepay":true}'
+      --data-raw \
+      '{"clientOid":"my-close-short-001","side":"buy","symbol":"BTC-USDT","type":"market","size":"0.001",
+      "autoBorrow":false,"autoRepay":true}'
 
 #### JSON Request
 
@@ -366,16 +373,16 @@ Verified: 2026-05-23
       funds = NULL,
       type = "market",
       price = NULL,
-      isIsolated = FALSE,
-      clientOid = NULL,
+      is_isolated = FALSE,
+      client_order_id = NULL,
       stp = NULL,
       remark = NULL,
-      timeInForce = NULL,
-      cancelAfter = NULL,
-      postOnly = NULL,
+      time_in_force = NULL,
+      cancel_after = NULL,
+      post_only = NULL,
       hidden = NULL,
       iceberg = NULL,
-      visibleSize = NULL,
+      visible_size = NULL,
       dry_run = FALSE
     )
 
@@ -383,90 +390,94 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; trading pair to close (must match the pair you shorted).
+  (scalar\<character\>) trading pair to close (must match the pair you
+  shorted).
 
 - `size`:
 
-  Numeric or NULL; quantity of the base asset to buy back. Should match
-  the size you shorted. For market orders, specify either `size` or
-  `funds`, not both.
+  (scalar\<numeric\> \| NULL) quantity of the base asset to buy back.
+  Should match the size you shorted. For market orders, specify either
+  `size` or `funds`, not both.
 
 - `funds`:
 
-  Numeric or NULL; amount in quote currency to spend buying back. Only
-  for market orders; mutually exclusive with `size`.
+  (scalar\<numeric\> \| NULL) amount in quote currency to spend buying
+  back. Only for market orders; mutually exclusive with `size`.
 
 - `type`:
 
-  Character; `"limit"` or `"market"` (default `"market"`).
+  (scalar\<character\>) `"limit"` or `"market"` (default `"market"`).
 
 - `price`:
 
-  Numeric or NULL; required for limit orders.
+  (scalar\<numeric\> \| NULL) required for limit orders.
 
-- `isIsolated`:
+- `is_isolated`:
 
-  Logical; must match the margin mode used in `open_short()`.
+  (scalar\<logical\>) must match the margin mode used in `open_short()`.
 
-- `clientOid`:
+- `client_order_id`:
 
-  Character or NULL; your own unique order ID.
+  (scalar\<character\> \| NULL) your own unique order ID.
 
 - `stp`:
 
-  Character or NULL; self-trade prevention.
+  (scalar\<character\> \| NULL) self-trade prevention.
 
 - `remark`:
 
-  Character or NULL; order remark.
+  (scalar\<character\> \| NULL) order remark.
 
-- `timeInForce`:
+- `time_in_force`:
 
-  Character or NULL; `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
+  (scalar\<character\> \| NULL) `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
 
-- `cancelAfter`:
+- `cancel_after`:
 
-  Numeric or NULL; auto-cancel seconds.
+  (scalar\<numeric\> \| NULL) auto-cancel seconds.
 
-- `postOnly`:
+- `post_only`:
 
-  Logical or NULL; passive order flag.
+  (scalar\<logical\> \| NULL) passive order flag.
 
 - `hidden`:
 
-  Logical or NULL; hidden order flag.
+  (scalar\<logical\> \| NULL) hidden order flag.
 
 - `iceberg`:
 
-  Logical or NULL; iceberg order flag.
+  (scalar\<logical\> \| NULL) iceberg order flag.
 
-- `visibleSize`:
+- `visible_size`:
 
-  Numeric or NULL; visible quantity for iceberg.
+  (scalar\<numeric\> \| NULL) visible quantity for iceberg.
 
 - `dry_run`:
 
-  Logical; if `TRUE`, validates without placing. Default `FALSE`.
+  (scalar\<logical\>) if `TRUE`, validates without placing. Default
+  `FALSE`.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the KuCoin-assigned
+order identifier and the client-provided order identifier (NA if not
+supplied):
 
-- `order_id` (character): KuCoin-assigned order identifier.
+- order_id (character) the system order identifier.
 
-- `client_oid` (character): Client-provided order identifier (NA if not
-  supplied).
+- client_oid (character \| NA) the client-supplied order identifier.
 
 #### Examples
 
+    \dontrun{
     margin <- KucoinMarginTrading$new()
     order <- margin$close_short(symbol = "BTC-USDT", size = 0.001)
     print(order)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarginTrading$open_long()`
+### Method `open_long()`
 
 Open a Leveraged Long Position (Borrow and Buy)
 
@@ -504,7 +515,9 @@ Verified: 2026-05-23
       --header 'KC-API-TIMESTAMP: 1729176273859' \
       --header 'KC-API-PASSPHRASE: your-passphrase' \
       --header 'KC-API-KEY-VERSION: 2' \
-      --data-raw '{"clientOid":"my-long-001","side":"buy","symbol":"BTC-USDT","type":"market","size":"0.001","autoBorrow":true,"autoRepay":false}'
+      --data-raw \
+      '{"clientOid":"my-long-001","side":"buy","symbol":"BTC-USDT","type":"market","size":"0.001","autoBorrow":true,
+      "autoRepay":false}'
 
 #### JSON Request
 
@@ -538,16 +551,16 @@ Verified: 2026-05-23
       funds = NULL,
       type = "market",
       price = NULL,
-      isIsolated = FALSE,
-      clientOid = NULL,
+      is_isolated = FALSE,
+      client_order_id = NULL,
       stp = NULL,
       remark = NULL,
-      timeInForce = NULL,
-      cancelAfter = NULL,
-      postOnly = NULL,
+      time_in_force = NULL,
+      cancel_after = NULL,
+      post_only = NULL,
       hidden = NULL,
       iceberg = NULL,
-      visibleSize = NULL,
+      visible_size = NULL,
       dry_run = FALSE
     )
 
@@ -555,85 +568,85 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; trading pair to go long on (e.g., `"BTC-USDT"`). You will
-  borrow quote currency (USDT) and buy the base (BTC).
+  (scalar\<character\>) trading pair to go long on (e.g., `"BTC-USDT"`).
+  You will borrow quote currency (USDT) and buy the base (BTC).
 
 - `size`:
 
-  Numeric or NULL; quantity of the base asset to buy.
+  (scalar\<numeric\> \| NULL) quantity of the base asset to buy.
 
 - `funds`:
 
-  Numeric or NULL; amount in quote currency to spend. Only for market
-  orders; mutually exclusive with `size`.
+  (scalar\<numeric\> \| NULL) amount in quote currency to spend. Only
+  for market orders; mutually exclusive with `size`.
 
 - `type`:
 
-  Character; `"limit"` or `"market"` (default `"market"`).
+  (scalar\<character\>) `"limit"` or `"market"` (default `"market"`).
 
 - `price`:
 
-  Numeric or NULL; required for limit orders.
+  (scalar\<numeric\> \| NULL) required for limit orders.
 
-- `isIsolated`:
+- `is_isolated`:
 
-  Logical; `TRUE` for isolated margin, `FALSE` (default) for cross.
+  (scalar\<logical\>) `TRUE` for isolated margin, `FALSE` (default) for
+  cross.
 
-- `clientOid`:
+- `client_order_id`:
 
-  Character or NULL; your own unique order ID.
+  (scalar\<character\> \| NULL) your own unique order ID.
 
 - `stp`:
 
-  Character or NULL; self-trade prevention.
+  (scalar\<character\> \| NULL) self-trade prevention.
 
 - `remark`:
 
-  Character or NULL; order remark.
+  (scalar\<character\> \| NULL) order remark.
 
-- `timeInForce`:
+- `time_in_force`:
 
-  Character or NULL; `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
+  (scalar\<character\> \| NULL) `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
 
-- `cancelAfter`:
+- `cancel_after`:
 
-  Numeric or NULL; auto-cancel seconds.
+  (scalar\<numeric\> \| NULL) auto-cancel seconds.
 
-- `postOnly`:
+- `post_only`:
 
-  Logical or NULL; passive order flag.
+  (scalar\<logical\> \| NULL) passive order flag.
 
 - `hidden`:
 
-  Logical or NULL; hidden order flag.
+  (scalar\<logical\> \| NULL) hidden order flag.
 
 - `iceberg`:
 
-  Logical or NULL; iceberg order flag.
+  (scalar\<logical\> \| NULL) iceberg order flag.
 
-- `visibleSize`:
+- `visible_size`:
 
-  Numeric or NULL; visible quantity for iceberg.
+  (scalar\<numeric\> \| NULL) visible quantity for iceberg.
 
 - `dry_run`:
 
-  Logical; if `TRUE`, validates without placing. Default `FALSE`.
+  (scalar\<logical\>) if `TRUE`, validates without placing. Default
+  `FALSE`.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the KuCoin-assigned
+order identifier, the client-provided order identifier, the amount
+borrowed, and the loan application ID:
 
-- `order_id` (character): KuCoin-assigned order identifier.
+- order_id (character) the system order identifier.
 
-- `client_oid` (character): Client-provided order identifier.
-
-- `borrow_size` (character): Amount borrowed.
-
-- `loan_apply_id` (character): Loan application ID.
+- client_oid (character \| NA) the client-supplied order identifier.
 
 #### Examples
 
+    \dontrun{
     margin <- KucoinMarginTrading$new()
 
     # Market long: buy 0.001 BTC with borrowed USDT
@@ -644,10 +657,11 @@ Verified: 2026-05-23
       symbol = "BTC-USDT", type = "limit",
       price = 50000, size = 0.001
     )
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarginTrading$close_long()`
+### Method `close_long()`
 
 Close a Leveraged Long Position (Sell and Repay)
 
@@ -682,7 +696,9 @@ Verified: 2026-05-23
       --header 'KC-API-TIMESTAMP: 1729176273859' \
       --header 'KC-API-PASSPHRASE: your-passphrase' \
       --header 'KC-API-KEY-VERSION: 2' \
-      --data-raw '{"clientOid":"my-close-long-001","side":"sell","symbol":"BTC-USDT","type":"market","size":"0.001","autoBorrow":false,"autoRepay":true}'
+      --data-raw \
+      '{"clientOid":"my-close-long-001","side":"sell","symbol":"BTC-USDT","type":"market","size":"0.001",
+      "autoBorrow":false,"autoRepay":true}'
 
 #### JSON Request
 
@@ -714,16 +730,16 @@ Verified: 2026-05-23
       funds = NULL,
       type = "market",
       price = NULL,
-      isIsolated = FALSE,
-      clientOid = NULL,
+      is_isolated = FALSE,
+      client_order_id = NULL,
       stp = NULL,
       remark = NULL,
-      timeInForce = NULL,
-      cancelAfter = NULL,
-      postOnly = NULL,
+      time_in_force = NULL,
+      cancel_after = NULL,
+      post_only = NULL,
       hidden = NULL,
       iceberg = NULL,
-      visibleSize = NULL,
+      visible_size = NULL,
       dry_run = FALSE
     )
 
@@ -731,88 +747,92 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; trading pair to close (must match the pair you longed).
+  (scalar\<character\>) trading pair to close (must match the pair you
+  longed).
 
 - `size`:
 
-  Numeric or NULL; quantity of the base asset to sell.
+  (scalar\<numeric\> \| NULL) quantity of the base asset to sell.
 
 - `funds`:
 
-  Numeric or NULL; amount in quote currency. Only for market orders;
-  mutually exclusive with `size`.
+  (scalar\<numeric\> \| NULL) amount in quote currency. Only for market
+  orders; mutually exclusive with `size`.
 
 - `type`:
 
-  Character; `"limit"` or `"market"` (default `"market"`).
+  (scalar\<character\>) `"limit"` or `"market"` (default `"market"`).
 
 - `price`:
 
-  Numeric or NULL; required for limit orders.
+  (scalar\<numeric\> \| NULL) required for limit orders.
 
-- `isIsolated`:
+- `is_isolated`:
 
-  Logical; must match the margin mode used in `open_long()`.
+  (scalar\<logical\>) must match the margin mode used in `open_long()`.
 
-- `clientOid`:
+- `client_order_id`:
 
-  Character or NULL; your own unique order ID.
+  (scalar\<character\> \| NULL) your own unique order ID.
 
 - `stp`:
 
-  Character or NULL; self-trade prevention.
+  (scalar\<character\> \| NULL) self-trade prevention.
 
 - `remark`:
 
-  Character or NULL; order remark.
+  (scalar\<character\> \| NULL) order remark.
 
-- `timeInForce`:
+- `time_in_force`:
 
-  Character or NULL; `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
+  (scalar\<character\> \| NULL) `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
 
-- `cancelAfter`:
+- `cancel_after`:
 
-  Numeric or NULL; auto-cancel seconds.
+  (scalar\<numeric\> \| NULL) auto-cancel seconds.
 
-- `postOnly`:
+- `post_only`:
 
-  Logical or NULL; passive order flag.
+  (scalar\<logical\> \| NULL) passive order flag.
 
 - `hidden`:
 
-  Logical or NULL; hidden order flag.
+  (scalar\<logical\> \| NULL) hidden order flag.
 
 - `iceberg`:
 
-  Logical or NULL; iceberg order flag.
+  (scalar\<logical\> \| NULL) iceberg order flag.
 
-- `visibleSize`:
+- `visible_size`:
 
-  Numeric or NULL; visible quantity for iceberg.
+  (scalar\<numeric\> \| NULL) visible quantity for iceberg.
 
 - `dry_run`:
 
-  Logical; if `TRUE`, validates without placing. Default `FALSE`.
+  (scalar\<logical\>) if `TRUE`, validates without placing. Default
+  `FALSE`.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the KuCoin-assigned
+order identifier and the client-provided order identifier (NA if not
+supplied):
 
-- `order_id` (character): KuCoin-assigned order identifier.
+- order_id (character) the system order identifier.
 
-- `client_oid` (character): Client-provided order identifier (NA if not
-  supplied).
+- client_oid (character \| NA) the client-supplied order identifier.
 
 #### Examples
 
+    \dontrun{
     margin <- KucoinMarginTrading$new()
     order <- margin$close_long(symbol = "BTC-USDT", size = 0.001)
     print(order)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarginTrading$borrow()`
+### Method `borrow()`
 
 Borrow Assets for Margin Trading
 
@@ -876,51 +896,55 @@ Verified: 2026-05-23
     KucoinMarginTrading$borrow(
       currency,
       size,
-      timeInForce = "IOC",
-      isIsolated = FALSE,
+      time_in_force = "IOC",
+      is_isolated = FALSE,
       symbol = NULL,
-      isHf = FALSE
+      is_hf = FALSE
     )
 
 #### Arguments
 
 - `currency`:
 
-  Character; the currency to borrow (e.g., `"USDT"`, `"BTC"`).
+  (scalar\<character\>) the currency to borrow (e.g., `"USDT"`,
+  `"BTC"`).
 
 - `size`:
 
-  Numeric; the amount to borrow.
+  (scalar\<numeric\>) the amount to borrow.
 
-- `timeInForce`:
+- `time_in_force`:
 
-  Character; order time-in-force policy (default `"IOC"`). Valid values:
-  `"IOC"` (immediate-or-cancel), `"FOK"` (fill-or-kill).
+  (scalar\<character\>) order time-in-force policy (default `"IOC"`).
+  Valid values: `"IOC"` (immediate-or-cancel), `"FOK"` (fill-or-kill).
 
-- `isIsolated`:
+- `is_isolated`:
 
-  Logical; `TRUE` for isolated margin, `FALSE` (default) for cross.
+  (scalar\<logical\>) `TRUE` for isolated margin, `FALSE` (default) for
+  cross.
 
 - `symbol`:
 
-  Character or NULL; required when `isIsolated = TRUE`. Trading pair
-  (e.g., `"BTC-USDT"`).
+  (scalar\<character\> \| NULL) required when `isIsolated = TRUE`.
+  Trading pair (e.g., `"BTC-USDT"`).
 
-- `isHf`:
+- `is_hf`:
 
-  Logical; `TRUE` for high-frequency trading mode, `FALSE` (default).
+  (scalar\<logical\>) `TRUE` for high-frequency trading mode, `FALSE`
+  (default).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the borrow order
+number and the amount actually borrowed:
 
-- `order_no` (character): Borrow order number.
+- order_no (character) the order number.
 
-- `actual_size` (character): Amount actually borrowed.
+- actual_size (numeric \| NA) the actual filled size.
 
 #### Examples
 
+    \dontrun{
     margin <- KucoinMarginTrading$new()
 
     # Cross margin borrow
@@ -932,10 +956,11 @@ Verified: 2026-05-23
       currency = "BTC", size = 0.01,
       isIsolated = TRUE, symbol = "BTC-USDT"
     )
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarginTrading$repay()`
+### Method `repay()`
 
 Repay Borrowed Assets
 
@@ -992,32 +1017,29 @@ Verified: 2026-05-23
 
 - `currency`:
 
-  Character; the currency to repay (e.g., `"USDT"`, `"BTC"`).
+  (scalar\<character\>) the currency to repay (e.g., `"USDT"`, `"BTC"`).
 
 - `size`:
 
-  Numeric; the amount to repay.
+  (scalar\<numeric\>) the amount to repay.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with a single row and columns:
-
-- `timestamp` (POSIXct): Server-side acceptance time of the repay.
-
-- `order_no` (character): Repayment order number.
-
-- `actual_size` (character): Amount actually repaid.
+(data.table \| promise\<data.table\>) one row giving the server-side
+acceptance time of the repay (POSIXct), the repayment order number, and
+the amount actually repaid.
 
 #### Examples
 
+    \dontrun{
     margin <- KucoinMarginTrading$new()
     result <- margin$repay(currency = "USDT", size = 100)
     print(result)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarginTrading$get_borrow_history()`
+### Method `get_borrow_history()`
 
 Get Borrow History
 
@@ -1075,55 +1097,32 @@ Verified: 2026-05-23
 
 - `query`:
 
-  Named list; optional filter parameters. Supported keys:
-
-  - `currency` (character): Filter by currency.
-
-  - `isIsolated` (logical): Filter by margin type.
-
-  - `symbol` (character): Filter by trading pair.
-
-  - `orderNo` (character): Filter by order number.
-
-  - `startTime` (integer): Start timestamp in milliseconds.
-
-  - `endTime` (integer): End timestamp in milliseconds.
-
-  - `currentPage` (integer): Page number.
-
-  - `pageSize` (integer): Items per page.
+  (list) optional filter parameters. Supported keys: `currency` (filter
+  by currency), `isIsolated` (filter by margin type), `symbol` (filter
+  by trading pair), `orderNo` (filter by order number), `startTime`
+  (start timestamp in milliseconds), `endTime` (end timestamp in
+  milliseconds), `currentPage` (page number), and `pageSize` (items per
+  page).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with **one row per borrow record** and columns:
-
-- `order_no` (character): Borrow order number.
-
-- `symbol` (character): Trading pair (NA on cross-margin records).
-
-- `currency` (character): Borrowed currency.
-
-- `size` (character): Requested borrow amount.
-
-- `actual_size` (character): Amount actually borrowed.
-
-- `status` (character): Lifecycle status (e.g. `"DONE"`).
-
-- `created_time` (POSIXct): Borrow timestamp (millisecond epoch
-  coerced).
-
-Empty response yields an empty `data.table`.
+(data.table \| promise\<data.table\>) one row per borrow record, giving
+the borrow order number, trading pair (NA on cross-margin records),
+borrowed currency, requested borrow amount, amount actually borrowed,
+lifecycle status, and borrow timestamp (POSIXct, coerced from epoch
+milliseconds); an empty data.table if no records match.
 
 #### Examples
 
+    \dontrun{
     margin <- KucoinMarginTrading$new()
     history <- margin$get_borrow_history(query = list(currency = "USDT"))
     print(history)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarginTrading$get_repay_history()`
+### Method `get_repay_history()`
 
 Get Repay History
 
@@ -1181,39 +1180,28 @@ Verified: 2026-05-23
 
 - `query`:
 
-  Named list; optional filter parameters. Same keys as
+  (list) optional filter parameters. Same keys as
   `get_borrow_history()`.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with **one row per repay record** and columns:
-
-- `order_no` (character): Repay order number.
-
-- `symbol` (character): Trading pair (NA on cross-margin records).
-
-- `currency` (character): Repaid currency.
-
-- `size` (character): Requested repay amount.
-
-- `actual_size` (character): Amount actually repaid.
-
-- `status` (character): Lifecycle status.
-
-- `created_time` (POSIXct): Repay timestamp (millisecond epoch coerced).
-
-Empty response yields an empty `data.table`.
+(data.table \| promise\<data.table\>) one row per repay record, giving
+the repay order number, trading pair (NA on cross-margin records),
+repaid currency, requested repay amount, amount actually repaid,
+lifecycle status, and repay timestamp (POSIXct, coerced from epoch
+milliseconds); an empty data.table if no records match.
 
 #### Examples
 
+    \dontrun{
     margin <- KucoinMarginTrading$new()
     history <- margin$get_repay_history(query = list(currency = "USDT"))
     print(history)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarginTrading$get_interest_history()`
+### Method `get_interest_history()`
 
 Get Interest History
 
@@ -1268,47 +1256,31 @@ Verified: 2026-05-23
 
 - `query`:
 
-  Named list; optional filter parameters. Supported keys:
-
-  - `currency` (character): Filter by currency.
-
-  - `isIsolated` (logical): Cross vs isolated.
-
-  - `symbol` (character): Trading pair.
-
-  - `startTime` (integer): Start timestamp in milliseconds.
-
-  - `endTime` (integer): End timestamp in milliseconds.
-
-  - `currentPage` (integer): Page number.
-
-  - `pageSize` (integer): Items per page.
+  (list) optional filter parameters. Supported keys: `currency` (filter
+  by currency), `isIsolated` (cross vs isolated), `symbol` (trading
+  pair), `startTime` (start timestamp in milliseconds), `endTime` (end
+  timestamp in milliseconds), `currentPage` (page number), and
+  `pageSize` (items per page).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with **one row per interest record** and columns:
-
-- `currency` (character): Currency on which interest accrued.
-
-- `day_ratio` (character): Daily rate applied.
-
-- `interest_amount` (character): Interest charged in the period.
-
-- `created_time` (POSIXct): Accrual timestamp (millisecond epoch
-  coerced).
-
-Empty response yields an empty `data.table`.
+(data.table \| promise\<data.table\>) one row per interest record,
+giving the currency on which interest accrued, the daily rate applied,
+the interest charged in the period, and the accrual timestamp (POSIXct,
+coerced from epoch milliseconds); an empty data.table if no records
+match.
 
 #### Examples
 
+    \dontrun{
     margin <- KucoinMarginTrading$new()
     interest <- margin$get_interest_history(query = list(currency = "USDT"))
     print(interest)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarginTrading$get_borrow_rate()`
+### Method `get_borrow_rate()`
 
 Get Borrow Interest Rate
 
@@ -1320,8 +1292,8 @@ Retrieves current borrow interest rates for one or more currencies.
 
 #### Official Documentation
 
-[KuCoin Get Borrow Interest
-Rate](https://www.kucoin.com/docs-new/rest/margin-trading/debit/get-borrow-interest-rate)
+KuCoin Get Borrow Interest Rate:
+<https://www.kucoin.com/docs-new/rest/margin-trading/debit/get-borrow-interest-rate>
 
 Verified: 2026-05-23
 
@@ -1361,33 +1333,27 @@ Verified: 2026-05-23
 
 - `query`:
 
-  Named list; optional filter parameters. Supported keys:
-
-  - `currency` (character): Comma-separated currency list (e.g.,
-    `"BTC,USDT"`).
-
-  - `vipLevel` (integer): VIP tier level.
+  (list) optional filter parameters. Supported keys: `currency`
+  (comma-separated currency list e.g. `"BTC,USDT"`) and `vipLevel` (VIP
+  tier level).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
-
-- `currency` (character): Currency code.
-
-- `hourly_borrow_rate` (character): Hourly interest rate.
-
-- `annualized_borrow_rate` (character): Annualized interest rate.
+(data.table \| promise\<data.table\>) one row per currency, giving the
+currency code, the hourly interest rate, and the annualised interest
+rate.
 
 #### Examples
 
+    \dontrun{
     margin <- KucoinMarginTrading$new()
     rates <- margin$get_borrow_rate(query = list(currency = "BTC,USDT,ETH"))
     print(rates)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarginTrading$modify_leverage()`
+### Method `modify_leverage()`
 
 Modify Leverage
 
@@ -1438,25 +1404,27 @@ Verified: 2026-05-23
 
 - `leverage`:
 
-  Numeric; the desired leverage multiplier (e.g., `3`, `5`, `10`).
+  (scalar\<numeric\>) the desired leverage multiplier (e.g., `3`, `5`,
+  `10`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if `async = TRUE`), single row
-with columns:
+(data.table \| promise\<data.table\>) one row:
 
-- `leverage` (numeric): The new leverage multiplier.
+- leverage (numeric \| NA) the new leverage multiplier.
 
-- `status` (character): `"success"`.
+- status (character) the local outcome marker, always `"success"`.
 
 #### Examples
 
+    \dontrun{
     margin <- KucoinMarginTrading$new()
     margin$modify_leverage(leverage = 5)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinMarginTrading$clone()`
+### Method `clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -1505,7 +1473,7 @@ print(rates)
 
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$open_short()`
+## Method `KucoinMarginTrading$open_short`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1525,7 +1493,7 @@ margin$open_short(symbol = "BTC-USDT", size = 0.001, dry_run = TRUE)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$close_short()`
+## Method `KucoinMarginTrading$close_short`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1535,7 +1503,7 @@ print(order)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$open_long()`
+## Method `KucoinMarginTrading$open_long`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1552,7 +1520,7 @@ order <- margin$open_long(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$close_long()`
+## Method `KucoinMarginTrading$close_long`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1562,7 +1530,7 @@ print(order)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$borrow()`
+## Method `KucoinMarginTrading$borrow`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1580,7 +1548,7 @@ loan <- margin$borrow(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$repay()`
+## Method `KucoinMarginTrading$repay`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1590,7 +1558,7 @@ print(result)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$get_borrow_history()`
+## Method `KucoinMarginTrading$get_borrow_history`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1600,7 +1568,7 @@ print(history)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$get_repay_history()`
+## Method `KucoinMarginTrading$get_repay_history`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1610,7 +1578,7 @@ print(history)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$get_interest_history()`
+## Method `KucoinMarginTrading$get_interest_history`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1620,7 +1588,7 @@ print(interest)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$get_borrow_rate()`
+## Method `KucoinMarginTrading$get_borrow_rate`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1630,7 +1598,7 @@ print(rates)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinMarginTrading$modify_leverage()`
+## Method `KucoinMarginTrading$modify_leverage`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

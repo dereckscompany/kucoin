@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,7 +36,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Retrieve KuCoin Sub-Account Configuration</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.1.0/R/utils.R" class="external-link"><code>R/utils.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/master/R/utils.R" class="external-link"><code>R/utils.R</code></a></small>
       <div class="d-none name"><code>get_sub_account.Rd</code></div>
     </div>
 
@@ -57,18 +57,19 @@
 
 
 <dl><dt id="arg-sub-account-name">sub_account_name<a class="anchor" aria-label="anchor" href="#arg-sub-account-name"></a></dt>
-<dd><p>Character string; sub-account name.
+<dd><p>(scalar&lt;character&gt;) sub-account name.
 Defaults to <code>Sys.getenv("KUCOIN_SUBACCOUNT_NAME")</code>.</p></dd>
 
 
 <dt id="arg-sub-account-password">sub_account_password<a class="anchor" aria-label="anchor" href="#arg-sub-account-password"></a></dt>
-<dd><p>Character string; sub-account password.
+<dd><p>(scalar&lt;character&gt;) sub-account password.
 Defaults to <code>Sys.getenv("KUCOIN_SUBACCOUNT_PASSWORD")</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Named list with <code>sub_account_name</code> and <code>sub_account_password</code>.</p>
+    <p>(list) named list with <code>sub_account_name</code> and
+<code>sub_account_password</code>.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

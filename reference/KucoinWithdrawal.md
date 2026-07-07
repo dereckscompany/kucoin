@@ -1,5 +1,11 @@
 # KucoinWithdrawal: Withdrawal Management
 
+KucoinWithdrawal: Withdrawal Management
+
+KucoinWithdrawal: Withdrawal Management
+
+## Details
+
 Provides methods for creating, cancelling, and querying cryptocurrency
 withdrawals on KuCoin. Inherits from
 [KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
@@ -59,7 +65,7 @@ Endpoints](https://www.kucoin.com/docs-new/rest/account-info/withdrawals/withdra
 
 [`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
 -\>
-[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinWithdrawal`
 
 ## Methods
@@ -80,11 +86,11 @@ Endpoints](https://www.kucoin.com/docs-new/rest/account-info/withdrawals/withdra
 
 Inherited methods
 
-- [`KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 
-### `KucoinWithdrawal$add_withdrawal()`
+### Method `add_withdrawal()`
 
 Add Withdrawal
 
@@ -136,7 +142,9 @@ Verified: 2026-05-23
       --header 'KC-API-TIMESTAMP: 1729176273859' \
       --header 'KC-API-PASSPHRASE: your-passphrase' \
       --header 'KC-API-KEY-VERSION: 2' \
-      --data-raw '{"currency":"USDT","toAddress":"TKFRQXSDcY4kd3QLzw7uK16GmLrjJggwX8","amount":"10","withdrawType":"ADDRESS","chain":"trx"}'
+      --data-raw \
+      '{"currency":"USDT","toAddress":"TKFRQXSDcY4kd3QLzw7uK16GmLrjJggwX8","amount":"10","withdrawType":"ADDRESS",
+      "chain":"trx"}'
 
 #### JSON Response
 
@@ -151,69 +159,72 @@ Verified: 2026-05-23
 
     KucoinWithdrawal$add_withdrawal(
       currency,
-      toAddress,
+      to_address,
       amount,
-      withdrawType,
+      withdraw_type,
       chain = NULL,
       memo = NULL,
-      isInner = NULL,
+      is_inner = NULL,
       remark = NULL,
-      feeDeductType = NULL
+      fee_deduct_type = NULL
     )
 
 #### Arguments
 
 - `currency`:
 
-  Character; currency code (e.g., `"BTC"`, `"USDT"`).
+  (scalar\<character\>) currency code (e.g., `"BTC"`, `"USDT"`).
 
-- `toAddress`:
+- `to_address`:
 
-  Character; withdrawal destination address, UID, email, or phone
-  number.
+  (scalar\<character\>) withdrawal destination address, UID, email, or
+  phone number.
 
 - `amount`:
 
-  Character; withdrawal amount (must be positive, multiple of currency
-  precision).
+  (scalar\<character\>) withdrawal amount (must be positive, multiple of
+  currency precision).
 
-- `withdrawType`:
+- `withdraw_type`:
 
-  Character; withdrawal type: `"ADDRESS"`, `"UID"`, `"MAIL"`, or
-  `"PHONE"`.
+  (scalar\<character\>) withdrawal type: `"ADDRESS"`, `"UID"`, `"MAIL"`,
+  or `"PHONE"`.
 
 - `chain`:
 
-  Character; blockchain network identifier (e.g., `"eth"`, `"trx"`,
-  `"bsc"`). Required by the KuCoin API.
+  (scalar\<character\> \| NULL) blockchain network identifier (e.g.,
+  `"eth"`, `"trx"`, `"bsc"`). Required by the KuCoin API; the method
+  raises if `NULL`.
 
 - `memo`:
 
-  Character or NULL; address memo/tag (required for some currencies like
-  XRP, XLM).
+  (scalar\<character\> \| NULL) address memo/tag (required for some
+  currencies like XRP, XLM).
 
-- `isInner`:
+- `is_inner`:
 
-  Logical or NULL; if `TRUE`, this is an internal KuCoin transfer (no
-  on-chain fee).
+  (scalar\<logical\> \| NULL) if `TRUE`, this is an internal KuCoin
+  transfer (no on-chain fee).
 
 - `remark`:
 
-  Character or NULL; optional remark for the withdrawal.
+  (scalar\<character\> \| NULL) optional remark for the withdrawal.
 
-- `feeDeductType`:
+- `fee_deduct_type`:
 
-  Character or NULL; fee deduction type: `"INTERNAL"` or `"EXTERNAL"`.
+  (scalar\<character\> \| NULL) fee deduction type: `"INTERNAL"` or
+  `"EXTERNAL"`.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row and columns:
+(data.table \| promise\<data.table\>) one row with column
+`withdrawal_id` (character): the unique withdrawal identifier:
 
-- `withdrawal_id` (character): The unique withdrawal identifier.
+- withdrawal_id (character) the withdrawal id.
 
 #### Examples
 
+    \dontrun{
     withdrawal <- KucoinWithdrawal$new()
 
     # Withdraw USDT via TRC20
@@ -234,10 +245,11 @@ Verified: 2026-05-23
       withdrawType = "UID",
       isInner = TRUE
     )
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinWithdrawal$cancel_withdrawal()`
+### Method `cancel_withdrawal()`
 
 Cancel Withdrawal
 
@@ -293,33 +305,35 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinWithdrawal$cancel_withdrawal(withdrawalId)
+    KucoinWithdrawal$cancel_withdrawal(withdrawal_id)
 
 #### Arguments
 
-- `withdrawalId`:
+- `withdrawal_id`:
 
-  Character; the unique withdrawal ID to cancel.
+  (scalar\<character\>) the unique withdrawal ID to cancel.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row and columns:
+(data.table \| promise\<data.table\>) one row, the cancelled withdrawal
+ID echoed from the input (KuCoin returns `null` data on a successful
+cancel):
 
-- `withdrawal_id` (character): The cancelled withdrawal ID (echoed from
-  the input since KuCoin returns `null` data on a successful cancel).
+- withdrawal_id (character) the cancelled withdrawal id.
 
 #### Examples
 
+    \dontrun{
     withdrawal <- KucoinWithdrawal$new()
 
     # Cancel a pending withdrawal
     result <- withdrawal$cancel_withdrawal("670deec84d64da0007d7c946")
     print(result$withdrawal_id)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinWithdrawal$get_withdrawal_quotas()`
+### Method `get_withdrawal_quotas()`
 
 Get Withdrawal Quotas
 
@@ -341,8 +355,8 @@ to ensure sufficient balance and valid amount parameters.
 
 #### Official Documentation
 
-[KuCoin Get Withdrawal
-Quotas](https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-quotas)
+KuCoin Get Withdrawal Quotas:
+<https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-quotas>
 
 Verified: 2026-05-23
 
@@ -402,58 +416,60 @@ Verified: 2026-05-23
 
 - `currency`:
 
-  Character; currency code (e.g., `"BTC"`, `"USDT"`).
+  (scalar\<character\>) currency code (e.g., `"BTC"`, `"USDT"`).
 
 - `chain`:
 
-  Character or NULL; blockchain network identifier (e.g., `"eth"`,
-  `"trx"`). When NULL, returns quotas for the default chain.
+  (scalar\<character\> \| NULL) blockchain network identifier (e.g.,
+  `"eth"`, `"trx"`). When NULL, returns quotas for the default chain.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row and columns:
+(data.table \| promise\<data.table\>) one row with the withdrawal quota
+details (currency, limit_btc_amount, used_btc_amount, quota_currency,
+limit_quota_currency_amount, used_quota_currency_amount, remain_amount,
+available_amount, withdraw_min_fee, inner_withdraw_min_fee,
+withdraw_min_size, is_withdraw_enabled, precision, chain, reason,
+locked_amount, ...):
 
-- `currency` (character): Currency code.
+- currency (character) the currency code.
 
-- `limit_btc_amount` (character): Daily withdrawal limit in BTC
-  equivalent.
+- chain (character) the chain code.
 
-- `used_btc_amount` (character): BTC equivalent already withdrawn today.
+- is_withdraw_enabled (logical \| NA) the is withdraw enabled.
 
-- `quota_currency` (character): Quota currency (e.g., `"USDT"`).
+- available_amount (numeric \| NA) the available amount.
 
-- `limit_quota_currency_amount` (character): Daily limit in quota
-  currency.
+- remain_amount (numeric \| NA) the remain amount.
 
-- `used_quota_currency_amount` (character): Amount used in quota
-  currency.
+- withdraw_min_fee (numeric \| NA) the withdraw min fee.
 
-- `remain_amount` (character): Remaining withdrawal quota in BTC
-  equivalent.
+- inner_withdraw_min_fee (numeric \| NA) the inner withdraw min fee.
 
-- `available_amount` (character): Available balance for withdrawal.
+- withdraw_min_size (numeric \| NA) the withdraw min size.
 
-- `withdraw_min_fee` (character): Minimum withdrawal fee.
+- precision (integer \| NA) the decimal precision.
 
-- `inner_withdraw_min_fee` (character): Minimum fee for internal
-  transfers.
+- limit_btc_amount (numeric \| NA) the limit btc amount.
 
-- `withdraw_min_size` (character): Minimum withdrawal amount.
+- used_btc_amount (numeric \| NA) the used btc amount.
 
-- `is_withdraw_enabled` (logical): Whether withdrawals are currently
-  enabled.
+- locked_amount (numeric \| NA) the locked amount.
 
-- `precision` (integer): Decimal precision for amounts.
+- quota_currency (character) the quota currency.
 
-- `chain` (character): Blockchain network name.
+- limit_quota_currency_amount (numeric \| NA) the limit quota currency
+  amount.
 
-- `reason` (character): Reason if withdrawals are disabled (or NA).
+- used_quota_currency_amount (numeric \| NA) the used quota currency
+  amount.
 
-- `locked_amount` (character): Amount currently locked.
+- reason (character \| NA) the reason withdrawals are disabled, when
+  present.
 
 #### Examples
 
+    \dontrun{
     withdrawal <- KucoinWithdrawal$new()
 
     # Check BTC withdrawal quotas
@@ -463,10 +479,11 @@ Verified: 2026-05-23
     # Check USDT quotas on TRC20
     usdt_quotas <- withdrawal$get_withdrawal_quotas(currency = "USDT", chain = "trx")
     print(usdt_quotas$withdraw_min_fee)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinWithdrawal$get_withdrawal_history()`
+### Method `get_withdrawal_history()`
 
 Get Withdrawal History
 
@@ -491,8 +508,8 @@ timestamps to POSIXct for convenient analysis.
 
 #### Official Documentation
 
-[KuCoin Get Withdrawal
-History](https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-history)
+KuCoin Get Withdrawal History:
+<https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-history>
 
 Verified: 2026-05-23
 
@@ -551,8 +568,8 @@ Verified: 2026-05-23
     KucoinWithdrawal$get_withdrawal_history(
       currency = NULL,
       status = NULL,
-      startAt = NULL,
-      endAt = NULL,
+      start_at = NULL,
+      end_at = NULL,
       page_size = 50,
       max_pages = Inf
     )
@@ -561,69 +578,46 @@ Verified: 2026-05-23
 
 - `currency`:
 
-  Character or NULL; currency code (e.g., `"BTC"`, `"USDT"`). If NULL,
-  returns withdrawals for all currencies.
+  (scalar\<character\> \| NULL) currency code (e.g., `"BTC"`, `"USDT"`).
+  If NULL, returns withdrawals for all currencies.
 
 - `status`:
 
-  Character or NULL; filter by withdrawal status. Accepted values:
-  `"PROCESSING"`, `"REVIEW"`, `"WALLET_PROCESSING"`, `"SUCCESS"`,
-  `"FAILURE"`. When NULL, returns withdrawals of all statuses.
+  (scalar\<character\> \| NULL) filter by withdrawal status. Accepted
+  values: `"PROCESSING"`, `"REVIEW"`, `"WALLET_PROCESSING"`,
+  `"SUCCESS"`, `"FAILURE"`. When NULL, returns withdrawals of all
+  statuses.
 
-- `startAt`:
+- `start_at`:
 
-  Integer or NULL; start timestamp in milliseconds (inclusive).
+  (scalar\<numeric\> \| NULL) start timestamp in milliseconds
+  (inclusive).
 
-- `endAt`:
+- `end_at`:
 
-  Integer or NULL; end timestamp in milliseconds (inclusive).
+  (scalar\<numeric\> \| NULL) end timestamp in milliseconds (inclusive).
 
 - `page_size`:
 
-  Integer; number of results per page (default 50, max 500).
+  (scalar\<count in \[1, Inf\]\>) number of results per page (default
+  50, max 500).
 
 - `max_pages`:
 
-  Numeric; maximum number of pages to fetch (default `Inf` for all
-  pages).
+  (scalar\<numeric in \[1, Inf\]\>) maximum number of pages to fetch
+  (default `Inf` for all pages).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per withdrawal and columns:
-
-- `currency` (character): Withdrawn currency code.
-
-- `chain` (character): Blockchain network used.
-
-- `status` (character): Withdrawal status.
-
-- `address` (character): Withdrawal destination address.
-
-- `memo` (character): Memo/tag (empty string if not applicable).
-
-- `is_inner` (logical): Whether this was an internal KuCoin transfer.
-
-- `amount` (character): Withdrawal amount.
-
-- `fee` (character): Withdrawal fee charged.
-
-- `wallet_tx_id` (character): On-chain transaction hash.
-
-- `created_at` (POSIXct): Creation datetime (coerced from epoch
-  milliseconds).
-
-- `updated_at` (POSIXct): Last update datetime (coerced from epoch
-  milliseconds).
-
-- `remark` (character): Optional remark.
-
-- `arrears` (logical): Whether the withdrawal is in arrears.
-
-Returns an empty `data.table` if no withdrawals match the filters.
+(data.table \| promise\<data.table\>) one row per withdrawal record
+(currency, chain, status, address, memo, is_inner, amount, fee,
+wallet_tx_id, created_at, updated_at, remark, arrears, ...), with
+`created_at`/`updated_at` coerced to POSIXct, or an empty `data.table`
+if no withdrawals match the filters.
 
 #### Examples
 
+    \dontrun{
     withdrawal <- KucoinWithdrawal$new()
 
     # Get all successful USDT withdrawals
@@ -640,10 +634,11 @@ Returns an empty `data.table` if no withdrawals match the filters.
       startAt = now_ms - 86400000L,
       endAt = now_ms
     )
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinWithdrawal$get_withdrawal_by_id()`
+### Method `get_withdrawal_by_id()`
 
 Get Withdrawal by ID
 
@@ -665,8 +660,8 @@ Provides more information than the history endpoint.
 
 #### Official Documentation
 
-[KuCoin Get Withdrawal
-Detail](https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-by-id)
+KuCoin Get Withdrawal Detail:
+<https://www.kucoin.com/docs-new/rest/account-info/withdrawals/get-withdrawal-by-id>
 
 Verified: 2026-05-23
 
@@ -715,55 +710,79 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinWithdrawal$get_withdrawal_by_id(withdrawalId)
+    KucoinWithdrawal$get_withdrawal_by_id(withdrawal_id)
 
 #### Arguments
 
-- `withdrawalId`:
+- `withdrawal_id`:
 
-  Character; the unique withdrawal ID.
+  (scalar\<character\>) the unique withdrawal ID.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row and columns:
+(data.table \| promise\<data.table\>) one row with the full withdrawal
+detail (id, currency, chain_id, chain_name, status, address, memo,
+is_inner, amount, fee, wallet_tx_id, cancel_type, failure_reason,
+failure_reason_msg, created_at, ...), with `created_at` coerced to
+POSIXct:
 
-- `id` (character): Withdrawal ID.
+- id (character) the record identifier.
 
-- `currency` (character): Currency code.
+- currency (character) the currency code.
 
-- `chain_id` (character): Chain identifier (e.g., `"trx"`, `"eth"`).
+- chain_id (character \| NA) the chain identifier.
 
-- `chain_name` (character): Chain display name (e.g., `"TRC20"`,
-  `"ERC20"`).
+- chain_name (character \| NA) the chain name.
 
-- `status` (character): Withdrawal status.
+- status (character) the status.
 
-- `address` (character): Destination address.
+- address (character) the address.
 
-- `memo` (character): Address memo/tag.
+- memo (character) the address memo/tag.
 
-- `is_inner` (logical): Internal transfer flag.
+- is_inner (logical) the is inner.
 
-- `amount` (character): Withdrawal amount.
+- amount (numeric \| NA) the amount.
 
-- `fee` (character): Fee charged.
+- fee (numeric \| NA) the fee.
 
-- `wallet_tx_id` (character): On-chain transaction hash (or NA).
+- wallet_tx_id (character \| NA) the on-chain wallet transaction hash;
+  NA for internal transfers.
 
-- `cancel_type` (character): `"CANCELABLE"`, `"CANCELING"`, or
-  `"NON_CANCELABLE"`.
+- created_at (POSIXct) the created at (UTC).
 
-- `failure_reason` (character): Failure reason code (or NA).
+- cancel_type (character) the cancel type.
 
-- `failure_reason_msg` (character): Human-readable failure message (or
-  NA).
+- uid (integer) the user identifier.
 
-- `created_at` (POSIXct): Creation datetime (coerced from epoch
-  milliseconds).
+- currency_name (character) the currency name.
+
+- failure_reason (character \| NA) the failure reason.
+
+- failure_reason_msg (character \| NA) the failure reason message, when
+  the withdrawal failed.
+
+- address_remark (character \| NA) the address remark.
+
+- remark (character \| NA) an optional remark.
+
+- taxes (numeric \| NA) the tax amount, when applicable.
+
+- tax_description (character \| NA) the tax description, when
+  applicable.
+
+- tx_id (character \| NA) the transaction id, when present.
+
+- return_status (character) the return status.
+
+- return_amount (numeric \| NA) the returned amount, when the withdrawal
+  was returned.
+
+- return_currency (character) the return currency.
 
 #### Examples
 
+    \dontrun{
     withdrawal <- KucoinWithdrawal$new()
 
     # Get withdrawal details
@@ -774,10 +793,11 @@ Verified: 2026-05-23
     if (detail$cancel_type == "CANCELABLE") {
       withdrawal$cancel_withdrawal(detail$id)
     }
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinWithdrawal$clone()`
+### Method `clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -812,7 +832,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinWithdrawal$add_withdrawal()`
+## Method `KucoinWithdrawal$add_withdrawal`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -839,7 +859,7 @@ result <- withdrawal$add_withdrawal(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinWithdrawal$cancel_withdrawal()`
+## Method `KucoinWithdrawal$cancel_withdrawal`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -851,7 +871,7 @@ print(result$withdrawal_id)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinWithdrawal$get_withdrawal_quotas()`
+## Method `KucoinWithdrawal$get_withdrawal_quotas`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -867,7 +887,7 @@ print(usdt_quotas$withdraw_min_fee)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinWithdrawal$get_withdrawal_history()`
+## Method `KucoinWithdrawal$get_withdrawal_history`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -890,7 +910,7 @@ recent <- withdrawal$get_withdrawal_history(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinWithdrawal$get_withdrawal_by_id()`
+## Method `KucoinWithdrawal$get_withdrawal_by_id`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

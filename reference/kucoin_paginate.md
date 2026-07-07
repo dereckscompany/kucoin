@@ -30,75 +30,88 @@ kucoin_paginate(
 
 - base_url:
 
-  Character; the API base URL.
+  (scalar\<character\>) the API base URL.
 
 - endpoint:
 
-  Character; the API path.
+  (scalar\<character\>) the API path.
 
 - method:
 
-  Character; HTTP method. Default `"GET"`.
+  (scalar\<character\>) HTTP method. Default `"GET"`.
 
 - query:
 
-  Named list; initial query parameters. Default
+  (list) initial query parameters. Default
   [`list()`](https://rdrr.io/r/base/list.html).
 
 - body:
 
-  Named list or NULL; request body. Default `NULL`.
+  (list \| NULL) request body. Default `NULL`.
 
 - keys:
 
-  List or NULL; API credentials. Default `NULL`.
+  (list \| NULL) API credentials from
+  [`get_api_keys()`](https://dereckscompany.github.io/kucoin/reference/get_api_keys.md),
+  or `NULL`:
+
+  - api_key (character) the API key.
+
+  - api_secret (character) the API secret.
+
+  - api_passphrase (character) the API passphrase.
+
+  - key_version (character) the API key version.
 
 - sign:
 
-  Function or NULL; the `.sign()` seam forwarded to
-  [`kucoin_build_request()`](https://dereckscompany.github.io/kucoin/reference/kucoin_build_request.md).
-  Default `NULL` (use KuCoin's own signer).
+  (function \| NULL) the `.sign()` seam forwarded to
+  [`connectcore::build_request()`](https://rdrr.io/pkg/connectcore/man/build_request.html).
+  Default `NULL` (use KuCoin's own `kucoin_sign_req()` signer).
 
 - parse_envelope:
 
-  Function; the `.parse_envelope()` seam forwarded to
-  [`kucoin_build_request()`](https://dereckscompany.github.io/kucoin/reference/kucoin_build_request.md).
+  (function) the `.parse_envelope()` seam forwarded to
+  [`connectcore::build_request()`](https://rdrr.io/pkg/connectcore/man/build_request.html).
   Default `parse_kucoin_response()`.
 
 - .perform:
 
-  Function; the httr2 perform function.
+  (function) the httr2 perform function.
 
 - .parser:
 
-  Function; post-processing for the final accumulated result. Default
+  (function) post-processing for the final accumulated result. Default
   `identity`.
 
 - is_async:
 
-  Logical; whether in async mode. Default `FALSE`.
+  (scalar\<logical\>) whether in async mode. Default `FALSE`.
 
 - page_size:
 
-  Integer; results per page. Default `50`.
+  (scalar\<count in \[1, Inf\]\>) results per page. Default `50`.
 
 - max_pages:
 
-  Numeric; maximum pages to fetch. Default `Inf`.
+  (scalar\<numeric in \[1, Inf\]\>) maximum pages to fetch. Default
+  `Inf`.
 
 - items_field:
 
-  Character; name of the items field. Default `"items"`.
+  (scalar\<character\>) name of the items field. Default `"items"`.
 
 - timeout:
 
-  Numeric; request timeout in seconds. Default `30`.
+  (scalar\<numeric in \]0, Inf\[\>) request timeout in seconds. Default
+  `30`.
 
 - .get_timestamp_ms:
 
-  Function or NULL; custom timestamp provider for request signing. If
+  (function \| NULL) custom timestamp provider for request signing. If
   `NULL`, uses the default internal timestamp function.
 
 ## Value
 
-Parsed and post-processed result, or a promise thereof.
+(any \| promise\<any\>) parsed and post-processed result, or a promise
+thereof.

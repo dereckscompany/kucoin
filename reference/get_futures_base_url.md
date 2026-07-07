@@ -19,12 +19,12 @@ get_futures_base_url(url = Sys.getenv("KUCOIN_FUTURES_API_ENDPOINT"))
 
 - url:
 
-  Character string; explicit base URL. Defaults to
+  (scalar\<character\> \| NULL) explicit base URL. Defaults to
   `Sys.getenv("KUCOIN_FUTURES_API_ENDPOINT")`.
 
 ## Value
 
-Character string; the Futures API base URL.
+(scalar\<character\>) the Futures API base URL.
 
 ## Examples
 

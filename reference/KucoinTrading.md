@@ -1,5 +1,11 @@
 # KucoinTrading: Spot Order Management
 
+KucoinTrading: Spot Order Management
+
+KucoinTrading: Spot Order Management
+
+## Details
+
 Provides methods for placing, cancelling, and querying spot orders on
 KuCoin. All order operations use the HF (High-Frequency) trading
 endpoints. Inherits from
@@ -94,7 +100,7 @@ match each other:
 
 [`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
 -\>
-[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinTrading`
 
 ## Methods
@@ -147,11 +153,11 @@ match each other:
 
 Inherited methods
 
-- [`KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 
-### `KucoinTrading$add_order()`
+### Method `add_order()`
 
 Place an Order
 
@@ -231,105 +237,109 @@ Verified: 2026-05-23
       type,
       symbol,
       side,
-      clientOid = NULL,
+      client_order_id = NULL,
       price = NULL,
       size = NULL,
       funds = NULL,
       stp = NULL,
       tags = NULL,
       remark = NULL,
-      timeInForce = NULL,
-      cancelAfter = NULL,
-      postOnly = NULL,
+      time_in_force = NULL,
+      cancel_after = NULL,
+      post_only = NULL,
       hidden = NULL,
       iceberg = NULL,
-      visibleSize = NULL
+      visible_size = NULL
     )
 
 #### Arguments
 
 - `type`:
 
-  Character; `"limit"` or `"market"`.
+  (scalar\<character\>) `"limit"` or `"market"`.
 
 - `symbol`:
 
-  Character; trading pair (e.g., `"BTC-USDT"`).
+  (scalar\<character\>) trading pair (e.g., `"BTC-USDT"`).
 
 - `side`:
 
-  Character; `"buy"` or `"sell"`.
+  (scalar\<character\>) `"buy"` or `"sell"`.
 
-- `clientOid`:
+- `client_order_id`:
 
-  Character or NULL; unique client order ID (max 40 chars).
+  (scalar\<character\> \| NULL) unique client order ID (max 40 chars).
 
 - `price`:
 
-  Numeric or NULL; price for limit orders. Must align with
-  `priceIncrement`. Required for limit orders; must NOT be set for
-  market orders.
+  (scalar\<numeric\> \| scalar\<character\> \| NULL) price for limit
+  orders. Must align with `priceIncrement`. Required for limit orders;
+  must NOT be set for market orders.
 
 - `size`:
 
-  Numeric or NULL; quantity in base currency. Must align with
-  `baseIncrement`. Required for limit orders; optional for market orders
-  (mutually exclusive with `funds`).
+  (scalar\<numeric\> \| scalar\<character\> \| NULL) quantity in base
+  currency. Must align with `baseIncrement`. Required for limit orders;
+  optional for market orders (mutually exclusive with `funds`).
 
 - `funds`:
 
-  Numeric or NULL; amount in quote currency for market orders. Mutually
-  exclusive with `size`. Not applicable for limit orders.
+  (scalar\<numeric\> \| scalar\<character\> \| NULL) amount in quote
+  currency for market orders. Mutually exclusive with `size`. Not
+  applicable for limit orders.
 
 - `stp`:
 
-  Character or NULL; self-trade prevention: `"CN"`, `"CO"`, `"CB"`,
-  `"DC"`.
+  (scalar\<character\> \| NULL) self-trade prevention: `"CN"`, `"CO"`,
+  `"CB"`, `"DC"`.
 
 - `tags`:
 
-  Character or NULL; order tag (max 20 ASCII chars).
+  (scalar\<character\> \| NULL) order tag (max 20 ASCII chars).
 
 - `remark`:
 
-  Character or NULL; remarks (max 20 ASCII chars).
+  (scalar\<character\> \| NULL) remarks (max 20 ASCII chars).
 
-- `timeInForce`:
+- `time_in_force`:
 
-  Character or NULL; `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
+  (scalar\<character\> \| NULL) `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
 
-- `cancelAfter`:
+- `cancel_after`:
 
-  Numeric or NULL; auto-cancel seconds (requires `timeInForce = "GTT"`).
+  (scalar\<numeric\> \| NULL) auto-cancel seconds (requires
+  `timeInForce = "GTT"`).
 
-- `postOnly`:
+- `post_only`:
 
-  Logical or NULL; if TRUE, order rejected if it would match
+  (scalar\<logical\> \| NULL) if TRUE, order rejected if it would match
   immediately.
 
 - `hidden`:
 
-  Logical or NULL; if TRUE, order hidden from order book.
+  (scalar\<logical\> \| NULL) if TRUE, order hidden from order book.
 
 - `iceberg`:
 
-  Logical or NULL; if TRUE, only `visibleSize` is shown.
+  (scalar\<logical\> \| NULL) if TRUE, only `visibleSize` is shown.
 
-- `visibleSize`:
+- `visible_size`:
 
-  Numeric or NULL; visible quantity for iceberg orders.
+  (scalar\<numeric\> \| scalar\<character\> \| NULL) visible quantity
+  for iceberg orders.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the KuCoin-assigned
+order identifier and the client-provided order identifier:
 
-- `order_id` (character): KuCoin-assigned order identifier.
+- order_id (character) the system order identifier.
 
-- `client_oid` (character): Client-provided order identifier.
+- client_oid (character \| NA) the client-supplied order identifier.
 
 #### Examples
 
+    \dontrun{
     trading <- KucoinTrading$new()
 
     # Limit buy order
@@ -344,10 +354,11 @@ Verified: 2026-05-23
       type = "market", symbol = "BTC-USDT", side = "sell",
       size = 0.00001
     )
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinTrading$add_order_test()`
+### Method `add_order_test()`
 
 Test Order Placement
 
@@ -419,106 +430,117 @@ Verified: 2026-05-23
       type,
       symbol,
       side,
-      clientOid = NULL,
+      client_order_id = NULL,
       price = NULL,
       size = NULL,
       funds = NULL,
       stp = NULL,
       tags = NULL,
       remark = NULL,
-      timeInForce = NULL,
-      cancelAfter = NULL,
-      postOnly = NULL,
+      time_in_force = NULL,
+      cancel_after = NULL,
+      post_only = NULL,
       hidden = NULL,
       iceberg = NULL,
-      visibleSize = NULL
+      visible_size = NULL
     )
 
 #### Arguments
 
 - `type`:
 
-  Character; `"limit"` or `"market"`.
+  (scalar\<character\>) `"limit"` or `"market"`.
 
 - `symbol`:
 
-  Character; trading pair (e.g., `"BTC-USDT"`).
+  (scalar\<character\>) trading pair (e.g., `"BTC-USDT"`).
 
 - `side`:
 
-  Character; `"buy"` or `"sell"`.
+  (scalar\<character\>) `"buy"` or `"sell"`.
 
-- `clientOid`:
+- `client_order_id`:
 
-  Character or NULL; unique client order ID (max 40 chars).
+  (scalar\<character\> \| NULL) unique client order ID (max 40 chars).
 
 - `price`:
 
-  Numeric or NULL; price for limit orders.
+  (scalar\<numeric\> \| scalar\<character\> \| NULL) price for limit
+  orders.
 
 - `size`:
 
-  Numeric or NULL; quantity in base currency.
+  (scalar\<numeric\> \| scalar\<character\> \| NULL) quantity in base
+  currency.
 
 - `funds`:
 
-  Numeric or NULL; amount in quote currency for market orders.
+  (scalar\<numeric\> \| scalar\<character\> \| NULL) amount in quote
+  currency for market orders.
 
 - `stp`:
 
-  Character or NULL; self-trade prevention: `"CN"`, `"CO"`, `"CB"`,
-  `"DC"`.
+  (scalar\<character\> \| NULL) self-trade prevention: `"CN"`, `"CO"`,
+  `"CB"`, `"DC"`.
 
 - `tags`:
 
-  Character or NULL; order tag (max 20 ASCII chars).
+  (scalar\<character\> \| NULL) order tag (max 20 ASCII chars).
 
 - `remark`:
 
-  Character or NULL; remarks (max 20 ASCII chars).
+  (scalar\<character\> \| NULL) remarks (max 20 ASCII chars).
 
-- `timeInForce`:
+- `time_in_force`:
 
-  Character or NULL; `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
+  (scalar\<character\> \| NULL) `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
 
-- `cancelAfter`:
+- `cancel_after`:
 
-  Numeric or NULL; auto-cancel seconds (requires `timeInForce = "GTT"`).
+  (scalar\<numeric\> \| NULL) auto-cancel seconds (requires
+  `timeInForce = "GTT"`).
 
-- `postOnly`:
+- `post_only`:
 
-  Logical or NULL; if TRUE, order rejected if it would match
+  (scalar\<logical\> \| NULL) if TRUE, order rejected if it would match
   immediately.
 
 - `hidden`:
 
-  Logical or NULL; if TRUE, order hidden from order book.
+  (scalar\<logical\> \| NULL) if TRUE, order hidden from order book.
 
 - `iceberg`:
 
-  Logical or NULL; if TRUE, only `visibleSize` is shown.
+  (scalar\<logical\> \| NULL) if TRUE, only `visibleSize` is shown.
 
-- `visibleSize`:
+- `visible_size`:
 
-  Numeric or NULL; visible quantity for iceberg orders.
+  (scalar\<numeric\> \| scalar\<character\> \| NULL) visible quantity
+  for iceberg orders.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with simulated `order_id` and `client_oid`.
+(data.table \| promise\<data.table\>) one row giving the simulated order
+identifier and the client-provided order identifier:
+
+- order_id (character) the system order identifier.
+
+- client_oid (character \| NA) the client-supplied order identifier.
 
 #### Examples
 
+    \dontrun{
     trading <- KucoinTrading$new()
     test <- trading$add_order_test(
       type = "limit", symbol = "BTC-USDT", side = "buy",
       price = 50000, size = 0.00001
     )
     print(test)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinTrading$add_order_batch()`
+### Method `add_order_batch()`
 
 Place Batch Orders
 
@@ -565,7 +587,9 @@ Verified: 2026-05-23
       --header 'KC-API-TIMESTAMP: 1729176273859' \
       --header 'KC-API-PASSPHRASE: your-passphrase' \
       --header 'KC-API-KEY-VERSION: 2' \
-      --data-raw '{"orderList":[{"clientOid":"id1","symbol":"BTC-USDT","type":"limit","side":"buy","price":"30000","size":"0.00001"}]}'
+      --data-raw \
+      '{"orderList":[{"clientOid":"id1","symbol":"BTC-USDT","type":"limit","side":"buy","price":"30000",
+      "size":"0.00001"}]}'
 
 #### JSON Request
 
@@ -615,24 +639,26 @@ Verified: 2026-05-23
 
 - `order_list`:
 
-  List of named lists; each containing order parameters (`type`,
+  (list) list of named lists; each containing order parameters (`type`,
   `symbol`, `side`, plus optional fields). Maximum 20 orders.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with per-order results:
+(data.table \| promise\<data.table\>) one row per order giving the
+KuCoin order ID, client order ID, the success flag, and any failure
+message:
 
-- `order_id` (character): KuCoin order ID (if successful).
+- order_id (character \| NA) the system order identifier.
 
-- `client_oid` (character): Client order ID (if provided).
+- client_oid (character \| NA) the client-supplied order identifier.
 
-- `success` (logical): Whether the order was placed successfully.
+- success (logical) whether the order succeeded.
 
-- `fail_msg` (character): Error message (if failed).
+- fail_msg (character \| NA) the failure message.
 
 #### Examples
 
+    \dontrun{
     trading <- KucoinTrading$new()
     orders <- trading$add_order_batch(list(
       list(type = "limit", symbol = "BTC-USDT", side = "buy",
@@ -642,10 +668,11 @@ Verified: 2026-05-23
     ))
     print(orders[success == TRUE, .(order_id, client_oid)])
     print(orders[success == FALSE, .(fail_msg)])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinTrading$cancel_order_by_id()`
+### Method `cancel_order_by_id()`
 
 Cancel Order by Order ID
 
@@ -657,8 +684,8 @@ Cancels a specific spot HF order by its KuCoin-assigned order ID.
 
 #### Official Documentation
 
-[KuCoin Cancel Order By
-OrderId](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld)
+KuCoin Cancel Order By OrderId:
+<https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld>
 
 Verified: 2026-05-23
 
@@ -683,34 +710,36 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinTrading$cancel_order_by_id(orderId, symbol)
+    KucoinTrading$cancel_order_by_id(order_id, symbol)
 
 #### Arguments
 
-- `orderId`:
+- `order_id`:
 
-  Character; the KuCoin order ID to cancel.
+  (scalar\<character\>) the KuCoin order ID to cancel.
 
 - `symbol`:
 
-  Character; trading pair (e.g., `"BTC-USDT"`).
+  (scalar\<character\>) trading pair (e.g., `"BTC-USDT"`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the cancelled order
+ID:
 
-- `order_id` (character): Cancelled order ID.
+- order_id (character) the system order identifier.
 
 #### Examples
 
+    \dontrun{
     trading <- KucoinTrading$new()
     result <- trading$cancel_order_by_id("671124f9365ccb00073debd4", "BTC-USDT")
     print(result$order_id)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinTrading$cancel_order_by_client_oid()`
+### Method `cancel_order_by_client_oid()`
 
 Cancel Order by Client OID
 
@@ -722,8 +751,8 @@ Cancels a spot HF order by its client-assigned order ID.
 
 #### Official Documentation
 
-[KuCoin Cancel Order By
-ClientOid](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid)
+KuCoin Cancel Order By ClientOid:
+<https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid>
 
 Verified: 2026-05-23
 
@@ -748,34 +777,36 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinTrading$cancel_order_by_client_oid(clientOid, symbol)
+    KucoinTrading$cancel_order_by_client_oid(client_order_id, symbol)
 
 #### Arguments
 
-- `clientOid`:
+- `client_order_id`:
 
-  Character; client order ID.
+  (scalar\<character\>) client order ID.
 
 - `symbol`:
 
-  Character; trading pair (e.g., `"BTC-USDT"`).
+  (scalar\<character\>) trading pair (e.g., `"BTC-USDT"`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the cancelled
+client order ID:
 
-- `client_oid` (character): Cancelled client order ID.
+- client_oid (character \| NA) the client-supplied order identifier.
 
 #### Examples
 
+    \dontrun{
     trading <- KucoinTrading$new()
     result <- trading$cancel_order_by_client_oid("myClientOid123", "BTC-USDT")
     print(result$client_oid)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinTrading$cancel_partial_order()`
+### Method `cancel_partial_order()`
 
 Cancel Partial Order
 
@@ -822,37 +853,44 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinTrading$cancel_partial_order(orderId, symbol, cancelSize)
+    KucoinTrading$cancel_partial_order(order_id, symbol, cancel_size)
 
 #### Arguments
 
-- `orderId`:
+- `order_id`:
 
-  Character; order ID.
+  (scalar\<character\>) order ID.
 
 - `symbol`:
 
-  Character; trading pair (e.g., `"BTC-USDT"`).
+  (scalar\<character\>) trading pair (e.g., `"BTC-USDT"`).
 
-- `cancelSize`:
+- `cancel_size`:
 
-  Numeric; quantity to cancel from the order.
+  (scalar\<numeric\> \| scalar\<character\>) quantity to cancel from the
+  order.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with cancellation result.
+(data.table \| promise\<data.table\>) one row giving the cancellation
+result:
+
+- order_id (character) the system order identifier.
+
+- cancel_size (numeric \| NA) the cancelled size.
 
 #### Examples
 
+    \dontrun{
     trading <- KucoinTrading$new()
     result <- trading$cancel_partial_order(
       "671124f9365ccb00073debd4", "BTC-USDT", cancelSize = 0.00001
     )
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinTrading$cancel_all_by_symbol()`
+### Method `cancel_all_by_symbol()`
 
 Cancel All Orders by Symbol
 
@@ -864,8 +902,8 @@ Cancels all open HF orders for a specific trading pair.
 
 #### Official Documentation
 
-[KuCoin Cancel All Orders By
-Symbol](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-all-orders-by-symbol)
+KuCoin Cancel All Orders By Symbol:
+<https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-all-orders-by-symbol>
 
 Verified: 2026-05-23
 
@@ -902,22 +940,25 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; trading pair (e.g., `"BTC-USDT"`).
+  (scalar\<character\>) trading pair (e.g., `"BTC-USDT"`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with column `result` containing the cancellation
-response.
+(data.table \| promise\<data.table\>) one row giving the cancellation
+response:
+
+- result (character) the KuCoin response string, e.g. `"success"`.
 
 #### Examples
 
+    \dontrun{
     trading <- KucoinTrading$new()
     trading$cancel_all_by_symbol("BTC-USDT")
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinTrading$cancel_all()`
+### Method `cancel_all()`
 
 Cancel All Orders
 
@@ -967,24 +1008,24 @@ Verified: 2026-05-23
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row per cancelled symbol; an
+empty (but typed) data.table if no orders were open:
 
-- `symbol` (character): Trading pair symbol.
+- symbol (character) the trading pair, e.g. `"BTC-USDT"`.
 
-- `status` (character): `"succeed"` or `"failed"`.
-
-Returns an empty `data.table` if no orders were open.
+- status (character) per-symbol outcome, `"succeed"` or `"failed"`.
 
 #### Examples
 
+    \dontrun{
     trading <- KucoinTrading$new()
     result <- trading$cancel_all()
     print(result[status == "failed"])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinTrading$get_order_by_id()`
+### Method `get_order_by_id()`
 
 Get Order by Order ID
 
@@ -1055,34 +1096,52 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinTrading$get_order_by_id(orderId, symbol = NULL)
+    KucoinTrading$get_order_by_id(order_id, symbol = NULL)
 
 #### Arguments
 
-- `orderId`:
+- `order_id`:
 
-  Character; the KuCoin order ID.
+  (scalar\<character\>) the KuCoin order ID.
 
 - `symbol`:
 
-  Character (optional); trading pair (e.g., `"BTC-USDT"`). Defaults to
-  `NULL`.
+  (scalar\<character\> \| NULL) trading pair (e.g., `"BTC-USDT"`).
+  Defaults to `NULL`.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with full order details including `created_at` and
-`last_updated_at` (POSIXct) if timestamps are present.
+(data.table \| promise\<data.table\>) one row of full order details,
+including the creation and last-updated datetimes (POSIXct) when
+timestamps are present:
+
+- order_id (character) the system order identifier.
+
+- symbol (character) the trading pair symbol.
+
+- side (character) the order side.
+
+- type (character) the type.
+
+- price (numeric \| NA) the price.
+
+- size (numeric \| NA) the size.
+
+- created_at (POSIXct) the created at (UTC).
+
+- last_updated_at (POSIXct) the last updated at (UTC).
 
 #### Examples
 
+    \dontrun{
     trading <- KucoinTrading$new()
     order <- trading$get_order_by_id("671124f9365ccb00073debd4", "BTC-USDT")
     print(order)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinTrading$get_order_by_client_oid()`
+### Method `get_order_by_client_oid()`
 
 Get Order by Client OID
 
@@ -1153,33 +1212,42 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinTrading$get_order_by_client_oid(clientOid, symbol)
+    KucoinTrading$get_order_by_client_oid(client_order_id, symbol)
 
 #### Arguments
 
-- `clientOid`:
+- `client_order_id`:
 
-  Character; client order ID.
+  (scalar\<character\>) client order ID.
 
 - `symbol`:
 
-  Character; trading pair (e.g., `"BTC-USDT"`).
+  (scalar\<character\>) trading pair (e.g., `"BTC-USDT"`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with full order details including `created_at` and
-`last_updated_at` (POSIXct) columns.
+(data.table \| promise\<data.table\>) one row of full order details,
+including the creation and last-updated datetimes (POSIXct):
+
+- client_oid (character \| NA) the client-supplied order identifier.
+
+- symbol (character) the trading pair symbol.
+
+- side (character) the order side.
+
+- created_at (POSIXct) the created at (UTC).
 
 #### Examples
 
+    \dontrun{
     trading <- KucoinTrading$new()
     order <- trading$get_order_by_client_oid("myClientOid123", "BTC-USDT")
     print(order)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinTrading$get_fills()`
+### Method `get_fills()`
 
 Get Trade Fills
 
@@ -1266,96 +1334,71 @@ Verified: 2026-05-23
 
     KucoinTrading$get_fills(
       symbol = NULL,
-      orderId = NULL,
+      order_id = NULL,
       side = NULL,
       type = NULL,
-      lastId = NULL,
+      last_id = NULL,
       limit = NULL,
-      startAt = NULL,
-      endAt = NULL
+      start_at = NULL,
+      end_at = NULL
     )
 
 #### Arguments
 
 - `symbol`:
 
-  Character or NULL; trading pair (e.g., `"BTC-USDT"`). If NULL, returns
-  fills across all symbols.
+  (scalar\<character\> \| NULL) trading pair (e.g., `"BTC-USDT"`). If
+  NULL, returns fills across all symbols.
 
-- `orderId`:
+- `order_id`:
 
-  Character or NULL; filter by specific order ID.
+  (scalar\<character\> \| NULL) filter by specific order ID.
 
 - `side`:
 
-  Character or NULL; `"buy"` or `"sell"`.
+  (scalar\<character\> \| NULL) `"buy"` or `"sell"`.
 
 - `type`:
 
-  Character or NULL; `"limit"` or `"market"`.
+  (scalar\<character\> \| NULL) `"limit"` or `"market"`.
 
-- `lastId`:
+- `last_id`:
 
-  Character or NULL; pagination cursor for fetching next page.
+  (scalar\<character\> \| NULL) pagination cursor for fetching next
+  page.
 
 - `limit`:
 
-  Integer or NULL; results per page (default 100, max 200).
+  (scalar\<count\> \| NULL) results per page (default 100, max 200).
 
-- `startAt`:
+- `start_at`:
 
-  Integer or NULL; start timestamp in milliseconds.
+  (scalar\<numeric\> \| NULL) start timestamp in milliseconds.
 
-- `endAt`:
+- `end_at`:
 
-  Integer or NULL; end timestamp in milliseconds.
+  (scalar\<numeric\> \| NULL) end timestamp in milliseconds.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
-
-- `id` (numeric): Fill identifier.
-
-- `order_id` (character): Parent order ID.
-
-- `counter_order_id` (character): Counterparty order ID.
-
-- `trade_id` (numeric): Trade identifier.
-
-- `symbol` (character): Trading pair.
-
-- `side` (character): Trade direction.
-
-- `liquidity` (character): `"maker"` or `"taker"`.
-
-- `type` (character): Order type.
-
-- `price` (character): Fill price.
-
-- `size` (character): Fill size.
-
-- `funds` (character): Fill value in quote currency.
-
-- `fee` (character): Fee charged.
-
-- `fee_rate` (character): Fee rate applied.
-
-- `fee_currency` (character): Currency of fee.
-
-- `created_at` (POSIXct): Creation datetime (coerced from epoch
-  milliseconds).
+(data.table \| promise\<data.table\>) one row per fill giving the fill
+and trade identifiers, the parent and counterparty order IDs, the
+trading pair, side, liquidity, type, price, size, funds, fee, fee rate,
+fee currency, and the creation datetime (POSIXct, coerced from epoch
+milliseconds).
 
 #### Examples
 
+    \dontrun{
     trading <- KucoinTrading$new()
     fills <- trading$get_fills("BTC-USDT")
     # Get all fills across symbols
     all_fills <- trading$get_fills()
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinTrading$get_symbols_with_open_orders()`
+### Method `get_symbols_with_open_orders()`
 
 Get Symbols with Open Orders
 
@@ -1368,8 +1411,8 @@ for determining which pairs need attention.
 
 #### Official Documentation
 
-[KuCoin Get Symbols With Open
-Order](https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-symbols-with-open-order)
+KuCoin Get Symbols With Open Order:
+<https://www.kucoin.com/docs-new/rest/spot-trading/orders/get-symbols-with-open-order>
 
 Verified: 2026-05-23
 
@@ -1405,20 +1448,22 @@ Verified: 2026-05-23
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with column:
+(data.table \| promise\<data.table\>) one row per trading pair that has
+at least one open order:
 
-- `symbols` (character): Trading pairs with open orders.
+- symbols (character) the trading pair, e.g. `"BTC-USDT"`.
 
 #### Examples
 
+    \dontrun{
     trading <- KucoinTrading$new()
     active <- trading$get_symbols_with_open_orders()
     print(active$symbols)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinTrading$get_open_orders()`
+### Method `get_open_orders()`
 
 Get Open Orders
 
@@ -1507,22 +1552,24 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; trading pair (e.g., `"BTC-USDT"`). **Required** by the API.
+  (scalar\<character\> \| NULL) trading pair (e.g., `"BTC-USDT"`).
+  **Required** by the API.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with open order details including `created_at`
-(POSIXct).
+(data.table \| promise\<data.table\>) one row per open order, including
+the creation datetime (POSIXct).
 
 #### Examples
 
+    \dontrun{
     trading <- KucoinTrading$new()
     open_orders <- trading$get_open_orders("BTC-USDT")
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinTrading$get_closed_orders()`
+### Method `get_closed_orders()`
 
 Get Closed Orders
 
@@ -1613,59 +1660,68 @@ Verified: 2026-05-23
       symbol = NULL,
       side = NULL,
       type = NULL,
-      startAt = NULL,
-      endAt = NULL,
+      start_at = NULL,
+      end_at = NULL,
       limit = NULL,
-      lastId = NULL
+      last_id = NULL
     )
 
 #### Arguments
 
 - `symbol`:
 
-  Character or NULL; trading pair (e.g., `"BTC-USDT"`). If NULL, returns
-  closed orders across all symbols.
+  (scalar\<character\> \| NULL) trading pair (e.g., `"BTC-USDT"`). If
+  NULL, returns closed orders across all symbols.
 
 - `side`:
 
-  Character or NULL; `"buy"` or `"sell"`.
+  (scalar\<character\> \| NULL) `"buy"` or `"sell"`.
 
 - `type`:
 
-  Character or NULL; `"limit"` or `"market"`.
+  (scalar\<character\> \| NULL) `"limit"` or `"market"`.
 
-- `startAt`:
+- `start_at`:
 
-  Integer or NULL; start timestamp in milliseconds.
+  (scalar\<numeric\> \| NULL) start timestamp in milliseconds.
 
-- `endAt`:
+- `end_at`:
 
-  Integer or NULL; end timestamp in milliseconds.
+  (scalar\<numeric\> \| NULL) end timestamp in milliseconds.
 
 - `limit`:
 
-  Integer or NULL; results per page (max 200).
+  (scalar\<count\> \| NULL) results per page (max 200).
 
-- `lastId`:
+- `last_id`:
 
-  Character or NULL; pagination cursor.
+  (scalar\<character\> \| NULL) pagination cursor.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with closed order details including `created_at`
-(POSIXct).
+(data.table \| promise\<data.table\>) one row per closed order,
+including the creation datetime (POSIXct):
+
+- order_id (character) the system order identifier.
+
+- symbol (character) the trading pair symbol.
+
+- side (character) the order side.
+
+- created_at (POSIXct) the created at (UTC).
 
 #### Examples
 
+    \dontrun{
     trading <- KucoinTrading$new()
     closed <- trading$get_closed_orders("BTC-USDT", limit = 20)
     # Get all closed orders across symbols
     all_closed <- trading$get_closed_orders()
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinTrading$add_order_sync()`
+### Method `add_order_sync()`
 
 Place an Order (Synchronous Return)
 
@@ -1738,123 +1794,114 @@ Verified: 2026-05-23
       type,
       symbol,
       side,
-      clientOid = NULL,
+      client_order_id = NULL,
       price = NULL,
       size = NULL,
       funds = NULL,
       stp = NULL,
       tags = NULL,
       remark = NULL,
-      timeInForce = NULL,
-      cancelAfter = NULL,
-      postOnly = NULL,
+      time_in_force = NULL,
+      cancel_after = NULL,
+      post_only = NULL,
       hidden = NULL,
       iceberg = NULL,
-      visibleSize = NULL
+      visible_size = NULL
     )
 
 #### Arguments
 
 - `type`:
 
-  Character; `"limit"` or `"market"`.
+  (scalar\<character\>) `"limit"` or `"market"`.
 
 - `symbol`:
 
-  Character; trading pair (e.g., `"BTC-USDT"`).
+  (scalar\<character\>) trading pair (e.g., `"BTC-USDT"`).
 
 - `side`:
 
-  Character; `"buy"` or `"sell"`.
+  (scalar\<character\>) `"buy"` or `"sell"`.
 
-- `clientOid`:
+- `client_order_id`:
 
-  Character or NULL; unique client order ID (max 40 chars).
+  (scalar\<character\> \| NULL) unique client order ID (max 40 chars).
 
 - `price`:
 
-  Numeric or NULL; price for limit orders.
+  (scalar\<numeric\> \| scalar\<character\> \| NULL) price for limit
+  orders.
 
 - `size`:
 
-  Numeric or NULL; quantity in base currency.
+  (scalar\<numeric\> \| scalar\<character\> \| NULL) quantity in base
+  currency.
 
 - `funds`:
 
-  Numeric or NULL; amount in quote currency for market orders.
+  (scalar\<numeric\> \| scalar\<character\> \| NULL) amount in quote
+  currency for market orders.
 
 - `stp`:
 
-  Character or NULL; self-trade prevention: `"CN"`, `"CO"`, `"CB"`,
-  `"DC"`.
+  (scalar\<character\> \| NULL) self-trade prevention: `"CN"`, `"CO"`,
+  `"CB"`, `"DC"`.
 
 - `tags`:
 
-  Character or NULL; order tag (max 20 ASCII chars).
+  (scalar\<character\> \| NULL) order tag (max 20 ASCII chars).
 
 - `remark`:
 
-  Character or NULL; remarks (max 20 ASCII chars).
+  (scalar\<character\> \| NULL) remarks (max 20 ASCII chars).
 
-- `timeInForce`:
+- `time_in_force`:
 
-  Character or NULL; `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
+  (scalar\<character\> \| NULL) `"GTC"`, `"GTT"`, `"IOC"`, `"FOK"`.
 
-- `cancelAfter`:
+- `cancel_after`:
 
-  Numeric or NULL; auto-cancel seconds (requires `timeInForce = "GTT"`).
+  (scalar\<numeric\> \| NULL) auto-cancel seconds (requires
+  `timeInForce = "GTT"`).
 
-- `postOnly`:
+- `post_only`:
 
-  Logical or NULL; if TRUE, order rejected if it would match
+  (scalar\<logical\> \| NULL) if TRUE, order rejected if it would match
   immediately.
 
 - `hidden`:
 
-  Logical or NULL; if TRUE, order hidden from order book.
+  (scalar\<logical\> \| NULL) if TRUE, order hidden from order book.
 
 - `iceberg`:
 
-  Logical or NULL; if TRUE, only `visibleSize` is shown.
+  (scalar\<logical\> \| NULL) if TRUE, only `visibleSize` is shown.
 
-- `visibleSize`:
+- `visible_size`:
 
-  Numeric or NULL; visible quantity for iceberg orders.
+  (scalar\<numeric\> \| scalar\<character\> \| NULL) visible quantity
+  for iceberg orders.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
-
-- `order_id` (character): KuCoin-assigned order identifier.
-
-- `client_oid` (character): Client-provided order identifier (NA if not
-  supplied).
-
-- `order_time` (numeric): Order placement time in milliseconds.
-
-- `origin_size` (character): Original order size.
-
-- `deal_size` (character): Filled size.
-
-- `remain_size` (character): Remaining unfilled size.
-
-- `canceled_size` (character): Cancelled size.
-
-- `status` (character): `"open"` or `"done"`.
+(data.table \| promise\<data.table\>) one row giving the order and
+client identifiers, the order placement datetime, the original, filled,
+remaining, and cancelled sizes, and the fill status.
 
 #### Examples
 
+    \dontrun{
     trading <- KucoinTrading$new()
     order <- trading$add_order_sync(
       type = "limit", symbol = "BTC-USDT", side = "buy",
       price = 50000, size = 0.00001
     )
     cat("Status:", order$status, "Filled:", order$deal_size, "\n")
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinTrading$add_order_batch_sync()`
+### Method `add_order_batch_sync()`
 
 Place Batch Orders (Synchronous Return)
 
@@ -1889,7 +1936,9 @@ Verified: 2026-05-23
       --header 'KC-API-TIMESTAMP: 1729176273859' \
       --header 'KC-API-PASSPHRASE: your-passphrase' \
       --header 'KC-API-KEY-VERSION: 2' \
-      --data-raw '{"orderList":[{"clientOid":"id1","symbol":"BTC-USDT","type":"limit","side":"buy","price":"30000","size":"0.00001"}]}'
+      --data-raw \
+      '{"orderList":[{"clientOid":"id1","symbol":"BTC-USDT","type":"limit","side":"buy","price":"30000",
+      "size":"0.00001"}]}'
 
 #### JSON Request
 
@@ -1952,31 +2001,34 @@ Verified: 2026-05-23
 
 - `order_list`:
 
-  List of named lists; each containing order parameters. Maximum 20
-  orders.
+  (list) list of named lists; each containing order parameters. Maximum
+  20 orders.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with per-order results:
+(data.table \| promise\<data.table\>) one row per order giving the order
+and client identifiers, the success flag, the fill status, and the
+filled, remaining, and cancelled quantities:
 
-- `order_id` (character): KuCoin-assigned order identifier.
+- order_id (character \| NA) the system order identifier.
 
-- `client_oid` (character): Client-provided order identifier (NA if not
-  supplied).
+- client_oid (character \| NA) the client-supplied order identifier.
 
-- `success` (logical): Whether the order was accepted.
+- success (logical) whether the order succeeded.
 
-- `status` (character): Fill status.
+- status (character \| NA) the status.
 
-- `deal_size` (character): Filled quantity.
+- deal_size (numeric \| NA) the filled size.
 
-- `remain_size` (character): Remaining unfilled quantity.
+- remain_size (numeric \| NA) the unfilled size.
 
-- `canceled_size` (character): Cancelled quantity.
+- canceled_size (numeric \| NA) the cancelled size.
+
+- fail_msg (character \| NA) the failure message.
 
 #### Examples
 
+    \dontrun{
     trading <- KucoinTrading$new()
     orders <- trading$add_order_batch_sync(list(
       list(type = "limit", symbol = "BTC-USDT", side = "buy",
@@ -1985,10 +2037,11 @@ Verified: 2026-05-23
            price = "2000", size = "0.001", clientOid = "order2")
     ))
     print(orders[success == TRUE, .(order_id, status, deal_size)])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinTrading$cancel_order_by_id_sync()`
+### Method `cancel_order_by_id_sync()`
 
 Cancel Order by Order ID (Synchronous Return)
 
@@ -2002,8 +2055,8 @@ sizes.
 
 #### Official Documentation
 
-[KuCoin Cancel Order By OrderId
-Sync](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld-sync)
+KuCoin Cancel Order By OrderId Sync:
+<https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-orderld-sync>
 
 Verified: 2026-05-23
 
@@ -2041,44 +2094,46 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinTrading$cancel_order_by_id_sync(orderId, symbol)
+    KucoinTrading$cancel_order_by_id_sync(order_id, symbol)
 
 #### Arguments
 
-- `orderId`:
+- `order_id`:
 
-  Character; the KuCoin order ID to cancel.
+  (scalar\<character\>) the KuCoin order ID to cancel.
 
 - `symbol`:
 
-  Character; trading pair (e.g., `"BTC-USDT"`).
+  (scalar\<character\>) trading pair (e.g., `"BTC-USDT"`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the order ID, the
+original, filled, remaining, and cancelled sizes, and the fill status:
 
-- `order_id` (character): Order ID.
+- order_id (character) the system order identifier.
 
-- `origin_size` (character): Original order size.
+- origin_size (numeric \| NA) the original size.
 
-- `deal_size` (character): Filled size.
+- deal_size (numeric \| NA) the filled size.
 
-- `remain_size` (character): Remaining size.
+- remain_size (numeric \| NA) the unfilled size.
 
-- `canceled_size` (character): Cancelled size.
+- canceled_size (numeric \| NA) the cancelled size.
 
-- `status` (character): `"open"` or `"done"`.
+- status (character) the status.
 
 #### Examples
 
+    \dontrun{
     trading <- KucoinTrading$new()
     result <- trading$cancel_order_by_id_sync("671128ee365ccb0007534d45", "BTC-USDT")
     cat("Status:", result$status, "Cancelled:", result$canceled_size, "\n")
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinTrading$cancel_order_by_client_oid_sync()`
+### Method `cancel_order_by_client_oid_sync()`
 
 Cancel Order by Client OID (Synchronous Return)
 
@@ -2091,8 +2146,8 @@ returning.
 
 #### Official Documentation
 
-[KuCoin Cancel Order By ClientOid
-Sync](https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid-sync)
+KuCoin Cancel Order By ClientOid Sync:
+<https://www.kucoin.com/docs-new/rest/spot-trading/orders/cancel-order-by-clientoid-sync>
 
 Verified: 2026-05-23
 
@@ -2123,44 +2178,47 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinTrading$cancel_order_by_client_oid_sync(clientOid, symbol)
+    KucoinTrading$cancel_order_by_client_oid_sync(client_order_id, symbol)
 
 #### Arguments
 
-- `clientOid`:
+- `client_order_id`:
 
-  Character; client order ID.
+  (scalar\<character\>) client order ID.
 
 - `symbol`:
 
-  Character; trading pair (e.g., `"BTC-USDT"`).
+  (scalar\<character\>) trading pair (e.g., `"BTC-USDT"`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the client order
+ID, the original, filled, remaining, and cancelled sizes, and the fill
+status:
 
-- `client_oid` (character): Client order ID.
+- client_oid (character \| NA) the client-supplied order identifier.
 
-- `origin_size` (character): Original order size.
+- origin_size (numeric \| NA) the original size.
 
-- `deal_size` (character): Filled size.
+- deal_size (numeric \| NA) the filled size.
 
-- `remain_size` (character): Remaining size.
+- remain_size (numeric \| NA) the unfilled size.
 
-- `canceled_size` (character): Cancelled size.
+- canceled_size (numeric \| NA) the cancelled size.
 
-- `status` (character): `"open"` or `"done"`.
+- status (character) the status.
 
 #### Examples
 
+    \dontrun{
     trading <- KucoinTrading$new()
     result <- trading$cancel_order_by_client_oid_sync("myClientOid123", "BTC-USDT")
     cat("Status:", result$status, "\n")
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinTrading$modify_order()`
+### Method `modify_order()`
 
 Modify Order
 
@@ -2222,49 +2280,50 @@ Verified: 2026-05-23
 
     KucoinTrading$modify_order(
       symbol,
-      orderId = NULL,
-      clientOid = NULL,
-      newPrice = NULL,
-      newSize = NULL
+      order_id = NULL,
+      client_order_id = NULL,
+      new_price = NULL,
+      new_size = NULL
     )
 
 #### Arguments
 
 - `symbol`:
 
-  Character; trading pair (e.g., `"BTC-USDT"`). Required.
+  (scalar\<character\>) trading pair (e.g., `"BTC-USDT"`). Required.
 
-- `orderId`:
+- `order_id`:
 
-  Character or NULL; KuCoin order ID. At least one of `orderId` or
-  `clientOid` required.
+  (scalar\<character\> \| NULL) KuCoin order ID. At least one of
+  `order_id` or `client_order_id` is required.
 
-- `clientOid`:
+- `client_order_id`:
 
-  Character or NULL; client order ID. At least one of `orderId` or
-  `clientOid` required.
+  (scalar\<character\> \| NULL) client order ID. At least one of
+  `order_id` or `client_order_id` is required.
 
-- `newPrice`:
+- `new_price`:
 
-  Character or NULL; new order price. At least one of `newPrice` or
-  `newSize` required.
+  (scalar\<numeric\> \| scalar\<character\> \| NULL) new order price. At
+  least one of `new_price` or `new_size` required.
 
-- `newSize`:
+- `new_size`:
 
-  Character or NULL; new order size. At least one of `newPrice` or
-  `newSize` required.
+  (scalar\<numeric\> \| scalar\<character\> \| NULL) new order size. At
+  least one of `new_price` or `new_size` required.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the replacement
+order's ID and the original client order ID:
 
-- `new_order_id` (character): The replacement order's ID.
+- new_order_id (character) the new order identifier.
 
-- `client_oid` (character): The original client order ID.
+- client_oid (character \| NA) the client-supplied order identifier.
 
 #### Examples
 
+    \dontrun{
     trading <- KucoinTrading$new()
     result <- trading$modify_order(
       symbol = "BTC-USDT",
@@ -2272,10 +2331,11 @@ Verified: 2026-05-23
       newPrice = "51000"
     )
     cat("New order ID:", result$new_order_id, "\n")
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinTrading$set_dcp()`
+### Method `set_dcp()`
 
 Set DCP (Dead Connection Protection)
 
@@ -2341,25 +2401,27 @@ Verified: 2026-05-23
 
 - `timeout`:
 
-  Integer; trigger duration in seconds. Use `-1` to disable, or `5` to
-  `86400`.
+  (scalar\<numeric\>) trigger duration in seconds. Use `-1` to disable,
+  or `5` to `86400`.
 
 - `symbols`:
 
-  Character or NULL; comma-separated trading pairs (max 50). Empty or
-  NULL applies to all pairs.
+  (scalar\<character\> \| NULL) comma-separated trading pairs (max 50).
+  Empty or NULL applies to all pairs.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the current server
+time and the time at which cancellation will trigger, both in seconds:
 
-- `current_time` (integer): Current server time in seconds.
+- current_time (integer) the current server time, in epoch seconds.
 
-- `trigger_time` (integer): When cancellation will trigger, in seconds.
+- trigger_time (integer) the time at which cancellation triggers, in
+  epoch seconds.
 
 #### Examples
 
+    \dontrun{
     trading <- KucoinTrading$new()
     # Enable DCP with 30-second timeout for BTC-USDT
     result <- trading$set_dcp(timeout = 30, symbols = "BTC-USDT")
@@ -2367,10 +2429,11 @@ Verified: 2026-05-23
 
     # Disable DCP
     trading$set_dcp(timeout = -1)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinTrading$get_dcp()`
+### Method `get_dcp()`
 
 Get DCP Settings
 
@@ -2416,31 +2479,25 @@ Verified: 2026-05-23
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
-
-- `timeout` (integer): Auto-cancel trigger time in seconds. `-1` if
-  unset.
-
-- `symbols` (character): Comma-separated trading pairs, or empty for
-  all.
-
-- `current_time` (integer): Current server time in seconds.
-
-- `trigger_time` (integer): When cancellation will trigger.
+(data.table \| promise\<data.table\>) one row giving the auto-cancel
+trigger time, the protected symbols, the current server time, and the
+time at which cancellation will trigger; an empty data.table if DCP is
+not configured.
 
 #### Examples
 
+    \dontrun{
     trading <- KucoinTrading$new()
     dcp <- trading$get_dcp()
     if (nrow(dcp) > 0) {
       cat("DCP timeout:", dcp$timeout, "seconds\n")
       cat("Symbols:", dcp$symbols, "\n")
     }
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinTrading$clone()`
+### Method `clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -2479,7 +2536,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinTrading$add_order()`
+## Method `KucoinTrading$add_order`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2500,7 +2557,7 @@ order <- trading$add_order(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$add_order_test()`
+## Method `KucoinTrading$add_order_test`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2513,7 +2570,7 @@ print(test)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$add_order_batch()`
+## Method `KucoinTrading$add_order_batch`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2529,7 +2586,7 @@ print(orders[success == FALSE, .(fail_msg)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$cancel_order_by_id()`
+## Method `KucoinTrading$cancel_order_by_id`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2539,7 +2596,7 @@ print(result$order_id)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$cancel_order_by_client_oid()`
+## Method `KucoinTrading$cancel_order_by_client_oid`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2549,7 +2606,7 @@ print(result$client_oid)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$cancel_partial_order()`
+## Method `KucoinTrading$cancel_partial_order`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2560,7 +2617,7 @@ result <- trading$cancel_partial_order(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$cancel_all_by_symbol()`
+## Method `KucoinTrading$cancel_all_by_symbol`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2569,7 +2626,7 @@ trading$cancel_all_by_symbol("BTC-USDT")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$cancel_all()`
+## Method `KucoinTrading$cancel_all`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2579,7 +2636,7 @@ print(result[status == "failed"])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$get_order_by_id()`
+## Method `KucoinTrading$get_order_by_id`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2589,7 +2646,7 @@ print(order)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$get_order_by_client_oid()`
+## Method `KucoinTrading$get_order_by_client_oid`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2599,7 +2656,7 @@ print(order)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$get_fills()`
+## Method `KucoinTrading$get_fills`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2610,7 +2667,7 @@ all_fills <- trading$get_fills()
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$get_symbols_with_open_orders()`
+## Method `KucoinTrading$get_symbols_with_open_orders`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2620,7 +2677,7 @@ print(active$symbols)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$get_open_orders()`
+## Method `KucoinTrading$get_open_orders`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2629,7 +2686,7 @@ open_orders <- trading$get_open_orders("BTC-USDT")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$get_closed_orders()`
+## Method `KucoinTrading$get_closed_orders`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2640,7 +2697,7 @@ all_closed <- trading$get_closed_orders()
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$add_order_sync()`
+## Method `KucoinTrading$add_order_sync`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2653,7 +2710,7 @@ cat("Status:", order$status, "Filled:", order$deal_size, "\n")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$add_order_batch_sync()`
+## Method `KucoinTrading$add_order_batch_sync`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2668,7 +2725,7 @@ print(orders[success == TRUE, .(order_id, status, deal_size)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$cancel_order_by_id_sync()`
+## Method `KucoinTrading$cancel_order_by_id_sync`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2678,7 +2735,7 @@ cat("Status:", result$status, "Cancelled:", result$canceled_size, "\n")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$cancel_order_by_client_oid_sync()`
+## Method `KucoinTrading$cancel_order_by_client_oid_sync`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2688,7 +2745,7 @@ cat("Status:", result$status, "\n")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$modify_order()`
+## Method `KucoinTrading$modify_order`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2702,7 +2759,7 @@ cat("New order ID:", result$new_order_id, "\n")
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$set_dcp()`
+## Method `KucoinTrading$set_dcp`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2716,7 +2773,7 @@ trading$set_dcp(timeout = -1)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTrading$get_dcp()`
+## Method `KucoinTrading$get_dcp`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

@@ -1,5 +1,11 @@
 # KucoinDeposit: Deposit Management
 
+KucoinDeposit: Deposit Management
+
+KucoinDeposit: Deposit Management
+
+## Details
+
 Provides methods for managing deposit addresses and retrieving deposit
 history on KuCoin. Inherits from
 [KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
@@ -42,7 +48,7 @@ Endpoints](https://www.kucoin.com/docs-new/rest/account-info/deposit/add-deposit
 
 [`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
 -\>
-[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinDeposit`
 
 ## Methods
@@ -59,11 +65,11 @@ Endpoints](https://www.kucoin.com/docs-new/rest/account-info/deposit/add-deposit
 
 Inherited methods
 
-- [`KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 
-### `KucoinDeposit$add_deposit_address()`
+### Method `add_deposit_address()`
 
 Add Deposit Address
 
@@ -144,48 +150,50 @@ Verified: 2026-05-23
 
 - `currency`:
 
-  Character; currency code (e.g., `"BTC"`, `"ETH"`, `"USDT"`). Must be a
-  valid KuCoin-supported currency symbol.
+  (scalar\<character\>) currency code (e.g., `"BTC"`, `"ETH"`,
+  `"USDT"`). Must be a valid KuCoin-supported currency symbol.
 
 - `chain`:
 
-  Character; blockchain network identifier (e.g., `"ERC20"`, `"TRC20"`,
-  `"btc"`). Required by the KuCoin API.
+  (scalar\<character\> \| NULL) blockchain network identifier (e.g.,
+  `"ERC20"`, `"TRC20"`, `"btc"`). Required by the KuCoin API.
 
 - `to`:
 
-  Character; target account type for the deposit. Accepted values
-  include `"main"` (funding account) and `"trade"` (trading account).
-  Required by the KuCoin API.
+  (scalar\<character\> \| NULL) target account type for the deposit.
+  Accepted values include `"main"` (funding account) and `"trade"`
+  (trading account). Required by the KuCoin API.
 
 - `amount`:
 
-  Character or NULL; deposit amount. Required for some invoice-based
-  deposit addresses (e.g., Lightning Network).
+  (scalar\<character\> \| NULL) deposit amount. Required for some
+  invoice-based deposit addresses (e.g., Lightning Network).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row and columns:
+(data.table \| promise\<data.table\>) one row describing the newly
+created deposit address: the generated address, its memo/tag (empty
+string if not applicable), the blockchain network name, the chain
+identifier, the target account type, the currency code, and the token
+contract address (empty for native coins) – all character:
 
-- `address` (character): The generated deposit address.
+- address (character) the address.
 
-- `memo` (character): Memo/tag for the address (empty string if not
-  applicable).
+- memo (character) the address memo/tag.
 
-- `chain` (character): Blockchain network name.
+- chain (character) the chain code.
 
-- `chain_id` (character): Chain identifier.
+- chain_id (character \| NA) the chain identifier.
 
-- `to` (character): Target account type.
+- to (character) the destination.
 
-- `currency` (character): Currency code.
+- currency (character) the currency code.
 
-- `contract_address` (character): Token contract address (empty for
-  native coins).
+- contract_address (character \| NA) the token contract address.
 
 #### Examples
 
+    \dontrun{
     deposit <- KucoinDeposit$new()
 
     # Create a BTC deposit address on the default chain
@@ -199,10 +207,11 @@ Verified: 2026-05-23
       to = "trade"
     )
     print(usdt_addr[, .(address, chain, to)])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinDeposit$get_deposit_addresses()`
+### Method `get_deposit_addresses()`
 
 Get Deposit Addresses
 
@@ -227,8 +236,8 @@ chain. Useful for looking up addresses before creating new ones.
 
 #### Official Documentation
 
-[KuCoin Get Deposit Addresses
-V3](https://www.kucoin.com/docs-new/rest/account-info/deposit/get-deposit-address-v3/en)
+KuCoin Get Deposit Addresses V3:
+<https://www.kucoin.com/docs-new/rest/account-info/deposit/get-deposit-address-v3/en>
 
 Verified: 2026-05-23
 
@@ -287,44 +296,32 @@ Verified: 2026-05-23
 
 - `currency`:
 
-  Character; currency code (e.g., `"BTC"`, `"ETH"`, `"USDT"`).
-  **Required** by the API.
+  (scalar\<character\>) currency code (e.g., `"BTC"`, `"ETH"`,
+  `"USDT"`). **Required** by the API.
 
 - `amount`:
 
-  Character or NULL; deposit amount. Some chains require an amount to
-  generate invoice-based addresses (e.g., Lightning Network).
+  (scalar\<character\> \| NULL) deposit amount. Some chains require an
+  amount to generate invoice-based addresses (e.g., Lightning Network).
 
 - `chain`:
 
-  Character or NULL; blockchain network identifier (e.g., `"ERC20"`,
-  `"TRC20"`, `"btc"`). When NULL, returns addresses for all chains.
+  (scalar\<character\> \| NULL) blockchain network identifier (e.g.,
+  `"ERC20"`, `"TRC20"`, `"btc"`). When NULL, returns addresses for all
+  chains.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per address and columns:
-
-- `address` (character): The deposit address string.
-
-- `memo` (character): Memo/tag for the address (empty string if not
-  applicable).
-
-- `chain` (character): Blockchain network name.
-
-- `chain_id` (character): Chain identifier.
-
-- `to` (character): Target account type.
-
-- `currency` (character): Currency code.
-
-- `contract_address` (character): Token contract address (empty for
-  native coins).
-
-Returns an empty `data.table` if no addresses exist for the currency.
+(data.table \| promise\<data.table\>) one row per deposit address, each
+giving the deposit address string, its memo/tag (empty string if not
+applicable), the blockchain network name, the chain identifier, the
+target account type, the currency code, and the token contract address
+(empty for native coins) – all character. Returns an empty data.table if
+no addresses exist for the currency.
 
 #### Examples
 
+    \dontrun{
     deposit <- KucoinDeposit$new()
 
     # Get all BTC deposit addresses across all chains
@@ -337,10 +334,11 @@ Returns an empty `data.table` if no addresses exist for the currency.
       chain = "ERC20"
     )
     print(usdt_erc20$address)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinDeposit$get_deposit_history()`
+### Method `get_deposit_history()`
 
 Get Deposit History
 
@@ -438,8 +436,8 @@ Verified: 2026-05-23
     KucoinDeposit$get_deposit_history(
       currency = NULL,
       status = NULL,
-      startAt = NULL,
-      endAt = NULL,
+      start_at = NULL,
+      end_at = NULL,
       page_size = 50,
       max_pages = Inf
     )
@@ -448,70 +446,49 @@ Verified: 2026-05-23
 
 - `currency`:
 
-  Character or NULL; filter by currency code (e.g., `"BTC"`, `"USDT"`).
-  When NULL, returns deposits for all currencies.
+  (scalar\<character\> \| NULL) filter by currency code (e.g., `"BTC"`,
+  `"USDT"`). When NULL, returns deposits for all currencies.
 
 - `status`:
 
-  Character or NULL; filter by deposit status. Accepted values:
-  `"PROCESSING"`, `"WALLET_PROCESSING"`, `"SUCCESS"`, `"FAILURE"`. When
-  NULL, returns deposits of all statuses.
+  (scalar\<character\> \| NULL) filter by deposit status. Accepted
+  values: `"PROCESSING"`, `"WALLET_PROCESSING"`, `"SUCCESS"`,
+  `"FAILURE"`. When NULL, returns deposits of all statuses.
 
-- `startAt`:
+- `start_at`:
 
-  Integer or NULL; start timestamp in milliseconds (inclusive). Used to
-  filter deposits created on or after this time.
+  (scalar\<numeric\> \| NULL) start timestamp in milliseconds
+  (inclusive). Used to filter deposits created on or after this time.
 
-- `endAt`:
+- `end_at`:
 
-  Integer or NULL; end timestamp in milliseconds (inclusive). Used to
-  filter deposits created on or before this time.
+  (scalar\<numeric\> \| NULL) end timestamp in milliseconds (inclusive).
+  Used to filter deposits created on or before this time.
 
 - `page_size`:
 
-  Integer; number of results per page (default 50, max 100).
+  (scalar\<count in \[1, Inf\]\>) number of results per page (default
+  50, max 100).
 
 - `max_pages`:
 
-  Numeric; maximum number of pages to fetch (default `Inf` for all
-  pages).
+  (scalar\<numeric in \[1, Inf\]\>) maximum number of pages to fetch
+  (default `Inf` for all pages).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per deposit and columns:
-
-- `currency` (character): Deposited currency code.
-
-- `chain` (character): Blockchain network used for the deposit.
-
-- `status` (character): Deposit status (`"PROCESSING"`, `"SUCCESS"`,
-  `"FAILURE"`).
-
-- `address` (character): Deposit address.
-
-- `memo` (character): Memo/tag (empty string if not applicable).
-
-- `is_inner` (logical): Whether this was an internal KuCoin transfer.
-
-- `amount` (character): Deposit amount.
-
-- `fee` (character): Deposit fee charged.
-
-- `wallet_tx_id` (character): On-chain transaction hash.
-
-- `created_at` (POSIXct): Creation datetime (coerced from epoch
-  milliseconds).
-
-- `updated_at` (POSIXct): Last update datetime (coerced from epoch
-  milliseconds).
-
-- `remark` (character): Optional remark.
-
-Returns an empty `data.table` if no deposits match the filters.
+(data.table \| promise\<data.table\>) one row per deposit, each giving
+the deposited currency code, the blockchain network used, the deposit
+status (`"PROCESSING"`, `"SUCCESS"`, `"FAILURE"`), the deposit address,
+the memo/tag (empty string if not applicable), whether the deposit was
+an internal KuCoin transfer (logical), the deposit amount, the fee
+charged, the on-chain transaction hash, the creation and last update
+datetimes (POSIXct, coerced from epoch milliseconds), and an optional
+remark. Returns an empty data.table if no deposits match the filters.
 
 #### Examples
 
+    \dontrun{
     deposit <- KucoinDeposit$new()
 
     # Get all successful BTC deposits
@@ -530,10 +507,11 @@ Returns an empty `data.table` if no deposits match the filters.
       max_pages = 5
     )
     print(recent[, .(currency, amount, wallet_tx_id, created_at)])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinDeposit$clone()`
+### Method `clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -568,7 +546,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinDeposit$add_deposit_address()`
+## Method `KucoinDeposit$add_deposit_address`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -588,7 +566,7 @@ print(usdt_addr[, .(address, chain, to)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinDeposit$get_deposit_addresses()`
+## Method `KucoinDeposit$get_deposit_addresses`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -607,7 +585,7 @@ print(usdt_erc20$address)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinDeposit$get_deposit_history()`
+## Method `KucoinDeposit$get_deposit_history`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

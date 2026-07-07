@@ -1,5 +1,11 @@
 # KucoinLending: Margin Lending Operations
 
+KucoinLending: Margin Lending Operations
+
+KucoinLending: Margin Lending Operations
+
+## Details
+
 Provides methods for lending assets on the KuCoin margin lending market,
 managing purchase (lend) orders, and redeeming lent assets. Inherits
 from
@@ -45,7 +51,7 @@ Market](https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-loan-mark
 
 [`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
 -\>
-[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinLending`
 
 ## Methods
@@ -70,11 +76,11 @@ Market](https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-loan-mark
 
 Inherited methods
 
-- [`KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 
-### `KucoinLending$get_loan_market()`
+### Method `get_loan_market()`
 
 Get Loan Market Information
 
@@ -131,48 +137,27 @@ Verified: 2026-05-23
 
 - `query`:
 
-  Named list; optional filter. Supported keys:
-
-  - `currency` (character): Filter by currency (e.g., `"USDT"`).
+  (list) optional filter; supported key `currency` (scalar\<character\>)
+  filters by currency (e.g., `"USDT"`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with **one row per lending currency** and columns:
-
-- `currency` (character): Currency code (e.g. `"USDT"`).
-
-- `purchase_enable` (logical): Whether new purchases are accepted.
-
-- `redeem_enable` (logical): Whether redemptions are accepted.
-
-- `increment` (character): Smallest purchase-size step.
-
-- `min_purchase_size` (character): Minimum purchase amount.
-
-- `max_purchase_size` (character): Maximum purchase amount.
-
-- `interest_increment` (character): Smallest interest-rate step.
-
-- `min_interest_rate` (character): Minimum permitted interest rate.
-
-- `market_interest_rate` (character): Current market rate.
-
-- `max_interest_rate` (character): Maximum permitted interest rate.
-
-- `auto_purchase_enable` (logical): Whether auto-purchase is available.
-
-Empty response yields an empty `data.table`.
+(data.table \| promise\<data.table\>) one row per lending currency with
+currency code, purchase/redeem enablement flags, size increments and
+bounds, and the minimum, market, and maximum interest rates; an empty
+response yields an empty data.table.
 
 #### Examples
 
+    \dontrun{
     lending <- KucoinLending$new()
     market <- lending$get_loan_market(query = list(currency = "USDT"))
     print(market)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinLending$get_loan_market_rate()`
+### Method `get_loan_market_rate()`
 
 Get Loan Market Interest Rate History
 
@@ -185,8 +170,8 @@ Retrieves the market interest rate history for a currency over the past
 
 #### Official Documentation
 
-[KuCoin Get Market Interest
-Rate](https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-loan-market-interest-rate)
+KuCoin Get Market Interest Rate:
+<https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-loan-market-interest-rate>
 
 Verified: 2026-05-23
 
@@ -220,28 +205,25 @@ Verified: 2026-05-23
 
 - `currency`:
 
-  Character; the currency to query (e.g., `"USDT"`).
+  (scalar\<character\>) the currency to query (e.g., `"USDT"`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with **one row per observation** and columns:
-
-- `time` (character): Timestamp string (YYYYMMDDHHmm format).
-
-- `market_interest_rate` (character): Market interest rate at that time.
-
-Empty response yields an empty `data.table`.
+(data.table \| promise\<data.table\>) one row per observation with the
+timestamp string (YYYYMMDDHHmm format) and the market interest rate at
+that time; an empty response yields an empty data.table.
 
 #### Examples
 
+    \dontrun{
     lending <- KucoinLending$new()
     rates <- lending$get_loan_market_rate(currency = "USDT")
     print(rates)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinLending$purchase()`
+### Method `purchase()`
 
 Purchase (Lend) Assets
 
@@ -289,38 +271,40 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinLending$purchase(currency, size, interestRate)
+    KucoinLending$purchase(currency, size, interest_rate)
 
 #### Arguments
 
 - `currency`:
 
-  Character; the currency to lend (e.g., `"USDT"`).
+  (scalar\<character\>) the currency to lend (e.g., `"USDT"`).
 
 - `size`:
 
-  Numeric; the amount to lend.
+  (scalar\<numeric\>) the amount to lend.
 
-- `interestRate`:
+- `interest_rate`:
 
-  Numeric; the interest rate (e.g., `0.05` for 5%).
+  (scalar\<numeric\>) the interest rate (e.g., `0.05` for 5%).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with column:
+(data.table \| promise\<data.table\>) one row with the lending order
+number:
 
-- `order_no` (character): Lending order number.
+- order_no (character) the order number.
 
 #### Examples
 
+    \dontrun{
     lending <- KucoinLending$new()
     order <- lending$purchase(currency = "USDT", size = 1000, interestRate = 0.05)
     print(order$order_no)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinLending$modify_purchase()`
+### Method `modify_purchase()`
 
 Modify Purchase Interest Rate
 
@@ -366,47 +350,48 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinLending$modify_purchase(currency, purchaseOrderNo, interestRate)
+    KucoinLending$modify_purchase(currency, purchase_order_no, interest_rate)
 
 #### Arguments
 
 - `currency`:
 
-  Character; the currency of the lending order.
+  (scalar\<character\>) the currency of the lending order.
 
-- `purchaseOrderNo`:
+- `purchase_order_no`:
 
-  Character; the order number to modify.
+  (scalar\<character\>) the order number to modify.
 
-- `interestRate`:
+- `interest_rate`:
 
-  Numeric; the new interest rate.
+  (scalar\<numeric\>) the new interest rate.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if `async = TRUE`), single row
-with columns:
+(data.table \| promise\<data.table\>) one row echoing the request:
 
-- `currency` (character): The lending currency.
+- currency (character) the lending currency.
 
-- `purchase_order_no` (character): The modified order number.
+- purchase_order_no (character) the modified order number.
 
-- `interest_rate` (numeric): The new interest rate.
+- interest_rate (numeric \| NA) the new interest rate.
 
-- `status` (character): `"success"`.
+- status (character) the local outcome marker, always `"success"`.
 
 #### Examples
 
+    \dontrun{
     lending <- KucoinLending$new()
     lending$modify_purchase(
       currency = "USDT",
       purchaseOrderNo = "abc123",
       interestRate = 0.06
     )
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinLending$get_purchase_orders()`
+### Method `get_purchase_orders()`
 
 Get Purchase Orders
 
@@ -465,52 +450,28 @@ Verified: 2026-05-23
 
 - `query`:
 
-  Named list; filters. Supported keys:
-
-  - `status` (character): **Required.** Order status (e.g., `"DONE"`,
-    `"PENDING"`).
-
-  - `currency` (character): Currency filter (e.g., `"USDT"`).
-
-  - `purchaseOrderNo` (character): Specific order number.
-
-  - `currentPage` (integer): Page number.
-
-  - `pageSize` (integer): Items per page.
+  (list) filters; supported keys `status` (required, e.g. `"DONE"`,
+  `"PENDING"`), `currency`, `purchaseOrderNo`, `currentPage`, and
+  `pageSize`.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with **one row per purchase order** and columns:
-
-- `currency` (character): Lent currency.
-
-- `purchase_order_no` (character): Purchase order number.
-
-- `purchase_size` (character): Amount lent.
-
-- `match_size` (character): Amount that has been matched.
-
-- `interest_rate` (character): Rate of the lending order.
-
-- `income_size` (character): Accrued income so far.
-
-- `apply_time` (POSIXct): Order creation time (millisecond epoch
-  coerced).
-
-- `status` (character): Order status (e.g. `"DONE"`).
-
-Empty response yields an empty `data.table`.
+(data.table \| promise\<data.table\>) one row per purchase order with
+the currency, purchase order number, amount lent, matched amount,
+interest rate, accrued income, order creation time, and status; an empty
+response yields an empty data.table.
 
 #### Examples
 
+    \dontrun{
     lending <- KucoinLending$new()
     orders <- lending$get_purchase_orders(query = list(currency = "USDT", status = "DONE"))
     print(orders)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinLending$redeem()`
+### Method `redeem()`
 
 Redeem Lent Assets
 
@@ -558,40 +519,42 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinLending$redeem(currency, size, purchaseOrderNo)
+    KucoinLending$redeem(currency, size, purchase_order_no)
 
 #### Arguments
 
 - `currency`:
 
-  Character; the currency to redeem (e.g., `"USDT"`).
+  (scalar\<character\>) the currency to redeem (e.g., `"USDT"`).
 
 - `size`:
 
-  Numeric; the amount to redeem.
+  (scalar\<numeric\>) the amount to redeem.
 
-- `purchaseOrderNo`:
+- `purchase_order_no`:
 
-  Character; the purchase order to redeem from.
+  (scalar\<character\>) the purchase order to redeem from.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with column:
+(data.table \| promise\<data.table\>) one row with the redemption order
+number:
 
-- `order_no` (character): Redemption order number.
+- order_no (character) the order number.
 
 #### Examples
 
+    \dontrun{
     lending <- KucoinLending$new()
     result <- lending$redeem(
       currency = "USDT", size = 500, purchaseOrderNo = "abc123"
     )
     print(result$order_no)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinLending$get_redeem_orders()`
+### Method `get_redeem_orders()`
 
 Get Redeem Orders
 
@@ -649,50 +612,28 @@ Verified: 2026-05-23
 
 - `query`:
 
-  Named list; filters. Supported keys:
-
-  - `status` (character): **Required.** Order status (e.g., `"DONE"`,
-    `"PENDING"`).
-
-  - `currency` (character): Currency filter (e.g., `"USDT"`).
-
-  - `redeemOrderNo` (character): Specific redemption order number.
-
-  - `currentPage` (integer): Page number.
-
-  - `pageSize` (integer): Items per page.
+  (list) filters; supported keys `status` (required, e.g. `"DONE"`,
+  `"PENDING"`), `currency`, `redeemOrderNo`, `currentPage`, and
+  `pageSize`.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with **one row per redemption order** and columns:
-
-- `currency` (character): Redeemed currency.
-
-- `purchase_order_no` (character): Source purchase order.
-
-- `redeem_order_no` (character): Redemption order number.
-
-- `redeem_size` (character): Requested redeem amount.
-
-- `receipt_size` (character): Amount actually received.
-
-- `apply_time` (POSIXct): Order creation time (millisecond epoch
-  coerced).
-
-- `status` (character): Order status (e.g. `"DONE"`).
-
-Empty response yields an empty `data.table`.
+(data.table \| promise\<data.table\>) one row per redemption order with
+the currency, source purchase order, redemption order number, requested
+redeem amount, amount actually received, order creation time, and
+status; an empty response yields an empty data.table.
 
 #### Examples
 
+    \dontrun{
     lending <- KucoinLending$new()
     orders <- lending$get_redeem_orders(query = list(currency = "USDT", status = "DONE"))
     print(orders)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinLending$clone()`
+### Method `clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -727,7 +668,7 @@ result <- lending$redeem(currency = "USDT", size = 1000,
 
 
 ## ------------------------------------------------
-## Method `KucoinLending$get_loan_market()`
+## Method `KucoinLending$get_loan_market`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -737,7 +678,7 @@ print(market)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinLending$get_loan_market_rate()`
+## Method `KucoinLending$get_loan_market_rate`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -747,7 +688,7 @@ print(rates)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinLending$purchase()`
+## Method `KucoinLending$purchase`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -757,7 +698,7 @@ print(order$order_no)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinLending$modify_purchase()`
+## Method `KucoinLending$modify_purchase`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -770,7 +711,7 @@ lending$modify_purchase(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinLending$get_purchase_orders()`
+## Method `KucoinLending$get_purchase_orders`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -780,7 +721,7 @@ print(orders)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinLending$redeem()`
+## Method `KucoinLending$redeem`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -792,7 +733,7 @@ print(result$order_no)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinLending$get_redeem_orders()`
+## Method `KucoinLending$get_redeem_orders`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

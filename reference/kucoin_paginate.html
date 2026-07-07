@@ -9,7 +9,7 @@ the items from each page into a list."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,7 @@ the items from each page into a list."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Paginate a KuCoin API Endpoint</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.1.0/R/helpers_request.R" class="external-link"><code>R/helpers_request.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/master/R/helpers_request.R" class="external-link"><code>R/helpers_request.R</code></a></small>
       <div class="d-none name"><code>kucoin_paginate.Rd</code></div>
     </div>
 
@@ -74,76 +74,85 @@ the items from each page into a list.</p>
 
 
 <dl><dt id="arg-base-url">base_url<a class="anchor" aria-label="anchor" href="#arg-base-url"></a></dt>
-<dd><p>Character; the API base URL.</p></dd>
+<dd><p>(scalar&lt;character&gt;) the API base URL.</p></dd>
 
 
 <dt id="arg-endpoint">endpoint<a class="anchor" aria-label="anchor" href="#arg-endpoint"></a></dt>
-<dd><p>Character; the API path.</p></dd>
+<dd><p>(scalar&lt;character&gt;) the API path.</p></dd>
 
 
 <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
-<dd><p>Character; HTTP method. Default <code>"GET"</code>.</p></dd>
+<dd><p>(scalar&lt;character&gt;) HTTP method. Default <code>"GET"</code>.</p></dd>
 
 
 <dt id="arg-query">query<a class="anchor" aria-label="anchor" href="#arg-query"></a></dt>
-<dd><p>Named list; initial query parameters. Default <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code>.</p></dd>
+<dd><p>(list) initial query parameters. Default <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code>.</p></dd>
 
 
 <dt id="arg-body">body<a class="anchor" aria-label="anchor" href="#arg-body"></a></dt>
-<dd><p>Named list or NULL; request body. Default <code>NULL</code>.</p></dd>
+<dd><p>(list | NULL) request body. Default <code>NULL</code>.</p></dd>
 
 
 <dt id="arg-keys">keys<a class="anchor" aria-label="anchor" href="#arg-keys"></a></dt>
-<dd><p>List or NULL; API credentials. Default <code>NULL</code>.</p></dd>
+<dd><p>(list | NULL) API credentials from <code><a href="get_api_keys.html">get_api_keys()</a></code>, or <code>NULL</code>:</p><ul><li><p>api_key (character) the API key.</p></li>
+<li><p>api_secret (character) the API secret.</p></li>
+<li><p>api_passphrase (character) the API passphrase.</p></li>
+<li><p>key_version (character) the API key version.</p></li>
+</ul></dd>
 
 
 <dt id="arg-sign">sign<a class="anchor" aria-label="anchor" href="#arg-sign"></a></dt>
-<dd><p>Function or NULL; the <code>.sign()</code> seam forwarded to
-<code><a href="kucoin_build_request.html">kucoin_build_request()</a></code>. Default <code>NULL</code> (use KuCoin's own signer).</p></dd>
+<dd><p>(function | NULL) the <code>.sign()</code> seam forwarded to
+<code><a href="https://rdrr.io/pkg/connectcore/man/build_request.html" class="external-link">connectcore::build_request()</a></code>. Default <code>NULL</code> (use KuCoin's own
+<code>kucoin_sign_req()</code> signer).</p></dd>
 
 
 <dt id="arg-parse-envelope">parse_envelope<a class="anchor" aria-label="anchor" href="#arg-parse-envelope"></a></dt>
-<dd><p>Function; the <code>.parse_envelope()</code> seam forwarded to
-<code><a href="kucoin_build_request.html">kucoin_build_request()</a></code>. Default <code>parse_kucoin_response()</code>.</p></dd>
+<dd><p>(function) the <code>.parse_envelope()</code> seam forwarded to
+<code><a href="https://rdrr.io/pkg/connectcore/man/build_request.html" class="external-link">connectcore::build_request()</a></code>. Default <code>parse_kucoin_response()</code>.</p></dd>
 
 
 <dt id="arg--perform">.perform<a class="anchor" aria-label="anchor" href="#arg--perform"></a></dt>
-<dd><p>Function; the httr2 perform function.</p></dd>
+<dd><p>(function) the httr2 perform function.</p></dd>
 
 
 <dt id="arg--parser">.parser<a class="anchor" aria-label="anchor" href="#arg--parser"></a></dt>
-<dd><p>Function; post-processing for the final accumulated result.
+<dd><p>(function) post-processing for the final accumulated result.
 Default <code>identity</code>.</p></dd>
 
 
 <dt id="arg-is-async">is_async<a class="anchor" aria-label="anchor" href="#arg-is-async"></a></dt>
-<dd><p>Logical; whether in async mode. Default <code>FALSE</code>.</p></dd>
+<dd><p>(scalar&lt;logical&gt;) whether in async mode. Default <code>FALSE</code>.</p></dd>
 
 
 <dt id="arg-page-size">page_size<a class="anchor" aria-label="anchor" href="#arg-page-size"></a></dt>
-<dd><p>Integer; results per page. Default <code>50</code>.</p></dd>
+<dd><p>(scalar&lt;count in [1, Inf]&gt;) results per page. Default <code>50</code>.</p></dd>
 
 
 <dt id="arg-max-pages">max_pages<a class="anchor" aria-label="anchor" href="#arg-max-pages"></a></dt>
-<dd><p>Numeric; maximum pages to fetch. Default <code>Inf</code>.</p></dd>
+<dd><p>(scalar&lt;numeric in [1, Inf]&gt;) maximum pages to fetch.
+Default <code>Inf</code>.</p></dd>
 
 
 <dt id="arg-items-field">items_field<a class="anchor" aria-label="anchor" href="#arg-items-field"></a></dt>
-<dd><p>Character; name of the items field. Default <code>"items"</code>.</p></dd>
+<dd><p>(scalar&lt;character&gt;) name of the items field. Default
+<code>"items"</code>.</p></dd>
 
 
 <dt id="arg-timeout">timeout<a class="anchor" aria-label="anchor" href="#arg-timeout"></a></dt>
-<dd><p>Numeric; request timeout in seconds. Default <code>30</code>.</p></dd>
+<dd><p>(scalar&lt;numeric in ]0, Inf[&gt;) request timeout in seconds.
+Default <code>30</code>.</p></dd>
 
 
 <dt id="arg--get-timestamp-ms">.get_timestamp_ms<a class="anchor" aria-label="anchor" href="#arg--get-timestamp-ms"></a></dt>
-<dd><p>Function or NULL; custom timestamp provider for
+<dd><p>(function | NULL) custom timestamp provider for
 request signing. If <code>NULL</code>, uses the default internal timestamp function.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Parsed and post-processed result, or a promise thereof.</p>
+    <p>(any | promise&lt;any&gt;) parsed and post-processed result, or a promise
+thereof.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

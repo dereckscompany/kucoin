@@ -1,5 +1,11 @@
 # KucoinFuturesTrading: Futures Order Management
 
+KucoinFuturesTrading: Futures Order Management
+
+KucoinFuturesTrading: Futures Order Management
+
+## Details
+
 Provides methods for placing, cancelling, and querying futures orders on
 KuCoin. Supports limit and market orders, stop orders, batch operations,
 and Dead Connection Protection (DCP). Inherits from
@@ -62,14 +68,14 @@ Orders](https://www.kucoin.com/docs-new/rest/futures-trading/orders/add-order)
 
 [`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
 -\>
-[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinFuturesTrading`
 
 ## Methods
 
 ### Public methods
 
-- [`KucoinFuturesTrading$new()`](#method-KucoinFuturesTrading-initialize)
+- [`KucoinFuturesTrading$new()`](#method-KucoinFuturesTrading-new)
 
 - [`KucoinFuturesTrading$add_order()`](#method-KucoinFuturesTrading-add_order)
 
@@ -109,7 +115,7 @@ Orders](https://www.kucoin.com/docs-new/rest/futures-trading/orders/add-order)
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesTrading$new()`
+### Method `new()`
 
 Create a new KucoinFuturesTrading instance.
 
@@ -126,29 +132,29 @@ Create a new KucoinFuturesTrading instance.
 
 - `keys`:
 
-  List; API credentials from
+  (list) API credentials from
   [`get_api_keys()`](https://dereckscompany.github.io/kucoin/reference/get_api_keys.md).
 
 - `base_url`:
 
-  Character; Futures API base URL. Defaults to
+  (scalar\<character\>) Futures API base URL. Defaults to
   [`get_futures_base_url()`](https://dereckscompany.github.io/kucoin/reference/get_futures_base_url.md).
 
 - `async`:
 
-  Logical; if TRUE, methods return promises.
+  (scalar\<logical\>) if TRUE, methods return promises.
 
 - `time_source`:
 
-  Character; `"local"` or `"server"`.
+  (scalar\<character\>) `"local"` or `"server"`.
 
 #### Returns
 
-Invisible self.
+(class\<KucoinFuturesTrading\>) invisibly, the new instance.
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesTrading$add_order()`
+### Method `add_order()`
 
 Place a Futures Order
 
@@ -239,71 +245,71 @@ Verified: 2026-05-23
 #### Usage
 
     KucoinFuturesTrading$add_order(
-      clientOid,
+      client_order_id,
       symbol,
       side,
       type,
       leverage,
       size,
       price = NULL,
-      marginMode = "ISOLATED",
-      positionSide = "BOTH",
-      timeInForce = NULL,
-      reduceOnly = NULL,
+      margin_mode = "ISOLATED",
+      position_side = "BOTH",
+      time_in_force = NULL,
+      reduce_only = NULL,
       remark = NULL,
       ...
     )
 
 #### Arguments
 
-- `clientOid`:
+- `client_order_id`:
 
-  Character; unique client order ID.
+  (scalar\<character\>) unique client order ID.
 
 - `symbol`:
 
-  Character; futures symbol (e.g., `"XBTUSDTM"`).
+  (scalar\<character\>) futures symbol (e.g., `"XBTUSDTM"`).
 
 - `side`:
 
-  Character; `"buy"` or `"sell"`.
+  (scalar\<character\>) `"buy"` or `"sell"`.
 
 - `type`:
 
-  Character; `"limit"` or `"market"`.
+  (scalar\<character\>) `"limit"` or `"market"`.
 
 - `leverage`:
 
-  Integer; leverage multiplier.
+  (scalar\<count in \[1, Inf\[\>) leverage multiplier.
 
 - `size`:
 
-  Integer; order quantity (number of contracts).
+  (scalar\<count in \[1, Inf\[\>) order quantity (number of contracts).
 
 - `price`:
 
-  Character or NULL; price (required for limit orders).
+  (scalar\<character\> \| NULL) price (required for limit orders).
 
-- `marginMode`:
+- `margin_mode`:
 
-  Character; `"ISOLATED"` or `"CROSS"`. Default `"ISOLATED"`.
+  (scalar\<character\>) `"ISOLATED"` or `"CROSS"`. Default `"ISOLATED"`.
 
-- `positionSide`:
+- `position_side`:
 
-  Character; `"BOTH"` for one-way mode, `"LONG"` or `"SHORT"` for hedge
-  mode. Default `"BOTH"`.
+  (scalar\<character\>) `"BOTH"` for one-way mode, `"LONG"` or `"SHORT"`
+  for hedge mode. Default `"BOTH"`.
 
-- `timeInForce`:
+- `time_in_force`:
 
-  Character or NULL; e.g., `"GTC"`, `"IOC"`, `"FOK"`.
+  (scalar\<character\> \| NULL) e.g., `"GTC"`, `"IOC"`, `"FOK"`.
 
-- `reduceOnly`:
+- `reduce_only`:
 
-  Logical or NULL; if TRUE, order only reduces position.
+  (scalar\<logical\> \| NULL) if TRUE, order only reduces position.
 
 - `remark`:
 
-  Character or NULL; order notes.
+  (scalar\<character\> \| NULL) order notes.
 
 - `...`:
 
@@ -311,15 +317,16 @@ Verified: 2026-05-23
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the system-assigned
+order ID and the client-provided order ID:
 
-- `order_id` (character): System-assigned order ID.
+- order_id (character) the system order identifier.
 
-- `client_oid` (character): Client-provided order ID.
+- client_oid (character \| NA) the client-supplied order identifier.
 
 #### Examples
 
+    \dontrun{
     ft <- KucoinFuturesTrading$new()
 
     # Place a limit buy order
@@ -344,10 +351,11 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
       size = 2,
       reduceOnly = TRUE
     )
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesTrading$add_order_test()`
+### Method `add_order_test()`
 
 Place a Test Futures Order (Dry Run)
 
@@ -437,71 +445,71 @@ Verified: 2026-05-23
 #### Usage
 
     KucoinFuturesTrading$add_order_test(
-      clientOid,
+      client_order_id,
       symbol,
       side,
       type,
       leverage,
       size,
       price = NULL,
-      marginMode = "ISOLATED",
-      positionSide = "BOTH",
-      timeInForce = NULL,
-      reduceOnly = NULL,
+      margin_mode = "ISOLATED",
+      position_side = "BOTH",
+      time_in_force = NULL,
+      reduce_only = NULL,
       remark = NULL,
       ...
     )
 
 #### Arguments
 
-- `clientOid`:
+- `client_order_id`:
 
-  Character; unique client order ID.
+  (scalar\<character\>) unique client order ID.
 
 - `symbol`:
 
-  Character; futures symbol (e.g., `"XBTUSDTM"`).
+  (scalar\<character\>) futures symbol (e.g., `"XBTUSDTM"`).
 
 - `side`:
 
-  Character; `"buy"` or `"sell"`.
+  (scalar\<character\>) `"buy"` or `"sell"`.
 
 - `type`:
 
-  Character; `"limit"` or `"market"`.
+  (scalar\<character\>) `"limit"` or `"market"`.
 
 - `leverage`:
 
-  Integer; leverage multiplier.
+  (scalar\<count in \[1, Inf\[\>) leverage multiplier.
 
 - `size`:
 
-  Integer; order quantity (number of contracts).
+  (scalar\<count in \[1, Inf\[\>) order quantity (number of contracts).
 
 - `price`:
 
-  Character or NULL; price (required for limit orders).
+  (scalar\<character\> \| NULL) price (required for limit orders).
 
-- `marginMode`:
+- `margin_mode`:
 
-  Character; `"ISOLATED"` or `"CROSS"`. Default `"ISOLATED"`.
+  (scalar\<character\>) `"ISOLATED"` or `"CROSS"`. Default `"ISOLATED"`.
 
-- `positionSide`:
+- `position_side`:
 
-  Character; `"BOTH"` for one-way mode, `"LONG"` or `"SHORT"` for hedge
-  mode. Default `"BOTH"`.
+  (scalar\<character\>) `"BOTH"` for one-way mode, `"LONG"` or `"SHORT"`
+  for hedge mode. Default `"BOTH"`.
 
-- `timeInForce`:
+- `time_in_force`:
 
-  Character or NULL; e.g., `"GTC"`, `"IOC"`, `"FOK"`.
+  (scalar\<character\> \| NULL) e.g., `"GTC"`, `"IOC"`, `"FOK"`.
 
-- `reduceOnly`:
+- `reduce_only`:
 
-  Logical or NULL; if TRUE, order only reduces position.
+  (scalar\<logical\> \| NULL) if TRUE, order only reduces position.
 
 - `remark`:
 
-  Character or NULL; order notes.
+  (scalar\<character\> \| NULL) order notes.
 
 - `...`:
 
@@ -509,15 +517,16 @@ Verified: 2026-05-23
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the simulated order
+ID and the client-provided order ID:
 
-- `order_id` (character): Simulated order ID.
+- order_id (character) the system order identifier.
 
-- `client_oid` (character): Client-provided order ID.
+- client_oid (character \| NA) the client-supplied order identifier.
 
 #### Examples
 
+    \dontrun{
     ft <- KucoinFuturesTrading$new()
 
     # Validate a limit order without placing it
@@ -531,10 +540,11 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
       price = "50000"
     )
     print(result)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesTrading$add_order_batch()`
+### Method `add_order_batch()`
 
 Batch Place Futures Orders
 
@@ -657,27 +667,23 @@ Verified: 2026-05-23
 
 - `orders`:
 
-  List of order lists, each with the same fields as `add_order()` (i.e.,
-  `clientOid`, `symbol`, `side`, `type`, `leverage`, `size`, and
+  (list) list of order lists, each with the same fields as `add_order()`
+  (i.e., `clientOid`, `symbol`, `side`, `type`, `leverage`, `size`, and
   optional `price`, `marginMode`, `positionSide`, etc.).
 
 #### Returns
 
-A `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per order result:
+(data.table \| promise\<data.table\>) one row per order result giving
+the system-assigned order ID, the client-provided order ID, the futures
+symbol, the per-order status code, and the per-order status message:
 
-- `order_id` (character): System-assigned order ID.
+- order_id (character) the system order identifier.
 
-- `client_oid` (character): Client-provided order ID.
-
-- `symbol` (character): Futures symbol.
-
-- `code` (character): Per-order status code (`"200000"` for success).
-
-- `msg` (character): Per-order status message.
+- client_oid (character \| NA) the client-supplied order identifier.
 
 #### Examples
 
+    \dontrun{
     ft <- KucoinFuturesTrading$new()
 
     orders <- list(
@@ -688,10 +694,11 @@ A `data.table` (or `promise<data.table>` if constructed with
     )
     results <- ft$add_order_batch(orders)
     print(results[, .(order_id, client_oid, code)])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesTrading$cancel_order_by_id()`
+### Method `cancel_order_by_id()`
 
 Cancel Order by Order ID
 
@@ -711,8 +718,8 @@ order has already been filled or cancelled, the API returns an error.
 
 #### Official Documentation
 
-[KuCoin Cancel Futures Order By
-OrderId](https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-orderld)
+KuCoin Cancel Futures Order By OrderId:
+<https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-orderld>
 
 Verified: 2026-05-23
 
@@ -747,31 +754,30 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinFuturesTrading$cancel_order_by_id(orderId)
+    KucoinFuturesTrading$cancel_order_by_id(order_id)
 
 #### Arguments
 
-- `orderId`:
+- `order_id`:
 
-  Character; the system order ID to cancel.
+  (scalar\<character\>) the system order ID to cancel.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per cancelled order, and column:
-
-- `cancelled_order_id` (character): Cancelled order ID. Empty
-  `data.table` (zero rows) if no orders matched.
+(data.table \| promise\<data.table\>) one row per cancelled order giving
+the cancelled order ID; an empty data.table if no orders matched.
 
 #### Examples
 
+    \dontrun{
     ft <- KucoinFuturesTrading$new()
     result <- ft$cancel_order_by_id("234125150956625920")
     print(result$cancelled_order_id)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesTrading$cancel_order_by_client_oid()`
+### Method `cancel_order_by_client_oid()`
 
 Cancel Order by Client Order ID
 
@@ -793,8 +799,8 @@ across symbols.
 
 #### Official Documentation
 
-[KuCoin Cancel Futures Order By
-ClientOid](https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-clientoid)
+KuCoin Cancel Futures Order By ClientOid:
+<https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-order-by-clientoid>
 
 Verified: 2026-05-23
 
@@ -827,34 +833,34 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinFuturesTrading$cancel_order_by_client_oid(clientOid, symbol)
+    KucoinFuturesTrading$cancel_order_by_client_oid(client_order_id, symbol)
 
 #### Arguments
 
-- `clientOid`:
+- `client_order_id`:
 
-  Character; the client order ID to cancel.
+  (scalar\<character\>) the client order ID to cancel.
 
 - `symbol`:
 
-  Character; futures symbol (e.g., `"XBTUSDTM"`).
+  (scalar\<character\>) futures symbol (e.g., `"XBTUSDTM"`).
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
-
-- `client_oid` (character): Cancelled client order ID.
+(data.table \| promise\<data.table\>) one row giving the cancelled
+client order ID.
 
 #### Examples
 
+    \dontrun{
     ft <- KucoinFuturesTrading$new()
     result <- ft$cancel_order_by_client_oid("my-order-001", symbol = "XBTUSDTM")
     print(result$client_oid)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesTrading$cancel_all()`
+### Method `cancel_all()`
 
 Cancel All Orders
 
@@ -923,19 +929,17 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character or NULL; filter by futures symbol. When NULL, cancels all
-  open orders across all symbols.
+  (scalar\<character\> \| NULL) filter by futures symbol. When NULL,
+  cancels all open orders across all symbols.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per cancelled order, and column:
-
-- `cancelled_order_id` (character): Cancelled order ID. Empty
-  `data.table` (zero rows) if no orders matched.
+(data.table \| promise\<data.table\>) one row per cancelled order giving
+the cancelled order ID; an empty data.table if no orders matched.
 
 #### Examples
 
+    \dontrun{
     ft <- KucoinFuturesTrading$new()
 
     # Cancel all open orders for XBTUSDTM
@@ -944,10 +948,11 @@ Verified: 2026-05-23
 
     # Cancel all open orders across all symbols
     result <- ft$cancel_all()
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesTrading$cancel_all_stop_orders()`
+### Method `cancel_all_stop_orders()`
 
 Cancel All Stop Orders
 
@@ -970,8 +975,8 @@ cancelled via `cancel_all()`.
 
 #### Official Documentation
 
-[KuCoin Cancel All Futures Stop
-Orders](https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-all-stop-orders)
+KuCoin Cancel All Futures Stop Orders:
+<https://www.kucoin.com/docs-new/rest/futures-trading/orders/cancel-all-stop-orders>
 
 Verified: 2026-05-23
 
@@ -1013,19 +1018,19 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character or NULL; filter by futures symbol. When NULL, cancels all
-  untriggered stop orders across all symbols.
+  (scalar\<character\> \| NULL) filter by futures symbol. When NULL,
+  cancels all untriggered stop orders across all symbols.
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per cancelled order, and column:
+(data.table \| promise\<data.table\>) one row per cancelled order giving
+the cancelled order ID; an empty data.table if no orders matched:
 
-- `cancelled_order_id` (character): Cancelled order ID. Empty
-  `data.table` (zero rows) if no orders matched.
+- cancelled_order_id (character) the cancelled order identifier.
 
 #### Examples
 
+    \dontrun{
     ft <- KucoinFuturesTrading$new()
 
     # Cancel all stop orders for XBTUSDTM
@@ -1034,10 +1039,11 @@ Verified: 2026-05-23
 
     # Cancel all stop orders across all symbols
     result <- ft$cancel_all_stop_orders()
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesTrading$get_order_by_id()`
+### Method `get_order_by_id()`
 
 Get Order by Order ID
 
@@ -1061,8 +1067,8 @@ configuration parameters.
 
 #### Official Documentation
 
-[KuCoin Get Futures Order By
-OrderId](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-by-orderld)
+KuCoin Get Futures Order By OrderId:
+<https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-order-by-orderld>
 
 Verified: 2026-05-23
 
@@ -1134,53 +1140,63 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinFuturesTrading$get_order_by_id(orderId)
+    KucoinFuturesTrading$get_order_by_id(order_id)
 
 #### Arguments
 
-- `orderId`:
+- `order_id`:
 
-  Character; the system order ID.
+  (scalar\<character\>) the system order ID.
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row of full order details,
+including the creation and last-updated datetimes (POSIXct, coerced from
+epoch milliseconds):
 
-- `id` (character): Order ID.
+- id (character) the record identifier.
 
-- `symbol` (character): Contract symbol.
+- symbol (character) the trading pair symbol.
 
-- `type` (character): Order type (`"limit"` or `"market"`).
+- type (character) the type.
 
-- `side` (character): `"buy"` or `"sell"`.
+- side (character) the order side.
 
-- `price` (character): Order price.
+- price (numeric \| NA) the price.
 
-- `size` (integer): Order size in contracts.
+- size (numeric \| NA) the size.
 
-- `leverage` (character): Leverage multiplier.
+- value (numeric \| NA) the order value.
 
-- `margin_mode` (character): `"ISOLATED"` or `"CROSS"`.
+- deal_value (numeric \| NA) the filled value.
 
-- `status` (character): Order status (e.g., `"open"`, `"done"`).
+- deal_size (numeric \| NA) the filled size.
 
-- `created_at` (POSIXct): Order creation time (coerced from
-  milliseconds).
+- leverage (integer \| NA) the leverage.
 
-- `updated_at` (POSIXct): Last update time (coerced from milliseconds).
+- margin_mode (character) the margin mode.
 
-- `client_oid` (character): Client-provided order ID.
+- position_side (character) the position side.
+
+- status (character) the status.
+
+- created_at (POSIXct) the created at (UTC).
+
+- updated_at (POSIXct \| NA) the updated at (UTC).
+
+- client_oid (character \| NA) the client-supplied order identifier.
 
 #### Examples
 
+    \dontrun{
     ft <- KucoinFuturesTrading$new()
     order <- ft$get_order_by_id("234125150956625920")
     print(order[, .(id, symbol, side, price, size, status)])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesTrading$get_order_by_client_oid()`
+### Method `get_order_by_client_oid()`
 
 Get Order by Client Order ID
 
@@ -1205,8 +1221,8 @@ time.
 
 #### Official Documentation
 
-[KuCoin Get Futures Order By
-ClientOid](https://www.kucoin.com/docs-new/rest/futures-trading/get-stop-order-by-clientoid)
+KuCoin Get Futures Order By ClientOid:
+<https://www.kucoin.com/docs-new/rest/futures-trading/get-stop-order-by-clientoid>
 
 Note: KuCoin's URL slug here contains `get-stop-order-by-clientoid`, but
 the page actually documents the regular order endpoint
@@ -1282,28 +1298,62 @@ Verified: 2026-05-23
 
 #### Usage
 
-    KucoinFuturesTrading$get_order_by_client_oid(clientOid)
+    KucoinFuturesTrading$get_order_by_client_oid(client_order_id)
 
 #### Arguments
 
-- `clientOid`:
+- `client_order_id`:
 
-  Character; the client order ID.
+  (scalar\<character\>) the client order ID.
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`); same columns as `get_order_by_id()`.
+(data.table \| promise\<data.table\>) one row of full order details;
+same columns as `get_order_by_id()`:
+
+- id (character) the record identifier.
+
+- symbol (character) the trading pair symbol.
+
+- type (character) the type.
+
+- side (character) the order side.
+
+- price (numeric \| NA) the price.
+
+- size (numeric \| NA) the size.
+
+- value (numeric \| NA) the order value.
+
+- deal_value (numeric \| NA) the filled value.
+
+- deal_size (numeric \| NA) the filled size.
+
+- leverage (integer \| NA) the leverage.
+
+- margin_mode (character) the margin mode.
+
+- position_side (character) the position side.
+
+- status (character) the status.
+
+- created_at (POSIXct) the created at (UTC).
+
+- updated_at (POSIXct \| NA) the updated at (UTC).
+
+- client_oid (character \| NA) the client-supplied order identifier.
 
 #### Examples
 
+    \dontrun{
     ft <- KucoinFuturesTrading$new()
     order <- ft$get_order_by_client_oid("my-order-001")
     print(order[, .(id, symbol, side, price, size, status)])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesTrading$get_order_list()`
+### Method `get_order_list()`
 
 Get Order List
 
@@ -1416,19 +1466,51 @@ Verified: 2026-05-23
 
 - `query`:
 
-  Named list; query parameters. Use `status = "active"` for open orders,
+  (list) query parameters. Use `status = "active"` for open orders,
   `status = "done"` for closed orders. Optional: `symbol`, `side`,
   `type`, `startAt`, `endAt`.
 
 #### Returns
 
-A `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with order records; same columns as `get_order_by_id()`.
+(data.table \| promise\<data.table\>) one row per order record (same
+columns as `get_order_by_id()`); an empty data.table if no orders match
+the filters:
 
-Returns an empty `data.table` if no orders match the filters.
+- id (character) the record identifier.
+
+- symbol (character) the trading pair symbol.
+
+- type (character) the type.
+
+- side (character) the order side.
+
+- price (numeric \| NA) the price.
+
+- size (numeric \| NA) the size.
+
+- value (numeric \| NA) the order value.
+
+- deal_value (numeric \| NA) the filled value.
+
+- deal_size (numeric \| NA) the filled size.
+
+- leverage (integer \| NA) the leverage.
+
+- margin_mode (character) the margin mode.
+
+- position_side (character) the position side.
+
+- status (character) the status.
+
+- created_at (POSIXct) the created at (UTC).
+
+- updated_at (POSIXct \| NA) the updated at (UTC).
+
+- client_oid (character \| NA) the client-supplied order identifier.
 
 #### Examples
 
+    \dontrun{
     ft <- KucoinFuturesTrading$new()
 
     # Get all active orders for XBTUSDTM
@@ -1436,16 +1518,17 @@ Returns an empty `data.table` if no orders match the filters.
     print(active[, .(id, side, price, size, status)])
 
     # Get completed orders from the last 7 days
-    now_ms <- as.integer(as.numeric(Sys.time()) * 1000)
+    now_ms <- as.integer(as.numeric(lubridate::now("UTC")) * 1000)
     done <- ft$get_order_list(query = list(
       status = "done",
       startAt = now_ms - 7 * 86400000L,
       endAt = now_ms
     ))
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesTrading$get_recent_closed_orders()`
+### Method `get_recent_closed_orders()`
 
 Get Recent Closed Orders
 
@@ -1470,8 +1553,8 @@ require pagination – it returns up to 1000 records in a single response.
 
 #### Official Documentation
 
-[KuCoin Get Recent Closed Futures
-Orders](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-closed-orders)
+KuCoin Get Recent Closed Futures Orders:
+<https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-closed-orders>
 
 Verified: 2026-05-23
 
@@ -1552,17 +1635,49 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character or NULL; filter by futures symbol.
+  (scalar\<character\> \| NULL) filter by futures symbol.
 
 #### Returns
 
-A `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with order records; same columns as `get_order_by_id()`.
+(data.table \| promise\<data.table\>) one row per order record (same
+columns as `get_order_by_id()`); an empty data.table if no recently
+closed orders exist:
 
-Returns an empty `data.table` if no recently closed orders exist.
+- id (character) the record identifier.
+
+- symbol (character) the trading pair symbol.
+
+- type (character) the type.
+
+- side (character) the order side.
+
+- price (numeric \| NA) the price.
+
+- size (numeric \| NA) the size.
+
+- value (numeric \| NA) the order value.
+
+- deal_value (numeric \| NA) the filled value.
+
+- deal_size (numeric \| NA) the filled size.
+
+- leverage (integer \| NA) the leverage.
+
+- margin_mode (character) the margin mode.
+
+- position_side (character) the position side.
+
+- status (character) the status.
+
+- created_at (POSIXct) the created at (UTC).
+
+- updated_at (POSIXct \| NA) the updated at (UTC).
+
+- client_oid (character \| NA) the client-supplied order identifier.
 
 #### Examples
 
+    \dontrun{
     ft <- KucoinFuturesTrading$new()
 
     # Get recently closed orders for XBTUSDTM
@@ -1571,10 +1686,11 @@ Returns an empty `data.table` if no recently closed orders exist.
 
     # Get all recently closed orders
     all_recent <- ft$get_recent_closed_orders()
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesTrading$get_stop_orders()`
+### Method `get_stop_orders()`
 
 Get Stop Orders List
 
@@ -1599,8 +1715,8 @@ Once triggered, they appear in the regular order list.
 
 #### Official Documentation
 
-[KuCoin Get Futures Untriggered Stop Order
-List](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-stop-order-list)
+KuCoin Get Futures Untriggered Stop Order List:
+<https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-stop-order-list>
 
 Verified: 2026-05-23
 
@@ -1667,19 +1783,18 @@ Verified: 2026-05-23
 
 - `query`:
 
-  Named list; query parameters. Optional: `symbol`, `side`, `type`,
+  (list) query parameters. Optional: `symbol`, `side`, `type`,
   `startAt`, `endAt`.
 
 #### Returns
 
-A `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with stop order records; same columns as
-`get_order_by_id()`.
-
-Returns an empty `data.table` if no untriggered stop orders exist.
+(data.table \| promise\<data.table\>) one row per stop order record
+(same columns as `get_order_by_id()`); an empty data.table if no
+untriggered stop orders exist.
 
 #### Examples
 
+    \dontrun{
     ft <- KucoinFuturesTrading$new()
 
     # Get all untriggered stop orders for XBTUSDTM
@@ -1688,10 +1803,11 @@ Returns an empty `data.table` if no untriggered stop orders exist.
 
     # Get all untriggered stop orders
     all_stops <- ft$get_stop_orders()
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesTrading$get_fills()`
+### Method `get_fills()`
 
 Get Trade History (Fills)
 
@@ -1811,45 +1927,21 @@ Verified: 2026-05-23
 
 - `query`:
 
-  Named list; query parameters. Optional: `orderId`, `symbol`, `side`,
+  (list) query parameters. Optional: `orderId`, `symbol`, `side`,
   `type`, `startAt`, `endAt`.
 
 #### Returns
 
-A `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
-
-- `symbol` (character): Contract symbol.
-
-- `trade_id` (character): Unique trade identifier.
-
-- `order_id` (character): Associated order ID.
-
-- `side` (character): `"buy"` or `"sell"`.
-
-- `liquidity` (character): `"taker"` or `"maker"`.
-
-- `price` (character): Fill price.
-
-- `size` (integer): Fill size in contracts.
-
-- `value` (character): Fill value in settlement currency.
-
-- `fee` (character): Fee charged.
-
-- `fee_currency` (character): Fee currency.
-
-- `fee_rate` (character): Fee rate applied.
-
-- `trade_time` (POSIXct): Trade timestamp (coerced from nanoseconds).
-
-- `created_at` (POSIXct): Record creation time (coerced from
-  milliseconds).
-
-Returns an empty `data.table` if no fills match the filters.
+(data.table \| promise\<data.table\>) one row per fill giving the
+contract symbol, trade identifier, associated order ID, side, liquidity,
+price, size in contracts, value in settlement currency, fee, fee
+currency, fee rate, the trade datetime (POSIXct, coerced from
+nanoseconds), and the record creation datetime (POSIXct, coerced from
+epoch milliseconds); an empty data.table if no fills match the filters.
 
 #### Examples
 
+    \dontrun{
     ft <- KucoinFuturesTrading$new()
 
     # Get all fills for XBTUSDTM
@@ -1858,10 +1950,11 @@ Returns an empty `data.table` if no fills match the filters.
 
     # Get fills for a specific order
     order_fills <- ft$get_fills(query = list(orderId = "234125150956625920"))
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesTrading$get_recent_fills()`
+### Method `get_recent_fills()`
 
 Get Recent Fills
 
@@ -1885,8 +1978,8 @@ recent trade executions.
 
 #### Official Documentation
 
-[KuCoin Get Recent Futures Filled
-List](https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-trade-history)
+KuCoin Get Recent Futures Filled List:
+<https://www.kucoin.com/docs-new/rest/futures-trading/orders/get-recent-trade-history>
 
 Verified: 2026-05-23
 
@@ -1951,17 +2044,50 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character or NULL; filter by futures symbol.
+  (scalar\<character\> \| NULL) filter by futures symbol.
 
 #### Returns
 
-A `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`); same columns as `get_fills()`.
+(data.table \| promise\<data.table\>) one row per fill (same columns as
+`get_fills()`); an empty data.table if no recent fills exist:
 
-Returns an empty `data.table` if no recent fills exist.
+- symbol (character) the trading pair symbol.
+
+- trade_id (character) the trade identifier.
+
+- order_id (character) the system order identifier.
+
+- side (character) the order side.
+
+- liquidity (character) the liquidity role.
+
+- force_taker (logical) the force taker.
+
+- price (numeric \| NA) the price.
+
+- size (numeric \| NA) the size.
+
+- value (numeric \| NA) the order value.
+
+- fee_rate (numeric \| NA) the fee rate.
+
+- fix_fee (numeric \| NA) the fix fee.
+
+- fee_currency (character) the fee currency.
+
+- fee (numeric \| NA) the fee.
+
+- order_type (character) the order type.
+
+- trade_type (character) the trade type.
+
+- trade_time (POSIXct) the trade time (UTC).
+
+- created_at (POSIXct) the created at (UTC).
 
 #### Examples
 
+    \dontrun{
     ft <- KucoinFuturesTrading$new()
 
     # Get recent fills for XBTUSDTM
@@ -1970,10 +2096,11 @@ Returns an empty `data.table` if no recent fills exist.
 
     # Get all recent fills
     all_recent <- ft$get_recent_fills()
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesTrading$get_open_order_value()`
+### Method `get_open_order_value()`
 
 Get Open Order Value Statistics
 
@@ -2026,8 +2153,8 @@ Verified: 2026-05-23
     {
       "code": "200000",
       "data": {
-        "openOrderBuyQty": 5,
-        "openOrderSellQty": 3,
+        "openOrderBuySize": 5,
+        "openOrderSellSize": 3,
         "openOrderBuyCost": "0.0005",
         "openOrderSellCost": "0.0003",
         "settleCurrency": "USDT"
@@ -2042,32 +2169,35 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; futures symbol (e.g., `"XBTUSDTM"`).
+  (scalar\<character\>) futures symbol (e.g., `"XBTUSDTM"`).
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the total buy order
+size, total sell order size, total buy order cost, total sell order
+cost, and the settlement currency:
 
-- `open_order_buy_qty` (integer): Total buy order quantity.
+- open_order_buy_size (integer \| NA) the open order buy size.
 
-- `open_order_sell_qty` (integer): Total sell order quantity.
+- open_order_sell_size (integer \| NA) the open order sell size.
 
-- `open_order_buy_cost` (character): Total buy order cost.
+- open_order_buy_cost (numeric \| NA) the open order buy cost.
 
-- `open_order_sell_cost` (character): Total sell order cost.
+- open_order_sell_cost (numeric \| NA) the open order sell cost.
 
-- `settle_currency` (character): Settlement currency.
+- settle_currency (character) the settle currency.
 
 #### Examples
 
+    \dontrun{
     ft <- KucoinFuturesTrading$new()
     stats <- ft$get_open_order_value(symbol = "XBTUSDTM")
-    print(stats[, .(open_order_buy_qty, open_order_sell_qty, settle_currency)])
+    print(stats[, .(open_order_buy_size, open_order_sell_size, settle_currency)])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesTrading$set_dcp()`
+### Method `set_dcp()`
 
 Set Dead Connection Protection (DCP)
 
@@ -2156,28 +2286,35 @@ Verified: 2026-05-23
 
 - `timeout`:
 
-  Integer; timeout in seconds. The DCP will cancel all applicable orders
-  if no heartbeat (re-call of `set_dcp()`) is received within this
-  period. Use `-1` to disable DCP.
+  (scalar\<numeric\>) timeout in seconds. The DCP will cancel all
+  applicable orders if no heartbeat (re-call of `set_dcp()`) is received
+  within this period. Use `-1` to disable DCP.
 
 - `symbol`:
 
-  Character or NULL; restrict DCP to a specific futures symbol. When
-  NULL, DCP applies to all symbols.
+  (scalar\<character\> \| NULL) restrict DCP to a specific futures
+  symbol. When NULL, DCP applies to all symbols.
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row acknowledging the DCP
+configuration change:
 
-- `timeout` (integer): Configured timeout in seconds.
+- trade_type (character) the trading account the setting applies to
+  (always "FUTURES").
 
-- `symbols` (character): Applicable symbols (empty for all).
+- symbol (character \| NA) the futures symbol the setting is scoped to;
+  NA when it applies to all symbols.
 
-- `current_time` (integer): Server time when DCP was set.
+- system_time (numeric) the server time when the setting was applied,
+  epoch.
+
+- trigger_time (numeric) the epoch time at which armed DCP would fire; 0
+  when DCP is disabled.
 
 #### Examples
 
+    \dontrun{
     ft <- KucoinFuturesTrading$new()
 
     # Enable DCP with 60-second timeout for XBTUSDTM
@@ -2186,10 +2323,11 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
     # Disable DCP
     ft$set_dcp(timeout = -1)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesTrading$get_dcp()`
+### Method `get_dcp()`
 
 Get Dead Connection Protection (DCP) Settings
 
@@ -2261,22 +2399,24 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character or NULL; query DCP settings for a specific futures symbol.
-  When NULL, returns the global DCP configuration.
+  (scalar\<character\> \| NULL) query DCP settings for a specific
+  futures symbol. When NULL, returns the global DCP configuration.
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the configured
+timeout in seconds, the applicable symbols, and the server time of the
+query:
 
-- `timeout` (integer): Configured timeout in seconds.
+- timeout (integer \| NA) the timeout.
 
-- `symbols` (character): Applicable symbols.
+- symbols (character) the symbols.
 
-- `current_time` (integer): Server time of the query.
+- current_time (numeric) the current time.
 
 #### Examples
 
+    \dontrun{
     ft <- KucoinFuturesTrading$new()
 
     # Check DCP settings for XBTUSDTM
@@ -2285,10 +2425,11 @@ A single-row `data.table` (or `promise<data.table>` if constructed with
 
     # Check global DCP settings
     dcp_global <- ft$get_dcp()
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesTrading$clone()`
+### Method `clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -2335,7 +2476,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$add_order()`
+## Method `KucoinFuturesTrading$add_order`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2366,7 +2507,7 @@ result <- ft$add_order(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$add_order_test()`
+## Method `KucoinFuturesTrading$add_order_test`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2386,7 +2527,7 @@ print(result)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$add_order_batch()`
+## Method `KucoinFuturesTrading$add_order_batch`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2403,7 +2544,7 @@ print(results[, .(order_id, client_oid, code)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$cancel_order_by_id()`
+## Method `KucoinFuturesTrading$cancel_order_by_id`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2413,7 +2554,7 @@ print(result$cancelled_order_id)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$cancel_order_by_client_oid()`
+## Method `KucoinFuturesTrading$cancel_order_by_client_oid`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2423,7 +2564,7 @@ print(result$client_oid)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$cancel_all()`
+## Method `KucoinFuturesTrading$cancel_all`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2438,7 +2579,7 @@ result <- ft$cancel_all()
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$cancel_all_stop_orders()`
+## Method `KucoinFuturesTrading$cancel_all_stop_orders`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2453,7 +2594,7 @@ result <- ft$cancel_all_stop_orders()
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_order_by_id()`
+## Method `KucoinFuturesTrading$get_order_by_id`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2463,7 +2604,7 @@ print(order[, .(id, symbol, side, price, size, status)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_order_by_client_oid()`
+## Method `KucoinFuturesTrading$get_order_by_client_oid`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2473,7 +2614,7 @@ print(order[, .(id, symbol, side, price, size, status)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_order_list()`
+## Method `KucoinFuturesTrading$get_order_list`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2484,7 +2625,7 @@ active <- ft$get_order_list(query = list(status = "active", symbol = "XBTUSDTM")
 print(active[, .(id, side, price, size, status)])
 
 # Get completed orders from the last 7 days
-now_ms <- as.integer(as.numeric(Sys.time()) * 1000)
+now_ms <- as.integer(as.numeric(lubridate::now("UTC")) * 1000)
 done <- ft$get_order_list(query = list(
   status = "done",
   startAt = now_ms - 7 * 86400000L,
@@ -2493,7 +2634,7 @@ done <- ft$get_order_list(query = list(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_recent_closed_orders()`
+## Method `KucoinFuturesTrading$get_recent_closed_orders`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2508,7 +2649,7 @@ all_recent <- ft$get_recent_closed_orders()
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_stop_orders()`
+## Method `KucoinFuturesTrading$get_stop_orders`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2523,7 +2664,7 @@ all_stops <- ft$get_stop_orders()
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_fills()`
+## Method `KucoinFuturesTrading$get_fills`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2538,7 +2679,7 @@ order_fills <- ft$get_fills(query = list(orderId = "234125150956625920"))
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_recent_fills()`
+## Method `KucoinFuturesTrading$get_recent_fills`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2553,17 +2694,17 @@ all_recent <- ft$get_recent_fills()
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_open_order_value()`
+## Method `KucoinFuturesTrading$get_open_order_value`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
 ft <- KucoinFuturesTrading$new()
 stats <- ft$get_open_order_value(symbol = "XBTUSDTM")
-print(stats[, .(open_order_buy_qty, open_order_sell_qty, settle_currency)])
+print(stats[, .(open_order_buy_size, open_order_sell_size, settle_currency)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$set_dcp()`
+## Method `KucoinFuturesTrading$set_dcp`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -2578,7 +2719,7 @@ ft$set_dcp(timeout = -1)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesTrading$get_dcp()`
+## Method `KucoinFuturesTrading$get_dcp`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

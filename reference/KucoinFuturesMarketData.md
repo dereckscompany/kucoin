@@ -1,5 +1,11 @@
 # KucoinFuturesMarketData: Futures Market Data Retrieval
 
+KucoinFuturesMarketData: Futures Market Data Retrieval
+
+KucoinFuturesMarketData: Futures Market Data Retrieval
+
+## Details
+
 Provides methods for querying KuCoin Futures public market data,
 including contract details, tickers, orderbooks, trade history, klines,
 mark prices, and funding rates. Inherits from
@@ -56,14 +62,14 @@ Data](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-all-s
 
 [`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
 -\>
-[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinFuturesMarketData`
 
 ## Methods
 
 ### Public methods
 
-- [`KucoinFuturesMarketData$new()`](#method-KucoinFuturesMarketData-initialize)
+- [`KucoinFuturesMarketData$new()`](#method-KucoinFuturesMarketData-new)
 
 - [`KucoinFuturesMarketData$get_contract()`](#method-KucoinFuturesMarketData-get_contract)
 
@@ -95,7 +101,7 @@ Data](https://www.kucoin.com/docs-new/rest/futures-trading/market-data/get-all-s
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesMarketData$new()`
+### Method `new()`
 
 Create a new KucoinFuturesMarketData instance.
 
@@ -112,29 +118,29 @@ Create a new KucoinFuturesMarketData instance.
 
 - `keys`:
 
-  List; API credentials from
+  (list) API credentials from
   [`get_api_keys()`](https://dereckscompany.github.io/kucoin/reference/get_api_keys.md).
 
 - `base_url`:
 
-  Character; Futures API base URL. Defaults to
+  (scalar\<character\>) Futures API base URL. Defaults to
   [`get_futures_base_url()`](https://dereckscompany.github.io/kucoin/reference/get_futures_base_url.md).
 
 - `async`:
 
-  Logical; if TRUE, methods return promises.
+  (scalar\<logical\>) if TRUE, methods return promises.
 
 - `time_source`:
 
-  Character; `"local"` or `"server"`.
+  (scalar\<character\>) `"local"` or `"server"`.
 
 #### Returns
 
-Invisible self.
+(class\<KucoinFuturesMarketData\>) invisibly, the new instance.
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesMarketData$get_contract()`
+### Method `get_contract()`
 
 Get Contract Details
 
@@ -239,78 +245,30 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; futures symbol (e.g., `"XBTUSDTM"`).
+  (scalar\<character\>) futures symbol (e.g., `"XBTUSDTM"`).
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with the contract specification flattened to one row per
-symbol. Key columns:
-
-- `symbol` (character): Contract symbol.
-
-- `root_symbol` (character): Root symbol (e.g., `"USDT"`).
-
-- `type` (character): Contract type (e.g., `"FFWCSX"` for perpetual).
-
-- `base_currency` (character): Base currency code.
-
-- `quote_currency` (character): Quote currency code.
-
-- `settle_currency` (character): Settlement currency code.
-
-- `lot_size` (integer): Minimum order size in contracts.
-
-- `tick_size` (numeric): Minimum price increment.
-
-- `multiplier` (numeric): Contract value multiplier.
-
-- `initial_margin` (numeric): Initial margin rate.
-
-- `maintain_margin` (numeric): Maintenance margin rate.
-
-- `max_leverage` (integer): Maximum allowed leverage.
-
-- `maker_fee_rate` (numeric): Maker fee rate.
-
-- `taker_fee_rate` (numeric): Taker fee rate.
-
-- `status` (character): Contract status (e.g., `"Open"`).
-
-- `mark_price` (numeric): Current mark price.
-
-- `index_price` (numeric): Underlying index price.
-
-- `last_trade_price` (numeric): Last traded price.
-
-- `funding_fee_rate` (numeric): Current funding fee rate.
-
-- `predicted_funding_fee_rate` (numeric): Predicted next funding fee
-  rate.
-
-- `open_interest` (character): Current open interest.
-
-- `turnover_of24h` (numeric): 24h turnover in settlement currency.
-
-- `volume_of24h` (numeric): 24h trading volume.
-
-- `low_price` (numeric): 24h low price.
-
-- `high_price` (numeric): 24h high price.
-
-- `price_chg_pct` (numeric): 24h price change percentage.
-
-- `price_chg` (numeric): 24h price change.
+(data.table \| promise\<data.table\>) one row giving the contract
+specification flattened to a single row, carrying the contract symbol,
+root symbol, type, base/quote/settlement currencies, lot and tick sizes,
+value multiplier, initial and maintenance margin rates, maximum
+leverage, maker and taker fee rates, status, mark/index/last-trade
+prices, current and predicted funding fee rates, open interest, 24-hour
+turnover, volume, low and high prices, and the 24-hour price change
+percentage and amount.
 
 #### Examples
 
+    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
     contract <- futures_market$get_contract("XBTUSDTM")
     print(contract[, .(symbol, lot_size, tick_size, max_leverage)])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesMarketData$get_all_contracts()`
+### Method `get_all_contracts()`
 
 Get All Active Contracts
 
@@ -404,20 +362,20 @@ Verified: 2026-05-23
 
 #### Returns
 
-A `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per active contract; columns match
-`get_contract()`. Returns an empty `data.table` if no active contracts
-are returned.
+(data.table \| promise\<data.table\>) one row per active contract,
+carrying the same contract metadata as `get_contract()`.
 
 #### Examples
 
+    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
     contracts <- futures_market$get_all_contracts()
     print(contracts[, .(symbol, status, max_leverage, mark_price)])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesMarketData$get_ticker()`
+### Method `get_ticker()`
 
 Get Futures Ticker
 
@@ -484,44 +442,49 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; futures symbol (e.g., `"XBTUSDTM"`).
+  (scalar\<character\>) futures symbol (e.g., `"XBTUSDTM"`).
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the real-time
+ticker snapshot: the sequence number, contract symbol, last trade side,
+size, trade identifier and price, the best bid and ask prices with their
+sizes, and the ticker datetime (POSIXct, coerced from the nanosecond
+timestamp):
 
-- `sequence` (integer): Sequence number.
+- sequence (numeric) the sequence.
 
-- `symbol` (character): Contract symbol.
+- symbol (character) the trading pair symbol.
 
-- `side` (character): Side of the last trade (`"buy"` or `"sell"`).
+- side (character) the order side.
 
-- `size` (integer): Size of the last trade.
+- size (numeric \| NA) the size.
 
-- `trade_id` (character): Identifier of the last trade.
+- price (numeric \| NA) the price.
 
-- `price` (character): Last trade price.
+- best_bid_size (numeric \| NA) the best bid size.
 
-- `best_bid_size` (integer): Quantity at best bid.
+- best_bid_price (numeric \| NA) the best bid price.
 
-- `best_bid_price` (character): Best bid price.
+- best_ask_price (numeric \| NA) the best ask price.
 
-- `best_ask_price` (character): Best ask price.
+- best_ask_size (numeric \| NA) the best ask size.
 
-- `best_ask_size` (integer): Quantity at best ask.
+- trade_id (character) the trade identifier.
 
-- `ts` (POSIXct): Ticker timestamp (coerced from nanoseconds).
+- ts (POSIXct) the ts (UTC).
 
 #### Examples
 
+    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
     ticker <- futures_market$get_ticker("XBTUSDTM")
     print(ticker[, .(symbol, price, best_bid_price, best_ask_price, ts)])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesMarketData$get_all_tickers()`
+### Method `get_all_tickers()`
 
 Get All Futures Tickers
 
@@ -599,19 +562,20 @@ Verified: 2026-05-23
 
 #### Returns
 
-A `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per contract; columns match `get_ticker()`.
-Returns an empty `data.table` if no tickers are returned.
+(data.table \| promise\<data.table\>) one row per contract, carrying the
+same ticker fields as `get_ticker()`.
 
 #### Examples
 
+    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
     all_tickers <- futures_market$get_all_tickers()
     print(all_tickers[, .(symbol, price, best_bid_price, best_ask_price)])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesMarketData$get_part_orderbook()`
+### Method `get_part_orderbook()`
 
 Get Partial Orderbook
 
@@ -685,39 +649,44 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; futures symbol (e.g., `"XBTUSDTM"`).
+  (scalar\<character\>) futures symbol (e.g., `"XBTUSDTM"`).
 
 - `size`:
 
-  Integer; number of levels, either `20` or `100`. Default `20`.
+  (scalar\<count\>) number of levels, either `20` or `100`. Default
+  `20`.
 
 #### Returns
 
-A `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) the level-2 order book in long
+format (ts, sequence, side, level, price, size, and symbol when
+present):
 
-- `ts` (POSIXct): Snapshot timestamp (coerced from nanoseconds).
+- ts (POSIXct) the ts (UTC).
 
-- `sequence` (character): Sequence number for change detection.
+- sequence (character) the sequence.
 
-- `side` (character): `"bid"` or `"ask"`.
+- side (character) the order side.
 
-- `level` (integer): 1-indexed depth from top-of-book within the side
-  (`level == 1` is best bid / best ask).
+- level (integer \| NA) the tier level.
 
-- `price` (numeric): Price level.
+- price (numeric \| NA) the price.
 
-- `size` (numeric): Size at this price level.
+- size (numeric \| NA) the size.
+
+- symbol (character) the trading pair symbol.
 
 #### Examples
 
+    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
     ob <- futures_market$get_part_orderbook("XBTUSDTM", size = 20)
     print(ob[side == "bid"][order(level)][1:5])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesMarketData$get_full_orderbook()`
+### Method `get_full_orderbook()`
 
 Get Full Orderbook
 
@@ -794,35 +763,39 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; futures symbol (e.g., `"XBTUSDTM"`).
+  (scalar\<character\>) futures symbol (e.g., `"XBTUSDTM"`).
 
 #### Returns
 
-A `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) the level-2 order book in long
+format (ts, sequence, side, level, price, size, and symbol when
+present):
 
-- `ts` (POSIXct): Snapshot timestamp (coerced from nanoseconds).
+- ts (POSIXct) the ts (UTC).
 
-- `sequence` (character): Sequence number for change detection.
+- sequence (character) the sequence.
 
-- `side` (character): `"bid"` or `"ask"`.
+- side (character) the order side.
 
-- `level` (integer): 1-indexed depth from top-of-book within the side
-  (`level == 1` is best bid / best ask).
+- level (integer \| NA) the tier level.
 
-- `price` (numeric): Price level.
+- price (numeric \| NA) the price.
 
-- `size` (numeric): Size at this price level.
+- size (numeric \| NA) the size.
+
+- symbol (character) the trading pair symbol.
 
 #### Examples
 
+    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
     full_ob <- futures_market$get_full_orderbook("XBTUSDTM")
     print(full_ob[, .N, by = side])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesMarketData$get_trade_history()`
+### Method `get_trade_history()`
 
 Get Recent Trade History
 
@@ -898,39 +871,27 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; futures symbol (e.g., `"XBTUSDTM"`).
+  (scalar\<character\>) futures symbol (e.g., `"XBTUSDTM"`).
 
 #### Returns
 
-A `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per trade. Returns an empty `data.table`
-when KuCoin reports no recent trades. Columns:
-
-- `sequence` (integer): Trade sequence number.
-
-- `trade_id` (character): Unique trade identifier.
-
-- `taker_order_id` (character): Taker's order ID.
-
-- `maker_order_id` (character): Maker's order ID.
-
-- `price` (character): Trade price.
-
-- `size` (integer): Trade size in contracts.
-
-- `side` (character): Taker side (`"buy"` or `"sell"`).
-
-- `ts` (POSIXct): Trade timestamp (coerced from nanoseconds).
+(data.table \| promise\<data.table\>) one row per recent trade, each
+giving the trade sequence number, trade identifier, taker and maker
+order identifiers, price, size in contracts, taker side (`"buy"` or
+`"sell"`), and the trade datetime (POSIXct, coerced from the nanosecond
+timestamp).
 
 #### Examples
 
+    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
     trades <- futures_market$get_trade_history("XBTUSDTM")
     print(trades[, .(price, size, side, ts)])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesMarketData$get_klines()`
+### Method `get_klines()`
 
 Get Klines (Candlestick Data)
 
@@ -1004,67 +965,54 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; futures symbol (e.g., `"XBTUSDTM"`).
+  (scalar\<character\>) futures symbol (e.g., `"XBTUSDTM"`).
 
 - `granularity`:
 
-  Integer; candle interval in minutes. Supported values: 1, 5, 15, 30,
-  60, 120, 240, 480, 720, 1440, 10080.
+  (scalar\<count in \[1, Inf\[\>) candle interval in minutes. Supported
+  values: 1, 5, 15, 30, 60, 120, 240, 480, 720, 1440, 10080.
 
 - `from`:
 
-  POSIXct, numeric, or NULL; start time. If POSIXct, converted to
-  milliseconds. If numeric, assumed to be milliseconds.
+  (POSIXct \| scalar\<numeric\> \| NULL) start time. If POSIXct,
+  converted to milliseconds. If numeric, assumed to be milliseconds.
 
 - `to`:
 
-  POSIXct, numeric, or NULL; end time.
+  (POSIXct \| scalar\<numeric\> \| NULL) end time.
 
 - `fetch_all`:
 
-  Logical; if `TRUE`, automatically segments the time range into
-  multiple API calls of up to 200 candles each, fetches all segments,
-  deduplicates overlapping boundaries, and returns the combined result
-  sorted by `datetime`. Both `from` and `to` are required when enabled.
-  **Warning**: large date ranges will consume multiple API requests and
-  may impact your rate-limit quota. Default `FALSE`.
+  (scalar\<logical\>) if `TRUE`, automatically segments the time range
+  into multiple API calls of up to 200 candles each, fetches all
+  segments, deduplicates overlapping boundaries, and returns the
+  combined result sorted by `datetime`. Both `from` and `to` are
+  required when enabled. **Warning**: large date ranges will consume
+  multiple API requests and may impact your rate-limit quota. Default
+  `FALSE`.
 
 - `sleep`:
 
-  Numeric; seconds to wait between consecutive API calls when
-  `fetch_all = TRUE`. Use this to avoid hitting KuCoin rate limits. Only
-  applies in synchronous mode; async mode chains requests sequentially
-  via promises. Default `0.2`.
+  (scalar\<numeric in \[0, Inf\[\>) seconds to wait between consecutive
+  API calls when `fetch_all = TRUE`. Use this to avoid hitting KuCoin
+  rate limits. Only applies in synchronous mode; async mode chains
+  requests sequentially via promises. Default `0.2`.
 
 #### Returns
 
-A `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
-
-- `datetime` (POSIXct): Candle open time (coerced from milliseconds).
-
-- `open` (numeric): Opening price.
-
-- `high` (numeric): Highest price.
-
-- `low` (numeric): Lowest price.
-
-- `close` (numeric): Closing price.
-
-- `volume` (numeric): Trading volume in contracts.
-
-- `turnover` (numeric): Trading turnover in settlement currency.
+(Klines \| promise\<Klines\>) one row per candle ascending by datetime.
 
 #### Examples
 
+    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
 
     # Single call: last 200 hourly candles
     klines <- futures_market$get_klines(
       "XBTUSDTM",
       granularity = 60,
-      from = as.numeric(Sys.time() - 200 * 3600) * 1000,
-      to = as.numeric(Sys.time()) * 1000
+      from = as.numeric(lubridate::now("UTC") - lubridate::dhours(200)) * 1000,
+      to = as.numeric(lubridate::now("UTC")) * 1000
     )
     print(klines[, .(datetime, open, high, low, close, volume)])
 
@@ -1072,16 +1020,17 @@ A `data.table` (or `promise<data.table>` if constructed with
     all_klines <- futures_market$get_klines(
       "XBTUSDTM",
       granularity = 60,
-      from = as.POSIXct("2024-10-01", tz = "UTC"),
-      to = as.POSIXct("2024-10-31", tz = "UTC"),
+      from = lubridate::as_datetime("2024-10-01"),
+      to = lubridate::as_datetime("2024-10-31"),
       fetch_all = TRUE,
       sleep = 0.3
     )
     print(nrow(all_klines))
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesMarketData$get_mark_price()`
+### Method `get_mark_price()`
 
 Get Mark Price
 
@@ -1143,32 +1092,36 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; futures symbol (e.g., `"XBTUSDTM"`).
+  (scalar\<character\>) futures symbol (e.g., `"XBTUSDTM"`).
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the current mark
+price: the contract symbol, price granularity in milliseconds, the rate
+datetime (POSIXct, coerced from epoch milliseconds), the mark price, and
+the underlying index price:
 
-- `symbol` (character): Contract symbol.
+- symbol (character) the trading pair symbol.
 
-- `granularity` (integer): Price granularity in milliseconds.
+- granularity (integer \| NA) the granularity.
 
-- `time_point` (POSIXct): Timestamp (coerced from milliseconds).
+- time_point (POSIXct) the time point (UTC).
 
-- `value` (numeric): Current mark price.
+- value (numeric \| NA) the order value.
 
-- `index_price` (numeric): Underlying index price.
+- index_price (numeric \| NA) the index price.
 
 #### Examples
 
+    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
     mark <- futures_market$get_mark_price("XBTUSDTM")
     print(mark[, .(symbol, value, index_price, time_point)])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesMarketData$get_funding_rate()`
+### Method `get_funding_rate()`
 
 Get Current Funding Rate
 
@@ -1189,8 +1142,8 @@ contracts.
 
 #### Official Documentation
 
-[KuCoin Get Current Funding
-Rate](https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-current-funding-rate)
+KuCoin Get Current Funding Rate:
+<https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-current-funding-rate>
 
 Verified: 2026-05-23
 
@@ -1202,8 +1155,9 @@ Verified: 2026-05-23
 - **Position Timing**: Avoid entering positions just before a large
   negative funding rate settlement.
 
-- **Predicted Rate Monitoring**: Use `predicted_value` to anticipate the
-  next funding cycle and adjust positions.
+- **Rate Bound Monitoring**: Use `funding_rate_cap` /
+  `funding_rate_floor` to bound the next funding cycle and adjust
+  positions.
 
 #### curl
 
@@ -1219,7 +1173,10 @@ Verified: 2026-05-23
         "granularity": 28800000,
         "timePoint": 1698267054000,
         "value": 0.000065,
-        "predictedValue": 0.000035,
+        "dailyInterestRate": 0.0003,
+        "fundingRateCap": 0.003,
+        "fundingRateFloor": -0.003,
+        "period": 1,
         "fundingTime": 1698278400000
       }
     }
@@ -1232,36 +1189,46 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; futures symbol (e.g., `"XBTUSDTM"`).
+  (scalar\<character\>) futures symbol (e.g., `"XBTUSDTM"`).
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the current funding
+rate: the contract symbol, funding interval in milliseconds, the rate
+datetime (POSIXct, coerced from epoch milliseconds), the current funding
+rate, the daily interest rate, the funding-rate cap and floor, the
+funding period, and the next funding settlement datetime (POSIXct,
+coerced from epoch milliseconds):
 
-- `symbol` (character): Contract symbol.
+- symbol (character) the trading pair symbol.
 
-- `granularity` (integer): Funding interval in milliseconds.
+- granularity (integer \| NA) the granularity.
 
-- `time_point` (POSIXct): Current rate timestamp (coerced from
-  milliseconds).
+- time_point (POSIXct) the time point (UTC).
 
-- `value` (numeric): Current funding rate.
+- value (numeric \| NA) the order value.
 
-- `predicted_value` (numeric): Predicted next funding rate.
+- daily_interest_rate (numeric \| NA) the daily interest rate.
 
-- `funding_time` (POSIXct): Next funding settlement time (coerced from
-  milliseconds).
+- funding_rate_cap (numeric \| NA) the funding rate cap.
+
+- funding_rate_floor (numeric \| NA) the funding rate floor.
+
+- period (integer \| NA) the period.
+
+- funding_time (POSIXct) the funding time (UTC).
 
 #### Examples
 
+    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
     rate <- futures_market$get_funding_rate("XBTUSDTM")
-    print(rate[, .(symbol, value, predicted_value, funding_time)])
+    print(rate[, .(symbol, value, funding_rate_cap, funding_time)])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesMarketData$get_funding_history()`
+### Method `get_funding_history()`
 
 Get Public Funding Rate History
 
@@ -1285,8 +1252,8 @@ specified time range.
 
 #### Official Documentation
 
-[KuCoin Get Public Funding Rate
-History](https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-public-funding-history)
+KuCoin Get Public Funding Rate History:
+<https://www.kucoin.com/docs-new/rest/futures-trading/funding-fees/get-public-funding-history>
 
 Verified: 2026-05-23
 
@@ -1337,44 +1304,39 @@ Verified: 2026-05-23
 
 - `symbol`:
 
-  Character; futures symbol (e.g., `"XBTUSDTM"`).
+  (scalar\<character\>) futures symbol (e.g., `"XBTUSDTM"`).
 
 - `from`:
 
-  POSIXct or numeric; start time. If POSIXct, converted to milliseconds.
-  If numeric, assumed to be milliseconds.
+  (POSIXct \| scalar\<numeric\>) start time. If POSIXct, converted to
+  milliseconds. If numeric, assumed to be milliseconds.
 
 - `to`:
 
-  POSIXct or numeric; end time. If POSIXct, converted to milliseconds.
-  If numeric, assumed to be milliseconds.
+  (POSIXct \| scalar\<numeric\>) end time. If POSIXct, converted to
+  milliseconds. If numeric, assumed to be milliseconds.
 
 #### Returns
 
-A `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row per funding settlement. Returns an empty
-`data.table` when no records cover the time range. Columns:
-
-- `symbol` (character): Contract symbol.
-
-- `funding_rate` (numeric): Funding rate for the period.
-
-- `timepoint` (POSIXct): Settlement timestamp (coerced from
-  milliseconds).
+(data.table \| promise\<data.table\>) one row per funding settlement,
+each giving the contract symbol, the funding rate for the period, and
+the settlement datetime (POSIXct, coerced from epoch milliseconds).
 
 #### Examples
 
+    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
     history <- futures_market$get_funding_history(
       symbol = "XBTUSDTM",
-      from = as.POSIXct("2024-10-25", tz = "UTC"),
-      to = as.POSIXct("2024-10-26", tz = "UTC")
+      from = lubridate::as_datetime("2024-10-25"),
+      to = lubridate::as_datetime("2024-10-26")
     )
     print(history[, .(symbol, funding_rate, timepoint)])
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesMarketData$get_server_time()`
+### Method `get_server_time()`
 
 Get Server Time
 
@@ -1428,20 +1390,22 @@ Verified: 2026-05-23
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the server datetime
+(POSIXct, coerced from epoch milliseconds):
 
-- `server_time` (POSIXct): Server timestamp (coerced from milliseconds).
+- server_time (POSIXct) the server time (UTC).
 
 #### Examples
 
+    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
     server_time <- futures_market$get_server_time()
     print(server_time$server_time)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesMarketData$get_service_status()`
+### Method `get_service_status()`
 
 Get Service Status
 
@@ -1498,22 +1462,25 @@ Verified: 2026-05-23
 
 #### Returns
 
-A single-row `data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with columns:
+(data.table \| promise\<data.table\>) one row giving the operational
+status (`"open"`, `"close"`, or `"cancelonly"`) and an optional
+remark/message:
 
-- `status` (character): Service status (e.g., `"open"`, `"close"`).
+- status (character) the status.
 
-- `msg` (character): Status message (empty when operational).
+- msg (character) the msg.
 
 #### Examples
 
+    \dontrun{
     futures_market <- KucoinFuturesMarketData$new()
     status <- futures_market$get_service_status()
     if (status$status == "open") message("Exchange is operational")
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinFuturesMarketData$clone()`
+### Method `clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -1548,7 +1515,7 @@ rate <- futures_market$get_funding_rate("XBTUSDTM")
 
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_contract()`
+## Method `KucoinFuturesMarketData$get_contract`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1558,7 +1525,7 @@ print(contract[, .(symbol, lot_size, tick_size, max_leverage)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_all_contracts()`
+## Method `KucoinFuturesMarketData$get_all_contracts`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1568,7 +1535,7 @@ print(contracts[, .(symbol, status, max_leverage, mark_price)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_ticker()`
+## Method `KucoinFuturesMarketData$get_ticker`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1578,7 +1545,7 @@ print(ticker[, .(symbol, price, best_bid_price, best_ask_price, ts)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_all_tickers()`
+## Method `KucoinFuturesMarketData$get_all_tickers`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1588,7 +1555,7 @@ print(all_tickers[, .(symbol, price, best_bid_price, best_ask_price)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_part_orderbook()`
+## Method `KucoinFuturesMarketData$get_part_orderbook`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1598,7 +1565,7 @@ print(ob[side == "bid"][order(level)][1:5])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_full_orderbook()`
+## Method `KucoinFuturesMarketData$get_full_orderbook`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1608,7 +1575,7 @@ print(full_ob[, .N, by = side])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_trade_history()`
+## Method `KucoinFuturesMarketData$get_trade_history`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1618,7 +1585,7 @@ print(trades[, .(price, size, side, ts)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_klines()`
+## Method `KucoinFuturesMarketData$get_klines`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1628,8 +1595,8 @@ futures_market <- KucoinFuturesMarketData$new()
 klines <- futures_market$get_klines(
   "XBTUSDTM",
   granularity = 60,
-  from = as.numeric(Sys.time() - 200 * 3600) * 1000,
-  to = as.numeric(Sys.time()) * 1000
+  from = as.numeric(lubridate::now("UTC") - lubridate::dhours(200)) * 1000,
+  to = as.numeric(lubridate::now("UTC")) * 1000
 )
 print(klines[, .(datetime, open, high, low, close, volume)])
 
@@ -1637,8 +1604,8 @@ print(klines[, .(datetime, open, high, low, close, volume)])
 all_klines <- futures_market$get_klines(
   "XBTUSDTM",
   granularity = 60,
-  from = as.POSIXct("2024-10-01", tz = "UTC"),
-  to = as.POSIXct("2024-10-31", tz = "UTC"),
+  from = lubridate::as_datetime("2024-10-01"),
+  to = lubridate::as_datetime("2024-10-31"),
   fetch_all = TRUE,
   sleep = 0.3
 )
@@ -1646,7 +1613,7 @@ print(nrow(all_klines))
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_mark_price()`
+## Method `KucoinFuturesMarketData$get_mark_price`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1656,31 +1623,31 @@ print(mark[, .(symbol, value, index_price, time_point)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_funding_rate()`
+## Method `KucoinFuturesMarketData$get_funding_rate`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
 futures_market <- KucoinFuturesMarketData$new()
 rate <- futures_market$get_funding_rate("XBTUSDTM")
-print(rate[, .(symbol, value, predicted_value, funding_time)])
+print(rate[, .(symbol, value, funding_rate_cap, funding_time)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_funding_history()`
+## Method `KucoinFuturesMarketData$get_funding_history`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
 futures_market <- KucoinFuturesMarketData$new()
 history <- futures_market$get_funding_history(
   symbol = "XBTUSDTM",
-  from = as.POSIXct("2024-10-25", tz = "UTC"),
-  to = as.POSIXct("2024-10-26", tz = "UTC")
+  from = lubridate::as_datetime("2024-10-25"),
+  to = lubridate::as_datetime("2024-10-26")
 )
 print(history[, .(symbol, funding_rate, timepoint)])
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_server_time()`
+## Method `KucoinFuturesMarketData$get_server_time`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -1690,7 +1657,7 @@ print(server_time$server_time)
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinFuturesMarketData$get_service_status()`
+## Method `KucoinFuturesMarketData$get_service_status`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

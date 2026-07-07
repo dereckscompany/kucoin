@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,7 +36,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Convert POSIXct to KuCoin Timestamp</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.1.0/R/utils_time.R" class="external-link"><code>R/utils_time.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/master/R/utils_time.R" class="external-link"><code>R/utils_time.R</code></a></small>
       <div class="d-none name"><code>time_convert_to_kucoin.Rd</code></div>
     </div>
 
@@ -54,17 +54,18 @@
 
 
 <dl><dt id="arg-datetime">datetime<a class="anchor" aria-label="anchor" href="#arg-datetime"></a></dt>
-<dd><p>POSIXct object to convert.</p></dd>
+<dd><p>(class&lt;POSIXct&gt;) the object to convert.</p></dd>
 
 
 <dt id="arg-unit">unit<a class="anchor" aria-label="anchor" href="#arg-unit"></a></dt>
-<dd><p>Character; output unit: <code>"ms"</code> (milliseconds, default),
-<code>"ns"</code> (nanoseconds), or <code>"s"</code> (seconds).</p></dd>
+<dd><p>(scalar&lt;character in c("ms", "ns", "s")&gt;) output unit: <code>"ms"</code>
+(milliseconds, default), <code>"ns"</code> (nanoseconds), or <code>"s"</code> (seconds).</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Numeric UNIX timestamp in the specified unit.</p>
+    <p>(scalar&lt;numeric&gt; | scalar&lt;integer&gt;) UNIX timestamp in the specified
+unit (<code>numeric</code> for <code>"ms"</code>/<code>"ns"</code>, <code>integer</code> for <code>"s"</code>).</p>
     </div>
 
     <div class="section level2">

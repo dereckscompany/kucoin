@@ -1,5 +1,11 @@
 # KucoinTransfer: Internal Transfer Management
 
+KucoinTransfer: Internal Transfer Management
+
+KucoinTransfer: Internal Transfer Management
+
+## Details
+
 Provides methods for transferring funds between KuCoin accounts (main,
 trade, margin, etc.) and between master and sub-accounts. Inherits from
 [KucoinBase](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md).
@@ -72,7 +78,7 @@ KuCoin uses separate accounts for different purposes:
 
 [`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
 -\>
-[`KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
+[`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinTransfer`
 
 ## Methods
@@ -87,11 +93,11 @@ KuCoin uses separate accounts for different purposes:
 
 Inherited methods
 
-- [`KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
+- [`kucoin::KucoinBase$initialize()`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.html#method-initialize)
 
 ------------------------------------------------------------------------
 
-### `KucoinTransfer$add_transfer()`
+### Method `add_transfer()`
 
 Add Transfer (Universal)
 
@@ -143,7 +149,9 @@ Verified: 2026-05-23
       --header 'KC-API-TIMESTAMP: 1729176273859' \
       --header 'KC-API-PASSPHRASE: your-passphrase' \
       --header 'KC-API-KEY-VERSION: 2' \
-      --data-raw '{"clientOid":"64ccc0f164781800010d8c09","currency":"USDT","amount":"10","type":"INTERNAL","fromAccountType":"MAIN","toAccountType":"TRADE"}'
+      --data-raw \
+      '{"clientOid":"64ccc0f164781800010d8c09","currency":"USDT","amount":"10","type":"INTERNAL",
+      "fromAccountType":"MAIN","toAccountType":"TRADE"}'
 
 #### JSON Response
 
@@ -157,77 +165,80 @@ Verified: 2026-05-23
 #### Usage
 
     KucoinTransfer$add_transfer(
-      clientOid,
+      client_order_id,
       currency,
       amount,
       type,
-      fromAccountType,
-      toAccountType,
-      fromUserId = NULL,
-      fromAccountTag = NULL,
-      toUserId = NULL,
-      toAccountTag = NULL
+      from_account_type,
+      to_account_type,
+      from_user_id = NULL,
+      from_account_tag = NULL,
+      to_user_id = NULL,
+      to_account_tag = NULL
     )
 
 #### Arguments
 
-- `clientOid`:
+- `client_order_id`:
 
-  Character; unique client order ID for idempotency (max 128 bits, e.g.,
-  UUID).
+  (scalar\<character\>) unique client order ID for idempotency (max 128
+  bits, e.g., UUID).
 
 - `currency`:
 
-  Character; currency code (e.g., `"BTC"`, `"USDT"`).
+  (scalar\<character\>) currency code (e.g., `"BTC"`, `"USDT"`).
 
 - `amount`:
 
-  Character; transfer amount (positive, multiple of currency precision).
+  (scalar\<character\>) transfer amount (positive, multiple of currency
+  precision).
 
 - `type`:
 
-  Character; transfer type: `"INTERNAL"`, `"PARENT_TO_SUB"`, or
-  `"SUB_TO_PARENT"`.
+  (scalar\<character\>) transfer type: `"INTERNAL"`, `"PARENT_TO_SUB"`,
+  or `"SUB_TO_PARENT"`.
 
-- `fromAccountType`:
+- `from_account_type`:
 
-  Character; source account type: `"MAIN"`, `"TRADE"`, `"CONTRACT"`,
-  `"MARGIN"`, `"ISOLATED"`, `"MARGIN_V2"`, `"ISOLATED_V2"`.
+  (scalar\<character\>) source account type: `"MAIN"`, `"TRADE"`,
+  `"CONTRACT"`, `"MARGIN"`, `"ISOLATED"`, `"MARGIN_V2"`,
+  `"ISOLATED_V2"`.
 
-- `toAccountType`:
+- `to_account_type`:
 
-  Character; destination account type (same options as
+  (scalar\<character\>) destination account type (same options as
   `fromAccountType`).
 
-- `fromUserId`:
+- `from_user_id`:
 
-  Character or NULL; source user ID (required for `"SUB_TO_PARENT"`
-  transfers).
+  (scalar\<character\> \| NULL) source user ID (required for
+  `"SUB_TO_PARENT"` transfers).
 
-- `fromAccountTag`:
+- `from_account_tag`:
 
-  Character or NULL; symbol for ISOLATED/ISOLATED_V2 source accounts
-  (e.g., `"BTC-USDT"`).
-
-- `toUserId`:
-
-  Character or NULL; destination user ID (required for `"PARENT_TO_SUB"`
-  transfers).
-
-- `toAccountTag`:
-
-  Character or NULL; symbol for ISOLATED/ISOLATED_V2 destination
+  (scalar\<character\> \| NULL) symbol for ISOLATED/ISOLATED_V2 source
   accounts (e.g., `"BTC-USDT"`).
+
+- `to_user_id`:
+
+  (scalar\<character\> \| NULL) destination user ID (required for
+  `"PARENT_TO_SUB"` transfers).
+
+- `to_account_tag`:
+
+  (scalar\<character\> \| NULL) symbol for ISOLATED/ISOLATED_V2
+  destination accounts (e.g., `"BTC-USDT"`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row and columns:
+(data.table \| promise\<data.table\>) one row with column `order_id`
+(character): the transfer order identifier:
 
-- `order_id` (character): The transfer order identifier.
+- order_id (character) the system order identifier.
 
 #### Examples
 
+    \dontrun{
     transfer <- KucoinTransfer$new()
 
     # Move USDT from main to trade account for spot trading
@@ -251,10 +262,11 @@ Verified: 2026-05-23
       toAccountType = "MAIN",
       toUserId = "sub-user-id-here"
     )
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinTransfer$get_transferable()`
+### Method `get_transferable()`
 
 Get Transferable Balance
 
@@ -322,35 +334,39 @@ Verified: 2026-05-23
 
 - `currency`:
 
-  Character; currency code (e.g., `"BTC"`, `"USDT"`).
+  (scalar\<character\>) currency code (e.g., `"BTC"`, `"USDT"`).
 
 - `type`:
 
-  Character; account type: `"MAIN"`, `"TRADE"`, `"MARGIN"`,
+  (scalar\<character\>) account type: `"MAIN"`, `"TRADE"`, `"MARGIN"`,
   `"ISOLATED"`, `"MARGIN_V2"`, `"ISOLATED_V2"`.
 
 - `tag`:
 
-  Character or NULL; trading pair symbol required for `"ISOLATED"`
-  account type (e.g., `"BTC-USDT"`).
+  (scalar\<character\> \| NULL) trading pair symbol required for
+  `"ISOLATED"` account type (e.g., `"BTC-USDT"`).
 
 #### Returns
 
-`data.table` (or `promise<data.table>` if constructed with
-`async = TRUE`) with one row and columns:
+(data.table \| promise\<data.table\>) one row with the balance
+breakdown: `currency` (currency code), `balance` (total funds),
+`available` (funds available to withdraw or trade), `holds` (funds
+locked in open orders), and `transferable` (funds available for
+transfer) – all character:
 
-- `currency` (character): Currency code.
+- currency (character) the currency code.
 
-- `balance` (character): Total funds in the account.
+- balance (numeric \| NA) the total balance.
 
-- `available` (character): Funds available to withdraw or trade.
+- available (numeric \| NA) the amount available.
 
-- `holds` (character): Funds on hold (locked in open orders).
+- holds (numeric \| NA) the amount on hold.
 
-- `transferable` (character): Funds available for transfer.
+- transferable (numeric \| NA) the transferable amount.
 
 #### Examples
 
+    \dontrun{
     transfer <- KucoinTransfer$new()
 
     # Check transferable USDT in main account
@@ -360,10 +376,11 @@ Verified: 2026-05-23
     # Check transferable BTC in trade account
     trade_bal <- transfer$get_transferable(currency = "BTC", type = "TRADE")
     print(trade_bal$transferable)
+    }
 
 ------------------------------------------------------------------------
 
-### `KucoinTransfer$clone()`
+### Method `clone()`
 
 The objects of this class are cloneable with this method.
 
@@ -398,7 +415,7 @@ while (!later::loop_empty()) later::run_now()
 
 
 ## ------------------------------------------------
-## Method `KucoinTransfer$add_transfer()`
+## Method `KucoinTransfer$add_transfer`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{
@@ -428,7 +445,7 @@ result <- transfer$add_transfer(
 } # }
 
 ## ------------------------------------------------
-## Method `KucoinTransfer$get_transferable()`
+## Method `KucoinTransfer$get_transferable`
 ## ------------------------------------------------
 
 if (FALSE) { # \dontrun{

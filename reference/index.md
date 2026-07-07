@@ -54,8 +54,6 @@ API credential and endpoint helpers
 
 Functions for building and executing KuCoin API requests
 
-- [`kucoin_build_request()`](https://dereckscompany.github.io/kucoin/reference/kucoin_build_request.md)
-  : Build and Execute a KuCoin API Request
 - [`kucoin_paginate()`](https://dereckscompany.github.io/kucoin/reference/kucoin_paginate.md)
   : Paginate a KuCoin API Endpoint
 
@@ -70,7 +68,7 @@ Bulk data download and included datasets
 
 ## Utilities
 
-Time conversion and validation helpers
+Time conversion, validation, and return-shape helpers
 
 - [`time_convert_from_kucoin()`](https://dereckscompany.github.io/kucoin/reference/time_convert_from_kucoin.md)
   : Convert KuCoin Timestamp to POSIXct
@@ -78,3 +76,5 @@ Time conversion and validation helpers
   : Convert POSIXct to KuCoin Timestamp
 - [`verify_symbol()`](https://dereckscompany.github.io/kucoin/reference/verify_symbol.md)
   : Verify Ticker Symbol Format
+- [`kucoin_shapes`](https://dereckscompany.github.io/kucoin/reference/kucoin_shapes.md)
+  : KuCoin return shapes

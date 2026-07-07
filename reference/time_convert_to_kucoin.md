@@ -12,16 +12,17 @@ time_convert_to_kucoin(datetime, unit = c("ms", "ns", "s"))
 
 - datetime:
 
-  POSIXct object to convert.
+  (class\<POSIXct\>) the object to convert.
 
 - unit:
 
-  Character; output unit: `"ms"` (milliseconds, default), `"ns"`
-  (nanoseconds), or `"s"` (seconds).
+  (scalar\<character in c("ms", "ns", "s")\>) output unit: `"ms"`
+  (milliseconds, default), `"ns"` (nanoseconds), or `"s"` (seconds).
 
 ## Value
 
-Numeric UNIX timestamp in the specified unit.
+(scalar\<numeric\> \| scalar\<integer\>) UNIX timestamp in the specified
+unit (`numeric` for `"ms"`/`"ns"`, `integer` for `"s"`).
 
 ## Examples
 

@@ -1,5 +1,255 @@
 # Changelog
 
+## kucoin 4.3.0
+
+### snake_case argument convergence (clean break) + connectcore alignment
+
+This release renames every camelCase R argument to snake_case, so the
+whole public surface reads in one style and matches the rest of the
+connector fleet. The KuCoin API’s own camelCase field names live on only
+as wire payload keys built inside each method: you now pass
+`client_order_id`, `time_in_force`, `order_id` and so on, and the method
+translates each back to `clientOid` / `timeInForce` / `orderId` at the
+call site. This is a clean break with no deprecation shims, hence the
+minor-version bump.
+
+- **snake_case everywhere.** All ~40 camelCase method arguments become
+  snake_case (`clientOid` -\> `client_order_id`, `orderId` -\>
+  `order_id`, `timeInForce` -\> `time_in_force`, `isIsolated` -\>
+  `is_isolated`, `stopPrice` -\> `stop_price`, `newPrice` / `newSize`
+  -\> `new_price` / `new_size`, `marginMode` -\> `margin_mode`, and the
+  rest); the venue’s camelCase survives only as accepted values and wire
+  payload keys. The blessed `.lintr` drops its camelCase allowance and
+  now enforces pure snake_case.
+- **`ms_to_datetime()` centralised in connectcore.** kucoin’s
+  length-preserving, NA-in-NA-out millisecond-to-POSIXct helper was the
+  fleet donor and now lives in `connectcore (>= 0.3.0)`; the local copy
+  is deleted and the function is imported, so every wrapper shares one
+  implementation. The nanosecond variant stays local because connectcore
+  does not centralise it.
+- **Backfill no longer smuggles failures on an attribute.**
+  [`kucoin_backfill_klines()`](https://dereckscompany.github.io/kucoin/reference/kucoin_backfill_klines.md)
+  previously attached a `"failures"` attribute to its returned file
+  path, breaking the one-method-one-value rule; per-combo failures are
+  now surfaced as warnings during the run, with a final summary warning
+  listing the failed count and affected `(symbol, timeframe)` pairs, and
+  the return value is just the file path.
+- **lubridate for all date/time.** The remaining base
+  [`as.POSIXct()`](https://rdrr.io/r/base/as.POSIXlt.html) /
+  [`Sys.time()`](https://rdrr.io/r/base/Sys.time.html) calls in code and
+  examples are replaced with
+  [`lubridate::as_datetime()`](https://lubridate.tidyverse.org/reference/as_date.html)
+  / `lubridate::now("UTC")`.
+- **Docs, tests, vignettes.** Documentation is regenerated with roxygen
+  7.3.3; `test-empty-tables.R` is renamed `test-empty-constructors.R`
+  and proves every `empty_dt_*` constructor is a zero-row,
+  non-zero-column, list-column-free, contract-passing table; the README
+  and vignettes execute against the tests/testthat mock router with the
+  new snake_case arguments and print real synthetic-fixture output.
+
+## kucoin 4.2.3
+
+### data.table return shapes documented with typed column bullets
+
+The `@return` of every public method that yields a fixed-shape
+`data.table` now lists each column as a typed nested bullet, following
+the roxyassert convention: bare element types (`character`, `integer`,
+`numeric`, `logical`, `POSIXct`) with `| NA` appended wherever a column
+can legitimately be missing in a real response. Documenting the columns
+regenerates `assert_has_columns` plus the per-column type asserts, so
+the parsed shape is now enforced at the public boundary — for the
+synchronous value and for the resolved value of a promise alike — rather
+than relying on the old loose `assert_data_table` check. Methods whose
+tables are genuinely variable-shape are deliberately left as the generic
+`(data.table | promise<data.table>)`: those that return a zero-column
+empty `data.table` on an empty response, the heterogeneous futures
+position tables whose numeric fields arrive sometimes as numbers and
+sometimes as strings, and the wide futures-contract metadata tables.
+This matches the package’s existing flattener convention and keeps the
+empty-response and variable-payload paths working untouched.
+
+## kucoin 4.2.2
+
+### Live-capture fixture hardening + bugs the synthetic fixtures hid
+
+This release validates every committed fixture against a read-only
+capture of the REAL KuCoin API (spot + futures, public + private GET)
+and fixes the divergences that synthetic, shape-only fixtures could not
+surface. A new `dev/capture-kucoin.R` drives the package’s own read
+methods through a raw-response interceptor and dumps each verbatim body
+to the git-ignored `local/raw-data/kucoin/`; `dev/validate-fixtures.R`
+diffs each fixture’s record keys against its capture. All enrichment
+uses synthetic values — no real account id, balance, or order id is
+committed.
+
+- **Futures `GET /api/v1/status` returns a `text/plain` Content-Type.**
+  KuCoin sends a valid JSON body for the futures service-status endpoint
+  but labels it `text/plain`, so
+  [`httr2::resp_body_json()`](https://httr2.r-lib.org/reference/resp_body_raw.html)’s
+  default content-type guard aborted before parsing and
+  `KucoinFuturesMarketData$get_service_status()` failed against the live
+  API. The synthetic mock (served as `application/json`) hid this.
+  `parse_kucoin_response()` now parses with `check_type = FALSE`.
+
+- **Futures contract `sourceExchanges` produced a forbidden list
+  column.** The live `GET /api/v1/contracts/active` and
+  `/api/v1/contracts/{symbol}` payloads carry a `sourceExchanges` JSON
+  array (the mark-price source venues) that the generic flattener turned
+  into a list column, violating the package’s no-list-column invariant
+  on real data. The old array-free fixtures hid it.
+  `KucoinFuturesMarketData$get_contract()` / `$get_all_contracts()` now
+  collapse `sourceExchanges` to a `;`-separated scalar via
+  `collapse_string_array_fields()`, matching the cross-package
+  Treatment-A convention.
+
+- **`get_open_order_value()` field rename `Qty` → `Size`.** The live
+  `GET /api/v1/openOrderStatistics` response returns `openOrderBuySize`
+  / `openOrderSellSize`; the fixture, mock helper, and unit assertion
+  still used the retired `openOrderBuyQty` / `openOrderSellQty` names.
+  The fixture, the `@return` / example docs, and the test now use
+  `open_order_buy_size` / `open_order_sell_size`.
+
+- **`get_funding_rate()` fictional `predictedValue` replaced with the
+  real fields.** The live `GET /api/v1/funding-rate/{symbol}/current`
+  response carries `dailyInterestRate`, `fundingRateCap`,
+  `fundingRateFloor`, and `period` and does NOT return `predictedValue`;
+  the fixture and docs invented a `predictedValue` field. Both now
+  reflect the real payload.
+
+- **`get_max_open_size()` rejected a numeric `price`.** The futures
+  max-open-size endpoint typed its `price` `@param` as
+  `scalar<character>`, so the natural numeric call
+  `get_max_open_size("XBTUSDTM", price = 40000, leverage = 10)` aborted
+  at the input contract — surfaced only by the private read-only live
+  test against the real API (the synthetic unit test happened to pass a
+  string). `price` is now `scalar<numeric in ]0, Inf[>` (httr2
+  serialises it for the query just like the adjacent numeric
+  `leverage`), and the unit tests pass a numeric price too.
+
+- **Empty kline ranges returned a column-less table.**
+  `combine_klines()` and the zero-width-range early returns in
+  `kucoin_fetch_klines()` (spot and futures) returned a bare
+  `data.table()` for a window with no candles, but `get_klines()`’s
+  `@return` requires the seven OHLCV columns (`assert_has_columns`), so
+  an empty range aborted instead of returning empty. All four sites now
+  return the existing typed `empty_dt_klines()` zero-row schema (the
+  same fix class as binance and hyperliquid).
+
+- **Fixtures enriched to the real superset (synthetic values).** Added
+  the real-but-missing fields: `futures_account_overview`
+  (`availableMargin`, `riskRatio`, `maxWithdrawAmount`);
+  `futures_contract` / `futures_all_contracts` (the full real field set
+  — `displaySymbol`, `marketMaxOrderQty`, `fundingRateCap`/`Floor`,
+  `crossRiskLimit`, `marketType`, `sourceExchanges`, and ~30 more);
+  `futures_trade_history` (`contractId`); `symbol` (the `callauction*`
+  stage fields and `tradingStartTime`, present-but-null);
+  `isolated_margin_symbols` (`autoRenewMaxDebtRatio`,
+  `baseBorrowCoefficient`, `quoteBorrowCoefficient`); `risk_limit`
+  (`timestamp`); `sub_accounts_page` (`tradeTypes`, `openedTradeTypes`);
+  `deposit_addresses` (`remark`); and spot `trade_history` (`tradeId`).
+
+### Type contract corrections (coinbase gold-standard remediation)
+
+- **Epoch-millisecond and page-size parameters retyped off `integer`.**
+  `assert_scalar_integer()` rejects a plain R double (an unsuffixed
+  numeric literal such as `1729176273859` or `100` is a double, not an
+  integer), so every `startAt` / `endAt` / `limit` / `currencyType`
+  argument typed `scalar<integer>` was rejecting legitimate caller input
+  at the contract boundary. Millisecond timestamp windows (`startAt` /
+  `endAt`) — which exceed `2^31` — are now `scalar<numeric>`; the small
+  bounded page-size / currency-type flags (`limit`, `currencyType`) are
+  now `scalar<count>`, which validates by value and accepts a whole
+  double. Affects `KucoinAccount`, `KucoinDeposit`, `KucoinTrading`,
+  `KucoinWithdrawal`.
+
+- **`max_pages` accepts its own `Inf` default again.** The pagination
+  cap was typed half-open `scalar<numeric in [1, Inf[>`, whose generated
+  `assert_between(..., upper_inclusive = FALSE)` rejected
+  `max_pages = Inf` — the parameter’s documented default. Retyped to the
+  closed `scalar<numeric in [1, Inf]>` (matching the sibling
+  connectors), so the unbounded default validates.
+
+- **Typed per-column `@return` shapes for the fixed-schema one-row /
+  single-column methods.** `KucoinTrading$cancel_all_by_symbol()` /
+  `$cancel_all()` / `$get_symbols_with_open_orders()`,
+  `KucoinMarketData$get_market_list()` / `$get_server_time()`,
+  `KucoinLending$modify_purchase()`,
+  `KucoinMarginTrading$modify_leverage()`, and
+  `KucoinWithdrawal$cancel_withdrawal()` documented their result as a
+  bare `(data.table)`; each now carries `- name (type)` column bullets,
+  so the contract roclet emits a real `assert_has_columns()` plus
+  per-column type check at the boundary. Payload-dependent returns (the
+  generic flatteners, the dry-run-variable margin order
+  acknowledgements, the optional-`symbol` futures order book)
+  deliberately stay generic per the cross-package convention.
+
+- **`DESCRIPTION` version constraints moved into `Imports` /
+  `Suggests`.** `connectcore (>= 0.1.0)` and `roxyassert (>= 0.9.1)` now
+  carry their minimum-version constraints in the dependency fields; the
+  `Remotes` field is source-only (the `@v…` refs were stripped) as the
+  other tracked packages do.
+
+- **Documentation hygiene.** `NEWS.md` bullets are now one continuous
+  line each (the renderer wraps); the over-long roxygen prose,
+  `### Official Documentation` links (split into a title line plus a
+  bare-URL autolink), and `curl` examples were wrapped so the package
+  lints clean at 120 columns with no `.lintr` exclusion.
+
+## kucoin 4.2.0
+
+### Type contracts (roxyassert)
+
+- **Adopted `roxyassert` for runtime type contracts across the whole
+  package.** Every `@param`/`@return` is now written in the `roxyassert`
+  grammar (zero prose type annotations remain), and the
+  [`roxyassert::contract_roclet`](https://dereckscompany.github.io/roxyassert/reference/contract_roclet.html)
+  generates `assert_args_*()` / `assert_return_*()` helpers into
+  `R/contracts-generated.R` at `document()` time — so each function’s
+  documented contract and its runtime validation come from a single
+  source. Every public R6 table method validates its arguments at entry
+  and validates the parsed result (synchronous value or the resolved
+  value of a promise alike) at the boundary via
+  `connectcore::then_or_now(res, assert_return_*, is_async = private$.is_async)`.
+  `assert` is now an import; `uuid` and `roxyassert` are added (the
+  margin client-order-id auto-generator now uses
+  [`uuid::UUIDgenerate()`](https://rdrr.io/pkg/uuid/man/UUIDgenerate.html)
+  instead of a hand-rolled hex string).
+
+- **Reusable `@type` shapes for the fixed-schema returns.**
+  `R/types_kucoin.R` defines `Klines` (the spot and futures OHLCV
+  candles) and `Orderbook` (the spot level-2 book in long format); the
+  kline and spot-order-book parsers return the fully-typed table and a
+  typed zero-row empty on no data. Every other endpoint returns a
+  payload-dependent schema (built by the generic
+  `as_dt_row`/`as_dt_list`/`flatten_pages` flatteners or a bespoke
+  inline parser), so those returns stay the generic
+  `(data.table | promise<data.table>)` — including the futures order
+  book, whose `symbol` column is optional. No contracts are exported
+  (`kucoin` is a leaf connector): the shapes expand inline into each
+  method’s generated `assert_return_*` and nothing downstream validates
+  against them. The public API and the wire bytes are unchanged.
+
+## kucoin 4.1.1
+
+### REFACTOR
+
+- **Adopted `connectcore`’s `body_format = "raw"` funnel; the connector
+  now owns no transport.** With `connectcore` v0.1.0 a pre-serialised
+  body can be sent byte-verbatim (no NULL-pruning, no pretty-printing,
+  no re-encoding) and the `.sign()` seam runs after the body is set, so
+  a body-signing venue reads the exact bytes off the request. KuCoin now
+  serialises its body once to compact JSON, routes it through the
+  inherited funnel via `body_format = "raw"`, and signs those exact
+  bytes — making the hand-rolled `kucoin_build_request()` redundant. It
+  has been **removed**; `KucoinBase$.request()` is a thin override of
+  [`connectcore::build_request()`](https://rdrr.io/pkg/connectcore/man/build_request.html)
+  and
+  [`kucoin_paginate()`](https://dereckscompany.github.io/kucoin/reference/kucoin_paginate.md)
+  routes each page through the same funnel. The wire bytes — and the
+  `KC-API-*` HMAC computed over them — are byte-identical to 4.1.0
+  (verified end-to-end: identical compact body, identical prehash,
+  identical signature). The public API is otherwise unchanged.
+
 ## kucoin 4.1.0
 
 ### REFACTOR
@@ -15,8 +265,7 @@
   signing the timestamp + method + URL-encoded path + raw body) and
   `.parse_envelope()` (KuCoin’s `code` / `data` envelope). The public
   API is unchanged: every `Kucoin*` class, method, and the exported
-  [`kucoin_build_request()`](https://dereckscompany.github.io/kucoin/reference/kucoin_build_request.md)
-  /
+  `kucoin_build_request()` /
   [`kucoin_paginate()`](https://dereckscompany.github.io/kucoin/reference/kucoin_paginate.md)
   helpers keep their exact signatures and behaviour.
 - **The generic transport helpers now come from `connectcore` instead of
@@ -31,13 +280,11 @@
   `;`-collapse warning id) stay in the package.
 - **Why KuCoin keeps its own request funnel.** Unlike most venues,
   KuCoin signs the *exact compact JSON request body* and must transmit
-  that same byte sequence on the wire, so
-  [`kucoin_build_request()`](https://dereckscompany.github.io/kucoin/reference/kucoin_build_request.md)
+  that same byte sequence on the wire, so `kucoin_build_request()`
   continues to send the body via `req_body_raw()` (the signed string
   verbatim) rather than `connectcore`’s default funnel, which
   pretty-prints the body and would invalidate the signature.
-  [`kucoin_build_request()`](https://dereckscompany.github.io/kucoin/reference/kucoin_build_request.md)
-  /
+  `kucoin_build_request()` /
   [`kucoin_paginate()`](https://dereckscompany.github.io/kucoin/reference/kucoin_paginate.md)
   gained optional `sign` / `parse_envelope` parameters (defaulting to
   KuCoin’s own) so the seams drive the funnel; existing callers are

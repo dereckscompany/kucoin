@@ -1,5 +1,11 @@
 # KucoinBase: Abstract Base Class for KuCoin API Clients
 
+KucoinBase: Abstract Base Class for KuCoin API Clients
+
+KucoinBase: Abstract Base Class for KuCoin API Clients
+
+## Details
+
 Provides shared infrastructure for all KuCoin R6 classes, including API
 credential management, sync/async execution mode, timestamp source
 configuration, and a standardised method for calling implementation
@@ -18,12 +24,11 @@ which adds the header-based HMAC signature, encrypted passphrase, and
 which honours KuCoin's `code`/`data` envelope).
 
 Unlike most connectors, KuCoin signs the *exact compact JSON request
-body* and must send that same byte sequence on the wire, so the request
-funnel is KuCoin's own
-[`kucoin_build_request()`](https://dereckscompany.github.io/kucoin/reference/kucoin_build_request.md)
-(which signs and sends an identical `req_body_raw` payload) rather than
-the connectcore default funnel; the two overridable seams are driven
-through it.
+body* and must send that same byte sequence on the wire. It still owns
+no transport: the body is pre-serialised to compact JSON and routed
+through the connectcore funnel via `body_format = "raw"` (byte-verbatim
+— no NULL-pruning, no pretty-printing), and the `.sign()` seam reads
+those exact bytes back off the request to compute the `KC-API-*` HMAC.
 
 ### Sync vs Async
 
@@ -72,13 +77,13 @@ inherit from it and define their own public methods that delegate to
 
 ### Public methods
 
-- [`KucoinBase$new()`](#method-KucoinBase-initialize)
+- [`KucoinBase$new()`](#method-KucoinBase-new)
 
 - [`KucoinBase$clone()`](#method-KucoinBase-clone)
 
 ------------------------------------------------------------------------
 
-### `KucoinBase$new()`
+### Method `new()`
 
 Initialise a KucoinBase Object
 
@@ -95,34 +100,35 @@ Initialise a KucoinBase Object
 
 - `keys`:
 
-  List; API credentials from
+  (list) API credentials from
   [`get_api_keys()`](https://dereckscompany.github.io/kucoin/reference/get_api_keys.md).
   Defaults to
   [`get_api_keys()`](https://dereckscompany.github.io/kucoin/reference/get_api_keys.md).
 
 - `base_url`:
 
-  Character; API base URL. Defaults to
+  (scalar\<character\>) API base URL. Defaults to
   [`get_base_url()`](https://dereckscompany.github.io/kucoin/reference/get_base_url.md).
 
 - `async`:
 
-  Logical; if `TRUE`, methods return promises. Default `FALSE`.
+  (scalar\<logical\>) if `TRUE`, methods return promises. Default
+  `FALSE`.
 
 - `time_source`:
 
-  Character; clock source for HMAC request signing. `"local"` (default)
-  uses the local UTC clock. `"server"` fetches the KuCoin server time
-  before each authenticated request, which adds latency but avoids
-  clock-drift issues.
+  (scalar\<character\>) clock source for HMAC request signing. `"local"`
+  (default) uses the local UTC clock. `"server"` fetches the KuCoin
+  server time before each authenticated request, which adds latency but
+  avoids clock-drift issues.
 
 #### Returns
 
-Invisible self.
+(class\<KucoinBase\>) invisibly, the new instance.
 
 ------------------------------------------------------------------------
 
-### `KucoinBase$clone()`
+### Method `clone()`
 
 The objects of this class are cloneable with this method.
 

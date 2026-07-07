@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,7 +64,7 @@
 Mezquita</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.1.0/vignettes/futures-trading.Rmd" class="external-link"><code>vignettes/futures-trading.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/master/vignettes/futures-trading.Rmd" class="external-link"><code>vignettes/futures-trading.Rmd</code></a></small>
       <div class="d-none name"><code>futures-trading.Rmd</code></div>
     </div>
 
@@ -161,9 +161,9 @@ sizes, leverage limits, and fee rates:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ticker</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_ticker</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
 <span><span class="va">ticker</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span><span class="va">symbol</span>, <span class="va">price</span>, <span class="va">best_bid_price</span>, <span class="va">best_ask_price</span>, <span class="va">ts</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;      symbol   price best_bid_price best_ask_price                  ts</span></span>
-<span><span class="co">#&gt;      &lt;char&gt;  &lt;char&gt;         &lt;char&gt;         &lt;char&gt;              &lt;POSc&gt;</span></span>
-<span><span class="co">#&gt; 1: XBTUSDTM 98250.0        98249.9        98250.1 2024-10-17 10:04:19</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;      symbol price best_bid_price best_ask_price                  ts</span></span>
+<span><span class="co">#&gt;      &lt;char&gt; &lt;num&gt;          &lt;num&gt;          &lt;num&gt;              &lt;POSc&gt;</span></span>
+<span><span class="co">#&gt; 1: XBTUSDTM 98250        98249.9        98250.1 2024-10-17 10:04:19</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="all-tickers">All Tickers<a class="anchor" aria-label="anchor" href="#all-tickers"></a>
@@ -171,10 +171,10 @@ sizes, leverage limits, and fee rates:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tickers</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_all_tickers</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">tickers</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span><span class="va">symbol</span>, <span class="va">price</span>, <span class="va">ts</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;      symbol   price                  ts</span></span>
-<span><span class="co">#&gt;      &lt;char&gt;  &lt;char&gt;              &lt;POSc&gt;</span></span>
-<span><span class="co">#&gt; 1: XBTUSDTM 98250.0 2024-10-17 10:04:19</span></span>
-<span><span class="co">#&gt; 2: ETHUSDTM 3456.78 2024-10-17 10:04:19</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;      symbol    price                  ts</span></span>
+<span><span class="co">#&gt;      &lt;char&gt;    &lt;num&gt;              &lt;POSc&gt;</span></span>
+<span><span class="co">#&gt; 1: XBTUSDTM 98250.00 2024-10-17 10:04:19</span></span>
+<span><span class="co">#&gt; 2: ETHUSDTM  3456.78 2024-10-17 10:04:19</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="orderbook">Orderbook<a class="anchor" aria-label="anchor" href="#orderbook"></a>
@@ -196,10 +196,10 @@ sizes, leverage limits, and fee rates:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">trades</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_trade_history</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
 <span><span class="va">trades</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span><span class="va">side</span>, <span class="va">price</span>, <span class="va">size</span>, <span class="va">ts</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;      side   price  size                  ts</span></span>
-<span><span class="co">#&gt;    &lt;char&gt;  &lt;char&gt; &lt;int&gt;              &lt;POSc&gt;</span></span>
-<span><span class="co">#&gt; 1:    buy 98250.0     1 2024-10-17 10:04:19</span></span>
-<span><span class="co">#&gt; 2:   sell 98251.0     2 2024-10-17 10:04:19</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;      side price  size                  ts</span></span>
+<span><span class="co">#&gt;    &lt;char&gt; &lt;num&gt; &lt;num&gt;              &lt;POSc&gt;</span></span>
+<span><span class="co">#&gt; 1:    buy 98250     1 2024-10-17 10:04:19</span></span>
+<span><span class="co">#&gt; 2:   sell 98251     2 2024-10-17 10:04:19</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="klines-candlesticks">Klines (Candlesticks)<a class="anchor" aria-label="anchor" href="#klines-candlesticks"></a>
@@ -233,12 +233,12 @@ longs pay shorts; negative means shorts pay longs:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rate</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_funding_rate</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
 <span><span class="va">rate</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;      symbol granularity          time_point value predicted_value</span></span>
-<span><span class="co">#&gt;      &lt;char&gt;       &lt;int&gt;              &lt;POSc&gt; &lt;num&gt;           &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1: XBTUSDTM    28800000 2024-10-17 08:00:00 1e-04           1e-04</span></span>
-<span><span class="co">#&gt;           funding_time</span></span>
-<span><span class="co">#&gt;                 &lt;POSc&gt;</span></span>
-<span><span class="co">#&gt; 1: 2024-10-17 16:00:00</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;      symbol granularity          time_point value daily_interest_rate</span></span>
+<span><span class="co">#&gt;      &lt;char&gt;       &lt;int&gt;              &lt;POSc&gt; &lt;num&gt;               &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1: XBTUSDTM    28800000 2024-10-17 08:00:00 1e-04               3e-04</span></span>
+<span><span class="co">#&gt;    funding_rate_cap funding_rate_floor period        funding_time</span></span>
+<span><span class="co">#&gt;               &lt;num&gt;              &lt;num&gt;  &lt;int&gt;              &lt;POSc&gt;</span></span>
+<span><span class="co">#&gt; 1:            0.003             -0.003      1 2024-10-17 16:00:00</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="server-time-and-status">Server Time and Status<a class="anchor" aria-label="anchor" href="#server-time-and-status"></a>
@@ -267,7 +267,7 @@ permission</strong> enabled on KuCoin.</p>
 placing a real order:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">trading</span><span class="op">$</span><span class="fu">add_order_test</span><span class="op">(</span></span>
-<span>  clientOid <span class="op">=</span> <span class="st">"my-test-001"</span>,</span>
+<span>  client_order_id <span class="op">=</span> <span class="st">"my-test-001"</span>,</span>
 <span>  symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span>,</span>
 <span>  side <span class="op">=</span> <span class="st">"buy"</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"limit"</span>,</span>
@@ -286,7 +286,7 @@ placing a real order:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Market order — no price needed</span></span>
 <span><span class="va">order</span> <span class="op">&lt;-</span> <span class="va">trading</span><span class="op">$</span><span class="fu">add_order</span><span class="op">(</span></span>
-<span>  clientOid <span class="op">=</span> <span class="st">"my-market-001"</span>,</span>
+<span>  client_order_id <span class="op">=</span> <span class="st">"my-market-001"</span>,</span>
 <span>  symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span>,</span>
 <span>  side <span class="op">=</span> <span class="st">"buy"</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"market"</span>,</span>
@@ -296,14 +296,14 @@ placing a real order:</p>
 <span></span>
 <span><span class="co"># Limit order</span></span>
 <span><span class="va">order</span> <span class="op">&lt;-</span> <span class="va">trading</span><span class="op">$</span><span class="fu">add_order</span><span class="op">(</span></span>
-<span>  clientOid <span class="op">=</span> <span class="st">"my-limit-001"</span>,</span>
+<span>  client_order_id <span class="op">=</span> <span class="st">"my-limit-001"</span>,</span>
 <span>  symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span>,</span>
 <span>  side <span class="op">=</span> <span class="st">"buy"</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"limit"</span>,</span>
 <span>  leverage <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>  size <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  price <span class="op">=</span> <span class="st">"95000"</span>,</span>
-<span>  timeInForce <span class="op">=</span> <span class="st">"GTC"</span></span>
+<span>  time_in_force <span class="op">=</span> <span class="st">"GTC"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -311,10 +311,10 @@ placing a real order:</p>
 </h3>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Cancel by system order ID</span></span>
-<span><span class="va">trading</span><span class="op">$</span><span class="fu">cancel_order_by_id</span><span class="op">(</span>orderId <span class="op">=</span> <span class="st">"order-id-here"</span><span class="op">)</span></span>
+<span><span class="va">trading</span><span class="op">$</span><span class="fu">cancel_order_by_id</span><span class="op">(</span>order_id <span class="op">=</span> <span class="st">"order-id-here"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Cancel by client order ID</span></span>
-<span><span class="va">trading</span><span class="op">$</span><span class="fu">cancel_order_by_client_oid</span><span class="op">(</span>clientOid <span class="op">=</span> <span class="st">"my-limit-001"</span>, symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
+<span><span class="va">trading</span><span class="op">$</span><span class="fu">cancel_order_by_client_oid</span><span class="op">(</span>client_order_id <span class="op">=</span> <span class="st">"my-limit-001"</span>, symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Cancel all orders for a symbol</span></span>
 <span><span class="va">trading</span><span class="op">$</span><span class="fu">cancel_all</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
@@ -327,7 +327,7 @@ placing a real order:</p>
 </h3>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get a specific order</span></span>
-<span><span class="va">order</span> <span class="op">&lt;-</span> <span class="va">trading</span><span class="op">$</span><span class="fu">get_order_by_id</span><span class="op">(</span>orderId <span class="op">=</span> <span class="st">"order-id"</span><span class="op">)</span></span>
+<span><span class="va">order</span> <span class="op">&lt;-</span> <span class="va">trading</span><span class="op">$</span><span class="fu">get_order_by_id</span><span class="op">(</span>order_id <span class="op">=</span> <span class="st">"order-id"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Get open orders</span></span>
 <span><span class="va">open</span> <span class="op">&lt;-</span> <span class="va">trading</span><span class="op">$</span><span class="fu">get_order_list</span><span class="op">(</span>query <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>status <span class="op">=</span> <span class="st">"active"</span><span class="op">)</span><span class="op">)</span></span>
@@ -356,9 +356,9 @@ sending heartbeats:</p>
 <span></span>
 <span><span class="co"># Check current DCP settings</span></span>
 <span><span class="va">trading</span><span class="op">$</span><span class="fu">get_dcp</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;    timeout symbols current_time</span></span>
-<span><span class="co">#&gt;      &lt;int&gt;  &lt;char&gt;        &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1:       5         1.729159e+12</span></span>
+<pre><code><span><span class="co">#&gt;    trade_type symbol system_time trigger_time</span></span>
+<span><span class="co">#&gt;        &lt;char&gt; &lt;char&gt;       &lt;num&gt;        &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1:    FUTURES   &lt;NA&gt;  1729159459            0</span></span>
 <span><span class="co">#&gt;    timeout symbols current_time</span></span>
 <span><span class="co">#&gt;      &lt;int&gt;  &lt;char&gt;        &lt;num&gt;</span></span>
 <span><span class="co">#&gt; 1:       5         1.729159e+12</span></span></code></pre>
@@ -409,12 +409,12 @@ sending heartbeats:</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Check current mode</span></span>
 <span><span class="va">account</span><span class="op">$</span><span class="fu">get_margin_mode</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;            v1</span></span>
-<span><span class="co">#&gt;        &lt;list&gt;</span></span>
-<span><span class="co">#&gt; 1: &lt;list[35]&gt;</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;      symbol margin_mode</span></span>
+<span><span class="co">#&gt;      &lt;char&gt;      &lt;char&gt;</span></span>
+<span><span class="co">#&gt; 1: XBTUSDTM    ISOLATED</span></span></code></pre>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Switch to cross margin</span></span>
-<span><span class="va">account</span><span class="op">$</span><span class="fu">set_margin_mode</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span>, marginMode <span class="op">=</span> <span class="st">"CROSS"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">account</span><span class="op">$</span><span class="fu">set_margin_mode</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span>, margin_mode <span class="op">=</span> <span class="st">"CROSS"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="leverage">Leverage<a class="anchor" aria-label="anchor" href="#leverage"></a>
