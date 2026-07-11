@@ -1,5 +1,28 @@
 # Changelog
 
+## kucoin 4.3.1
+
+### `kucoin_paginate()` walks pages iteratively in sync mode (closes [\#15](https://github.com/dereckscompany/kucoin/issues/15))
+
+[`kucoin_paginate()`](https://dereckscompany.github.io/kucoin/reference/kucoin_paginate.md)
+expressed its page walk as self-recursion: each page’s synchronous
+continuation called the fetch closure for the next page, so on a deep
+walk (thousands of pages, e.g. a long account history) the nested
+`fetch_page -> then_or_now -> continuation -> fetch_page` frames grew
+the call stack and eventually aborted with a node-stack overflow (R has
+no tail-call optimisation). The sync path is now an iterative
+`while`-loop that accumulates pages in constant stack depth, so a
+several-thousand-page walk completes. Results are bit-identical: the
+same page ordering, the same `page < total && page < max_pages` stop
+condition, and the same `max_pages` / `page_size` closed-interval
+contracts. The async path keeps its promise-based recursion, which is
+safe because
+[`promises::then()`](https://rstudio.github.io/promises/reference/then.html)
+schedules each continuation as a fresh event-loop task, so the call
+stack unwinds between pages. A regression test walks 3000 pages through
+the mock router and confirms the sync path survives where the recursive
+code overflowed.
+
 ## kucoin 4.3.0
 
 ### snake_case argument convergence (clean break) + connectcore alignment

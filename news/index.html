@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,14 @@
       <small>Source: <a href="https://github.com/dereckscompany/kucoin/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="4.3.1" id="kucoin-431">kucoin 4.3.1<a class="anchor" aria-label="anchor" href="#kucoin-431"></a></h2>
+<div class="section level3">
+<h3 id="kucoin_paginate-walks-pages-iteratively-in-sync-mode-closes-4-3-1">
+<code>kucoin_paginate()</code> walks pages iteratively in sync mode (closes <a href="https://github.com/dereckscompany/kucoin/issues/15" class="external-link">#15</a>)<a class="anchor" aria-label="anchor" href="#kucoin_paginate-walks-pages-iteratively-in-sync-mode-closes-4-3-1"></a></h3>
+<p><code><a href="../reference/kucoin_paginate.html">kucoin_paginate()</a></code> expressed its page walk as self-recursion: each page’s synchronous continuation called the fetch closure for the next page, so on a deep walk (thousands of pages, e.g. a long account history) the nested <code>fetch_page -&gt; then_or_now -&gt; continuation -&gt; fetch_page</code> frames grew the call stack and eventually aborted with a node-stack overflow (R has no tail-call optimisation). The sync path is now an iterative <code>while</code>-loop that accumulates pages in constant stack depth, so a several-thousand-page walk completes. Results are bit-identical: the same page ordering, the same <code>page &lt; total &amp;&amp; page &lt; max_pages</code> stop condition, and the same <code>max_pages</code> / <code>page_size</code> closed-interval contracts. The async path keeps its promise-based recursion, which is safe because <code><a href="https://rstudio.github.io/promises/reference/then.html" class="external-link">promises::then()</a></code> schedules each continuation as a fresh event-loop task, so the call stack unwinds between pages. A regression test walks 3000 pages through the mock router and confirms the sync path survives where the recursive code overflowed.</p>
+</div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="4.3.0" id="kucoin-430">kucoin 4.3.0<a class="anchor" aria-label="anchor" href="#kucoin-430"></a></h2>
 <div class="section level3">
