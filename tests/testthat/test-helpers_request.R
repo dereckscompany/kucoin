@@ -394,3 +394,43 @@ test_that("kucoin_paginate respects max_pages", {
 
   expect_equal(call_count, 2L)
 })
+
+test_that("kucoin_paginate walks thousands of pages in sync mode without overflowing the stack", {
+  # Regression for #15: the sync walk used to self-recurse once per page, nesting
+  # `fetch_page -> then_or_now -> continuation -> fetch_page` on the call stack
+  # (R has no tail-call optimisation), and overflowed the node stack on a deep
+  # walk. Verified: the old recursive code aborts this exact test with
+  # "node stack overflow"; the iterative sync loop runs in constant stack depth
+  # and completes. Every page reports the same large totalPage and carries no
+  # items, so the walk runs `deep_total` iterations cheaply (the empty
+  # accumulator is fed to flatten_pages, which yields an empty data.table). The
+  # multi-page ordering/accumulation contract is covered by the tests above.
+  deep_total <- 3000L
+  call_count <- 0L
+
+  # The walk's stop condition reads only totalPage, never the response's
+  # currentPage, so one constant response drives every page (fast: no per-page
+  # JSON re-encoding).
+  resp <- mock_kucoin_response(
+    data = list(
+      totalNum = deep_total,
+      totalPage = deep_total,
+      pageSize = 1L
+    )
+  )
+  httr2::local_mocked_responses(function(req) {
+    call_count <<- call_count + 1L
+    return(resp)
+  })
+
+  result <- kucoin_paginate(
+    base_url = "https://api.kucoin.com",
+    endpoint = "/api/v3/announcements",
+    .parser = flatten_pages,
+    page_size = 1
+  )
+
+  expect_equal(call_count, deep_total)
+  expect_s3_class(result, "data.table")
+  expect_equal(nrow(result), 0L)
+})

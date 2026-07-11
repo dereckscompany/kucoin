@@ -301,12 +301,15 @@ kucoin_paginate <- function(
 
   accumulator <- list()
 
-  fetch_page <- function(page) {
+  # Issue one page request. Returns the parsed page data in sync mode, or a
+  # promise resolving to it in async mode. Both walk paths below build the
+  # request identically through this seam, so the two modes stay bit-identical.
+  request_page <- function(page) {
     q <- query
     q$currentPage <- page
     q$pageSize <- page_size
 
-    result <- connectcore::build_request(
+    return(connectcore::build_request(
       base_url = base_url,
       endpoint = endpoint,
       method = method,
@@ -320,30 +323,66 @@ kucoin_paginate <- function(
       is_async = is_async,
       timeout = timeout,
       ctx = list(get_timestamp_ms = .get_timestamp_ms)
-    )
-
-    return(connectcore::then_or_now(
-      result,
-      function(data) {
-        page_items <- data[[items_field]]
-        if (!is.null(page_items)) {
-          accumulator[[length(accumulator) + 1L]] <<- page_items
-        }
-
-        total <- 1L
-        if (!is.null(data$totalPage)) {
-          total <- data$totalPage
-        }
-
-        if (page < total && page < max_pages) {
-          return(fetch_page(page + 1L))
-        }
-
-        return(.parser(accumulator))
-      },
-      is_async = is_async
     ))
   }
 
-  return(assert_return_kucoin_paginate(fetch_page(1L)))
+  # Fold one page's items into the accumulator and report its `totalPage`
+  # (defaulting to 1 when the field is absent, exactly as before). Shared by
+  # both walk paths so ordering and stop conditions are identical.
+  absorb_page <- function(data) {
+    page_items <- data[[items_field]]
+    if (!is.null(page_items)) {
+      accumulator[[length(accumulator) + 1L]] <<- page_items
+    }
+
+    total <- 1L
+    if (!is.null(data$totalPage)) {
+      total <- data$totalPage
+    }
+
+    return(total)
+  }
+
+  # Sync and async walk the same pages with the same stop condition; only the
+  # control structure differs, because each mode has a different stack model.
+  result <- NULL
+  if (is_async) {
+    # Async: promise-based recursion. `promises::then()` schedules each
+    # continuation as a fresh event-loop task, so the call stack unwinds between
+    # pages (the recursion is trampolined by the event loop and does not grow
+    # the stack with page count). Left as recursion deliberately.
+    fetch_page <- function(page) {
+      return(connectcore::then_or_now(
+        request_page(page),
+        function(data) {
+          total <- absorb_page(data)
+          if (page < total && page < max_pages) {
+            return(fetch_page(page + 1L))
+          }
+          return(.parser(accumulator))
+        },
+        is_async = TRUE
+      ))
+    }
+    result <- fetch_page(1L)
+  } else {
+    # Sync: iterative while-loop. R has no tail-call optimisation and runs the
+    # continuation inline, so expressing the walk as self-recursion nested
+    # `fetch_page -> then_or_now -> continuation -> fetch_page` and overflowed
+    # the stack on a deep walk (thousands of pages). The loop runs in constant
+    # stack depth while preserving the exact page ordering.
+    page <- 1L
+    walking <- TRUE
+    while (walking) {
+      total <- absorb_page(request_page(page))
+      if (page < total && page < max_pages) {
+        page <- page + 1L
+      } else {
+        walking <- FALSE
+      }
+    }
+    result <- .parser(accumulator)
+  }
+
+  return(assert_return_kucoin_paginate(result))
 }
