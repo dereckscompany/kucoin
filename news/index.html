@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,9 +36,19 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.3.1/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/dereckscompany/kucoin/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="4.4.0" id="kucoin-440">kucoin 4.4.0<a class="anchor" aria-label="anchor" href="#kucoin-440"></a></h2>
+<div class="section level3">
+<h3 id="typed-api-error-conditions-4-4-0">Typed API-error conditions<a class="anchor" aria-label="anchor" href="#typed-api-error-conditions-4-4-0"></a></h3>
+<ul><li>All three failure surfaces of the request funnel (<code>parse_kucoin_response()</code>) now signal a <strong>classed condition</strong> instead of a bare <code><a href="https://rlang.r-lib.org/reference/abort.html" class="external-link">rlang::abort()</a></code>, so a caller branches on error <em>type</em> and reads structured <em>fields</em> rather than grepping the message text. The two API surfaces — a non-2xx HTTP status, and a venue error carried as a <code>code</code> other than <code>"200000"</code> in the JSON body (KuCoin returns HTTP 200 with the error in the body) — signal a class vector ordered specific -&gt; general: <code>kucoin_api_error_&lt;status&gt;</code> (keyed on the HTTP status), <code>kucoin_api_error</code> (any KuCoin API failure), then the inherited connectcore family <code>connectcore_api_error_&lt;status&gt;</code> / <code>connectcore_api_error</code> / <code>connectcore_error</code>. The condition carries <code>status</code> (integer), <code>code</code> (the KuCoin venue code, <code>NULL</code> on a plain HTTP failure), <code>url</code> (query-string credentials redacted), and <code>body_snippet</code> (the response body) as fields — read <code>e$code</code>, not a regex.</li>
+<li>The third surface — a parsed-but-malformed body missing its <code>code</code> field — is connectcore’s response-error surface, so it now raises <code><a href="https://rdrr.io/pkg/connectcore/man/abort_response_error.html" class="external-link">connectcore::abort_response_error()</a></code> (classed <code>connectcore_response_error</code> / <code>connectcore_error</code>, carrying <code>field = "code"</code>), not the API-error family. <code>connectcore_error</code> still catches all three.</li>
+<li>The message strings are <strong>byte-identical</strong> to the previous <code>"KuCoin API error &lt;code&gt;: &lt;msg&gt;"</code>, <code>"KuCoin HTTP error &lt;status&gt;\n&lt;body&gt;"</code>, and <code>"Invalid KuCoin API response: missing 'code' field."</code>, so existing tests and downstream message greps keep matching. The classes and fields are purely additive.</li>
+<li>This follows the connector-subclass recipe documented in connectcore 0.4.0 (<code>?connectcore_conditions</code>); the floor is bumped to <code>connectcore (&gt;= 0.4.0)</code>.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="4.3.1" id="kucoin-431">kucoin 4.3.1<a class="anchor" aria-label="anchor" href="#kucoin-431"></a></h2>
 <div class="section level3">
