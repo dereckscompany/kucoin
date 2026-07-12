@@ -46,6 +46,60 @@ test_that("parse_kucoin_response aborts on missing code field", {
   expect_error(parse_kucoin_response(resp), "missing.*code")
 })
 
+test_that("parse_kucoin_response HTTP path raises a typed condition (no venue code)", {
+  resp <- mock_http_error(status_code = 500L, body_text = "Server Error")
+
+  status_hit <- tryCatch(parse_kucoin_response(resp), kucoin_api_error_500 = function(e) e)
+  expect_s3_class(status_hit, "kucoin_api_error_500")
+  expect_equal(status_hit$status, 500L)
+  expect_null(status_hit$code)
+  expect_s3_class(status_hit, "connectcore_api_error")
+  expect_s3_class(status_hit, "connectcore_error")
+
+  err <- tryCatch(parse_kucoin_response(resp), error = function(e) e)
+  expect_equal(conditionMessage(err), "KuCoin HTTP error 500\nServer Error")
+})
+
+test_that("parse_kucoin_response venue-code path raises a typed condition (code carried)", {
+  # KuCoin signals venue errors on an HTTP 200, so the per-status class is 200
+  resp <- mock_kucoin_error(code = "400100", msg = "Order not found", status_code = 200L)
+
+  status_hit <- tryCatch(parse_kucoin_response(resp), kucoin_api_error_200 = function(e) e)
+  expect_s3_class(status_hit, "kucoin_api_error_200")
+  expect_equal(status_hit$status, 200L)
+  expect_equal(status_hit$code, "400100")
+
+  # package family and connectcore family both catch it
+  expect_s3_class(tryCatch(parse_kucoin_response(resp), kucoin_api_error = function(e) e), "kucoin_api_error")
+  cc_fam <- tryCatch(parse_kucoin_response(resp), connectcore_api_error = function(e) e)
+  expect_s3_class(cc_fam, "connectcore_api_error")
+
+  err <- tryCatch(parse_kucoin_response(resp), error = function(e) e)
+  expect_equal(conditionMessage(err), "KuCoin API error 400100: Order not found")
+})
+
+test_that("parse_kucoin_response missing-code path raises a connectcore response error", {
+  body <- jsonlite::toJSON(list(data = "something"), auto_unbox = TRUE)
+  resp <- httr2::response(
+    status_code = 200L,
+    headers = list(`Content-Type` = "application/json"),
+    body = charToRaw(as.character(body))
+  )
+
+  # A malformed body is the response-error surface, NOT the api_error family
+  resp_err <- tryCatch(parse_kucoin_response(resp), connectcore_response_error = function(e) e)
+  expect_s3_class(resp_err, "connectcore_response_error")
+  expect_s3_class(resp_err, "connectcore_error")
+  expect_equal(resp_err$field, "code")
+
+  # it must NOT be caught as a kucoin_api_error
+  not_api <- tryCatch(parse_kucoin_response(resp), kucoin_api_error = function(e) "caught", error = function(e) "other")
+  expect_equal(not_api, "other")
+
+  err <- tryCatch(parse_kucoin_response(resp), error = function(e) e)
+  expect_equal(conditionMessage(err), "Invalid KuCoin API response: missing 'code' field.")
+})
+
 # -- sign_request --
 
 test_that("sign_request adds all required auth headers", {
