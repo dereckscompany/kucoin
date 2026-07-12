@@ -185,7 +185,12 @@ parse_kucoin_response <- function(resp) {
       httr2::resp_body_string(resp),
       error = function(e) "<unable to read body>"
     )
-    rlang::abort(paste0("KuCoin HTTP error ", status, "\n", body_text))
+    abort_kucoin_error(
+      status = status,
+      url = resp$url,
+      body = body_text,
+      message = paste0("KuCoin HTTP error ", status, "\n", body_text)
+    )
   }
 
   # NOTE: simplifyVector must be FALSE to preserve JSON structure faithfully.
@@ -199,17 +204,27 @@ parse_kucoin_response <- function(resp) {
   # The body is still valid JSON, so we parse it regardless of the declared
   # type. Synthetic mock fixtures (served as `application/json`) hid this.
   parsed <- httr2::resp_body_json(resp, simplifyVector = FALSE, check_type = FALSE)
+  body_text <- tryCatch(httr2::resp_body_string(resp), error = function(e) NULL)
 
   if (is.null(parsed$code)) {
-    rlang::abort("Invalid KuCoin API response: missing 'code' field.")
+    # A parsed-but-malformed body (no `code` field) is connectcore's response
+    # error surface, not an API error — raise it directly so it nests under
+    # connectcore_response_error / connectcore_error.
+    connectcore::abort_response_error(
+      message = "Invalid KuCoin API response: missing 'code' field.",
+      field = "code",
+      url = resp$url,
+      body = body_text
+    )
   }
   if (as.character(parsed$code) != "200000") {
-    rlang::abort(paste0(
-      "KuCoin API error ",
-      parsed$code,
-      ": ",
-      if (is.null(parsed$msg)) "No error message provided." else parsed$msg
-    ))
+    abort_kucoin_error(
+      status = status,
+      code = parsed$code,
+      msg = parsed$msg,
+      url = resp$url,
+      body = body_text
+    )
   }
 
   return(assert_return_parse_kucoin_response(parsed$data))

@@ -1,7 +1,7 @@
 Package: kucoin
 Type: Package
 Title: API Wrapper to KuCoin Cryptocurrency Exchange
-Version: 4.3.1
+Version: 4.4.0
 URL: https://dereckscompany.github.io/kucoin/
 BugReports: https://github.com/dereckscompany/kucoin/issues
 Authors@R: 
@@ -28,7 +28,7 @@ Imports:
     lubridate,
     uuid,
     assert,
-    connectcore (>= 0.3.0)
+    connectcore (>= 0.4.0)
 Suggests:
     promises,
     coro,

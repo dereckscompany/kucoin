@@ -1,3 +1,12 @@
+# kucoin 4.4.0
+
+## Typed API-error conditions
+
+* All three failure surfaces of the request funnel (`parse_kucoin_response()`) now signal a **classed condition** instead of a bare `rlang::abort()`, so a caller branches on error *type* and reads structured *fields* rather than grepping the message text. The two API surfaces — a non-2xx HTTP status, and a venue error carried as a `code` other than `"200000"` in the JSON body (KuCoin returns HTTP 200 with the error in the body) — signal a class vector ordered specific -> general: `kucoin_api_error_<status>` (keyed on the HTTP status), `kucoin_api_error` (any KuCoin API failure), then the inherited connectcore family `connectcore_api_error_<status>` / `connectcore_api_error` / `connectcore_error`. The condition carries `status` (integer), `code` (the KuCoin venue code, `NULL` on a plain HTTP failure), `url` (query-string credentials redacted), and `body_snippet` (the response body) as fields — read `e$code`, not a regex.
+* The third surface — a parsed-but-malformed body missing its `code` field — is connectcore's response-error surface, so it now raises `connectcore::abort_response_error()` (classed `connectcore_response_error` / `connectcore_error`, carrying `field = "code"`), not the API-error family. `connectcore_error` still catches all three.
+* The message strings are **byte-identical** to the previous `"KuCoin API error <code>: <msg>"`, `"KuCoin HTTP error <status>\n<body>"`, and `"Invalid KuCoin API response: missing 'code' field."`, so existing tests and downstream message greps keep matching. The classes and fields are purely additive.
+* This follows the connector-subclass recipe documented in connectcore 0.4.0 (`?connectcore_conditions`); the floor is bumped to `connectcore (>= 0.4.0)`.
+
 # kucoin 4.3.1
 
 ## `kucoin_paginate()` walks pages iteratively in sync mode (closes #15)
