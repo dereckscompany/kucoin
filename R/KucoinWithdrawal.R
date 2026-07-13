@@ -187,17 +187,17 @@ KucoinWithdrawal <- R6::R6Class(
         fee_deduct_type
       )
       if (!is.character(currency) || !nzchar(currency)) {
-        rlang::abort("Parameter 'currency' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'currency' must be a non-empty string.")
       }
       if (!is.character(to_address) || !nzchar(to_address)) {
-        rlang::abort("Parameter 'toAddress' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'toAddress' must be a non-empty string.")
       }
       if (!is.character(amount) || !nzchar(amount)) {
-        rlang::abort("Parameter 'amount' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'amount' must be a non-empty string.")
       }
       valid_types <- c("ADDRESS", "UID", "MAIL", "PHONE")
       if (!is.character(withdraw_type) || !(withdraw_type %in% valid_types)) {
-        rlang::abort(paste0(
+        abort_kucoin_validation_error(paste0(
           "Parameter 'withdrawType' must be one of: ",
           paste(valid_types, collapse = ", "),
           "."
@@ -205,7 +205,7 @@ KucoinWithdrawal <- R6::R6Class(
       }
 
       if (is.null(chain)) {
-        rlang::abort("Parameter 'chain' is required by the KuCoin API.")
+        abort_kucoin_validation_error("Parameter 'chain' is required by the KuCoin API.")
       }
 
       body <- list(
@@ -309,7 +309,7 @@ KucoinWithdrawal <- R6::R6Class(
     cancel_withdrawal = function(withdrawal_id) {
       assert_args_KucoinWithdrawal__cancel_withdrawal(withdrawal_id)
       if (!is.character(withdrawal_id) || !nzchar(withdrawal_id)) {
-        rlang::abort("Parameter 'withdrawalId' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'withdrawalId' must be a non-empty string.")
       }
 
       res <- private$.request(
@@ -431,7 +431,7 @@ KucoinWithdrawal <- R6::R6Class(
     get_withdrawal_quotas = function(currency, chain = NULL) {
       assert_args_KucoinWithdrawal__get_withdrawal_quotas(currency, chain)
       if (!is.character(currency) || !nzchar(currency)) {
-        rlang::abort("Parameter 'currency' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'currency' must be a non-empty string.")
       }
 
       res <- private$.request(
@@ -611,7 +611,7 @@ KucoinWithdrawal <- R6::R6Class(
         max_pages
       )
       if (!is.null(currency) && (!is.character(currency) || !nzchar(currency))) {
-        rlang::abort("Parameter 'currency' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'currency' must be a non-empty string.")
       }
 
       res <- private$.paginate(
@@ -770,7 +770,7 @@ KucoinWithdrawal <- R6::R6Class(
     get_withdrawal_by_id = function(withdrawal_id) {
       assert_args_KucoinWithdrawal__get_withdrawal_by_id(withdrawal_id)
       if (!is.character(withdrawal_id) || !nzchar(withdrawal_id)) {
-        rlang::abort("Parameter 'withdrawalId' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'withdrawalId' must be a non-empty string.")
       }
 
       res <- private$.request(

@@ -863,13 +863,15 @@ KucoinMarginTrading <- R6::R6Class(
         is_hf
       )
       if (!is.character(currency) || !nzchar(currency)) {
-        rlang::abort("Parameter 'currency' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'currency' must be a non-empty string.")
       }
       if (!is.numeric(size) || size <= 0) {
-        rlang::abort("Parameter 'size' must be a positive number.")
+        abort_kucoin_validation_error("Parameter 'size' must be a positive number.")
       }
       if (isTRUE(is_isolated) && (is.null(symbol) || !verify_symbol(symbol))) {
-        rlang::abort("Parameter 'symbol' is required and must be a valid ticker when 'is_isolated' is TRUE.")
+        abort_kucoin_validation_error(
+          "Parameter 'symbol' is required and must be a valid ticker when 'is_isolated' is TRUE."
+        )
       }
 
       body <- list(
@@ -964,10 +966,10 @@ KucoinMarginTrading <- R6::R6Class(
     repay = function(currency, size) {
       assert_args_KucoinMarginTrading__repay(currency, size)
       if (!is.character(currency) || !nzchar(currency)) {
-        rlang::abort("Parameter 'currency' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'currency' must be a non-empty string.")
       }
       if (!is.numeric(size) || size <= 0) {
-        rlang::abort("Parameter 'size' must be a positive number.")
+        abort_kucoin_validation_error("Parameter 'size' must be a positive number.")
       }
 
       body <- list(
@@ -1403,7 +1405,7 @@ KucoinMarginTrading <- R6::R6Class(
     #' }
     modify_leverage = function(leverage) {
       if (!is.numeric(leverage) || leverage <= 0) {
-        rlang::abort("Parameter 'leverage' must be a positive number.")
+        abort_kucoin_validation_error("Parameter 'leverage' must be a positive number.")
       }
 
       body <- list(leverage = as.character(leverage))

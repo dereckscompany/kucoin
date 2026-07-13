@@ -189,7 +189,7 @@ KucoinLending <- R6::R6Class(
     get_loan_market_rate = function(currency) {
       assert_args_KucoinLending__get_loan_market_rate(currency)
       if (!is.character(currency) || !nzchar(currency)) {
-        rlang::abort("Parameter 'currency' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'currency' must be a non-empty string.")
       }
 
       res <- private$.request(
@@ -274,13 +274,13 @@ KucoinLending <- R6::R6Class(
     purchase = function(currency, size, interest_rate) {
       assert_args_KucoinLending__purchase(currency, size, interest_rate)
       if (!is.character(currency) || !nzchar(currency)) {
-        rlang::abort("Parameter 'currency' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'currency' must be a non-empty string.")
       }
       if (!is.numeric(size) || size <= 0) {
-        rlang::abort("Parameter 'size' must be a positive number.")
+        abort_kucoin_validation_error("Parameter 'size' must be a positive number.")
       }
       if (!is.numeric(interest_rate) || interest_rate <= 0) {
-        rlang::abort("Parameter 'interestRate' must be a positive number.")
+        abort_kucoin_validation_error("Parameter 'interestRate' must be a positive number.")
       }
 
       body <- list(
@@ -371,13 +371,13 @@ KucoinLending <- R6::R6Class(
     modify_purchase = function(currency, purchase_order_no, interest_rate) {
       assert_args_KucoinLending__modify_purchase(currency, purchase_order_no, interest_rate)
       if (!is.character(currency) || !nzchar(currency)) {
-        rlang::abort("Parameter 'currency' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'currency' must be a non-empty string.")
       }
       if (!is.character(purchase_order_no) || !nzchar(purchase_order_no)) {
-        rlang::abort("Parameter 'purchaseOrderNo' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'purchaseOrderNo' must be a non-empty string.")
       }
       if (!is.numeric(interest_rate) || interest_rate <= 0) {
-        rlang::abort("Parameter 'interestRate' must be a positive number.")
+        abort_kucoin_validation_error("Parameter 'interestRate' must be a positive number.")
       }
 
       body <- list(
@@ -576,13 +576,13 @@ KucoinLending <- R6::R6Class(
     redeem = function(currency, size, purchase_order_no) {
       assert_args_KucoinLending__redeem(currency, size, purchase_order_no)
       if (!is.character(currency) || !nzchar(currency)) {
-        rlang::abort("Parameter 'currency' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'currency' must be a non-empty string.")
       }
       if (!is.numeric(size) || size <= 0) {
-        rlang::abort("Parameter 'size' must be a positive number.")
+        abort_kucoin_validation_error("Parameter 'size' must be a positive number.")
       }
       if (!is.character(purchase_order_no) || !nzchar(purchase_order_no)) {
-        rlang::abort("Parameter 'purchaseOrderNo' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'purchaseOrderNo' must be a non-empty string.")
       }
 
       body <- list(

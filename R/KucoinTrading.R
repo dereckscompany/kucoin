@@ -550,7 +550,7 @@ KucoinTrading <- R6::R6Class(
     add_order_batch = function(order_list) {
       assert_args_KucoinTrading__add_order_batch(order_list)
       if (!is.list(order_list) || length(order_list) == 0 || length(order_list) > 20) {
-        rlang::abort("Parameter 'order_list' must contain 1 to 20 orders.")
+        abort_kucoin_validation_error("Parameter 'order_list' must contain 1 to 20 orders.")
       }
 
       validated <- lapply(order_list, validate_batch_order)
@@ -638,10 +638,10 @@ KucoinTrading <- R6::R6Class(
     cancel_order_by_id = function(order_id, symbol) {
       assert_args_KucoinTrading__cancel_order_by_id(order_id, symbol)
       if (!is.character(order_id) || !nzchar(order_id)) {
-        rlang::abort("Parameter 'order_id' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'order_id' must be a non-empty string.")
       }
       if (!verify_symbol(symbol)) {
-        rlang::abort("Parameter 'symbol' must be a valid ticker (e.g., 'BTC-USDT').")
+        abort_kucoin_validation_error("Parameter 'symbol' must be a valid ticker (e.g., 'BTC-USDT').")
       }
 
       res <- private$.request(
@@ -710,10 +710,10 @@ KucoinTrading <- R6::R6Class(
     cancel_order_by_client_oid = function(client_order_id, symbol) {
       assert_args_KucoinTrading__cancel_order_by_client_oid(client_order_id, symbol)
       if (!is.character(client_order_id) || !nzchar(client_order_id)) {
-        rlang::abort("Parameter 'client_order_id' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'client_order_id' must be a non-empty string.")
       }
       if (!verify_symbol(symbol)) {
-        rlang::abort("Parameter 'symbol' must be a valid ticker.")
+        abort_kucoin_validation_error("Parameter 'symbol' must be a valid ticker.")
       }
 
       res <- private$.request(
@@ -789,10 +789,10 @@ KucoinTrading <- R6::R6Class(
     cancel_partial_order = function(order_id, symbol, cancel_size) {
       assert_args_KucoinTrading__cancel_partial_order(order_id, symbol, cancel_size)
       if (!is.character(order_id) || !nzchar(order_id)) {
-        rlang::abort("Parameter 'order_id' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'order_id' must be a non-empty string.")
       }
       if (!verify_symbol(symbol)) {
-        rlang::abort("Parameter 'symbol' must be a valid ticker.")
+        abort_kucoin_validation_error("Parameter 'symbol' must be a valid ticker.")
       }
 
       res <- private$.request(
@@ -863,7 +863,7 @@ KucoinTrading <- R6::R6Class(
     cancel_all_by_symbol = function(symbol) {
       assert_args_KucoinTrading__cancel_all_by_symbol(symbol)
       if (!verify_symbol(symbol)) {
-        rlang::abort("Parameter 'symbol' must be a valid ticker.")
+        abort_kucoin_validation_error("Parameter 'symbol' must be a valid ticker.")
       }
 
       res <- private$.request(
@@ -1059,10 +1059,10 @@ KucoinTrading <- R6::R6Class(
     get_order_by_id = function(order_id, symbol = NULL) {
       assert_args_KucoinTrading__get_order_by_id(order_id, symbol)
       if (!is.character(order_id) || !nzchar(order_id)) {
-        rlang::abort("Parameter 'order_id' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'order_id' must be a non-empty string.")
       }
       if (!is.null(symbol) && !verify_symbol(symbol)) {
-        rlang::abort("Parameter 'symbol' must be a valid ticker.")
+        abort_kucoin_validation_error("Parameter 'symbol' must be a valid ticker.")
       }
 
       res <- private$.request(
@@ -1184,10 +1184,10 @@ KucoinTrading <- R6::R6Class(
     get_order_by_client_oid = function(client_order_id, symbol) {
       assert_args_KucoinTrading__get_order_by_client_oid(client_order_id, symbol)
       if (!is.character(client_order_id) || !nzchar(client_order_id)) {
-        rlang::abort("Parameter 'client_order_id' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'client_order_id' must be a non-empty string.")
       }
       if (!verify_symbol(symbol)) {
-        rlang::abort("Parameter 'symbol' must be a valid ticker.")
+        abort_kucoin_validation_error("Parameter 'symbol' must be a valid ticker.")
       }
 
       res <- private$.request(
@@ -1330,7 +1330,7 @@ KucoinTrading <- R6::R6Class(
         end_at
       )
       if (!is.null(symbol) && !verify_symbol(symbol)) {
-        rlang::abort("Parameter 'symbol' must be a valid ticker.")
+        abort_kucoin_validation_error("Parameter 'symbol' must be a valid ticker.")
       }
 
       res <- private$.request(
@@ -1549,7 +1549,7 @@ KucoinTrading <- R6::R6Class(
     get_open_orders = function(symbol = NULL) {
       assert_args_KucoinTrading__get_open_orders(symbol)
       if (!is.null(symbol) && !verify_symbol(symbol)) {
-        rlang::abort("Parameter 'symbol' must be a valid ticker.")
+        abort_kucoin_validation_error("Parameter 'symbol' must be a valid ticker.")
       }
 
       res <- private$.request(
@@ -1697,7 +1697,7 @@ KucoinTrading <- R6::R6Class(
         last_id
       )
       if (!is.null(symbol) && !verify_symbol(symbol)) {
-        rlang::abort("Parameter 'symbol' must be a valid ticker.")
+        abort_kucoin_validation_error("Parameter 'symbol' must be a valid ticker.")
       }
 
       res <- private$.request(
@@ -2044,7 +2044,7 @@ KucoinTrading <- R6::R6Class(
     add_order_batch_sync = function(order_list) {
       assert_args_KucoinTrading__add_order_batch_sync(order_list)
       if (!is.list(order_list) || length(order_list) == 0 || length(order_list) > 20) {
-        rlang::abort("Parameter 'order_list' must contain 1 to 20 orders.")
+        abort_kucoin_validation_error("Parameter 'order_list' must contain 1 to 20 orders.")
       }
 
       validated <- lapply(order_list, validate_batch_order)
@@ -2156,10 +2156,10 @@ KucoinTrading <- R6::R6Class(
     cancel_order_by_id_sync = function(order_id, symbol) {
       assert_args_KucoinTrading__cancel_order_by_id_sync(order_id, symbol)
       if (!is.character(order_id) || !nzchar(order_id)) {
-        rlang::abort("Parameter 'order_id' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'order_id' must be a non-empty string.")
       }
       if (!verify_symbol(symbol)) {
-        rlang::abort("Parameter 'symbol' must be a valid ticker (e.g., 'BTC-USDT').")
+        abort_kucoin_validation_error("Parameter 'symbol' must be a valid ticker (e.g., 'BTC-USDT').")
       }
 
       res <- private$.request(
@@ -2248,10 +2248,10 @@ KucoinTrading <- R6::R6Class(
     cancel_order_by_client_oid_sync = function(client_order_id, symbol) {
       assert_args_KucoinTrading__cancel_order_by_client_oid_sync(client_order_id, symbol)
       if (!is.character(client_order_id) || !nzchar(client_order_id)) {
-        rlang::abort("Parameter 'client_order_id' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'client_order_id' must be a non-empty string.")
       }
       if (!verify_symbol(symbol)) {
-        rlang::abort("Parameter 'symbol' must be a valid ticker.")
+        abort_kucoin_validation_error("Parameter 'symbol' must be a valid ticker.")
       }
 
       res <- private$.request(
@@ -2361,13 +2361,13 @@ KucoinTrading <- R6::R6Class(
     modify_order = function(symbol, order_id = NULL, client_order_id = NULL, new_price = NULL, new_size = NULL) {
       assert_args_KucoinTrading__modify_order(symbol, order_id, client_order_id, new_price, new_size)
       if (!verify_symbol(symbol)) {
-        rlang::abort("Parameter 'symbol' must be a valid ticker (e.g., 'BTC-USDT').")
+        abort_kucoin_validation_error("Parameter 'symbol' must be a valid ticker (e.g., 'BTC-USDT').")
       }
       if (is.null(order_id) && is.null(client_order_id)) {
-        rlang::abort("At least one of 'order_id' or 'client_order_id' must be specified.")
+        abort_kucoin_validation_error("At least one of 'order_id' or 'client_order_id' must be specified.")
       }
       if (is.null(new_price) && is.null(new_size)) {
-        rlang::abort("At least one of 'new_price' or 'new_size' must be specified.")
+        abort_kucoin_validation_error("At least one of 'new_price' or 'new_size' must be specified.")
       }
 
       body <- list(symbol = symbol)
@@ -2477,10 +2477,10 @@ KucoinTrading <- R6::R6Class(
     set_dcp = function(timeout, symbols = NULL) {
       assert_args_KucoinTrading__set_dcp(symbols)
       if (!is.numeric(timeout) || length(timeout) != 1) {
-        rlang::abort("Parameter 'timeout' must be a single integer.")
+        abort_kucoin_validation_error("Parameter 'timeout' must be a single integer.")
       }
       if (timeout != -1 && (timeout < 5 || timeout > 86400)) {
-        rlang::abort("Parameter 'timeout' must be -1 (disable) or between 5 and 86400.")
+        abort_kucoin_validation_error("Parameter 'timeout' must be -1 (disable) or between 5 and 86400.")
       }
 
       body <- list(timeout = as.integer(timeout))

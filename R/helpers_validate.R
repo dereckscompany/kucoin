@@ -104,7 +104,7 @@ validate_order_params <- function(
   side <- rlang::arg_match0(side, c("buy", "sell"))
 
   if (!verify_symbol(symbol)) {
-    rlang::abort("Parameter 'symbol' must be a valid ticker (e.g., 'BTC-USDT').")
+    abort_kucoin_validation_error("Parameter 'symbol' must be a valid ticker (e.g., 'BTC-USDT').")
   }
 
   # Convert numerics to character for the API
@@ -124,28 +124,28 @@ validate_order_params <- function(
   # Type-specific validation
   if (type == "limit") {
     if (is.null(price)) {
-      rlang::abort("Parameter 'price' is required for limit orders.")
+      abort_kucoin_validation_error("Parameter 'price' is required for limit orders.")
     }
     if (is.null(size)) {
-      rlang::abort("Parameter 'size' is required for limit orders.")
+      abort_kucoin_validation_error("Parameter 'size' is required for limit orders.")
     }
-    if (!is.null(funds)) rlang::abort("Parameter 'funds' is not applicable for limit orders.")
+    if (!is.null(funds)) abort_kucoin_validation_error("Parameter 'funds' is not applicable for limit orders.")
   } else if (type == "market") {
     if (!is.null(price)) {
-      rlang::abort("Parameter 'price' is not applicable for market orders.")
+      abort_kucoin_validation_error("Parameter 'price' is not applicable for market orders.")
     }
     if (is.null(size) && is.null(funds)) {
-      rlang::abort("Either 'size' or 'funds' must be specified for market orders.")
+      abort_kucoin_validation_error("Either 'size' or 'funds' must be specified for market orders.")
     }
     if (!is.null(size) && !is.null(funds)) {
-      rlang::abort("Parameters 'size' and 'funds' are mutually exclusive for market orders.")
+      abort_kucoin_validation_error("Parameters 'size' and 'funds' are mutually exclusive for market orders.")
     }
   }
 
   # Optional parameter validation
   if (!is.null(client_order_id)) {
     if (!is.character(client_order_id) || nchar(client_order_id) > 40 || !grepl("^[a-zA-Z0-9_-]+$", client_order_id)) {
-      rlang::abort("Parameter 'client_order_id' must be <= 40 chars, alphanumeric/underscore/hyphen.")
+      abort_kucoin_validation_error("Parameter 'client_order_id' must be <= 40 chars, alphanumeric/underscore/hyphen.")
     }
   }
 
@@ -155,13 +155,13 @@ validate_order_params <- function(
 
   if (!is.null(tags)) {
     if (!is.character(tags) || nchar(tags) > 20 || !all(charToRaw(tags) <= 127)) {
-      rlang::abort("Parameter 'tags' must be ASCII and max 20 characters.")
+      abort_kucoin_validation_error("Parameter 'tags' must be ASCII and max 20 characters.")
     }
   }
 
   if (!is.null(remark)) {
     if (!is.character(remark) || nchar(remark) > 20 || !all(charToRaw(remark) <= 127)) {
-      rlang::abort("Parameter 'remark' must be ASCII and max 20 characters.")
+      abort_kucoin_validation_error("Parameter 'remark' must be ASCII and max 20 characters.")
     }
   }
 
@@ -171,34 +171,34 @@ validate_order_params <- function(
 
   if (!is.null(cancel_after)) {
     if (!is.numeric(cancel_after) || cancel_after <= 0) {
-      rlang::abort("Parameter 'cancel_after' must be a positive number.")
+      abort_kucoin_validation_error("Parameter 'cancel_after' must be a positive number.")
     }
     cancel_after <- as.integer(cancel_after)
   }
 
   if (!is.null(post_only) && !is.logical(post_only)) {
-    rlang::abort("Parameter 'post_only' must be logical.")
+    abort_kucoin_validation_error("Parameter 'post_only' must be logical.")
   }
   if (!is.null(hidden) && !is.logical(hidden)) {
-    rlang::abort("Parameter 'hidden' must be logical.")
+    abort_kucoin_validation_error("Parameter 'hidden' must be logical.")
   }
   if (!is.null(iceberg) && !is.logical(iceberg)) {
-    rlang::abort("Parameter 'iceberg' must be logical.")
+    abort_kucoin_validation_error("Parameter 'iceberg' must be logical.")
   }
 
   if (!is.null(visible_size) && !isTRUE(iceberg)) {
-    rlang::abort("Parameter 'visible_size' is only applicable when 'iceberg' is TRUE.")
+    abort_kucoin_validation_error("Parameter 'visible_size' is only applicable when 'iceberg' is TRUE.")
   }
 
   # Cross-field validation
   if (identical(time_in_force, "GTT") && is.null(cancel_after)) {
-    rlang::abort("Parameter 'cancel_after' is required when 'time_in_force' is 'GTT'.")
+    abort_kucoin_validation_error("Parameter 'cancel_after' is required when 'time_in_force' is 'GTT'.")
   }
   if (isTRUE(post_only) && time_in_force %in% c("IOC", "FOK")) {
-    rlang::abort("Parameter 'post_only' cannot be TRUE when 'time_in_force' is 'IOC' or 'FOK'.")
+    abort_kucoin_validation_error("Parameter 'post_only' cannot be TRUE when 'time_in_force' is 'IOC' or 'FOK'.")
   }
   if (isTRUE(iceberg) && isTRUE(hidden)) {
-    rlang::abort("Parameters 'iceberg' and 'hidden' cannot both be TRUE.")
+    abort_kucoin_validation_error("Parameters 'iceberg' and 'hidden' cannot both be TRUE.")
   }
 
   # Build the result list, dropping NULLs
@@ -297,13 +297,13 @@ validate_margin_order_params <- function(
 
   # Margin-specific validation
   if (!is.null(is_isolated) && !is.logical(is_isolated)) {
-    rlang::abort("Parameter 'is_isolated' must be logical.")
+    abort_kucoin_validation_error("Parameter 'is_isolated' must be logical.")
   }
   if (!is.null(auto_borrow) && !is.logical(auto_borrow)) {
-    rlang::abort("Parameter 'autoBorrow' must be logical.")
+    abort_kucoin_validation_error("Parameter 'autoBorrow' must be logical.")
   }
   if (!is.null(auto_repay) && !is.logical(auto_repay)) {
-    rlang::abort("Parameter 'autoRepay' must be logical.")
+    abort_kucoin_validation_error("Parameter 'autoRepay' must be logical.")
   }
 
   # Append margin-specific fields
@@ -331,13 +331,13 @@ validate_margin_order_params <- function(
 validate_batch_order <- function(order) {
   assert_args_validate_batch_order(order)
   if (!is.list(order)) {
-    rlang::abort("Each order in a batch must be a list.")
+    abort_kucoin_validation_error("Each order in a batch must be a list.")
   }
 
   required <- c("symbol", "type", "side")
   missing <- setdiff(required, names(order))
   if (length(missing) > 0) {
-    rlang::abort(paste0("Missing required field(s) in batch order: ", paste(missing, collapse = ", ")))
+    abort_kucoin_validation_error(paste0("Missing required field(s) in batch order: ", paste(missing, collapse = ", ")))
   }
 
   return(assert_return_validate_batch_order(validate_order_params(

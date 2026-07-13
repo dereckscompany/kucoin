@@ -68,7 +68,7 @@ kucoin_backfill_klines <- function(
   assert_args_kucoin_backfill_klines(timeframes, file, base_url, sleep, verbose)
   # --- Input validation ---
   if (is.null(symbols) || length(symbols) == 0L) {
-    rlang::abort("`symbols` must be a non-empty character vector of trading pairs.")
+    abort_kucoin_validation_error("`symbols` must be a non-empty character vector of trading pairs.")
   }
 
   # Clamp from / to

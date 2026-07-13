@@ -271,27 +271,27 @@ KucoinStopOrders <- R6::R6Class(
       type <- rlang::arg_match0(type, c("limit", "market"))
       side <- rlang::arg_match0(side, c("buy", "sell"))
       if (!verify_symbol(symbol)) {
-        rlang::abort("Parameter 'symbol' must be a valid ticker.")
+        abort_kucoin_validation_error("Parameter 'symbol' must be a valid ticker.")
       }
 
       # Type-specific validation
       if (type == "limit") {
         if (is.null(price)) {
-          rlang::abort("'price' is required for limit stop orders.")
+          abort_kucoin_validation_error("'price' is required for limit stop orders.")
         }
         if (is.null(size)) {
-          rlang::abort("'size' is required for limit stop orders.")
+          abort_kucoin_validation_error("'size' is required for limit stop orders.")
         }
-        if (!is.null(funds)) rlang::abort("'funds' is not applicable for limit orders.")
+        if (!is.null(funds)) abort_kucoin_validation_error("'funds' is not applicable for limit orders.")
       } else {
         if (!is.null(price)) {
-          rlang::abort("'price' is not applicable for market orders.")
+          abort_kucoin_validation_error("'price' is not applicable for market orders.")
         }
         if (is.null(size) && is.null(funds)) {
-          rlang::abort("Either 'size' or 'funds' must be specified for market orders.")
+          abort_kucoin_validation_error("Either 'size' or 'funds' must be specified for market orders.")
         }
         if (!is.null(size) && !is.null(funds)) {
-          rlang::abort("'size' and 'funds' are mutually exclusive for market orders.")
+          abort_kucoin_validation_error("'size' and 'funds' are mutually exclusive for market orders.")
         }
       }
 

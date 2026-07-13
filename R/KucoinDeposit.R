@@ -151,10 +151,10 @@ KucoinDeposit <- R6::R6Class(
       assert_args_KucoinDeposit__add_deposit_address(currency, chain, to, amount)
       assert::assert_nonempty_strings(currency)
       if (is.null(chain)) {
-        rlang::abort("Parameter 'chain' is required by the KuCoin API.")
+        abort_kucoin_validation_error("Parameter 'chain' is required by the KuCoin API.")
       }
       if (is.null(to)) {
-        rlang::abort("Parameter 'to' is required by the KuCoin API.")
+        abort_kucoin_validation_error("Parameter 'to' is required by the KuCoin API.")
       }
       body <- list(currency = currency)
       if (!is.null(chain)) {

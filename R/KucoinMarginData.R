@@ -481,7 +481,7 @@ KucoinMarginData <- R6::R6Class(
     get_risk_limit = function(is_isolated, query = list()) {
       assert_args_KucoinMarginData__get_risk_limit(is_isolated, query)
       if (!is.logical(is_isolated)) {
-        rlang::abort("Parameter 'is_isolated' must be logical (TRUE or FALSE).")
+        abort_kucoin_validation_error("Parameter 'is_isolated' must be logical (TRUE or FALSE).")
       }
 
       query$isIsolated <- is_isolated

@@ -1,3 +1,12 @@
+# kucoin 4.5.0
+
+## Typed input-validation conditions (the non-transport half of the taxonomy)
+
+* The connector's 101 non-transport `rlang::abort()` sites — a method's argument or parameter is malformed or violates a rule *before* any request is made (a missing required parameter, a bad ticker, a non-positive size, a mutually-exclusive pair supplied together, a value out of range) — now signal a **classed condition** through a new `abort_kucoin_validation_error()` raiser, so a caller branches on error *type* instead of grepping the message text. This completes the taxonomy alongside the request funnel's typed transport conditions.
+* The class vector is `c("kucoin_validation_error", "kucoin_error")`. `kucoin_error` is the connector's DOMAIN root, parallel to the transport `connectcore_error` root: a validation failure is not a transport failure, so the two roots never meet — exactly the `core_error` / `connectcore_error` split the fleet already uses. Catch `kucoin_validation_error` for input bugs specifically, or `kucoin_error` for any non-transport KuCoin failure.
+* The message strings are **byte-identical** to the bare `rlang::abort()` calls they replaced (a reverse-substitution proves all 101 reproduce master exactly; golden tests pin two representative sites), so existing tests and downstream message greps keep matching. The classes are purely additive; `conditionMessage()` and `inherits(e, "error")` are unchanged. No behaviour changes.
+* Follows the org convention (dereckscompany/tradebot-core#30; discussion "throw typed errors, not bare strings"). The transport/API funnel (`abort_kucoin_error`, rooted at `connectcore_error`) is untouched.
+
 # kucoin 4.4.0
 
 ## Typed API-error conditions
