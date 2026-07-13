@@ -1141,7 +1141,7 @@ KucoinMarketData <- R6::R6Class(
       assert_args_KucoinMarketData__get_part_orderbook(symbol)
       assert::assert_nonempty_strings(symbol)
       if (!size %in% c(20, 100)) {
-        rlang::abort("Parameter 'size' must be 20 or 100.")
+        abort_kucoin_validation_error("Parameter 'size' must be 20 or 100.")
       }
 
       res <- private$.request(

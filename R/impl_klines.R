@@ -42,7 +42,7 @@ kucoin_fetch_klines <- function(
   is_async = FALSE
 ) {
   if (!timeframe %in% names(kucoin_timeframe_map)) {
-    rlang::abort(paste0(
+    abort_kucoin_validation_error(paste0(
       "Invalid timeframe '",
       timeframe,
       "'. Valid: ",
@@ -202,7 +202,7 @@ kucoin_fetch_futures_klines <- function(
 ) {
   gran_key <- as.character(granularity)
   if (!gran_key %in% names(kucoin_futures_granularity_map)) {
-    rlang::abort(paste0(
+    abort_kucoin_validation_error(paste0(
       "Invalid granularity '",
       granularity,
       "'. Valid: ",

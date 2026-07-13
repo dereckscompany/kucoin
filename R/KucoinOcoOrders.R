@@ -193,7 +193,7 @@ KucoinOcoOrders <- R6::R6Class(
         trade_type
       )
       if (!verify_symbol(symbol)) {
-        rlang::abort("Parameter 'symbol' must be a valid ticker.")
+        abort_kucoin_validation_error("Parameter 'symbol' must be a valid ticker.")
       }
       side <- rlang::arg_match0(side, c("buy", "sell"))
 

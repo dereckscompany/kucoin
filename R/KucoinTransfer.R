@@ -202,17 +202,17 @@ KucoinTransfer <- R6::R6Class(
         to_account_tag
       )
       if (!is.character(client_order_id) || !nzchar(client_order_id)) {
-        rlang::abort("Parameter 'client_order_id' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'client_order_id' must be a non-empty string.")
       }
       if (!is.character(currency) || !nzchar(currency)) {
-        rlang::abort("Parameter 'currency' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'currency' must be a non-empty string.")
       }
       if (!is.character(amount) || !nzchar(amount)) {
-        rlang::abort("Parameter 'amount' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'amount' must be a non-empty string.")
       }
       valid_types <- c("INTERNAL", "PARENT_TO_SUB", "SUB_TO_PARENT")
       if (!is.character(type) || !(type %in% valid_types)) {
-        rlang::abort(paste0(
+        abort_kucoin_validation_error(paste0(
           "Parameter 'type' must be one of: ",
           paste(valid_types, collapse = ", "),
           "."
@@ -220,14 +220,14 @@ KucoinTransfer <- R6::R6Class(
       }
       valid_accounts <- c("MAIN", "TRADE", "CONTRACT", "MARGIN", "ISOLATED", "MARGIN_V2", "ISOLATED_V2")
       if (!is.character(from_account_type) || !(from_account_type %in% valid_accounts)) {
-        rlang::abort(paste0(
+        abort_kucoin_validation_error(paste0(
           "Parameter 'fromAccountType' must be one of: ",
           paste(valid_accounts, collapse = ", "),
           "."
         ))
       }
       if (!is.character(to_account_type) || !(to_account_type %in% valid_accounts)) {
-        rlang::abort(paste0(
+        abort_kucoin_validation_error(paste0(
           "Parameter 'toAccountType' must be one of: ",
           paste(valid_accounts, collapse = ", "),
           "."
@@ -354,11 +354,11 @@ KucoinTransfer <- R6::R6Class(
     get_transferable = function(currency, type, tag = NULL) {
       assert_args_KucoinTransfer__get_transferable(currency, type, tag)
       if (!is.character(currency) || !nzchar(currency)) {
-        rlang::abort("Parameter 'currency' must be a non-empty string.")
+        abort_kucoin_validation_error("Parameter 'currency' must be a non-empty string.")
       }
       valid_types <- c("MAIN", "TRADE", "MARGIN", "ISOLATED", "MARGIN_V2", "ISOLATED_V2")
       if (!is.character(type) || !(type %in% valid_types)) {
-        rlang::abort(paste0(
+        abort_kucoin_validation_error(paste0(
           "Parameter 'type' must be one of: ",
           paste(valid_types, collapse = ", "),
           "."

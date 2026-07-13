@@ -84,3 +84,38 @@ abort_kucoin_error <- function(status, code = NULL, msg = NULL, url = NULL, body
     call = rlang::caller_env()
   ))
 }
+
+#' Raise a typed KuCoin input-validation error
+#'
+#' Signals a condition classed `c("kucoin_validation_error", "kucoin_error")` (on
+#' top of rlang's error classes) for a NON-transport failure: a method's argument
+#' or parameter is malformed or violates a rule before any request is made (a
+#' missing required parameter, a bad ticker, a non-positive size, a
+#' mutually-exclusive pair supplied together, a value out of range). `kucoin_error`
+#' is the connector's DOMAIN root, parallel to the transport `connectcore_error`
+#' root: a validation failure is not a transport failure, so the two roots never
+#' meet -- exactly the `core_error` / `connectcore_error` split. The `message` is
+#' passed through verbatim, so the string stays byte-identical to the bare
+#' `rlang::abort()` this replaced. See [connectcore::connectcore_conditions] for
+#' the transport taxonomy.
+#'
+#' @param message (scalar<character>) the condition message, passed through
+#'   verbatim to [rlang::abort()].
+#' @param ... structured fields stored on the condition, read with `e[["field"]]`.
+#'   Forwarded to [rlang::abort()].
+#' @param call (environment) the environment blamed in the traceback; defaults to
+#'   the caller via [rlang::caller_env()].
+#' @return (class<kucoin_error>) never returns normally; signals the classed
+#'   condition described above.
+#' @importFrom rlang abort caller_env
+#' @keywords internal
+#' @noassert
+#' @noRd
+abort_kucoin_validation_error <- function(message, ..., call = rlang::caller_env()) {
+  return(rlang::abort(
+    message = message,
+    class = c("kucoin_validation_error", "kucoin_error"),
+    ...,
+    call = call
+  ))
+}

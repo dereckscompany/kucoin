@@ -883,7 +883,7 @@ KucoinFuturesMarketData <- R6::R6Class(
       # fetch_all mode: segment the time range into multiple API calls
       if (isTRUE(fetch_all)) {
         if (is.null(from) || is.null(to)) {
-          rlang::abort("Both `from` and `to` are required when `fetch_all = TRUE`.")
+          abort_kucoin_validation_error("Both `from` and `to` are required when `fetch_all = TRUE`.")
         }
         # Keep as POSIXct for the fetch function. Declare with the
         # already-POSIXct branch as the default; reassign when the

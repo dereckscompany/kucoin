@@ -24,7 +24,7 @@
 time_convert_from_kucoin <- function(time_value, unit = c("ms", "ns", "s")) {
   unit <- match.arg(unit)
   if (!is.numeric(time_value)) {
-    rlang::abort("Input must be a numeric value.")
+    abort_kucoin_validation_error("Input must be a numeric value.")
   }
 
   seconds <- switch(
@@ -60,7 +60,7 @@ time_convert_from_kucoin <- function(time_value, unit = c("ms", "ns", "s")) {
 time_convert_to_kucoin <- function(datetime, unit = c("ms", "ns", "s")) {
   unit <- match.arg(unit)
   if (!inherits(datetime, "POSIXct")) {
-    rlang::abort("Input must be a POSIXct object.")
+    abort_kucoin_validation_error("Input must be a POSIXct object.")
   }
 
   seconds <- as.numeric(datetime)

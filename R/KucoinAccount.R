@@ -1420,7 +1420,7 @@ KucoinAccount <- R6::R6Class(
     get_fee_rate = function(symbols) {
       assert_args_KucoinAccount__get_fee_rate(symbols)
       if (!is.character(symbols) || !nzchar(symbols)) {
-        rlang::abort("Parameter 'symbols' must be a non-empty string of comma-separated pairs.")
+        abort_kucoin_validation_error("Parameter 'symbols' must be a non-empty string of comma-separated pairs.")
       }
 
       res <- private$.request(
