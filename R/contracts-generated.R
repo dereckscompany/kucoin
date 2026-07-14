@@ -209,10 +209,12 @@ assert_return_KucoinAccount__get_fee_rate <- function(value) {
   return(value)
 }
 
-assert_args_KucoinBase__initialize <- function(keys, base_url, async) {
+assert_args_KucoinBase__initialize <- function(keys, base_url, async, max_tries) {
   assert_list(keys)
   assert_scalar_character(base_url)
   assert_scalar_logical(async)
+  assert_scalar_integer(max_tries)
+  assert_between(max_tries, lower = 1, upper = 10)
   return(invisible(NULL))
 }
 
@@ -3292,7 +3294,7 @@ assert_return_parse_kucoin_response <- function(value) {
   return(value)
 }
 
-assert_args_kucoin_paginate <- function(base_url, endpoint, method, query, body, keys, sign, parse_envelope, .perform, .parser, is_async, page_size, max_pages, items_field, timeout, .get_timestamp_ms) {
+assert_args_kucoin_paginate <- function(base_url, endpoint, method, query, body, keys, sign, parse_envelope, .perform, .parser, is_async, page_size, max_pages, items_field, timeout, .get_timestamp_ms, max_tries) {
   assert_scalar_character(base_url)
   assert_scalar_character(endpoint)
   assert_scalar_character(method)
@@ -3329,6 +3331,8 @@ assert_args_kucoin_paginate <- function(base_url, endpoint, method, query, body,
   if (!is.null(.get_timestamp_ms)) {
     assert_function(.get_timestamp_ms)
   }
+  assert_scalar_integer(max_tries)
+  assert_between(max_tries, lower = 1, upper = 10)
   return(invisible(NULL))
 }
 

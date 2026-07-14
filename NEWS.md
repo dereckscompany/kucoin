@@ -1,3 +1,9 @@
+# kucoin 4.6.0
+
+## Opt-in request retry at construction (`max_tries`), a hard GET-only carve-out
+
+Every client class constructor (via `KucoinBase`) gains a `max_tries` argument (`scalar<integer in [1, 10]>`, default `1` = no retry) threaded to `connectcore`'s retry machinery. Setting it above `1` opts every GET the client makes — single requests and paginated reads alike — into automatic retry on a transient failure (HTTP 408/429/5xx or a dropped connection) with jittered backoff. Retry is a hard **GET-only** carve-out: a non-idempotent verb (an order `POST`, a cancel `DELETE`) is never auto-retried, so a resend can never double-submit an order. The default `1` leaves live-trading behaviour unchanged — the trader layer stays the single retry authority there; raise `max_tries` only for research and backfill reads. Implements the fleet retry-convergence ruling (2026-07-14), closes #14. Requires `connectcore (>= 0.5.0)`, where the GET-only guard is enforced in the one shared request funnel. `kucoin_paginate()` also gains a `max_tries` argument so the constructor policy reaches paginated reads.
+
 # kucoin 4.5.1
 
 ## Weekly and monthly candle fetches no longer overflow (closes #40)

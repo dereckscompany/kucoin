@@ -41,6 +41,17 @@
 #'   before each authenticated request. This is slower (one extra HTTP round
 #'   trip) but ensures signing works even when the local clock is out of sync.
 #'
+#' ### Retries
+#' `max_tries > 1` opts every GET this client makes — single requests and
+#' paginated reads alike — into automatic retry on a transient failure (HTTP
+#' 408/429/5xx or a dropped connection) with jittered backoff, delegated to
+#' [connectcore::build_request()]. Retry is a hard **GET-only** carve-out: a
+#' non-idempotent verb (an order `POST`, a cancel `DELETE`) is never
+#' auto-retried, so a resend can never double-submit an order. Leave it at the
+#' default `1` for live trading — there the trader layer is the single retry
+#' authority (it routes by typed error class and manages cooldowns); raise it
+#' only for research and backfill reads.
+#'
 #' ### Design
 #' This class is not meant to be instantiated directly. Subclasses (e.g.,
 #' [KucoinMarketData], [KucoinTrading]) inherit from it and define their
@@ -75,15 +86,20 @@ KucoinBase <- R6::R6Class(
     #'   signing. `"local"` (default) uses the local UTC clock. `"server"` fetches
     #'   the KuCoin server time before each authenticated request, which adds
     #'   latency but avoids clock-drift issues.
+    #' @param max_tries (scalar<integer in [1, 10]>) for idempotent GET requests
+    #'   only, retry up to this many times on a transient failure. Default `1`
+    #'   (no retry). See the class **Retries** section for the write-safety
+    #'   carve-out and why live trading should leave this at `1`.
     #' @return (class<KucoinBase>) invisibly, the new instance.
     #' @noassert time_source
     initialize = function(
       keys = get_api_keys(),
       base_url = get_base_url(),
       async = FALSE,
-      time_source = c("local", "server")
+      time_source = c("local", "server"),
+      max_tries = 1L
     ) {
-      assert_args_KucoinBase__initialize(keys, base_url, async)
+      assert_args_KucoinBase__initialize(keys, base_url, async, max_tries)
       if (isTRUE(async) && !requireNamespace("promises", quietly = TRUE)) {
         abort_kucoin_validation_error(
           "Package 'promises' is required for async mode. Install with: install.packages('promises')"
@@ -96,7 +112,8 @@ KucoinBase <- R6::R6Class(
         time_source = match.arg(time_source),
         time_endpoint = "/api/v1/timestamp",
         time_field = "data",
-        body_format = "none"
+        body_format = "none",
+        max_tries = max_tries
       )
       return(invisible(self))
     }
@@ -188,6 +205,9 @@ KucoinBase <- R6::R6Class(
         sign = private$.sign,
         parse_envelope = private$.parse_envelope,
         .perform = private$.perform,
+        # Paginated reads are GETs; honour the instance retry policy (connectcore
+        # applies it to GET only, so this can never resend a write).
+        max_tries = private$.max_tries,
         # Coerce number-as-string quantity columns to numeric on the accumulated
         # paginated result (see coerce_numeric_quantities()).
         .parser = function(parsed) coerce_numeric_quantities(.parser(parsed)),

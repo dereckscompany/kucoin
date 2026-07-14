@@ -20,7 +20,8 @@ kucoin_paginate(
   max_pages = Inf,
   items_field = "items",
   timeout = 30,
-  .get_timestamp_ms = NULL
+  .get_timestamp_ms = NULL,
+  max_tries = 1L
 )
 }
 \arguments{
@@ -69,6 +70,11 @@ Default \code{30}.}
 
 \item{.get_timestamp_ms}{(function | NULL) custom timestamp provider for
 request signing. If \code{NULL}, uses the default internal timestamp function.}
+
+\item{max_tries}{(scalar<integer in [1, 10]>) retry each page request up to
+this many times on a transient failure. Paginated endpoints are GETs, so
+\code{\link[connectcore:build_request]{connectcore::build_request()}} applies the retry to every page. Default \code{1}
+(no retry).}
 }
 \value{
 (any | promise<any>) parsed and post-processed result, or a promise

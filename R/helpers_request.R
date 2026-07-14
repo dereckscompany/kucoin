@@ -263,6 +263,10 @@ parse_kucoin_response <- function(resp) {
 #'   Default `30`.
 #' @param .get_timestamp_ms (function | NULL) custom timestamp provider for
 #'   request signing. If `NULL`, uses the default internal timestamp function.
+#' @param max_tries (scalar<integer in [1, 10]>) retry each page request up to
+#'   this many times on a transient failure. Paginated endpoints are GETs, so
+#'   [connectcore::build_request()] applies the retry to every page. Default `1`
+#'   (no retry).
 #' @return (any | promise<any>) parsed and post-processed result, or a promise
 #'   thereof.
 #'
@@ -284,7 +288,8 @@ kucoin_paginate <- function(
   max_pages = Inf,
   items_field = "items",
   timeout = 30,
-  .get_timestamp_ms = NULL
+  .get_timestamp_ms = NULL,
+  max_tries = 1L
 ) {
   assert_args_kucoin_paginate(
     base_url,
@@ -302,7 +307,8 @@ kucoin_paginate <- function(
     max_pages,
     items_field,
     timeout,
-    .get_timestamp_ms
+    .get_timestamp_ms,
+    max_tries
   )
   # KuCoin owns no funnel: every page flows through connectcore::build_request.
   # The body (rare for paginated endpoints) is pre-serialised to compact JSON and
@@ -337,6 +343,7 @@ kucoin_paginate <- function(
       .perform = .perform,
       is_async = is_async,
       timeout = timeout,
+      max_tries = max_tries,
       ctx = list(get_timestamp_ms = .get_timestamp_ms)
     ))
   }

@@ -4,11 +4,6 @@
 \alias{KucoinBase}
 \title{KucoinBase: Abstract Base Class for KuCoin API Clients}
 \description{
-KucoinBase: Abstract Base Class for KuCoin API Clients
-
-KucoinBase: Abstract Base Class for KuCoin API Clients
-}
-\details{
 Provides shared infrastructure for all KuCoin R6 classes, including API
 credential management, sync/async execution mode, timestamp source
 configuration, and a standardised method for calling implementation
@@ -56,6 +51,19 @@ trip) but ensures signing works even when the local clock is out of sync.
 }
 }
 
+\subsection{Retries}{
+
+\code{max_tries > 1} opts every GET this client makes — single requests and
+paginated reads alike — into automatic retry on a transient failure (HTTP
+408/429/5xx or a dropped connection) with jittered backoff, delegated to
+\code{\link[connectcore:build_request]{connectcore::build_request()}}. Retry is a hard \strong{GET-only} carve-out: a
+non-idempotent verb (an order \code{POST}, a cancel \code{DELETE}) is never
+auto-retried, so a resend can never double-submit an order. Leave it at the
+default \code{1} for live trading — there the trader layer is the single retry
+authority (it routes by typed error class and manages cooldowns); raise it
+only for research and backfill reads.
+}
+
 \subsection{Design}{
 
 This class is not meant to be instantiated directly. Subclasses (e.g.,
@@ -79,63 +87,69 @@ trading <- KucoinTrading$new(time_source = "server")
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-KucoinBase-new}{\code{KucoinBase$new()}}
-\item \href{#method-KucoinBase-clone}{\code{KucoinBase$clone()}}
-}
+  \itemize{
+    \item \href{#method-KucoinBase-initialize}{\code{KucoinBase$new()}}
+    \item \href{#method-KucoinBase-clone}{\code{KucoinBase$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-KucoinBase-new"></a>}}
-\if{latex}{\out{\hypertarget{method-KucoinBase-new}{}}}
-\subsection{Method \code{new()}}{
-Initialise a KucoinBase Object
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinBase$new(
+\if{html}{\out{<a id="method-KucoinBase-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-KucoinBase-initialize}{}}}
+\subsection{\code{KucoinBase$new()}}{
+  Initialise a KucoinBase Object
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinBase$new(
   keys = get_api_keys(),
   base_url = get_base_url(),
   async = FALSE,
-  time_source = c("local", "server")
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{keys}}{(list) API credentials from \code{\link[=get_api_keys]{get_api_keys()}}. Defaults to
+  time_source = c("local", "server"),
+  max_tries = 1L
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{keys}}{(list) API credentials from \code{\link[=get_api_keys]{get_api_keys()}}. Defaults to
 \code{get_api_keys()}.}
-
-\item{\code{base_url}}{(scalar<character>) API base URL. Defaults to
+      \item{\code{base_url}}{(scalar<character>) API base URL. Defaults to
 \code{get_base_url()}.}
-
-\item{\code{async}}{(scalar<logical>) if \code{TRUE}, methods return promises. Default
+      \item{\code{async}}{(scalar<logical>) if \code{TRUE}, methods return promises. Default
 \code{FALSE}.}
-
-\item{\code{time_source}}{(scalar<character>) clock source for HMAC request
+      \item{\code{time_source}}{(scalar<character>) clock source for HMAC request
 signing. \code{"local"} (default) uses the local UTC clock. \code{"server"} fetches
 the KuCoin server time before each authenticated request, which adds
 latency but avoids clock-drift issues.}
+      \item{\code{max_tries}}{(scalar<integer in [1, 10]>) for idempotent GET requests
+only, retry up to this many times on a transient failure. Default \code{1}
+(no retry). See the class \strong{Retries} section for the write-safety
+carve-out and why live trading should leave this at \code{1}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (class<KucoinBase>) invisibly, the new instance.
+  }
 }
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(class<KucoinBase>) invisibly, the new instance.
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-KucoinBase-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-KucoinBase-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{KucoinBase$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{KucoinBase$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{KucoinBase$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }
