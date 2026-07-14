@@ -85,9 +85,16 @@ kucoin_fetch_klines <- function(
     from <- lubridate::now("UTC") - lubridate::dhours(24)
   }
 
+  # Epoch-second math stays in double, never int32. For week/month intervals the
+  # window width `max_candles * timeframe_seconds` alone exceeds
+  # .Machine$integer.max (1500 * 2592000 = 3.888e9), and adding a 2020-era epoch
+  # second compounds it, so int32 arithmetic yielded NA and broke the loop
+  # condition (issue #40). The futures path already works in double for this
+  # reason. `as.numeric(timeframe_seconds)` forces the product into double even
+  # though `from_s`/`to_s` are already double.
   timeframe_seconds <- kucoin_timeframe_map[[timeframe]]
-  from_s <- as.integer(as.numeric(from))
-  to_s <- as.integer(as.numeric(to))
+  from_s <- as.numeric(from)
+  to_s <- as.numeric(to)
   max_candles <- 1500L
 
   # Split into segments of up to 1500 candles each, with 1-candle overlap
@@ -95,7 +102,7 @@ kucoin_fetch_klines <- function(
   segments <- list()
   seg_start <- from_s
   while (seg_start < to_s) {
-    seg_end <- min(seg_start + max_candles * timeframe_seconds, to_s)
+    seg_end <- min(seg_start + max_candles * as.numeric(timeframe_seconds), to_s)
     segments[[length(segments) + 1L]] <- list(
       startAt = seg_start,
       endAt = seg_end
