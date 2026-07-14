@@ -266,3 +266,148 @@ test_that("kucoin_fetch_klines segments overlap by 1 candle", {
   seg2_start <- captured_queries[[2]]$startAt
   expect_equal(seg2_start, seg1_end - 900)
 })
+
+# -- int32 overflow regression (issue #40) --
+
+# For week/month intervals the segment-window width alone
+# (max_candles * timeframe_seconds) exceeds .Machine$integer.max, so the old
+# int32 arithmetic produced `NA` on the first loop iteration and threw
+# "missing value where TRUE/FALSE needed". These tests drive the exact 2020-era
+# epochs from the bug report and assert the segmentation is overflow-free with
+# finite, correct boundaries.
+
+test_that("kucoin_fetch_klines: 1week segment math is overflow-free at 2020+ epochs (issue #40)", {
+  from_dt <- lubridate::as_datetime("2020-01-01", tz = "UTC")
+  to_dt <- lubridate::as_datetime("2021-01-01", tz = "UTC")
+  from_s <- as.numeric(from_dt)
+  to_s <- as.numeric(to_dt)
+
+  captured_queries <- list()
+  call_count <- 0L
+  fake_req_fn <- function(endpoint, method, query, auth, .parser, ...) {
+    call_count <<- call_count + 1L
+    captured_queries[[call_count]] <<- query
+    return(.parser(list()))
+  }
+
+  expect_no_warning(
+    kucoin_fetch_klines(
+      symbol = "BTC-USDT",
+      timeframe = "1week",
+      from = from_dt,
+      to = to_dt,
+      .req_fn = fake_req_fn
+    )
+  )
+
+  # A full year of weekly candles fits inside one 1500-week segment
+  expect_equal(call_count, 1L)
+  q <- captured_queries[[1]]
+  expect_false(is.na(q$startAt))
+  expect_false(is.na(q$endAt))
+  expect_equal(q$startAt, from_s)
+  expect_equal(q$endAt, to_s)
+})
+
+test_that("kucoin_fetch_klines: 1month segment math is overflow-free at 2020+ epochs (issue #40)", {
+  from_dt <- lubridate::as_datetime("2020-01-01", tz = "UTC")
+  to_dt <- lubridate::as_datetime("2022-01-01", tz = "UTC")
+  from_s <- as.numeric(from_dt)
+  to_s <- as.numeric(to_dt)
+
+  captured_queries <- list()
+  call_count <- 0L
+  fake_req_fn <- function(endpoint, method, query, auth, .parser, ...) {
+    call_count <<- call_count + 1L
+    captured_queries[[call_count]] <<- query
+    return(.parser(list()))
+  }
+
+  # 1month's width alone (1500 * 2592000 = 3.888e9) overflows int32 even before
+  # adding the epoch second, so this is the strictest regression of the two.
+  expect_no_warning(
+    kucoin_fetch_klines(
+      symbol = "BTC-USDT",
+      timeframe = "1month",
+      from = from_dt,
+      to = to_dt,
+      .req_fn = fake_req_fn
+    )
+  )
+
+  expect_equal(call_count, 1L)
+  q <- captured_queries[[1]]
+  expect_false(is.na(q$startAt))
+  expect_false(is.na(q$endAt))
+  expect_equal(q$startAt, from_s)
+  expect_equal(q$endAt, to_s)
+})
+
+test_that("kucoin_fetch_klines: 1week multi-segment boundaries are correct past int32 (issue #40)", {
+  tf_s <- 604800 # 1week in seconds
+  from_dt <- lubridate::as_datetime("2020-01-01", tz = "UTC")
+  from_s <- as.numeric(from_dt)
+  # Window just over one 1500-week segment to force a second segment. The first
+  # segment's endAt (from_s + 1500 * 604800 = 2.485e9) lands past
+  # .Machine$integer.max, which is exactly where the old code overflowed.
+  to_s <- from_s + 1500 * tf_s + tf_s
+  to_dt <- lubridate::as_datetime(to_s, tz = "UTC")
+
+  captured_queries <- list()
+  call_count <- 0L
+  fake_req_fn <- function(endpoint, method, query, auth, .parser, ...) {
+    call_count <<- call_count + 1L
+    captured_queries[[call_count]] <<- query
+    return(.parser(list()))
+  }
+
+  expect_no_warning(
+    kucoin_fetch_klines(
+      symbol = "BTC-USDT",
+      timeframe = "1week",
+      from = from_dt,
+      to = to_dt,
+      .req_fn = fake_req_fn
+    )
+  )
+
+  expect_equal(call_count, 2L)
+  seg1_end <- captured_queries[[1]]$endAt
+  seg2_start <- captured_queries[[2]]$startAt
+  expect_false(is.na(seg1_end))
+  expect_gt(seg1_end, .Machine$integer.max)
+  expect_equal(seg1_end, from_s + 1500 * tf_s)
+  expect_equal(seg2_start, seg1_end - tf_s) # 1-candle overlap
+})
+
+test_that("kucoin_fetch_klines: sub-week intervals (1hour/4hour/1day) unchanged at 2020+ epochs (issue #40)", {
+  from_dt <- lubridate::as_datetime("2020-01-01", tz = "UTC")
+  from_s <- as.numeric(from_dt)
+  to_dt <- from_dt + lubridate::ddays(50) # small window: single segment for all
+  to_s <- as.numeric(to_dt)
+
+  for (tf in c("1hour", "4hour", "1day")) {
+    captured_queries <- list()
+    call_count <- 0L
+    fake_req_fn <- function(endpoint, method, query, auth, .parser, ...) {
+      call_count <<- call_count + 1L
+      captured_queries[[call_count]] <<- query
+      return(.parser(list()))
+    }
+
+    expect_no_warning(
+      kucoin_fetch_klines(
+        symbol = "BTC-USDT",
+        timeframe = tf,
+        from = from_dt,
+        to = to_dt,
+        .req_fn = fake_req_fn
+      )
+    )
+
+    expect_equal(call_count, 1L, info = tf)
+    q <- captured_queries[[1]]
+    expect_equal(q$startAt, from_s, info = tf)
+    expect_equal(q$endAt, to_s, info = tf)
+  }
+})
