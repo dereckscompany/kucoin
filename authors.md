@@ -8,7 +8,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/dereckscompany/kucoin/blob/master/inst/CITATION)
+[`inst/CITATION`](https://github.com/dereckscompany/kucoin/blob/v4.6.0/inst/CITATION)
 
 Mezquita, D. (2026). kucoin: R API Wrapper to KuCoin Cryptocurrency
 Exchange. R package version 3.0.0.
