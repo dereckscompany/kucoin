@@ -1,5 +1,19 @@
 # Changelog
 
+## kucoin 4.5.1
+
+### Weekly and monthly candle fetches no longer overflow (closes [\#40](https://github.com/dereckscompany/kucoin/issues/40))
+
+In plain English: asking for 1week or 1month candles over any long
+history used to crash the fetch loop, because the arithmetic that splits
+the request into 1,500-candle segments was done in 32-bit integers — and
+fifteen hundred months of seconds is a bigger number than a 32-bit
+integer can hold. The segment maths now stays in double precision end to
+end (mirroring the futures path, which always did), so week- and
+month-scale backfills work across the full history. Regression tests pin
+1week and 1month segment boundaries at 2020-era epochs and prove the
+hourly/daily paths are byte-for-byte unchanged.
+
 ## kucoin 4.5.0
 
 ### Typed input-validation conditions (the non-transport half of the taxonomy)
