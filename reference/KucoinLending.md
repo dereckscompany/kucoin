@@ -49,7 +49,7 @@ Market](https://www.kucoin.com/docs-new/rest/margin-trading/credit/get-loan-mark
 
 ## Super classes
 
-[`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
+[`connectcore::RestClient`](https://dereckscompany.github.io/connectcore/reference/RestClient.html)
 -\>
 [`kucoin::KucoinBase`](https://dereckscompany.github.io/kucoin/reference/KucoinBase.md)
 -\> `KucoinLending`

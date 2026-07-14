@@ -9,7 +9,7 @@ the items from each page into a list."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.5.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +65,8 @@ the items from each page into a list.</p>
 <span>  max_pages <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  items_field <span class="op">=</span> <span class="st">"items"</span>,</span>
 <span>  timeout <span class="op">=</span> <span class="fl">30</span>,</span>
-<span>  .get_timestamp_ms <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  .get_timestamp_ms <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  max_tries <span class="op">=</span> <span class="fl">1L</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -103,13 +104,13 @@ the items from each page into a list.</p>
 
 <dt id="arg-sign">sign<a class="anchor" aria-label="anchor" href="#arg-sign"></a></dt>
 <dd><p>(function | NULL) the <code>.sign()</code> seam forwarded to
-<code><a href="https://rdrr.io/pkg/connectcore/man/build_request.html" class="external-link">connectcore::build_request()</a></code>. Default <code>NULL</code> (use KuCoin's own
+<code><a href="https://dereckscompany.github.io/connectcore/reference/build_request.html" class="external-link">connectcore::build_request()</a></code>. Default <code>NULL</code> (use KuCoin's own
 <code>kucoin_sign_req()</code> signer).</p></dd>
 
 
 <dt id="arg-parse-envelope">parse_envelope<a class="anchor" aria-label="anchor" href="#arg-parse-envelope"></a></dt>
 <dd><p>(function) the <code>.parse_envelope()</code> seam forwarded to
-<code><a href="https://rdrr.io/pkg/connectcore/man/build_request.html" class="external-link">connectcore::build_request()</a></code>. Default <code>parse_kucoin_response()</code>.</p></dd>
+<code><a href="https://dereckscompany.github.io/connectcore/reference/build_request.html" class="external-link">connectcore::build_request()</a></code>. Default <code>parse_kucoin_response()</code>.</p></dd>
 
 
 <dt id="arg--perform">.perform<a class="anchor" aria-label="anchor" href="#arg--perform"></a></dt>
@@ -147,6 +148,13 @@ Default <code>30</code>.</p></dd>
 <dt id="arg--get-timestamp-ms">.get_timestamp_ms<a class="anchor" aria-label="anchor" href="#arg--get-timestamp-ms"></a></dt>
 <dd><p>(function | NULL) custom timestamp provider for
 request signing. If <code>NULL</code>, uses the default internal timestamp function.</p></dd>
+
+
+<dt id="arg-max-tries">max_tries<a class="anchor" aria-label="anchor" href="#arg-max-tries"></a></dt>
+<dd><p>(scalar&lt;integer in [1, 10]&gt;) retry each page request up to
+this many times on a transient failure. Paginated endpoints are GETs, so
+<code><a href="https://dereckscompany.github.io/connectcore/reference/build_request.html" class="external-link">connectcore::build_request()</a></code> applies the retry to every page. Default <code>1</code>
+(no retry).</p></dd>
 
 </dl></div>
     <div class="section level2">

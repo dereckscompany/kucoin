@@ -47,7 +47,7 @@ Standalone (not on a class):
 | Helper | What it does |
 |----|----|
 | [`get_api_keys()`](https://dereckscompany.github.io/kucoin/reference/get_api_keys.md), [`get_base_url()`](https://dereckscompany.github.io/kucoin/reference/get_base_url.md), [`get_futures_base_url()`](https://dereckscompany.github.io/kucoin/reference/get_futures_base_url.md) | Read API credentials and base URLs from environment variables |
-| [`kucoin_paginate()`](https://dereckscompany.github.io/kucoin/reference/kucoin_paginate.md) | Generic page-walker for paginated endpoints (routes through [`connectcore::build_request()`](https://rdrr.io/pkg/connectcore/man/build_request.html)) |
+| [`kucoin_paginate()`](https://dereckscompany.github.io/kucoin/reference/kucoin_paginate.md) | Generic page-walker for paginated endpoints (routes through [`connectcore::build_request()`](https://dereckscompany.github.io/connectcore/reference/build_request.html)) |
 | [`kucoin_backfill_klines()`](https://dereckscompany.github.io/kucoin/reference/kucoin_backfill_klines.md) | Bulk historical klines download for many symbols × timeframes with CSV resume |
 | [`verify_symbol()`](https://dereckscompany.github.io/kucoin/reference/verify_symbol.md) | Sanity-check a symbol against the cached symbol list before placing an order |
 | [`time_convert_to_kucoin()`](https://dereckscompany.github.io/kucoin/reference/time_convert_to_kucoin.md), [`time_convert_from_kucoin()`](https://dereckscompany.github.io/kucoin/reference/time_convert_from_kucoin.md) | Millisecond / nanosecond timestamps ↔︎ `POSIXct` |
@@ -381,7 +381,7 @@ fut_url  <- get_futures_base_url()      # api-futures.kucoin.com
 ### Low-level HTTP
 
 Every request flows through
-[`connectcore::build_request()`](https://rdrr.io/pkg/connectcore/man/build_request.html)
+[`connectcore::build_request()`](https://dereckscompany.github.io/connectcore/reference/build_request.html)
 (the shared transport funnel) via `KucoinBase$.request()`, which
 pre-serialises the body to compact JSON and sends it byte-verbatim so
 the HMAC-SHA256 signature matches on the wire.
@@ -666,7 +666,7 @@ A few intentional non-goals, shared with the sister `alpaca` and
   caller’s job.
 - **No reconnect / retry on transient network errors.** The single call
   is what you asked for; configure retries through
-  [`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)’s
+  [`connectcore::RestClient`](https://dereckscompany.github.io/connectcore/reference/RestClient.html)’s
   `max_tries` (the shared transport funnel) if you want them.
 
 ------------------------------------------------------------------------

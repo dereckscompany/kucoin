@@ -1,11 +1,5 @@
 # KucoinBase: Abstract Base Class for KuCoin API Clients
 
-KucoinBase: Abstract Base Class for KuCoin API Clients
-
-KucoinBase: Abstract Base Class for KuCoin API Clients
-
-## Details
-
 Provides shared infrastructure for all KuCoin R6 classes, including API
 credential management, sync/async execution mode, timestamp source
 configuration, and a standardised method for calling implementation
@@ -14,7 +8,7 @@ functions.
 ### Transport
 
 This class is a thin KuCoin specialisation of
-[connectcore::RestClient](https://rdrr.io/pkg/connectcore/man/RestClient.html),
+[connectcore::RestClient](https://dereckscompany.github.io/connectcore/reference/RestClient.html),
 the shared transport base. Credential storage, the sync/async mode flag,
 the server-time clock source, and the `is_async` / `time_source` active
 bindings all live in `connectcore`; `KucoinBase` supplies the two
@@ -60,6 +54,20 @@ request signing:
   round trip) but ensures signing works even when the local clock is out
   of sync.
 
+### Retries
+
+`max_tries > 1` opts every GET this client makes — single requests and
+paginated reads alike — into automatic retry on a transient failure
+(HTTP 408/429/5xx or a dropped connection) with jittered backoff,
+delegated to
+[`connectcore::build_request()`](https://dereckscompany.github.io/connectcore/reference/build_request.html).
+Retry is a hard **GET-only** carve-out: a non-idempotent verb (an order
+`POST`, a cancel `DELETE`) is never auto-retried, so a resend can never
+double-submit an order. Leave it at the default `1` for live trading —
+there the trader layer is the single retry authority (it routes by typed
+error class and manages cooldowns); raise it only for research and
+backfill reads.
+
 ### Design
 
 This class is not meant to be instantiated directly. Subclasses (e.g.,
@@ -70,20 +78,20 @@ inherit from it and define their own public methods that delegate to
 
 ## Super class
 
-[`connectcore::RestClient`](https://rdrr.io/pkg/connectcore/man/RestClient.html)
+[`connectcore::RestClient`](https://dereckscompany.github.io/connectcore/reference/RestClient.html)
 -\> `KucoinBase`
 
 ## Methods
 
 ### Public methods
 
-- [`KucoinBase$new()`](#method-KucoinBase-new)
+- [`KucoinBase$new()`](#method-KucoinBase-initialize)
 
 - [`KucoinBase$clone()`](#method-KucoinBase-clone)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `KucoinBase$new()`
 
 Initialise a KucoinBase Object
 
@@ -93,7 +101,8 @@ Initialise a KucoinBase Object
       keys = get_api_keys(),
       base_url = get_base_url(),
       async = FALSE,
-      time_source = c("local", "server")
+      time_source = c("local", "server"),
+      max_tries = 1L
     )
 
 #### Arguments
@@ -122,13 +131,20 @@ Initialise a KucoinBase Object
   server time before each authenticated request, which adds latency but
   avoids clock-drift issues.
 
+- `max_tries`:
+
+  (scalar\<integer in \[1, 10\]\>) for idempotent GET requests only,
+  retry up to this many times on a transient failure. Default `1` (no
+  retry). See the class **Retries** section for the write-safety
+  carve-out and why live trading should leave this at `1`.
+
 #### Returns
 
 (class\<KucoinBase\>) invisibly, the new instance.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `KucoinBase$clone()`
 
 The objects of this class are cloneable with this method.
 

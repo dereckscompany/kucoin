@@ -22,7 +22,8 @@ kucoin_paginate(
   max_pages = Inf,
   items_field = "items",
   timeout = 30,
-  .get_timestamp_ms = NULL
+  .get_timestamp_ms = NULL,
+  max_tries = 1L
 )
 ```
 
@@ -66,13 +67,13 @@ kucoin_paginate(
 - sign:
 
   (function \| NULL) the `.sign()` seam forwarded to
-  [`connectcore::build_request()`](https://rdrr.io/pkg/connectcore/man/build_request.html).
+  [`connectcore::build_request()`](https://dereckscompany.github.io/connectcore/reference/build_request.html).
   Default `NULL` (use KuCoin's own `kucoin_sign_req()` signer).
 
 - parse_envelope:
 
   (function) the `.parse_envelope()` seam forwarded to
-  [`connectcore::build_request()`](https://rdrr.io/pkg/connectcore/man/build_request.html).
+  [`connectcore::build_request()`](https://dereckscompany.github.io/connectcore/reference/build_request.html).
   Default `parse_kucoin_response()`.
 
 - .perform:
@@ -110,6 +111,13 @@ kucoin_paginate(
 
   (function \| NULL) custom timestamp provider for request signing. If
   `NULL`, uses the default internal timestamp function.
+
+- max_tries:
+
+  (scalar\<integer in \[1, 10\]\>) retry each page request up to this
+  many times on a transient failure. Paginated endpoints are GETs, so
+  [`connectcore::build_request()`](https://dereckscompany.github.io/connectcore/reference/build_request.html)
+  applies the retry to every page. Default `1` (no retry).
 
 ## Value
 

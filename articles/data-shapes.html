@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.5.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -190,7 +190,7 @@ leverage</td>
 <tr class="even">
 <td><code><a href="../reference/kucoin_paginate.html">kucoin_paginate()</a></code></td>
 <td>Generic page-walker for paginated endpoints (routes through
-<code><a href="https://rdrr.io/pkg/connectcore/man/build_request.html" class="external-link">connectcore::build_request()</a></code>)</td>
+<code><a href="https://dereckscompany.github.io/connectcore/reference/build_request.html" class="external-link">connectcore::build_request()</a></code>)</td>
 </tr>
 <tr class="odd">
 <td><code><a href="../reference/kucoin_backfill_klines.html">kucoin_backfill_klines()</a></code></td>
@@ -1327,7 +1327,7 @@ borrowers)<a class="anchor" aria-label="anchor" href="#kucoinlending-lending-poo
 <div class="section level3">
 <h3 id="low-level-http">Low-level HTTP<a class="anchor" aria-label="anchor" href="#low-level-http"></a>
 </h3>
-<p>Every request flows through <code><a href="https://rdrr.io/pkg/connectcore/man/build_request.html" class="external-link">connectcore::build_request()</a></code>
+<p>Every request flows through <code><a href="https://dereckscompany.github.io/connectcore/reference/build_request.html" class="external-link">connectcore::build_request()</a></code>
 (the shared transport funnel) via <code>KucoinBase$.request()</code>,
 which pre-serialises the body to compact JSON and sends it byte-verbatim
 so the HMAC-SHA256 signature matches on the wire.
@@ -1608,7 +1608,7 @@ is the caller’s job.</li>
 <li>
 <strong>No reconnect / retry on transient network errors.</strong>
 The single call is what you asked for; configure retries through
-<code><a href="https://rdrr.io/pkg/connectcore/man/RestClient.html" class="external-link">connectcore::RestClient</a></code>’s <code>max_tries</code> (the
+<code><a href="https://dereckscompany.github.io/connectcore/reference/RestClient.html" class="external-link">connectcore::RestClient</a></code>’s <code>max_tries</code> (the
 shared transport funnel) if you want them.</li>
 </ul>
 <hr>
