@@ -8,6 +8,19 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
+**In plain terms:** KuCoin is a large cryptocurrency exchange, and this
+package is the R doorway to it. Instead of hand-building web requests,
+signing them with your secret keys, and untangling the raw replies, you
+call plain R functions to read live prices, place and cancel orders,
+manage margin and futures positions, and move money in and out of your
+account. Every answer comes back as a tidy table with consistent column
+names, so the same code shape works whether you are checking a price or
+reviewing a filled order. It can run one request at a time or fire off
+many at once and collect the results as they arrive. You bring the
+account and the API keys; the package handles the plumbing.
+
+## Technical overview
+
 An R API wrapper for the [KuCoin](https://www.kucoin.com/)
 cryptocurrency exchange. Provides `R6` classes for spot market data,
 trading, stop orders, OCO orders, account management, deposits,
