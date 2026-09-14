@@ -1,3 +1,10 @@
+# kucoin 4.6.1
+
+**A regression test that guards against price data ever being truncated again.** In plain English: on 2026-09-13 the fleet discovered that every Hyperliquid candle in the data lake had been stored to four decimal places for months, so a coin priced below a cent lost almost all of its information, and a strategy that ranks coins by calmness ranked them wrongly as a result. The cause was traced and proved NOT to be in the venue connector packages — this package's parse path turns KuCoin's decimal strings into R numbers at full precision, both inline (klines) and via the shared `coerce_numeric_quantities()` mechanism that every other endpoint (including the ticker) runs through — it was a re-serialisation default in the data scraper, since fixed. This release adds a test that pins that correctness in place for KuCoin: if anyone later introduces `round()`, `signif()`, `sprintf("%.4f")`, `format(nsmall = )`, or a narrowing cast into either coercion path, the test fails immediately.
+
+- Added `tests/testthat/test-parse-precision.R`: drives `get_klines()` and `get_ticker()` through the real public client, via synthetic high-precision fixtures (raw JSON text, matching KuCoin's own wire format) routed through the shared `connectcore` mock harness. Every returned numeric column is asserted `expect_identical()` (never tolerance-based) against `as.numeric()` of the fixture's own decimal string, and a big-integer-looking `sequence` (the ticker's identifier, explicitly excluded from `coerce_numeric_quantities()`'s whitelist) is asserted to stay character and unchanged.
+- No behaviour change: both parse paths (`parse_klines()`'s inline `as.numeric()`, and the centrally-applied `coerce_numeric_quantities()`, both in `R/helpers_parse.R`) were already correct and are untouched.
+
 # kucoin 4.6.0
 
 ## Opt-in request retry at construction (`max_tries`), a hard GET-only carve-out
