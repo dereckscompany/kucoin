@@ -1,6 +1,26 @@
 # Changelog
 
-## kucoin 4.6.1
+## kucoin 4.6.2
+
+**A legal order — post-only with no explicit time-in-force — used to
+crash the caller with a raw R error instead of either accepting it or
+raising a normal validation error.** In plain English: `time_in_force`
+defaults to `NULL`, and `validate_order_params()`’s post-only/IOC-FOK
+conflict check compared that `NULL` against `c("IOC", "FOK")` with
+`%in%`, which produces an empty logical rather than `TRUE` or `FALSE`;
+feeding that into `if()` aborted with base R’s uncaught
+`"missing value where TRUE/FALSE needed"` instead of the package’s own
+classed error, so a post-only order placed without a `time_in_force` (a
+perfectly legal combination) failed with the wrong kind of error instead
+of succeeding.
+
+- Fixed `validate_order_params()` (`R/helpers_validate.R`) to guard the
+  comparison with `!is.null(time_in_force)`, mirroring the
+  `identical(time_in_force, "GTT")` NULL-safe check immediately above
+  it, so `post_only = TRUE` with `time_in_force` left at its `NULL`
+  default now validates cleanly, and `post_only = TRUE` with
+  `time_in_force` in `c("IOC", "FOK")` still raises
+  `kucoin_validation_error` as intended.
 
 **A regression test that guards against price data ever being truncated
 again.** In plain English: on 2026-09-13 the fleet discovered that every
