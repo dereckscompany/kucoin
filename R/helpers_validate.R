@@ -194,7 +194,7 @@ validate_order_params <- function(
   if (identical(time_in_force, "GTT") && is.null(cancel_after)) {
     abort_kucoin_validation_error("Parameter 'cancel_after' is required when 'time_in_force' is 'GTT'.")
   }
-  if (isTRUE(post_only) && time_in_force %in% c("IOC", "FOK")) {
+  if (isTRUE(post_only) && !is.null(time_in_force) && time_in_force %in% c("IOC", "FOK")) {
     abort_kucoin_validation_error("Parameter 'post_only' cannot be TRUE when 'time_in_force' is 'IOC' or 'FOK'.")
   }
   if (isTRUE(iceberg) && isTRUE(hidden)) {

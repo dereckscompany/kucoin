@@ -149,6 +149,34 @@ test_that("validate_order_params enforces postOnly with IOC", {
   )
 })
 
+test_that("validate_order_params allows postOnly with time_in_force left at its NULL default", {
+  expect_no_error(
+    validate_order_params(
+      type = "limit",
+      symbol = "BTC-USDT",
+      side = "buy",
+      price = 67000,
+      size = 0.001,
+      post_only = TRUE
+    )
+  )
+})
+
+test_that("validate_order_params enforces postOnly with IOC via kucoin_validation_error", {
+  expect_error(
+    validate_order_params(
+      type = "limit",
+      symbol = "BTC-USDT",
+      side = "buy",
+      price = 67000,
+      size = 0.001,
+      time_in_force = "IOC",
+      post_only = TRUE
+    ),
+    class = "kucoin_validation_error"
+  )
+})
+
 test_that("validate_order_params enforces iceberg and hidden mutual exclusion", {
   expect_error(
     validate_order_params(
