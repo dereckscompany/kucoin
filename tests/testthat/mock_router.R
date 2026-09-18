@@ -12,9 +12,20 @@
 # keyed by file basename; each value is the raw JSON string). Every fixture
 # carries the full KuCoin envelope `{ "code": "200000", "data": ... }`, so
 # connectcore::mock_response() -- which serves a string body verbatim -- feeds
-# the parsers and column contracts exactly what the live wire returns. The
-# fixtures are synthetic but shape-faithful; the authenticated ones carry no
-# real account identifiers or balances.
+# the parsers and column contracts exactly what the live wire returns.
+#
+# Every fixture in tests/testthat/fixtures/*.json is AUTHORED SYNTHETIC DATA,
+# hand-written to be shape-faithful to KuCoin's own documented responses (same
+# keys, nesting, and value types as the real API) -- it is never captured from
+# a live account or a live market moment, not even scrubbed. Ids follow a
+# patterned scheme (`order-0001`-style strings, `withdrawal-000N`, small
+# integer sequences), addresses are obviously-fake placeholders
+# (`0x000...000N`, `TXXX...XXXN`, `bc1q000...000`), timestamps sit on an
+# invented clean grid (2026-01-05 onward, stepping by minutes/hours/days), and
+# prices and sizes are round (BTC ~50000, ETH ~3000). This is a public
+# repository; nothing under tests/testthat/fixtures/ may ever be replaced with
+# a live capture, scrubbed or otherwise (fleet fixture-authoring rule,
+# ratified 2026-07-05, re-ratified 2026-09-17).
 #
 # httr2 exposes a native global mock hook: connectcore::with_mock_api(.mock_routes,
 # { ... }) (or local_mock_api(.mock_routes)) installs the dispatcher as the

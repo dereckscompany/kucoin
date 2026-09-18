@@ -131,7 +131,7 @@ test_that("get_purchase_orders returns data.table with apply_time", {
           matchSize = "800",
           interestRate = "0.05",
           incomeSize = "3.42",
-          applyTime = 1729655606816,
+          applyTime = 1767657600000,
           status = "DONE"
         )
       )
@@ -184,7 +184,7 @@ test_that("get_redeem_orders returns data.table with apply_time", {
           redeemOrderNo = "r1",
           redeemSize = "500",
           receiptSize = "500",
-          applyTime = 1729655606816,
+          applyTime = 1767657600000,
           status = "DONE"
         )
       )
@@ -307,7 +307,7 @@ test_that("get_purchase_orders schema: no list columns, POSIXct apply_time", {
           matchSize = "800",
           interestRate = "0.05",
           incomeSize = "3.42",
-          applyTime = 1729655606816,
+          applyTime = 1767657600000,
           status = "DONE"
         )
       )
@@ -332,7 +332,7 @@ test_that("get_redeem_orders schema: no list columns, POSIXct apply_time", {
           redeemOrderNo = "r1",
           redeemSize = "500",
           receiptSize = "500",
-          applyTime = 1729655606816,
+          applyTime = 1767657600000,
           status = "DONE"
         )
       )

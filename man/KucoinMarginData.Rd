@@ -178,7 +178,7 @@ Verified: 2026-05-23
 \if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
   "code": "200000",
   "data": \{
-    "timestamp": 1772993986642,
+    "timestamp": 1768003200000,
     "items": [
       \{
         "symbol": "BTC-USDT",

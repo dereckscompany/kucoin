@@ -118,7 +118,7 @@ KucoinFuturesMarketData <- R6::R6Class(
     #'     "symbol": "XBTUSDTM",
     #'     "rootSymbol": "USDT",
     #'     "type": "FFWCSX",
-    #'     "firstOpenDate": 1585555200000,
+    #'     "firstOpenDate": 1585699200000,
     #'     "baseCurrency": "XBT",
     #'     "quoteCurrency": "USDT",
     #'     "settleCurrency": "USDT",

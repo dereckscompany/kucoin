@@ -237,15 +237,15 @@ test_that("get_all_symbols returns multi-row data.table", {
 
 test_that("get_klines returns OHLCV data.table via kucoin_fetch_klines", {
   set.seed(42)
-  klines <- mock_klines_data(n = 5, start_ts = 1729100000)
+  klines <- mock_klines_data(n = 5, start_ts = 1767571200)
   resp <- mock_kucoin_response(data = klines)
   httr2::local_mocked_responses(function(req) resp)
 
   dt <- new_market()$get_klines(
     symbol = TEST_SYMBOL_SPOT,
     timeframe = "15min",
-    from = 1729100000,
-    to = 1729110000
+    from = 1767571200,
+    to = 1767581200
   )
 
   expect_s3_class(dt, "data.table")
@@ -348,14 +348,14 @@ test_that("get_full_orderbook passes authentication headers", {
 # -- get_server_time --
 
 test_that("get_server_time returns server_time and datetime", {
-  resp <- mock_kucoin_response(data = 1729100692873)
+  resp <- mock_kucoin_response(data = 1767571200000)
   httr2::local_mocked_responses(function(req) resp)
 
   dt <- new_market()$get_server_time()
 
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
-  expect_equal(dt$server_time, 1729100692873)
+  expect_equal(dt$server_time, 1767571200000)
   expect_s3_class(dt$datetime, "POSIXct")
 })
 

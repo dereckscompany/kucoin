@@ -12,19 +12,19 @@ test_that("KucoinWithdrawal inherits from KucoinBase", {
 # -- add_withdrawal --
 
 test_that("add_withdrawal returns data.table with withdrawal_id", {
-  resp <- mock_kucoin_response(data = list(withdrawalId = "670deec84d64da0007d7c946"))
+  resp <- mock_kucoin_response(data = list(withdrawalId = "withdrawal-0001"))
   httr2::local_mocked_responses(function(req) resp)
 
   dt <- new_withdrawal()$add_withdrawal(
     currency = "USDT",
-    to_address = "TKFRQXSDcY4kd3QLzw7uK16GmLrjJggwX8",
+    to_address = "TXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX1",
     amount = "10",
     withdraw_type = "ADDRESS",
     chain = "trx"
   )
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
-  expect_equal(dt$withdrawal_id, "670deec84d64da0007d7c946")
+  expect_equal(dt$withdrawal_id, "withdrawal-0001")
   expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
 
@@ -82,7 +82,7 @@ test_that("add_withdrawal includes optional parameters", {
 
   dt <- new_withdrawal()$add_withdrawal(
     currency = "USDT",
-    to_address = "TKFRQXSDcY4kd3QLzw7uK16GmLrjJggwX8",
+    to_address = "TXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX1",
     amount = "10",
     withdraw_type = "ADDRESS",
     chain = "trx",
@@ -101,10 +101,10 @@ test_that("cancel_withdrawal returns data.table with withdrawal_id", {
   resp <- mock_kucoin_response(data = NULL)
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_withdrawal()$cancel_withdrawal("670deec84d64da0007d7c946")
+  dt <- new_withdrawal()$cancel_withdrawal("withdrawal-0001")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
-  expect_equal(dt$withdrawal_id, "670deec84d64da0007d7c946")
+  expect_equal(dt$withdrawal_id, "withdrawal-0001")
   expect_equal(length(names(dt)[vapply(dt, is.list, logical(1))]), 0L)
 })
 
@@ -174,14 +174,14 @@ test_that("get_withdrawal_history returns paginated data with created_at", {
           currency = "USDT",
           chain = "",
           status = "SUCCESS",
-          address = "a435*****@gmail.com",
+          address = "user@example.com",
           memo = "",
           isInner = TRUE,
           amount = "1.00000000",
           fee = "0.00000000",
           walletTxId = NULL,
-          createdAt = 1728555875000,
-          updatedAt = 1728555875000,
+          createdAt = 1767312000000,
+          updatedAt = 1767312000000,
           remark = "",
           arrears = FALSE
         )
@@ -235,8 +235,8 @@ test_that("get_withdrawal_history validates currency", {
 test_that("get_withdrawal_by_id returns detailed data.table with created_at", {
   resp <- mock_kucoin_response(
     data = list(
-      id = "67e6515f7960ba0007b42025",
-      uid = 165111215L,
+      id = "withdrawal-0002",
+      uid = 1000001L,
       currency = "USDT",
       chainId = "trx",
       chainName = "TRC20",
@@ -244,15 +244,15 @@ test_that("get_withdrawal_by_id returns detailed data.table with created_at", {
       status = "SUCCESS",
       failureReason = "",
       failureReasonMsg = NULL,
-      address = "TKFRQXSDcY4kd3QLzw7uK16GmLrjJggwX8",
+      address = "TXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX1",
       memo = "",
       isInner = TRUE,
       amount = "3.00000000",
       fee = "0.00000000",
       walletTxId = NULL,
       addressRemark = "test",
-      remark = "this is Remark",
-      createdAt = 1743147359000,
+      remark = "synthetic remark",
+      createdAt = 1767398400000,
       cancelType = "NON_CANCELABLE",
       taxes = NULL,
       taxDescription = NULL,
@@ -264,13 +264,13 @@ test_that("get_withdrawal_by_id returns detailed data.table with created_at", {
   )
   httr2::local_mocked_responses(function(req) resp)
 
-  dt <- new_withdrawal()$get_withdrawal_by_id("67e6515f7960ba0007b42025")
+  dt <- new_withdrawal()$get_withdrawal_by_id("withdrawal-0002")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
   expect_true("created_at" %in% names(dt))
   expect_false("datetime_created" %in% names(dt))
   expect_s3_class(dt$created_at, "POSIXct")
-  expect_equal(dt$id, "67e6515f7960ba0007b42025")
+  expect_equal(dt$id, "withdrawal-0002")
   expect_equal(dt$currency, "USDT")
   expect_equal(dt$status, "SUCCESS")
   expect_equal(dt$cancel_type, "NON_CANCELABLE")

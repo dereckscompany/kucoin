@@ -447,7 +447,7 @@ KucoinLending <- R6::R6Class(
     #'         "matchSize": "800",
     #'         "interestRate": "0.05",
     #'         "incomeSize": "3.42",
-    #'         "applyTime": 1729655606816,
+    #'         "applyTime": 1767657600000,
     #'         "status": "DONE"
     #'       }
     #'     ]
@@ -649,7 +649,7 @@ KucoinLending <- R6::R6Class(
     #'         "redeemOrderNo": "def456",
     #'         "redeemSize": "500",
     #'         "receiptSize": "500",
-    #'         "applyTime": 1729655606816,
+    #'         "applyTime": 1767657600000,
     #'         "status": "DONE"
     #'       }
     #'     ]

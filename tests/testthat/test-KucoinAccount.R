@@ -50,7 +50,7 @@ test_that("get_apikey_info returns data.table with key details", {
       apiKey = "670c42f1a24b1b0001a5c7e0",
       apiVersion = 3,
       permission = "General,Spot",
-      createdAt = 1728905969000,
+      createdAt = 1767571200000,
       uid = 123456789,
       isMaster = TRUE,
       region = "US",
@@ -222,7 +222,7 @@ test_that("get_isolated_margin_account flattens baseAsset/quoteAsset wide-prefix
     data = list(
       totalAssetOfQuoteCurrency = "5234.67",
       totalLiabilityOfQuoteCurrency = "1000.00",
-      timestamp = 1729176273859,
+      timestamp = 1767571200000,
       assets = list(
         list(
           symbol = "BTC-USDT",
@@ -290,7 +290,7 @@ test_that("get_isolated_margin_account replicates parent across multiple pairs",
   resp <- mock_kucoin_response(
     data = list(
       totalAssetOfQuoteCurrency = "100",
-      timestamp = 1729176273859,
+      timestamp = 1767571200000,
       assets = list(
         list(
           symbol = "BTC-USDT",
@@ -345,7 +345,7 @@ test_that("get_spot_ledger returns paginated data with created_at", {
           accountType = "TRADE",
           bizType = "Exchange",
           direction = "in",
-          createdAt = 1729176273859,
+          createdAt = 1767571200000,
           context = "{}"
         )
       )
@@ -396,7 +396,7 @@ test_that("get_hf_ledger returns ledger entries with created_at", {
           accountType = "TRADE_HF",
           bizType = "TRADE_EXCHANGE",
           direction = "in",
-          createdAt = 1729577515473,
+          createdAt = 1767571500000,
           context = "{\"orderId\":\"abc\"}"
         )
       )

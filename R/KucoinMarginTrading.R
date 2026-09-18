@@ -943,7 +943,7 @@ KucoinMarginTrading <- R6::R6Class(
     #' {
     #'   "code": "200000",
     #'   "data": {
-    #'     "timestamp": 1729655606816,
+    #'     "timestamp": 1767657600000,
     #'     "orderNo": "abc123",
     #'     "actualSize": "100"
     #'   }
@@ -1037,7 +1037,7 @@ KucoinMarginTrading <- R6::R6Class(
     #'         "size": "100",
     #'         "actualSize": "100",
     #'         "status": "DONE",
-    #'         "createdTime": 1729577515473
+    #'         "createdTime": 1767571500000
     #'       }
     #'     ]
     #'   }
@@ -1130,7 +1130,7 @@ KucoinMarginTrading <- R6::R6Class(
     #'         "size": "100",
     #'         "actualSize": "100",
     #'         "status": "DONE",
-    #'         "createdTime": 1729577815473
+    #'         "createdTime": 1767571800000
     #'       }
     #'     ]
     #'   }
@@ -1216,7 +1216,7 @@ KucoinMarginTrading <- R6::R6Class(
     #'         "currency": "USDT",
     #'         "dayRatio": "0.0001",
     #'         "interestAmount": "0.01",
-    #'         "createdTime": 1729577515473
+    #'         "createdTime": 1767571500000
     #'       }
     #'     ]
     #'   }

@@ -2,12 +2,12 @@
   "code": "200000",
   "data": {
     "sequence": "200001",
-    "price": "2530.6",
+    "price": "3000.5",
     "size": "0.5",
-    "bestBid": "2530.5",
+    "bestBid": "2999.5",
     "bestBidSize": "12.0",
-    "bestAsk": "2530.8",
+    "bestAsk": "3000.5",
     "bestAskSize": "8.5",
-    "time": 1729159459033
+    "time": 1767571200000
   }
 }

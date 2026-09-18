@@ -71,7 +71,7 @@ test_that("time_convert_to_kucoin rejects non-POSIXct input", {
 # -- Round-trip consistency --
 
 test_that("from/to kucoin round-trips correctly", {
-  original_ms <- 1729159459033
+  original_ms <- 1767571200000
   posixct <- time_convert_from_kucoin(original_ms, unit = "ms")
   back_to_ms <- time_convert_to_kucoin(posixct, unit = "ms")
   expect_equal(back_to_ms, original_ms, tolerance = 1)

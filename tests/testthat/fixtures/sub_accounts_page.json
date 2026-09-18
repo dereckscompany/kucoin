@@ -20,7 +20,7 @@
           "Spot"
         ],
         "remarks": "Trading bot",
-        "createdAt": 1729159459033
+        "createdAt": 1767571200000
       },
       {
         "userId": "641e8027df0db80001f1e6bb",
@@ -38,7 +38,7 @@
           "Futures"
         ],
         "remarks": "Futures bot",
-        "createdAt": 1729159559033
+        "createdAt": 1767571800000
       }
     ]
   }

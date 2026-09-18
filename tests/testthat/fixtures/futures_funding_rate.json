@@ -3,12 +3,12 @@
   "data": {
     "symbol": "XBTUSDTM",
     "granularity": 28800000,
-    "timePoint": 1729152000000,
+    "timePoint": 1767571200000,
     "value": 0.0001,
     "dailyInterestRate": 0.0003,
     "fundingRateCap": 0.003,
     "fundingRateFloor": -0.003,
     "period": 1,
-    "fundingTime": 1729180800000
+    "fundingTime": 1767600000000
   }
 }

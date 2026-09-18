@@ -14,7 +14,7 @@ test_that("KucoinDeposit inherits from KucoinBase", {
 test_that("add_deposit_address returns data.table with column reorder", {
   resp <- mock_kucoin_response(
     data = list(
-      address = "bc1qxz47arp3kx8f0smu4j5dqylecgn3r7sft2wkgq",
+      address = "bc1q00000000000000000000000000000000000000",
       memo = "",
       chain = "btc",
       chainId = "btc",
@@ -28,7 +28,7 @@ test_that("add_deposit_address returns data.table with column reorder", {
   dt <- new_deposit()$add_deposit_address(currency = "BTC", chain = "btc", to = "main")
   expect_s3_class(dt, "data.table")
   expect_equal(nrow(dt), 1L)
-  expect_equal(dt$address, "bc1qxz47arp3kx8f0smu4j5dqylecgn3r7sft2wkgq")
+  expect_equal(dt$address, "bc1q00000000000000000000000000000000000000")
   expect_equal(dt$currency, "BTC")
   # Check column ordering starts with address
   expect_equal(names(dt)[1], "address")
@@ -57,7 +57,7 @@ test_that("get_deposit_addresses returns array as multi-row data.table", {
         chainId = "eth",
         to = "main",
         currency = "BTC",
-        contractAddress = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+        contractAddress = "0x0000000000000000000000000000000000000001"
       )
     )
   )
@@ -113,14 +113,14 @@ test_that("get_deposit_history returns paginated data with created_at and column
           currency = "BTC",
           chain = "btc",
           status = "SUCCESS",
-          address = "bc1qxz47arp3kx8f0smu4j5dqylecgn3r7sft2wkgq",
+          address = "bc1q00000000000000000000000000000000000000",
           memo = "",
           isInner = FALSE,
           amount = "0.05000000",
           fee = "0.00000000",
           walletTxId = "a1b2c3d4e5f6",
-          createdAt = 1729577515473,
-          updatedAt = 1729577815473,
+          createdAt = 1767571500000,
+          updatedAt = 1767571800000,
           remark = ""
         )
       )

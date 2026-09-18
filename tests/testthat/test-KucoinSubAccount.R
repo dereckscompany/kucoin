@@ -60,7 +60,7 @@ test_that("get_sub_account_list returns paginated data with created_at", {
           type = 0,
           access = "Spot",
           remarks = "bot-alpha",
-          createdAt = 1679726345000
+          createdAt = 1767571200000
         ),
         list(
           userId = "641e8027df0db80001f1e6bb",
@@ -70,7 +70,7 @@ test_that("get_sub_account_list returns paginated data with created_at", {
           type = 0,
           access = "Futures",
           remarks = NA,
-          createdAt = 1679726400000
+          createdAt = 1767571260000
         )
       )
     )

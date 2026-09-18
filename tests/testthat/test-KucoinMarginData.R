@@ -197,7 +197,7 @@ test_that("get_risk_limit returns empty data.table for empty response", {
 test_that("get_cross_margin_symbols produces no list columns", {
   resp <- mock_kucoin_response(
     data = list(
-      timestamp = 1772993986642,
+      timestamp = 1768003200000,
       items = list(
         list(
           symbol = "BTC-USDT",
