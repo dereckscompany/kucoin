@@ -1,13 +1,13 @@
 {
   "code": "200000",
   "data": {
-    "sequence": "1550467636704",
-    "price": "67232.9",
-    "size": "0.00007682",
-    "bestBid": "67232.8",
-    "bestBidSize": "0.41861839",
-    "bestAsk": "67232.9",
-    "bestAskSize": "1.24808993",
-    "time": 1729159459033
+    "sequence": "100",
+    "price": "50000.5",
+    "size": "0.001",
+    "bestBid": "49999.5",
+    "bestBidSize": "0.5",
+    "bestAsk": "50000.5",
+    "bestAskSize": "1.0",
+    "time": 1767571200000
   }
 }

@@ -25,7 +25,7 @@ test_that("backfill writes CSV and returns file path", {
 
   # Mock the HTTP layer: kucoin_fetch_klines calls .req_fn which eventually
   # calls httr2::req_perform. We mock that.
-  kline_data <- mock_klines_data(n = 3, start_ts = 1729100000)
+  kline_data <- mock_klines_data(n = 3, start_ts = 1767571200)
   resp <- mock_kucoin_response(data = kline_data)
   httr2::local_mocked_responses(function(req) resp)
 

@@ -372,7 +372,7 @@ Verified: 2026-05-23
         "type": 0,
         "access": "Spot",
         "remarks": "bot-alpha",
-        "createdAt": 1679726345000
+        "createdAt": 1767571200000
       \},
       \{
         "userId": "641e8027df0db80001f1e6bb",
@@ -382,7 +382,7 @@ Verified: 2026-05-23
         "type": 0,
         "access": "Futures",
         "remarks": null,
-        "createdAt": 1679726400000
+        "createdAt": 1767571260000
       \}
     ]
   \}

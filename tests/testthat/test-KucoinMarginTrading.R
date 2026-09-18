@@ -175,8 +175,8 @@ test_that("get_borrow_history returns data.table with created_time", {
   resp <- mock_kucoin_response(
     data = list(
       items = list(
-        list(orderNo = "b1", currency = "USDT", size = "100", createdTime = 1729655606816),
-        list(orderNo = "b2", currency = "BTC", size = "0.01", createdTime = 1729655706816)
+        list(orderNo = "b1", currency = "USDT", size = "100", createdTime = 1767657600000),
+        list(orderNo = "b2", currency = "BTC", size = "0.01", createdTime = 1767661200000)
       )
     )
   )
@@ -204,7 +204,7 @@ test_that("get_repay_history returns data.table", {
   resp <- mock_kucoin_response(
     data = list(
       items = list(
-        list(orderNo = "r1", currency = "USDT", size = "100", createdTime = 1729655606816)
+        list(orderNo = "r1", currency = "USDT", size = "100", createdTime = 1767657600000)
       )
     )
   )
@@ -221,7 +221,7 @@ test_that("get_interest_history returns data.table", {
   resp <- mock_kucoin_response(
     data = list(
       items = list(
-        list(currency = "USDT", interest = "0.42", createdTime = 1729655606816)
+        list(currency = "USDT", interest = "0.42", createdTime = 1767657600000)
       )
     )
   )
@@ -317,7 +317,7 @@ test_that("borrow returns no list columns", {
 
 test_that("repay coerces timestamp to POSIXct with no list columns", {
   resp <- mock_kucoin_response(
-    data = list(timestamp = 1729655606816, orderNo = "r1", actualSize = "100")
+    data = list(timestamp = 1767657600000, orderNo = "r1", actualSize = "100")
   )
   httr2::local_mocked_responses(function(req) resp)
 
@@ -341,7 +341,7 @@ test_that("get_borrow_history schema: no list columns, POSIXct created_time", {
           size = "100",
           actualSize = "100",
           status = "DONE",
-          createdTime = 1729655606816
+          createdTime = 1767657600000
         )
       )
     )
@@ -366,7 +366,7 @@ test_that("get_repay_history schema: no list columns, POSIXct created_time", {
           size = "100",
           actualSize = "100",
           status = "DONE",
-          createdTime = 1729655606816
+          createdTime = 1767657600000
         )
       )
     )
@@ -386,7 +386,7 @@ test_that("get_interest_history schema: no list columns, POSIXct created_time", 
           currency = "USDT",
           dayRatio = "0.0001",
           interestAmount = "0.01",
-          createdTime = 1729655606816
+          createdTime = 1767657600000
         )
       )
     )

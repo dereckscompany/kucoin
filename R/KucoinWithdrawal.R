@@ -104,7 +104,7 @@ KucoinWithdrawal <- R6::R6Class(
     #'   --header 'KC-API-PASSPHRASE: your-passphrase' \
     #'   --header 'KC-API-KEY-VERSION: 2' \
     #'   --data-raw \
-    #'   '{"currency":"USDT","toAddress":"TKFRQXSDcY4kd3QLzw7uK16GmLrjJggwX8","amount":"10","withdrawType":"ADDRESS",
+    #'   '{"currency":"USDT","toAddress":"TXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX1","amount":"10","withdrawType":"ADDRESS",
     #'   "chain":"trx"}'
     #' ```
     #'
@@ -113,7 +113,7 @@ KucoinWithdrawal <- R6::R6Class(
     #' {
     #'   "code": "200000",
     #'   "data": {
-    #'     "withdrawalId": "670deec84d64da0007d7c946"
+    #'     "withdrawalId": "withdrawal-0001"
     #'   }
     #' }
     #' ```
@@ -148,7 +148,7 @@ KucoinWithdrawal <- R6::R6Class(
     #' # Withdraw USDT via TRC20
     #' result <- withdrawal$add_withdrawal(
     #'   currency = "USDT",
-    #'   toAddress = "TKFRQXSDcY4kd3QLzw7uK16GmLrjJggwX8",
+    #'   toAddress = "TXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX1",
     #'   amount = "10",
     #'   withdrawType = "ADDRESS",
     #'   chain = "trx"
@@ -275,7 +275,7 @@ KucoinWithdrawal <- R6::R6Class(
     #' ### curl
     #' ```
     #' curl --location --request DELETE \
-    #'   'https://api.kucoin.com/api/v1/withdrawals/670deec84d64da0007d7c946' \
+    #'   'https://api.kucoin.com/api/v1/withdrawals/withdrawal-0001' \
     #'   --header 'KC-API-KEY: your-api-key' \
     #'   --header 'KC-API-SIGN: your-signature' \
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
@@ -303,7 +303,7 @@ KucoinWithdrawal <- R6::R6Class(
     #' withdrawal <- KucoinWithdrawal$new()
     #'
     #' # Cancel a pending withdrawal
-    #' result <- withdrawal$cancel_withdrawal("670deec84d64da0007d7c946")
+    #' result <- withdrawal$cancel_withdrawal("withdrawal-0001")
     #' print(result$withdrawal_id)
     #' }
     cancel_withdrawal = function(withdrawal_id) {
@@ -540,14 +540,14 @@ KucoinWithdrawal <- R6::R6Class(
     #'         "currency": "USDT",
     #'         "chain": "",
     #'         "status": "SUCCESS",
-    #'         "address": "a435*****@gmail.com",
+    #'         "address": "user@example.com",
     #'         "memo": "",
     #'         "isInner": true,
     #'         "amount": "1.00000000",
     #'         "fee": "0.00000000",
     #'         "walletTxId": null,
-    #'         "createdAt": 1728555875000,
-    #'         "updatedAt": 1728555875000,
+    #'         "createdAt": 1767312000000,
+    #'         "updatedAt": 1767312000000,
     #'         "remark": "",
     #'         "arrears": false
     #'       }
@@ -692,7 +692,7 @@ KucoinWithdrawal <- R6::R6Class(
     #' ### curl
     #' ```
     #' curl --location --request GET \
-    #'   'https://api.kucoin.com/api/v1/withdrawals/670deec84d64da0007d7c946' \
+    #'   'https://api.kucoin.com/api/v1/withdrawals/withdrawal-0001' \
     #'   --header 'KC-API-KEY: your-api-key' \
     #'   --header 'KC-API-SIGN: your-signature' \
     #'   --header 'KC-API-TIMESTAMP: 1729176273859' \
@@ -705,18 +705,18 @@ KucoinWithdrawal <- R6::R6Class(
     #' {
     #'   "code": "200000",
     #'   "data": {
-    #'     "id": "67e6515f7960ba0007b42025",
+    #'     "id": "withdrawal-0002",
     #'     "currency": "USDT",
     #'     "chainId": "trx",
     #'     "chainName": "TRC20",
     #'     "status": "SUCCESS",
-    #'     "address": "TKFRQXSDcY4kd3QLzw7uK16GmLrjJggwX8",
+    #'     "address": "TXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX1",
     #'     "memo": "",
     #'     "isInner": true,
     #'     "amount": "3.00000000",
     #'     "fee": "0.00000000",
     #'     "walletTxId": null,
-    #'     "createdAt": 1743147359000,
+    #'     "createdAt": 1767398400000,
     #'     "cancelType": "NON_CANCELABLE"
     #'   }
     #' }
@@ -759,7 +759,7 @@ KucoinWithdrawal <- R6::R6Class(
     #' withdrawal <- KucoinWithdrawal$new()
     #'
     #' # Get withdrawal details
-    #' detail <- withdrawal$get_withdrawal_by_id("670deec84d64da0007d7c946")
+    #' detail <- withdrawal$get_withdrawal_by_id("withdrawal-0001")
     #' print(detail[, .(id, currency, status, amount, cancel_type)])
     #'
     #' # Check if a withdrawal can be cancelled

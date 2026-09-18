@@ -136,7 +136,7 @@ test_that("get_order_by_id returns data.table with order_time and column reorder
       orderId = "674c40d38b4b2f00073deef3",
       symbol = "BTC-USDT",
       clientOid = "my-bot-oco-001",
-      orderTime = 1729176273859,
+      orderTime = 1767571200000,
       status = "NEW"
     )
   )
@@ -161,7 +161,7 @@ test_that("get_order_by_client_oid returns data.table with order_time", {
       orderId = "674c40d38b4b2f00073deef3",
       symbol = "BTC-USDT",
       clientOid = "my-bot-oco-001",
-      orderTime = 1729176273859,
+      orderTime = 1767571200000,
       status = "NEW"
     )
   )
@@ -181,7 +181,7 @@ test_that("get_order_detail_by_id returns data.table with orders list-column", {
       orderId = "674c40d38b4b2f00073deef3",
       symbol = "BTC-USDT",
       clientOid = "my-bot-oco-001",
-      orderTime = 1729176273859,
+      orderTime = 1767571200000,
       status = "NEW",
       orders = list(
         list(
@@ -229,14 +229,14 @@ test_that("get_order_list returns orders with order_time and column reorder", {
           orderId = "674c40d38b4b2f00073deef3",
           symbol = "BTC-USDT",
           clientOid = "oco-001",
-          orderTime = 1729176273859,
+          orderTime = 1767571200000,
           status = "NEW"
         ),
         list(
           orderId = "674c40d38b4b2f00073deef6",
           symbol = "ETH-USDT",
           clientOid = "oco-002",
-          orderTime = 1729176274000,
+          orderTime = 1767571201000,
           status = "TRIGGERED"
         )
       )

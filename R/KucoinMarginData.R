@@ -80,7 +80,7 @@ KucoinMarginData <- R6::R6Class(
     #' {
     #'   "code": "200000",
     #'   "data": {
-    #'     "timestamp": 1772993986642,
+    #'     "timestamp": 1768003200000,
     #'     "items": [
     #'       {
     #'         "symbol": "BTC-USDT",

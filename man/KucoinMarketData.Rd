@@ -1383,7 +1383,7 @@ Verified: 2026-05-23
 \if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
   "code": "200000",
   "data": \{
-    "time": 1729176273859,
+    "time": 1767571200000,
     "sequence": "14610502970",
     "bids": [["66976.4", "0.69109872"], ["66976.3", "0.14377"]],
     "asks": [["66976.5", "0.05408199"], ["66976.8", "0.0005"]]
@@ -1475,7 +1475,7 @@ Verified: 2026-05-23
 \if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
   "code": "200000",
   "data": \{
-    "time": 1729176273859,
+    "time": 1767571200000,
     "sequence": "14610502970",
     "bids": [["66976.4", "0.69109872"], ["66976.3", "0.14377"]],
     "asks": [["66976.5", "0.05408199"], ["66976.8", "0.0005"]]
@@ -1851,7 +1851,7 @@ Verified: 2026-05-23
 
 \if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
   "code": "200000",
-  "data": 1729176273859
+  "data": 1767571200000
 \}
 }\if{html}{\out{</div>}}
 }

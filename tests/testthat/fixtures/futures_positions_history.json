@@ -7,8 +7,8 @@
         "settleCurrency": "USDT",
         "realisedGrossPnl": "10.50",
         "realisedPnl": "10.25",
-        "openTime": 1729100000000,
-        "closeTime": 1729159459033,
+        "openTime": 1767484800000,
+        "closeTime": 1767571200000,
         "leverage": 5,
         "type": "Close"
       }

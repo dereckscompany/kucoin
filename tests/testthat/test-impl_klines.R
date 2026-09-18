@@ -39,8 +39,8 @@ test_that("kucoin_fetch_klines rejects invalid timeframe", {
     kucoin_fetch_klines(
       symbol = "BTC-USDT",
       timeframe = "2min",
-      from = 1729100000,
-      to = 1729200000,
+      from = 1767571200,
+      to = 1767671200,
       .req_fn = fake_fn
     ),
     "Invalid timeframe.*2min"
@@ -52,8 +52,8 @@ test_that("kucoin_fetch_klines returns empty data.table for zero-width range", {
   result <- kucoin_fetch_klines(
     symbol = "BTC-USDT",
     timeframe = "15min",
-    from = 1729100000,
-    to = 1729100000,
+    from = 1767571200,
+    to = 1767571200,
     .req_fn = fake_fn
   )
   expect_s3_class(result, "data.table")
@@ -67,7 +67,7 @@ test_that("kucoin_fetch_klines fetches single segment correctly", {
   captured_queries <- list()
 
   # 10 candles at 15min = 9000 seconds, well within 1500-candle limit
-  from_ts <- 1729100000
+  from_ts <- 1767571200
   to_ts <- from_ts + 9000
 
   set.seed(42)
@@ -104,7 +104,7 @@ test_that("kucoin_fetch_klines segments large time ranges", {
 
   # 1500 candles * 900s = 1,350,000s per segment
   # Request 3000 candles worth = should be 2-3 segments (with overlap)
-  from_ts <- 1729100000
+  from_ts <- 1767571200
   to_ts <- from_ts + 3000 * 900 # 2,700,000s
 
   fake_req_fn <- function(endpoint, method, query, auth, .parser, ...) {
@@ -129,7 +129,7 @@ test_that("kucoin_fetch_klines segments large time ranges", {
 })
 
 test_that("kucoin_fetch_klines deduplicates by datetime", {
-  from_ts <- 1729100000
+  from_ts <- 1767571200
   to_ts <- from_ts + 1800 # 2 candles worth at 15min
 
   # Return overlapping data
@@ -154,7 +154,7 @@ test_that("kucoin_fetch_klines deduplicates by datetime", {
 })
 
 test_that("kucoin_fetch_klines sorts by datetime ascending", {
-  from_ts <- 1729100000
+  from_ts <- 1767571200
   to_ts <- from_ts + 5400 # 6 candles at 15min
 
   fake_req_fn <- function(endpoint, method, query, auth, .parser, ...) {
@@ -191,8 +191,8 @@ test_that("kucoin_fetch_klines uses correct endpoint", {
   kucoin_fetch_klines(
     symbol = "BTC-USDT",
     timeframe = "1day",
-    from = 1729100000,
-    to = 1729200000,
+    from = 1767571200,
+    to = 1767671200,
     .req_fn = fake_req_fn
   )
 
@@ -210,8 +210,8 @@ test_that("kucoin_fetch_klines sets auth = FALSE", {
   kucoin_fetch_klines(
     symbol = "BTC-USDT",
     timeframe = "1day",
-    from = 1729100000,
-    to = 1729200000,
+    from = 1767571200,
+    to = 1767671200,
     .req_fn = fake_req_fn
   )
 
@@ -226,8 +226,8 @@ test_that("kucoin_fetch_klines handles empty API responses", {
   result <- kucoin_fetch_klines(
     symbol = "BTC-USDT",
     timeframe = "15min",
-    from = 1729100000,
-    to = 1729200000,
+    from = 1767571200,
+    to = 1767671200,
     .req_fn = fake_req_fn
   )
 

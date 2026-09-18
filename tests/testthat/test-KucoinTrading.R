@@ -190,8 +190,8 @@ test_that("get_order_by_id converts timestamps and returns data.table", {
       type = "limit",
       price = "67717.6",
       size = "0.00001",
-      createdAt = 1729577515473,
-      lastUpdatedAt = 1729577515500
+      createdAt = 1767571500000,
+      lastUpdatedAt = 1767571530000
     )
   )
   httr2::local_mocked_responses(function(req) resp)
@@ -213,7 +213,7 @@ test_that("get_order_by_client_oid converts timestamps to created_at", {
       clientOid = "myOid",
       symbol = "BTC-USDT",
       side = "sell",
-      createdAt = 1729577515473
+      createdAt = 1767571500000
     )
   )
   httr2::local_mocked_responses(function(req) resp)
@@ -239,7 +239,7 @@ test_that("get_fills returns fills with created_at", {
           size = "0.00001",
           fee = "0.000677176",
           feeCurrency = "USDT",
-          createdAt = 1729577515473
+          createdAt = 1767571500000
         )
       ),
       lastId = 19814995255305
@@ -290,8 +290,8 @@ test_that("get_symbols_with_open_orders handles empty", {
 test_that("get_open_orders returns order list with timestamps", {
   resp <- mock_kucoin_response(
     data = list(
-      list(orderId = "o1", symbol = "BTC-USDT", side = "buy", price = "67000", createdAt = 1729577515473),
-      list(orderId = "o2", symbol = "BTC-USDT", side = "sell", price = "68000", createdAt = 1729577516000)
+      list(orderId = "o1", symbol = "BTC-USDT", side = "buy", price = "67000", createdAt = 1767571500000),
+      list(orderId = "o2", symbol = "BTC-USDT", side = "sell", price = "68000", createdAt = 1767571560000)
     )
   )
   httr2::local_mocked_responses(function(req) resp)
@@ -317,8 +317,8 @@ test_that("get_closed_orders returns orders with timestamps", {
   resp <- mock_kucoin_response(
     data = list(
       items = list(
-        list(orderId = "c1", symbol = "BTC-USDT", side = "buy", createdAt = 1729577515473),
-        list(orderId = "c2", symbol = "BTC-USDT", side = "sell", createdAt = 1729577516000)
+        list(orderId = "c1", symbol = "BTC-USDT", side = "buy", createdAt = 1767571500000),
+        list(orderId = "c2", symbol = "BTC-USDT", side = "sell", createdAt = 1767571560000)
       ),
       lastId = 12345
     )
@@ -338,13 +338,13 @@ test_that("add_order_sync returns fill result with status", {
     data = list(
       orderId = "sync123",
       clientOid = "c1",
-      orderTime = 1729577515473,
+      orderTime = 1767571500000,
       originSize = "0.00001",
       dealSize = "0.00001",
       remainSize = "0",
       canceledSize = "0",
       status = "done",
-      matchTime = 1729577515500
+      matchTime = 1767571530000
     )
   )
   httr2::local_mocked_responses(function(req) resp)
@@ -502,16 +502,16 @@ test_that("modify_order validates required parameters", {
 test_that("set_dcp returns current and trigger times", {
   resp <- mock_kucoin_response(
     data = list(
-      currentTime = 1729656588,
-      triggerTime = 1729656593
+      currentTime = 1767571200,
+      triggerTime = 1767571205
     )
   )
   httr2::local_mocked_responses(function(req) resp)
 
   dt <- new_trading()$set_dcp(timeout = 30, symbols = "BTC-USDT")
   expect_s3_class(dt, "data.table")
-  expect_equal(dt$current_time, 1729656588)
-  expect_equal(dt$trigger_time, 1729656593)
+  expect_equal(dt$current_time, 1767571200)
+  expect_equal(dt$trigger_time, 1767571205)
 })
 
 test_that("set_dcp validates timeout", {
@@ -520,7 +520,7 @@ test_that("set_dcp validates timeout", {
 })
 
 test_that("set_dcp allows -1 to disable", {
-  resp <- mock_kucoin_response(data = list(currentTime = 1729656588, triggerTime = 0))
+  resp <- mock_kucoin_response(data = list(currentTime = 1767571200, triggerTime = 0))
   httr2::local_mocked_responses(function(req) resp)
 
   dt <- new_trading()$set_dcp(timeout = -1)
@@ -534,8 +534,8 @@ test_that("get_dcp returns settings", {
     data = list(
       timeout = 5,
       symbols = "BTC-USDT,ETH-USDT",
-      currentTime = 1729241305,
-      triggerTime = 1729241308
+      currentTime = 1767571200,
+      triggerTime = 1767571203
     )
   )
   httr2::local_mocked_responses(function(req) resp)

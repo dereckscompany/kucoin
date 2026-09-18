@@ -734,7 +734,7 @@ Verified: 2026-05-23
     "orderId": "674c40d38b4b2f00073deef3",
     "symbol": "BTC-USDT",
     "clientOid": "my-bot-oco-001",
-    "orderTime": 1729176273859,
+    "orderTime": 1767571200000,
     "status": "NEW"
   \}
 \}
@@ -839,7 +839,7 @@ one.
     "orderId": "674c40d38b4b2f00073deef3",
     "symbol": "BTC-USDT",
     "clientOid": "my-bot-oco-001",
-    "orderTime": 1729176273859,
+    "orderTime": 1767571200000,
     "status": "NEW"
   \}
 \}
@@ -943,7 +943,7 @@ Verified: 2026-05-23
     "orderId": "674c40d38b4b2f00073deef3",
     "symbol": "BTC-USDT",
     "clientOid": "my-bot-oco-001",
-    "orderTime": 1729176273859,
+    "orderTime": 1767571200000,
     "status": "NEW",
     "orders": [
       \{
@@ -1087,14 +1087,14 @@ need adjustment.
         "orderId": "674c40d38b4b2f00073deef3",
         "symbol": "BTC-USDT",
         "clientOid": "my-bot-oco-001",
-        "orderTime": 1729176273859,
+        "orderTime": 1767571200000,
         "status": "NEW"
       \},
       \{
         "orderId": "674c40d38b4b2f00073deef6",
         "symbol": "ETH-USDT",
         "clientOid": "my-bot-oco-002",
-        "orderTime": 1729176274000,
+        "orderTime": 1767571201000,
         "status": "TRIGGERED"
       \}
     ]

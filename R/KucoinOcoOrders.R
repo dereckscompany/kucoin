@@ -582,7 +582,7 @@ KucoinOcoOrders <- R6::R6Class(
     #'     "orderId": "674c40d38b4b2f00073deef3",
     #'     "symbol": "BTC-USDT",
     #'     "clientOid": "my-bot-oco-001",
-    #'     "orderTime": 1729176273859,
+    #'     "orderTime": 1767571200000,
     #'     "status": "NEW"
     #'   }
     #' }
@@ -680,7 +680,7 @@ KucoinOcoOrders <- R6::R6Class(
     #'     "orderId": "674c40d38b4b2f00073deef3",
     #'     "symbol": "BTC-USDT",
     #'     "clientOid": "my-bot-oco-001",
-    #'     "orderTime": 1729176273859,
+    #'     "orderTime": 1767571200000,
     #'     "status": "NEW"
     #'   }
     #' }
@@ -777,7 +777,7 @@ KucoinOcoOrders <- R6::R6Class(
     #'     "orderId": "674c40d38b4b2f00073deef3",
     #'     "symbol": "BTC-USDT",
     #'     "clientOid": "my-bot-oco-001",
-    #'     "orderTime": 1729176273859,
+    #'     "orderTime": 1767571200000,
     #'     "status": "NEW",
     #'     "orders": [
     #'       {
@@ -938,14 +938,14 @@ KucoinOcoOrders <- R6::R6Class(
     #'         "orderId": "674c40d38b4b2f00073deef3",
     #'         "symbol": "BTC-USDT",
     #'         "clientOid": "my-bot-oco-001",
-    #'         "orderTime": 1729176273859,
+    #'         "orderTime": 1767571200000,
     #'         "status": "NEW"
     #'       },
     #'       {
     #'         "orderId": "674c40d38b4b2f00073deef6",
     #'         "symbol": "ETH-USDT",
     #'         "clientOid": "my-bot-oco-002",
-    #'         "orderTime": 1729176274000,
+    #'         "orderTime": 1767571201000,
     #'         "status": "TRIGGERED"
     #'       }
     #'     ]

@@ -55,10 +55,10 @@ test_that("as_dt_list returns empty data.table for NULL/empty", {
 })
 
 test_that("ms_to_datetime converts millisecond timestamps", {
-  # 1729159459033 ms = 2024-10-17T10:04:19 UTC
-  result <- ms_to_datetime(1729159459033)
+  # 1767571200000 ms = 2026-01-05T00:00:00 UTC
+  result <- ms_to_datetime(1767571200000)
   expect_s3_class(result, "POSIXct")
-  expect_equal(as.numeric(result), 1729159459.033, tolerance = 0.001)
+  expect_equal(as.numeric(result), 1767571200, tolerance = 0.001)
 })
 
 test_that("ms_to_datetime returns NA for NULL/NA input", {
@@ -67,10 +67,10 @@ test_that("ms_to_datetime returns NA for NULL/NA input", {
 })
 
 test_that("ns_to_datetime converts nanosecond timestamps", {
-  # 1729159459033000000 ns = 1729159459.033 seconds
-  result <- ns_to_datetime(1729159459033000000)
+  # 1767571200000000000 ns = 1767571200.000 seconds
+  result <- ns_to_datetime(1767571200000000000)
   expect_s3_class(result, "POSIXct")
-  expect_equal(as.numeric(result), 1729159459.033, tolerance = 0.001)
+  expect_equal(as.numeric(result), 1767571200, tolerance = 0.001)
 })
 
 test_that("ns_to_datetime returns NA for NULL/NA input", {
@@ -119,10 +119,10 @@ test_that("coerce_cols deduplicates `cols` so each column is coerced once", {
   # `ms_to_datetime` on an already-POSIXct value reinterprets the
   # epoch-seconds-as-numeric as epoch-milliseconds and returns a year
   # in the 56,000s. With `unique(cols)` the second pass is skipped.
-  dt <- data.table::data.table(time = 1729159459033)
+  dt <- data.table::data.table(time = 1767571200000)
   coerce_cols(dt, c("time", "time"), ms_to_datetime)
   expect_s3_class(dt$time, "POSIXct")
-  expect_equal(as.numeric(dt$time), 1729159459.033, tolerance = 0.001)
+  expect_equal(as.numeric(dt$time), 1767571200, tolerance = 0.001)
 })
 
 test_that("parse_orderbook creates correct data.table from bid/ask arrays", {
@@ -148,19 +148,19 @@ test_that("parse_orderbook creates correct data.table from bid/ask arrays", {
   expect_equal(dt[side == "ask", level], 1:3)
 
   # Check values
-  expect_equal(dt[side == "bid"][1]$price, 67232.8)
-  expect_equal(dt[side == "ask"][1]$price, 67232.9)
+  expect_equal(dt[side == "bid"][1]$price, 49999.5)
+  expect_equal(dt[side == "ask"][1]$price, 50000.5)
 })
 
 test_that("parse_orderbook handles empty bids/asks", {
-  data <- list(time = 1729159459033, sequence = "123", bids = list(), asks = list())
+  data <- list(time = 1767571200000, sequence = "123", bids = list(), asks = list())
   dt <- parse_orderbook(data)
   expect_equal(nrow(dt), 0L)
 })
 
 test_that("parse_klines creates correct OHLCV data.table", {
   set.seed(42)
-  data <- mock_klines_data(n = 3, start_ts = 1729100000)
+  data <- mock_klines_data(n = 3, start_ts = 1767571200)
   dt <- parse_klines(data)
 
   expect_s3_class(dt, "data.table")
@@ -185,7 +185,7 @@ test_that("parse_klines reorders KuCoin close/high/low correctly", {
   # KuCoin returns: [ts, open, close, high, low, vol, turnover]
   # We want: datetime, open, high, low, close, vol, turnover
   data <- list(
-    c("1729100000", "100", "103", "105", "98", "50", "5000")
+    c("1767571200", "100", "103", "105", "98", "50", "5000")
   )
   dt <- parse_klines(data)
   expect_equal(dt$open, 100)

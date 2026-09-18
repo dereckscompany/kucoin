@@ -1023,7 +1023,7 @@ KucoinTrading <- R6::R6Class(
     #'     "remark": "",
     #'     "tags": "",
     #'     "cancelExist": false,
-    #'     "createdAt": 1729176273859,
+    #'     "createdAt": 1767571200000,
     #'     "lastUpdatedAt": 1729176273952,
     #'     "tradeType": "TRADE",
     #'     "inOrderBook": false,
@@ -1152,7 +1152,7 @@ KucoinTrading <- R6::R6Class(
     #'     "remark": "",
     #'     "tags": "",
     #'     "cancelExist": false,
-    #'     "createdAt": 1729176273859,
+    #'     "createdAt": 1767571200000,
     #'     "lastUpdatedAt": 1729176273952,
     #'     "tradeType": "TRADE",
     #'     "inOrderBook": false,
@@ -1281,7 +1281,7 @@ KucoinTrading <- R6::R6Class(
     #'         "tradeType": "TRADE",
     #'         "taxRate": "0",
     #'         "tax": "0",
-    #'         "createdAt": 1729577515473
+    #'         "createdAt": 1767571500000
     #'       }
     #'     ],
     #'     "lastId": 19814995255305
@@ -1523,7 +1523,7 @@ KucoinTrading <- R6::R6Class(
     #'       "remark": "",
     #'       "tags": "",
     #'       "cancelExist": false,
-    #'       "createdAt": 1729176273859,
+    #'       "createdAt": 1767571200000,
     #'       "lastUpdatedAt": 1729176273952,
     #'       "tradeType": "TRADE",
     #'       "inOrderBook": true,
@@ -1641,7 +1641,7 @@ KucoinTrading <- R6::R6Class(
     #'         "remark": "",
     #'         "tags": "",
     #'         "cancelExist": false,
-    #'         "createdAt": 1729176273859,
+    #'         "createdAt": 1767571200000,
     #'         "lastUpdatedAt": 1729176273952,
     #'         "tradeType": "TRADE",
     #'         "inOrderBook": false,
@@ -1796,7 +1796,7 @@ KucoinTrading <- R6::R6Class(
     #'   "code": "200000",
     #'   "data": {
     #'     "orderId": "670fd33bf9406e0007ab3945",
-    #'     "orderTime": 1729176273859,
+    #'     "orderTime": 1767571200000,
     #'     "originSize": "0.00001",
     #'     "dealSize": "0.00001",
     #'     "remainSize": "0",
@@ -1996,7 +1996,7 @@ KucoinTrading <- R6::R6Class(
     #'       "orderId": "6710d8336afcdb0007319c27",
     #'       "clientOid": "id1",
     #'       "success": true,
-    #'       "orderTime": 1729176273859,
+    #'       "orderTime": 1767571200000,
     #'       "originSize": "0.00001",
     #'       "dealSize": "0.00001",
     #'       "remainSize": "0",
