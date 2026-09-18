@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,7 +64,7 @@
 Mezquita</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.6.2/vignettes/margin-trading.Rmd" class="external-link"><code>vignettes/margin-trading.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.6.3/vignettes/margin-trading.Rmd" class="external-link"><code>vignettes/margin-trading.Rmd</code></a></small>
       <div class="d-none name"><code>margin-trading.Rmd</code></div>
     </div>
 
@@ -266,9 +266,9 @@ control:</p>
 <pre><code><span><span class="co">#&gt;            order_no actual_size</span></span>
 <span><span class="co">#&gt;              &lt;char&gt;       &lt;num&gt;</span></span>
 <span><span class="co">#&gt; 1: borrow-order-001        1000</span></span>
-<span><span class="co">#&gt;           order_no actual_size           timestamp</span></span>
-<span><span class="co">#&gt;             &lt;char&gt;       &lt;num&gt;              &lt;POSc&gt;</span></span>
-<span><span class="co">#&gt; 1: repay-order-001        1000 2024-10-23 03:53:26</span></span></code></pre>
+<span><span class="co">#&gt;           order_no actual_size  timestamp</span></span>
+<span><span class="co">#&gt;             &lt;char&gt;       &lt;num&gt;     &lt;POSc&gt;</span></span>
+<span><span class="co">#&gt; 1: repay-order-001        1000 2026-01-06</span></span></code></pre>
 <div class="section level3">
 <h3 id="borrow-history-and-interest">Borrow History and Interest<a class="anchor" aria-label="anchor" href="#borrow-history-and-interest"></a>
 </h3>
@@ -290,14 +290,14 @@ control:</p>
 <span><span class="va">rates</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;            order_no currency principal interest        created_time</span></span>
 <span><span class="co">#&gt;              &lt;char&gt;   &lt;char&gt;    &lt;char&gt;   &lt;char&gt;              &lt;POSc&gt;</span></span>
-<span><span class="co">#&gt; 1: borrow-order-001     USDT      1000      0.5 2024-10-23 03:53:26</span></span>
-<span><span class="co">#&gt; 2: borrow-order-002     USDT       500      0.2 2024-10-23 03:55:06</span></span>
-<span><span class="co">#&gt;           order_no currency principal interest        created_time</span></span>
-<span><span class="co">#&gt;             &lt;char&gt;   &lt;char&gt;    &lt;char&gt;   &lt;char&gt;              &lt;POSc&gt;</span></span>
-<span><span class="co">#&gt; 1: repay-order-001     USDT      1000      0.5 2024-10-23 03:53:26</span></span>
-<span><span class="co">#&gt;    currency interest_payment_amount        created_time</span></span>
-<span><span class="co">#&gt;      &lt;char&gt;                  &lt;char&gt;              &lt;POSc&gt;</span></span>
-<span><span class="co">#&gt; 1:     USDT                     0.5 2024-10-23 03:53:26</span></span>
+<span><span class="co">#&gt; 1: borrow-order-001     USDT      1000      0.5 2026-01-06 00:00:00</span></span>
+<span><span class="co">#&gt; 2: borrow-order-002     USDT       500      0.2 2026-01-06 01:00:00</span></span>
+<span><span class="co">#&gt;           order_no currency principal interest created_time</span></span>
+<span><span class="co">#&gt;             &lt;char&gt;   &lt;char&gt;    &lt;char&gt;   &lt;char&gt;       &lt;POSc&gt;</span></span>
+<span><span class="co">#&gt; 1: repay-order-001     USDT      1000      0.5   2026-01-06</span></span>
+<span><span class="co">#&gt;    currency interest_payment_amount created_time</span></span>
+<span><span class="co">#&gt;      &lt;char&gt;                  &lt;char&gt;       &lt;POSc&gt;</span></span>
+<span><span class="co">#&gt; 1:     USDT                     0.5   2026-01-06</span></span>
 <span><span class="co">#&gt;    currency hourly_borrow_rate annualized_borrow_rate</span></span>
 <span><span class="co">#&gt;      &lt;char&gt;              &lt;num&gt;                  &lt;num&gt;</span></span>
 <span><span class="co">#&gt; 1:      BTC            2.1e-05                 0.1839</span></span>
@@ -417,9 +417,9 @@ pool:</p>
 <span><span class="co">#&gt; 2:              0.08                 TRUE</span></span>
 <span><span class="co">#&gt;            time market_interest_rate</span></span>
 <span><span class="co">#&gt;          &lt;char&gt;                &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1: 202603070000                0.050</span></span>
-<span><span class="co">#&gt; 2: 202603060000                0.048</span></span>
-<span><span class="co">#&gt; 3: 202603050000                0.052</span></span>
+<span><span class="co">#&gt; 1: 202601050000                0.050</span></span>
+<span><span class="co">#&gt; 2: 202601040000                0.048</span></span>
+<span><span class="co">#&gt; 3: 202601030000                0.052</span></span>
 <span><span class="co">#&gt; [1] "lending-purchase-001"</span></span>
 <span><span class="co">#&gt;    currency    purchase_order_no interest_rate  status</span></span>
 <span><span class="co">#&gt;      &lt;char&gt;               &lt;char&gt;         &lt;num&gt;  &lt;char&gt;</span></span>
@@ -427,16 +427,16 @@ pool:</p>
 <span><span class="co">#&gt;    currency    purchase_order_no purchase_size match_size interest_rate</span></span>
 <span><span class="co">#&gt;      &lt;char&gt;               &lt;char&gt;        &lt;char&gt;     &lt;char&gt;        &lt;char&gt;</span></span>
 <span><span class="co">#&gt; 1:     USDT lending-purchase-001          1000        800          0.05</span></span>
-<span><span class="co">#&gt;    income_size          apply_time status</span></span>
-<span><span class="co">#&gt;         &lt;char&gt;              &lt;POSc&gt; &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1:        3.42 2024-10-23 03:53:26   DONE</span></span>
+<span><span class="co">#&gt;    income_size apply_time status</span></span>
+<span><span class="co">#&gt;         &lt;char&gt;     &lt;POSc&gt; &lt;char&gt;</span></span>
+<span><span class="co">#&gt; 1:        3.42 2026-01-06   DONE</span></span>
 <span><span class="co">#&gt; [1] "lending-redeem-001"</span></span>
 <span><span class="co">#&gt;    currency    purchase_order_no    redeem_order_no redeem_size receipt_size</span></span>
 <span><span class="co">#&gt;      &lt;char&gt;               &lt;char&gt;             &lt;char&gt;      &lt;char&gt;       &lt;char&gt;</span></span>
 <span><span class="co">#&gt; 1:     USDT lending-purchase-001 lending-redeem-001         500          500</span></span>
-<span><span class="co">#&gt;             apply_time status</span></span>
-<span><span class="co">#&gt;                 &lt;POSc&gt; &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1: 2024-10-23 03:53:26   DONE</span></span></code></pre>
+<span><span class="co">#&gt;    apply_time status</span></span>
+<span><span class="co">#&gt;        &lt;POSc&gt; &lt;char&gt;</span></span>
+<span><span class="co">#&gt; 1: 2026-01-06   DONE</span></span></code></pre>
 <hr>
 </div>
 <div class="section level2">

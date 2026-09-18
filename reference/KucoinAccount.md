@@ -276,7 +276,7 @@ Verified: 2026-05-23
         "apiVersion": 3,
         "permission": "General,Spot",
         "ipWhitelist": "198.51.100.42",
-        "createdAt": 1728905969000,
+        "createdAt": 1767571200000,
         "uid": 123456789,
         "isMaster": true
       }
@@ -800,7 +800,7 @@ Verified: 2026-05-23
       "data": {
         "totalAssetOfQuoteCurrency": "5234.67",
         "totalLiabilityOfQuoteCurrency": "1000.00",
-        "timestamp": 1729176273859,
+        "timestamp": 1767571200000,
         "assets": [
           {
             "symbol": "BTC-USDT",
@@ -944,7 +944,7 @@ Verified: 2026-05-23
             "accountType": "TRADE",
             "bizType": "Exchange",
             "direction": "in",
-            "createdAt": 1729176273859,
+            "createdAt": 1767571200000,
             "context": "{\"orderId\":\"670fd33bf9406e0007ab3945\",\"symbol\":\"BTC-USDT\"}"
           },
           {
@@ -1082,7 +1082,7 @@ Verified: 2026-05-23
           "accountType": "TRADE_HF",
           "bizType": "TRADE_EXCHANGE",
           "direction": "in",
-          "createdAt": 1729176273859,
+          "createdAt": 1767571200000,
           "context": "{\"orderId\":\"670fd33bf9406e0007ab3945\",\"symbol\":\"BTC-USDT\"}"
         },
         {

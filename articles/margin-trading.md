@@ -194,9 +194,9 @@ result
     #>            order_no actual_size
     #>              <char>       <num>
     #> 1: borrow-order-001        1000
-    #>           order_no actual_size           timestamp
-    #>             <char>       <num>              <POSc>
-    #> 1: repay-order-001        1000 2024-10-23 03:53:26
+    #>           order_no actual_size  timestamp
+    #>             <char>       <num>     <POSc>
+    #> 1: repay-order-001        1000 2026-01-06
 
 ### Borrow History and Interest
 
@@ -221,14 +221,14 @@ rates
 
     #>            order_no currency principal interest        created_time
     #>              <char>   <char>    <char>   <char>              <POSc>
-    #> 1: borrow-order-001     USDT      1000      0.5 2024-10-23 03:53:26
-    #> 2: borrow-order-002     USDT       500      0.2 2024-10-23 03:55:06
-    #>           order_no currency principal interest        created_time
-    #>             <char>   <char>    <char>   <char>              <POSc>
-    #> 1: repay-order-001     USDT      1000      0.5 2024-10-23 03:53:26
-    #>    currency interest_payment_amount        created_time
-    #>      <char>                  <char>              <POSc>
-    #> 1:     USDT                     0.5 2024-10-23 03:53:26
+    #> 1: borrow-order-001     USDT      1000      0.5 2026-01-06 00:00:00
+    #> 2: borrow-order-002     USDT       500      0.2 2026-01-06 01:00:00
+    #>           order_no currency principal interest created_time
+    #>             <char>   <char>    <char>   <char>       <POSc>
+    #> 1: repay-order-001     USDT      1000      0.5   2026-01-06
+    #>    currency interest_payment_amount created_time
+    #>      <char>                  <char>       <POSc>
+    #> 1:     USDT                     0.5   2026-01-06
     #>    currency hourly_borrow_rate annualized_borrow_rate
     #>      <char>              <num>                  <num>
     #> 1:      BTC            2.1e-05                 0.1839
@@ -360,9 +360,9 @@ redeems
     #> 2:              0.08                 TRUE
     #>            time market_interest_rate
     #>          <char>                <num>
-    #> 1: 202603070000                0.050
-    #> 2: 202603060000                0.048
-    #> 3: 202603050000                0.052
+    #> 1: 202601050000                0.050
+    #> 2: 202601040000                0.048
+    #> 3: 202601030000                0.052
     #> [1] "lending-purchase-001"
     #>    currency    purchase_order_no interest_rate  status
     #>      <char>               <char>         <num>  <char>
@@ -370,16 +370,16 @@ redeems
     #>    currency    purchase_order_no purchase_size match_size interest_rate
     #>      <char>               <char>        <char>     <char>        <char>
     #> 1:     USDT lending-purchase-001          1000        800          0.05
-    #>    income_size          apply_time status
-    #>         <char>              <POSc> <char>
-    #> 1:        3.42 2024-10-23 03:53:26   DONE
+    #>    income_size apply_time status
+    #>         <char>     <POSc> <char>
+    #> 1:        3.42 2026-01-06   DONE
     #> [1] "lending-redeem-001"
     #>    currency    purchase_order_no    redeem_order_no redeem_size receipt_size
     #>      <char>               <char>             <char>      <char>       <char>
     #> 1:     USDT lending-purchase-001 lending-redeem-001         500          500
-    #>             apply_time status
-    #>                 <POSc> <char>
-    #> 1: 2024-10-23 03:53:26   DONE
+    #>    apply_time status
+    #>        <POSc> <char>
+    #> 1: 2026-01-06   DONE
 
 ------------------------------------------------------------------------
 

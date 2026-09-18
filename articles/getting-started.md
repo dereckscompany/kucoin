@@ -46,12 +46,12 @@ ticker <- market$get_ticker(symbol = "BTC-USDT")
 ticker
 ```
 
-    #>                   time      sequence   price      size best_bid best_bid_size
-    #>                 <POSc>        <char>   <num>     <num>    <num>         <num>
-    #> 1: 2024-10-17 10:04:19 1550467636704 67232.9 7.682e-05  67232.8     0.4186184
-    #>    best_ask best_ask_size
-    #>       <num>         <num>
-    #> 1:  67232.9       1.24809
+    #>          time sequence   price  size best_bid best_bid_size best_ask
+    #>        <POSc>   <char>   <num> <num>    <num>         <num>    <num>
+    #> 1: 2026-01-05      100 50000.5 0.001  49999.5           0.5  50000.5
+    #>    best_ask_size
+    #>            <num>
+    #> 1:             1
 
 ### 24hr Statistics
 
@@ -61,12 +61,12 @@ stats <- market$get_24hr_stats(symbol = "BTC-USDT")
 stats
 ```
 
-    #>                   time   symbol     buy    sell change_rate change_price  high
-    #>                 <POSc>   <char>   <num>   <num>       <num>        <num> <num>
-    #> 1: 2024-10-17 10:04:19 BTC-USDT 67232.8 67232.9     -0.0114       -772.1 68100
-    #>      low      vol vol_value    last average_price taker_fee_rate maker_fee_rate
-    #>    <num>    <num>     <num>   <num>         <num>          <num>          <num>
-    #> 1: 66800 3456.789 232456789 67232.9       67450.5          0.001          0.001
+    #>          time   symbol     buy    sell change_rate change_price  high   low
+    #>        <POSc>   <char>   <num>   <num>       <num>        <num> <num> <num>
+    #> 1: 2026-01-05 BTC-USDT 49999.5 50000.5      -0.001          -50 50500 49500
+    #>      vol vol_value    last average_price taker_fee_rate maker_fee_rate
+    #>    <num>     <num>   <num>         <num>          <num>          <num>
+    #> 1:  1000     5e+07 50000.5         50000          0.001          0.001
     #>    taker_coefficient maker_coefficient
     #>                <num>             <num>
     #> 1:                 1                 1
@@ -81,16 +81,16 @@ tickers
 
     #>      symbol symbol_name     buy    sell change_rate change_price  high   low
     #>      <char>      <char>   <num>   <num>       <num>        <num> <num> <num>
-    #> 1: BTC-USDT    BTC-USDT 67232.8 67232.9     -0.0114       -772.1 68100 66800
-    #> 2: ETH-USDT    ETH-USDT  2530.5  2530.8      0.0235         58.2  2560  2470
-    #>          vol vol_value    last average_price taker_fee_rate maker_fee_rate
-    #>        <num>     <num>   <num>         <num>          <num>          <num>
-    #> 1:  3456.789 232456789 67232.9       67450.5          0.001          0.001
-    #> 2: 45678.123 115432000  2530.6        2515.3          0.001          0.001
-    #>                   time
-    #>                 <POSc>
-    #> 1: 2024-10-17 10:04:19
-    #> 2: 2024-10-17 10:04:19
+    #> 1: BTC-USDT    BTC-USDT 49999.5 50000.5      -0.001          -50 50500 49500
+    #> 2: ETH-USDT    ETH-USDT  2999.5  3000.5       0.005           15  3050  2950
+    #>      vol vol_value    last average_price taker_fee_rate maker_fee_rate
+    #>    <num>     <num>   <num>         <num>          <num>          <num>
+    #> 1:  1000   5.0e+07 50000.5         50000          0.001          0.001
+    #> 2:  5000   1.5e+07  3000.5          3000          0.001          0.001
+    #>          time
+    #>        <POSc>
+    #> 1: 2026-01-05
+    #> 2: 2026-01-05
 
 ### Trade History
 
@@ -100,11 +100,11 @@ trades <- market$get_trade_history(symbol = "BTC-USDT")
 trades
 ```
 
-    #>         sequence   side   price      size                time      trade_id
-    #>           <char> <char>   <num>     <num>              <POSc>        <char>
-    #> 1: 1550467636704    buy 67232.9 7.682e-05 2024-10-17 10:04:19 1550467636704
-    #> 2: 1550467636705   sell 67231.5 1.234e-02 2024-10-17 10:04:20 1550467636705
-    #> 3: 1550467636706    buy 67233.0 5.000e-03 2024-10-17 10:04:21 1550467636706
+    #>    sequence   side   price  size                time trade_id
+    #>      <char> <char>   <num> <num>              <POSc>   <char>
+    #> 1:      100    buy 50000.5 0.001 2026-01-05 00:00:00      100
+    #> 2:      101   sell 49999.0 0.010 2026-01-05 00:01:00      101
+    #> 3:      102    buy 50001.0 0.005 2026-01-05 00:02:00      102
 
 ### Partial Orderbook
 
@@ -114,14 +114,14 @@ book <- market$get_part_orderbook(symbol = "BTC-USDT", size = 20)
 book
 ```
 
-    #>                   time      sequence   side level   price      size
-    #>                 <POSc>        <char> <char> <int>   <num>     <num>
-    #> 1: 2024-10-17 10:04:19 1550467636704    bid     1 67232.8 0.4186184
-    #> 2: 2024-10-17 10:04:19 1550467636704    bid     2 67232.5 1.5000000
-    #> 3: 2024-10-17 10:04:19 1550467636704    bid     3 67230.0 0.8000000
-    #> 4: 2024-10-17 10:04:19 1550467636704    ask     1 67232.9 1.2480899
-    #> 5: 2024-10-17 10:04:19 1550467636704    ask     2 67233.5 0.5000000
-    #> 6: 2024-10-17 10:04:19 1550467636704    ask     3 67235.0 2.1000000
+    #>          time sequence   side level   price  size
+    #>        <POSc>   <char> <char> <int>   <num> <num>
+    #> 1: 2026-01-05      100    bid     1 49999.5   0.5
+    #> 2: 2026-01-05      100    bid     2 49999.0   1.5
+    #> 3: 2026-01-05      100    bid     3 49998.0   0.8
+    #> 4: 2026-01-05      100    ask     1 50000.5   1.0
+    #> 5: 2026-01-05      100    ask     2 50001.0   0.5
+    #> 6: 2026-01-05      100    ask     3 50002.0   2.1
 
 ### Klines (Candlestick Data)
 
@@ -136,11 +136,11 @@ klines <- market$get_klines(
 klines
 ```
 
-    #>               datetime     open     high      low    close   volume turnover
-    #>                 <POSc>    <num>    <num>    <num>    <num>    <num>    <num>
-    #> 1: 2025-07-26 12:00:00 117775.9 118221.2 117766.4 118128.9 264.6461 31241540
-    #> 2: 2025-07-26 16:00:00 118129.0 118291.8 117940.3 118227.4 197.8112 23355797
-    #> 3: 2025-07-26 20:00:00 118227.3 118299.3 117880.4 117915.0 252.9352 29854685
+    #>               datetime  open  high   low close volume turnover
+    #>                 <POSc> <num> <num> <num> <num>  <num>    <num>
+    #> 1: 2026-01-05 00:00:00 50000 50200 49900 50100    100  5010000
+    #> 2: 2026-01-05 04:00:00 50100 50300 50000 50250    110  5527500
+    #> 3: 2026-01-05 08:00:00 50250 50400 50100 50350    120  6042000
 
 ### Currency Info
 
@@ -274,7 +274,7 @@ open_orders
     #> 1:       1e-04            0   TRUE          TRUE 5c52e11203aa677f33e493fb
     #>      tags          created_at     last_updated_at
     #>    <char>              <POSc>              <POSc>
-    #> 1:        2024-10-22 06:11:55 2024-10-22 06:11:55
+    #> 1:        2026-01-05 00:05:00 2026-01-05 00:05:30
 
 ------------------------------------------------------------------------
 
@@ -413,8 +413,8 @@ addrs
     #> 2:    TXyz123abcDEF456ghiJKL789mnoPQR012stuVW         TRC20      trx   main
     #>    currency                           contract_address remark chain_name
     #>      <char>                                     <char> <char>     <char>
-    #> 1:     USDT 0xdac17f958d2ee523a2206206994597c13d831ec7             ERC20
-    #> 2:     USDT         TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t             TRC20
+    #> 1:     USDT 0x0000000000000000000000000000000000000002             ERC20
+    #> 2:     USDT         TXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX2             TRC20
     #>    expiration_date
     #>              <int>
     #> 1:               0
@@ -597,8 +597,8 @@ subs
     #> 2: 641e8027df0db80001f1e6bb 169630810  bot-beta      2     0 Futures
     #>    trade_types opened_trade_types     remarks          created_at
     #>         <list>             <list>      <char>              <POSc>
-    #> 1:   <list[1]>          <list[1]> Trading bot 2024-10-17 10:04:19
-    #> 2:   <list[2]>          <list[2]> Futures bot 2024-10-17 10:05:59
+    #> 1:   <list[1]>          <list[1]> Trading bot 2026-01-05 00:00:00
+    #> 2:   <list[2]>          <list[2]> Futures bot 2026-01-05 00:10:00
 
 ------------------------------------------------------------------------
 

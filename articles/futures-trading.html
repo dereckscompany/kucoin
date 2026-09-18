@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,7 +64,7 @@
 Mezquita</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.6.2/vignettes/futures-trading.Rmd" class="external-link"><code>vignettes/futures-trading.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.6.3/vignettes/futures-trading.Rmd" class="external-link"><code>vignettes/futures-trading.Rmd</code></a></small>
       <div class="d-none name"><code>futures-trading.Rmd</code></div>
     </div>
 
@@ -161,9 +161,9 @@ sizes, leverage limits, and fee rates:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ticker</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_ticker</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
 <span><span class="va">ticker</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span><span class="va">symbol</span>, <span class="va">price</span>, <span class="va">best_bid_price</span>, <span class="va">best_ask_price</span>, <span class="va">ts</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;      symbol price best_bid_price best_ask_price                  ts</span></span>
-<span><span class="co">#&gt;      &lt;char&gt; &lt;num&gt;          &lt;num&gt;          &lt;num&gt;              &lt;POSc&gt;</span></span>
-<span><span class="co">#&gt; 1: XBTUSDTM 98250        98249.9        98250.1 2024-10-17 10:04:19</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;      symbol price best_bid_price best_ask_price         ts</span></span>
+<span><span class="co">#&gt;      &lt;char&gt; &lt;num&gt;          &lt;num&gt;          &lt;num&gt;     &lt;POSc&gt;</span></span>
+<span><span class="co">#&gt; 1: XBTUSDTM 98250        98249.9        98250.1 2026-01-05</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="all-tickers">All Tickers<a class="anchor" aria-label="anchor" href="#all-tickers"></a>
@@ -173,8 +173,8 @@ sizes, leverage limits, and fee rates:</p>
 <span><span class="va">tickers</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span><span class="va">symbol</span>, <span class="va">price</span>, <span class="va">ts</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;      symbol    price                  ts</span></span>
 <span><span class="co">#&gt;      &lt;char&gt;    &lt;num&gt;              &lt;POSc&gt;</span></span>
-<span><span class="co">#&gt; 1: XBTUSDTM 98250.00 2024-10-17 10:04:19</span></span>
-<span><span class="co">#&gt; 2: ETHUSDTM  3456.78 2024-10-17 10:04:19</span></span></code></pre>
+<span><span class="co">#&gt; 1: XBTUSDTM 98250.00 2026-01-05 00:00:00</span></span>
+<span><span class="co">#&gt; 2: ETHUSDTM  3456.78 2026-01-05 00:01:00</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="orderbook">Orderbook<a class="anchor" aria-label="anchor" href="#orderbook"></a>
@@ -183,12 +183,12 @@ sizes, leverage limits, and fee rates:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ob</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_part_orderbook</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span>, size <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
 <span><span class="va">ob</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;                     ts sequence   side level   price  size   symbol</span></span>
-<span><span class="co">#&gt;                 &lt;POSc&gt;   &lt;char&gt; &lt;char&gt; &lt;int&gt;   &lt;num&gt; &lt;num&gt;   &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1: 2024-10-17 10:04:19      100    bid     1 98249.9    50 XBTUSDTM</span></span>
-<span><span class="co">#&gt; 2: 2024-10-17 10:04:19      100    bid     2 98249.0   100 XBTUSDTM</span></span>
-<span><span class="co">#&gt; 3: 2024-10-17 10:04:19      100    ask     1 98250.1    30 XBTUSDTM</span></span>
-<span><span class="co">#&gt; 4: 2024-10-17 10:04:19      100    ask     2 98251.0    75 XBTUSDTM</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;            ts sequence   side level   price  size   symbol</span></span>
+<span><span class="co">#&gt;        &lt;POSc&gt;   &lt;char&gt; &lt;char&gt; &lt;int&gt;   &lt;num&gt; &lt;num&gt;   &lt;char&gt;</span></span>
+<span><span class="co">#&gt; 1: 2026-01-05      100    bid     1 98249.9    50 XBTUSDTM</span></span>
+<span><span class="co">#&gt; 2: 2026-01-05      100    bid     2 98249.0   100 XBTUSDTM</span></span>
+<span><span class="co">#&gt; 3: 2026-01-05      100    ask     1 98250.1    30 XBTUSDTM</span></span>
+<span><span class="co">#&gt; 4: 2026-01-05      100    ask     2 98251.0    75 XBTUSDTM</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="trade-history">Trade History<a class="anchor" aria-label="anchor" href="#trade-history"></a>
@@ -198,8 +198,8 @@ sizes, leverage limits, and fee rates:</p>
 <span><span class="va">trades</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span><span class="va">side</span>, <span class="va">price</span>, <span class="va">size</span>, <span class="va">ts</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;      side price  size                  ts</span></span>
 <span><span class="co">#&gt;    &lt;char&gt; &lt;num&gt; &lt;num&gt;              &lt;POSc&gt;</span></span>
-<span><span class="co">#&gt; 1:    buy 98250     1 2024-10-17 10:04:19</span></span>
-<span><span class="co">#&gt; 2:   sell 98251     2 2024-10-17 10:04:19</span></span></code></pre>
+<span><span class="co">#&gt; 1:    buy 98250     1 2026-01-05 00:00:00</span></span>
+<span><span class="co">#&gt; 2:   sell 98251     2 2026-01-05 00:01:00</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="klines-candlesticks">Klines (Candlesticks)<a class="anchor" aria-label="anchor" href="#klines-candlesticks"></a>
@@ -210,9 +210,9 @@ sizes, leverage limits, and fee rates:</p>
 <span><span class="va">klines</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;               datetime  open  high   low close volume turnover</span></span>
 <span><span class="co">#&gt;                 &lt;POSc&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt;  &lt;num&gt;    &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1: 2024-10-17 09:00:00 98100 98300 98000 98250    150 14737500</span></span>
-<span><span class="co">#&gt; 2: 2024-10-17 10:00:00 98250 98400 98200 98350    120 11802000</span></span>
-<span><span class="co">#&gt; 3: 2024-10-17 11:00:00 98350 98500 98300 98450    100  9845000</span></span></code></pre>
+<span><span class="co">#&gt; 1: 2026-01-05 00:00:00 98100 98300 98000 98250    150 14737500</span></span>
+<span><span class="co">#&gt; 2: 2026-01-05 01:00:00 98250 98400 98200 98350    120 11802000</span></span>
+<span><span class="co">#&gt; 3: 2026-01-05 02:00:00 98350 98500 98300 98450    100  9845000</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="mark-price">Mark Price<a class="anchor" aria-label="anchor" href="#mark-price"></a>
@@ -221,9 +221,9 @@ sizes, leverage limits, and fee rates:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mark</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_mark_price</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
 <span><span class="va">mark</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;      symbol granularity          time_point   value index_price</span></span>
-<span><span class="co">#&gt;      &lt;char&gt;       &lt;int&gt;              &lt;POSc&gt;   &lt;num&gt;       &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1: XBTUSDTM        1000 2024-10-17 10:04:19 98252.1    98232.45</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;      symbol granularity time_point   value index_price</span></span>
+<span><span class="co">#&gt;      &lt;char&gt;       &lt;int&gt;     &lt;POSc&gt;   &lt;num&gt;       &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1: XBTUSDTM        1000 2026-01-05 98252.1    98232.45</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="funding-rate">Funding Rate<a class="anchor" aria-label="anchor" href="#funding-rate"></a>
@@ -233,12 +233,12 @@ longs pay shorts; negative means shorts pay longs:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rate</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_funding_rate</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
 <span><span class="va">rate</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;      symbol granularity          time_point value daily_interest_rate</span></span>
-<span><span class="co">#&gt;      &lt;char&gt;       &lt;int&gt;              &lt;POSc&gt; &lt;num&gt;               &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1: XBTUSDTM    28800000 2024-10-17 08:00:00 1e-04               3e-04</span></span>
-<span><span class="co">#&gt;    funding_rate_cap funding_rate_floor period        funding_time</span></span>
-<span><span class="co">#&gt;               &lt;num&gt;              &lt;num&gt;  &lt;int&gt;              &lt;POSc&gt;</span></span>
-<span><span class="co">#&gt; 1:            0.003             -0.003      1 2024-10-17 16:00:00</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;      symbol granularity time_point value daily_interest_rate funding_rate_cap</span></span>
+<span><span class="co">#&gt;      &lt;char&gt;       &lt;int&gt;     &lt;POSc&gt; &lt;num&gt;               &lt;num&gt;            &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1: XBTUSDTM    28800000 2026-01-05 1e-04               3e-04            0.003</span></span>
+<span><span class="co">#&gt;    funding_rate_floor period        funding_time</span></span>
+<span><span class="co">#&gt;                 &lt;num&gt;  &lt;int&gt;              &lt;POSc&gt;</span></span>
+<span><span class="co">#&gt; 1:             -0.003      1 2026-01-05 08:00:00</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="server-time-and-status">Server Time and Status<a class="anchor" aria-label="anchor" href="#server-time-and-status"></a>
@@ -246,9 +246,9 @@ longs pay shorts; negative means shorts pay longs:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">market</span><span class="op">$</span><span class="fu">get_server_time</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">market</span><span class="op">$</span><span class="fu">get_service_status</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;            server_time</span></span>
-<span><span class="co">#&gt;                 &lt;POSc&gt;</span></span>
-<span><span class="co">#&gt; 1: 2024-10-17 10:04:19</span></span>
+<pre><code><span><span class="co">#&gt;    server_time</span></span>
+<span><span class="co">#&gt;         &lt;POSc&gt;</span></span>
+<span><span class="co">#&gt; 1:  2026-01-05</span></span>
 <span><span class="co">#&gt;    status    msg</span></span>
 <span><span class="co">#&gt;    &lt;char&gt; &lt;char&gt;</span></span>
 <span><span class="co">#&gt; 1:   open</span></span></code></pre>
@@ -358,10 +358,10 @@ sending heartbeats:</p>
 <span><span class="va">trading</span><span class="op">$</span><span class="fu">get_dcp</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;    trade_type symbol system_time trigger_time</span></span>
 <span><span class="co">#&gt;        &lt;char&gt; &lt;char&gt;       &lt;num&gt;        &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1:    FUTURES   &lt;NA&gt;  1729159459            0</span></span>
+<span><span class="co">#&gt; 1:    FUTURES   &lt;NA&gt;  1767571200            0</span></span>
 <span><span class="co">#&gt;    timeout symbols current_time</span></span>
 <span><span class="co">#&gt;      &lt;int&gt;  &lt;char&gt;        &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1:       5         1.729159e+12</span></span></code></pre>
+<span><span class="co">#&gt; 1:       5         1.767571e+12</span></span></code></pre>
 <hr>
 </div>
 </div>
@@ -395,12 +395,12 @@ sending heartbeats:</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">history</span> <span class="op">&lt;-</span> <span class="va">account</span><span class="op">$</span><span class="fu">get_positions_history</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">history</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;      symbol settle_currency realised_gross_pnl realised_pnl           open_time</span></span>
-<span><span class="co">#&gt;      &lt;char&gt;          &lt;char&gt;             &lt;char&gt;       &lt;char&gt;              &lt;POSc&gt;</span></span>
-<span><span class="co">#&gt; 1: XBTUSDTM            USDT              10.50        10.25 2024-10-16 17:33:20</span></span>
-<span><span class="co">#&gt;             close_time leverage   type</span></span>
-<span><span class="co">#&gt;                 &lt;POSc&gt;    &lt;int&gt; &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1: 2024-10-17 10:04:19        5  Close</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;      symbol settle_currency realised_gross_pnl realised_pnl  open_time</span></span>
+<span><span class="co">#&gt;      &lt;char&gt;          &lt;char&gt;             &lt;char&gt;       &lt;char&gt;     &lt;POSc&gt;</span></span>
+<span><span class="co">#&gt; 1: XBTUSDTM            USDT              10.50        10.25 2026-01-04</span></span>
+<span><span class="co">#&gt;    close_time leverage   type</span></span>
+<span><span class="co">#&gt;        &lt;POSc&gt;    &lt;int&gt; &lt;char&gt;</span></span>
+<span><span class="co">#&gt; 1: 2026-01-05        5  Close</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="margin-mode">Margin Mode<a class="anchor" aria-label="anchor" href="#margin-mode"></a>
@@ -447,12 +447,12 @@ position size increases:</p>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">funding</span> <span class="op">&lt;-</span> <span class="va">account</span><span class="op">$</span><span class="fu">get_funding_history</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span>
 <span><span class="va">funding</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;       id   symbol          time_point funding_rate mark_price position_qty</span></span>
-<span><span class="co">#&gt;    &lt;int&gt;   &lt;char&gt;              &lt;POSc&gt;        &lt;num&gt;      &lt;int&gt;        &lt;int&gt;</span></span>
-<span><span class="co">#&gt; 1:     1 XBTUSDTM 2024-10-17 08:00:00        1e-04      98250            1</span></span>
-<span><span class="co">#&gt;    position_cost   funding settle_currency</span></span>
-<span><span class="co">#&gt;           &lt;char&gt;    &lt;char&gt;          &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1:         98.25 -0.009825            USDT</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;       id   symbol time_point funding_rate mark_price position_qty position_cost</span></span>
+<span><span class="co">#&gt;    &lt;int&gt;   &lt;char&gt;     &lt;POSc&gt;        &lt;num&gt;      &lt;int&gt;        &lt;int&gt;        &lt;char&gt;</span></span>
+<span><span class="co">#&gt; 1:     1 XBTUSDTM 2026-01-05        1e-04      98250            1         98.25</span></span>
+<span><span class="co">#&gt;      funding settle_currency</span></span>
+<span><span class="co">#&gt;       &lt;char&gt;          &lt;char&gt;</span></span>
+<span><span class="co">#&gt; 1: -0.009825            USDT</span></span></code></pre>
 <hr>
 </div>
 </div>

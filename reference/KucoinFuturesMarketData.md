@@ -189,7 +189,7 @@ Verified: 2026-05-23
         "symbol": "XBTUSDTM",
         "rootSymbol": "USDT",
         "type": "FFWCSX",
-        "firstOpenDate": 1585555200000,
+        "firstOpenDate": 1585699200000,
         "baseCurrency": "XBT",
         "quoteCurrency": "USDT",
         "settleCurrency": "USDT",

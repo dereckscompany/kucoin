@@ -1,5 +1,79 @@
 # Changelog
 
+## kucoin 4.6.3
+
+**Test data is now entirely made up.** In plain English: this package’s
+test fixtures — the canned JSON responses that stand in for the real
+KuCoin API in tests, the README, and the vignettes — were, for most
+endpoints, genuine responses captured from a real KuCoin session on
+2024-10-17 (and a couple of adjacent dates), plus a handful of example
+values lifted verbatim from KuCoin’s own API documentation. That meant
+this public repository shipped a real BTC/ETH market snapshot and a real
+BTC daily-candle sequence from 2025-07-26 that matches true exchange
+history, a Tron withdrawal address that also appears in the sibling
+`binance` package, two real mainnet token-contract addresses (WETH and
+USDT on Ethereum, USDT on Tron), a live-format BTC bech32 address, and
+KuCoin’s own documentation example uid, withdrawal id, masked email, and
+remark text baked into the withdrawal tests. None of that belongs in a
+public repository, however incidental it looked. The fleet rule
+(ratified 2026-07-05, re-ratified 2026-09-17) is that fixtures are
+hand-authored and synthetic from the start — never captured, never
+scrubbed-and-shipped, and never lifted from vendor docs. This release
+brings kucoin into line: every fixture is now invented data on a clean,
+recognisable grid, and the shared mock router’s documentation is
+corrected to stop merely claiming that and actually be that.
+
+- Rewrote every fixture in `tests/testthat/fixtures/*.json` that carried
+  a real-looking value: timestamps across the whole set now sit on one
+  invented clean grid (`2026-01-05T00:00:00Z` = `1767571200000` ms,
+  stepping by minutes/hours/days as each endpoint’s own fields relate to
+  one another — funding-rate cycles keep their real 8-hour granularity,
+  daily announcements keep their real 1-day gap), the spot `klines.json`
+  candle sequence is now three round BTC-~50000 bars instead of the real
+  2025-07-26 117.7k-118.3k history, spot ticker/orderbook/trade-history
+  prices are round (BTC ~50000, ETH ~3000) instead of the captured
+  _(67232/)2530 snapshot, and KuCoin-documentation-style sequence
+  numbers (`1550467636704`) become small patterned ids. Addresses were
+  replaced with obviously-fake but shape-valid placeholders: the Tron
+  withdrawal address and the Tron USDT contract address each become a
+  distinct `TXXX...XXXN` string, the WETH and USDT ERC-20 contract
+  addresses become `0x000...000N`, and the BTC bech32 deposit address
+  becomes `bc1q000...000` — the package has no client-side
+  address-format validator, so no checksum-valid generation was needed.
+  The withdrawal-history KuCoin-doc example values (uid `165111215` →
+  `1000001`, id `67e6515f7960ba0007b42025` → `withdrawal-0002`, the
+  paired `670deec84d64da0007d7c946` → `withdrawal-0001`, the masked
+  `a435*****@gmail.com` → `user@example.com`, and the remark
+  `"this is Remark"` → `"synthetic remark"`) are replaced the same way
+  in both the fixtures/tests and the mirroring Roxygen
+  `@examples`/JSON-response blocks in `R/KucoinWithdrawal.R`,
+  `R/KucoinDeposit.R`, `R/KucoinLending.R`, `R/KucoinMarginTrading.R`,
+  `R/KucoinMarginData.R`, and `R/KucoinFuturesMarketData.R`. No test,
+  vignette, or README asserted a specific captured value that survives
+  this change unaccounted for: the two assertions that did pin a
+  captured number (an orderbook top-of-book price in
+  `test-helpers_parse.R`, a futures-ticker sequence type) were updated
+  alongside their fixtures.
+- Two fixtures needed a follow-up fix beyond the value swap:
+  `futures_ticker.json` and `futures_all_tickers.json` originally
+  carried a `sequence` field so large (`1744931221320`) that it could
+  only ever parse as an R double; replacing it with a small patterned
+  integer silently made it parse as an R integer instead (JSON has no
+  int/double distinction, and R’s JSON round-trip infers integer for any
+  whole number that fits `int32`), tripping the ticker parser’s
+  `assert_double()` contract. Fixed by giving `sequence` a patterned
+  value that is still unambiguously too large for `int32` (`10000000001`
+  / `10000000002`) rather than a small one.
+- Corrected `tests/testthat/mock_router.R`’s header, which said the
+  fixtures were “synthetic but shape-faithful” while several of them
+  were not: it now states plainly that every fixture is authored
+  synthetic data, describes the id/address/timestamp/price conventions
+  used, and cites the fleet fixture-authoring rule.
+- README.md re-rendered from README.Rmd against the new fixtures; no
+  code or column-contract changes, so every printed example now shows
+  the invented BTC/ETH snapshot and candle grid instead of the real
+  2024-10-17 capture.
+
 ## kucoin 4.6.2
 
 **A legal order — post-only with no explicit time-in-force — used to

@@ -275,7 +275,7 @@ Verified: 2026-05-23
         "bankruptPrice": "20012.0",
         "settleCurrency": "USDT",
         "marginMode": "ISOLATED",
-        "openingTimestamp": 1729176273859,
+        "openingTimestamp": 1767571200000,
         "currentTimestamp": 1729176573859
       }
     }
@@ -362,7 +362,7 @@ Verified: 2026-05-23
           "avgEntryPrice": "40008.0",
           "liquidationPrice": "20332.0",
           "marginMode": "ISOLATED",
-          "openingTimestamp": 1729176273859,
+          "openingTimestamp": 1767571200000,
           "currentTimestamp": 1729176573859
         },
         {
@@ -380,7 +380,7 @@ Verified: 2026-05-23
           "avgEntryPrice": "2005.0",
           "liquidationPrice": "1650.0",
           "marginMode": "CROSS",
-          "openingTimestamp": 1729176273859,
+          "openingTimestamp": 1767571200000,
           "currentTimestamp": 1729176573859
         }
       ]
@@ -466,7 +466,7 @@ Verified: 2026-05-23
             "withdrawPnl": "0",
             "tradeFee": "0.155",
             "fundingFee": "0.012",
-            "openTime": 1729176273859,
+            "openTime": 1767571200000,
             "closeTime": 1729262673859,
             "openPrice": "40008.0",
             "closePrice": "40250.0",

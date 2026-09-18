@@ -168,12 +168,12 @@ market$get_ticker(symbol = "BTC-USDT")
 ```
 
 ``` R
-#>                   time      sequence   price      size best_bid best_bid_size
-#>                 <POSc>        <char>   <num>     <num>    <num>         <num>
-#> 1: 2024-10-17 10:04:19 1550467636704 67232.9 7.682e-05  67232.8     0.4186184
-#>    best_ask best_ask_size
-#>       <num>         <num>
-#> 1:  67232.9       1.24809
+#>          time sequence   price  size best_bid best_bid_size best_ask
+#>        <POSc>   <char>   <num> <num>    <num>         <num>    <num>
+#> 1: 2026-01-05      100 50000.5 0.001  49999.5           0.5  50000.5
+#>    best_ask_size
+#>            <num>
+#> 1:             1
 ```
 
 ### 24hr Statistics
@@ -184,12 +184,12 @@ market$get_24hr_stats(symbol = "BTC-USDT")
 ```
 
 ``` R
-#>                   time   symbol     buy    sell change_rate change_price  high
-#>                 <POSc>   <char>   <num>   <num>       <num>        <num> <num>
-#> 1: 2024-10-17 10:04:19 BTC-USDT 67232.8 67232.9     -0.0114       -772.1 68100
-#>      low      vol vol_value    last average_price taker_fee_rate maker_fee_rate
-#>    <num>    <num>     <num>   <num>         <num>          <num>          <num>
-#> 1: 66800 3456.789 232456789 67232.9       67450.5          0.001          0.001
+#>          time   symbol     buy    sell change_rate change_price  high   low
+#>        <POSc>   <char>   <num>   <num>       <num>        <num> <num> <num>
+#> 1: 2026-01-05 BTC-USDT 49999.5 50000.5      -0.001          -50 50500 49500
+#>      vol vol_value    last average_price taker_fee_rate maker_fee_rate
+#>    <num>     <num>   <num>         <num>          <num>          <num>
+#> 1:  1000     5e+07 50000.5         50000          0.001          0.001
 #>    taker_coefficient maker_coefficient
 #>                <num>             <num>
 #> 1:                 1                 1
@@ -208,11 +208,11 @@ market$get_klines(
 ```
 
 ``` R
-#>               datetime     open     high      low    close   volume turnover
-#>                 <POSc>    <num>    <num>    <num>    <num>    <num>    <num>
-#> 1: 2025-07-26 12:00:00 117775.9 118221.2 117766.4 118128.9 264.6461 31241540
-#> 2: 2025-07-26 16:00:00 118129.0 118291.8 117940.3 118227.4 197.8112 23355797
-#> 3: 2025-07-26 20:00:00 118227.3 118299.3 117880.4 117915.0 252.9352 29854685
+#>               datetime  open  high   low close volume turnover
+#>                 <POSc> <num> <num> <num> <num>  <num>    <num>
+#> 1: 2026-01-05 00:00:00 50000 50200 49900 50100    100  5010000
+#> 2: 2026-01-05 04:00:00 50100 50300 50000 50250    110  5527500
+#> 3: 2026-01-05 08:00:00 50250 50400 50100 50350    120  6042000
 ```
 
 ## Trading
@@ -266,7 +266,7 @@ trading$get_open_orders(symbol = "BTC-USDT")
 #> 1:       1e-04            0   TRUE          TRUE 5c52e11203aa677f33e493fb
 #>      tags          created_at     last_updated_at
 #>    <char>              <POSc>              <POSc>
-#> 1:        2024-10-22 06:11:55 2024-10-22 06:11:55
+#> 1:        2026-01-05 00:05:00 2026-01-05 00:05:30
 ```
 
 ## Available Classes
@@ -455,7 +455,7 @@ futures_market$get_contract(symbol = "XBTUSDTM")
 ``` R
 #>      symbol display_symbol root_symbol   type first_open_date expire_date
 #>      <char>         <char>      <char> <char>           <num>      <lgcl>
-#> 1: XBTUSDTM       XBTUSDTM        USDT FFWCSX    1.585555e+12          NA
+#> 1: XBTUSDTM       XBTUSDTM        USDT FFWCSX    1.585699e+12          NA
 #>    settle_date base_currency display_base_currency quote_currency
 #>         <lgcl>        <char>                <char>         <char>
 #> 1:          NA           XBT                   XBT           USDT
@@ -485,13 +485,13 @@ futures_market$get_contract(symbol = "XBTUSDTM")
 #> 1:            0.003             -0.003      1
 #>    effective_funding_rate_cycle_start_time current_funding_rate_granularity
 #>                                      <num>                            <int>
-#> 1:                             1.72913e+12                         28800000
+#> 1:                            1.767571e+12                         28800000
 #>    open_interest turnover_of24h volume_of24h mark_price index_price
 #>            <num>          <num>        <int>      <num>       <num>
 #> 1:         27228       23472918          239    98252.1    98232.45
 #>    last_trade_price next_funding_rate_time next_funding_rate_date_time
 #>               <int>                  <int>                       <num>
-#> 1:            98260               21467281                1.729181e+12
+#> 1:            98260               21467281                  1.7676e+12
 #>    max_leverage    source_exchanges premiums_symbol1_m premiums_symbol8_h
 #>           <int>              <char>             <char>             <char>
 #> 1:          125 okex;binance;kucoin        .XBTUSDTMPI      .XBTUSDTMPI8H
@@ -520,12 +520,12 @@ futures_market$get_ticker(symbol = "XBTUSDTM")
 ```
 
 ``` R
-#>        sequence   symbol   side  size price best_bid_size best_bid_price
-#>           <num>   <char> <char> <num> <num>         <num>          <num>
-#> 1: 1.744931e+12 XBTUSDTM   sell     1 98250            50        98249.9
-#>    best_ask_price best_ask_size         trade_id                  ts
-#>             <num>         <num>           <char>              <POSc>
-#> 1:        98250.1            30 67fd1234abcd5678 2024-10-17 10:04:19
+#>    sequence   symbol   side  size price best_bid_size best_bid_price
+#>       <num>   <char> <char> <num> <num>         <num>          <num>
+#> 1:    1e+10 XBTUSDTM   sell     1 98250            50        98249.9
+#>    best_ask_price best_ask_size           trade_id         ts
+#>             <num>         <num>             <char>     <POSc>
+#> 1:        98250.1            30 futures-trade-0001 2026-01-05
 ```
 
 ### Futures Trading
@@ -568,24 +568,24 @@ futures_account$get_positions()
 #>         id   symbol auto_deposit real_leverage cross_mode delev_percentage
 #>     <char>   <char>       <lgcl>         <int>     <lgcl>            <num>
 #> 1: pos-001 XBTUSDTM        FALSE             5      FALSE              0.5
-#>      opening_timestamp   current_timestamp current_qty current_cost
-#>                 <POSc>              <POSc>       <int>       <char>
-#> 1: 2024-10-17 10:04:19 2024-10-17 10:46:40           1        98.25
-#>    current_comm unrealised_cost realised_gross_cost realised_cost is_open
-#>          <char>          <char>              <char>        <char>  <lgcl>
-#> 1:      0.05895           98.25                   0       0.05895    TRUE
-#>    mark_price mark_value pos_cost pos_cross pos_init pos_comm pos_loss
-#>         <int>     <char>   <char>    <char>   <char>   <char>   <char>
-#> 1:      98350      98.35    98.25         0    19.65  0.07861        0
-#>    pos_margin pos_maint maint_margin realised_gross_pnl realised_pnl
-#>        <char>    <char>       <char>             <char>       <char>
-#> 1:   19.72861    0.4423     19.82861                  0     -0.05895
-#>    unrealised_pnl unrealised_pnl_pcnt avg_entry_price liquidation_price
-#>            <char>               <num>          <char>            <char>
-#> 1:            0.1               0.001         98250.0           79000.0
-#>    bankrupt_price settle_currency margin_mode position_side
-#>            <char>          <char>      <char>        <char>
-#> 1:        78500.0            USDT    ISOLATED          BOTH
+#>      opening_timestamp current_timestamp current_qty current_cost current_comm
+#>                 <POSc>            <POSc>       <int>       <char>       <char>
+#> 1: 2026-01-04 23:30:00        2026-01-05           1        98.25      0.05895
+#>    unrealised_cost realised_gross_cost realised_cost is_open mark_price
+#>             <char>              <char>        <char>  <lgcl>      <int>
+#> 1:           98.25                   0       0.05895    TRUE      98350
+#>    mark_value pos_cost pos_cross pos_init pos_comm pos_loss pos_margin
+#>        <char>   <char>    <char>   <char>   <char>   <char>     <char>
+#> 1:      98.35    98.25         0    19.65  0.07861        0   19.72861
+#>    pos_maint maint_margin realised_gross_pnl realised_pnl unrealised_pnl
+#>       <char>       <char>             <char>       <char>         <char>
+#> 1:    0.4423     19.82861                  0     -0.05895            0.1
+#>    unrealised_pnl_pcnt avg_entry_price liquidation_price bankrupt_price
+#>                  <num>          <char>            <char>         <char>
+#> 1:               0.001         98250.0           79000.0        78500.0
+#>    settle_currency margin_mode position_side
+#>             <char>      <char>        <char>
+#> 1:            USDT    ISOLATED          BOTH
 ```
 
 For full futures documentation see
@@ -628,17 +628,17 @@ while (!later$loop_empty()) {
 ```
 
 ``` R
-#>                   time      sequence   price      size best_bid best_bid_size
-#>                 <POSc>        <char>   <num>     <num>    <num>         <num>
-#> 1: 2024-10-17 10:04:19 1550467636704 67232.9 7.682e-05  67232.8     0.4186184
-#>    best_ask best_ask_size
-#>       <num>         <num>
-#> 1:  67232.9       1.24809
-#>               datetime     open     high      low    close   volume turnover
-#>                 <POSc>    <num>    <num>    <num>    <num>    <num>    <num>
-#> 1: 2025-07-26 12:00:00 117775.9 118221.2 117766.4 118128.9 264.6461 31241540
-#> 2: 2025-07-26 16:00:00 118129.0 118291.8 117940.3 118227.4 197.8112 23355797
-#> 3: 2025-07-26 20:00:00 118227.3 118299.3 117880.4 117915.0 252.9352 29854685
+#>          time sequence   price  size best_bid best_bid_size best_ask
+#>        <POSc>   <char>   <num> <num>    <num>         <num>    <num>
+#> 1: 2026-01-05      100 50000.5 0.001  49999.5           0.5  50000.5
+#>    best_ask_size
+#>            <num>
+#> 1:             1
+#>               datetime  open  high   low close volume turnover
+#>                 <POSc> <num> <num> <num> <num>  <num>    <num>
+#> 1: 2026-01-05 00:00:00 50000 50200 49900 50100    100  5010000
+#> 2: 2026-01-05 04:00:00 50100 50300 50000 50250    110  5527500
+#> 3: 2026-01-05 08:00:00 50250 50400 50100 50350    120  6042000
 ```
 
 ## Sample Data

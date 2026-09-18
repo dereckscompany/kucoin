@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,7 +64,7 @@
 Mezquita</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.6.2/vignettes/getting-started.Rmd" class="external-link"><code>vignettes/getting-started.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.6.3/vignettes/getting-started.Rmd" class="external-link"><code>vignettes/getting-started.Rmd</code></a></small>
       <div class="d-none name"><code>getting-started.Rmd</code></div>
     </div>
 
@@ -108,12 +108,12 @@ market endpoints.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ticker</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_ticker</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"BTC-USDT"</span><span class="op">)</span></span>
 <span><span class="va">ticker</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;                   time      sequence   price      size best_bid best_bid_size</span></span>
-<span><span class="co">#&gt;                 &lt;POSc&gt;        &lt;char&gt;   &lt;num&gt;     &lt;num&gt;    &lt;num&gt;         &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1: 2024-10-17 10:04:19 1550467636704 67232.9 7.682e-05  67232.8     0.4186184</span></span>
-<span><span class="co">#&gt;    best_ask best_ask_size</span></span>
-<span><span class="co">#&gt;       &lt;num&gt;         &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1:  67232.9       1.24809</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;          time sequence   price  size best_bid best_bid_size best_ask</span></span>
+<span><span class="co">#&gt;        &lt;POSc&gt;   &lt;char&gt;   &lt;num&gt; &lt;num&gt;    &lt;num&gt;         &lt;num&gt;    &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1: 2026-01-05      100 50000.5 0.001  49999.5           0.5  50000.5</span></span>
+<span><span class="co">#&gt;    best_ask_size</span></span>
+<span><span class="co">#&gt;            &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1:             1</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="hr-statistics">24hr Statistics<a class="anchor" aria-label="anchor" href="#hr-statistics"></a>
@@ -121,12 +121,12 @@ market endpoints.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">stats</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_24hr_stats</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"BTC-USDT"</span><span class="op">)</span></span>
 <span><span class="va">stats</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;                   time   symbol     buy    sell change_rate change_price  high</span></span>
-<span><span class="co">#&gt;                 &lt;POSc&gt;   &lt;char&gt;   &lt;num&gt;   &lt;num&gt;       &lt;num&gt;        &lt;num&gt; &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1: 2024-10-17 10:04:19 BTC-USDT 67232.8 67232.9     -0.0114       -772.1 68100</span></span>
-<span><span class="co">#&gt;      low      vol vol_value    last average_price taker_fee_rate maker_fee_rate</span></span>
-<span><span class="co">#&gt;    &lt;num&gt;    &lt;num&gt;     &lt;num&gt;   &lt;num&gt;         &lt;num&gt;          &lt;num&gt;          &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1: 66800 3456.789 232456789 67232.9       67450.5          0.001          0.001</span></span>
+<pre><code><span><span class="co">#&gt;          time   symbol     buy    sell change_rate change_price  high   low</span></span>
+<span><span class="co">#&gt;        &lt;POSc&gt;   &lt;char&gt;   &lt;num&gt;   &lt;num&gt;       &lt;num&gt;        &lt;num&gt; &lt;num&gt; &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1: 2026-01-05 BTC-USDT 49999.5 50000.5      -0.001          -50 50500 49500</span></span>
+<span><span class="co">#&gt;      vol vol_value    last average_price taker_fee_rate maker_fee_rate</span></span>
+<span><span class="co">#&gt;    &lt;num&gt;     &lt;num&gt;   &lt;num&gt;         &lt;num&gt;          &lt;num&gt;          &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1:  1000     5e+07 50000.5         50000          0.001          0.001</span></span>
 <span><span class="co">#&gt;    taker_coefficient maker_coefficient</span></span>
 <span><span class="co">#&gt;                &lt;num&gt;             &lt;num&gt;</span></span>
 <span><span class="co">#&gt; 1:                 1                 1</span></span></code></pre>
@@ -139,16 +139,16 @@ market endpoints.</p>
 <span><span class="va">tickers</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;      symbol symbol_name     buy    sell change_rate change_price  high   low</span></span>
 <span><span class="co">#&gt;      &lt;char&gt;      &lt;char&gt;   &lt;num&gt;   &lt;num&gt;       &lt;num&gt;        &lt;num&gt; &lt;num&gt; &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1: BTC-USDT    BTC-USDT 67232.8 67232.9     -0.0114       -772.1 68100 66800</span></span>
-<span><span class="co">#&gt; 2: ETH-USDT    ETH-USDT  2530.5  2530.8      0.0235         58.2  2560  2470</span></span>
-<span><span class="co">#&gt;          vol vol_value    last average_price taker_fee_rate maker_fee_rate</span></span>
-<span><span class="co">#&gt;        &lt;num&gt;     &lt;num&gt;   &lt;num&gt;         &lt;num&gt;          &lt;num&gt;          &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1:  3456.789 232456789 67232.9       67450.5          0.001          0.001</span></span>
-<span><span class="co">#&gt; 2: 45678.123 115432000  2530.6        2515.3          0.001          0.001</span></span>
-<span><span class="co">#&gt;                   time</span></span>
-<span><span class="co">#&gt;                 &lt;POSc&gt;</span></span>
-<span><span class="co">#&gt; 1: 2024-10-17 10:04:19</span></span>
-<span><span class="co">#&gt; 2: 2024-10-17 10:04:19</span></span></code></pre>
+<span><span class="co">#&gt; 1: BTC-USDT    BTC-USDT 49999.5 50000.5      -0.001          -50 50500 49500</span></span>
+<span><span class="co">#&gt; 2: ETH-USDT    ETH-USDT  2999.5  3000.5       0.005           15  3050  2950</span></span>
+<span><span class="co">#&gt;      vol vol_value    last average_price taker_fee_rate maker_fee_rate</span></span>
+<span><span class="co">#&gt;    &lt;num&gt;     &lt;num&gt;   &lt;num&gt;         &lt;num&gt;          &lt;num&gt;          &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1:  1000   5.0e+07 50000.5         50000          0.001          0.001</span></span>
+<span><span class="co">#&gt; 2:  5000   1.5e+07  3000.5          3000          0.001          0.001</span></span>
+<span><span class="co">#&gt;          time</span></span>
+<span><span class="co">#&gt;        &lt;POSc&gt;</span></span>
+<span><span class="co">#&gt; 1: 2026-01-05</span></span>
+<span><span class="co">#&gt; 2: 2026-01-05</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="trade-history">Trade History<a class="anchor" aria-label="anchor" href="#trade-history"></a>
@@ -156,11 +156,11 @@ market endpoints.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">trades</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_trade_history</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"BTC-USDT"</span><span class="op">)</span></span>
 <span><span class="va">trades</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;         sequence   side   price      size                time      trade_id</span></span>
-<span><span class="co">#&gt;           &lt;char&gt; &lt;char&gt;   &lt;num&gt;     &lt;num&gt;              &lt;POSc&gt;        &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1: 1550467636704    buy 67232.9 7.682e-05 2024-10-17 10:04:19 1550467636704</span></span>
-<span><span class="co">#&gt; 2: 1550467636705   sell 67231.5 1.234e-02 2024-10-17 10:04:20 1550467636705</span></span>
-<span><span class="co">#&gt; 3: 1550467636706    buy 67233.0 5.000e-03 2024-10-17 10:04:21 1550467636706</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;    sequence   side   price  size                time trade_id</span></span>
+<span><span class="co">#&gt;      &lt;char&gt; &lt;char&gt;   &lt;num&gt; &lt;num&gt;              &lt;POSc&gt;   &lt;char&gt;</span></span>
+<span><span class="co">#&gt; 1:      100    buy 50000.5 0.001 2026-01-05 00:00:00      100</span></span>
+<span><span class="co">#&gt; 2:      101   sell 49999.0 0.010 2026-01-05 00:01:00      101</span></span>
+<span><span class="co">#&gt; 3:      102    buy 50001.0 0.005 2026-01-05 00:02:00      102</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="partial-orderbook">Partial Orderbook<a class="anchor" aria-label="anchor" href="#partial-orderbook"></a>
@@ -168,14 +168,14 @@ market endpoints.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">book</span> <span class="op">&lt;-</span> <span class="va">market</span><span class="op">$</span><span class="fu">get_part_orderbook</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"BTC-USDT"</span>, size <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
 <span><span class="va">book</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;                   time      sequence   side level   price      size</span></span>
-<span><span class="co">#&gt;                 &lt;POSc&gt;        &lt;char&gt; &lt;char&gt; &lt;int&gt;   &lt;num&gt;     &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1: 2024-10-17 10:04:19 1550467636704    bid     1 67232.8 0.4186184</span></span>
-<span><span class="co">#&gt; 2: 2024-10-17 10:04:19 1550467636704    bid     2 67232.5 1.5000000</span></span>
-<span><span class="co">#&gt; 3: 2024-10-17 10:04:19 1550467636704    bid     3 67230.0 0.8000000</span></span>
-<span><span class="co">#&gt; 4: 2024-10-17 10:04:19 1550467636704    ask     1 67232.9 1.2480899</span></span>
-<span><span class="co">#&gt; 5: 2024-10-17 10:04:19 1550467636704    ask     2 67233.5 0.5000000</span></span>
-<span><span class="co">#&gt; 6: 2024-10-17 10:04:19 1550467636704    ask     3 67235.0 2.1000000</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;          time sequence   side level   price  size</span></span>
+<span><span class="co">#&gt;        &lt;POSc&gt;   &lt;char&gt; &lt;char&gt; &lt;int&gt;   &lt;num&gt; &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1: 2026-01-05      100    bid     1 49999.5   0.5</span></span>
+<span><span class="co">#&gt; 2: 2026-01-05      100    bid     2 49999.0   1.5</span></span>
+<span><span class="co">#&gt; 3: 2026-01-05      100    bid     3 49998.0   0.8</span></span>
+<span><span class="co">#&gt; 4: 2026-01-05      100    ask     1 50000.5   1.0</span></span>
+<span><span class="co">#&gt; 5: 2026-01-05      100    ask     2 50001.0   0.5</span></span>
+<span><span class="co">#&gt; 6: 2026-01-05      100    ask     3 50002.0   2.1</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="klines-candlestick-data">Klines (Candlestick Data)<a class="anchor" aria-label="anchor" href="#klines-candlestick-data"></a>
@@ -188,11 +188,11 @@ market endpoints.</p>
 <span>  to <span class="op">=</span> <span class="fu">ymd_hms</span><span class="op">(</span><span class="st">"2024-10-16 21:00:00"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">klines</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;               datetime     open     high      low    close   volume turnover</span></span>
-<span><span class="co">#&gt;                 &lt;POSc&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1: 2025-07-26 12:00:00 117775.9 118221.2 117766.4 118128.9 264.6461 31241540</span></span>
-<span><span class="co">#&gt; 2: 2025-07-26 16:00:00 118129.0 118291.8 117940.3 118227.4 197.8112 23355797</span></span>
-<span><span class="co">#&gt; 3: 2025-07-26 20:00:00 118227.3 118299.3 117880.4 117915.0 252.9352 29854685</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;               datetime  open  high   low close volume turnover</span></span>
+<span><span class="co">#&gt;                 &lt;POSc&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt;  &lt;num&gt;    &lt;num&gt;</span></span>
+<span><span class="co">#&gt; 1: 2026-01-05 00:00:00 50000 50200 49900 50100    100  5010000</span></span>
+<span><span class="co">#&gt; 2: 2026-01-05 04:00:00 50100 50300 50000 50250    110  5527500</span></span>
+<span><span class="co">#&gt; 3: 2026-01-05 08:00:00 50250 50400 50100 50350    120  6042000</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="currency-info">Currency Info<a class="anchor" aria-label="anchor" href="#currency-info"></a>
@@ -311,7 +311,7 @@ trading endpoints require authentication.</p>
 <span><span class="co">#&gt; 1:       1e-04            0   TRUE          TRUE 5c52e11203aa677f33e493fb</span></span>
 <span><span class="co">#&gt;      tags          created_at     last_updated_at</span></span>
 <span><span class="co">#&gt;    &lt;char&gt;              &lt;POSc&gt;              &lt;POSc&gt;</span></span>
-<span><span class="co">#&gt; 1:        2024-10-22 06:11:55 2024-10-22 06:11:55</span></span></code></pre>
+<span><span class="co">#&gt; 1:        2026-01-05 00:05:00 2026-01-05 00:05:30</span></span></code></pre>
 <hr>
 </div>
 </div>
@@ -424,8 +424,8 @@ automatically.</p>
 <span><span class="co">#&gt; 2:    TXyz123abcDEF456ghiJKL789mnoPQR012stuVW         TRC20      trx   main</span></span>
 <span><span class="co">#&gt;    currency                           contract_address remark chain_name</span></span>
 <span><span class="co">#&gt;      &lt;char&gt;                                     &lt;char&gt; &lt;char&gt;     &lt;char&gt;</span></span>
-<span><span class="co">#&gt; 1:     USDT 0xdac17f958d2ee523a2206206994597c13d831ec7             ERC20</span></span>
-<span><span class="co">#&gt; 2:     USDT         TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t             TRC20</span></span>
+<span><span class="co">#&gt; 1:     USDT 0x0000000000000000000000000000000000000002             ERC20</span></span>
+<span><span class="co">#&gt; 2:     USDT         TXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX2             TRC20</span></span>
 <span><span class="co">#&gt;    expiration_date</span></span>
 <span><span class="co">#&gt;              &lt;int&gt;</span></span>
 <span><span class="co">#&gt; 1:               0</span></span>
@@ -587,8 +587,8 @@ initiate withdrawals, and monitor withdrawal status.</p>
 <span><span class="co">#&gt; 2: 641e8027df0db80001f1e6bb 169630810  bot-beta      2     0 Futures</span></span>
 <span><span class="co">#&gt;    trade_types opened_trade_types     remarks          created_at</span></span>
 <span><span class="co">#&gt;         &lt;list&gt;             &lt;list&gt;      &lt;char&gt;              &lt;POSc&gt;</span></span>
-<span><span class="co">#&gt; 1:   &lt;list[1]&gt;          &lt;list[1]&gt; Trading bot 2024-10-17 10:04:19</span></span>
-<span><span class="co">#&gt; 2:   &lt;list[2]&gt;          &lt;list[2]&gt; Futures bot 2024-10-17 10:05:59</span></span></code></pre>
+<span><span class="co">#&gt; 1:   &lt;list[1]&gt;          &lt;list[1]&gt; Trading bot 2026-01-05 00:00:00</span></span>
+<span><span class="co">#&gt; 2:   &lt;list[2]&gt;          &lt;list[2]&gt; Futures bot 2026-01-05 00:10:00</span></span></code></pre>
 <hr>
 </div>
 </div>

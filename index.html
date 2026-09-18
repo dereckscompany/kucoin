@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -203,24 +203,24 @@
 </h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">market</span><span class="op">$</span><span class="fu">get_ticker</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"BTC-USDT"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co">#&gt;                   time      sequence   price      size best_bid best_bid_size</span></span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co">#&gt;                 &lt;POSc&gt;        &lt;char&gt;   &lt;num&gt;     &lt;num&gt;    &lt;num&gt;         &lt;num&gt;</span></span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co">#&gt; 1: 2024-10-17 10:04:19 1550467636704 67232.9 7.682e-05  67232.8     0.4186184</span></span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co">#&gt;    best_ask best_ask_size</span></span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co">#&gt;       &lt;num&gt;         &lt;num&gt;</span></span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co">#&gt; 1:  67232.9       1.24809</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co">#&gt;          time sequence   price  size best_bid best_bid_size best_ask</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co">#&gt;        &lt;POSc&gt;   &lt;char&gt;   &lt;num&gt; &lt;num&gt;    &lt;num&gt;         &lt;num&gt;    &lt;num&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co">#&gt; 1: 2026-01-05      100 50000.5 0.001  49999.5           0.5  50000.5</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co">#&gt;    best_ask_size</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co">#&gt;            &lt;num&gt;</span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co">#&gt; 1:             1</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="id_24hr-statistics">24hr Statistics<a class="anchor" aria-label="anchor" href="#id_24hr-statistics"></a>
 </h3>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">market</span><span class="op">$</span><span class="fu">get_24hr_stats</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"BTC-USDT"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co">#&gt;                   time   symbol     buy    sell change_rate change_price  high</span></span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#&gt;                 &lt;POSc&gt;   &lt;char&gt;   &lt;num&gt;   &lt;num&gt;       &lt;num&gt;        &lt;num&gt; &lt;num&gt;</span></span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co">#&gt; 1: 2024-10-17 10:04:19 BTC-USDT 67232.8 67232.9     -0.0114       -772.1 68100</span></span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co">#&gt;      low      vol vol_value    last average_price taker_fee_rate maker_fee_rate</span></span>
-<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co">#&gt;    &lt;num&gt;    &lt;num&gt;     &lt;num&gt;   &lt;num&gt;         &lt;num&gt;          &lt;num&gt;          &lt;num&gt;</span></span>
-<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#&gt; 1: 66800 3456.789 232456789 67232.9       67450.5          0.001          0.001</span></span>
+<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co">#&gt;          time   symbol     buy    sell change_rate change_price  high   low</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#&gt;        &lt;POSc&gt;   &lt;char&gt;   &lt;num&gt;   &lt;num&gt;       &lt;num&gt;        &lt;num&gt; &lt;num&gt; &lt;num&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co">#&gt; 1: 2026-01-05 BTC-USDT 49999.5 50000.5      -0.001          -50 50500 49500</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co">#&gt;      vol vol_value    last average_price taker_fee_rate maker_fee_rate</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co">#&gt;    &lt;num&gt;     &lt;num&gt;   &lt;num&gt;         &lt;num&gt;          &lt;num&gt;          &lt;num&gt;</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#&gt; 1:  1000     5e+07 50000.5         50000          0.001          0.001</span></span>
 <span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt;    taker_coefficient maker_coefficient</span></span>
 <span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co">#&gt;                &lt;num&gt;             &lt;num&gt;</span></span>
 <span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co">#&gt; 1:                 1                 1</span></span></code></pre></div>
@@ -235,11 +235,11 @@
 <span>  from <span class="op">=</span> <span class="fu">ymd_hms</span><span class="op">(</span><span class="st">"2025-01-01 00:00:00"</span><span class="op">)</span>,</span>
 <span>  to <span class="op">=</span> <span class="fu">ymd_hms</span><span class="op">(</span><span class="st">"2025-01-02 00:00:00"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co">#&gt;               datetime     open     high      low    close   volume turnover</span></span>
-<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="co">#&gt;                 &lt;POSc&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;</span></span>
-<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="co">#&gt; 1: 2025-07-26 12:00:00 117775.9 118221.2 117766.4 118128.9 264.6461 31241540</span></span>
-<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co">#&gt; 2: 2025-07-26 16:00:00 118129.0 118291.8 117940.3 118227.4 197.8112 23355797</span></span>
-<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co">#&gt; 3: 2025-07-26 20:00:00 118227.3 118299.3 117880.4 117915.0 252.9352 29854685</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co">#&gt;               datetime  open  high   low close volume turnover</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="co">#&gt;                 &lt;POSc&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt;  &lt;num&gt;    &lt;num&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="co">#&gt; 1: 2026-01-05 00:00:00 50000 50200 49900 50100    100  5010000</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co">#&gt; 2: 2026-01-05 04:00:00 50100 50300 50000 50250    110  5527500</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co">#&gt; 3: 2026-01-05 08:00:00 50250 50400 50100 50350    120  6042000</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -282,7 +282,7 @@
 <span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a><span class="co">#&gt; 1:       1e-04            0   TRUE          TRUE 5c52e11203aa677f33e493fb</span></span>
 <span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a><span class="co">#&gt;      tags          created_at     last_updated_at</span></span>
 <span id="cb15-14"><a href="#cb15-14" tabindex="-1"></a><span class="co">#&gt;    &lt;char&gt;              &lt;POSc&gt;              &lt;POSc&gt;</span></span>
-<span id="cb15-15"><a href="#cb15-15" tabindex="-1"></a><span class="co">#&gt; 1:        2024-10-22 06:11:55 2024-10-22 06:11:55</span></span></code></pre></div>
+<span id="cb15-15"><a href="#cb15-15" tabindex="-1"></a><span class="co">#&gt; 1:        2026-01-05 00:05:00 2026-01-05 00:05:30</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -488,7 +488,7 @@
 <code class="sourceCode R"><span><span class="va">futures_market</span><span class="op">$</span><span class="fu">get_contract</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb31"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="co">#&gt;      symbol display_symbol root_symbol   type first_open_date expire_date</span></span>
 <span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a><span class="co">#&gt;      &lt;char&gt;         &lt;char&gt;      &lt;char&gt; &lt;char&gt;           &lt;num&gt;      &lt;lgcl&gt;</span></span>
-<span id="cb31-3"><a href="#cb31-3" tabindex="-1"></a><span class="co">#&gt; 1: XBTUSDTM       XBTUSDTM        USDT FFWCSX    1.585555e+12          NA</span></span>
+<span id="cb31-3"><a href="#cb31-3" tabindex="-1"></a><span class="co">#&gt; 1: XBTUSDTM       XBTUSDTM        USDT FFWCSX    1.585699e+12          NA</span></span>
 <span id="cb31-4"><a href="#cb31-4" tabindex="-1"></a><span class="co">#&gt;    settle_date base_currency display_base_currency quote_currency</span></span>
 <span id="cb31-5"><a href="#cb31-5" tabindex="-1"></a><span class="co">#&gt;         &lt;lgcl&gt;        &lt;char&gt;                &lt;char&gt;         &lt;char&gt;</span></span>
 <span id="cb31-6"><a href="#cb31-6" tabindex="-1"></a><span class="co">#&gt; 1:          NA           XBT                   XBT           USDT</span></span>
@@ -518,13 +518,13 @@
 <span id="cb31-30"><a href="#cb31-30" tabindex="-1"></a><span class="co">#&gt; 1:            0.003             -0.003      1</span></span>
 <span id="cb31-31"><a href="#cb31-31" tabindex="-1"></a><span class="co">#&gt;    effective_funding_rate_cycle_start_time current_funding_rate_granularity</span></span>
 <span id="cb31-32"><a href="#cb31-32" tabindex="-1"></a><span class="co">#&gt;                                      &lt;num&gt;                            &lt;int&gt;</span></span>
-<span id="cb31-33"><a href="#cb31-33" tabindex="-1"></a><span class="co">#&gt; 1:                             1.72913e+12                         28800000</span></span>
+<span id="cb31-33"><a href="#cb31-33" tabindex="-1"></a><span class="co">#&gt; 1:                            1.767571e+12                         28800000</span></span>
 <span id="cb31-34"><a href="#cb31-34" tabindex="-1"></a><span class="co">#&gt;    open_interest turnover_of24h volume_of24h mark_price index_price</span></span>
 <span id="cb31-35"><a href="#cb31-35" tabindex="-1"></a><span class="co">#&gt;            &lt;num&gt;          &lt;num&gt;        &lt;int&gt;      &lt;num&gt;       &lt;num&gt;</span></span>
 <span id="cb31-36"><a href="#cb31-36" tabindex="-1"></a><span class="co">#&gt; 1:         27228       23472918          239    98252.1    98232.45</span></span>
 <span id="cb31-37"><a href="#cb31-37" tabindex="-1"></a><span class="co">#&gt;    last_trade_price next_funding_rate_time next_funding_rate_date_time</span></span>
 <span id="cb31-38"><a href="#cb31-38" tabindex="-1"></a><span class="co">#&gt;               &lt;int&gt;                  &lt;int&gt;                       &lt;num&gt;</span></span>
-<span id="cb31-39"><a href="#cb31-39" tabindex="-1"></a><span class="co">#&gt; 1:            98260               21467281                1.729181e+12</span></span>
+<span id="cb31-39"><a href="#cb31-39" tabindex="-1"></a><span class="co">#&gt; 1:            98260               21467281                  1.7676e+12</span></span>
 <span id="cb31-40"><a href="#cb31-40" tabindex="-1"></a><span class="co">#&gt;    max_leverage    source_exchanges premiums_symbol1_m premiums_symbol8_h</span></span>
 <span id="cb31-41"><a href="#cb31-41" tabindex="-1"></a><span class="co">#&gt;           &lt;int&gt;              &lt;char&gt;             &lt;char&gt;             &lt;char&gt;</span></span>
 <span id="cb31-42"><a href="#cb31-42" tabindex="-1"></a><span class="co">#&gt; 1:          125 okex;binance;kucoin        .XBTUSDTMPI      .XBTUSDTMPI8H</span></span>
@@ -549,12 +549,12 @@
 </h4>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">futures_market</span><span class="op">$</span><span class="fu">get_ticker</span><span class="op">(</span>symbol <span class="op">=</span> <span class="st">"XBTUSDTM"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb33"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="co">#&gt;        sequence   symbol   side  size price best_bid_size best_bid_price</span></span>
-<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a><span class="co">#&gt;           &lt;num&gt;   &lt;char&gt; &lt;char&gt; &lt;num&gt; &lt;num&gt;         &lt;num&gt;          &lt;num&gt;</span></span>
-<span id="cb33-3"><a href="#cb33-3" tabindex="-1"></a><span class="co">#&gt; 1: 1.744931e+12 XBTUSDTM   sell     1 98250            50        98249.9</span></span>
-<span id="cb33-4"><a href="#cb33-4" tabindex="-1"></a><span class="co">#&gt;    best_ask_price best_ask_size         trade_id                  ts</span></span>
-<span id="cb33-5"><a href="#cb33-5" tabindex="-1"></a><span class="co">#&gt;             &lt;num&gt;         &lt;num&gt;           &lt;char&gt;              &lt;POSc&gt;</span></span>
-<span id="cb33-6"><a href="#cb33-6" tabindex="-1"></a><span class="co">#&gt; 1:        98250.1            30 67fd1234abcd5678 2024-10-17 10:04:19</span></span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="co">#&gt;    sequence   symbol   side  size price best_bid_size best_bid_price</span></span>
+<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a><span class="co">#&gt;       &lt;num&gt;   &lt;char&gt; &lt;char&gt; &lt;num&gt; &lt;num&gt;         &lt;num&gt;          &lt;num&gt;</span></span>
+<span id="cb33-3"><a href="#cb33-3" tabindex="-1"></a><span class="co">#&gt; 1:    1e+10 XBTUSDTM   sell     1 98250            50        98249.9</span></span>
+<span id="cb33-4"><a href="#cb33-4" tabindex="-1"></a><span class="co">#&gt;    best_ask_price best_ask_size           trade_id         ts</span></span>
+<span id="cb33-5"><a href="#cb33-5" tabindex="-1"></a><span class="co">#&gt;             &lt;num&gt;         &lt;num&gt;             &lt;char&gt;     &lt;POSc&gt;</span></span>
+<span id="cb33-6"><a href="#cb33-6" tabindex="-1"></a><span class="co">#&gt; 1:        98250.1            30 futures-trade-0001 2026-01-05</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level3">
@@ -588,24 +588,24 @@
 <div class="sourceCode" id="cb38"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" tabindex="-1"></a><span class="co">#&gt;         id   symbol auto_deposit real_leverage cross_mode delev_percentage</span></span>
 <span id="cb38-2"><a href="#cb38-2" tabindex="-1"></a><span class="co">#&gt;     &lt;char&gt;   &lt;char&gt;       &lt;lgcl&gt;         &lt;int&gt;     &lt;lgcl&gt;            &lt;num&gt;</span></span>
 <span id="cb38-3"><a href="#cb38-3" tabindex="-1"></a><span class="co">#&gt; 1: pos-001 XBTUSDTM        FALSE             5      FALSE              0.5</span></span>
-<span id="cb38-4"><a href="#cb38-4" tabindex="-1"></a><span class="co">#&gt;      opening_timestamp   current_timestamp current_qty current_cost</span></span>
-<span id="cb38-5"><a href="#cb38-5" tabindex="-1"></a><span class="co">#&gt;                 &lt;POSc&gt;              &lt;POSc&gt;       &lt;int&gt;       &lt;char&gt;</span></span>
-<span id="cb38-6"><a href="#cb38-6" tabindex="-1"></a><span class="co">#&gt; 1: 2024-10-17 10:04:19 2024-10-17 10:46:40           1        98.25</span></span>
-<span id="cb38-7"><a href="#cb38-7" tabindex="-1"></a><span class="co">#&gt;    current_comm unrealised_cost realised_gross_cost realised_cost is_open</span></span>
-<span id="cb38-8"><a href="#cb38-8" tabindex="-1"></a><span class="co">#&gt;          &lt;char&gt;          &lt;char&gt;              &lt;char&gt;        &lt;char&gt;  &lt;lgcl&gt;</span></span>
-<span id="cb38-9"><a href="#cb38-9" tabindex="-1"></a><span class="co">#&gt; 1:      0.05895           98.25                   0       0.05895    TRUE</span></span>
-<span id="cb38-10"><a href="#cb38-10" tabindex="-1"></a><span class="co">#&gt;    mark_price mark_value pos_cost pos_cross pos_init pos_comm pos_loss</span></span>
-<span id="cb38-11"><a href="#cb38-11" tabindex="-1"></a><span class="co">#&gt;         &lt;int&gt;     &lt;char&gt;   &lt;char&gt;    &lt;char&gt;   &lt;char&gt;   &lt;char&gt;   &lt;char&gt;</span></span>
-<span id="cb38-12"><a href="#cb38-12" tabindex="-1"></a><span class="co">#&gt; 1:      98350      98.35    98.25         0    19.65  0.07861        0</span></span>
-<span id="cb38-13"><a href="#cb38-13" tabindex="-1"></a><span class="co">#&gt;    pos_margin pos_maint maint_margin realised_gross_pnl realised_pnl</span></span>
-<span id="cb38-14"><a href="#cb38-14" tabindex="-1"></a><span class="co">#&gt;        &lt;char&gt;    &lt;char&gt;       &lt;char&gt;             &lt;char&gt;       &lt;char&gt;</span></span>
-<span id="cb38-15"><a href="#cb38-15" tabindex="-1"></a><span class="co">#&gt; 1:   19.72861    0.4423     19.82861                  0     -0.05895</span></span>
-<span id="cb38-16"><a href="#cb38-16" tabindex="-1"></a><span class="co">#&gt;    unrealised_pnl unrealised_pnl_pcnt avg_entry_price liquidation_price</span></span>
-<span id="cb38-17"><a href="#cb38-17" tabindex="-1"></a><span class="co">#&gt;            &lt;char&gt;               &lt;num&gt;          &lt;char&gt;            &lt;char&gt;</span></span>
-<span id="cb38-18"><a href="#cb38-18" tabindex="-1"></a><span class="co">#&gt; 1:            0.1               0.001         98250.0           79000.0</span></span>
-<span id="cb38-19"><a href="#cb38-19" tabindex="-1"></a><span class="co">#&gt;    bankrupt_price settle_currency margin_mode position_side</span></span>
-<span id="cb38-20"><a href="#cb38-20" tabindex="-1"></a><span class="co">#&gt;            &lt;char&gt;          &lt;char&gt;      &lt;char&gt;        &lt;char&gt;</span></span>
-<span id="cb38-21"><a href="#cb38-21" tabindex="-1"></a><span class="co">#&gt; 1:        78500.0            USDT    ISOLATED          BOTH</span></span></code></pre></div>
+<span id="cb38-4"><a href="#cb38-4" tabindex="-1"></a><span class="co">#&gt;      opening_timestamp current_timestamp current_qty current_cost current_comm</span></span>
+<span id="cb38-5"><a href="#cb38-5" tabindex="-1"></a><span class="co">#&gt;                 &lt;POSc&gt;            &lt;POSc&gt;       &lt;int&gt;       &lt;char&gt;       &lt;char&gt;</span></span>
+<span id="cb38-6"><a href="#cb38-6" tabindex="-1"></a><span class="co">#&gt; 1: 2026-01-04 23:30:00        2026-01-05           1        98.25      0.05895</span></span>
+<span id="cb38-7"><a href="#cb38-7" tabindex="-1"></a><span class="co">#&gt;    unrealised_cost realised_gross_cost realised_cost is_open mark_price</span></span>
+<span id="cb38-8"><a href="#cb38-8" tabindex="-1"></a><span class="co">#&gt;             &lt;char&gt;              &lt;char&gt;        &lt;char&gt;  &lt;lgcl&gt;      &lt;int&gt;</span></span>
+<span id="cb38-9"><a href="#cb38-9" tabindex="-1"></a><span class="co">#&gt; 1:           98.25                   0       0.05895    TRUE      98350</span></span>
+<span id="cb38-10"><a href="#cb38-10" tabindex="-1"></a><span class="co">#&gt;    mark_value pos_cost pos_cross pos_init pos_comm pos_loss pos_margin</span></span>
+<span id="cb38-11"><a href="#cb38-11" tabindex="-1"></a><span class="co">#&gt;        &lt;char&gt;   &lt;char&gt;    &lt;char&gt;   &lt;char&gt;   &lt;char&gt;   &lt;char&gt;     &lt;char&gt;</span></span>
+<span id="cb38-12"><a href="#cb38-12" tabindex="-1"></a><span class="co">#&gt; 1:      98.35    98.25         0    19.65  0.07861        0   19.72861</span></span>
+<span id="cb38-13"><a href="#cb38-13" tabindex="-1"></a><span class="co">#&gt;    pos_maint maint_margin realised_gross_pnl realised_pnl unrealised_pnl</span></span>
+<span id="cb38-14"><a href="#cb38-14" tabindex="-1"></a><span class="co">#&gt;       &lt;char&gt;       &lt;char&gt;             &lt;char&gt;       &lt;char&gt;         &lt;char&gt;</span></span>
+<span id="cb38-15"><a href="#cb38-15" tabindex="-1"></a><span class="co">#&gt; 1:    0.4423     19.82861                  0     -0.05895            0.1</span></span>
+<span id="cb38-16"><a href="#cb38-16" tabindex="-1"></a><span class="co">#&gt;    unrealised_pnl_pcnt avg_entry_price liquidation_price bankrupt_price</span></span>
+<span id="cb38-17"><a href="#cb38-17" tabindex="-1"></a><span class="co">#&gt;                  &lt;num&gt;          &lt;char&gt;            &lt;char&gt;         &lt;char&gt;</span></span>
+<span id="cb38-18"><a href="#cb38-18" tabindex="-1"></a><span class="co">#&gt; 1:               0.001         98250.0           79000.0        78500.0</span></span>
+<span id="cb38-19"><a href="#cb38-19" tabindex="-1"></a><span class="co">#&gt;    settle_currency margin_mode position_side</span></span>
+<span id="cb38-20"><a href="#cb38-20" tabindex="-1"></a><span class="co">#&gt;             &lt;char&gt;      &lt;char&gt;        &lt;char&gt;</span></span>
+<span id="cb38-21"><a href="#cb38-21" tabindex="-1"></a><span class="co">#&gt; 1:            USDT    ISOLATED          BOTH</span></span></code></pre></div>
 <p>For full futures documentation see <code><a href="articles/futures-trading.html">vignette("futures-trading")</a></code>.</p>
 </div>
 </div>
@@ -634,17 +634,17 @@
 <span><span class="kw">while</span> <span class="op">(</span><span class="op">!</span><span class="va">later</span><span class="op">$</span><span class="fu">loop_empty</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">later</span><span class="op">$</span><span class="fu">run_now</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<div class="sourceCode" id="cb40"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a><span class="co">#&gt;                   time      sequence   price      size best_bid best_bid_size</span></span>
-<span id="cb40-2"><a href="#cb40-2" tabindex="-1"></a><span class="co">#&gt;                 &lt;POSc&gt;        &lt;char&gt;   &lt;num&gt;     &lt;num&gt;    &lt;num&gt;         &lt;num&gt;</span></span>
-<span id="cb40-3"><a href="#cb40-3" tabindex="-1"></a><span class="co">#&gt; 1: 2024-10-17 10:04:19 1550467636704 67232.9 7.682e-05  67232.8     0.4186184</span></span>
-<span id="cb40-4"><a href="#cb40-4" tabindex="-1"></a><span class="co">#&gt;    best_ask best_ask_size</span></span>
-<span id="cb40-5"><a href="#cb40-5" tabindex="-1"></a><span class="co">#&gt;       &lt;num&gt;         &lt;num&gt;</span></span>
-<span id="cb40-6"><a href="#cb40-6" tabindex="-1"></a><span class="co">#&gt; 1:  67232.9       1.24809</span></span>
-<span id="cb40-7"><a href="#cb40-7" tabindex="-1"></a><span class="co">#&gt;               datetime     open     high      low    close   volume turnover</span></span>
-<span id="cb40-8"><a href="#cb40-8" tabindex="-1"></a><span class="co">#&gt;                 &lt;POSc&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;</span></span>
-<span id="cb40-9"><a href="#cb40-9" tabindex="-1"></a><span class="co">#&gt; 1: 2025-07-26 12:00:00 117775.9 118221.2 117766.4 118128.9 264.6461 31241540</span></span>
-<span id="cb40-10"><a href="#cb40-10" tabindex="-1"></a><span class="co">#&gt; 2: 2025-07-26 16:00:00 118129.0 118291.8 117940.3 118227.4 197.8112 23355797</span></span>
-<span id="cb40-11"><a href="#cb40-11" tabindex="-1"></a><span class="co">#&gt; 3: 2025-07-26 20:00:00 118227.3 118299.3 117880.4 117915.0 252.9352 29854685</span></span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a><span class="co">#&gt;          time sequence   price  size best_bid best_bid_size best_ask</span></span>
+<span id="cb40-2"><a href="#cb40-2" tabindex="-1"></a><span class="co">#&gt;        &lt;POSc&gt;   &lt;char&gt;   &lt;num&gt; &lt;num&gt;    &lt;num&gt;         &lt;num&gt;    &lt;num&gt;</span></span>
+<span id="cb40-3"><a href="#cb40-3" tabindex="-1"></a><span class="co">#&gt; 1: 2026-01-05      100 50000.5 0.001  49999.5           0.5  50000.5</span></span>
+<span id="cb40-4"><a href="#cb40-4" tabindex="-1"></a><span class="co">#&gt;    best_ask_size</span></span>
+<span id="cb40-5"><a href="#cb40-5" tabindex="-1"></a><span class="co">#&gt;            &lt;num&gt;</span></span>
+<span id="cb40-6"><a href="#cb40-6" tabindex="-1"></a><span class="co">#&gt; 1:             1</span></span>
+<span id="cb40-7"><a href="#cb40-7" tabindex="-1"></a><span class="co">#&gt;               datetime  open  high   low close volume turnover</span></span>
+<span id="cb40-8"><a href="#cb40-8" tabindex="-1"></a><span class="co">#&gt;                 &lt;POSc&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt;  &lt;num&gt;    &lt;num&gt;</span></span>
+<span id="cb40-9"><a href="#cb40-9" tabindex="-1"></a><span class="co">#&gt; 1: 2026-01-05 00:00:00 50000 50200 49900 50100    100  5010000</span></span>
+<span id="cb40-10"><a href="#cb40-10" tabindex="-1"></a><span class="co">#&gt; 2: 2026-01-05 04:00:00 50100 50300 50000 50250    110  5527500</span></span>
+<span id="cb40-11"><a href="#cb40-11" tabindex="-1"></a><span class="co">#&gt; 3: 2026-01-05 08:00:00 50250 50400 50100 50350    120  6042000</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="sample-data">Sample Data<a class="anchor" aria-label="anchor" href="#sample-data"></a>

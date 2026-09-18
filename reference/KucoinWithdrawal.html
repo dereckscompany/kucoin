@@ -9,7 +9,7 @@ KucoinWithdrawal: Withdrawal Management"></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,7 @@ KucoinWithdrawal: Withdrawal Management"></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>KucoinWithdrawal: Withdrawal Management</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.6.2/R/KucoinWithdrawal.R" class="external-link"><code>R/KucoinWithdrawal.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.6.3/R/KucoinWithdrawal.R" class="external-link"><code>R/KucoinWithdrawal.R</code></a></small>
       <div class="d-none name"><code>KucoinWithdrawal.Rd</code></div>
     </div>
 
@@ -160,7 +160,7 @@ network.</p></li>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-PASSPHRASE: your-passphrase'</span> \</span>
 <span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-KEY-VERSION: 2'</span> \</span>
 <span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  <span class="sc">--</span>data<span class="sc">-</span>raw \</span>
-<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>  <span class="st">'{"currency":"USDT","toAddress":"TKFRQXSDcY4kd3QLzw7uK16GmLrjJggwX8","amount":"10","withdrawType":"ADDRESS",</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>  <span class="st">'{"currency":"USDT","toAddress":"TXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX1","amount":"10","withdrawType":"ADDRESS",</span></span>
 <span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="st">  "chain":"trx"}'</span></span></code></pre><p></p></div>
 </div>
 
@@ -171,7 +171,7 @@ network.</p></li>
 <p></p><div class="sourceCode json"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="dt">"code"</span><span class="fu">:</span> <span class="st">"200000"</span><span class="fu">,</span></span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="dt">"data"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>    <span class="dt">"withdrawalId"</span><span class="fu">:</span> <span class="st">"670deec84d64da0007d7c946"</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>    <span class="dt">"withdrawalId"</span><span class="fu">:</span> <span class="st">"withdrawal-0001"</span></span>
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="fu">}</span></span>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="fu">}</span></span></code></pre><p></p></div>
 </div>
@@ -253,7 +253,7 @@ withdrawal &lt;- KucoinWithdrawal$new()
 # Withdraw USDT via TRC20
 result &lt;- withdrawal$add_withdrawal(
   currency = "USDT",
-  toAddress = "TKFRQXSDcY4kd3QLzw7uK16GmLrjJggwX8",
+  toAddress = "TXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX1",
   amount = "10",
   withdrawType = "ADDRESS",
   chain = "trx"
@@ -313,7 +313,7 @@ or later, it cannot be reversed.</p><div class="section">
 
 
 <p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>curl <span class="sc">--</span>location <span class="sc">--</span>request DELETE \</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="st">'https://api.kucoin.com/api/v1/withdrawals/670deec84d64da0007d7c946'</span> \</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="st">'https://api.kucoin.com/api/v1/withdrawals/withdrawal-0001'</span> \</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-KEY: your-api-key'</span> \</span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-SIGN: your-signature'</span> \</span>
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-TIMESTAMP: 1729176273859'</span> \</span>
@@ -356,7 +356,7 @@ successful cancel):</p><ul><li><p>withdrawal_id (character) the cancelled withdr
 withdrawal &lt;- KucoinWithdrawal$new()
 
 # Cancel a pending withdrawal
-result &lt;- withdrawal$cancel_withdrawal("670deec84d64da0007d7c946")
+result &lt;- withdrawal$cancel_withdrawal("withdrawal-0001")
 print(result$withdrawal_id)
 }
 </code></pre></div><p></p></div>
@@ -566,14 +566,14 @@ to POSIXct for convenient analysis.</p><div class="section">
 <span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>        <span class="dt">"currency"</span><span class="fu">:</span> <span class="st">"USDT"</span><span class="fu">,</span></span>
 <span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>        <span class="dt">"chain"</span><span class="fu">:</span> <span class="st">""</span><span class="fu">,</span></span>
 <span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>        <span class="dt">"status"</span><span class="fu">:</span> <span class="st">"SUCCESS"</span><span class="fu">,</span></span>
-<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>        <span class="dt">"address"</span><span class="fu">:</span> <span class="st">"a435*****@gmail.com"</span><span class="fu">,</span></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>        <span class="dt">"address"</span><span class="fu">:</span> <span class="st">"user@example.com"</span><span class="fu">,</span></span>
 <span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>        <span class="dt">"memo"</span><span class="fu">:</span> <span class="st">""</span><span class="fu">,</span></span>
 <span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>        <span class="dt">"isInner"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
 <span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>        <span class="dt">"amount"</span><span class="fu">:</span> <span class="st">"1.00000000"</span><span class="fu">,</span></span>
 <span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a>        <span class="dt">"fee"</span><span class="fu">:</span> <span class="st">"0.00000000"</span><span class="fu">,</span></span>
 <span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a>        <span class="dt">"walletTxId"</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
-<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>        <span class="dt">"createdAt"</span><span class="fu">:</span> <span class="dv">1728555875000</span><span class="fu">,</span></span>
-<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a>        <span class="dt">"updatedAt"</span><span class="fu">:</span> <span class="dv">1728555875000</span><span class="fu">,</span></span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>        <span class="dt">"createdAt"</span><span class="fu">:</span> <span class="dv">1767312000000</span><span class="fu">,</span></span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a>        <span class="dt">"updatedAt"</span><span class="fu">:</span> <span class="dv">1767312000000</span><span class="fu">,</span></span>
 <span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a>        <span class="dt">"remark"</span><span class="fu">:</span> <span class="st">""</span><span class="fu">,</span></span>
 <span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a>        <span class="dt">"arrears"</span><span class="fu">:</span> <span class="kw">false</span></span>
 <span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a>      <span class="fu">}</span></span>
@@ -704,7 +704,7 @@ withdrawal can still be cancelled.</p></li>
 
 
 <p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>curl <span class="sc">--</span>location <span class="sc">--</span>request GET \</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="st">'https://api.kucoin.com/api/v1/withdrawals/670deec84d64da0007d7c946'</span> \</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="st">'https://api.kucoin.com/api/v1/withdrawals/withdrawal-0001'</span> \</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-KEY: your-api-key'</span> \</span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-SIGN: your-signature'</span> \</span>
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="sc">--</span>header <span class="st">'KC-API-TIMESTAMP: 1729176273859'</span> \</span>
@@ -719,18 +719,18 @@ withdrawal can still be cancelled.</p></li>
 <p></p><div class="sourceCode json"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="dt">"code"</span><span class="fu">:</span> <span class="st">"200000"</span><span class="fu">,</span></span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="dt">"data"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>    <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"67e6515f7960ba0007b42025"</span><span class="fu">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>    <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"withdrawal-0002"</span><span class="fu">,</span></span>
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>    <span class="dt">"currency"</span><span class="fu">:</span> <span class="st">"USDT"</span><span class="fu">,</span></span>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>    <span class="dt">"chainId"</span><span class="fu">:</span> <span class="st">"trx"</span><span class="fu">,</span></span>
 <span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>    <span class="dt">"chainName"</span><span class="fu">:</span> <span class="st">"TRC20"</span><span class="fu">,</span></span>
 <span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>    <span class="dt">"status"</span><span class="fu">:</span> <span class="st">"SUCCESS"</span><span class="fu">,</span></span>
-<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>    <span class="dt">"address"</span><span class="fu">:</span> <span class="st">"TKFRQXSDcY4kd3QLzw7uK16GmLrjJggwX8"</span><span class="fu">,</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>    <span class="dt">"address"</span><span class="fu">:</span> <span class="st">"TXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX1"</span><span class="fu">,</span></span>
 <span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>    <span class="dt">"memo"</span><span class="fu">:</span> <span class="st">""</span><span class="fu">,</span></span>
 <span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>    <span class="dt">"isInner"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
 <span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>    <span class="dt">"amount"</span><span class="fu">:</span> <span class="st">"3.00000000"</span><span class="fu">,</span></span>
 <span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>    <span class="dt">"fee"</span><span class="fu">:</span> <span class="st">"0.00000000"</span><span class="fu">,</span></span>
 <span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>    <span class="dt">"walletTxId"</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
-<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>    <span class="dt">"createdAt"</span><span class="fu">:</span> <span class="dv">1743147359000</span><span class="fu">,</span></span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>    <span class="dt">"createdAt"</span><span class="fu">:</span> <span class="dv">1767398400000</span><span class="fu">,</span></span>
 <span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>    <span class="dt">"cancelType"</span><span class="fu">:</span> <span class="st">"NON_CANCELABLE"</span></span>
 <span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a>  <span class="fu">}</span></span>
 <span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a><span class="fu">}</span></span></code></pre><p></p></div>
@@ -786,7 +786,7 @@ POSIXct:</p><ul><li><p>id (character) the record identifier.</p></li>
 withdrawal &lt;- KucoinWithdrawal$new()
 
 # Get withdrawal details
-detail &lt;- withdrawal$get_withdrawal_by_id("670deec84d64da0007d7c946")
+detail &lt;- withdrawal$get_withdrawal_by_id("withdrawal-0001")
 print(detail[, .(id, currency, status, amount, cancel_type)])
 
 # Check if a withdrawal can be cancelled
@@ -847,7 +847,7 @@ if (detail$cancel_type == "CANCELABLE") {
 <span class="r-in"><span><span class="co"># Withdraw USDT via TRC20</span></span></span>
 <span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">withdrawal</span><span class="op">$</span><span class="fu">add_withdrawal</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  currency <span class="op">=</span> <span class="st">"USDT"</span>,</span></span>
-<span class="r-in"><span>  toAddress <span class="op">=</span> <span class="st">"TKFRQXSDcY4kd3QLzw7uK16GmLrjJggwX8"</span>,</span></span>
+<span class="r-in"><span>  toAddress <span class="op">=</span> <span class="st">"TXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX1"</span>,</span></span>
 <span class="r-in"><span>  amount <span class="op">=</span> <span class="st">"10"</span>,</span></span>
 <span class="r-in"><span>  withdrawType <span class="op">=</span> <span class="st">"ADDRESS"</span>,</span></span>
 <span class="r-in"><span>  chain <span class="op">=</span> <span class="st">"trx"</span></span></span>
@@ -872,7 +872,7 @@ if (detail$cancel_type == "CANCELABLE") {
 <span class="r-in"><span><span class="va">withdrawal</span> <span class="op">&lt;-</span> <span class="va">KucoinWithdrawal</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Cancel a pending withdrawal</span></span></span>
-<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">withdrawal</span><span class="op">$</span><span class="fu">cancel_withdrawal</span><span class="op">(</span><span class="st">"670deec84d64da0007d7c946"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="va">withdrawal</span><span class="op">$</span><span class="fu">cancel_withdrawal</span><span class="op">(</span><span class="st">"withdrawal-0001"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="va">withdrawal_id</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
@@ -923,7 +923,7 @@ if (detail$cancel_type == "CANCELABLE") {
 <span class="r-in"><span><span class="va">withdrawal</span> <span class="op">&lt;-</span> <span class="va">KucoinWithdrawal</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Get withdrawal details</span></span></span>
-<span class="r-in"><span><span class="va">detail</span> <span class="op">&lt;-</span> <span class="va">withdrawal</span><span class="op">$</span><span class="fu">get_withdrawal_by_id</span><span class="op">(</span><span class="st">"670deec84d64da0007d7c946"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">detail</span> <span class="op">&lt;-</span> <span class="va">withdrawal</span><span class="op">$</span><span class="fu">get_withdrawal_by_id</span><span class="op">(</span><span class="st">"withdrawal-0001"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">detail</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span><span class="va">id</span>, <span class="va">currency</span>, <span class="va">status</span>, <span class="va">amount</span>, <span class="va">cancel_type</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Check if a withdrawal can be cancelled</span></span></span>

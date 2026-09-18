@@ -83,9 +83,9 @@ ticker <- market$get_ticker(symbol = "XBTUSDTM")
 ticker[, .(symbol, price, best_bid_price, best_ask_price, ts)]
 ```
 
-    #>      symbol price best_bid_price best_ask_price                  ts
-    #>      <char> <num>          <num>          <num>              <POSc>
-    #> 1: XBTUSDTM 98250        98249.9        98250.1 2024-10-17 10:04:19
+    #>      symbol price best_bid_price best_ask_price         ts
+    #>      <char> <num>          <num>          <num>     <POSc>
+    #> 1: XBTUSDTM 98250        98249.9        98250.1 2026-01-05
 
 ### All Tickers
 
@@ -97,8 +97,8 @@ tickers[, .(symbol, price, ts)]
 
     #>      symbol    price                  ts
     #>      <char>    <num>              <POSc>
-    #> 1: XBTUSDTM 98250.00 2024-10-17 10:04:19
-    #> 2: ETHUSDTM  3456.78 2024-10-17 10:04:19
+    #> 1: XBTUSDTM 98250.00 2026-01-05 00:00:00
+    #> 2: ETHUSDTM  3456.78 2026-01-05 00:01:00
 
 ### Orderbook
 
@@ -110,12 +110,12 @@ ob <- market$get_part_orderbook(symbol = "XBTUSDTM", size = 20)
 ob
 ```
 
-    #>                     ts sequence   side level   price  size   symbol
-    #>                 <POSc>   <char> <char> <int>   <num> <num>   <char>
-    #> 1: 2024-10-17 10:04:19      100    bid     1 98249.9    50 XBTUSDTM
-    #> 2: 2024-10-17 10:04:19      100    bid     2 98249.0   100 XBTUSDTM
-    #> 3: 2024-10-17 10:04:19      100    ask     1 98250.1    30 XBTUSDTM
-    #> 4: 2024-10-17 10:04:19      100    ask     2 98251.0    75 XBTUSDTM
+    #>            ts sequence   side level   price  size   symbol
+    #>        <POSc>   <char> <char> <int>   <num> <num>   <char>
+    #> 1: 2026-01-05      100    bid     1 98249.9    50 XBTUSDTM
+    #> 2: 2026-01-05      100    bid     2 98249.0   100 XBTUSDTM
+    #> 3: 2026-01-05      100    ask     1 98250.1    30 XBTUSDTM
+    #> 4: 2026-01-05      100    ask     2 98251.0    75 XBTUSDTM
 
 ### Trade History
 
@@ -127,8 +127,8 @@ trades[, .(side, price, size, ts)]
 
     #>      side price  size                  ts
     #>    <char> <num> <num>              <POSc>
-    #> 1:    buy 98250     1 2024-10-17 10:04:19
-    #> 2:   sell 98251     2 2024-10-17 10:04:19
+    #> 1:    buy 98250     1 2026-01-05 00:00:00
+    #> 2:   sell 98251     2 2026-01-05 00:01:00
 
 ### Klines (Candlesticks)
 
@@ -142,9 +142,9 @@ klines
 
     #>               datetime  open  high   low close volume turnover
     #>                 <POSc> <num> <num> <num> <num>  <num>    <num>
-    #> 1: 2024-10-17 09:00:00 98100 98300 98000 98250    150 14737500
-    #> 2: 2024-10-17 10:00:00 98250 98400 98200 98350    120 11802000
-    #> 3: 2024-10-17 11:00:00 98350 98500 98300 98450    100  9845000
+    #> 1: 2026-01-05 00:00:00 98100 98300 98000 98250    150 14737500
+    #> 2: 2026-01-05 01:00:00 98250 98400 98200 98350    120 11802000
+    #> 3: 2026-01-05 02:00:00 98350 98500 98300 98450    100  9845000
 
 ### Mark Price
 
@@ -156,9 +156,9 @@ mark <- market$get_mark_price(symbol = "XBTUSDTM")
 mark
 ```
 
-    #>      symbol granularity          time_point   value index_price
-    #>      <char>       <int>              <POSc>   <num>       <num>
-    #> 1: XBTUSDTM        1000 2024-10-17 10:04:19 98252.1    98232.45
+    #>      symbol granularity time_point   value index_price
+    #>      <char>       <int>     <POSc>   <num>       <num>
+    #> 1: XBTUSDTM        1000 2026-01-05 98252.1    98232.45
 
 ### Funding Rate
 
@@ -171,12 +171,12 @@ rate <- market$get_funding_rate(symbol = "XBTUSDTM")
 rate
 ```
 
-    #>      symbol granularity          time_point value daily_interest_rate
-    #>      <char>       <int>              <POSc> <num>               <num>
-    #> 1: XBTUSDTM    28800000 2024-10-17 08:00:00 1e-04               3e-04
-    #>    funding_rate_cap funding_rate_floor period        funding_time
-    #>               <num>              <num>  <int>              <POSc>
-    #> 1:            0.003             -0.003      1 2024-10-17 16:00:00
+    #>      symbol granularity time_point value daily_interest_rate funding_rate_cap
+    #>      <char>       <int>     <POSc> <num>               <num>            <num>
+    #> 1: XBTUSDTM    28800000 2026-01-05 1e-04               3e-04            0.003
+    #>    funding_rate_floor period        funding_time
+    #>                 <num>  <int>              <POSc>
+    #> 1:             -0.003      1 2026-01-05 08:00:00
 
 ### Server Time and Status
 
@@ -186,9 +186,9 @@ market$get_server_time()
 market$get_service_status()
 ```
 
-    #>            server_time
-    #>                 <POSc>
-    #> 1: 2024-10-17 10:04:19
+    #>    server_time
+    #>         <POSc>
+    #> 1:  2026-01-05
     #>    status    msg
     #>    <char> <char>
     #> 1:   open
@@ -308,10 +308,10 @@ trading$get_dcp()
 
     #>    trade_type symbol system_time trigger_time
     #>        <char> <char>       <num>        <num>
-    #> 1:    FUTURES   <NA>  1729159459            0
+    #> 1:    FUTURES   <NA>  1767571200            0
     #>    timeout symbols current_time
     #>      <int>  <char>        <num>
-    #> 1:       5         1.729159e+12
+    #> 1:       5         1.767571e+12
 
 ------------------------------------------------------------------------
 
@@ -350,12 +350,12 @@ history <- account$get_positions_history()
 history
 ```
 
-    #>      symbol settle_currency realised_gross_pnl realised_pnl           open_time
-    #>      <char>          <char>             <char>       <char>              <POSc>
-    #> 1: XBTUSDTM            USDT              10.50        10.25 2024-10-16 17:33:20
-    #>             close_time leverage   type
-    #>                 <POSc>    <int> <char>
-    #> 1: 2024-10-17 10:04:19        5  Close
+    #>      symbol settle_currency realised_gross_pnl realised_pnl  open_time
+    #>      <char>          <char>             <char>       <char>     <POSc>
+    #> 1: XBTUSDTM            USDT              10.50        10.25 2026-01-04
+    #>    close_time leverage   type
+    #>        <POSc>    <int> <char>
+    #> 1: 2026-01-05        5  Close
 
 ### Margin Mode
 
@@ -419,12 +419,12 @@ funding <- account$get_funding_history(symbol = "XBTUSDTM")
 funding
 ```
 
-    #>       id   symbol          time_point funding_rate mark_price position_qty
-    #>    <int>   <char>              <POSc>        <num>      <int>        <int>
-    #> 1:     1 XBTUSDTM 2024-10-17 08:00:00        1e-04      98250            1
-    #>    position_cost   funding settle_currency
-    #>           <char>    <char>          <char>
-    #> 1:         98.25 -0.009825            USDT
+    #>       id   symbol time_point funding_rate mark_price position_qty position_cost
+    #>    <int>   <char>     <POSc>        <num>      <int>        <int>        <char>
+    #> 1:     1 XBTUSDTM 2026-01-05        1e-04      98250            1         98.25
+    #>      funding settle_currency
+    #>       <char>          <char>
+    #> 1: -0.009825            USDT
 
 ------------------------------------------------------------------------
 

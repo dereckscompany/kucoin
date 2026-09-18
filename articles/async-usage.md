@@ -102,15 +102,15 @@ results$btc
 results$eth
 ```
 
-    #>                   time      sequence   price      size best_bid best_bid_size
-    #>                 <POSc>        <char>   <num>     <num>    <num>         <num>
-    #> 1: 2024-10-17 10:04:19 1550467636704 67232.9 7.682e-05  67232.8     0.4186184
-    #>    best_ask best_ask_size
-    #>       <num>         <num>
-    #> 1:  67232.9       1.24809
-    #>                   time sequence  price  size best_bid best_bid_size best_ask
-    #>                 <POSc>   <char>  <num> <num>    <num>         <num>    <num>
-    #> 1: 2024-10-17 10:04:19   200001 2530.6   0.5   2530.5            12   2530.8
+    #>          time sequence   price  size best_bid best_bid_size best_ask
+    #>        <POSc>   <char>   <num> <num>    <num>         <num>    <num>
+    #> 1: 2026-01-05      100 50000.5 0.001  49999.5           0.5  50000.5
+    #>    best_ask_size
+    #>            <num>
+    #> 1:             1
+    #>          time sequence  price  size best_bid best_bid_size best_ask
+    #>        <POSc>   <char>  <num> <num>    <num>         <num>    <num>
+    #> 1: 2026-01-05   200001 3000.5   0.5   2999.5            12   3000.5
     #>    best_ask_size
     #>            <num>
     #> 1:           8.5
@@ -144,15 +144,15 @@ results$btc
 results$eth
 ```
 
-    #>                   time      sequence   price      size best_bid best_bid_size
-    #>                 <POSc>        <char>   <num>     <num>    <num>         <num>
-    #> 1: 2024-10-17 10:04:19 1550467636704 67232.9 7.682e-05  67232.8     0.4186184
-    #>    best_ask best_ask_size
-    #>       <num>         <num>
-    #> 1:  67232.9       1.24809
-    #>                   time sequence  price  size best_bid best_bid_size best_ask
-    #>                 <POSc>   <char>  <num> <num>    <num>         <num>    <num>
-    #> 1: 2024-10-17 10:04:19   200001 2530.6   0.5   2530.5            12   2530.8
+    #>          time sequence   price  size best_bid best_bid_size best_ask
+    #>        <POSc>   <char>   <num> <num>    <num>         <num>    <num>
+    #> 1: 2026-01-05      100 50000.5 0.001  49999.5           0.5  50000.5
+    #>    best_ask_size
+    #>            <num>
+    #> 1:             1
+    #>          time sequence  price  size best_bid best_bid_size best_ask
+    #>        <POSc>   <char>  <num> <num>    <num>         <num>    <num>
+    #> 1: 2026-01-05   200001 3000.5   0.5   2999.5            12   3000.5
     #>    best_ask_size
     #>            <num>
     #> 1:           8.5
@@ -268,7 +268,7 @@ results$open
     #> 1:       1e-04            0   TRUE          TRUE 5c52e11203aa677f33e493fb
     #>      tags          created_at     last_updated_at
     #>    <char>              <POSc>              <POSc>
-    #> 1:        2024-10-22 06:11:55 2024-10-22 06:11:55
+    #> 1:        2026-01-05 00:05:00 2026-01-05 00:05:30
 
 ------------------------------------------------------------------------
 
