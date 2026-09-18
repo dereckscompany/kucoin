@@ -476,7 +476,7 @@ KucoinStopOrders <- R6::R6Class(
     #' ### Automated Trading Usage
     #' - **Client-Side Tracking**: Cancel orders using your own identifiers without storing KuCoin order IDs.
     #' - **Idempotent Cancellation**: Use deterministic client OIDs for reliable cancel-and-replace workflows.
-    #' - **Multi-Symbol Bots**: Combine `clientOid` prefixes with symbol for organized order management.
+    #' - **Multi-Symbol Bots**: Combine `clientOid` prefixes with symbol for organised order management.
     #'
     #' ### curl
     #' ```

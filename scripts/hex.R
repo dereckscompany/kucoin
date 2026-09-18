@@ -10,7 +10,7 @@ box::use(
 font_add_google("Open Sans", "open_sans")
 showtext_auto()
 
-# Define brand color to match your logo
+# Define brand colour to match your logo
 brand_color <- "#54AC92"
 
 filename <- "man/figures/logo.png"

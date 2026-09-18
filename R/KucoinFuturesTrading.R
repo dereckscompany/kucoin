@@ -1667,9 +1667,9 @@ KucoinFuturesTrading <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **PnL Calculation**: Aggregate fill prices and sizes to compute realized profit/loss per position.
+    #' - **PnL Calculation**: Aggregate fill prices and sizes to compute realised profit/loss per position.
     #' - **Fee Tracking**: Sum fees across fills for accurate cost accounting.
-    #' - **Maker/Taker Analysis**: Monitor `liquidity` field to optimize order placement for fee savings.
+    #' - **Maker/Taker Analysis**: Monitor `liquidity` field to optimise order placement for fee savings.
     #'
     #' ### curl
     #' ```
