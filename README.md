@@ -628,26 +628,24 @@ The rendered reference site is at
 Five vignettes take a reader from a first call to the full method
 catalogue and every trading surface, in this reading order:
 
-1.  `vignette("getting-started", package = "kucoin")` — connecting
+1.  `vignette("getting-started", package = "kucoin")`: connecting
     synchronously and making first calls across the market data,
     trading, account, stop order, OCO order, deposit, and sub-account
     surfaces.
-2.  `vignette("async-usage", package = "kucoin")` — running the same
+2.  `vignette("async-usage", package = "kucoin")`: running the same
     classes in asynchronous mode with `coro`/`later`.
-3.  `vignette("data-shapes", package = "kucoin")` — the one-stop tour of
+3.  `vignette("data-shapes", package = "kucoin")`: the one-stop tour of
     every public method by class, and the data-shape conventions (column
     naming, type coercion, nested-object treatments) behind them.
-4.  `vignette("margin-trading", package = "kucoin")` — margin trading,
+4.  `vignette("margin-trading", package = "kucoin")`: margin trading,
     lending, and margin market data: opening and closing short and long
     positions, borrowing, and repayment.
-5.  `vignette("futures-trading", package = "kucoin")` — futures contract
+5.  `vignette("futures-trading", package = "kucoin")`: futures contract
     trading: market data, orders, and positions with leverage.
 
 The full release history is in [`NEWS.md`](NEWS.md).
 
 ## Citation
-
-Cite as:
 
 If you use this package in your work, please cite it:
 
@@ -659,7 +657,7 @@ citation("kucoin")
 > Exchange. R package version 4.6.5.
 > <https://github.com/dereckscompany/kucoin>.
 
-Author: Dereck Mezquita — [ORCID:
+Author: Dereck Mezquita, [ORCID:
 0000-0002-9307-6762](https://orcid.org/0000-0002-9307-6762)
 
 ## Licence
