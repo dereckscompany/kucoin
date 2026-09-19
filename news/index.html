@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,9 +36,20 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.6.5/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/dereckscompany/kucoin/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="4.6.6" id="kucoin-466">kucoin 4.6.6<a class="anchor" aria-label="anchor" href="#kucoin-466"></a></h2>
+<p><strong>The changelog now reads the same way in every release, in this package and across the fleet.</strong></p>
+<p><code>NEWS.md</code> is reshaped so every version section opens with one bold plain-English sentence and a plain paragraph before its technical bullets, matching the fleet’s one canonical changelog form. Nothing else about this release changes.</p>
+<ul><li>Sections reshaped with a new bold lead and paragraph: 16 (4.6.0, 4.5.1, 4.5.0, 4.4.0, 4.3.1, 4.3.0, 4.2.3, 4.2.2, 4.2.0, 4.1.1, 4.1.0, 4.0.3, 4.0.2, 4.0.1, 4.0.0, 3.0.0). The lead and paragraph for each were written only from that section’s own existing heading and bullets, and every existing bullet was kept verbatim and in place.</li>
+<li>Sections already in form, left untouched: 4 (4.6.5, 4.6.4, 4.6.3, 4.6.2).</li>
+<li>Sub-headings re-cased from capitals to sentence case: 24 (<code>## REFACTOR</code> → <code>## Refactor</code> at four sites, <code>## BUG FIXES</code> → <code>## Bug fixes</code> at four sites, <code>## DOCUMENTATION</code> → <code>## Documentation</code> at three sites, <code>## TESTS</code> → <code>## Tests</code> at two sites, <code>## NEW FEATURES</code> → <code>## New features</code> at two sites, <code>## BREAKING CHANGES</code> → <code>## Breaking changes</code> at two sites, <code>## IMPROVEMENTS</code> → <code>## Improvements</code> at two sites, <code>## LICENCE</code> → <code>## Licence</code> at two sites, and <code>## DEPENDENCIES</code> → <code>## Dependencies</code> and <code>## DATA</code> → <code>## Data</code> and <code>## TOOLING</code> → <code>## Tooling</code> once each). Sub-headings already in sentence or title case were left as they are.</li>
+<li>Headings that lost a link: 0. No section heading in this file carried a link or a <code>v</code> prefix.</li>
+<li>Sections moved for order: 0. Every section was already in descending version order.</li>
+<li>Citation block in <code>README.Rmd</code>: changed. The previous block was a blockquote with an intervening code chunk and a separate author/ORCID line; it is rewritten to the one plain <code>Cite as:</code> line built from <code>DESCRIPTION</code>, and the version number is bumped to match this release.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="4.6.5" id="kucoin-465">kucoin 4.6.5<a class="anchor" aria-label="anchor" href="#kucoin-465"></a></h2>
 <p><strong>The README now follows the same shape as every other package in the fleet, so a reader who knows one package’s documentation already knows where to look in this one.</strong> This is a documentation-only release; no code path, argument, column, or API-facing string changed. The README’s sections were renamed and reordered into the fleet’s canonical shape (plain-English lead, technical overview, design philosophy, installation, quick start, per-surface usage, asynchronous usage, documentation, citation, licence) without dropping any existing sentence, code chunk, table or link; the one rewrite is the stale hand-written citation block, rebuilt from <code>DESCRIPTION</code>.</p>
@@ -77,6 +88,8 @@
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="4.6.0" id="kucoin-460">kucoin 4.6.0<a class="anchor" aria-label="anchor" href="#kucoin-460"></a></h2>
+<p><strong>Client constructors can now opt into automatic retry of failed read requests, without ever risking an order being sent twice.</strong></p>
+<p>Every client class constructor gains a <code>max_tries</code> argument that, when raised above its default of <code>1</code>, retries a GET request automatically after a transient failure such as an HTTP 408, 429, or 5xx response, or a dropped connection. Retry only ever applies to GET requests; an order placement or cancellation is never retried automatically, so a resend can never double-submit an order. The default of <code>1</code> leaves existing behaviour unchanged, and pagination inherits the same setting through <code><a href="../reference/kucoin_paginate.html">kucoin_paginate()</a></code>.</p>
 <div class="section level3">
 <h3 id="opt-in-request-retry-at-construction-max_tries-a-hard-get-only-carve-out-4-6-0">Opt-in request retry at construction (<code>max_tries</code>), a hard GET-only carve-out<a class="anchor" aria-label="anchor" href="#opt-in-request-retry-at-construction-max_tries-a-hard-get-only-carve-out-4-6-0"></a></h3>
 <p>Every client class constructor (via <code>KucoinBase</code>) gains a <code>max_tries</code> argument (<code>scalar&lt;integer in [1, 10]&gt;</code>, default <code>1</code> = no retry) threaded to <code>connectcore</code>’s retry machinery. Setting it above <code>1</code> opts every GET the client makes — single requests and paginated reads alike — into automatic retry on a transient failure (HTTP 408/429/5xx or a dropped connection) with jittered backoff. Retry is a hard <strong>GET-only</strong> carve-out: a non-idempotent verb (an order <code>POST</code>, a cancel <code>DELETE</code>) is never auto-retried, so a resend can never double-submit an order. The default <code>1</code> leaves live-trading behaviour unchanged — the trader layer stays the single retry authority there; raise <code>max_tries</code> only for research and backfill reads. Implements the fleet retry-convergence ruling (2026-07-14), closes <a href="https://github.com/dereckscompany/kucoin/issues/14" class="external-link">#14</a>. Requires <code>connectcore (&gt;= 0.5.0)</code>, where the GET-only guard is enforced in the one shared request funnel. <code><a href="../reference/kucoin_paginate.html">kucoin_paginate()</a></code> also gains a <code>max_tries</code> argument so the constructor policy reaches paginated reads.</p>
@@ -84,6 +97,8 @@
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="4.5.1" id="kucoin-451">kucoin 4.5.1<a class="anchor" aria-label="anchor" href="#kucoin-451"></a></h2>
+<p><strong>Fetching weekly or monthly candles over a long history no longer crashes.</strong></p>
+<p>Requesting 1-week or 1-month candles across a long date range used to fail because the arithmetic that splits the request into 1,500-candle segments overflowed a 32-bit integer. That arithmetic now runs in double precision throughout, matching the futures path, so week- and month-scale backfills complete across the full history, and regression tests confirm the hourly and daily paths are unchanged.</p>
 <div class="section level3">
 <h3 id="weekly-and-monthly-candle-fetches-no-longer-overflow-closes-4-5-1">Weekly and monthly candle fetches no longer overflow (closes <a href="https://github.com/dereckscompany/kucoin/issues/40" class="external-link">#40</a>)<a class="anchor" aria-label="anchor" href="#weekly-and-monthly-candle-fetches-no-longer-overflow-closes-4-5-1"></a></h3>
 <p>Asking for 1week or 1month candles over any long history used to crash the fetch loop, because the arithmetic that splits the request into 1,500-candle segments was done in 32-bit integers — and fifteen hundred months of seconds is a bigger number than a 32-bit integer can hold. The segment maths now stays in double precision end to end (mirroring the futures path, which always did), so week- and month-scale backfills work across the full history. Regression tests pin 1week and 1month segment boundaries at 2020-era epochs and prove the hourly/daily paths are byte-for-byte unchanged.</p>
@@ -91,6 +106,8 @@
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="4.5.0" id="kucoin-450">kucoin 4.5.0<a class="anchor" aria-label="anchor" href="#kucoin-450"></a></h2>
+<p><strong>Validation failures now raise a typed error instead of a plain one, so calling code can catch them by type.</strong></p>
+<p>The connector’s 101 non-transport validation checks, covering things such as a missing required parameter or a value out of range, now raise a classed <code>kucoin_validation_error</code> condition instead of a bare error, rooted under a new <code>kucoin_error</code> domain that sits alongside the existing transport error family. The error messages are unchanged, and no other behaviour changes, so existing tests and message-matching code keep working.</p>
 <div class="section level3">
 <h3 id="typed-input-validation-conditions-the-non-transport-half-of-the-taxonomy-4-5-0">Typed input-validation conditions (the non-transport half of the taxonomy)<a class="anchor" aria-label="anchor" href="#typed-input-validation-conditions-the-non-transport-half-of-the-taxonomy-4-5-0"></a></h3>
 <ul><li>The connector’s 101 non-transport <code><a href="https://rlang.r-lib.org/reference/abort.html" class="external-link">rlang::abort()</a></code> sites — a method’s argument or parameter is malformed or violates a rule <em>before</em> any request is made (a missing required parameter, a bad ticker, a non-positive size, a mutually-exclusive pair supplied together, a value out of range) — now signal a <strong>classed condition</strong> through a new <code>abort_kucoin_validation_error()</code> raiser, so a caller branches on error <em>type</em> instead of grepping the message text. This completes the taxonomy alongside the request funnel’s typed transport conditions.</li>
@@ -101,6 +118,8 @@
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="4.4.0" id="kucoin-440">kucoin 4.4.0<a class="anchor" aria-label="anchor" href="#kucoin-440"></a></h2>
+<p><strong>API errors from KuCoin now come back as a typed, structured condition instead of a plain error message.</strong></p>
+<p>Every failure surfaced by the request funnel, whether an HTTP error status or a venue error returned in the response body, now raises a classed condition carrying structured fields such as the status code, the KuCoin error code, the request URL, and a snippet of the response body, so calling code can read those fields instead of parsing the message text. A malformed response missing its error code raises the shared <code>connectcore</code> response error instead. The error message text is unchanged, and the change is purely additive.</p>
 <div class="section level3">
 <h3 id="typed-api-error-conditions-4-4-0">Typed API-error conditions<a class="anchor" aria-label="anchor" href="#typed-api-error-conditions-4-4-0"></a></h3>
 <ul><li>All three failure surfaces of the request funnel (<code>parse_kucoin_response()</code>) now signal a <strong>classed condition</strong> instead of a bare <code><a href="https://rlang.r-lib.org/reference/abort.html" class="external-link">rlang::abort()</a></code>, so a caller branches on error <em>type</em> and reads structured <em>fields</em> rather than grepping the message text. The two API surfaces — a non-2xx HTTP status, and a venue error carried as a <code>code</code> other than <code>"200000"</code> in the JSON body (KuCoin returns HTTP 200 with the error in the body) — signal a class vector ordered specific -&gt; general: <code>kucoin_api_error_&lt;status&gt;</code> (keyed on the HTTP status), <code>kucoin_api_error</code> (any KuCoin API failure), then the inherited connectcore family <code>connectcore_api_error_&lt;status&gt;</code> / <code>connectcore_api_error</code> / <code>connectcore_error</code>. The condition carries <code>status</code> (integer), <code>code</code> (the KuCoin venue code, <code>NULL</code> on a plain HTTP failure), <code>url</code> (query-string credentials redacted), and <code>body_snippet</code> (the response body) as fields — read <code>e$code</code>, not a regex.</li>
@@ -111,6 +130,8 @@
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="4.3.1" id="kucoin-431">kucoin 4.3.1<a class="anchor" aria-label="anchor" href="#kucoin-431"></a></h2>
+<p><strong>Paginated reads with thousands of pages no longer crash with a stack overflow.</strong></p>
+<p><code><a href="../reference/kucoin_paginate.html">kucoin_paginate()</a></code>’s synchronous path used to recurse into itself for every page, so a very long page walk, such as a large account history, could overflow the call stack. It now walks pages with an iterative loop instead, using constant stack depth, while returning the exact same page ordering and stopping conditions as before. The asynchronous path is unchanged, and a regression test now walks 3,000 pages to confirm the fix.</p>
 <div class="section level3">
 <h3 id="kucoin_paginate-walks-pages-iteratively-in-sync-mode-closes-4-3-1">
 <code>kucoin_paginate()</code> walks pages iteratively in sync mode (closes <a href="https://github.com/dereckscompany/kucoin/issues/15" class="external-link">#15</a>)<a class="anchor" aria-label="anchor" href="#kucoin_paginate-walks-pages-iteratively-in-sync-mode-closes-4-3-1"></a></h3>
@@ -119,6 +140,8 @@
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="4.3.0" id="kucoin-430">kucoin 4.3.0<a class="anchor" aria-label="anchor" href="#kucoin-430"></a></h2>
+<p><strong>Every method argument now uses snake_case, with no deprecated camelCase names kept around.</strong></p>
+<p>This release renames roughly 40 camelCase arguments to snake_case across the whole public surface, as a clean break with no deprecation shims, so callers now pass names such as <code>client_order_id</code> or <code>time_in_force</code> instead of KuCoin’s own camelCase field names. The shared <code>ms_to_datetime()</code> helper moves into <code>connectcore</code> so every wrapper shares one implementation, <code><a href="../reference/kucoin_backfill_klines.html">kucoin_backfill_klines()</a></code> reports per-combination failures as warnings instead of smuggling them on a return attribute, remaining base date-time calls are replaced with <code>lubridate</code>, and documentation, tests, and vignettes are updated to match.</p>
 <div class="section level3">
 <h3 id="snake_case-argument-convergence-clean-break--connectcore-alignment-4-3-0">snake_case argument convergence (clean break) + connectcore alignment<a class="anchor" aria-label="anchor" href="#snake_case-argument-convergence-clean-break--connectcore-alignment-4-3-0"></a></h3>
 <p>This release renames every camelCase R argument to snake_case, so the whole public surface reads in one style and matches the rest of the connector fleet. The KuCoin API’s own camelCase field names live on only as wire payload keys built inside each method: you now pass <code>client_order_id</code>, <code>time_in_force</code>, <code>order_id</code> and so on, and the method translates each back to <code>clientOid</code> / <code>timeInForce</code> / <code>orderId</code> at the call site. This is a clean break with no deprecation shims, hence the minor-version bump.</p>
@@ -136,6 +159,8 @@
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="4.2.3" id="kucoin-423">kucoin 4.2.3<a class="anchor" aria-label="anchor" href="#kucoin-423"></a></h2>
+<p><strong>Every method that returns a fixed-shape table now documents, and enforces, exactly which columns it returns.</strong></p>
+<p>The <code>@return</code> documentation of every public method that yields a fixed-shape <code>data.table</code> now lists each column with its type, which in turn generates a runtime check on both the synchronous result and the resolved value of a promise. Methods whose result shape genuinely varies, such as the zero-column empty response, the heterogeneous futures position tables, and the wide futures-contract metadata tables, are deliberately left undocumented in this way and keep working as before.</p>
 <div class="section level3">
 <h3 id="datatable-return-shapes-documented-with-typed-column-bullets-4-2-3">data.table return shapes documented with typed column bullets<a class="anchor" aria-label="anchor" href="#datatable-return-shapes-documented-with-typed-column-bullets-4-2-3"></a></h3>
 <p>The <code>@return</code> of every public method that yields a fixed-shape <code>data.table</code> now lists each column as a typed nested bullet, following the roxyassert convention: bare element types (<code>character</code>, <code>integer</code>, <code>numeric</code>, <code>logical</code>, <code>POSIXct</code>) with <code>| NA</code> appended wherever a column can legitimately be missing in a real response. Documenting the columns regenerates <code>assert_has_columns</code> plus the per-column type asserts, so the parsed shape is now enforced at the public boundary — for the synchronous value and for the resolved value of a promise alike — rather than relying on the old loose <code>assert_data_table</code> check. Methods whose tables are genuinely variable-shape are deliberately left as the generic <code>(data.table | promise&lt;data.table&gt;)</code>: those that return a zero-column empty <code>data.table</code> on an empty response, the heterogeneous futures position tables whose numeric fields arrive sometimes as numbers and sometimes as strings, and the wide futures-contract metadata tables. This matches the package’s existing flattener convention and keeps the empty-response and variable-payload paths working untouched.</p>
@@ -143,6 +168,8 @@
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="4.2.2" id="kucoin-422">kucoin 4.2.2<a class="anchor" aria-label="anchor" href="#kucoin-422"></a></h2>
+<p><strong>Real KuCoin API responses uncovered and fixed several bugs that synthetic test fixtures alone could not catch, alongside a batch of input-type corrections.</strong></p>
+<p>Every committed test fixture was validated against a read-only capture of the real KuCoin API, and the release fixes the divergences that surfaced: a futures status endpoint that KuCoin mislabels as plain text, a nested field that produced a forbidden list column, a renamed field, a fabricated field that the live API never returns, a parameter typed too narrowly to accept a plain number, and an empty candle range that aborted instead of returning an empty table. A second pass corrects further type contracts, including two millisecond-timestamp and page-size parameters that rejected legitimate numeric input, a pagination cap that rejected its own documented <code>Inf</code> default, and adds typed per-column documentation to several one-row methods.</p>
 <div class="section level3">
 <h3 id="live-capture-fixture-hardening--bugs-the-synthetic-fixtures-hid-4-2-2">Live-capture fixture hardening + bugs the synthetic fixtures hid<a class="anchor" aria-label="anchor" href="#live-capture-fixture-hardening--bugs-the-synthetic-fixtures-hid-4-2-2"></a></h3>
 <p>This release validates every committed fixture against a read-only capture of the REAL KuCoin API (spot + futures, public + private GET) and fixes the divergences that synthetic, shape-only fixtures could not surface. A new <code>dev/capture-kucoin.R</code> drives the package’s own read methods through a raw-response interceptor and dumps each verbatim body to the git-ignored <code>local/raw-data/kucoin/</code>; <code>dev/validate-fixtures.R</code> diffs each fixture’s record keys against its capture. All enrichment uses synthetic values — no real account id, balance, or order id is committed.</p>
@@ -165,6 +192,8 @@
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="4.2.0" id="kucoin-420">kucoin 4.2.0<a class="anchor" aria-label="anchor" href="#kucoin-420"></a></h2>
+<p><strong>Every function argument and return value is now checked at runtime against a documented type contract.</strong></p>
+<p>The whole package adopts the <code>roxyassert</code> framework, so every documented parameter and return type is written in a single grammar that also generates the runtime checks applied at each method’s entry and at its result, for both the synchronous and promise-based paths. Two reusable shapes, for candle data and for the order book, are defined for the endpoints with a genuinely fixed schema; every other endpoint keeps a generic return type, and the public API and wire format are unchanged.</p>
 <div class="section level3">
 <h3 id="type-contracts-roxyassert-4-2-0">Type contracts (roxyassert)<a class="anchor" aria-label="anchor" href="#type-contracts-roxyassert-4-2-0"></a></h3>
 <ul><li><p><strong>Adopted <code>roxyassert</code> for runtime type contracts across the whole package.</strong> Every <code>@param</code>/<code>@return</code> is now written in the <code>roxyassert</code> grammar (zero prose type annotations remain), and the <code><a href="https://dereckscompany.github.io/roxyassert/reference/contract_roclet.html" class="external-link">roxyassert::contract_roclet</a></code> generates <code>assert_args_*()</code> / <code>assert_return_*()</code> helpers into <code>R/contracts-generated.R</code> at <code>document()</code> time — so each function’s documented contract and its runtime validation come from a single source. Every public R6 table method validates its arguments at entry and validates the parsed result (synchronous value or the resolved value of a promise alike) at the boundary via <code>connectcore::then_or_now(res, assert_return_*, is_async = private$.is_async)</code>. <code>assert</code> is now an import; <code>uuid</code> and <code>roxyassert</code> are added (the margin client-order-id auto-generator now uses <code><a href="https://rdrr.io/pkg/uuid/man/UUIDgenerate.html" class="external-link">uuid::UUIDgenerate()</a></code> instead of a hand-rolled hex string).</p></li>
@@ -173,16 +202,20 @@
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="4.1.1" id="kucoin-411">kucoin 4.1.1<a class="anchor" aria-label="anchor" href="#kucoin-411"></a></h2>
+<p><strong>The connector no longer maintains its own request-sending code; it now goes through the shared transport layer entirely.</strong></p>
+<p>With a new <code>connectcore</code> feature that can send a pre-serialised request body byte-for-byte, KuCoin now routes every request, including its signed body, through the shared funnel instead of its own hand-rolled request builder, which has been removed. The bytes sent on the wire, and the signature computed over them, are unchanged from the previous release, and the public API is otherwise unchanged.</p>
 <div class="section level3">
-<h3 id="refactor-4-1-1">REFACTOR<a class="anchor" aria-label="anchor" href="#refactor-4-1-1"></a></h3>
+<h3 id="refactor-4-1-1">Refactor<a class="anchor" aria-label="anchor" href="#refactor-4-1-1"></a></h3>
 <ul><li>
 <strong>Adopted <code>connectcore</code>’s <code>body_format = "raw"</code> funnel; the connector now owns no transport.</strong> With <code>connectcore</code> v0.1.0 a pre-serialised body can be sent byte-verbatim (no NULL-pruning, no pretty-printing, no re-encoding) and the <code>.sign()</code> seam runs after the body is set, so a body-signing venue reads the exact bytes off the request. KuCoin now serialises its body once to compact JSON, routes it through the inherited funnel via <code>body_format = "raw"</code>, and signs those exact bytes — making the hand-rolled <code>kucoin_build_request()</code> redundant. It has been <strong>removed</strong>; <code>KucoinBase$.request()</code> is a thin override of <code><a href="https://dereckscompany.github.io/connectcore/reference/build_request.html" class="external-link">connectcore::build_request()</a></code> and <code><a href="../reference/kucoin_paginate.html">kucoin_paginate()</a></code> routes each page through the same funnel. The wire bytes — and the <code>KC-API-*</code> HMAC computed over them — are byte-identical to 4.1.0 (verified end-to-end: identical compact body, identical prehash, identical signature). The public API is otherwise unchanged.</li>
 </ul></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="4.1.0" id="kucoin-410">kucoin 4.1.0<a class="anchor" aria-label="anchor" href="#kucoin-410"></a></h2>
+<p><strong>The connector’s transport layer now sits on a shared base package instead of its own copy of the plumbing.</strong></p>
+<p><code>KucoinBase</code> now inherits the shared <code><a href="https://dereckscompany.github.io/connectcore/reference/RestClient.html" class="external-link">connectcore::RestClient</a></code> instead of carrying its own credential-storage, sync/async, and server-time code, plugging in through two documented seams for KuCoin’s header-based signing scheme and its response envelope. Generic helpers such as JSON-to-table conversion move into <code>connectcore</code> too, while KuCoin keeps its own request funnel because it must sign and transmit the exact compact JSON body, which the shared default funnel would alter. The public API is unchanged, and <code>connectcore</code> is added as a new dependency.</p>
 <div class="section level3">
-<h3 id="refactor-4-1-0">REFACTOR<a class="anchor" aria-label="anchor" href="#refactor-4-1-0"></a></h3>
+<h3 id="refactor-4-1-0">Refactor<a class="anchor" aria-label="anchor" href="#refactor-4-1-0"></a></h3>
 <ul><li>
 <strong>Migrated the transport layer onto <code>connectcore</code>, the shared connector base.</strong> <code>KucoinBase</code> now inherits <a href="https://github.com/dereckscompany/connectcore" class="external-link"><code>connectcore::RestClient</code></a> instead of carrying its own copy of the credential-storage / sync-async / server-time / active-binding plumbing. KuCoin plugs into the base through the two documented seams — <code>.sign()</code> (the header-based HMAC scheme: <code>KC-API-KEY</code> / <code>KC-API-SIGN</code> / <code>KC-API-TIMESTAMP</code> / <code>KC-API-PASSPHRASE</code> / <code>KC-API-KEY-VERSION</code>, signing the timestamp + method + URL-encoded path + raw body) and <code>.parse_envelope()</code> (KuCoin’s <code>code</code> / <code>data</code> envelope). The public API is unchanged: every <code>Kucoin*</code> class, method, and the exported <code>kucoin_build_request()</code> / <code><a href="../reference/kucoin_paginate.html">kucoin_paginate()</a></code> helpers keep their exact signatures and behaviour.</li>
 <li>
@@ -191,24 +224,26 @@
 <strong>Why KuCoin keeps its own request funnel.</strong> Unlike most venues, KuCoin signs the <em>exact compact JSON request body</em> and must transmit that same byte sequence on the wire, so <code>kucoin_build_request()</code> continues to send the body via <code>req_body_raw()</code> (the signed string verbatim) rather than <code>connectcore</code>’s default funnel, which pretty-prints the body and would invalidate the signature. <code>kucoin_build_request()</code> / <code><a href="../reference/kucoin_paginate.html">kucoin_paginate()</a></code> gained optional <code>sign</code> / <code>parse_envelope</code> parameters (defaulting to KuCoin’s own) so the seams drive the funnel; existing callers are unaffected.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="dependencies-4-1-0">DEPENDENCIES<a class="anchor" aria-label="anchor" href="#dependencies-4-1-0"></a></h3>
+<h3 id="dependencies-4-1-0">Dependencies<a class="anchor" aria-label="anchor" href="#dependencies-4-1-0"></a></h3>
 <ul><li>Added <code>connectcore</code> to <code>Imports</code> (pinned to <code>dereckscompany/connectcore@v0.0.1</code> via <code>Remotes</code> and <code>renv.lock</code>).</li>
 </ul></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="4.0.3" id="kucoin-403">kucoin 4.0.3<a class="anchor" aria-label="anchor" href="#kucoin-403"></a></h2>
+<p><strong>Futures Dead Connection Protection works again after KuCoin retired the old endpoints, and the futures REST surface gained live test coverage.</strong></p>
+<p>KuCoin retired the legacy futures Dead Connection Protection endpoints, so <code>set_dcp()</code> and <code>get_dcp()</code> are migrated to the new unified endpoint while keeping the same method signatures for callers. The private request method gains an optional parameter to target a different host for a single call, which is what makes the migration possible. New live integration tests cover the futures public and authenticated endpoints, including the migrated DCP methods, skipping gracefully when a contributor has no funded futures account rather than failing; write methods that would need real positions or funds are left unexercised.</p>
 <div class="section level3">
-<h3 id="bug-fixes-4-0-3">BUG FIXES<a class="anchor" aria-label="anchor" href="#bug-fixes-4-0-3"></a></h3>
+<h3 id="bug-fixes-4-0-3">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-4-0-3"></a></h3>
 <ul><li>
 <strong><code>KucoinFuturesTrading$set_dcp()</code> / <code>$get_dcp()</code> migrated to KuCoin’s new unified DCP endpoint.</strong> The legacy futures-specific paths (<code>POST /api/v1/orders/dead-cancel-all</code> and <code>GET /api/v1/orders/dead-cancel-all/query</code> on <code>api-futures.kucoin.com</code>) were retired by KuCoin around 2026-05 — the docs page was withdrawn, the GET path returned HTTP 404 and the POST returned 403 even on accounts with the relevant permission. KuCoin replaced both with a unified Universal-Trading-Account endpoint on the spot host: <code>POST /api/ua/v1/dcp/set</code> and <code>GET /api/ua/v1/dcp/query</code>, both taking a <code>tradeType</code> parameter that accepts <code>SPOT</code>, <code>MARGIN</code>, or <code>FUTURES</code>. We now hardcode <code>tradeType = "FUTURES"</code> and override the base URL to the spot host inside both methods, so the public method API stays unchanged — existing <code>futures_trading$set_dcp(timeout, symbol)</code> and <code>$get_dcp(symbol)</code> calls keep working. Spot DCP (<code>KucoinTrading$set_dcp()</code> / <code>$get_dcp()</code>) is untouched — it still works against the <code>/api/v1/hf/orders/dead-cancel-all*</code> paths on the spot host.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="refactor-4-0-3">REFACTOR<a class="anchor" aria-label="anchor" href="#refactor-4-0-3"></a></h3>
+<h3 id="refactor-4-0-3">Refactor<a class="anchor" aria-label="anchor" href="#refactor-4-0-3"></a></h3>
 <ul><li>
 <strong><code>KucoinBase$.request()</code> (private) gains an optional <code>base_url</code> parameter</strong> that overrides the instance’s configured host for a single call. Used so the migrated futures DCP methods can target the spot host while every other <code>KucoinFuturesTrading</code> method keeps using the futures host. No behaviour change for any existing call site — <code>base_url = NULL</code> (the default) preserves the previous behaviour exactly.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="tests-4-0-3">TESTS<a class="anchor" aria-label="anchor" href="#tests-4-0-3"></a></h3>
+<h3 id="tests-4-0-3">Tests<a class="anchor" aria-label="anchor" href="#tests-4-0-3"></a></h3>
 <ul><li>
 <strong>Live integration coverage for the Futures REST surface.</strong> New <code>[LIVE]</code> test blocks in <code>tests/testthat/test-live-integration-public.R</code> (7 tests against <code>KucoinFuturesMarketData</code> public endpoints) and <code>test-live-integration-private.R</code> (13 tests covering authenticated <code>KucoinFuturesAccount</code>, <code>KucoinFuturesMarketData$get_full_orderbook</code>, read-only <code>KucoinFuturesTrading</code> queries, and the migrated DCP methods). Pins the 5 path-corrected GET endpoints from v4.0.2 (<code>get_margin_mode</code>, <code>get_cross_margin_leverage</code>, <code>get_max_open_size</code>, <code>get_max_withdraw_margin</code>, <code>get_full_orderbook</code>) plus the migrated DCP endpoints so the next time KuCoin moves a futures endpoint, CI surfaces the 404 instead of waiting for a user report. The DCP <code>set_dcp</code> test deliberately uses <code>timeout = -1</code> (disable) so it has no real side effects.</li>
 <li>Write methods (<code>set_margin_mode</code>, <code>set_cross_margin_leverage</code>, <code>add_isolated_margin</code>, <code>remove_isolated_margin</code>) are intentionally not exercised — they require real positions / funds.</li>
@@ -217,15 +252,17 @@
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="4.0.2" id="kucoin-402">kucoin 4.0.2<a class="anchor" aria-label="anchor" href="#kucoin-402"></a></h2>
+<p><strong>Documentation links and nine futures endpoint paths are corrected after KuCoin reorganised its docs and moved several routes.</strong></p>
+<p>Every one of the 144 verification markers in the roxygen documentation was walked individually against the live KuCoin docs, and 25 documentation links that had gone stale after KuCoin reorganised its site are refreshed. Nine futures REST endpoint paths that KuCoin moved during that reorganisation are corrected to their new locations, and the futures Dead Connection Protection query endpoint is flagged as apparently withdrawn by KuCoin without any announcement.</p>
 <div class="section level3">
-<h3 id="documentation-4-0-2">DOCUMENTATION<a class="anchor" aria-label="anchor" href="#documentation-4-0-2"></a></h3>
+<h3 id="documentation-4-0-2">Documentation<a class="anchor" aria-label="anchor" href="#documentation-4-0-2"></a></h3>
 <ul><li>
 <strong>All 144 <code>Verified: YYYY-MM-DD</code> markers in the R6 roxygen blocks bumped to <code>2026-05-23</code>.</strong> Every marker was walked individually against the live KuCoin docs — endpoint paths, HTTP methods, and “page exists” all confirmed per endpoint, not sampled. 119 matched the source as-is; the other 25 surfaced the docs URL / endpoint-path drift documented below.</li>
 <li>
 <strong>Refreshed 25 stale <code>### Official Documentation</code> URLs after KuCoin reorganised the docs-new site.</strong> 17 had returned HTTP 404 because the futures section moved (e.g. <code>/futures-trading/account/get-account-overview</code> → <code>/account-info/account-funding/get-account-futures</code>; <code>/futures-trading/orders/cancel-order-by-orderid</code> → <code>/futures-trading/orders/cancel-order-by-orderld</code> — note the typo on KuCoin’s side); 7 pointed at pages that now document a different REST endpoint than the source code calls; 1 (<code>KucoinMarketData$get_symbol</code>) pointed at the all-symbols list page instead of the single-symbol detail page. All replacement URLs verified by HTTP GET. The futures Dead Connection Protection (DCP) docs were withdrawn from KuCoin entirely, so <code>KucoinFuturesTrading$set_dcp()</code> / <code>$get_dcp()</code> now reference the equivalent spot-trading DCP page with an inline note (see BUG FIXES below for the related endpoint observation).</li>
 </ul></div>
 <div class="section level3">
-<h3 id="bug-fixes-4-0-2">BUG FIXES<a class="anchor" aria-label="anchor" href="#bug-fixes-4-0-2"></a></h3>
+<h3 id="bug-fixes-4-0-2">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-4-0-2"></a></h3>
 <ul><li>
 <strong>9 KuCoin Futures REST endpoint paths corrected after the 2026-05 docs reorganisation moved them.</strong> The old paths now return HTTP 404; the new paths were confirmed live (read endpoints fully exercised; write endpoints poked with no-op or invalid payloads to confirm the path is recognised by KuCoin and only the business validation fails). Methods affected:
 <ul><li>
@@ -253,8 +290,10 @@
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="4.0.1" id="kucoin-401">kucoin 4.0.1<a class="anchor" aria-label="anchor" href="#kucoin-401"></a></h2>
+<p><strong>Two small timestamp-handling bugs are fixed: a spurious warning, and a column that could silently be corrupted.</strong></p>
+<p>The millisecond and nanosecond timestamp conversion helpers no longer emit a spurious coercion warning when given an entirely missing input, since an all-missing result is the documented, correct behaviour rather than a problem. Separately, <code>coerce_cols()</code> now deduplicates the column list it is given, because passing the same column name twice previously fed an already-converted value back through the same conversion a second time and silently produced a wildly wrong result.</p>
 <div class="section level3">
-<h3 id="bug-fixes-4-0-1">BUG FIXES<a class="anchor" aria-label="anchor" href="#bug-fixes-4-0-1"></a></h3>
+<h3 id="bug-fixes-4-0-1">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-4-0-1"></a></h3>
 <ul><li>
 <strong><code>ms_to_datetime()</code> / <code>ns_to_datetime()</code> no longer emit spurious <code>"NAs introduced by coercion"</code> warnings</strong> when given an all-<code>NA_character_</code> vector. The NA → NA path is the documented contract, not a problem worth a warning. Implemented by type-dispatching on the input and only feeding the non-NA entries to <code><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric()</a></code> — not <code><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings()</a></code>, which would hide genuine bad input (e.g. a malformed numeric string from a future API change). Pinned by a counter-regression test that asserts <code>ms_to_datetime("not-a-number")</code> still warns loudly.</li>
 <li>
@@ -263,8 +302,10 @@
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="4.0.0" id="kucoin-400">kucoin 4.0.0<a class="anchor" aria-label="anchor" href="#kucoin-400"></a></h2>
+<p><strong>This release adds KuCoin Futures support and margin and lending trading, and changes how several timestamp columns are named.</strong></p>
+<p>This release adds three new classes for margin trading, margin market data, and lending, plus three more that bring KuCoin Futures support across 44 endpoints for market data, trading, and account management. It is also a breaking release: API timestamp fields keep their original names instead of gaining a <code>datetime_</code> prefix, the kline <code>freq</code> parameter is renamed <code>timeframe</code>, the default candle window changes, and the deposit-address <code>currency</code> argument becomes required. Alongside several parser and response-shape bug fixes, every class is swept to remove list columns and return a consistent <code>data.table</code> shape, the bundled dataset is refreshed, documentation and vignettes are expanded, and new mocked and live integration tests, tooling, and licensing changes are added.</p>
 <div class="section level3">
-<h3 id="new-features-4-0-0">NEW FEATURES<a class="anchor" aria-label="anchor" href="#new-features-4-0-0"></a></h3>
+<h3 id="new-features-4-0-0">New features<a class="anchor" aria-label="anchor" href="#new-features-4-0-0"></a></h3>
 <ul><li>
 <strong>Margin Trading — <code>KucoinMarginTrading</code> class</strong> (9 endpoints): intent-based wrappers (<code>open_short</code>, <code>close_short</code>, <code>open_long</code>, <code>close_long</code>), <code>borrow</code>, <code>repay</code>, borrow/repay/interest history, borrow rate, leverage modification.</li>
 <li>
@@ -288,7 +329,7 @@
 <strong>Margin order validation</strong>: <code>validate_margin_order_params()</code> helper for margin-specific order parameter checking with auto-generated <code>clientOid</code>.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="breaking-changes-4-0-0">BREAKING CHANGES<a class="anchor" aria-label="anchor" href="#breaking-changes-4-0-0"></a></h3>
+<h3 id="breaking-changes-4-0-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-4-0-0"></a></h3>
 <ul><li>
 <strong>Version bump 3.0.0 → 4.0.0</strong>.</li>
 <li>
@@ -318,7 +359,7 @@
 <strong><code>KucoinDeposit$get_deposit_addresses()</code></strong>: <code>currency</code> is now a required argument (removed <code>NULL</code> default) to match KuCoin API requirement.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="bug-fixes-4-0-0">BUG FIXES<a class="anchor" aria-label="anchor" href="#bug-fixes-4-0-0"></a></h3>
+<h3 id="bug-fixes-4-0-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-4-0-0"></a></h3>
 <ul><li>Fixed <code>KucoinMarginData$get_cross_margin_symbols()</code> parser to handle KuCoin’s new <code>{timestamp, items}</code> response envelope. Previously returned garbled columns (<code>v1</code>, <code>v2</code>, …) instead of proper data.</li>
 <li>Fixed <code>KucoinLending$get_loan_market()</code> — KuCoin now requires authentication for <code>/api/v3/project/list</code>. Removed erroneous <code>auth = FALSE</code>.</li>
 <li>Removed usage of <code>%||%</code> operator which was not defined or imported; replaced with explicit <code>if (is.null(...))</code> checks.</li>
@@ -337,7 +378,7 @@
 <code>ms_to_datetime()</code> / <code>ns_to_datetime()</code> (and the alpaca equivalent <code>rfc3339_to_datetime</code>) no longer short-circuit on <code>all(is.na(x))</code> input. The short-circuit returned a length-1 <code>NA_POSIXct_</code> which <code><a href="https://rdrr.io/pkg/data.table/man/assign.html" class="external-link">data.table::set()</a></code> would recycle into the existing column’s storage type rather than replacing the column with POSIXct — so all-NA timestamp columns were silently typed as <code>character</code>/<code>numeric</code> instead of <code>POSIXct</code>. The helpers now always produce a length-matching POSIXct vector, even when every input value is missing.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="improvements-4-0-0">IMPROVEMENTS<a class="anchor" aria-label="anchor" href="#improvements-4-0-0"></a></h3>
+<h3 id="improvements-4-0-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-4-0-0"></a></h3>
 <ul><li>
 <strong>One-entity-per-row, no-list-column convention across every R6 class.</strong> Sweeping pass on all 16 classes to eliminate <code>data.table</code> list columns and standardise on one of five shape treatments (<code>;</code>-collapse for arrays of plain strings; long-format explode for arrays of objects, with a 1-indexed position column where order matters; wide-prefix flatten for fixed-schema nested objects; sibling-method re-route for collections that don’t fit the row entity; JSON-string encode for dynamic-key or array-of-array objects). Matches the convention in the sibling <code>alpaca</code> and <code>binance</code> packages — see the new <code><a href="../articles/data-shapes.html">vignette("data-shapes")</a></code>.</li>
 <li>
@@ -366,7 +407,7 @@
 <li>Support both <code>KC-API-KEY</code> and <code>KUCOIN_API_KEY</code> environment variable naming conventions.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="documentation-4-0-0">DOCUMENTATION<a class="anchor" aria-label="anchor" href="#documentation-4-0-0"></a></h3>
+<h3 id="documentation-4-0-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-4-0-0"></a></h3>
 <ul><li>Corrected parameter docs based on live API testing:
 <ul><li>
 <code>KucoinTrading$get_open_orders()</code>: <code>symbol</code> is <strong>required</strong> (not optional).</li>
@@ -385,7 +426,7 @@
 <li>Updated ROADMAP to v4.0.0 with Futures classes added to completed items.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="tests-4-0-0">TESTS<a class="anchor" aria-label="anchor" href="#tests-4-0-0"></a></h3>
+<h3 id="tests-4-0-0">Tests<a class="anchor" aria-label="anchor" href="#tests-4-0-0"></a></h3>
 <ul><li>Added 140 live integration tests gated behind <code>KUCOIN_LIVE_TESTS=true</code>:
 <ul><li>
 <code>test-live-integration-public.R</code>: 21 tests covering all public endpoints (no auth required).</li>
@@ -398,18 +439,18 @@
 <li>Added data-shape regression tests on <code>KucoinMarginData</code>, <code>KucoinMarginTrading</code>, and <code>KucoinLending</code>: each public method asserts there are no list columns, the column types match the documented <code>@return</code> block, and the empty-response path yields a zero-row <code>data.table</code> rather than a stub row.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="data-4-0-0">DATA<a class="anchor" aria-label="anchor" href="#data-4-0-0"></a></h3>
+<h3 id="data-4-0-0">Data<a class="anchor" aria-label="anchor" href="#data-4-0-0"></a></h3>
 <ul><li>Refreshed bundled <code>kucoin_btc_usdt_4h_ohlcv</code> dataset (18,351 rows, Oct 2017 – Mar 2026).</li>
 </ul></div>
 <div class="section level3">
-<h3 id="tooling-4-0-0">TOOLING<a class="anchor" aria-label="anchor" href="#tooling-4-0-0"></a></h3>
+<h3 id="tooling-4-0-0">Tooling<a class="anchor" aria-label="anchor" href="#tooling-4-0-0"></a></h3>
 <ul><li>
 <strong><code>scripts/LINT.sh</code></strong> — new script that runs <code>air format .</code> first (so reformatted code is what gets linted, and a passing run leaves the working tree clean) then <code>lintr::lint_package()</code> with the package loaded via <code>devtools::load_all()</code> so <code>object_usage_linter</code> honours <code><a href="https://rdrr.io/r/utils/globalVariables.html" class="external-link">utils::globalVariables()</a></code> declarations for <code>data.table</code> NSE columns. Matches the binance package’s lint script with the air format step folded in.</li>
 <li>
 <strong><code>.lintr</code> config repaired</strong>. The previous file started with a leading <code># .lintr</code> comment that made the DCF parser reject it (<code>Malformed config file</code>) — <code>lintr::lint_package()</code> had been failing silently. Now adopts the binance ruleset: line length 120, indentation 2, explicit <code><a href="https://rdrr.io/r/base/function.html" class="external-link">return()</a></code> style, and <code>object_name_linter</code> allowing <code>snake_case</code> / <code>SNAKE_CASE</code> / <code>CamelCase</code> / <code>camelCase</code> so R6 class names and KuCoin’s camelCase API params (<code>clientOid</code>, <code>orderId</code>) are accepted.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="refactor-4-0-0">REFACTOR<a class="anchor" aria-label="anchor" href="#refactor-4-0-0"></a></h3>
+<h3 id="refactor-4-0-0">Refactor<a class="anchor" aria-label="anchor" href="#refactor-4-0-0"></a></h3>
 <ul><li>
 <strong>Explicit <code><a href="https://rdrr.io/r/base/function.html" class="external-link">return()</a></code> everywhere.</strong> Every closure now has an explicit <code>return(...)</code> instead of relying on R’s implicit-last-expression. Touches 78 sites across the package (9 in <code>R/</code>, 69 across <code>tests/</code> and <code>vignettes/</code>). Side-effect-only closures get <code>return(invisible(NULL))</code>.</li>
 <li>
@@ -418,21 +459,23 @@
 <strong><code>tests/testthat/helper-constants.R</code></strong> — shared test-setup file (auto-sourced by <code>testthat</code> before tests). Defines <code>BASE_SPOT</code> / <code>BASE_FUTURES</code>, <code>TEST_KEYS</code>, <code>TEST_SYMBOL_SPOT</code> / <code>TEST_SYMBOL_FUTURES</code>, and one <code>new_xxx()</code> constructor helper per R6 class. Strips ~130 lines of duplicated setup boilerplate from the 14 test files; collapses 22 inline <code>KucoinMarketData$new(...)</code> calls in <code>test-KucoinMarketData.R</code> to <code>new_market()</code>. Resolves three name collisions that the per-file scoping had been hiding (<code>new_account</code>, <code>new_market</code>, <code>new_trading</code> now have explicit <code>new_futures_*</code> siblings).</li>
 </ul></div>
 <div class="section level3">
-<h3 id="licence-4-0-0">LICENCE<a class="anchor" aria-label="anchor" href="#licence-4-0-0"></a></h3>
+<h3 id="licence-4-0-0">Licence<a class="anchor" aria-label="anchor" href="#licence-4-0-0"></a></h3>
 <ul><li>
 <strong><code>LICENSE</code> consolidated to a single full MIT file</strong>. The package previously shipped both a 2-line DCF stub (<code>LICENSE</code>) and the full MIT text (<code>LICENSE.md</code>), to satisfy the CRAN <code>License: MIT + file LICENSE</code> template alongside GitHub’s licensee detector. Those two requirements conflict in practice. <code>DESCRIPTION</code> now declares <code>License: MIT</code> (non-CRAN form), so R CMD check skips the DCF parse of the LICENSE file while GitHub still detects MIT. The previously bundled <strong>Citation Clause has been dropped</strong> — the package is now plain MIT, matching the sibling <code>alpaca</code> and <code>binance</code> packages. <code>LICENSE.md</code> was removed; <code>LICENSE</code> carries the full text.</li>
 </ul></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="3.0.0" id="kucoin-300">kucoin 3.0.0<a class="anchor" aria-label="anchor" href="#kucoin-300"></a></h2>
+<p><strong>This release is a complete rewrite onto an R6 class architecture covering the whole KuCoin Classic Spot API.</strong></p>
+<p>The package is rewritten from standalone functions into ten R6 classes covering 77 KuCoin Classic Spot REST endpoints, with credentials now managed through environment variables or passed to constructors, and the old v2 functions removed. New capabilities include synchronous order placement and cancellation, order modification, Dead Connection Protection, fee-rate queries, an HF trading ledger, server-time and service-status checks, fiat prices, a configurable timestamp source, async support via promises, bulk historical kline backfill, a bundled sample dataset, and automatic pagination. Every response is returned as a <code>data.table</code> with snake_case columns and converted datetime fields, method naming is standardised across classes, and the release ships full roxygen documentation, two vignettes, a README, and a pkgdown site, under an MIT licence with an additional citation clause.</p>
 <div class="section level3">
-<h3 id="breaking-changes-3-0-0">BREAKING CHANGES<a class="anchor" aria-label="anchor" href="#breaking-changes-3-0-0"></a></h3>
+<h3 id="breaking-changes-3-0-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-3-0-0"></a></h3>
 <ul><li>Complete rewrite of the package architecture. All implementation functions are now wrapped in R6 classes inheriting from <code>KucoinBase</code>.</li>
 <li>Removed all v2 standalone functions (<code>kucoin_get_ticker()</code>, <code>kucoin_place_order()</code>, etc.). Use the corresponding R6 class methods instead.</li>
 <li>API credentials are now managed via environment variables (<code>KC-API-KEY</code>, <code>KC-API-SECRET</code>, <code>KC-API-PASSPHRASE</code>) or passed directly to class constructors through <code><a href="../reference/get_api_keys.html">get_api_keys()</a></code>.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="new-features-3-0-0">NEW FEATURES<a class="anchor" aria-label="anchor" href="#new-features-3-0-0"></a></h3>
+<h3 id="new-features-3-0-0">New features<a class="anchor" aria-label="anchor" href="#new-features-3-0-0"></a></h3>
 <ul><li>
 <strong>R6 class architecture</strong>: Ten R6 classes covering 77 KuCoin Classic Spot REST API endpoints:
 <ul><li>
@@ -486,7 +529,7 @@
 <strong>Timestamp handling</strong>: <code><a href="../reference/time_convert_from_kucoin.html">time_convert_from_kucoin()</a></code> and <code><a href="../reference/time_convert_to_kucoin.html">time_convert_to_kucoin()</a></code> for millisecond/nanosecond epoch conversion.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="improvements-3-0-0">IMPROVEMENTS<a class="anchor" aria-label="anchor" href="#improvements-3-0-0"></a></h3>
+<h3 id="improvements-3-0-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-3-0-0"></a></h3>
 <ul><li>All API responses returned as <code>data.table</code> objects with snake_case column names.</li>
 <li>Datetime columns automatically converted to POSIXct.</li>
 <li>Input validation for order placement (type, side, symbol format, parameter combinations).</li>
@@ -503,7 +546,7 @@
 </ul></li>
 </ul></div>
 <div class="section level3">
-<h3 id="documentation-3-0-0">DOCUMENTATION<a class="anchor" aria-label="anchor" href="#documentation-3-0-0"></a></h3>
+<h3 id="documentation-3-0-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-3-0-0"></a></h3>
 <ul><li>Full roxygen2 R6 method documentation for all public methods.</li>
 <li>Class-level docs include endpoint tables, example usage, and curl equivalents.</li>
 <li>Two vignettes: “Getting Started” (all 9 classes, synchronous) and “Async Usage” (promise-based patterns).</li>
@@ -511,7 +554,7 @@
 <li>pkgdown site at <a href="https://dereckscompany.github.io/kucoin/" class="uri">https://dereckscompany.github.io/kucoin/</a>.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="licence-3-0-0">LICENCE<a class="anchor" aria-label="anchor" href="#licence-3-0-0"></a></h3>
+<h3 id="licence-3-0-0">Licence<a class="anchor" aria-label="anchor" href="#licence-3-0-0"></a></h3>
 <ul><li>MIT licence with an additional citation clause requiring attribution in academic publications, research outputs, and publicly distributed derivative works.</li>
 </ul></div>
 </div>
