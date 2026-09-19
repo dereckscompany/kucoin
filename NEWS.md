@@ -1,3 +1,16 @@
+# kucoin 4.6.6
+
+**The changelog now reads the same way in every release, in this package and across the fleet.**
+
+`NEWS.md` is reshaped so every version section opens with one bold plain-English sentence and a plain paragraph before its technical bullets, matching the fleet's one canonical changelog form. Nothing else about this release changes.
+
+- Sections reshaped with a new bold lead and paragraph: 16 (4.6.0, 4.5.1, 4.5.0, 4.4.0, 4.3.1, 4.3.0, 4.2.3, 4.2.2, 4.2.0, 4.1.1, 4.1.0, 4.0.3, 4.0.2, 4.0.1, 4.0.0, 3.0.0). The lead and paragraph for each were written only from that section's own existing heading and bullets, and every existing bullet was kept verbatim and in place.
+- Sections already in form, left untouched: 4 (4.6.5, 4.6.4, 4.6.3, 4.6.2).
+- Sub-headings re-cased from capitals to sentence case: 24 (`## REFACTOR` → `## Refactor` at four sites, `## BUG FIXES` → `## Bug fixes` at four sites, `## DOCUMENTATION` → `## Documentation` at three sites, `## TESTS` → `## Tests` at two sites, `## NEW FEATURES` → `## New features` at two sites, `## BREAKING CHANGES` → `## Breaking changes` at two sites, `## IMPROVEMENTS` → `## Improvements` at two sites, `## LICENCE` → `## Licence` at two sites, and `## DEPENDENCIES` → `## Dependencies` and `## DATA` → `## Data` and `## TOOLING` → `## Tooling` once each). Sub-headings already in sentence or title case were left as they are.
+- Headings that lost a link: 0. No section heading in this file carried a link or a `v` prefix.
+- Sections moved for order: 0. Every section was already in descending version order.
+- Citation block in `README.Rmd`: changed. The previous block was a blockquote with an intervening code chunk and a separate author/ORCID line; it is rewritten to the one plain `Cite as:` line built from `DESCRIPTION`, and the version number is bumped to match this release.
+
 # kucoin 4.6.5
 
 **The README now follows the same shape as every other package in the fleet, so a reader who knows one package's documentation already knows where to look in this one.** This is a documentation-only release; no code path, argument, column, or API-facing string changed. The README's sections were renamed and reordered into the fleet's canonical shape (plain-English lead, technical overview, design philosophy, installation, quick start, per-surface usage, asynchronous usage, documentation, citation, licence) without dropping any existing sentence, code chunk, table or link; the one rewrite is the stale hand-written citation block, rebuilt from `DESCRIPTION`.
@@ -42,17 +55,29 @@
 
 # kucoin 4.6.0
 
+**Client constructors can now opt into automatic retry of failed read requests, without ever risking an order being sent twice.**
+
+Every client class constructor gains a `max_tries` argument that, when raised above its default of `1`, retries a GET request automatically after a transient failure such as an HTTP 408, 429, or 5xx response, or a dropped connection. Retry only ever applies to GET requests; an order placement or cancellation is never retried automatically, so a resend can never double-submit an order. The default of `1` leaves existing behaviour unchanged, and pagination inherits the same setting through `kucoin_paginate()`.
+
 ## Opt-in request retry at construction (`max_tries`), a hard GET-only carve-out
 
 Every client class constructor (via `KucoinBase`) gains a `max_tries` argument (`scalar<integer in [1, 10]>`, default `1` = no retry) threaded to `connectcore`'s retry machinery. Setting it above `1` opts every GET the client makes — single requests and paginated reads alike — into automatic retry on a transient failure (HTTP 408/429/5xx or a dropped connection) with jittered backoff. Retry is a hard **GET-only** carve-out: a non-idempotent verb (an order `POST`, a cancel `DELETE`) is never auto-retried, so a resend can never double-submit an order. The default `1` leaves live-trading behaviour unchanged — the trader layer stays the single retry authority there; raise `max_tries` only for research and backfill reads. Implements the fleet retry-convergence ruling (2026-07-14), closes #14. Requires `connectcore (>= 0.5.0)`, where the GET-only guard is enforced in the one shared request funnel. `kucoin_paginate()` also gains a `max_tries` argument so the constructor policy reaches paginated reads.
 
 # kucoin 4.5.1
 
+**Fetching weekly or monthly candles over a long history no longer crashes.**
+
+Requesting 1-week or 1-month candles across a long date range used to fail because the arithmetic that splits the request into 1,500-candle segments overflowed a 32-bit integer. That arithmetic now runs in double precision throughout, matching the futures path, so week- and month-scale backfills complete across the full history, and regression tests confirm the hourly and daily paths are unchanged.
+
 ## Weekly and monthly candle fetches no longer overflow (closes #40)
 
 Asking for 1week or 1month candles over any long history used to crash the fetch loop, because the arithmetic that splits the request into 1,500-candle segments was done in 32-bit integers — and fifteen hundred months of seconds is a bigger number than a 32-bit integer can hold. The segment maths now stays in double precision end to end (mirroring the futures path, which always did), so week- and month-scale backfills work across the full history. Regression tests pin 1week and 1month segment boundaries at 2020-era epochs and prove the hourly/daily paths are byte-for-byte unchanged.
 
 # kucoin 4.5.0
+
+**Validation failures now raise a typed error instead of a plain one, so calling code can catch them by type.**
+
+The connector's 101 non-transport validation checks, covering things such as a missing required parameter or a value out of range, now raise a classed `kucoin_validation_error` condition instead of a bare error, rooted under a new `kucoin_error` domain that sits alongside the existing transport error family. The error messages are unchanged, and no other behaviour changes, so existing tests and message-matching code keep working.
 
 ## Typed input-validation conditions (the non-transport half of the taxonomy)
 
@@ -63,6 +88,10 @@ Asking for 1week or 1month candles over any long history used to crash the fetch
 
 # kucoin 4.4.0
 
+**API errors from KuCoin now come back as a typed, structured condition instead of a plain error message.**
+
+Every failure surfaced by the request funnel, whether an HTTP error status or a venue error returned in the response body, now raises a classed condition carrying structured fields such as the status code, the KuCoin error code, the request URL, and a snippet of the response body, so calling code can read those fields instead of parsing the message text. A malformed response missing its error code raises the shared `connectcore` response error instead. The error message text is unchanged, and the change is purely additive.
+
 ## Typed API-error conditions
 
 * All three failure surfaces of the request funnel (`parse_kucoin_response()`) now signal a **classed condition** instead of a bare `rlang::abort()`, so a caller branches on error *type* and reads structured *fields* rather than grepping the message text. The two API surfaces — a non-2xx HTTP status, and a venue error carried as a `code` other than `"200000"` in the JSON body (KuCoin returns HTTP 200 with the error in the body) — signal a class vector ordered specific -> general: `kucoin_api_error_<status>` (keyed on the HTTP status), `kucoin_api_error` (any KuCoin API failure), then the inherited connectcore family `connectcore_api_error_<status>` / `connectcore_api_error` / `connectcore_error`. The condition carries `status` (integer), `code` (the KuCoin venue code, `NULL` on a plain HTTP failure), `url` (query-string credentials redacted), and `body_snippet` (the response body) as fields — read `e$code`, not a regex.
@@ -72,11 +101,19 @@ Asking for 1week or 1month candles over any long history used to crash the fetch
 
 # kucoin 4.3.1
 
+**Paginated reads with thousands of pages no longer crash with a stack overflow.**
+
+`kucoin_paginate()`'s synchronous path used to recurse into itself for every page, so a very long page walk, such as a large account history, could overflow the call stack. It now walks pages with an iterative loop instead, using constant stack depth, while returning the exact same page ordering and stopping conditions as before. The asynchronous path is unchanged, and a regression test now walks 3,000 pages to confirm the fix.
+
 ## `kucoin_paginate()` walks pages iteratively in sync mode (closes #15)
 
 `kucoin_paginate()` expressed its page walk as self-recursion: each page's synchronous continuation called the fetch closure for the next page, so on a deep walk (thousands of pages, e.g. a long account history) the nested `fetch_page -> then_or_now -> continuation -> fetch_page` frames grew the call stack and eventually aborted with a node-stack overflow (R has no tail-call optimisation). The sync path is now an iterative `while`-loop that accumulates pages in constant stack depth, so a several-thousand-page walk completes. Results are bit-identical: the same page ordering, the same `page < total && page < max_pages` stop condition, and the same `max_pages` / `page_size` closed-interval contracts. The async path keeps its promise-based recursion, which is safe because `promises::then()` schedules each continuation as a fresh event-loop task, so the call stack unwinds between pages. A regression test walks 3000 pages through the mock router and confirms the sync path survives where the recursive code overflowed.
 
 # kucoin 4.3.0
+
+**Every method argument now uses snake_case, with no deprecated camelCase names kept around.**
+
+This release renames roughly 40 camelCase arguments to snake_case across the whole public surface, as a clean break with no deprecation shims, so callers now pass names such as `client_order_id` or `time_in_force` instead of KuCoin's own camelCase field names. The shared `ms_to_datetime()` helper moves into `connectcore` so every wrapper shares one implementation, `kucoin_backfill_klines()` reports per-combination failures as warnings instead of smuggling them on a return attribute, remaining base date-time calls are replaced with `lubridate`, and documentation, tests, and vignettes are updated to match.
 
 ## snake_case argument convergence (clean break) + connectcore alignment
 
@@ -90,11 +127,19 @@ This release renames every camelCase R argument to snake_case, so the whole publ
 
 # kucoin 4.2.3
 
+**Every method that returns a fixed-shape table now documents, and enforces, exactly which columns it returns.**
+
+The `@return` documentation of every public method that yields a fixed-shape `data.table` now lists each column with its type, which in turn generates a runtime check on both the synchronous result and the resolved value of a promise. Methods whose result shape genuinely varies, such as the zero-column empty response, the heterogeneous futures position tables, and the wide futures-contract metadata tables, are deliberately left undocumented in this way and keep working as before.
+
 ## data.table return shapes documented with typed column bullets
 
 The `@return` of every public method that yields a fixed-shape `data.table` now lists each column as a typed nested bullet, following the roxyassert convention: bare element types (`character`, `integer`, `numeric`, `logical`, `POSIXct`) with ` | NA` appended wherever a column can legitimately be missing in a real response. Documenting the columns regenerates `assert_has_columns` plus the per-column type asserts, so the parsed shape is now enforced at the public boundary — for the synchronous value and for the resolved value of a promise alike — rather than relying on the old loose `assert_data_table` check. Methods whose tables are genuinely variable-shape are deliberately left as the generic `(data.table | promise<data.table>)`: those that return a zero-column empty `data.table` on an empty response, the heterogeneous futures position tables whose numeric fields arrive sometimes as numbers and sometimes as strings, and the wide futures-contract metadata tables. This matches the package's existing flattener convention and keeps the empty-response and variable-payload paths working untouched.
 
 # kucoin 4.2.2
+
+**Real KuCoin API responses uncovered and fixed several bugs that synthetic test fixtures alone could not catch, alongside a batch of input-type corrections.**
+
+Every committed test fixture was validated against a read-only capture of the real KuCoin API, and the release fixes the divergences that surfaced: a futures status endpoint that KuCoin mislabels as plain text, a nested field that produced a forbidden list column, a renamed field, a fabricated field that the live API never returns, a parameter typed too narrowly to accept a plain number, and an empty candle range that aborted instead of returning an empty table. A second pass corrects further type contracts, including two millisecond-timestamp and page-size parameters that rejected legitimate numeric input, a pagination cap that rejected its own documented `Inf` default, and adds typed per-column documentation to several one-row methods.
 
 ## Live-capture fixture hardening + bugs the synthetic fixtures hid
 
@@ -128,6 +173,10 @@ This release validates every committed fixture against a read-only capture of th
 
 # kucoin 4.2.0
 
+**Every function argument and return value is now checked at runtime against a documented type contract.**
+
+The whole package adopts the `roxyassert` framework, so every documented parameter and return type is written in a single grammar that also generates the runtime checks applied at each method's entry and at its result, for both the synchronous and promise-based paths. Two reusable shapes, for candle data and for the order book, are defined for the endpoints with a genuinely fixed schema; every other endpoint keeps a generic return type, and the public API and wire format are unchanged.
+
 ## Type contracts (roxyassert)
 
 * **Adopted `roxyassert` for runtime type contracts across the whole package.** Every `@param`/`@return` is now written in the `roxyassert` grammar (zero prose type annotations remain), and the `roxyassert::contract_roclet` generates `assert_args_*()` / `assert_return_*()` helpers into `R/contracts-generated.R` at `document()` time — so each function's documented contract and its runtime validation come from a single source. Every public R6 table method validates its arguments at entry and validates the parsed result (synchronous value or the resolved value of a promise alike) at the boundary via `connectcore::then_or_now(res, assert_return_*, is_async = private$.is_async)`. `assert` is now an import; `uuid` and `roxyassert` are added (the margin client-order-id auto-generator now uses `uuid::UUIDgenerate()` instead of a hand-rolled hex string).
@@ -136,33 +185,45 @@ This release validates every committed fixture against a read-only capture of th
 
 # kucoin 4.1.1
 
-## REFACTOR
+**The connector no longer maintains its own request-sending code; it now goes through the shared transport layer entirely.**
+
+With a new `connectcore` feature that can send a pre-serialised request body byte-for-byte, KuCoin now routes every request, including its signed body, through the shared funnel instead of its own hand-rolled request builder, which has been removed. The bytes sent on the wire, and the signature computed over them, are unchanged from the previous release, and the public API is otherwise unchanged.
+
+## Refactor
 
 * **Adopted `connectcore`'s `body_format = "raw"` funnel; the connector now owns no transport.** With `connectcore` v0.1.0 a pre-serialised body can be sent byte-verbatim (no NULL-pruning, no pretty-printing, no re-encoding) and the `.sign()` seam runs after the body is set, so a body-signing venue reads the exact bytes off the request. KuCoin now serialises its body once to compact JSON, routes it through the inherited funnel via `body_format = "raw"`, and signs those exact bytes — making the hand-rolled `kucoin_build_request()` redundant. It has been **removed**; `KucoinBase$.request()` is a thin override of `connectcore::build_request()` and `kucoin_paginate()` routes each page through the same funnel. The wire bytes — and the `KC-API-*` HMAC computed over them — are byte-identical to 4.1.0 (verified end-to-end: identical compact body, identical prehash, identical signature). The public API is otherwise unchanged.
 
 # kucoin 4.1.0
 
-## REFACTOR
+**The connector's transport layer now sits on a shared base package instead of its own copy of the plumbing.**
+
+`KucoinBase` now inherits the shared `connectcore::RestClient` instead of carrying its own credential-storage, sync/async, and server-time code, plugging in through two documented seams for KuCoin's header-based signing scheme and its response envelope. Generic helpers such as JSON-to-table conversion move into `connectcore` too, while KuCoin keeps its own request funnel because it must sign and transmit the exact compact JSON body, which the shared default funnel would alter. The public API is unchanged, and `connectcore` is added as a new dependency.
+
+## Refactor
 
 * **Migrated the transport layer onto `connectcore`, the shared connector base.** `KucoinBase` now inherits [`connectcore::RestClient`](https://github.com/dereckscompany/connectcore) instead of carrying its own copy of the credential-storage / sync-async / server-time / active-binding plumbing. KuCoin plugs into the base through the two documented seams — `.sign()` (the header-based HMAC scheme: `KC-API-KEY` / `KC-API-SIGN` / `KC-API-TIMESTAMP` / `KC-API-PASSPHRASE` / `KC-API-KEY-VERSION`, signing the timestamp + method + URL-encoded path + raw body) and `.parse_envelope()` (KuCoin's `code` / `data` envelope). The public API is unchanged: every `Kucoin*` class, method, and the exported `kucoin_build_request()` / `kucoin_paginate()` helpers keep their exact signatures and behaviour.
 * **The generic transport helpers now come from `connectcore` instead of being duplicated here.** The package-private `then_or_now()` and `fetch_server_time_ms()`, plus the generic JSON→data.table toolkit (`to_snake_case()`, `as_dt_row()`, `as_dt_list()`), are imported from `connectcore` (their KuCoin copies were byte-for-byte equivalents). KuCoin-specific parsers (`parse_orderbook()`, `parse_klines()`, `flatten_pages()`, the futures kline parser) and the helpers whose precise behaviour the test-suite pins (`ms_to_datetime()` / `ns_to_datetime()` shape contracts, `coerce_cols()` dedup, the `;`-collapse warning id) stay in the package.
 * **Why KuCoin keeps its own request funnel.** Unlike most venues, KuCoin signs the *exact compact JSON request body* and must transmit that same byte sequence on the wire, so `kucoin_build_request()` continues to send the body via `req_body_raw()` (the signed string verbatim) rather than `connectcore`'s default funnel, which pretty-prints the body and would invalidate the signature. `kucoin_build_request()` / `kucoin_paginate()` gained optional `sign` / `parse_envelope` parameters (defaulting to KuCoin's own) so the seams drive the funnel; existing callers are unaffected.
 
-## DEPENDENCIES
+## Dependencies
 
 * Added `connectcore` to `Imports` (pinned to `dereckscompany/connectcore@v0.0.1` via `Remotes` and `renv.lock`).
 
 # kucoin 4.0.3
 
-## BUG FIXES
+**Futures Dead Connection Protection works again after KuCoin retired the old endpoints, and the futures REST surface gained live test coverage.**
+
+KuCoin retired the legacy futures Dead Connection Protection endpoints, so `set_dcp()` and `get_dcp()` are migrated to the new unified endpoint while keeping the same method signatures for callers. The private request method gains an optional parameter to target a different host for a single call, which is what makes the migration possible. New live integration tests cover the futures public and authenticated endpoints, including the migrated DCP methods, skipping gracefully when a contributor has no funded futures account rather than failing; write methods that would need real positions or funds are left unexercised.
+
+## Bug fixes
 
 * **`KucoinFuturesTrading$set_dcp()` / `$get_dcp()` migrated to KuCoin's new unified DCP endpoint.** The legacy futures-specific paths (`POST /api/v1/orders/dead-cancel-all` and `GET /api/v1/orders/dead-cancel-all/query` on `api-futures.kucoin.com`) were retired by KuCoin around 2026-05 — the docs page was withdrawn, the GET path returned HTTP 404 and the POST returned 403 even on accounts with the relevant permission. KuCoin replaced both with a unified Universal-Trading-Account endpoint on the spot host: `POST /api/ua/v1/dcp/set` and `GET /api/ua/v1/dcp/query`, both taking a `tradeType` parameter that accepts `SPOT`, `MARGIN`, or `FUTURES`. We now hardcode `tradeType = "FUTURES"` and override the base URL to the spot host inside both methods, so the public method API stays unchanged — existing `futures_trading$set_dcp(timeout, symbol)` and `$get_dcp(symbol)` calls keep working. Spot DCP (`KucoinTrading$set_dcp()` / `$get_dcp()`) is untouched — it still works against the `/api/v1/hf/orders/dead-cancel-all*` paths on the spot host.
 
-## REFACTOR
+## Refactor
 
 * **`KucoinBase$.request()` (private) gains an optional `base_url` parameter** that overrides the instance's configured host for a single call. Used so the migrated futures DCP methods can target the spot host while every other `KucoinFuturesTrading` method keeps using the futures host. No behaviour change for any existing call site — `base_url = NULL` (the default) preserves the previous behaviour exactly.
 
-## TESTS
+## Tests
 
 * **Live integration coverage for the Futures REST surface.** New `[LIVE]` test blocks in `tests/testthat/test-live-integration-public.R` (7 tests against `KucoinFuturesMarketData` public endpoints) and `test-live-integration-private.R` (13 tests covering authenticated `KucoinFuturesAccount`, `KucoinFuturesMarketData$get_full_orderbook`, read-only `KucoinFuturesTrading` queries, and the migrated DCP methods). Pins the 5 path-corrected GET endpoints from v4.0.2 (`get_margin_mode`, `get_cross_margin_leverage`, `get_max_open_size`, `get_max_withdraw_margin`, `get_full_orderbook`) plus the migrated DCP endpoints so the next time KuCoin moves a futures endpoint, CI surfaces the 404 instead of waiting for a user report. The DCP `set_dcp` test deliberately uses `timeout = -1` (disable) so it has no real side effects.
 * Write methods (`set_margin_mode`, `set_cross_margin_leverage`, `add_isolated_margin`, `remove_isolated_margin`) are intentionally not exercised — they require real positions / funds.
@@ -170,12 +231,16 @@ This release validates every committed fixture against a read-only capture of th
 
 # kucoin 4.0.2
 
-## DOCUMENTATION
+**Documentation links and nine futures endpoint paths are corrected after KuCoin reorganised its docs and moved several routes.**
+
+Every one of the 144 verification markers in the roxygen documentation was walked individually against the live KuCoin docs, and 25 documentation links that had gone stale after KuCoin reorganised its site are refreshed. Nine futures REST endpoint paths that KuCoin moved during that reorganisation are corrected to their new locations, and the futures Dead Connection Protection query endpoint is flagged as apparently withdrawn by KuCoin without any announcement.
+
+## Documentation
 
 * **All 144 `Verified: YYYY-MM-DD` markers in the R6 roxygen blocks bumped to `2026-05-23`.** Every marker was walked individually against the live KuCoin docs — endpoint paths, HTTP methods, and "page exists" all confirmed per endpoint, not sampled. 119 matched the source as-is; the other 25 surfaced the docs URL / endpoint-path drift documented below.
 * **Refreshed 25 stale `### Official Documentation` URLs after KuCoin reorganised the docs-new site.** 17 had returned HTTP 404 because the futures section moved (e.g. `/futures-trading/account/get-account-overview` → `/account-info/account-funding/get-account-futures`; `/futures-trading/orders/cancel-order-by-orderid` → `/futures-trading/orders/cancel-order-by-orderld` — note the typo on KuCoin's side); 7 pointed at pages that now document a different REST endpoint than the source code calls; 1 (`KucoinMarketData$get_symbol`) pointed at the all-symbols list page instead of the single-symbol detail page. All replacement URLs verified by HTTP GET. The futures Dead Connection Protection (DCP) docs were withdrawn from KuCoin entirely, so `KucoinFuturesTrading$set_dcp()` / `$get_dcp()` now reference the equivalent spot-trading DCP page with an inline note (see BUG FIXES below for the related endpoint observation).
 
-## BUG FIXES
+## Bug fixes
 
 * **9 KuCoin Futures REST endpoint paths corrected after the 2026-05 docs reorganisation moved them.** The old paths now return HTTP 404; the new paths were confirmed live (read endpoints fully exercised; write endpoints poked with no-op or invalid payloads to confirm the path is recognised by KuCoin and only the business validation fails). Methods affected:
     - `KucoinFuturesAccount$get_margin_mode()`: `GET /api/v1/marginMode` → `GET /api/v2/position/getMarginMode`.
@@ -191,14 +256,22 @@ This release validates every committed fixture against a read-only capture of th
 
 # kucoin 4.0.1
 
-## BUG FIXES
+**Two small timestamp-handling bugs are fixed: a spurious warning, and a column that could silently be corrupted.**
+
+The millisecond and nanosecond timestamp conversion helpers no longer emit a spurious coercion warning when given an entirely missing input, since an all-missing result is the documented, correct behaviour rather than a problem. Separately, `coerce_cols()` now deduplicates the column list it is given, because passing the same column name twice previously fed an already-converted value back through the same conversion a second time and silently produced a wildly wrong result.
+
+## Bug fixes
 
 * **`ms_to_datetime()` / `ns_to_datetime()` no longer emit spurious `"NAs introduced by coercion"` warnings** when given an all-`NA_character_` vector. The NA → NA path is the documented contract, not a problem worth a warning. Implemented by type-dispatching on the input and only feeding the non-NA entries to `as.numeric()` — not `suppressWarnings()`, which would hide genuine bad input (e.g. a malformed numeric string from a future API change). Pinned by a counter-regression test that asserts `ms_to_datetime("not-a-number")` still warns loudly.
 * **`coerce_cols(dt, cols, fn)` deduplicates `cols`**. Previously passing the same column name twice — `coerce_cols(dt, c("time", "time"), ms_to_datetime)` — would feed the already-coerced POSIXct value back through `ms_to_datetime`, reinterpreting epoch-seconds as epoch-ms and silently producing wildly wrong values (year 56,000+). Now uses `for (col in unique(cols))`. Same fix applied to the binance and alpaca helpers.
 
 # kucoin 4.0.0
 
-## NEW FEATURES
+**This release adds KuCoin Futures support and margin and lending trading, and changes how several timestamp columns are named.**
+
+This release adds three new classes for margin trading, margin market data, and lending, plus three more that bring KuCoin Futures support across 44 endpoints for market data, trading, and account management. It is also a breaking release: API timestamp fields keep their original names instead of gaining a `datetime_` prefix, the kline `freq` parameter is renamed `timeframe`, the default candle window changes, and the deposit-address `currency` argument becomes required. Alongside several parser and response-shape bug fixes, every class is swept to remove list columns and return a consistent `data.table` shape, the bundled dataset is refreshed, documentation and vignettes are expanded, and new mocked and live integration tests, tooling, and licensing changes are added.
+
+## New features
 
 * **Margin Trading — `KucoinMarginTrading` class** (9 endpoints): intent-based wrappers (`open_short`, `close_short`, `open_long`, `close_long`), `borrow`, `repay`, borrow/repay/interest history, borrow rate, leverage modification.
 * **Margin Market Data — `KucoinMarginData` class** (5 endpoints): cross-margin symbols, isolated-margin symbols, margin config, collateral ratios, risk limits.
@@ -211,7 +284,7 @@ This release validates every committed fixture against a read-only capture of th
 * **Futures-specific parsers**: `parse_futures_orderbook()` and `parse_futures_klines()` handle the different data formats (numeric values vs strings, nanosecond timestamps, OHLC column order).
 * **Margin order validation**: `validate_margin_order_params()` helper for margin-specific order parameter checking with auto-generated `clientOid`.
 
-## BREAKING CHANGES
+## Breaking changes
 
 * **Version bump 3.0.0 → 4.0.0**.
 * **Timestamp columns no longer renamed**: All API timestamp fields now keep their original snake_case names instead of being renamed to `datetime_*` prefixed names. Timestamps are coerced to POSIXct in-place. No fields are dropped. Migration guide:
@@ -227,7 +300,7 @@ This release validates every committed fixture against a read-only capture of th
 * **`KucoinMarketData$get_klines()` default window changed**: with `from = NULL`/`to = NULL` the method now returns the most recent candles for the requested timeframe rather than the previous "last 24 hours" window. Pass explicit `from`/`to` to restore deterministic ranges.
 * **`KucoinDeposit$get_deposit_addresses()`**: `currency` is now a required argument (removed `NULL` default) to match KuCoin API requirement.
 
-## BUG FIXES
+## Bug fixes
 
 * Fixed `KucoinMarginData$get_cross_margin_symbols()` parser to handle KuCoin's new `{timestamp, items}` response envelope. Previously returned garbled columns (`v1`, `v2`, ...) instead of proper data.
 * Fixed `KucoinLending$get_loan_market()` — KuCoin now requires authentication for `/api/v3/project/list`. Removed erroneous `auth = FALSE`.
@@ -240,7 +313,7 @@ This release validates every committed fixture against a read-only capture of th
 * **`KucoinSubAccount` `account_type` semantic labels**. `get_detail_balance()` and `get_all_spot_balances()` previously emitted the raw response field names (`main_accounts`, `trade_accounts`, `margin_accounts`); these are now the stable semantic labels `"main"`, `"trade"`, `"margin"` so the documented filter idiom `balances[account_type == "trade"]` keeps working.
 * `ms_to_datetime()` / `ns_to_datetime()` (and the alpaca equivalent `rfc3339_to_datetime`) no longer short-circuit on `all(is.na(x))` input. The short-circuit returned a length-1 `NA_POSIXct_` which `data.table::set()` would recycle into the existing column's storage type rather than replacing the column with POSIXct — so all-NA timestamp columns were silently typed as `character`/`numeric` instead of `POSIXct`. The helpers now always produce a length-matching POSIXct vector, even when every input value is missing.
 
-## IMPROVEMENTS
+## Improvements
 
 * **One-entity-per-row, no-list-column convention across every R6 class.** Sweeping pass on all 16 classes to eliminate `data.table` list columns and standardise on one of five shape treatments (`;`-collapse for arrays of plain strings; long-format explode for arrays of objects, with a 1-indexed position column where order matters; wide-prefix flatten for fixed-schema nested objects; sibling-method re-route for collections that don't fit the row entity; JSON-string encode for dynamic-key or array-of-array objects). Matches the convention in the sibling `alpaca` and `binance` packages — see the new `vignette("data-shapes")`.
 * **Consistent `data.table` returns**: All parsers now return `data.table` objects. Fixed four methods that previously returned other types:
@@ -256,7 +329,7 @@ This release validates every committed fixture against a read-only capture of th
 * `@import data.table` added centrally via `R/imports.R` to simplify namespace management.
 * Support both `KC-API-KEY` and `KUCOIN_API_KEY` environment variable naming conventions.
 
-## DOCUMENTATION
+## Documentation
 
 * Corrected parameter docs based on live API testing:
     - `KucoinTrading$get_open_orders()`: `symbol` is **required** (not optional).
@@ -270,7 +343,7 @@ This release validates every committed fixture against a read-only capture of th
 * README gains a **Design Philosophy** section explaining the snake_case / timestamp / shape-normalisation contract and pointing at `vignette("data-shapes")` for the full catalogue. Mirrors the section the sibling `alpaca` / `binance` READMEs already carry.
 * Updated ROADMAP to v4.0.0 with Futures classes added to completed items.
 
-## TESTS
+## Tests
 
 * Added 140 live integration tests gated behind `KUCOIN_LIVE_TESTS=true`:
     - `test-live-integration-public.R`: 21 tests covering all public endpoints (no auth required).
@@ -280,34 +353,38 @@ This release validates every committed fixture against a read-only capture of th
 * Write tests use only the `/orders/test` dry-run endpoint — no real orders placed.
 * Added data-shape regression tests on `KucoinMarginData`, `KucoinMarginTrading`, and `KucoinLending`: each public method asserts there are no list columns, the column types match the documented `@return` block, and the empty-response path yields a zero-row `data.table` rather than a stub row.
 
-## DATA
+## Data
 
 * Refreshed bundled `kucoin_btc_usdt_4h_ohlcv` dataset (18,351 rows, Oct 2017 – Mar 2026).
 
-## TOOLING
+## Tooling
 
 * **`scripts/LINT.sh`** — new script that runs `air format .` first (so reformatted code is what gets linted, and a passing run leaves the working tree clean) then `lintr::lint_package()` with the package loaded via `devtools::load_all()` so `object_usage_linter` honours `utils::globalVariables()` declarations for `data.table` NSE columns. Matches the binance package's lint script with the air format step folded in.
 * **`.lintr` config repaired**. The previous file started with a leading `# .lintr` comment that made the DCF parser reject it (`Malformed config file`) — `lintr::lint_package()` had been failing silently. Now adopts the binance ruleset: line length 120, indentation 2, explicit `return()` style, and `object_name_linter` allowing `snake_case` / `SNAKE_CASE` / `CamelCase` / `camelCase` so R6 class names and KuCoin's camelCase API params (`clientOid`, `orderId`) are accepted.
 
-## REFACTOR
+## Refactor
 
 * **Explicit `return()` everywhere.** Every closure now has an explicit `return(...)` instead of relying on R's implicit-last-expression. Touches 78 sites across the package (9 in `R/`, 69 across `tests/` and `vignettes/`). Side-effect-only closures get `return(invisible(NULL))`.
 * **No `var <- if (...)` style.** Three sites refactored to declare the variable with its default value and conditionally reassign instead (POSIXct-vs-epoch-ms coercion in `KucoinFuturesMarketData$get_klines()`; ticker mock alternation in `vignettes/async-usage.Rmd`). Function-call named args (`f(x = if (...) a else b)`) are out of scope for the rule and were left alone.
 * **`tests/testthat/helper-constants.R`** — shared test-setup file (auto-sourced by `testthat` before tests). Defines `BASE_SPOT` / `BASE_FUTURES`, `TEST_KEYS`, `TEST_SYMBOL_SPOT` / `TEST_SYMBOL_FUTURES`, and one `new_xxx()` constructor helper per R6 class. Strips ~130 lines of duplicated setup boilerplate from the 14 test files; collapses 22 inline `KucoinMarketData$new(...)` calls in `test-KucoinMarketData.R` to `new_market()`. Resolves three name collisions that the per-file scoping had been hiding (`new_account`, `new_market`, `new_trading` now have explicit `new_futures_*` siblings).
 
-## LICENCE
+## Licence
 
 * **`LICENSE` consolidated to a single full MIT file**. The package previously shipped both a 2-line DCF stub (`LICENSE`) and the full MIT text (`LICENSE.md`), to satisfy the CRAN `License: MIT + file LICENSE` template alongside GitHub's licensee detector. Those two requirements conflict in practice. `DESCRIPTION` now declares `License: MIT` (non-CRAN form), so R CMD check skips the DCF parse of the LICENSE file while GitHub still detects MIT. The previously bundled **Citation Clause has been dropped** — the package is now plain MIT, matching the sibling `alpaca` and `binance` packages. `LICENSE.md` was removed; `LICENSE` carries the full text.
 
 # kucoin 3.0.0
 
-## BREAKING CHANGES
+**This release is a complete rewrite onto an R6 class architecture covering the whole KuCoin Classic Spot API.**
+
+The package is rewritten from standalone functions into ten R6 classes covering 77 KuCoin Classic Spot REST endpoints, with credentials now managed through environment variables or passed to constructors, and the old v2 functions removed. New capabilities include synchronous order placement and cancellation, order modification, Dead Connection Protection, fee-rate queries, an HF trading ledger, server-time and service-status checks, fiat prices, a configurable timestamp source, async support via promises, bulk historical kline backfill, a bundled sample dataset, and automatic pagination. Every response is returned as a `data.table` with snake_case columns and converted datetime fields, method naming is standardised across classes, and the release ships full roxygen documentation, two vignettes, a README, and a pkgdown site, under an MIT licence with an additional citation clause.
+
+## Breaking changes
 
 * Complete rewrite of the package architecture. All implementation functions are now wrapped in R6 classes inheriting from `KucoinBase`.
 * Removed all v2 standalone functions (`kucoin_get_ticker()`, `kucoin_place_order()`, etc.). Use the corresponding R6 class methods instead.
 * API credentials are now managed via environment variables (`KC-API-KEY`, `KC-API-SECRET`, `KC-API-PASSPHRASE`) or passed directly to class constructors through `get_api_keys()`.
 
-## NEW FEATURES
+## New features
 
 * **R6 class architecture**: Ten R6 classes covering 77 KuCoin Classic Spot REST API endpoints:
     - `KucoinMarketData` (16 endpoints): announcements, currencies, symbols, tickers, orderbooks, trade history, 24hr stats, klines, market list, server time, service status, fiat prices.
@@ -335,7 +412,7 @@ This release validates every committed fixture against a read-only capture of th
 * **Automatic pagination**: `kucoin_paginate()` handles multi-page API responses transparently.
 * **Timestamp handling**: `time_convert_from_kucoin()` and `time_convert_to_kucoin()` for millisecond/nanosecond epoch conversion.
 
-## IMPROVEMENTS
+## Improvements
 
 * All API responses returned as `data.table` objects with snake_case column names.
 * Datetime columns automatically converted to POSIXct.
@@ -349,7 +426,7 @@ This release validates every committed fixture against a read-only capture of th
     - Renamed in `KucoinStopOrders` and `KucoinOcoOrders`: `cancel_by_id` -> `cancel_order_by_id`, `cancel_by_client_oid` -> `cancel_order_by_client_oid`, `cancel_batch` -> `cancel_all`, `get_by_id` -> `get_order_by_id`, `get_by_client_oid` -> `get_order_by_client_oid`, `get_detail_by_id` -> `get_order_detail_by_id`.
     - Renamed: `get_subaccount` -> `get_sub_account`.
 
-## DOCUMENTATION
+## Documentation
 
 * Full roxygen2 R6 method documentation for all public methods.
 * Class-level docs include endpoint tables, example usage, and curl equivalents.
@@ -357,6 +434,6 @@ This release validates every committed fixture against a read-only capture of th
 * README with evaluated code examples using invisible mocked HTTP.
 * pkgdown site at <https://dereckscompany.github.io/kucoin/>.
 
-## LICENCE
+## Licence
 
 * MIT licence with an additional citation clause requiring attribution in academic publications, research outputs, and publicly distributed derivative works.
