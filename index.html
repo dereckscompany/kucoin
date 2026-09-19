@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,20 +60,14 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>KuCoin is a large cryptocurrency exchange, and this package is the R doorway to it. Instead of hand-building web requests, signing them with your secret keys, and untangling the raw replies, you call plain R functions to read live prices, place and cancel orders, manage margin and futures positions, and move money in and out of your account. Every answer comes back as a tidy table with consistent column names, so the same code shape works whether you are checking a price or reviewing a filled order. It can run one request at a time or fire off many at once and collect the results as they arrive. You bring the account and the API keys; the package handles the plumbing.</p>
+<p><strong>KuCoin is a large cryptocurrency exchange, and this package is the R doorway to it.</strong> Instead of hand-building web requests, signing them with your secret keys, and untangling the raw replies, you call plain R functions to read live prices, place and cancel orders, manage margin and futures positions, and move money in and out of your account. Every answer comes back as a tidy table with consistent column names, so the same code shape works whether you are checking a price or reviewing a filled order. It can run one request at a time or fire off many at once and collect the results as they arrive. You bring the account and the API keys; the package handles the plumbing.</p>
 <div class="section level2">
 <h2 id="technical-overview">Technical overview<a class="anchor" aria-label="anchor" href="#technical-overview"></a>
 </h2>
 <p>An R API wrapper for the <a href="https://www.kucoin.com/" class="external-link">KuCoin</a> cryptocurrency exchange. Provides <code>R6</code> classes for spot market data, trading, stop orders, OCO orders, account management, deposits, transfers, withdrawals, sub-accounts, margin trading, margin lending, and futures trading. Supports both synchronous and asynchronous (promise based) operation via <code>httr2</code>.</p>
 </div>
 <div class="section level2">
-<h2 id="disclaimer">Disclaimer<a class="anchor" aria-label="anchor" href="#disclaimer"></a>
-</h2>
-<p>This software is provided “as is”, without warranty of any kind. <strong>This package interacts with live cryptocurrency exchange accounts and can execute real trades, transfers, and withdrawals involving real money.</strong> By using this package you accept full responsibility for any financial losses, erroneous transactions, or other damages that may result. Always test with small amounts first, use API key permissions to restrict access to only what you need, and never share your API credentials. The author(s) and contributor(s) are not liable for any financial loss or damage arising from the use of this software.</p>
-<p>We invite you to read the source code and make contributions if you find a bug or wish to make an improvement.</p>
-</div>
-<div class="section level2">
-<h2 id="design-philosophy">Design Philosophy<a class="anchor" aria-label="anchor" href="#design-philosophy"></a>
+<h2 id="design-philosophy">Design philosophy<a class="anchor" aria-label="anchor" href="#design-philosophy"></a>
 </h2>
 <p>All API responses are returned as <code>data.table</code> objects with three transformations applied:</p>
 <ol style="list-style-type: decimal">
@@ -139,11 +133,14 @@
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"dereckscompany/kucoin"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">renv</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/renv/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"dereckscompany/kucoin"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># or, if you use remotes instead of renv:</span></span>
+<span><span class="co"># install.packages("remotes")</span></span>
+<span><span class="co"># remotes::install_github("dereckscompany/kucoin")</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
+<h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># special mock for local build: the shared connectcore mock harness installs the</span></span>
@@ -193,7 +190,13 @@
 <p>If you don’t have a key, visit the <a href="https://www.kucoin.com/docs-new" class="external-link">KuCoin API documentation</a>.</p>
 </div>
 <div class="section level2">
-<h2 id="quick-start--market-data">Quick Start – Market Data<a class="anchor" aria-label="anchor" href="#quick-start--market-data"></a>
+<h2 id="disclaimer">Disclaimer<a class="anchor" aria-label="anchor" href="#disclaimer"></a>
+</h2>
+<p>This software is provided “as is”, without warranty of any kind. <strong>This package interacts with live cryptocurrency exchange accounts and can execute real trades, transfers, and withdrawals involving real money.</strong> By using this package you accept full responsibility for any financial losses, erroneous transactions, or other damages that may result. Always test with small amounts first, use API key permissions to restrict access to only what you need, and never share your API credentials. The author(s) and contributor(s) are not liable for any financial loss or damage arising from the use of this software.</p>
+<p>We invite you to read the source code and make contributions if you find a bug or wish to make an improvement.</p>
+</div>
+<div class="section level2">
+<h2 id="market-data">Market Data<a class="anchor" aria-label="anchor" href="#market-data"></a>
 </h2>
 <p>Market data endpoints are public and require no authentication.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -284,82 +287,6 @@
 <span id="cb15-14"><a href="#cb15-14" tabindex="-1"></a><span class="co">#&gt;    &lt;char&gt;              &lt;POSc&gt;              &lt;POSc&gt;</span></span>
 <span id="cb15-15"><a href="#cb15-15" tabindex="-1"></a><span class="co">#&gt; 1:        2026-01-05 00:05:00 2026-01-05 00:05:30</span></span></code></pre></div>
 </div>
-</div>
-<div class="section level2">
-<h2 id="available-classes">Available Classes<a class="anchor" aria-label="anchor" href="#available-classes"></a>
-</h2>
-<table class="table">
-<colgroup>
-<col width="50%">
-<col width="50%">
-</colgroup>
-<thead><tr>
-<th>Class</th>
-<th>Purpose</th>
-</tr></thead>
-<tbody>
-<tr>
-<td><code>KucoinMarketData</code></td>
-<td>Tickers, klines, orderbooks, currencies, symbols, trade history, server time, service status, fiat prices</td>
-</tr>
-<tr>
-<td><code>KucoinTrading</code></td>
-<td>Place, cancel, modify, and query HF spot orders; sync variants; DCP dead-man’s switch</td>
-</tr>
-<tr>
-<td><code>KucoinStopOrders</code></td>
-<td>Stop order management with trigger prices</td>
-</tr>
-<tr>
-<td><code>KucoinOcoOrders</code></td>
-<td>One-Cancels-Other order pairs</td>
-</tr>
-<tr>
-<td><code>KucoinAccount</code></td>
-<td>Account balances, ledger, HF ledger, fee rates, API key info</td>
-</tr>
-<tr>
-<td><code>KucoinDeposit</code></td>
-<td>Deposit addresses and history</td>
-</tr>
-<tr>
-<td><code>KucoinTransfer</code></td>
-<td>Internal transfers between account types (main, trade, margin)</td>
-</tr>
-<tr>
-<td><code>KucoinWithdrawal</code></td>
-<td>Withdrawal creation, cancellation, quotas, and history</td>
-</tr>
-<tr>
-<td><code>KucoinSubAccount</code></td>
-<td>Sub-account creation and balance queries</td>
-</tr>
-<tr>
-<td><code>KucoinMarginTrading</code></td>
-<td>Margin trading: open/close short and long positions, borrow, repay, leverage</td>
-</tr>
-<tr>
-<td><code>KucoinMarginData</code></td>
-<td>Margin pair info, config, collateral ratios, risk limits</td>
-</tr>
-<tr>
-<td><code>KucoinLending</code></td>
-<td>Lend assets to earn interest, manage lending orders</td>
-</tr>
-<tr>
-<td><code>KucoinFuturesMarketData</code></td>
-<td>Futures contract specs, tickers, orderbooks, klines, funding rates</td>
-</tr>
-<tr>
-<td><code>KucoinFuturesTrading</code></td>
-<td>Place, cancel, and query futures orders; batch orders; DCP</td>
-</tr>
-<tr>
-<td><code>KucoinFuturesAccount</code></td>
-<td>Futures account overview, positions, margin, leverage, risk limits</td>
-</tr>
-</tbody>
-</table>
 </div>
 <div class="section level2">
 <h2 id="fund-transfers-and-withdrawals">Fund Transfers and Withdrawals<a class="anchor" aria-label="anchor" href="#fund-transfers-and-withdrawals"></a>
@@ -611,12 +538,112 @@
 </div>
 </div>
 <div class="section level2">
-<h2 id="async-usage">Async Usage<a class="anchor" aria-label="anchor" href="#async-usage"></a>
+<h2 id="sample-data">Sample Data<a class="anchor" aria-label="anchor" href="#sample-data"></a>
+</h2>
+<p>The package includes bundled historical OHLCV data for BTC-USDT at 4-hour intervals (October 2017 through March 2026):</p>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">kucoin_btc_usdt_4h_ohlcv</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">kucoin_btc_usdt_4h_ohlcv</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a><span class="co">#&gt;      symbol            datetime     open     high      low    close     volume</span></span>
+<span id="cb40-2"><a href="#cb40-2" tabindex="-1"></a><span class="co">#&gt;      &lt;char&gt;              &lt;POSc&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;      &lt;num&gt;</span></span>
+<span id="cb40-3"><a href="#cb40-3" tabindex="-1"></a><span class="co">#&gt; 1: BTC-USDT 2017-10-18 16:00:00 3996.866 4318.733 3806.382 3811.101 0.12096412</span></span>
+<span id="cb40-4"><a href="#cb40-4" tabindex="-1"></a><span class="co">#&gt; 2: BTC-USDT 2017-10-18 20:00:00 3811.101 4088.281 3811.101 3812.004 0.06215084</span></span>
+<span id="cb40-5"><a href="#cb40-5" tabindex="-1"></a><span class="co">#&gt; 3: BTC-USDT 2017-10-19 00:00:00 3812.004 5548.231 3812.000 4060.403 0.13683638</span></span>
+<span id="cb40-6"><a href="#cb40-6" tabindex="-1"></a><span class="co">#&gt; 4: BTC-USDT 2017-10-19 04:00:00 4060.021 5693.211 3806.382 5123.414 0.37534149</span></span>
+<span id="cb40-7"><a href="#cb40-7" tabindex="-1"></a><span class="co">#&gt; 5: BTC-USDT 2017-10-19 08:00:00 5093.211 5693.211 5093.211 5093.211 0.93088201</span></span>
+<span id="cb40-8"><a href="#cb40-8" tabindex="-1"></a><span class="co">#&gt; 6: BTC-USDT 2017-10-19 12:00:00 5094.149 5693.000 5093.211 5408.350 0.47226735</span></span>
+<span id="cb40-9"><a href="#cb40-9" tabindex="-1"></a><span class="co">#&gt;     turnover   freq</span></span>
+<span id="cb40-10"><a href="#cb40-10" tabindex="-1"></a><span class="co">#&gt;        &lt;num&gt; &lt;char&gt;</span></span>
+<span id="cb40-11"><a href="#cb40-11" tabindex="-1"></a><span class="co">#&gt; 1:  467.0677     4h</span></span>
+<span id="cb40-12"><a href="#cb40-12" tabindex="-1"></a><span class="co">#&gt; 2:  241.1115     4h</span></span>
+<span id="cb40-13"><a href="#cb40-13" tabindex="-1"></a><span class="co">#&gt; 3:  545.1717     4h</span></span>
+<span id="cb40-14"><a href="#cb40-14" tabindex="-1"></a><span class="co">#&gt; 4: 1647.8900     4h</span></span>
+<span id="cb40-15"><a href="#cb40-15" tabindex="-1"></a><span class="co">#&gt; 5: 5071.2131     4h</span></span>
+<span id="cb40-16"><a href="#cb40-16" tabindex="-1"></a><span class="co">#&gt; 6: 2535.2478     4h</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="available-classes">Available Classes<a class="anchor" aria-label="anchor" href="#available-classes"></a>
+</h2>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr>
+<th>Class</th>
+<th>Purpose</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code>KucoinMarketData</code></td>
+<td>Tickers, klines, orderbooks, currencies, symbols, trade history, server time, service status, fiat prices</td>
+</tr>
+<tr>
+<td><code>KucoinTrading</code></td>
+<td>Place, cancel, modify, and query HF spot orders; sync variants; DCP dead-man’s switch</td>
+</tr>
+<tr>
+<td><code>KucoinStopOrders</code></td>
+<td>Stop order management with trigger prices</td>
+</tr>
+<tr>
+<td><code>KucoinOcoOrders</code></td>
+<td>One-Cancels-Other order pairs</td>
+</tr>
+<tr>
+<td><code>KucoinAccount</code></td>
+<td>Account balances, ledger, HF ledger, fee rates, API key info</td>
+</tr>
+<tr>
+<td><code>KucoinDeposit</code></td>
+<td>Deposit addresses and history</td>
+</tr>
+<tr>
+<td><code>KucoinTransfer</code></td>
+<td>Internal transfers between account types (main, trade, margin)</td>
+</tr>
+<tr>
+<td><code>KucoinWithdrawal</code></td>
+<td>Withdrawal creation, cancellation, quotas, and history</td>
+</tr>
+<tr>
+<td><code>KucoinSubAccount</code></td>
+<td>Sub-account creation and balance queries</td>
+</tr>
+<tr>
+<td><code>KucoinMarginTrading</code></td>
+<td>Margin trading: open/close short and long positions, borrow, repay, leverage</td>
+</tr>
+<tr>
+<td><code>KucoinMarginData</code></td>
+<td>Margin pair info, config, collateral ratios, risk limits</td>
+</tr>
+<tr>
+<td><code>KucoinLending</code></td>
+<td>Lend assets to earn interest, manage lending orders</td>
+</tr>
+<tr>
+<td><code>KucoinFuturesMarketData</code></td>
+<td>Futures contract specs, tickers, orderbooks, klines, funding rates</td>
+</tr>
+<tr>
+<td><code>KucoinFuturesTrading</code></td>
+<td>Place, cancel, and query futures orders; batch orders; DCP</td>
+</tr>
+<tr>
+<td><code>KucoinFuturesAccount</code></td>
+<td>Futures account overview, positions, margin, leverage, risk limits</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level2">
+<h2 id="asynchronous-usage">Asynchronous usage<a class="anchor" aria-label="anchor" href="#asynchronous-usage"></a>
 </h2>
 <p>This package is meant to be used in an asynchronous non-blocking event loop (i.e. à la JavaScript) and is written around promises. Please use <code>later</code> to run your event loop. I recommend the pattern shown below.</p>
 <p>We offer a synchronous and asynchronous instance of the classes. All classes accept <code>async = TRUE</code>, this makes methods return promises instead of objects. You can resolve promises in whichever way you like, either <code>$then()</code> chaining or <code>async</code>/<code>await</code> patterns.</p>
 <p>I recommend use <code><a href="https://coro.r-lib.org/reference/async.html" class="external-link">coro::async()</a></code> to write sequential looking async code:</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">box</span><span class="fu">::</span><span class="fu"><a href="https://klmr.me/box/reference/use.html" class="external-link">use</a></span><span class="op">(</span><span class="va">coro</span>, <span class="va">later</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">market_async</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/KucoinMarketData.html">KucoinMarketData</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>keys <span class="op">=</span> <span class="va">KEYS</span>, base_url <span class="op">=</span> <span class="va">BASE</span>, async <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -634,41 +661,36 @@
 <span><span class="kw">while</span> <span class="op">(</span><span class="op">!</span><span class="va">later</span><span class="op">$</span><span class="fu">loop_empty</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">later</span><span class="op">$</span><span class="fu">run_now</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<div class="sourceCode" id="cb40"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a><span class="co">#&gt;          time sequence   price  size best_bid best_bid_size best_ask</span></span>
-<span id="cb40-2"><a href="#cb40-2" tabindex="-1"></a><span class="co">#&gt;        &lt;POSc&gt;   &lt;char&gt;   &lt;num&gt; &lt;num&gt;    &lt;num&gt;         &lt;num&gt;    &lt;num&gt;</span></span>
-<span id="cb40-3"><a href="#cb40-3" tabindex="-1"></a><span class="co">#&gt; 1: 2026-01-05      100 50000.5 0.001  49999.5           0.5  50000.5</span></span>
-<span id="cb40-4"><a href="#cb40-4" tabindex="-1"></a><span class="co">#&gt;    best_ask_size</span></span>
-<span id="cb40-5"><a href="#cb40-5" tabindex="-1"></a><span class="co">#&gt;            &lt;num&gt;</span></span>
-<span id="cb40-6"><a href="#cb40-6" tabindex="-1"></a><span class="co">#&gt; 1:             1</span></span>
-<span id="cb40-7"><a href="#cb40-7" tabindex="-1"></a><span class="co">#&gt;               datetime  open  high   low close volume turnover</span></span>
-<span id="cb40-8"><a href="#cb40-8" tabindex="-1"></a><span class="co">#&gt;                 &lt;POSc&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt;  &lt;num&gt;    &lt;num&gt;</span></span>
-<span id="cb40-9"><a href="#cb40-9" tabindex="-1"></a><span class="co">#&gt; 1: 2026-01-05 00:00:00 50000 50200 49900 50100    100  5010000</span></span>
-<span id="cb40-10"><a href="#cb40-10" tabindex="-1"></a><span class="co">#&gt; 2: 2026-01-05 04:00:00 50100 50300 50000 50250    110  5527500</span></span>
-<span id="cb40-11"><a href="#cb40-11" tabindex="-1"></a><span class="co">#&gt; 3: 2026-01-05 08:00:00 50250 50400 50100 50350    120  6042000</span></span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" tabindex="-1"></a><span class="co">#&gt;          time sequence   price  size best_bid best_bid_size best_ask</span></span>
+<span id="cb42-2"><a href="#cb42-2" tabindex="-1"></a><span class="co">#&gt;        &lt;POSc&gt;   &lt;char&gt;   &lt;num&gt; &lt;num&gt;    &lt;num&gt;         &lt;num&gt;    &lt;num&gt;</span></span>
+<span id="cb42-3"><a href="#cb42-3" tabindex="-1"></a><span class="co">#&gt; 1: 2026-01-05      100 50000.5 0.001  49999.5           0.5  50000.5</span></span>
+<span id="cb42-4"><a href="#cb42-4" tabindex="-1"></a><span class="co">#&gt;    best_ask_size</span></span>
+<span id="cb42-5"><a href="#cb42-5" tabindex="-1"></a><span class="co">#&gt;            &lt;num&gt;</span></span>
+<span id="cb42-6"><a href="#cb42-6" tabindex="-1"></a><span class="co">#&gt; 1:             1</span></span>
+<span id="cb42-7"><a href="#cb42-7" tabindex="-1"></a><span class="co">#&gt;               datetime  open  high   low close volume turnover</span></span>
+<span id="cb42-8"><a href="#cb42-8" tabindex="-1"></a><span class="co">#&gt;                 &lt;POSc&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt;  &lt;num&gt;    &lt;num&gt;</span></span>
+<span id="cb42-9"><a href="#cb42-9" tabindex="-1"></a><span class="co">#&gt; 1: 2026-01-05 00:00:00 50000 50200 49900 50100    100  5010000</span></span>
+<span id="cb42-10"><a href="#cb42-10" tabindex="-1"></a><span class="co">#&gt; 2: 2026-01-05 04:00:00 50100 50300 50000 50250    110  5527500</span></span>
+<span id="cb42-11"><a href="#cb42-11" tabindex="-1"></a><span class="co">#&gt; 3: 2026-01-05 08:00:00 50250 50400 50100 50350    120  6042000</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="sample-data">Sample Data<a class="anchor" aria-label="anchor" href="#sample-data"></a>
+<h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
 </h2>
-<p>The package includes bundled historical OHLCV data for BTC-USDT at 4-hour intervals (October 2017 through March 2026):</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">kucoin_btc_usdt_4h_ohlcv</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">kucoin_btc_usdt_4h_ohlcv</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb42"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" tabindex="-1"></a><span class="co">#&gt;      symbol            datetime     open     high      low    close     volume</span></span>
-<span id="cb42-2"><a href="#cb42-2" tabindex="-1"></a><span class="co">#&gt;      &lt;char&gt;              &lt;POSc&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;    &lt;num&gt;      &lt;num&gt;</span></span>
-<span id="cb42-3"><a href="#cb42-3" tabindex="-1"></a><span class="co">#&gt; 1: BTC-USDT 2017-10-18 16:00:00 3996.866 4318.733 3806.382 3811.101 0.12096412</span></span>
-<span id="cb42-4"><a href="#cb42-4" tabindex="-1"></a><span class="co">#&gt; 2: BTC-USDT 2017-10-18 20:00:00 3811.101 4088.281 3811.101 3812.004 0.06215084</span></span>
-<span id="cb42-5"><a href="#cb42-5" tabindex="-1"></a><span class="co">#&gt; 3: BTC-USDT 2017-10-19 00:00:00 3812.004 5548.231 3812.000 4060.403 0.13683638</span></span>
-<span id="cb42-6"><a href="#cb42-6" tabindex="-1"></a><span class="co">#&gt; 4: BTC-USDT 2017-10-19 04:00:00 4060.021 5693.211 3806.382 5123.414 0.37534149</span></span>
-<span id="cb42-7"><a href="#cb42-7" tabindex="-1"></a><span class="co">#&gt; 5: BTC-USDT 2017-10-19 08:00:00 5093.211 5693.211 5093.211 5093.211 0.93088201</span></span>
-<span id="cb42-8"><a href="#cb42-8" tabindex="-1"></a><span class="co">#&gt; 6: BTC-USDT 2017-10-19 12:00:00 5094.149 5693.000 5093.211 5408.350 0.47226735</span></span>
-<span id="cb42-9"><a href="#cb42-9" tabindex="-1"></a><span class="co">#&gt;     turnover   freq</span></span>
-<span id="cb42-10"><a href="#cb42-10" tabindex="-1"></a><span class="co">#&gt;        &lt;num&gt; &lt;char&gt;</span></span>
-<span id="cb42-11"><a href="#cb42-11" tabindex="-1"></a><span class="co">#&gt; 1:  467.0677     4h</span></span>
-<span id="cb42-12"><a href="#cb42-12" tabindex="-1"></a><span class="co">#&gt; 2:  241.1115     4h</span></span>
-<span id="cb42-13"><a href="#cb42-13" tabindex="-1"></a><span class="co">#&gt; 3:  545.1717     4h</span></span>
-<span id="cb42-14"><a href="#cb42-14" tabindex="-1"></a><span class="co">#&gt; 4: 1647.8900     4h</span></span>
-<span id="cb42-15"><a href="#cb42-15" tabindex="-1"></a><span class="co">#&gt; 5: 5071.2131     4h</span></span>
-<span id="cb42-16"><a href="#cb42-16" tabindex="-1"></a><span class="co">#&gt; 6: 2535.2478     4h</span></span></code></pre></div>
+<p>The rendered reference site is at <a href="https://dereckscompany.github.io/kucoin/">dereckscompany.github.io/kucoin</a>.</p>
+<p>Five vignettes take a reader from a first call to the full method catalogue and every trading surface, in this reading order:</p>
+<ol style="list-style-type: decimal">
+<li>
+<code><a href="articles/getting-started.html">vignette("getting-started", package = "kucoin")</a></code>: connecting synchronously and making first calls across the market data, trading, account, stop order, OCO order, deposit, and sub-account surfaces.</li>
+<li>
+<code><a href="articles/async-usage.html">vignette("async-usage", package = "kucoin")</a></code>: running the same classes in asynchronous mode with <code>coro</code>/<code>later</code>.</li>
+<li>
+<code><a href="articles/data-shapes.html">vignette("data-shapes", package = "kucoin")</a></code>: the one-stop tour of every public method by class, and the data-shape conventions (column naming, type coercion, nested-object treatments) behind them.</li>
+<li>
+<code><a href="articles/margin-trading.html">vignette("margin-trading", package = "kucoin")</a></code>: margin trading, lending, and margin market data: opening and closing short and long positions, borrowing, and repayment.</li>
+<li>
+<code><a href="articles/futures-trading.html">vignette("futures-trading", package = "kucoin")</a></code>: futures contract trading: market data, orders, and positions with leverage.</li>
+</ol>
+<p>The full release history is in <a href="NEWS.html"><code>NEWS.md</code></a>.</p>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
@@ -677,8 +699,9 @@
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"kucoin"</span><span class="op">)</span></span></code></pre></div>
 <blockquote>
-<p>Mezquita, D. (2026). kucoin: R API Wrapper to KuCoin Cryptocurrency Exchange. R package version 4.0.0.</p>
+<p>Mezquita, D. (2026). kucoin: API Wrapper to KuCoin Cryptocurrency Exchange. R package version 4.6.5. <a href="https://github.com/dereckscompany/kucoin" class="external-link uri">https://github.com/dereckscompany/kucoin</a>.</p>
 </blockquote>
+<p>Author: Dereck Mezquita, <a href="https://orcid.org/0000-0002-9307-6762" class="external-link">ORCID: 0000-0002-9307-6762</a></p>
 </div>
 <div class="section level2">
 <h2 id="licence">Licence<a class="anchor" aria-label="anchor" href="#licence"></a>

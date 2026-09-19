@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">kucoin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.6.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,9 +36,21 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/dereckscompany/kucoin/blob/v4.6.4/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/dereckscompany/kucoin/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="4.6.5" id="kucoin-465">kucoin 4.6.5<a class="anchor" aria-label="anchor" href="#kucoin-465"></a></h2>
+<p><strong>The README now follows the same shape as every other package in the fleet, so a reader who knows one package’s documentation already knows where to look in this one.</strong> This is a documentation-only release; no code path, argument, column, or API-facing string changed. The README’s sections were renamed and reordered into the fleet’s canonical shape (plain-English lead, technical overview, design philosophy, installation, quick start, per-surface usage, asynchronous usage, documentation, citation, licence) without dropping any existing sentence, code chunk, table or link; the one rewrite is the stale hand-written citation block, rebuilt from <code>DESCRIPTION</code>.</p>
+<ul><li>Lead paragraph: the opening sentence is now bold, matching the fleet’s unlabelled bold-lead-plus-paragraph convention; the wording is unchanged.</li>
+<li>Heading renames: <code>## Design Philosophy</code> → <code>## Design philosophy</code>; <code>## Setup</code> → <code>## Quick start</code>; <code>## Quick Start -- Market Data</code> → <code>## Market Data</code>; <code>## Async Usage</code> → <code>## Asynchronous usage</code>.</li>
+<li>Section moves: <code>## Disclaimer</code> moved from immediately after Technical overview to immediately after Quick start; <code>## Available Classes</code> moved from immediately after Trading to immediately before Asynchronous usage; <code>## Sample Data</code> moved from after Asynchronous usage to immediately before Available Classes. No section content changed in the move.</li>
+<li>Installation rebuilt renv-first: <code>renv::install("dereckscompany/kucoin")</code> is now the primary form, with <code>remotes::install_github("dereckscompany/kucoin")</code> kept as a commented fallback in the same code chunk.</li>
+<li>New <code>## Documentation</code> section: links the rendered pkgdown site and lists all five vignettes in their <code>_pkgdown.yml</code> reading order (<code>getting-started</code>, <code>async-usage</code>, <code>data-shapes</code>, <code>margin-trading</code>, <code>futures-trading</code>), each with a one-line summary of what it teaches, plus a link to <code>NEWS.md</code>.</li>
+<li>
+<code>## Citation</code> rebuilt from <code>DESCRIPTION</code> alone: author, title, package version, and the repository URL, replacing the previous hand-written citation block that had drifted to a stale version number.</li>
+<li>No <code>## Error handling</code> section was added: the README has no existing error-handling content to move, and the package’s typed-condition system is not yet documented there.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="4.6.4" id="kucoin-464">kucoin 4.6.4<a class="anchor" aria-label="anchor" href="#kucoin-464"></a></h2>
 <p><strong>Documentation prose brought in line with house style: leftover plain-English scaffolding labels removed and spelling normalised to British throughout.</strong> This is a documentation-only release; no code path, argument, column, or API-facing string changed. Two mechanical passes were made over every README, vignette, NEWS entry, and roxygen/comment line in the package: the first stripped visible “In plain terms:” / “In plain English:” labels while keeping the sentence each one introduced (never deleting content), and the second corrected American spellings to their British equivalents wherever they appeared as ordinary prose rather than as a code identifier, an API field name, a file name, or a quotation.</p>
