@@ -8,9 +8,9 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-KuCoin is a large cryptocurrency exchange, and this package is the R
-doorway to it. Instead of hand-building web requests, signing them with
-your secret keys, and untangling the raw replies, you call plain R
+**KuCoin is a large cryptocurrency exchange, and this package is the R
+doorway to it.** Instead of hand-building web requests, signing them
+with your secret keys, and untangling the raw replies, you call plain R
 functions to read live prices, place and cancel orders, manage margin
 and futures positions, and move money in and out of your account. Every
 answer comes back as a tidy table with consistent column names, so the
@@ -28,22 +28,7 @@ transfers, withdrawals, sub-accounts, margin trading, margin lending,
 and futures trading. Supports both synchronous and asynchronous (promise
 based) operation via `httr2`.
 
-## Disclaimer
-
-This software is provided “as is”, without warranty of any kind. **This
-package interacts with live cryptocurrency exchange accounts and can
-execute real trades, transfers, and withdrawals involving real money.**
-By using this package you accept full responsibility for any financial
-losses, erroneous transactions, or other damages that may result. Always
-test with small amounts first, use API key permissions to restrict
-access to only what you need, and never share your API credentials. The
-author(s) and contributor(s) are not liable for any financial loss or
-damage arising from the use of this software.
-
-We invite you to read the source code and make contributions if you find
-a bug or wish to make an improvement.
-
-## Design Philosophy
+## Design philosophy
 
 All API responses are returned as `data.table` objects with three
 transformations applied:
@@ -96,11 +81,14 @@ For the full per-treatment catalogue with worked examples, see
 ## Installation
 
 ``` r
+renv::install("dereckscompany/kucoin")
+
+# or, if you use remotes instead of renv:
 # install.packages("remotes")
-remotes::install_github("dereckscompany/kucoin")
+# remotes::install_github("dereckscompany/kucoin")
 ```
 
-## Setup
+## Quick start
 
 ``` r
 # special mock for local build: the shared connectcore mock harness installs the
@@ -156,7 +144,22 @@ KUCOIN_API_PASSPHRASE = your-api-passphrase
 If you don’t have a key, visit the [KuCoin API
 documentation](https://www.kucoin.com/docs-new).
 
-## Quick Start – Market Data
+## Disclaimer
+
+This software is provided “as is”, without warranty of any kind. **This
+package interacts with live cryptocurrency exchange accounts and can
+execute real trades, transfers, and withdrawals involving real money.**
+By using this package you accept full responsibility for any financial
+losses, erroneous transactions, or other damages that may result. Always
+test with small amounts first, use API key permissions to restrict
+access to only what you need, and never share your API credentials. The
+author(s) and contributor(s) are not liable for any financial loss or
+damage arising from the use of this software.
+
+We invite you to read the source code and make contributions if you find
+a bug or wish to make an improvement.
+
+## Market Data
 
 Market data endpoints are public and require no authentication.
 
@@ -256,26 +259,6 @@ trading$get_open_orders(symbol = "BTC-USDT")
     #>      tags          created_at     last_updated_at
     #>    <char>              <POSc>              <POSc>
     #> 1:        2026-01-05 00:05:00 2026-01-05 00:05:30
-
-## Available Classes
-
-| Class | Purpose |
-|----|----|
-| `KucoinMarketData` | Tickers, klines, orderbooks, currencies, symbols, trade history, server time, service status, fiat prices |
-| `KucoinTrading` | Place, cancel, modify, and query HF spot orders; sync variants; DCP dead-man’s switch |
-| `KucoinStopOrders` | Stop order management with trigger prices |
-| `KucoinOcoOrders` | One-Cancels-Other order pairs |
-| `KucoinAccount` | Account balances, ledger, HF ledger, fee rates, API key info |
-| `KucoinDeposit` | Deposit addresses and history |
-| `KucoinTransfer` | Internal transfers between account types (main, trade, margin) |
-| `KucoinWithdrawal` | Withdrawal creation, cancellation, quotas, and history |
-| `KucoinSubAccount` | Sub-account creation and balance queries |
-| `KucoinMarginTrading` | Margin trading: open/close short and long positions, borrow, repay, leverage |
-| `KucoinMarginData` | Margin pair info, config, collateral ratios, risk limits |
-| `KucoinLending` | Lend assets to earn interest, manage lending orders |
-| `KucoinFuturesMarketData` | Futures contract specs, tickers, orderbooks, klines, funding rates |
-| `KucoinFuturesTrading` | Place, cancel, and query futures orders; batch orders; DCP |
-| `KucoinFuturesAccount` | Futures account overview, positions, margin, leverage, risk limits |
 
 ## Fund Transfers and Withdrawals
 
@@ -545,7 +528,54 @@ futures_account$get_positions()
 
 For full futures documentation see `vignette("futures-trading")`.
 
-## Async Usage
+## Sample Data
+
+The package includes bundled historical OHLCV data for BTC-USDT at
+4-hour intervals (October 2017 through March 2026):
+
+``` r
+data(kucoin_btc_usdt_4h_ohlcv)
+head(kucoin_btc_usdt_4h_ohlcv)
+```
+
+    #>      symbol            datetime     open     high      low    close     volume
+    #>      <char>              <POSc>    <num>    <num>    <num>    <num>      <num>
+    #> 1: BTC-USDT 2017-10-18 16:00:00 3996.866 4318.733 3806.382 3811.101 0.12096412
+    #> 2: BTC-USDT 2017-10-18 20:00:00 3811.101 4088.281 3811.101 3812.004 0.06215084
+    #> 3: BTC-USDT 2017-10-19 00:00:00 3812.004 5548.231 3812.000 4060.403 0.13683638
+    #> 4: BTC-USDT 2017-10-19 04:00:00 4060.021 5693.211 3806.382 5123.414 0.37534149
+    #> 5: BTC-USDT 2017-10-19 08:00:00 5093.211 5693.211 5093.211 5093.211 0.93088201
+    #> 6: BTC-USDT 2017-10-19 12:00:00 5094.149 5693.000 5093.211 5408.350 0.47226735
+    #>     turnover   freq
+    #>        <num> <char>
+    #> 1:  467.0677     4h
+    #> 2:  241.1115     4h
+    #> 3:  545.1717     4h
+    #> 4: 1647.8900     4h
+    #> 5: 5071.2131     4h
+    #> 6: 2535.2478     4h
+
+## Available Classes
+
+| Class | Purpose |
+|----|----|
+| `KucoinMarketData` | Tickers, klines, orderbooks, currencies, symbols, trade history, server time, service status, fiat prices |
+| `KucoinTrading` | Place, cancel, modify, and query HF spot orders; sync variants; DCP dead-man’s switch |
+| `KucoinStopOrders` | Stop order management with trigger prices |
+| `KucoinOcoOrders` | One-Cancels-Other order pairs |
+| `KucoinAccount` | Account balances, ledger, HF ledger, fee rates, API key info |
+| `KucoinDeposit` | Deposit addresses and history |
+| `KucoinTransfer` | Internal transfers between account types (main, trade, margin) |
+| `KucoinWithdrawal` | Withdrawal creation, cancellation, quotas, and history |
+| `KucoinSubAccount` | Sub-account creation and balance queries |
+| `KucoinMarginTrading` | Margin trading: open/close short and long positions, borrow, repay, leverage |
+| `KucoinMarginData` | Margin pair info, config, collateral ratios, risk limits |
+| `KucoinLending` | Lend assets to earn interest, manage lending orders |
+| `KucoinFuturesMarketData` | Futures contract specs, tickers, orderbooks, klines, funding rates |
+| `KucoinFuturesTrading` | Place, cancel, and query futures orders; batch orders; DCP |
+| `KucoinFuturesAccount` | Futures account overview, positions, margin, leverage, risk limits |
+
+## Asynchronous usage
 
 This package is meant to be used in an asynchronous non-blocking event
 loop (i.e. à la JavaScript) and is written around promises. Please use
@@ -590,43 +620,41 @@ while (!later$loop_empty()) {
     #> 2: 2026-01-05 04:00:00 50100 50300 50000 50250    110  5527500
     #> 3: 2026-01-05 08:00:00 50250 50400 50100 50350    120  6042000
 
-## Sample Data
+## Documentation
 
-The package includes bundled historical OHLCV data for BTC-USDT at
-4-hour intervals (October 2017 through March 2026):
+The rendered reference site is at
+[dereckscompany.github.io/kucoin](https://dereckscompany.github.io/kucoin/).
 
-``` r
-data(kucoin_btc_usdt_4h_ohlcv)
-head(kucoin_btc_usdt_4h_ohlcv)
-```
+Five vignettes take a reader from a first call to the full method
+catalogue and every trading surface, in this reading order:
 
-    #>      symbol            datetime     open     high      low    close     volume
-    #>      <char>              <POSc>    <num>    <num>    <num>    <num>      <num>
-    #> 1: BTC-USDT 2017-10-18 16:00:00 3996.866 4318.733 3806.382 3811.101 0.12096412
-    #> 2: BTC-USDT 2017-10-18 20:00:00 3811.101 4088.281 3811.101 3812.004 0.06215084
-    #> 3: BTC-USDT 2017-10-19 00:00:00 3812.004 5548.231 3812.000 4060.403 0.13683638
-    #> 4: BTC-USDT 2017-10-19 04:00:00 4060.021 5693.211 3806.382 5123.414 0.37534149
-    #> 5: BTC-USDT 2017-10-19 08:00:00 5093.211 5693.211 5093.211 5093.211 0.93088201
-    #> 6: BTC-USDT 2017-10-19 12:00:00 5094.149 5693.000 5093.211 5408.350 0.47226735
-    #>     turnover   freq
-    #>        <num> <char>
-    #> 1:  467.0677     4h
-    #> 2:  241.1115     4h
-    #> 3:  545.1717     4h
-    #> 4: 1647.8900     4h
-    #> 5: 5071.2131     4h
-    #> 6: 2535.2478     4h
+1.  `vignette("getting-started", package = "kucoin")` — connecting
+    synchronously and making first calls across the market data,
+    trading, account, stop order, OCO order, deposit, and sub-account
+    surfaces.
+2.  `vignette("async-usage", package = "kucoin")` — running the same
+    classes in asynchronous mode with `coro`/`later`.
+3.  `vignette("data-shapes", package = "kucoin")` — the one-stop tour of
+    every public method by class, and the data-shape conventions (column
+    naming, type coercion, nested-object treatments) behind them.
+4.  `vignette("margin-trading", package = "kucoin")` — margin trading,
+    lending, and margin market data: opening and closing short and long
+    positions, borrowing, and repayment.
+5.  `vignette("futures-trading", package = "kucoin")` — futures contract
+    trading: market data, orders, and positions with leverage.
+
+The full release history is in [`NEWS.md`](NEWS.md).
 
 ## Citation
 
-If you use this package in your work, please cite it:
+Cite as:
 
-``` r
-citation("kucoin")
-```
+> Mezquita, D. (2026). kucoin: API Wrapper to KuCoin Cryptocurrency
+> Exchange. R package version 4.6.5.
+> <https://github.com/dereckscompany/kucoin>.
 
-> Mezquita, D. (2026). kucoin: R API Wrapper to KuCoin Cryptocurrency
-> Exchange. R package version 4.0.0.
+Author: Dereck Mezquita — [ORCID:
+0000-0002-9307-6762](https://orcid.org/0000-0002-9307-6762)
 
 ## Licence
 
