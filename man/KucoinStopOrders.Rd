@@ -579,7 +579,7 @@ Verified: 2026-05-23
 \itemize{
 \item \strong{Client-Side Tracking}: Cancel orders using your own identifiers without storing KuCoin order IDs.
 \item \strong{Idempotent Cancellation}: Use deterministic client OIDs for reliable cancel-and-replace workflows.
-\item \strong{Multi-Symbol Bots}: Combine \code{clientOid} prefixes with symbol for organized order management.
+\item \strong{Multi-Symbol Bots}: Combine \code{clientOid} prefixes with symbol for organised order management.
 }
 }
 

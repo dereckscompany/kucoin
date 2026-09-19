@@ -1472,8 +1472,8 @@ Verified: 2026-05-23
 \subsection{Automated Trading Usage}{
 \itemize{
 \item \strong{Precise PnL}: Use actual rates for accurate profit/loss calculations.
-\item \strong{Fee Optimization}: Compare rates across pairs to choose the cheapest execution venue.
-\item \strong{Batch Query}: Query up to 10 pairs at once to minimize API calls.
+\item \strong{Fee Optimisation}: Compare rates across pairs to choose the cheapest execution venue.
+\item \strong{Batch Query}: Query up to 10 pairs at once to minimise API calls.
 }
 }
 \subsection{Usage}{

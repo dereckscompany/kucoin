@@ -716,7 +716,7 @@ KucoinFuturesMarketData <- R6::R6Class(
     #' Verified: 2026-05-23
     #'
     #' ### Automated Trading Usage
-    #' - **Tape Reading**: Analyze recent trades to detect large block trades or aggressive buying/selling.
+    #' - **Tape Reading**: Analyse recent trades to detect large block trades or aggressive buying/selling.
     #' - **Volume Confirmation**: Confirm breakout signals by checking if recent trade volume supports the price move.
     #' - **Trade-Flow Analysis**: Track maker vs taker order IDs to understand order flow dynamics.
     #'

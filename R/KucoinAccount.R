@@ -1399,8 +1399,8 @@ KucoinAccount <- R6::R6Class(
     #'
     #' ### Automated Trading Usage
     #' - **Precise PnL**: Use actual rates for accurate profit/loss calculations.
-    #' - **Fee Optimization**: Compare rates across pairs to choose the cheapest execution venue.
-    #' - **Batch Query**: Query up to 10 pairs at once to minimize API calls.
+    #' - **Fee Optimisation**: Compare rates across pairs to choose the cheapest execution venue.
+    #' - **Batch Query**: Query up to 10 pairs at once to minimise API calls.
     #'
     #' @param symbols (scalar<character>) comma-separated trading pairs (max 10),
     #'   e.g. `"BTC-USDT,ETH-USDT"`.

@@ -2040,9 +2040,9 @@ Verified: 2026-05-23
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{PnL Calculation}: Aggregate fill prices and sizes to compute realized profit/loss per position.
+\item \strong{PnL Calculation}: Aggregate fill prices and sizes to compute realised profit/loss per position.
 \item \strong{Fee Tracking}: Sum fees across fills for accurate cost accounting.
-\item \strong{Maker/Taker Analysis}: Monitor \code{liquidity} field to optimize order placement for fee savings.
+\item \strong{Maker/Taker Analysis}: Monitor \code{liquidity} field to optimise order placement for fee savings.
 }
 }
 

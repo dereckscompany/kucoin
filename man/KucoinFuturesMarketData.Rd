@@ -964,7 +964,7 @@ Verified: 2026-05-23
 
 \subsection{Automated Trading Usage}{
 \itemize{
-\item \strong{Tape Reading}: Analyze recent trades to detect large block trades or aggressive buying/selling.
+\item \strong{Tape Reading}: Analyse recent trades to detect large block trades or aggressive buying/selling.
 \item \strong{Volume Confirmation}: Confirm breakout signals by checking if recent trade volume supports the price move.
 \item \strong{Trade-Flow Analysis}: Track maker vs taker order IDs to understand order flow dynamics.
 }
