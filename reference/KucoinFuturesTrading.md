@@ -1840,11 +1840,11 @@ Verified: 2026-05-23
 #### Automated Trading Usage
 
 - **PnL Calculation**: Aggregate fill prices and sizes to compute
-  realized profit/loss per position.
+  realised profit/loss per position.
 
 - **Fee Tracking**: Sum fees across fills for accurate cost accounting.
 
-- **Maker/Taker Analysis**: Monitor `liquidity` field to optimize order
+- **Maker/Taker Analysis**: Monitor `liquidity` field to optimise order
   placement for fee savings.
 
 #### curl

@@ -1,15 +1,58 @@
 # Changelog
 
+## kucoin 4.6.4
+
+**Documentation prose brought in line with house style: leftover
+plain-English scaffolding labels removed and spelling normalised to
+British throughout.** This is a documentation-only release; no code
+path, argument, column, or API-facing string changed. Two mechanical
+passes were made over every README, vignette, NEWS entry, and
+roxygen/comment line in the package: the first stripped visible “In
+plain terms:” / “In plain English:” labels while keeping the sentence
+each one introduced (never deleting content), and the second corrected
+American spellings to their British equivalents wherever they appeared
+as ordinary prose rather than as a code identifier, an API field name, a
+file name, or a quotation.
+
+- Labels removed: 5 total — 1 in `README.Rmd` (“In plain terms:”) and 4
+  in `NEWS.md` (“In plain English:”, at the openings of the 4.6.3, 4.6.2
+  (two entries), and 4.5.1 items).
+- Spellings corrected: 8 total — `analyze` → `analyse` and `organized` →
+  `organised` (one site each), `optimize`/`optimization` →
+  `optimise`/`optimisation` and `minimize` → `minimise` (three sites
+  across `KucoinAccount.R` and `KucoinFuturesTrading.R`), `realized` →
+  `realised` (one site), `behavior` → `behaviour` (one site in
+  `NEWS.md`), and `color` → `colour` (one comment in `scripts/hex.R`).
+- Files touched: `README.Rmd` (and its regenerated `README.md`),
+  `NEWS.md`, `R/KucoinAccount.R`, `R/KucoinFuturesMarketData.R`,
+  `R/KucoinFuturesTrading.R`, `R/KucoinStopOrders.R`, `scripts/hex.R`,
+  plus the four `man/*.Rd` pages that mirror the touched roxygen blocks
+  (`KucoinAccount.Rd`, `KucoinFuturesMarketData.Rd`,
+  `KucoinFuturesTrading.Rd`, `KucoinStopOrders.Rd`), where the same four
+  prose substitutions were applied by hand because a full roxygen
+  regeneration on this machine (roxygen2 8.0.0, not the pinned 7.3.3)
+  rewrites every page with unrelated formatting churn; the pages must be
+  regenerated properly at the next release built with roxygen2 7.3.3.
+  `DESCRIPTION` carries the version bump.
+- A grep sweep for the same word list found no further instances after
+  the change; the remaining matches anywhere in the package
+  (`fig.align = "center"` as a knitr code-chunk option, the `LICENSE`
+  file name and its `License: MIT` DESCRIPTION field, the R6
+  `initialize` method name, and the `serialize` argument to
+  [`digest::hmac()`](https://eddelbuettel.github.io/digest/man/hmac.html))
+  are all code identifiers or file names outside this sweep’s scope, not
+  prose.
+
 ## kucoin 4.6.3
 
-**Test data is now entirely made up.** In plain English: this package’s
-test fixtures — the canned JSON responses that stand in for the real
-KuCoin API in tests, the README, and the vignettes — were, for most
-endpoints, genuine responses captured from a real KuCoin session on
-2024-10-17 (and a couple of adjacent dates), plus a handful of example
-values lifted verbatim from KuCoin’s own API documentation. That meant
-this public repository shipped a real BTC/ETH market snapshot and a real
-BTC daily-candle sequence from 2025-07-26 that matches true exchange
+**Test data is now entirely made up.** This package’s test fixtures —
+the canned JSON responses that stand in for the real KuCoin API in
+tests, the README, and the vignettes — were, for most endpoints, genuine
+responses captured from a real KuCoin session on 2024-10-17 (and a
+couple of adjacent dates), plus a handful of example values lifted
+verbatim from KuCoin’s own API documentation. That meant this public
+repository shipped a real BTC/ETH market snapshot and a real BTC
+daily-candle sequence from 2025-07-26 that matches true exchange
 history, a Tron withdrawal address that also appears in the sibling
 `binance` package, two real mainnet token-contract addresses (WETH and
 USDT on Ethereum, USDT on Tron), a live-format BTC bech32 address, and
@@ -78,11 +121,11 @@ corrected to stop merely claiming that and actually be that.
 
 **A legal order — post-only with no explicit time-in-force — used to
 crash the caller with a raw R error instead of either accepting it or
-raising a normal validation error.** In plain English: `time_in_force`
-defaults to `NULL`, and `validate_order_params()`’s post-only/IOC-FOK
-conflict check compared that `NULL` against `c("IOC", "FOK")` with
-`%in%`, which produces an empty logical rather than `TRUE` or `FALSE`;
-feeding that into `if()` aborted with base R’s uncaught
+raising a normal validation error.** `time_in_force` defaults to `NULL`,
+and `validate_order_params()`’s post-only/IOC-FOK conflict check
+compared that `NULL` against `c("IOC", "FOK")` with `%in%`, which
+produces an empty logical rather than `TRUE` or `FALSE`; feeding that
+into `if()` aborted with base R’s uncaught
 `"missing value where TRUE/FALSE needed"` instead of the package’s own
 classed error, so a post-only order placed without a `time_in_force` (a
 perfectly legal combination) failed with the wrong kind of error instead
@@ -97,9 +140,9 @@ of succeeding.
   `kucoin_validation_error` as intended.
 
 **A regression test that guards against price data ever being truncated
-again.** In plain English: on 2026-09-13 the fleet discovered that every
-Hyperliquid candle in the data lake had been stored to four decimal
-places for months, so a coin priced below a cent lost almost all of its
+again.** On 2026-09-13 the fleet discovered that every Hyperliquid
+candle in the data lake had been stored to four decimal places for
+months, so a coin priced below a cent lost almost all of its
 information, and a strategy that ranks coins by calmness ranked them
 wrongly as a result. The cause was traced and proved NOT to be in the
 venue connector packages — this package’s parse path turns KuCoin’s
@@ -155,15 +198,15 @@ paginated reads.
 
 ### Weekly and monthly candle fetches no longer overflow (closes [\#40](https://github.com/dereckscompany/kucoin/issues/40))
 
-In plain English: asking for 1week or 1month candles over any long
-history used to crash the fetch loop, because the arithmetic that splits
-the request into 1,500-candle segments was done in 32-bit integers — and
-fifteen hundred months of seconds is a bigger number than a 32-bit
-integer can hold. The segment maths now stays in double precision end to
-end (mirroring the futures path, which always did), so week- and
-month-scale backfills work across the full history. Regression tests pin
-1week and 1month segment boundaries at 2020-era epochs and prove the
-hourly/daily paths are byte-for-byte unchanged.
+Asking for 1week or 1month candles over any long history used to crash
+the fetch loop, because the arithmetic that splits the request into
+1,500-candle segments was done in 32-bit integers — and fifteen hundred
+months of seconds is a bigger number than a 32-bit integer can hold. The
+segment maths now stays in double precision end to end (mirroring the
+futures path, which always did), so week- and month-scale backfills work
+across the full history. Regression tests pin 1week and 1month segment
+boundaries at 2020-era epochs and prove the hourly/daily paths are
+byte-for-byte unchanged.
 
 ## kucoin 4.5.0
 
@@ -873,7 +916,7 @@ committed.
     `status` is **required** in the query list.
   - `KucoinLending$get_loan_market()`: now documented as authenticated.
 - Corrected `wrap_list_fields` / `as_dt_row` documentation to accurately
-  describe `length >= 1` wrapping behavior.
+  describe `length >= 1` wrapping behaviour.
 - Expanded `@return` blocks across `KucoinMarginData`,
   `KucoinMarginTrading`, and `KucoinLending`: every public method now
   spells out its columns and their R types, the per-method row entity,

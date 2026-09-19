@@ -821,7 +821,7 @@ Verified: 2026-05-23
 
 #### Automated Trading Usage
 
-- **Tape Reading**: Analyze recent trades to detect large block trades
+- **Tape Reading**: Analyse recent trades to detect large block trades
   or aggressive buying/selling.
 
 - **Volume Confirmation**: Confirm breakout signals by checking if

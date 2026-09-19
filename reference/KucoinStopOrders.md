@@ -479,7 +479,7 @@ Verified: 2026-05-23
   reliable cancel-and-replace workflows.
 
 - **Multi-Symbol Bots**: Combine `clientOid` prefixes with symbol for
-  organized order management.
+  organised order management.
 
 #### curl
 

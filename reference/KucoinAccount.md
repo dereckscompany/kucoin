@@ -1321,10 +1321,10 @@ Verified: 2026-05-23
 - **Precise PnL**: Use actual rates for accurate profit/loss
   calculations.
 
-- **Fee Optimization**: Compare rates across pairs to choose the
+- **Fee Optimisation**: Compare rates across pairs to choose the
   cheapest execution venue.
 
-- **Batch Query**: Query up to 10 pairs at once to minimize API calls.
+- **Batch Query**: Query up to 10 pairs at once to minimise API calls.
 
 #### Usage
 
