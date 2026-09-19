@@ -649,6 +649,12 @@ The full release history is in [`NEWS.md`](NEWS.md).
 
 Cite as:
 
+If you use this package in your work, please cite it:
+
+``` r
+citation("kucoin")
+```
+
 > Mezquita, D. (2026). kucoin: API Wrapper to KuCoin Cryptocurrency
 > Exchange. R package version 4.6.5.
 > <https://github.com/dereckscompany/kucoin>.
