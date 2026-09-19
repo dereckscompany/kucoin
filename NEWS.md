@@ -1,3 +1,15 @@
+# kucoin 4.6.5
+
+**The README now follows the same shape as every other package in the fleet, so a reader who knows one package's documentation already knows where to look in this one.** This is a documentation-only release; no code path, argument, column, or API-facing string changed. The README's sections were renamed and reordered into the fleet's canonical shape (plain-English lead, technical overview, design philosophy, installation, quick start, per-surface usage, asynchronous usage, documentation, citation, licence) without dropping any existing sentence, code chunk, table or link; the one rewrite is the stale hand-written citation block, rebuilt from `DESCRIPTION`.
+
+- Lead paragraph: the opening sentence is now bold, matching the fleet's unlabelled bold-lead-plus-paragraph convention; the wording is unchanged.
+- Heading renames: `## Design Philosophy` → `## Design philosophy`; `## Setup` → `## Quick start`; `## Quick Start -- Market Data` → `## Market Data`; `## Async Usage` → `## Asynchronous usage`.
+- Section moves: `## Disclaimer` moved from immediately after Technical overview to immediately after Quick start; `## Available Classes` moved from immediately after Trading to immediately before Asynchronous usage; `## Sample Data` moved from after Asynchronous usage to immediately before Available Classes. No section content changed in the move.
+- Installation rebuilt renv-first: `renv::install("dereckscompany/kucoin")` is now the primary form, with `remotes::install_github("dereckscompany/kucoin")` kept as a commented fallback in the same code chunk.
+- New `## Documentation` section: links the rendered pkgdown site and lists all five vignettes in their `_pkgdown.yml` reading order (`getting-started`, `async-usage`, `data-shapes`, `margin-trading`, `futures-trading`), each with a one-line summary of what it teaches, plus a link to `NEWS.md`.
+- `## Citation` rebuilt from `DESCRIPTION` alone: author, title, package version, and the repository URL, replacing the previous hand-written citation block that had drifted to a stale version number.
+- No `## Error handling` section was added: the README has no existing error-handling content to move, and the package's typed-condition system is not yet documented there.
+
 # kucoin 4.6.4
 
 **Documentation prose brought in line with house style: leftover plain-English scaffolding labels removed and spelling normalised to British throughout.** This is a documentation-only release; no code path, argument, column, or API-facing string changed. Two mechanical passes were made over every README, vignette, NEWS entry, and roxygen/comment line in the package: the first stripped visible "In plain terms:" / "In plain English:" labels while keeping the sentence each one introduced (never deleting content), and the second corrected American spellings to their British equivalents wherever they appeared as ordinary prose rather than as a code identifier, an API field name, a file name, or a quotation.
