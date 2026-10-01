@@ -1,3 +1,13 @@
+# kucoin 4.6.7
+
+**Re-locks the package against a fixed version of the shared connection library, closing a bug where one stuck network request could silently freeze every other request waiting on the same exchange connection.** connectcore 0.6.0 gives every asynchronous request its own request queue and a safety-net timer, so a single slow or hung call to KuCoin can no longer stall the others queued up behind it; a hung request is now cancelled and reported instead of hanging indefinitely. This is a dependency re-lock only: no production code path, argument, or API-facing behaviour in kucoin itself changed.
+
+- `DESCRIPTION`: `connectcore` floor raised from `(>= 0.5.0)` to `(>= 0.6.0)`.
+- `renv.lock`: `connectcore` pin updated from 0.5.0 to 0.6.0 via `renv::record("dereckscompany/connectcore@v0.6.0")` followed by `renv::restore()`.
+- Underlying fix (in connectcore, not kucoin): a resident container once went ten minutes without an answer to a positions/orders request because of a units bug in httr2's async pool poller, where one stalled asynchronous request could freeze every later asynchronous call sharing the same curl connection pool. connectcore 0.6.0's `build_request()` now gives every asynchronous request its own `curl::new_pool()` and races it against a `later::later()` timer set to the request timeout plus a 5-second margin; if the timer wins, the stalled request's handles are cancelled and it fails with a new classed, credential-free condition, `connectcore_request_deadline`, instead of hanging.
+- kucoin has no custom async `.perform()` test stub, so no test needed updating for the new timeout/cancellation path; the full suite was re-run unchanged against the re-locked library.
+- Out of scope: the open kucoin event-time-to-timestamp follow-up is untouched by this release.
+
 # kucoin 4.6.6
 
 **The changelog now reads the same way in every release, in this package and across the fleet.**
