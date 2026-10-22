@@ -1,3 +1,12 @@
+# kucoin 4.6.8
+
+**Two stale or duplicated documents are deleted and the README's "Cite as" line names the current version; nothing the package does has changed.** `ROADMAP.md` was frozen at an early release and is contradicted by this changelog and by the code, and `CONTRIBUTING.md` was a boilerplate copy that only alpaca, binance and kucoin carried (the other eight connector packages have none); `NEWS.md` is the one record of what was released and why.
+
+- `ROADMAP.md` removed (fleet clean-up plan D.1-39). Evidence: it describes an early release and is contradicted by this file and the code; its only unique content, the method-name verb convention (`get_*` query, `add_*` create, `cancel_*` cancel, `modify_*` amend, `set_*` configure; snake_case; no API version numbers in method names), is unchanged and visible in every class's method list. The file stays recoverable from git history.
+- `CONTRIBUTING.md` removed (plan G.2-18). Evidence: byte-identical across alpaca, binance and kucoin once the package name is substituted, absent from the other eight connector packages, and its advice to prefer base R over added dependencies conflicts with the fleet's lubridate and data.table conventions; the pull-request template in `.github/` is untouched.
+- `README.Rmd` / `README.md`: citation 4.6.6 -> 4.6.8 (fleet clean-up plan G.2-14); `README.md` re-rendered.
+- `DESCRIPTION`: version bumped 4.6.7 -> 4.6.8.
+
 # kucoin 4.6.7
 
 **Re-locks the package against a fixed version of the shared connection library, closing a bug where one stuck network request could silently freeze every other request waiting on the same exchange connection.** connectcore 0.6.0 gives every asynchronous request its own request queue and a safety-net timer, so a single slow or hung call to KuCoin can no longer stall the others queued up behind it; a hung request is now cancelled and reported instead of hanging indefinitely. This is a dependency re-lock only: no production code path, argument, or API-facing behaviour in kucoin itself changed.
