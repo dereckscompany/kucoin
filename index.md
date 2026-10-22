@@ -705,7 +705,7 @@ The full release history is in
 ## Citation
 
 Cite as: Mezquita, D. (2026). kucoin: API Wrapper to KuCoin
-Cryptocurrency Exchange. R package version 4.6.6.
+Cryptocurrency Exchange. R package version 4.6.8.
 <https://github.com/dereckscompany/kucoin>
 
 ## Licence
